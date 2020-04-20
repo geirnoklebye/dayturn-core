@@ -160,33 +160,6 @@ BOOL RRHelper::preventFloater(std::string floaterName)
 static LLUUID current_handlecommand_caller;
 //ca
 
-// Adopted from llsettingsksy
-namespace {
-    LLQuaternion convert_azimuth_and_altitude_to_quat(F32 azimuth, F32 altitude)
-    {
-        F32 sinTheta = sin(azimuth);
-        F32 cosTheta = cos(azimuth);
-        F32 sinPhi   = sin(altitude);
-        F32 cosPhi   = cos(altitude);
-
-        LLVector3 dir;
-        // +x right, +z up, +y at...	
-        dir.mV[0] = cosTheta * cosPhi;
-        dir.mV[1] = sinTheta * cosPhi;	
-        dir.mV[2] = sinPhi;
-
-        LLVector3 axis = LLVector3::x_axis % dir;
-        axis.normalize();
-
-        F32 angle = acos(LLVector3::x_axis * dir);
-
-        LLQuaternion quat;
-        quat.setAngleAxis(angle, axis);
-
-        return quat;
-    }
-}
-
 // --
 // Local functions
 std::string dumpList2String (std::deque<std::string> list, std::string sep, int size = -1)
@@ -4002,10 +3975,10 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 //		water_params->mUnderWaterFogMod.update (water_params->mCurParams);
 	}
 	else if (command == "maxaltitude") {
-		psky->setMaxY(val);
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
-		//params->mMaxAlt.x = val;
-		//updateAndSave (&(params->mMaxAlt));
+		/*** NEEDS CHANGE FOR EEP ***
+		params->mMaxAlt.x = val;
+		updateAndSave (&(params->mMaxAlt));
+		***/
 	}
 
 	else if (command == "sunmooncolorr") {
@@ -4116,22 +4089,16 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		//updateAndSave(&(params->mAmbient));
 	}
 	else if (command == "sunglowfocus") {
-		// still needs a fudge to match UI values to internal
-		LLColor3 glow=psky->getGlow();
-		glow.mV[2] = val * -5; // 5 is SLIDER_SCALE_GLOW_B, negation is intended
-		psky->setGlow(glow);
-		psky->update();		
-		//params->mGlow.b = -val*5;
-		//updateAndSave (&(params->mGlow));
+		/*** NEEDS CHANGE FOR EEP ***
+		params->mGlow.b = -val*5;
+		updateAndSave (&(params->mGlow));
+		***/
 	}
 	else if (command == "sunglowsize") {
-		// still needs a fudge to match UI values to internal
-		LLColor3 glow=psky->getGlow();
-		glow.mV[0] = (2-val)*20; // 2 is max of UI, 20 is SLIDER_SCALE_GLOW_R
-		psky->setGlow(glow);
-		psky->update();		
-		//params->mGlow.r = (2-val)*20;
-		//updateAndSave (&(params->mGlow));
+		/*** NEEDS CHANGE FOR EEP ***
+		params->mGlow.r = (2-val)*20;
+		updateAndSave (&(params->mGlow));
+		***/
 	}
 	else if (command == "scenegamma") {
 		psky->setGamma(val);
@@ -4140,103 +4107,15 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		//params->mWLGamma.x = val;
 		//updateAndSave (&(params->mWLGamma));
 	}
-	//else if (command == "sunmoonposition") {
-		// replaced by combined routine below
-		//params->mCurParams.setSunAngle (F_TWO_PI * val);
-	//}
-	//else if (command == "eastangle") {
-		// replaced by combined routine below
-		//params->mCurParams.setEastAngle (F_TWO_PI * val);
-	//}
-	else if (command == "sunmoonposition" || command == "eastangle")
-	{
-		// these are both legacy windlight values, so before we can modify them we need to calculate current values for both
-		// the conversion below is adapted from llsettingsvo
-		
-		// although supposed to be symmetrical, these conversions currently aren't - BUG-228508 raised with LL
-    LLVector3 dir = psky->getSunDirection();
-
-    F32 phi     = asin(dir.mV[2]);
-    F32 cos_phi = cosf(phi);
-    F32 theta   = (cos_phi != 0) ? asin(dir.mV[1] / cos_phi) : 0.0f;
-
-    theta = -theta;
-
-    // get angles back into valid ranges for legacy viewer...
-    //
-    while (theta < 0)
-    {
-        theta += F_PI * 2;
-    }
-    
-    if (theta > 4 * F_PI)
-    {
-        theta = fmod(theta, 2 * F_PI);
-    }
-    
-    while (phi < -F_PI)
-    {
-        phi += 2 * F_PI;
-    }
-    
-    if (phi > 3 * F_PI)
-    {
-        phi = F_PI + fmod(phi - F_PI, 2 * F_PI);
-    }
-    LL_INFOS() << "Values after conversion theta " << (theta / F_TWO_PI) << " phi " << (phi / F_TWO_PI) << LL_ENDL;
-    // theta is eastangle, phi is sunmoonposition
-    if (command == "eastangle")
-    {
-    	theta = F_TWO_PI * val;
-    }
-    else // it's sunmoonposition
-    {
-    	phi = F_TWO_PI * val;
-    }
-    LL_INFOS() << "Values after modification theta " << (theta / F_TWO_PI) << " phi " << (phi / F_TWO_PI) << LL_ENDL;
-
-    // now to write it back, this part is adapted from llsettingsksy
-    F32 azimuth = -theta; // negation is intended
-    F32 altitude = phi;		
-    LLQuaternion sunquat  = convert_azimuth_and_altitude_to_quat(azimuth, altitude);
-    // original WL moon dir was diametrically opposed to the sun dir
-    LLQuaternion moonquat = convert_azimuth_and_altitude_to_quat(azimuth + F_PI, -altitude);
-    psky->setSunRotation(sunquat);
-    psky->setMoonRotation(moonquat);
-		// below here is debugging to be removed
-    dir = psky->getSunDirection();
-
-    phi     = asin(dir.mV[2]);
-    cos_phi = cosf(phi);
-    theta   = (cos_phi != 0) ? asin(dir.mV[1] / cos_phi) : 0.0f;
-
-    theta = -theta;
-
-    // get angles back into valid ranges for legacy viewer...
-    //
-    while (theta < 0)
-    {
-        theta += F_PI * 2;
-    }
-    
-    if (theta > 4 * F_PI)
-    {
-        theta = fmod(theta, 2 * F_PI);
-    }
-    
-    while (phi < -F_PI)
-    {
-        phi += 2 * F_PI;
-    }
-    
-    if (phi > 3 * F_PI)
-    {
-        phi = F_PI + fmod(phi - F_PI, 2 * F_PI);
-    }
-    LL_INFOS() << "Values read back after write theta " << (theta / F_TWO_PI) << " phi " << (phi / F_TWO_PI) << LL_ENDL;
-		// above here is debugging to be removed
- 		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);   
+	else if (command == "sunmoonposition") {
+		/*** NEEDS CHANGE FOR EEP ***
+		params->mCurParams.setSunAngle (F_TWO_PI * val);
+		***/
+	}
+	else if (command == "eastangle") {
+		/*** NEEDS CHANGE FOR EEP ***
+		params->mCurParams.setEastAngle (F_TWO_PI * val);
+		***/
 	}
 	else if (command == "starbrightness") {
 		psky->setStarBrightness(val);
@@ -4442,10 +4321,9 @@ std::string RRInterface::getEnvironment (std::string command)
 
 	else if (command == "densitymultiplier")  res = psky->getDensityMultiplier()*1000;
 	else if (command == "distancemultiplier") res = psky->getDistanceMultiplier();
-	else if (command == "maxaltitude")        res = psky->getMaxY();
 	//else if (command == "densitymultiplier")  res = params->mDensityMult.x*1000;
 	//else if (command == "distancemultiplier") res = params->mDistanceMult.x;
-	//else if (command == "maxaltitude")        res = params->mMaxAlt.x;
+	// *** NEEDS CHANGE FOR EEP *** else if (command == "maxaltitude")        res = params->mMaxAlt.x;
 
 	else if (command == "sunmooncolorr") res = (psky->getSunlightColor().mV[0])/3;
 	else if (command == "sunmooncolorg") res = (psky->getSunlightColor().mV[1])/3;
@@ -4465,59 +4343,17 @@ std::string RRInterface::getEnvironment (std::string command)
 	//else if (command == "ambientb") res = params->mAmbient.b/3;
 	//else if (command == "ambienti") res = max (max (params->mAmbient.r, params->mAmbient.g), params->mAmbient.b) / 3;
 
-	if (command == "sunglowfocus")	res = (-psky->getGlow().mV[2]) / 5; // negation is intended, 5 is SLIDER_SCALE_GLOW_B
+	if (command == "sunglowfocus")	res = -legacy[LLSettingsSky::SETTING_GLOW][2].asReal()/5;
 	//else if (command == "sunglowfocus")	res = -params->mGlow.b/5;
-	if (command == "sunglowsize")		res = 2 - psky->getGlow().mV[0] / 20; // 2 is UI size, 20 is SLIDER_SCALE_GLOW_R
+	if (command == "sunglowsize")		res = 2-legacy[LLSettingsSky::SETTING_GLOW][0].asReal()/20;
 	//else if (command == "sunglowsize")		res = 2-params->mGlow.r/20;
 	else if (command == "scenegamma")		res = psky->getGamma();
 	//else if (command == "scenegamma")		res = params->mWLGamma.x;
 
+	else if (command == "sunmoonposition")		res = legacy[LLSettingsSky::SETTING_LEGACY_SUN_ANGLE].asReal()/F_TWO_PI; //note: originally protected
 	//else if (command == "sunmoonposition")		res = params->mCurParams.getSunAngle()/F_TWO_PI;
+	else if (command == "eastangle")			res = legacy[LLSettingsSky::SETTING_LEGACY_EAST_ANGLE].asReal()/F_TWO_PI; // note: originally protected
 	//else if (command == "eastangle")			res = params->mCurParams.getEastAngle()/F_TWO_PI;
-	
-	else if (command=="eastangle" || command=="sunmoonposition")
-	{
-		// these are both legacy windlight values
-		// the conversion below is adapted from llsettingsvo
-    LLVector3 dir = psky->getSunDirection();
-
-    F32 phi     = asin(dir.mV[2]);
-    F32 cos_phi = cosf(phi);
-    F32 theta   = (cos_phi != 0) ? asin(dir.mV[1] / cos_phi) : 0.0f;
-
-    theta = -theta;
-
-    // get angles back into valid ranges for legacy viewer...
-    //
-    while (theta < 0)
-    {
-        theta += F_PI * 2;
-    }
-    
-    if (theta > 4 * F_PI)
-    {
-        theta = fmod(theta, 2 * F_PI);
-    }
-    
-    while (phi < -F_PI)
-    {
-        phi += 2 * F_PI;
-    }
-    
-    if (phi > 3 * F_PI)
-    {
-        phi = F_PI + fmod(phi - F_PI, 2 * F_PI);
-    }
-    // theta is eastangle, phi is sunmoonposition	
-		if (command == "eastangle")
-		{
-			res = theta / F_TWO_PI;
-		} else // it's sunmoonposition
-		{
-			res = phi / F_TWO_PI;
-		}
-	}
-	
 	else if (command == "starbrightness")		res = psky->getStarBrightness();
 	//else if (command == "starbrightness")		res = params->mCurParams.getStarBrightness();
 
