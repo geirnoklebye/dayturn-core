@@ -39,6 +39,8 @@
 #if !LL_WINDOWS
 # include <syslog.h>
 # include <unistd.h>
+#else
+# include <io.h>
 #endif // !LL_WINDOWS
 #include <vector>
 #include "string.h"
@@ -223,16 +225,14 @@ namespace {
 			fprintf(stderr, "\033[%sm", color.c_str() );
 		};
 
+		// Windows 10 terminal can handle ANSI colour sequences too
 		bool checkANSI(void)
 		{
-#if LL_LINUX || LL_DARWIN
 			// Check whether it's okay to use ANSI; if stderr is
 			// a tty then we assume yes.  Can be turned off with
 			// the LL_NO_ANSI_COLOR env var.
 			return (0 != isatty(2)) &&
 				(NULL == getenv("LL_NO_ANSI_COLOR"));
-#endif // LL_LINUX
-			return false;
 		};
 	};
 
@@ -244,7 +244,7 @@ namespace {
             {
                 this->showMultiline(true);
                 this->showTags(false);
-                this->showLocation(false);
+                this->showLocation(true);
             }
 		
         virtual bool enabled() override
@@ -1613,6 +1613,3 @@ bool debugLoggingEnabled(const std::string& tag)
     bool res = checkLevelMap(s->mTagLevelMap, tag, level);
     return res;
 }
-
-
-

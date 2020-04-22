@@ -555,6 +555,10 @@ void LLAppViewerWin32::disableWinErrorReporting()
 }
 
 const S32 MAX_CONSOLE_LINES = 500;
+// Only defined in newer SDKs than we currently use
+#ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
+#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 4
+#endif
 
 static bool create_console()
 {
@@ -584,6 +588,10 @@ static bool create_console()
 		fp = _fdopen( h_con_handle, "w" );
 		*stdout = *fp;
 		setvbuf( stdout, NULL, _IONBF, 0 );
+		DWORD dwMode = 0;
+		GetConsoleMode((HANDLE)l_std_handle, &dwMode);
+		dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+		SetConsoleMode((HANDLE)l_std_handle, dwMode);
 	}
 
 	// redirect unbuffered STDIN to the console
@@ -598,6 +606,10 @@ static bool create_console()
 		fp = _fdopen( h_con_handle, "r" );
 		*stdin = *fp;
 		setvbuf( stdin, NULL, _IONBF, 0 );
+		DWORD dwMode = 0;
+		GetConsoleMode((HANDLE)l_std_handle, &dwMode);
+		dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+		SetConsoleMode((HANDLE)l_std_handle, dwMode);
 	}
 
 	// redirect unbuffered STDERR to the console
@@ -612,6 +624,10 @@ static bool create_console()
 		fp = _fdopen( h_con_handle, "w" );
 		*stderr = *fp;
 		setvbuf( stderr, NULL, _IONBF, 0 );
+		DWORD dwMode = 0;
+		GetConsoleMode((HANDLE)l_std_handle, &dwMode);
+		dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+		SetConsoleMode((HANDLE)l_std_handle, dwMode);
 	}
 
     return isConsoleAllocated;
