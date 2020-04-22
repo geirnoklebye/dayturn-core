@@ -597,15 +597,21 @@ void send_stats()
 	F32 grey_time = LLVOAvatar::sGreyTime * 1000.f / gFrameTimeSeconds;
 	misc["int_2"] = LLSD::Integer(grey_time); // Steve: 1.22
 
-	LL_INFOS() << "Misc Stats: int_1: " << misc["int_1"] << " int_2: " << misc["int_2"] << LL_ENDL;
-	LL_INFOS() << "Misc Stats: string_1: " << misc["string_1"] << " string_2: " << misc["string_2"] << LL_ENDL;
+	if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
+	{
+		LL_INFOS() << "Misc Stats: int_1: " << misc["int_1"] << " int_2: " << misc["int_2"] << LL_ENDL;
+		LL_INFOS() << "Misc Stats: string_1: " << misc["string_1"] << " string_2: " << misc["string_2"] << LL_ENDL;
+	}
 
 	body["DisplayNamesEnabled"] = gSavedSettings.getBOOL("UseDisplayNames");
 	body["DisplayNamesShowUsername"] = gSavedSettings.getBOOL("NameTagShowUsernames");
 	
 	body["MinimalSkin"] = false;
 
-	LL_INFOS("LogViewerStatsPacket") << "Sending viewer statistics: " << body << LL_ENDL;
+	if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
+	{
+		LL_INFOS("LogViewerStatsPacket") << "Sending viewer statistics: " << body << LL_ENDL;
+	}
 
 	// The session ID token must never appear in logs
 	body["session_id"] = gAgentSessionID;

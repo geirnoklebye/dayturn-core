@@ -4876,7 +4876,10 @@ void LLAppViewer::idle()
 		// *FIX: (?) SAMANTHA
 		if (viewer_stats_timer.getElapsedTimeF32() >= SEND_STATS_PERIOD && !gDisconnected)
 		{
-			LL_INFOS() << "Transmitting sessions stats" << LL_ENDL;
+			if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
+			{
+				LL_INFOS() << "Transmitting sessions stats" << LL_ENDL;
+			}
 			send_stats();
 			viewer_stats_timer.reset();
 		}
@@ -4888,12 +4891,18 @@ void LLAppViewer::idle()
 			object_debug_timer.reset();
 			if (gObjectList.mNumDeadObjectUpdates)
 			{
-				LL_INFOS() << "Dead object updates: " << gObjectList.mNumDeadObjectUpdates << LL_ENDL;
+				if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
+				{
+					LL_INFOS() << "Dead object updates: " << gObjectList.mNumDeadObjectUpdates << LL_ENDL;
+				}
 				gObjectList.mNumDeadObjectUpdates = 0;
 			}
 			if (gObjectList.mNumUnknownUpdates)
 			{
-				LL_INFOS() << "Unknown object updates: " << gObjectList.mNumUnknownUpdates << LL_ENDL;
+				if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
+				{
+					LL_INFOS() << "Unknown object updates: " << gObjectList.mNumUnknownUpdates << LL_ENDL;
+				}
 				gObjectList.mNumUnknownUpdates = 0;
 			}
 
