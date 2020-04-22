@@ -36,7 +36,9 @@
 #include <map>
 #include <boost/tokenizer.hpp>
 #include <boost/concept_check.hpp>
+#include "llcontrol.h"
 
+extern LLControlGroup gSavedSettings;
 //=========================================================================
 namespace LLExperienceCacheImpl
 {
@@ -211,7 +213,10 @@ LLUUID LLExperienceCache::getExperienceId(const LLUUID& private_key, bool null_i
 //=========================================================================
 void LLExperienceCache::processExperience(const LLUUID& public_key, const LLSD& experience)
 {
+	if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
+	{
     LL_INFOS("ExperienceCache") << "Processing experience \"" << experience[NAME] << "\" with key " << public_key.asString() << LL_ENDL;
+  }
 
 	mCache[public_key]=experience;
 	LLSD & row = mCache[public_key];
