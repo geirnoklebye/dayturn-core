@@ -20999,6 +20999,17 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
+    <key>KokuaSuppressPeriodicLogging</key>
+    <map>
+      <key>Comment</key>
+      <string>Enabling this setting will reduce log output by disabling the most prolific periodic log generators</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
   <key>FSAdvancedWorldmapRegionInfo</key>
   <map>
     <key>Comment</key>
