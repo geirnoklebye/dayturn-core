@@ -212,6 +212,8 @@ void display_update_camera()
 // Write some stats to LL_INFOS()
 void display_stats()
 {
+	if (gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging")) return;
+
 	F32 fps_log_freq = gSavedSettings.getF32("FPSLogFrequency");
 	if (fps_log_freq > 0.f && gRecentFPSTime.getElapsedTimeF32() >= fps_log_freq)
 	{

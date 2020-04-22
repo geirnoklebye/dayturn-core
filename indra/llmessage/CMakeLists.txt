@@ -15,6 +15,7 @@ include(Python)
 include(Tut)
 include(Python)
 include(JsonCpp)
+include(LLXML)
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -25,6 +26,12 @@ include_directories(
     ${LLMESSAGE_INCLUDE_DIRS}
     ${LLVFS_INCLUDE_DIRS}
     ${JSONCPP_INCLUDE_DIR}
+    ${LLXML_INCLUDE_DIRS}
+    )
+
+include_directories(SYSTEM
+    ${LLCOMMON_SYSTEM_INCLUDE_DIRS}
+    ${LLXML_SYSTEM_INCLUDE_DIRS}
     )
 
 set(llmessage_SOURCE_FILES
