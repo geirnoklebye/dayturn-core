@@ -2528,7 +2528,7 @@ void LLVOAvatarSelf::appearanceChangeMetricsCoro(std::string url)
 			if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
 			{
         LL_INFOS("Avatar") << "Statistics upload OK" << LL_ENDL;
-      }
+			}
         mInitialMetric = false;
     }
 }
