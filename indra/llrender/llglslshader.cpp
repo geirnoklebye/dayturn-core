@@ -423,6 +423,7 @@ BOOL LLGLSLShader::createShader(std::vector<LLStaticHashedString> * attributes,
         else
         {
             success = FALSE;
+            LL_WARNS() << "Shader loading failed for SHADER FILE: " << (*fileIter).first << " mShaderLevel=" << mShaderLevel << LL_ENDL;
         }
     }
 
