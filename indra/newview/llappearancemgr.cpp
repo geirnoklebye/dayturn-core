@@ -4401,6 +4401,9 @@ void LLAppearanceMgr::removeItemsFromAvatar(const uuid_vec_t& ids_to_remove, LLP
 	}
 // [RLVa:KB] - Checked: 2013-02-12 (RLVa-1.4.8)
 //	LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy;
+//MK (CA)
+	gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 	for (uuid_vec_t::const_iterator it = ids_to_remove.begin(); it != ids_to_remove.end(); ++it)
 	{
 		const LLUUID& id_to_remove = *it;
