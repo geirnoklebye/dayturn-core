@@ -50,6 +50,7 @@ public:
 	LLFloaterPostProcess(const LLSD& key);
 	virtual ~LLFloaterPostProcess();
 	/*virtual*/	BOOL	postBuild();
+	/*virtual*/ void	onOpen(const LLSD& key);
 
 	/// post process callbacks
 	static void onBoolToggle(LLUICtrl* ctrl, void* userData);

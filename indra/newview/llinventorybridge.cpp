@@ -7592,41 +7592,55 @@ void LLSettingsBridge::performAction(LLInventoryModel* model, std::string action
 {
     if ("apply_settings_local" == action)
     {
-        // Single item only
-        LLViewerInventoryItem* item = static_cast<LLViewerInventoryItem*>(getItem());
-        if (!item) 
-            return;
-        LLUUID asset_id = item->getAssetUUID();
-        LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, asset_id);
-        LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
+// MK by CA (nested if because we don't want this falling into the top level ELSE)
+		if (!gRRenabled || (gRRenabled && !gAgent.mRRInterface.mContainsSetenv))
+		{
+// mk by CA
+			// Single item only
+			LLViewerInventoryItem* item = static_cast<LLViewerInventoryItem*>(getItem());
+			if (!item) 
+				return;
+			LLUUID asset_id = item->getAssetUUID();
+			LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, asset_id);
+			LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
+// MK by CA (nested if because we don't want this falling into the top level ELSE)
+		}
+// mk by CA
     }
     else if ("apply_settings_parcel" == action)
     {
-        // Single item only
-        LLViewerInventoryItem* item = static_cast<LLViewerInventoryItem*>(getItem());
-        if (!item)
-            return;
-        LLUUID asset_id = item->getAssetUUID();
-        std::string name = item->getName();
+// MK by CA (nested if because we don't want this falling into the top level ELSE)
+		if (!gRRenabled || (gRRenabled && !gAgent.mRRInterface.mContainsSetenv))
+		{
+// mk by CA
+			// Single item only
+			LLViewerInventoryItem* item = static_cast<LLViewerInventoryItem*>(getItem());
+			if (!item)
+				return;
+			LLUUID asset_id = item->getAssetUUID();
+			std::string name = item->getName();
 
-        U32 flags(0);
+			U32 flags(0);
 
-        if (!item->getPermissions().allowOperationBy(PERM_MODIFY, gAgent.getID()))
-            flags |= LLSettingsBase::FLAG_NOMOD;
-        if (!item->getPermissions().allowOperationBy(PERM_TRANSFER, gAgent.getID()))
-            flags |= LLSettingsBase::FLAG_NOTRANS;
+			if (!item->getPermissions().allowOperationBy(PERM_MODIFY, gAgent.getID()))
+				flags |= LLSettingsBase::FLAG_NOMOD;
+			if (!item->getPermissions().allowOperationBy(PERM_TRANSFER, gAgent.getID()))
+				flags |= LLSettingsBase::FLAG_NOTRANS;
 
-        LLParcel *parcel = LLViewerParcelMgr::instance().getAgentOrSelectedParcel();
-        if (!parcel)
-        {
-            LL_WARNS("INVENTORY") << "could not identify parcel." << LL_ENDL;
-            return;
-        }
-        S32 parcel_id = parcel->getLocalID();
+			LLParcel *parcel = LLViewerParcelMgr::instance().getAgentOrSelectedParcel();
+			if (!parcel)
+			{
+				LL_WARNS("INVENTORY") << "could not identify parcel." << LL_ENDL;
+				return;
+			}
+			S32 parcel_id = parcel->getLocalID();
 
-        LL_DEBUGS("ENVIRONMENT") << "Applying asset ID " << asset_id << " to parcel " << parcel_id << LL_ENDL;
-        LLEnvironment::instance().updateParcel(parcel_id, asset_id, name, LLEnvironment::NO_TRACK, -1, -1, flags);
-        LLEnvironment::instance().setSharedEnvironment();
+			LL_DEBUGS("ENVIRONMENT") << "Applying asset ID " << asset_id << " to parcel " << parcel_id << LL_ENDL;
+			LLEnvironment::instance().updateParcel(parcel_id, asset_id, name, LLEnvironment::NO_TRACK, -1, -1, flags);
+			LLEnvironment::instance().setSharedEnvironment();
+// MK by CA (nested if because we don't want this falling into the top level ELSE)
+		}
+// mk by CA
     }
     else
         LLItemBridge::performAction(model, action);
@@ -8106,10 +8120,16 @@ public:
             switch (type)
             {
             case LLSettingsType::ST_SKY:
-                LLFloaterReg::showInstance("env_fixed_environmentent_sky", LLSDMap("inventory_id", item->getUUID()), TAKE_FOCUS_YES);
+//MK : typo in the floater name
+////				LLFloaterReg::showInstance("env_fixed_environmentent_sky", LLSDMap("inventory_id", item->getUUID()), TAKE_FOCUS_YES);
+				LLFloaterReg::showInstance("env_fixed_environment_sky", LLSDMap("inventory_id", item->getUUID()), TAKE_FOCUS_YES);
+//mk
                 break;
             case LLSettingsType::ST_WATER:
-                LLFloaterReg::showInstance("env_fixed_environmentent_water", LLSDMap("inventory_id", item->getUUID()), TAKE_FOCUS_YES);
+//MK : typo in the floater name
+////				LLFloaterReg::showInstance("env_fixed_environmentent_water", LLSDMap("inventory_id", item->getUUID()), TAKE_FOCUS_YES);
+				LLFloaterReg::showInstance("env_fixed_environment_water", LLSDMap("inventory_id", item->getUUID()), TAKE_FOCUS_YES);
+//mk
                 break;
             case LLSettingsType::ST_DAYCYCLE:
                 LLFloaterReg::showInstance("env_edit_extdaycycle", LLSDMap("inventory_id", item->getUUID())("edit_context", "inventory"), TAKE_FOCUS_YES);

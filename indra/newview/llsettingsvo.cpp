@@ -66,7 +66,7 @@
 
 #include "lltrans.h"
 
-#undef  VERIFY_LEGACY_CONVERSION
+#undef  VERIFY_LEGACY_CONVERSION // The code for converting back is broken BUG-228508
 
 //=========================================================================
 namespace 
@@ -478,13 +478,13 @@ LLSettingsSky::ptr_t LLSettingsVOSky::buildFromLegacyPreset(const std::string &n
     LLSettingsSky::ptr_t skyp = std::make_shared<LLSettingsVOSky>(newsettings);
 
 #ifdef VERIFY_LEGACY_CONVERSION
-    LLSD oldsettings = LLSettingsVOSky::convertToLegacy(skyp, isAdvanced());
+    LLSD testsettings = LLSettingsVOSky::convertToLegacy(skyp, false);
 
-    if (!llsd_equals(oldsettings, oldsettings))
+    if (!llsd_equals(oldsettings, testsettings))
     {
         LL_WARNS("SKY") << "Conversion to/from legacy does not match!\n" 
             << "Old: " << oldsettings
-            << "new: " << oldsettings << LL_ENDL;
+            << "new: " << testsettings << LL_ENDL;
     }
 
 #endif
@@ -806,13 +806,13 @@ LLSettingsWater::ptr_t LLSettingsVOWater::buildFromLegacyPreset(const std::strin
     LLSettingsWater::ptr_t waterp = std::make_shared<LLSettingsVOWater>(newsettings);
 
 #ifdef VERIFY_LEGACY_CONVERSION
-    LLSD oldsettings = LLSettingsVOWater::convertToLegacy(waterp);
+    LLSD testsettings = LLSettingsVOWater::convertToLegacy(waterp);
 
-    if (!llsd_equals(oldsettings, oldsettings))
+    if (!llsd_equals(oldsettings, testsettings))
     {
         LL_WARNS("WATER") << "Conversion to/from legacy does not match!\n"
             << "Old: " << oldsettings
-            << "new: " << oldsettings << LL_ENDL;
+            << "new: " << testsettings << LL_ENDL;
     }
 
 #endif

@@ -63,6 +63,7 @@
 #include "llrendersphere.h"
 #include "llselectmgr.h"
 #include "llsettingssky.h" // new include for EEP
+#include "llsettingsvo.h" // new include for EEP
 #include "llspeakers.h"
 #include "llstartup.h"
 #include "llvoavatar.h"
@@ -121,7 +122,8 @@ F32 RRInterface::sLastAvatarZOffsetCommit = 1.f;
 F32 RRInterface::sLastOutfitChange = -1000.f;
 U32 RRInterface::mCamDistNbGradients = 40;
 BOOL RRInterface::sRenderLimitRenderedThisFrame = FALSE;
-
+F32 RRInterface::previousEastAngle = 0;
+F32 RRInterface::previousSunMoonPosition = 0;
 
 #if !defined(max)
 #define max(a, b)	((a) > (b) ? (a) : (b))
@@ -148,12 +150,178 @@ BOOL RRHelper::preventFloater(std::string floaterName)
 	else if (floaterName == "floater_my_inventory" && gAgent.mRRInterface.mContainsShowinv) return TRUE;
 	else if (floaterName == "rlv_console" && gAgent.mRRInterface.mContainsViewScript) return TRUE;
 
+	else if (gAgent.mRRInterface.mContainsSetenv)
+	{
+		if (floaterName == "env_post_process" || floaterName == "env_fixed_environment_water" || 
+			floaterName == "env_fixed_environment_sky" || floaterName == "env_adjust_snapshot" ||
+			floaterName == "env_edit_extdaycycle" || floaterName == "my_environments") return TRUE;
+	}
 	return FALSE;
 }
 
 static LLUUID current_handlecommand_caller;
 //ca
 
+namespace {
+		bool approx_equal(F32 f1, F32 f2)
+		{
+			// LL's is_approx_zero() returns incorrect results when fed values of different signs, eg +1 and -1
+			// So here's our own version which also preserves the signage of nearly zero values
+			return (fabs(f1 - f2) < 0.00001 && (signbit(f1) == signbit(f2)));
+		}
+	
+		void cleanMathFloat(F32 &f)
+		{
+			//make nearly 1 and nearly 0 exact and make sure we're not over 1 in either direction since sin & cos shouldn't ever do that
+			if (f < -1.0f) f = -1.0f;
+			else if (approx_equal(-1.0f, f)) f = -1.0f;
+			else if (approx_equal(-0.0f, f)) f = -0.0f;
+			else if (approx_equal( 0.0f, f)) f =  0.0f;
+			else if (approx_equal( 1.0f, f)) f =  1.0f;
+			else if (f > 1.0f) f = 1.0f;
+		}
+	
+		void cleanMathVector(LLVector3 &v)
+		{
+			cleanMathFloat(v.mV[0]);
+			cleanMathFloat(v.mV[1]);
+			cleanMathFloat(v.mV[2]);
+		}
+			
+    LLVector3 convert_direction_to_azimuth_and_elevation(LLVector3 dir)
+    {
+    	// The azimuth routine is adapted from a LL routine removed from llvosky when EEP was introduced for 
+			// azimuth and from current llsky for elevation
+			//
+			// WARNING: due to the way that LLQuaternion::setAngleToAxis is coded, and the fact that eastangle and
+			// sunmoonposition were defined as describing a whole circle rather than a semi-circle it's possible to
+			// describe any position on the sphere formed by eastangle/sunmoonposition in two ways. For example,
+			// eastangle=sunmoonposition=0 describes the same point as eastangle=sunmoonposition=0.5 
+			// Accordingly, it's not possible to reliably to do a read and derive both / modify one / write both
+			// back style implementation of setenv_eastangle/sunmoonposition. 
+			// For same reason, it's now strongly recommended that callers always read both sunmoonposition and 
+			// eastangle in case the returned value is part of the opposite pair to the one they expect.
+
+			// There are some special cases where we lose the ability to return one of two postions, such as when
+			// the elevation is directly up or directly down - in those situations azimuth could be anything since
+			// it's irrelevant. For these we try to help by returning our last used value through the setenv commands
+			
+			// Reminder of the vector content
+			// dir.mV[0] = cosAzimuth * cosElevation
+      // dir.mV[1] = sinAzimuth * cosElevation
+      // dir.mV[2] = sinElevation
+
+			// math errors can mean that what should be 0 isn't quite and same for 1 - by the time we see them here
+			// these values have been through trig functions and in and out of quaternion conversions
+			cleanMathVector(dir);
+			
+			F32 azimuth = 0.0f;
+			F32 elevation = 0.0f;
+			F32 xy_component = (F32) sqrt(dir.mV[VX] * dir.mV[VX] + dir.mV[VY] * dir.mV[VY]);
+			if (xy_component == 0.0f)
+			{
+				if (dir.mV[VZ] > 0.f)
+				{
+					elevation = F_PI_BY_TWO;
+					azimuth = RRInterface::previousEastAngle * -F_TWO_PI; // it could have been anything when set, so prefer a value we're aware of (note the negation)
+				}
+				else
+				{
+					elevation = -F_PI_BY_TWO;
+					azimuth = RRInterface::previousEastAngle * F_TWO_PI; // it could have been anything when set, so prefer a value we're aware of
+				}
+			}
+			else if ((fabs(dir.mV[VX]) == 1.0f) && dir.mV[VY] == 0.0f && dir.mV[VZ] == 0.0f)
+			{
+				// it should be the case that VX comes back as -1 in some cases, which would indicate that it's a case where azimuth is
+				// PI rather than zero, however it looks like we always get back 1,0,0 in this situation. We can't go any further on
+				// figuring out the azimuth because cos alt being zero has wiped out the value of sin azimuth in mV[VY]. The azimuth
+				// is 0 or +/PI and we can't tell which.
+				//
+				// We're in similar straits with the elevation. It too could be 0 or +-PI. If we could trust the sign of mV[VX] that
+				// would let us decide whether it's 0,PI and PI,0 or it's 0,0 or PI,PI
+				//
+				// The only option I see is to return our saved values if they are consistent with this situation. If they're not
+				// we'll fall back to returning one of the possibilities
+				
+				// at the moment elevation and azimuth are still initialised at zero; we'll return them as such if this test fails
+				if (approx_equal(fabs(sin(F_TWO_PI * RRInterface::previousEastAngle)), 0.0f)  && approx_equal(fabs(sin(F_TWO_PI * RRInterface::previousSunMoonPosition)), 0.0f))					
+				{
+					elevation = RRInterface::previousSunMoonPosition * F_TWO_PI;
+					azimuth = RRInterface::previousEastAngle * -F_TWO_PI;
+				}
+			}				
+			else
+			{
+				elevation = (F32) atan(dir.mV[VZ]/xy_component);
+										
+				if (dir.mV[VX] == 0.0f)
+				{
+					if (dir.mV[VY] > 0.0f)
+					{
+						azimuth = F_PI_BY_TWO;
+					}
+					else if (dir.mV[VY] < 0.0f)
+					{
+						azimuth = F_TWO_PI - F_PI_BY_TWO;
+					}
+				}
+				else
+				{
+					azimuth = (F32) atan(dir.mV[VY] / dir.mV[VX]);
+					if (dir.mV[VX] < 0.0f)
+					{
+						azimuth += F_PI;
+						elevation = F_PI - elevation;
+					}
+					else if (dir.mV[VY] < 0.0f)
+					{
+						azimuth += F_TWO_PI;
+						// no effect on elevation
+					}
+				}	
+			}
+			while (azimuth < 0)
+			{
+					azimuth += F_TWO_PI;
+			}
+			while (elevation < 0)
+			{
+				elevation += F_TWO_PI;
+			}
+    	return (LLVector3(azimuth, elevation, 0));
+    }
+
+		// Adopted from llsettingsksy
+    LLQuaternion convert_azimuth_and_elevation_to_quat(F32 azimuth, F32 elevation)
+    {
+    		// eastangle should be negated before calling to convert rotation direction to azimuth
+        F32 sinAzimuth = sin(azimuth);
+        F32 cosAzimuth = cos(azimuth);
+        F32 sinElevation   = sin(elevation);
+        F32 cosElevation   = cos(elevation);
+        
+        LLVector3 dir;
+        // +x right, +z up, +y at...	
+        dir.mV[0] = cosAzimuth * cosElevation;
+        dir.mV[1] = sinAzimuth * cosElevation;	
+        dir.mV[2] = sinElevation;
+
+        LLVector3 axis = LLVector3::x_axis % dir;
+        // this is a.mV[1]*b.mV[2] - b.mV[1]*a.mV[2], a.mV[2]*b.mV[0] - b.mV[2]*a.mV[0], a.mV[0]*b.mV[1] - b.mV[0]*a.mV[1]
+        // however a = <1,0,0> so this simplifies to
+        // 0-0, 0-bmV[2], bmV[1]-0
+        // ie axis=<0, -sinElevation, sinAzimuth * cosElevation>
+        axis.normalize();
+
+        F32 angle = acos(LLVector3::x_axis * dir); // ie x1x2+y1y2+z1z2, but y1=z1=0 and x1=1, so = dir.mV[0] = cosAzimuth * cosElevation
+
+        LLQuaternion quat;
+        quat.setAngleAxis(angle, axis);
+				LLVector3 test = convert_direction_to_azimuth_and_elevation(dir);
+        return quat;
+    }
+}
 // --
 // Local functions
 std::string dumpList2String (std::deque<std::string> list, std::string sep, int size = -1)
@@ -1071,18 +1239,15 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 			if (sRRNoSetEnv) {
 				return TRUE;
 			}
-//			LLFloaterEnvSettings::instance()->close();
-//			LLFloaterWater::instance()->close();
-//			LLFloaterPostProcess::instance()->close();
-//			LLFloaterDayCycle::instance()->close();
-//			LLFloaterWindLight::instance()->close();
+			// CA update this for EEP floaters
 			gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
 			gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE);
-			LLFloaterReg::hideInstance("env_settings");
-			LLFloaterReg::hideInstance("env_water");
 			LLFloaterReg::hideInstance("env_post_process");
-			LLFloaterReg::hideInstance("env_day_cycle");
-			LLFloaterReg::hideInstance("env_windlight");
+			LLFloaterReg::hideInstance("env_fixed_environment_water");
+			LLFloaterReg::hideInstance("env_fixed_environment_sky");
+			LLFloaterReg::hideInstance("env_edit_ext_daycycle");
+			LLFloaterReg::hideInstance("my_environments");
+			LLFloaterReg::hideInstance("env_adjust_snapshot");
 		}
 		else if (action=="setdebug") {
 			if (!sRRNoSetEnv) {
@@ -3742,43 +3907,78 @@ std::string RRInterface::getCensoredMessage (std::string str)
 	return str;
 #endif
 }
-
-#if 0
 void updateAndSave (WLColorControl* color)
 {
 	if (color == NULL) return;
-	color->i = color->r;
-	if (color->g > color->i) {
-		color->i = color->g;
+	color->setIntensity(color->getRed());
+	if (color->getGreen() > color->getIntensity()) {
+		color->setIntensity(color->getGreen());
 	}
-	if (color->b > color->i) {
-		color->i = color->b;
+	if (color->getBlue() > color->getIntensity()) {
+		color->setIntensity(color->getBlue());
 	}
-	color->update (LLWLParamManager::getInstance()->mCurParams);
+//	if (color == NULL) return;
+//	color->i = color->r;
+//	if (color->g > color->i) {
+//		color->i = color->g;
+//	}
+//	if (color->b > color->i) {
+//		color->i = color->b;
+//	}
+//	color->update (LLWLParamManager::getInstance()->mCurParams);
 }
 
 void updateAndSave (WLFloatControl* floatControl)
 {
-	if (floatControl == NULL) return;
-	floatControl->update (LLWLParamManager::getInstance()->mCurParams);
+//	if (floatControl == NULL) return;
+//	floatControl->update (LLWLParamManager::getInstance()->mCurParams);
 }
-#endif
 
 BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 {
-#if 0
 	// command is "setenv_<something>"
 	double val = atof (option.c_str());
 
 	int length = 7; // size of "setenv_"
 	command = command.substr (length);
-	LLWLParamManager* params = LLWLParamManager::getInstance();
+	//LLWLParamManager* params = LLWLParamManager::getInstance();
 
-	params->mAnimator.mIsRunning = false;
+	//params->mAnimator.mIsRunning = false;
 	//params->mAnimator.mUseLindenTime = false;
-	params->mAnimator.setTimeType(LLWLAnimator::TIME_CUSTOM);
+	//params->mAnimator.setTimeType(LLWLAnimator::TIME_CUSTOM);
+	
+	//adapted from llfloaterenvironmentadjust
+  LLEnvironment &environment(LLEnvironment::instance());
+  bool updatelocal(false);
+  LLSettingsSky::ptr_t        psky;
+    	
+  if (environment.hasEnvironment(LLEnvironment::ENV_LOCAL))
+  {
+      if (environment.getEnvironmentDay(LLEnvironment::ENV_LOCAL))
+      {   // We have a full day cycle in the local environment.  Freeze the sky
+          psky = environment.getEnvironmentFixedSky(LLEnvironment::ENV_LOCAL)->buildClone();
+          updatelocal = true;
+      }
+      else
+      {   // otherwise we can just use the sky.
+          psky = environment.getEnvironmentFixedSky(LLEnvironment::ENV_LOCAL);
+      }
+  }
+  else
+  {
+      psky = environment.getEnvironmentFixedSky(LLEnvironment::ENV_PARCEL, true)->buildClone();
+      updatelocal = true;
+  }
+
+  if (updatelocal)
+  {
+      environment.setEnvironment(LLEnvironment::ENV_LOCAL,  psky, 0);
+  }
+  environment.setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
+  environment.updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 
 	if (command == "daytime") {
+		/*** NEEDS CHANGE FOR EEP ***
 		if (val > 1.0) val = 1.0;
 		if (val >= 0.0) {
 			params->mAnimator.setDayTime(val);
@@ -3790,223 +3990,477 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 			LLWLParamManager::getInstance()->mAnimator.setTimeType(LLWLAnimator::TIME_LINDEN);
 			LLEnvManagerNew::instance().useRegionSettings();
 		}
+		***/
 	}
 	else if (command == "bluehorizonr") {
-		params->mBlueHorizon.r = val*2;
-		updateAndSave (&(params->mBlueHorizon));
+		LLColor3 bluehorizon=psky->getBlueHorizon();
+		bluehorizon.mV[0] = val * 2;
+		psky->setBlueHorizon(bluehorizon);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mBlueHorizon.r = val*2;
+		//updateAndSave (&(params->mBlueHorizon));
 	}
 	else if (command == "bluehorizong") {
-		params->mBlueHorizon.g = val*2;
-		updateAndSave (&(params->mBlueHorizon));
+		LLColor3 bluehorizon=psky->getBlueHorizon();
+		bluehorizon.mV[1] = val * 2;
+		psky->setBlueHorizon(bluehorizon);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mBlueHorizon.g = val*2;
+		//updateAndSave (&(params->mBlueHorizon));
 	}
 	else if (command == "bluehorizonb") {
-		params->mBlueHorizon.b = val*2;
-		updateAndSave (&(params->mBlueHorizon));
+		LLColor3 bluehorizon=psky->getBlueHorizon();
+		bluehorizon.mV[2] = val * 2;
+		psky->setBlueHorizon(bluehorizon);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mBlueHorizon.b = val*2;
+		//updateAndSave (&(params->mBlueHorizon));
 	}
 	else if (command == "bluehorizoni") {
-		F32 old_intensity = llmax(params->mBlueHorizon.r, params->mBlueHorizon.g, params->mBlueHorizon.b);
+		LLColor3 bluehorizon=psky->getBlueHorizon();
+		F32 old_intensity = llmax(bluehorizon.mV[0], bluehorizon.mV[1], bluehorizon.mV[2]);
 		if (val == 0 || old_intensity == 0) {
-			params->mBlueHorizon.r = params->mBlueHorizon.g = params->mBlueHorizon.b = val * 2;
+			bluehorizon.mV[0] = bluehorizon.mV[1] = bluehorizon.mV[2] = val * 2;
 		}
 		else {
-			params->mBlueHorizon.r *= val * 2 / old_intensity;
-			params->mBlueHorizon.g *= val * 2 / old_intensity;
-			params->mBlueHorizon.b *= val * 2 / old_intensity;
+			bluehorizon.mV[0] *= val * 2 / old_intensity;
+			bluehorizon.mV[1] *= val * 2 / old_intensity;
+			bluehorizon.mV[2] *= val * 2 / old_intensity;
 		}
-		updateAndSave(&(params->mBlueHorizon));
+		psky->setBlueHorizon(bluehorizon);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//F32 old_intensity = llmax(params->mBlueHorizon.r, params->mBlueHorizon.g, params->mBlueHorizon.b);
+		//if (val == 0 || old_intensity == 0) {
+		//	params->mBlueHorizon.r = params->mBlueHorizon.g = params->mBlueHorizon.b = val * 2;
+		//}
+		//else {
+		//	params->mBlueHorizon.r *= val * 2 / old_intensity;
+		//	params->mBlueHorizon.g *= val * 2 / old_intensity;
+		//	params->mBlueHorizon.b *= val * 2 / old_intensity;
+		//}
+		//updateAndSave(&(params->mBlueHorizon));
 	}
 
 	else if (command == "bluedensityr") {
-		params->mBlueDensity.r = val*2;
-		updateAndSave (&(params->mBlueDensity));
+		LLColor3 bluedensity=psky->getBlueDensity();
+		bluedensity.mV[0] = val * 2;
+		psky->setBlueDensity(bluedensity);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mBlueDensity.r = val*2;
+		//updateAndSave (&(params->mBlueDensity));
 	}
 	else if (command == "bluedensityg") {
-		params->mBlueDensity.g = val*2;
-		updateAndSave (&(params->mBlueDensity));
+		LLColor3 bluedensity=psky->getBlueDensity();
+		bluedensity.mV[1] = val * 2;
+		psky->setBlueDensity(bluedensity);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mBlueDensity.g = val*2;
+		//updateAndSave (&(params->mBlueDensity));
 	}
 	else if (command == "bluedensityb") {
-		params->mBlueDensity.b = val*2;
-		updateAndSave (&(params->mBlueDensity));
+		LLColor3 bluedensity=psky->getBlueDensity();
+		bluedensity.mV[2] = val * 2;
+		psky->setBlueDensity(bluedensity);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mBlueDensity.b = val*2;
+		//updateAndSave (&(params->mBlueDensity));
 	}
 	else if (command == "bluedensityi") {
-		F32 old_intensity = llmax(params->mBlueDensity.r, params->mBlueDensity.g, params->mBlueDensity.b);
+		LLColor3 bluedensity=psky->getBlueDensity();
+		F32 old_intensity = llmax(bluedensity.mV[0], bluedensity.mV[1], bluedensity.mV[2]);
 		if (val == 0 || old_intensity == 0) {
-			params->mBlueDensity.r = params->mBlueDensity.g = params->mBlueDensity.b = val * 2;
+			bluedensity.mV[0] = bluedensity.mV[1] = bluedensity.mV[2] = val * 2;
 		}
 		else {
-			params->mBlueDensity.r *= val * 2 / old_intensity;
-			params->mBlueDensity.g *= val * 2 / old_intensity;
-			params->mBlueDensity.b *= val * 2 / old_intensity;
+			bluedensity.mV[0] *= val * 2 / old_intensity;
+			bluedensity.mV[1] *= val * 2 / old_intensity;
+			bluedensity.mV[2] *= val * 2 / old_intensity;
 		}
-		updateAndSave(&(params->mBlueDensity));
+		psky->setBlueDensity(bluedensity);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//F32 old_intensity = llmax(params->mBlueDensity.r, params->mBlueDensity.g, params->mBlueDensity.b);
+		//if (val == 0 || old_intensity == 0) {
+		//	params->mBlueDensity.r = params->mBlueDensity.g = params->mBlueDensity.b = val * 2;
+		//}
+		//else {
+		//	params->mBlueDensity.r *= val * 2 / old_intensity;
+		//	params->mBlueDensity.g *= val * 2 / old_intensity;
+		//	params->mBlueDensity.b *= val * 2 / old_intensity;
+		//}
+		//updateAndSave(&(params->mBlueDensity));
 	}
 
 	else if (command == "hazehorizon") {
-		params->mHazeHorizon.x = val*2;
-		updateAndSave (&(params->mHazeHorizon));
+		psky->setHazeHorizon(val); // original bug, slider only goes up to 1.0
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mHazeHorizon.x = val*2;
+		//updateAndSave (&(params->mHazeHorizon));
 	}
 	else if (command == "hazedensity") {
-		params->mHazeDensity.x = val*2;
-		updateAndSave (&(params->mHazeDensity));
+		psky->setHazeDensity(val * 4); // original bug, slider goes up to 4.0
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mHazeDensity.x = val*2;
+		//updateAndSave (&(params->mHazeDensity));
 	}
 
 	else if (command == "densitymultiplier") {
-		params->mDensityMult.x = val / 1000;
-		params->mDensityMult.mult = 1.0;
-		updateAndSave (&(params->mDensityMult));
+		psky->setDensityMultiplier(val / 1000);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mDensityMult.x = val / 1000;
+		//params->mDensityMult.mult = 1.0;
+		//updateAndSave (&(params->mDensityMult));
 //		LLWaterParamManager* water_params = LLWaterParamManager::instance();
 //		water_params->mFogDensity.mExp = 5.0;
 //		water_params->mFogDensity.update (water_params->mCurParams);
 	}
 	else if (command == "distancemultiplier") {
-		params->mDistanceMult.x = val;
-		params->mDistanceMult.mult = 1.0;
-		updateAndSave (&(params->mDistanceMult));
+		psky->setDistanceMultiplier(val);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mDistanceMult.x = val;
+		//params->mDistanceMult.mult = 1.0;
+		//updateAndSave (&(params->mDistanceMult));
 //		LLWaterParamManager* water_params = LLWaterParamManager::instance();
 //		water_params->mUnderWaterFogMod.mX = 1.0;
 //		water_params->mUnderWaterFogMod.update (water_params->mCurParams);
 	}
 	else if (command == "maxaltitude") {
-		params->mMaxAlt.x = val;
-		updateAndSave (&(params->mMaxAlt));
+		psky->setMaxY(val);
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mMaxAlt.x = val;
+		//updateAndSave (&(params->mMaxAlt));
 	}
 
 	else if (command == "sunmooncolorr") {
-		params->mSunlight.r = val*3;
-		updateAndSave (&(params->mSunlight));
+		LLColor3 suncolour=psky->getSunlightColor();
+		suncolour.mV[0] = val * 3;
+		psky->setSunlightColor(suncolour);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mSunlight.r = val*3;
+		//updateAndSave (&(params->mSunlight));
 	}
 	else if (command == "sunmooncolorg") {
-		params->mSunlight.g = val*3;
-		updateAndSave (&(params->mSunlight));
+		LLColor3 suncolour=psky->getSunlightColor();
+		suncolour.mV[1] = val * 3;
+		psky->setSunlightColor(suncolour);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mSunlight.g = val*3;
+		//updateAndSave (&(params->mSunlight));
 	}
 	else if (command == "sunmooncolorb") {
-		params->mSunlight.b = val*3;
-		updateAndSave (&(params->mSunlight));
+		LLColor3 suncolour=psky->getSunlightColor();
+		suncolour.mV[2] = val * 3;
+		psky->setSunlightColor(suncolour);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mSunlight.b = val*3;
+		//updateAndSave (&(params->mSunlight));
 	}
 	else if (command == "sunmooncolori") {
-		F32 old_intensity = llmax(params->mSunlight.r, params->mSunlight.g, params->mSunlight.b);
+		LLColor3 suncolor=psky->getSunlightColor();
+		F32 old_intensity = llmax(suncolor.mV[0], suncolor.mV[1], suncolor.mV[2]);
+		// original bug, *2 used here, *3 elsewhere for sunmooncolor
 		if (val == 0 || old_intensity == 0) {
-			params->mSunlight.r = params->mSunlight.g = params->mSunlight.b = val * 2;
+			suncolor.mV[0] = suncolor.mV[1] = suncolor.mV[2] = val * 3;
 		}
 		else {
-			params->mSunlight.r *= val * 2 / old_intensity;
-			params->mSunlight.g *= val * 2 / old_intensity;
-			params->mSunlight.b *= val * 2 / old_intensity;
+			suncolor.mV[0] *= val * 3 / old_intensity;
+			suncolor.mV[1] *= val * 3 / old_intensity;
+			suncolor.mV[2] *= val * 3 / old_intensity;
 		}
-		updateAndSave(&(params->mSunlight));
+		psky->setSunlightColor(suncolor);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//F32 old_intensity = llmax(params->mSunlight.r, params->mSunlight.g, params->mSunlight.b);
+		//if (val == 0 || old_intensity == 0) {
+		//	params->mSunlight.r = params->mSunlight.g = params->mSunlight.b = val * 2;
+		//}
+		//else {
+		//	params->mSunlight.r *= val * 2 / old_intensity;
+		//	params->mSunlight.g *= val * 2 / old_intensity;
+		//	params->mSunlight.b *= val * 2 / old_intensity;
+		//}
+		//updateAndSave(&(params->mSunlight));
 	}
 
 	else if (command == "ambientr") {
-		params->mAmbient.r = val*3;
-		updateAndSave (&(params->mAmbient));
+		LLColor3 ambientcolor=psky->getAmbientColor();
+		ambientcolor.mV[0] = val * 3;
+		psky->setAmbientColor(ambientcolor);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mAmbient.r = val*3;
+		//updateAndSave (&(params->mAmbient));
 	}
 	else if (command == "ambientg") {
-		params->mAmbient.g = val*3;
-		updateAndSave (&(params->mAmbient));
+		LLColor3 ambientcolor=psky->getAmbientColor();
+		ambientcolor.mV[1] = val * 3;
+		psky->setAmbientColor(ambientcolor);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mAmbient.g = val*3;
+		//updateAndSave (&(params->mAmbient));
 	}
 	else if (command == "ambientb") {
-		params->mAmbient.b = val*3;
-		updateAndSave (&(params->mAmbient));
+		LLColor3 ambientcolor=psky->getAmbientColor();
+		ambientcolor.mV[2] = val * 3;
+		psky->setAmbientColor(ambientcolor);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mAmbient.b = val*3;
+		//updateAndSave (&(params->mAmbient));
 	}
 	else if (command == "ambienti") {
-		F32 old_intensity = llmax(params->mAmbient.r, params->mAmbient.g, params->mAmbient.b);
+		LLColor3 ambientcolor=psky->getAmbientColor();
+		F32 old_intensity = llmax(ambientcolor.mV[0], ambientcolor.mV[1], ambientcolor.mV[2]);
+		// original bug, *2 used here, *3 used in r/g/b, use *3 too
 		if (val == 0 || old_intensity == 0) {
-			params->mAmbient.r = params->mAmbient.g = params->mAmbient.b = val * 2;
+			ambientcolor.mV[0] = ambientcolor.mV[1] = ambientcolor.mV[2] = val * 3;
 		}
 		else {
-			params->mAmbient.r *= val * 2 / old_intensity;
-			params->mAmbient.g *= val * 2 / old_intensity;
-			params->mAmbient.b *= val * 2 / old_intensity;
+			ambientcolor.mV[0] *= val * 3 / old_intensity;
+			ambientcolor.mV[1] *= val * 3 / old_intensity;
+			ambientcolor.mV[2] *= val * 3 / old_intensity;
 		}
-		updateAndSave(&(params->mAmbient));
+		psky->setAmbientColor(ambientcolor);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//F32 old_intensity = llmax(params->mAmbient.r, params->mAmbient.g, params->mAmbient.b);
+		//if (val == 0 || old_intensity == 0) {
+		//	params->mAmbient.r = params->mAmbient.g = params->mAmbient.b = val * 2;
+		//}
+		//else {
+		//	params->mAmbient.r *= val * 2 / old_intensity;
+		//	params->mAmbient.g *= val * 2 / old_intensity;
+		//	params->mAmbient.b *= val * 2 / old_intensity;
+		//}
+		//updateAndSave(&(params->mAmbient));
 	}
 	else if (command == "sunglowfocus") {
-		params->mGlow.b = -val*5;
-		updateAndSave (&(params->mGlow));
+		// still needs a fudge to match UI values to internal
+		LLColor3 glow=psky->getGlow();
+		glow.mV[2] = val * -5; // 5 is SLIDER_SCALE_GLOW_B, negation is intended
+		psky->setGlow(glow);
+		psky->update();		
+		//params->mGlow.b = -val*5;
+		//updateAndSave (&(params->mGlow));
 	}
 	else if (command == "sunglowsize") {
-		params->mGlow.r = (2-val)*20;
-		updateAndSave (&(params->mGlow));
+		// still needs a fudge to match UI values to internal
+		LLColor3 glow=psky->getGlow();
+		glow.mV[0] = (2-val)*20; // 2 is max of UI, 20 is SLIDER_SCALE_GLOW_R
+		psky->setGlow(glow);
+		psky->update();		
+		//params->mGlow.r = (2-val)*20;
+		//updateAndSave (&(params->mGlow));
 	}
 	else if (command == "scenegamma") {
-		params->mWLGamma.x = val;
-		updateAndSave (&(params->mWLGamma));
+		psky->setGamma(val);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mWLGamma.x = val;
+		//updateAndSave (&(params->mWLGamma));
 	}
-	else if (command == "sunmoonposition") {
-		params->mCurParams.setSunAngle (F_TWO_PI * val);
-	}
-	else if (command == "eastangle") {
-		params->mCurParams.setEastAngle (F_TWO_PI * val);
+	//else if (command == "sunmoonposition") {
+		// replaced by combined routine below
+		//params->mCurParams.setSunAngle (F_TWO_PI * val);
+	//}
+	//else if (command == "eastangle") {
+		// replaced by combined routine below
+		//params->mCurParams.setEastAngle (F_TWO_PI * val);
+	//}
+	else if (command == "sunmoonposition" || command == "eastangle")
+	{
+		// It's not possible to reliable read back these values because any point on the eastangle/sunmoonposition sphere
+		// can be described two ways and it's indeterminate whether the one you read back is the one you were expecting.
+		// Instead we remember the previous value used and use it again here alongside the newly specified value.
+		LLVector3 east_sun(previousEastAngle * F_TWO_PI, previousSunMoonPosition * F_TWO_PI, 0.0);
+		
+		// make sure val is in range (0.0-1.0 for both)
+		while (val < 0.0)
+		{
+			val += 1.0;
+		}
+		while (val > 1.0)
+		{
+			val -= 1.0;
+		}
+		
+    if (command == "eastangle")
+    {
+    	east_sun.mV[0] = F_TWO_PI * val;
+    	previousEastAngle = val;
+    }
+    else // it's sunmoonposition
+    {
+    	east_sun.mV[1] = F_TWO_PI * val;
+    	previousSunMoonPosition = val;
+    }
+
+    LLQuaternion sunquat  = convert_azimuth_and_elevation_to_quat(-east_sun.mV[0], east_sun.mV[1]);
+    // original WL moon dir was diametrically opposed to the sun dir
+    LLQuaternion moonquat = convert_azimuth_and_elevation_to_quat(-east_sun.mV[0] + F_PI, -east_sun.mV[1]);
+    psky->setMoonRotation(moonquat);
+    psky->setSunRotation(sunquat);
+ 		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);   
 	}
 	else if (command == "starbrightness") {
-		params->mCurParams.setStarBrightness (val);
+		psky->setStarBrightness(val);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCurParams.setStarBrightness (val);
 	}
 
 	else if (command == "cloudcolorr") {
-		params->mCloudColor.r = val;
-		updateAndSave (&(params->mCloudColor));
+		LLColor3 cloudcolor=psky->getCloudColor();
+		cloudcolor.mV[0] = val;
+		psky->setCloudColor(cloudcolor);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCloudColor.r = val;
+		//updateAndSave (&(params->mCloudColor));
 	}
 	else if (command == "cloudcolorg") {
-		params->mCloudColor.g = val;
-		updateAndSave (&(params->mCloudColor));
+		LLColor3 cloudcolor=psky->getCloudColor();
+		cloudcolor.mV[1] = val;
+		psky->setCloudColor(cloudcolor);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCloudColor.g = val;
+		//updateAndSave (&(params->mCloudColor));
 	}
 	else if (command == "cloudcolorb") {
-		params->mCloudColor.b = val;
-		updateAndSave (&(params->mCloudColor));
+		LLColor3 cloudcolor=psky->getCloudColor();
+		cloudcolor.mV[2] = val;
+		psky->setCloudColor(cloudcolor);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCloudColor.b = val;
+		//updateAndSave (&(params->mCloudColor));
 	}
 	else if (command == "cloudcolori") {
-		F32 old_intensity = llmax(params->mCloudColor.r, params->mCloudColor.g, params->mCloudColor.b);
+		LLColor3 cloudcolor=psky->getCloudColor();
+		F32 old_intensity = llmax(cloudcolor.mV[0], cloudcolor.mV[1], cloudcolor.mV[2]);
+		// original bug: *2 used here *1 for other setters, change to *1
 		if (val == 0 || old_intensity == 0) {
-			params->mCloudColor.r = params->mCloudColor.g = params->mCloudColor.b = val * 2;
+			cloudcolor.mV[0] = cloudcolor.mV[1] = cloudcolor.mV[2] = val;
 		}
 		else {
-			params->mCloudColor.r *= val * 2 / old_intensity;
-			params->mCloudColor.g *= val * 2 / old_intensity;
-			params->mCloudColor.b *= val * 2 / old_intensity;
+			cloudcolor.mV[0] *= val / old_intensity;
+			cloudcolor.mV[1] *= val / old_intensity;
+			cloudcolor.mV[2] *= val / old_intensity;
 		}
-		updateAndSave(&(params->mCloudColor));
+		psky->setCloudColor(cloudcolor);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//F32 old_intensity = llmax(params->mCloudColor.r, params->mCloudColor.g, params->mCloudColor.b);
+		//if (val == 0 || old_intensity == 0) {
+		//	params->mCloudColor.r = params->mCloudColor.g = params->mCloudColor.b = val * 2;
+		//}
+		//else {
+		//	params->mCloudColor.r *= val * 2 / old_intensity;
+		//	params->mCloudColor.g *= val * 2 / old_intensity;
+		//	params->mCloudColor.b *= val * 2 / old_intensity;
+		//}
+		//updateAndSave(&(params->mCloudColor));
 	}
 
 	else if (command == "cloudx") {
-		params->mCloudMain.r = val;
-		updateAndSave (&(params->mCloudMain));
+		LLColor3 clouddetail=psky->getCloudPosDensity1();
+		clouddetail.mV[0] = val;
+		psky->setCloudPosDensity1(clouddetail);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCloudMain.r = val;
+		//updateAndSave (&(params->mCloudMain));
 	}
 	else if (command == "cloudy") {
-		params->mCloudMain.g = val;
-		updateAndSave (&(params->mCloudMain));
+		LLColor3 clouddetail=psky->getCloudPosDensity1();
+		clouddetail.mV[1] = val;
+		psky->setCloudPosDensity1(clouddetail);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCloudMain.g = val;
+		//updateAndSave (&(params->mCloudMain));
 	}
 	else if (command == "cloudd") {
-		params->mCloudMain.b = val;
-		updateAndSave (&(params->mCloudMain));
+		LLColor3 clouddetail=psky->getCloudPosDensity1();
+		clouddetail.mV[2] = val;
+		psky->setCloudPosDensity1(clouddetail);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCloudMain.b = val;
+		//updateAndSave (&(params->mCloudMain));
 	}
 
 	else if (command == "clouddetailx") {
-		params->mCloudDetail.r = val;
-		updateAndSave (&(params->mCloudDetail));
+		LLColor3 clouddetail=psky->getCloudPosDensity2();
+		clouddetail.mV[0] = val;
+		psky->setCloudPosDensity2(clouddetail);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCloudDetail.r = val;
+		//updateAndSave (&(params->mCloudDetail));
 	}
 	else if (command == "clouddetaily") {
-		params->mCloudDetail.g = val;
-		updateAndSave (&(params->mCloudDetail));
+		LLColor3 clouddetail=psky->getCloudPosDensity2();
+		clouddetail.mV[1] = val;
+		psky->setCloudPosDensity2(clouddetail);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCloudDetail.g = val;
+		//updateAndSave (&(params->mCloudDetail));
 	}
 	else if (command == "clouddetaild") {
-		params->mCloudDetail.b = val;
-		updateAndSave (&(params->mCloudDetail));
+		LLColor3 clouddetail=psky->getCloudPosDensity2();
+		clouddetail.mV[2] = val;
+		psky->setCloudPosDensity2(clouddetail);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCloudDetail.b = val;
+		//updateAndSave (&(params->mCloudDetail));
 	}
 
 	else if (command == "cloudcoverage") {
-		params->mCloudCoverage.x = val;
-		updateAndSave (&(params->mCloudCoverage));
+		psky->setCloudShadow(val);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCloudCoverage.x = val;
+		//updateAndSave (&(params->mCloudCoverage));
 	}
 	else if (command == "cloudscale") {
-		params->mCloudScale.x = val;
-		updateAndSave (&(params->mCloudScale));
+		psky->setCloudScale(val);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCloudScale.x = val;
+		//updateAndSave (&(params->mCloudScale));
 	}
 
 	else if (command == "cloudscrollx") {
-		params->mCurParams.setCloudScrollX (val+10);
+		psky->setCloudScrollRateX(val + 10);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCurParams.setCloudScrollX (val+10);
 	}
 	else if (command == "cloudscrolly") {
-		params->mCurParams.setCloudScrollY (val+10);
+		psky->setCloudScrollRateY(val + 10);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCurParams.setCloudScrollY (val+10);
 	}
 	// sunglowfocus 0-0.5, sunglowsize 0-2, scenegamma 0-10, starbrightness 0-2
 	// cloudcolor rgb 0-1, cloudxydensity xyd 0-1, cloudcoverage 0-1, cloudscale 0-1, clouddetail xyd 0-1
@@ -4014,86 +4468,163 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 
 	else if (command == "preset") {
 //		params->loadPreset (option);
+		/*** NEEDS CHANGE FOR EEP ***
 		LLEnvManagerNew::getInstance()->useSkyPreset(option);
+		***/
 	}
 
 	// send the current parameters to shaders
+	/*** NEEDS CHANGE FOR EEP ***
 	LLWLParamManager::getInstance()->propagateParameters();
-#endif
+	***/
 	return TRUE;
 }
 
 std::string RRInterface::getEnvironment (std::string command)
 {
 	F64 res = 0;
-#if 0
 	int length = 7; // size of "getenv_"
 	command = command.substr (length);
-	LLWLParamManager* params = LLWLParamManager::getInstance();
+	//LLWLParamManager* params = LLWLParamManager::getInstance();
+	LLSettingsSky::ptr_t psky = LLEnvironment::instance().getCurrentSky();
+	bool preformatted = false; // true if the routine wants to set up its own response
+	std::stringstream str; // needs definition here so that preformatting routines can write direct
 
 	if (command == "daytime") {
+		/*** NEEDS CHANGE FOR EEP ***
 		if (params->mAnimator.mIsRunning && params->mAnimator.getTimeType() == LLWLAnimator::TIME_LINDEN) res = -1;
 		else res = params->mAnimator.getDayTime();
+		***/
 	}
 
-	else if (command == "bluehorizonr") res = params->mBlueHorizon.r/2;
-	else if (command == "bluehorizong") res = params->mBlueHorizon.g/2;
-	else if (command == "bluehorizonb") res = params->mBlueHorizon.b/2;
-	else if (command == "bluehorizoni") res = max (max (params->mBlueHorizon.r, params->mBlueHorizon.g), params->mBlueHorizon.b) / 2;
+	else if (command == "bluehorizonr") res = (psky->getBlueHorizon().mV[0])/2;
+	else if (command == "bluehorizong") res = (psky->getBlueHorizon().mV[1])/2;
+	else if (command == "bluehorizonb") res = (psky->getBlueHorizon().mV[2])/2;
+	else if (command == "bluehorizoni") res = max (max (psky->getBlueHorizon().mV[0], psky->getBlueHorizon().mV[1]), psky->getBlueHorizon().mV[2]) / 2;
+	//else if (command == "bluehorizonr") res = params->mBlueHorizon.r/2;
+	//else if (command == "bluehorizong") res = params->mBlueHorizon.g/2;
+	//else if (command == "bluehorizonb") res = params->mBlueHorizon.b/2;
+	//else if (command == "bluehorizoni") res = max (max (params->mBlueHorizon.r, params->mBlueHorizon.g), params->mBlueHorizon.b) / 2;
 
-	else if (command == "bluedensityr") res = params->mBlueDensity.r/2;
-	else if (command == "bluedensityg") res = params->mBlueDensity.g/2;
-	else if (command == "bluedensityb") res = params->mBlueDensity.b/2;
-	else if (command == "bluedensityi") res = max (max (params->mBlueDensity.r, params->mBlueDensity.g), params->mBlueDensity.b) / 2;
+	else if (command == "bluedensityr") res = (psky->getBlueDensity().mV[0])/2;
+	else if (command == "bluedensityg") res = (psky->getBlueDensity().mV[1])/2;
+	else if (command == "bluedensityb") res = (psky->getBlueDensity().mV[2])/2;
+	else if (command == "bluedensityi") res = max (max (psky->getBlueDensity().mV[0], psky->getBlueDensity().mV[1]), psky->getBlueDensity().mV[2]) / 2;
+	//else if (command == "bluedensityr") res = params->mBlueDensity.r/2;
+	//else if (command == "bluedensityg") res = params->mBlueDensity.g/2;
+	//else if (command == "bluedensityb") res = params->mBlueDensity.b/2;
+	//else if (command == "bluedensityi") res = max (max (params->mBlueDensity.r, params->mBlueDensity.g), params->mBlueDensity.b) / 2;
 
-	else if (command == "hazehorizon")  res = params->mHazeHorizon.x;
-	else if (command == "hazedensity")  res = params->mHazeDensity.x;
+	else if (command == "hazehorizon")  res = psky->getHazeHorizon();
+	else if (command == "hazedensity")  res = psky->getHazeDensity() / 4; //original bug: windlight slider goes up to 4
+	//else if (command == "hazehorizon")  res = params->mHazeHorizon.x;
+	//else if (command == "hazedensity")  res = params->mHazeDensity.x;
 
-	else if (command == "densitymultiplier")  res = params->mDensityMult.x*1000;
-	else if (command == "distancemultiplier") res = params->mDistanceMult.x;
-	else if (command == "maxaltitude")        res = params->mMaxAlt.x;
+	else if (command == "densitymultiplier")  res = psky->getDensityMultiplier()*1000;
+	else if (command == "distancemultiplier") res = psky->getDistanceMultiplier();
+	else if (command == "maxaltitude")        res = psky->getMaxY();
+	//else if (command == "densitymultiplier")  res = params->mDensityMult.x*1000;
+	//else if (command == "distancemultiplier") res = params->mDistanceMult.x;
+	//else if (command == "maxaltitude")        res = params->mMaxAlt.x;
 
-	else if (command == "sunmooncolorr") res = params->mSunlight.r/3;
-	else if (command == "sunmooncolorg") res = params->mSunlight.g/3;
-	else if (command == "sunmooncolorb") res = params->mSunlight.b/3;
-	else if (command == "sunmooncolori") res = max (max (params->mSunlight.r, params->mSunlight.g), params->mSunlight.b) / 3;
+	else if (command == "sunmooncolorr") res = (psky->getSunlightColor().mV[0])/3;
+	else if (command == "sunmooncolorg") res = (psky->getSunlightColor().mV[1])/3;
+	else if (command == "sunmooncolorb") res = (psky->getSunlightColor().mV[2])/3;
+	else if (command == "sunmooncolori") res = max (max (psky->getSunlightColor().mV[0], psky->getSunlightColor().mV[1]), psky->getSunlightColor().mV[2]) / 3;
+	//else if (command == "sunmooncolorr") res = params->mSunlight.r/3;
+	//else if (command == "sunmooncolorg") res = params->mSunlight.g/3;
+	//else if (command == "sunmooncolorb") res = params->mSunlight.b/3;
+	//else if (command == "sunmooncolori") res = max (max (params->mSunlight.r, params->mSunlight.g), params->mSunlight.b) / 3;
 
-	else if (command == "ambientr") res = params->mAmbient.r/3;
-	else if (command == "ambientg") res = params->mAmbient.g/3;
-	else if (command == "ambientb") res = params->mAmbient.b/3;
-	else if (command == "ambienti") res = max (max (params->mAmbient.r, params->mAmbient.g), params->mAmbient.b) / 3;
+	else if (command == "ambientr") res = (psky->getAmbientColor().mV[0])/3;
+	else if (command == "ambientg") res = (psky->getAmbientColor().mV[1])/3;
+	else if (command == "ambientb") res = (psky->getAmbientColor().mV[2])/3;
+	else if (command == "ambienti") res = max (max (psky->getAmbientColor().mV[0], psky->getAmbientColor().mV[1]), psky->getAmbientColor().mV[2]) / 3;
+	//else if (command == "ambientr") res = params->mAmbient.r/3;
+	//else if (command == "ambientg") res = params->mAmbient.g/3;
+	//else if (command == "ambientb") res = params->mAmbient.b/3;
+	//else if (command == "ambienti") res = max (max (params->mAmbient.r, params->mAmbient.g), params->mAmbient.b) / 3;
 
-	else if (command == "sunglowfocus")	res = -params->mGlow.b/5;
-	else if (command == "sunglowsize")		res = 2-params->mGlow.r/20;
-	else if (command == "scenegamma")		res = params->mWLGamma.x;
+	if (command == "sunglowfocus")	res = (-psky->getGlow().mV[2]) / 5; // negation is intended, 5 is SLIDER_SCALE_GLOW_B
+	//else if (command == "sunglowfocus")	res = -params->mGlow.b/5;
+	if (command == "sunglowsize")		res = 2 - psky->getGlow().mV[0] / 20; // 2 is UI size, 20 is SLIDER_SCALE_GLOW_R
+	//else if (command == "sunglowsize")		res = 2-params->mGlow.r/20;
+	else if (command == "scenegamma")		res = psky->getGamma();
+	//else if (command == "scenegamma")		res = params->mWLGamma.x;
 
-	else if (command == "sunmoonposition")		res = params->mCurParams.getSunAngle()/F_TWO_PI;
-	else if (command == "eastangle")			res = params->mCurParams.getEastAngle()/F_TWO_PI;
-	else if (command == "starbrightness")		res = params->mCurParams.getStarBrightness();
+	//else if (command == "sunmoonposition")		res = params->mCurParams.getSunAngle()/F_TWO_PI;
+	//else if (command == "eastangle")			res = params->mCurParams.getEastAngle()/F_TWO_PI;
+	
+	else if (command=="eastangle" || command=="sunmoonposition")
+	{
+		// It's debatable whether this should return live values read back from the system or the local
+		// values used to pair with with a setenv command. We'll go the live value route since it's
+		// quite possible that things have changed since RLV was last used to write the environment 
+		//
+		// This routine has an experimental extension where it can return value,value. Comment out if not desired.
+		//
 
-	else if (command == "cloudcolorr") res = params->mCloudColor.r;
-	else if (command == "cloudcolorg") res = params->mCloudColor.g;
-	else if (command == "cloudcolorb") res = params->mCloudColor.b;
-	else if (command == "cloudcolori") res = max (max (params->mCloudColor.r, params->mCloudColor.g), params->mCloudColor.b);
+		LLVector3 az_alt = convert_direction_to_azimuth_and_elevation(psky->getSunDirection());
 
-	else if (command == "cloudx")  res = params->mCloudMain.r;
-	else if (command == "cloudy")  res = params->mCloudMain.g;
-	else if (command == "cloudd")  res = params->mCloudMain.b;
+		F32 eastangle = -az_alt.mV[0] / F_TWO_PI;
+		F32 sunmoonposition = az_alt.mV[1] / F_TWO_PI;
+		// make sure both are in 0.0 to 1.0 range and suppress -0 return values
+		if (eastangle == 0.0 && signbit(eastangle)) eastangle = 0.0; // eliminate -0 returns
+		if (sunmoonposition == 0.0 && signbit(sunmoonposition)) sunmoonposition = 0.0; // eliminate -0 returns
 
-	else if (command == "clouddetailx")  res = params->mCloudDetail.r;
-	else if (command == "clouddetaily")  res = params->mCloudDetail.g;
-	else if (command == "clouddetaild")  res = params->mCloudDetail.b;
+		while (eastangle < 0.0 ) eastangle+=1.0; 
+		while (eastangle > 1.0) eastangle-=1.0; // strictly should be >= however the API says 0.0 to 1.0
+		while (sunmoonposition < 0.0) sunmoonposition+=1.0;
+		while (sunmoonposition > 1.0) sunmoonposition-=1.0; // strictly should be >= however the API says 0.0 to 1.0
 
-	else if (command == "cloudcoverage")	res = params->mCloudCoverage.x;
-	else if (command == "cloudscale")		res = params->mCloudScale.x;
+		// original return values, will get ignored due to use of preformatted option
+		if (command == "eastangle") res = eastangle;
+		else res = sunmoonposition;
+			
+		preformatted = true; // override the automatic formatting so we can make our own reply
+		if (command == "eastangle") str << eastangle << "," << sunmoonposition;
+		else str << sunmoonposition << "," << eastangle;	
+	}
+	
+	else if (command == "starbrightness")		res = psky->getStarBrightness();
+	//else if (command == "starbrightness")		res = params->mCurParams.getStarBrightness();
 
-	else if (command == "cloudscrollx") res = params->mCurParams.getCloudScrollX() - 10;
-	else if (command == "cloudscrolly") res = params->mCurParams.getCloudScrollY() - 10;
+	else if (command == "cloudcolorr") res = (psky->getCloudColor().mV[0]);
+	else if (command == "cloudcolorg") res = (psky->getCloudColor().mV[1]);
+	else if (command == "cloudcolorb") res = (psky->getCloudColor().mV[2]);
+	else if (command == "cloudcolori") res = max (max (psky->getCloudColor().mV[0], psky->getCloudColor().mV[1]), psky->getCloudColor().mV[2]);
+	//else if (command == "cloudcolorr") res = params->mCloudColor.r;
+	//else if (command == "cloudcolorg") res = params->mCloudColor.g;
+	//else if (command == "cloudcolorb") res = params->mCloudColor.b;
+	//else if (command == "cloudcolori") res = max (max (params->mCloudColor.r, params->mCloudColor.g), params->mCloudColor.b);
 
-	else if (command == "preset") return getLastLoadedPreset();
-#endif
-	std::stringstream str;
-	str << res;
+	else if (command == "cloudx")  res = (psky->getCloudPosDensity1().mV[0]);
+	else if (command == "cloudy")  res = (psky->getCloudPosDensity1().mV[1]);
+	else if (command == "cloudd")  res = (psky->getCloudPosDensity1().mV[2]);
+	//else if (command == "cloudx")  res = params->mCloudMain.r;
+	//else if (command == "cloudy")  res = params->mCloudMain.g;
+	//else if (command == "cloudd")  res = params->mCloudMain.b;
+
+	else if (command == "clouddetailx") res = (psky->getCloudPosDensity2().mV[0]);
+	else if (command == "clouddetaily") res = (psky->getCloudPosDensity2().mV[1]);
+	else if (command == "clouddetaild") res = (psky->getCloudPosDensity2().mV[2]);
+	//else if (command == "clouddetailx")  res = params->mCloudDetail.r;
+	//else if (command == "clouddetaily")  res = params->mCloudDetail.g;
+	//else if (command == "clouddetaild")  res = params->mCloudDetail.b;
+
+	else if (command == "cloudcoverage")	res = psky->getCloudShadow();
+	//else if (command == "cloudcoverage")	res = params->mCloudCoverage.x;
+	else if (command == "cloudscale")		res = psky->getCloudScale();
+	//else if (command == "cloudscale")		res = params->mCloudScale.x;
+
+	else if (command == "cloudscrollx") res = psky->getCloudScrollRate().mV[0] - 10;
+	else if (command == "cloudscrolly") res = psky->getCloudScrollRate().mV[1] - 10;
+	//else if (command == "cloudscrollx") res = params->mCurParams.getCloudScrollX() - 10;
+	//else if (command == "cloudscrolly") res = params->mCurParams.getCloudScrollY() - 10;
+
+	//*** NEEDS CHANGE FOR EEP *** else if (command == "preset") return getLastLoadedPreset();
+
+	if (!preformatted) str << res;
 	return str.str();
 }
 
@@ -5254,11 +5785,6 @@ BOOL RRInterface::updateCameraLimits ()
 		mCamDistMin = mCamDistMax;
 	}
 
-// DKO
-// read "gRRenabled" below has never been tested or it would not be there. flycam is broken and will not work even when RLV is enabled
-// only time this should happen when it is set by RLV user sets the limit. Obviously that is broken. 
-// note the command "handle_toggle_flycam" is used for another purpose. here it is always part of RRInterface.o object file
-//DKO
 //	if (gRRenabled) // RLV_108 : don't toggle flycam if RLV is disabled since we call this method at startup
 //	{
 //		LLViewerJoystick::getInstance()->getOverrideCamera();
