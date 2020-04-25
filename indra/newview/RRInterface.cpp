@@ -167,7 +167,7 @@ namespace {
 		{
 			// LL's is_approx_zero() returns incorrect results when fed values of different signs, eg +1 and -1
 			// So here's our own version which also preserves the signage of nearly zero values
-			return (fabs(f1 - f2) < 0.00001 && (signbit(f1) == signbit(f2)));
+			return (fabs(f1 - f2) < 0.00001 && (std::signbit(f1) == std::signbit(f2)));
 		}
 	
 		void cleanMathFloat(F32 &f)
@@ -4569,8 +4569,8 @@ std::string RRInterface::getEnvironment (std::string command)
 		F32 eastangle = -az_alt.mV[0] / F_TWO_PI;
 		F32 sunmoonposition = az_alt.mV[1] / F_TWO_PI;
 		// make sure both are in 0.0 to 1.0 range and suppress -0 return values
-		if (eastangle == 0.0 && signbit(eastangle)) eastangle = 0.0; // eliminate -0 returns
-		if (sunmoonposition == 0.0 && signbit(sunmoonposition)) sunmoonposition = 0.0; // eliminate -0 returns
+		if (eastangle == 0.0 && std::signbit(eastangle)) eastangle = 0.0; // eliminate -0 returns
+		if (sunmoonposition == 0.0 && std::signbit(sunmoonposition)) sunmoonposition = 0.0; // eliminate -0 returns
 
 		while (eastangle < 0.0 ) eastangle+=1.0; 
 		while (eastangle > 1.0) eastangle-=1.0; // strictly should be >= however the API says 0.0 to 1.0
