@@ -318,7 +318,6 @@ namespace {
 
         LLQuaternion quat;
         quat.setAngleAxis(angle, axis);
-				LLVector3 test = convert_direction_to_azimuth_and_elevation(dir);
         return quat;
     }
 }
