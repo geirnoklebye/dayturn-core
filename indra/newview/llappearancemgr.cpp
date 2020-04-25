@@ -3328,10 +3328,14 @@ void LLAppearanceMgr::updateIsDirty()
 		{
 			LLViewerInventoryItem *item1 = cof_items.at(i);
 			LLViewerInventoryItem *item2 = outfit_items.at(i);
+			
+			bool fix_description = false;
+			if (item1->getActualDescription()=="(No Description)" && item2->getActualDescription()=="") fix_description = true;
+			if (item2->getActualDescription()=="(No Description)" && item1->getActualDescription()=="") fix_description = true;
 
 			if (item1->getLinkedUUID() != item2->getLinkedUUID() || 
 				item1->getName() != item2->getName() ||
-				item1->getActualDescription() != item2->getActualDescription())
+				(!fix_description && (item1->getActualDescription() != item2->getActualDescription())))
 			{
 				if (item1->getLinkedUUID() != item2->getLinkedUUID())
 				{
