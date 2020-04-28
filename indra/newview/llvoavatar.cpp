@@ -4227,7 +4227,7 @@ void LLVOAvatar::computeUpdatePeriod()
         && !isUIAvatar()
 	// <FS:Ansariel> Fix LL impostor hacking; Adjust update period for muted avatars if using no impostors
         //&& sUseImpostors
-        && (sUseImpostors || isInMuteList())
+        && (sUseImpostors || isInMuteList() || silhouette)
 	// </FS:Ansariel>
         && !mNeedsAnimUpdate 
         && !sFreezeCounter)
@@ -10666,6 +10666,12 @@ BOOL LLVOAvatar::isImpostor()
 
 BOOL LLVOAvatar::shouldImpostor(const U32 rank_factor) const
 {
+//MK
+	if (!isSelf() && mRenderAsSilhouette)
+	{
+		return TRUE;
+	}
+//mk
 	return (!isSelf() && sUseImpostors && mVisibilityRank > (sMaxNonImpostors * rank_factor));
 }
 
@@ -10734,6 +10740,17 @@ void LLVOAvatar::updateImpostorRendering(U32 newMaxNonImpostorsValue)
 	}
 	// the sUseImpostors flag depends on whether or not sMaxNonImpostors is set to the no-limit value (0)
 	sUseImpostors = (0 != sMaxNonImpostors);
+//MK
+	// Without this test, when setting the max number of non-impostors to "no limit", we wouldn't get silhouettes under @camavdist.
+	if (gRRenabled && gAgent.mRRInterface.mShowavsDistMax < EXTREMUM || gAgent.mRRInterface.mCamDistDrawAlphaMax >= ALPHA_ALMOST_OPAQUE)
+	{
+		if (newMaxNonImpostorsValue == 0)
+		{
+			sMaxNonImpostors = IMPOSTORS_OFF - 1;
+		}
+		sUseImpostors = TRUE;
+	}
+//mk
     if ( oldflg != sUseImpostors )
     {
         LL_DEBUGS("AvatarRender")
