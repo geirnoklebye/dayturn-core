@@ -297,6 +297,7 @@ public:
 	BOOL mContainsShownametags;
 	// CA
 	BOOL mContainsViewScript;
+	BOOL mContainsShowNearby;
 
 	BOOL mHandleNoStrip;
 	//BOOL mContainsMoveUp;

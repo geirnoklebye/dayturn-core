@@ -107,6 +107,8 @@
 #include "llteleporthistory.h"		// KKA-682 to allow another try at storing login location in TP history
 //ca
 
+#define DISABLE_SHOWNEARBY
+
 // Global and static variables initialization.
 BOOL gRRenabled = TRUE;
 BOOL RRInterface::sRRNoSetEnv = FALSE;
@@ -430,6 +432,9 @@ void refreshCachedVariable (std::string var)
 	else if (var == "showloc")				gAgent.mRRInterface.mContainsShowloc = contained;
 	//else if (var == "shownames")			gAgent.mRRInterface.mContainsShownames = contained;
 	else if (var == "shownametags")			gAgent.mRRInterface.mContainsShownametags = contained;
+#ifndef DISABLE_SHOWNEARBY
+	else if (var == "shownearby")			gAgent.mRRInterface.mContainsShowNearby = contained;
+#endif
 	else if (var == "setenv")				gAgent.mRRInterface.mContainsSetenv = contained;
 	else if (var == "setdebug")				gAgent.mRRInterface.mContainsSetdebug = contained;
 	else if (var == "fly")					gAgent.mRRInterface.mContainsFly = contained;
@@ -513,8 +518,12 @@ void refreshCachedVariable (std::string var)
 		}
 	}
 
+#ifndef DISABLE_SHOWNEARBY
 	else if (var == "shownames" || var == "shownames_sec" || var == "shownametags") {
-		if (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags) {
+#else
+	else if (var == "shownames" || var == "shownames_sec" || var == "shownametags" || var == "shownearby") {
+#endif
+		if (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby) {
 //			LLSideTray::getInstance()->childSetVisible("nearby_panel", false);
 //			LLSideTray::getInstance()->childSetVisible("recent_panel", false);
 			LLPanel* panel = LLFloaterSidePanelContainer::getPanel("people", "panel_people");
@@ -742,6 +751,8 @@ RRInterface::RRInterface():
 	, mContainsShowloc(FALSE)
 	, mContainsShownames(FALSE)
 	, mContainsShownametags(FALSE)
+	, mContainsShowNearby(FALSE)
+	, mContainsViewScript(FALSE)
 	, mContainsSetenv(FALSE)
 	, mContainsSetdebug(FALSE)
 	, mContainsFly(FALSE)

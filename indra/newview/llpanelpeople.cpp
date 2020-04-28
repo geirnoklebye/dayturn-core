@@ -930,7 +930,7 @@ void LLPanelPeople::updateNearbyList()
 //   so all messages now go through an avatar name cache callback to ensure they've been loaded
 //ca
 
-			if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+			if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
 			{
 //CA it doesn't look pretty getting all three messages if someone pops up within chat range, so add logic to only give the
 //   closest active message
@@ -989,7 +989,7 @@ void LLPanelPeople::updateNearbyList()
 		{
 			av->setFirstSeen(time(NULL));
 
-			if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+			if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
 			{
 				BOOL messaged = FALSE;
 				if (gSavedSettings.getBOOL("RadarReportChatRange") && (r <= CHAT_NORMAL_RADIUS))
@@ -1027,7 +1027,7 @@ void LLPanelPeople::updateNearbyList()
 	{
 		radarFields rf = i->second;
 		
-		if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+		if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
 		{
 			BOOL messaged = FALSE;
 //CA in the case of departures it makes more sense to prioritise these the other may around so if someone leaves
@@ -1085,7 +1085,7 @@ void LLPanelPeople::updateNearbyList()
 		lastRadarSweep[av->getAvatarId()] = rf;
 	}
 
-	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
 	{
 		LLPanel* nearby_tab = getChild<LLPanel>(NEARBY_TAB_NAME);
 		if (nearby_tab && nearby_tab->getVisible())
@@ -1121,7 +1121,7 @@ void LLPanelPeople::updateRecentList()
 	mRecentList->setDirty();
 
 //MK
-	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags) || gAgent.mRRInterface.mContainsShowNearby)
 	{
 		LLPanel* nearby_tab = getChild<LLPanel>(NEARBY_TAB_NAME);
 		if (nearby_tab && nearby_tab->getVisible())
