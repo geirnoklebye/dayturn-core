@@ -107,7 +107,7 @@
 #include "llteleporthistory.h"		// KKA-682 to allow another try at storing login location in TP history
 //ca
 
-#define DISABLE_SHOWNEARBY
+//#define DISABLE_SHOWNEARBY
 
 // Global and static variables initialization.
 BOOL gRRenabled = TRUE;
