@@ -1180,7 +1180,21 @@ void LLEnvironment::setEnvironment(LLEnvironment::EnvSelection_t env, const LLSe
     }
     else if (settings->getSettingsType() == "sky")
     {
-        fixedEnvironment_t fixedenv(std::static_pointer_cast<LLSettingsSky>(settings), LLSettingsWater::ptr_t());
+//MK
+		// Retain the name of this preset
+		LLViewerInventoryItem* item = gInventory.getItem(settings->getAssetId());
+		// If the settings come from an inventory item, asset_id points to this item and we retain its name.
+		if (item)
+		{
+			gAgent.mRRInterface.setLastLoadedPreset(item->getName());
+		}
+		// Otherwise, assume it is a fixed setting (midnight, sunrise etc) and store the corresponding name.
+		else
+		{
+			gAgent.mRRInterface.setLastLoadedPreset(settings->getName());
+		}
+//mk
+		fixedEnvironment_t fixedenv(std::static_pointer_cast<LLSettingsSky>(settings), LLSettingsWater::ptr_t());
         setEnvironment(env, fixedenv);
     }
     else if (settings->getSettingsType() == "water")

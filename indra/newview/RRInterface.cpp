@@ -4659,6 +4659,38 @@ std::string RRInterface::getEnvironment (std::string command)
 		if (params->mAnimator.mIsRunning && params->mAnimator.getTimeType() == LLWLAnimator::TIME_LINDEN) res = -1;
 		else res = params->mAnimator.getDayTime();
 		***/
+		// This command is now deprecated so any script that asks the time of day will be given "0" or "1" as a response depending on whether the sun is below or above the horizon respectively,
+		// unless the environment is set to "region", in which case it will give "-1" instead.
+		if (getLastLoadedPreset() == "")
+		{
+			res = -1.0;
+		}
+		else
+		{
+			// The pitch value reported by getEulerAngles is useless here so we need to do it another way : get the yaw, rotate around Z by the same amount
+			// to get the local pitch to become the global pitch, and then use the pitch to determine whether to return 0 or 1 as day time.
+			LLQuaternion orig_quat = psky->getSunRotation();
+			F32 roll;
+			F32 pitch;
+			F32 yaw;
+			orig_quat.getEulerAngles(&roll, &pitch, &yaw);
+			LLQuaternion rotation_world;
+			rotation_world.setEulerAngles(0.0, 0.0, -yaw); // rotation of (-yaw) radians around Z axis
+			rotation_world.normalize();
+			LLQuaternion new_quat = orig_quat * rotation_world; // global rotation
+			new_quat.getEulerAngles(&roll, &pitch, &yaw);
+			if (roll <= -F_PI_BY_TWO || roll >= F_PI_BY_TWO){
+				pitch = -pitch;
+			}
+			if (pitch > 0.0) // pitch > 0 means the sun is below the horizon
+			{
+				res = 0.0;
+			}
+			else
+			{
+				res = 1.0;
+			}
+		}
 	}
 
 	else if (command == "bluehorizonr") res = (psky->getBlueHorizon().mV[0])/2;
@@ -4740,6 +4772,10 @@ std::string RRInterface::getEnvironment (std::string command)
 		rotation_world.normalize();
 		LLQuaternion new_quat = orig_quat * rotation_world; // global rotation
 		new_quat.getEulerAngles(&roll, &pitch, &yaw);
+		LL_INFOS() << "roll=" << roll << " pitch=" << pitch << " yaw=" << yaw << LL_ENDL;
+		if (roll <= -F_PI_BY_TWO || roll >= F_PI_BY_TWO) {
+			pitch = -pitch;
+		}
 		res = -(F64)pitch; // report the negative pitch
 	}
 	else if (command == "moonazim") { // moon azimuth
@@ -4763,6 +4799,9 @@ std::string RRInterface::getEnvironment (std::string command)
 		rotation_world.normalize();
 		LLQuaternion new_quat = orig_quat * rotation_world; // global rotation
 		new_quat.getEulerAngles(&roll, &pitch, &yaw);
+		if (roll <= -F_PI_BY_TWO || roll >= F_PI_BY_TWO) {
+			pitch = -pitch;
+		}
 		res = -(F64)pitch; // report the negative pitch
 	}
 	else if (command == "eastangle" || command == "sunmoonposition")
