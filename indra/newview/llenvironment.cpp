@@ -1228,6 +1228,20 @@ void LLEnvironment::onSetEnvAssetLoaded(EnvSelection_t env,
 
     setEnvironment(env, settings);
     updateEnvironment(transition);
+//MK
+	// Retain the name of this preset
+	LLViewerInventoryItem* item = gInventory.getItem(asset_id);
+	// If the settings come from an inventory item, asset_id points to this item and we retain its name.
+	if (item)
+	{
+		gAgent.mRRInterface.setLastLoadedPreset(item->getName());
+	}
+	// Otherwise, assume it is a fixed setting (midnight, sunrise etc) and store the corresponding name.
+	else
+	{
+		gAgent.mRRInterface.setLastLoadedPreset(settings->getName());
+	}
+//mk
 }
 
 void LLEnvironment::clearEnvironment(LLEnvironment::EnvSelection_t env)
@@ -1243,6 +1257,10 @@ void LLEnvironment::clearEnvironment(LLEnvironment::EnvSelection_t env)
     if (!mSignalEnvChanged.empty())
         mSignalEnvChanged(env, VERSION_CLEANUP);
 
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("");
+//mk
     /*TODO: readjust environment*/
 }
 

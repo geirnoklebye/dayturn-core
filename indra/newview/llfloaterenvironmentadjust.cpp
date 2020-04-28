@@ -243,6 +243,10 @@ void LLFloaterEnvironmentAdjust::onAmbientLightChanged()
         return;
     mLiveSky->setAmbientColor(LLColor3(getChild<LLColorSwatchCtrl>(FIELD_SKY_AMBIENT_LIGHT)->get() * SLIDER_SCALE_SUN_AMBIENT));
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onBlueHorizonChanged()
@@ -251,6 +255,10 @@ void LLFloaterEnvironmentAdjust::onBlueHorizonChanged()
         return;
     mLiveSky->setBlueHorizon(LLColor3(getChild<LLColorSwatchCtrl>(FIELD_SKY_BLUE_HORIZON)->get() * SLIDER_SCALE_BLUE_HORIZON_DENSITY));
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onBlueDensityChanged()
@@ -259,6 +267,10 @@ void LLFloaterEnvironmentAdjust::onBlueDensityChanged()
         return;
     mLiveSky->setBlueDensity(LLColor3(getChild<LLColorSwatchCtrl>(FIELD_SKY_BLUE_DENSITY)->get() * SLIDER_SCALE_BLUE_HORIZON_DENSITY));
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onHazeHorizonChanged()
@@ -267,6 +279,10 @@ void LLFloaterEnvironmentAdjust::onHazeHorizonChanged()
         return;
     mLiveSky->setHazeHorizon(getChild<LLUICtrl>(FIELD_SKY_HAZE_HORIZON)->getValue().asReal());
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onHazeDensityChanged()
@@ -275,6 +291,10 @@ void LLFloaterEnvironmentAdjust::onHazeDensityChanged()
         return;
     mLiveSky->setHazeDensity(getChild<LLUICtrl>(FIELD_SKY_HAZE_DENSITY)->getValue().asReal());
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onSceneGammaChanged()
@@ -283,6 +303,10 @@ void LLFloaterEnvironmentAdjust::onSceneGammaChanged()
         return;
     mLiveSky->setGamma(getChild<LLUICtrl>(FIELD_SKY_SCENE_GAMMA)->getValue().asReal());
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onCloudColorChanged()
@@ -291,6 +315,10 @@ void LLFloaterEnvironmentAdjust::onCloudColorChanged()
         return;
     mLiveSky->setCloudColor(LLColor3(getChild<LLColorSwatchCtrl>(FIELD_SKY_CLOUD_COLOR)->get()));
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onCloudCoverageChanged()
@@ -299,6 +327,10 @@ void LLFloaterEnvironmentAdjust::onCloudCoverageChanged()
         return;
     mLiveSky->setCloudShadow(getChild<LLUICtrl>(FIELD_SKY_CLOUD_COVERAGE)->getValue().asReal());
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onCloudScaleChanged()
@@ -307,6 +339,10 @@ void LLFloaterEnvironmentAdjust::onCloudScaleChanged()
         return;
     mLiveSky->setCloudScale(getChild<LLUICtrl>(FIELD_SKY_CLOUD_SCALE)->getValue().asReal());
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onGlowChanged()
@@ -321,6 +357,10 @@ void LLFloaterEnvironmentAdjust::onGlowChanged()
 
     mLiveSky->setGlow(glow);
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onStarBrightnessChanged()
@@ -329,6 +369,10 @@ void LLFloaterEnvironmentAdjust::onStarBrightnessChanged()
         return;
     mLiveSky->setStarBrightness(getChild<LLUICtrl>(FIELD_SKY_STAR_BRIGHTNESS)->getValue().asReal());
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onSunRotationChanged()
@@ -337,6 +381,10 @@ void LLFloaterEnvironmentAdjust::onSunRotationChanged()
         return;
     mLiveSky->setSunRotation(getChild<LLVirtualTrackball>(FIELD_SKY_SUN_ROTATION)->getRotation());
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onSunScaleChanged()
@@ -345,6 +393,10 @@ void LLFloaterEnvironmentAdjust::onSunScaleChanged()
         return;
     mLiveSky->setSunScale((getChild<LLUICtrl>(FIELD_SKY_SUN_SCALE)->getValue().asReal()));
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onMoonRotationChanged()
@@ -353,6 +405,10 @@ void LLFloaterEnvironmentAdjust::onMoonRotationChanged()
         return;
     mLiveSky->setMoonRotation(getChild<LLVirtualTrackball>(FIELD_SKY_MOON_ROTATION)->getRotation());
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onCloudMapChanged()
@@ -361,6 +417,10 @@ void LLFloaterEnvironmentAdjust::onCloudMapChanged()
         return;
     mLiveSky->setCloudNoiseTextureId(getChild<LLTextureCtrl>(FIELD_SKY_CLOUD_MAP)->getValue().asUUID());
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onWaterMapChanged()
@@ -369,6 +429,10 @@ void LLFloaterEnvironmentAdjust::onWaterMapChanged()
         return;
     mLiveWater->setNormalMapID(getChild<LLTextureCtrl>(FIELD_WATER_NORMAL_MAP)->getValue().asUUID());
     mLiveWater->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 void LLFloaterEnvironmentAdjust::onSunColorChanged()
@@ -381,6 +445,10 @@ void LLFloaterEnvironmentAdjust::onSunColorChanged()
 
     mLiveSky->setSunlightColor(color);
     mLiveSky->update();
+//MK
+	// Clear the name of the preset
+	gAgent.mRRInterface.setLastLoadedPreset("Personal");
+//mk
 }
 
 

@@ -3417,6 +3417,13 @@ BOOL RRInterface::forceAttach (std::string category, BOOL recursive, AttachHow h
 							LLGestureMgr::instance().activateGesture(item->getLinkedUUID());
 						}
 					}
+					// this is an environment settings (EEP) => it is not really attached but activated, replacing the current environment settings (but won't appear "attached" or "activated" in the inventory)
+					else if (item->getType() == LLAssetType::AT_SETTINGS) {
+						if (!mContainsSetenv) {
+							LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, item->getAssetUUID());
+							LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
+						}
+					}
 				}
 			}
 		}
@@ -3576,6 +3583,14 @@ BOOL RRInterface::forceDetachByName (std::string category, BOOL recursive)
 						else if (item->getType() == LLAssetType::AT_GESTURE) {
 							if (LLGestureMgr::instance().isGestureActive(item->getLinkedUUID())) {
 								LLGestureMgr::instance().deactivateGesture(item->getLinkedUUID());
+							}
+						}
+						// this is an environment settings (EEP) => such an asset is not attached nor detached, but activated or replaced with the region settings
+						else if (item->getType() == LLAssetType::AT_SETTINGS) {
+							if (!mContainsSetenv) {
+								LLEnvironment::instance().clearEnvironment(LLEnvironment::ENV_LOCAL);
+								LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
+								LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 							}
 						}
 					}
@@ -3947,49 +3962,57 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	//params->mAnimator.setTimeType(LLWLAnimator::TIME_CUSTOM);
 	
 	//adapted from llfloaterenvironmentadjust
-  LLEnvironment &environment(LLEnvironment::instance());
-  bool updatelocal(false);
-  LLSettingsSky::ptr_t        psky;
+	LLEnvironment &environment(LLEnvironment::instance());
+	bool updatelocal(false);
+	LLSettingsSky::ptr_t        psky;
     	
-  if (environment.hasEnvironment(LLEnvironment::ENV_LOCAL))
-  {
-      if (environment.getEnvironmentDay(LLEnvironment::ENV_LOCAL))
-      {   // We have a full day cycle in the local environment.  Freeze the sky
-          psky = environment.getEnvironmentFixedSky(LLEnvironment::ENV_LOCAL)->buildClone();
-          updatelocal = true;
-      }
-      else
-      {   // otherwise we can just use the sky.
-          psky = environment.getEnvironmentFixedSky(LLEnvironment::ENV_LOCAL);
-      }
-  }
-  else
-  {
-      psky = environment.getEnvironmentFixedSky(LLEnvironment::ENV_PARCEL, true)->buildClone();
-      updatelocal = true;
-  }
+	if (environment.hasEnvironment(LLEnvironment::ENV_LOCAL))
+	{
+		if (environment.getEnvironmentDay(LLEnvironment::ENV_LOCAL))
+		{   // We have a full day cycle in the local environment.  Freeze the sky
+			psky = environment.getEnvironmentFixedSky(LLEnvironment::ENV_LOCAL)->buildClone();
+			updatelocal = true;
+		}
+		else
+		{   // otherwise we can just use the sky.
+			psky = environment.getEnvironmentFixedSky(LLEnvironment::ENV_LOCAL);
+		}
+	}
+	else
+	{
+		psky = environment.getEnvironmentFixedSky(LLEnvironment::ENV_PARCEL, true)->buildClone();
+		updatelocal = true;
+	}
 
-  if (updatelocal)
-  {
-      environment.setEnvironment(LLEnvironment::ENV_LOCAL,  psky, 0);
-  }
-  environment.setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
-  environment.updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+	if (updatelocal)
+	{
+		environment.setEnvironment(LLEnvironment::ENV_LOCAL,  psky, 0);
+	}
+	environment.setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
+	environment.updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+	// Clear the last loaded preset name since we're tweaking it.
+	gAgent.mRRInterface.setLastLoadedPreset("");
 
 	if (command == "daytime") {
-		/*** NEEDS CHANGE FOR EEP ***
 		if (val > 1.0) val = 1.0;
 		if (val >= 0.0) {
-			params->mAnimator.setDayTime(val);
-			params->mAnimator.update(params->mCurParams);
+			//params->mAnimator.setDayTime(val);
+			//params->mAnimator.update(params->mCurParams);
 		}
 		else {
-			LLWLParamManager::getInstance()->mAnimator.mIsRunning = true;
-			//LLWLParamManager::getInstance()->mAnimator.mUseLindenTime = true;
-			LLWLParamManager::getInstance()->mAnimator.setTimeType(LLWLAnimator::TIME_LINDEN);
-			LLEnvManagerNew::instance().useRegionSettings();
+			environment.clearEnvironment(LLEnvironment::ENV_LOCAL);
+			environment.setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
+			environment.updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+			//LLWLParamManager::getInstance()->mAnimator.mIsRunning = true;
+			////LLWLParamManager::getInstance()->mAnimator.mUseLindenTime = true;
+			//LLWLParamManager::getInstance()->mAnimator.setTimeType(LLWLAnimator::TIME_LINDEN);
+			//LLEnvManagerNew::instance().useRegionSettings();
 		}
-		***/
+	}
+	else if (command == "reset") { // synonym for "daytime:-1"
+		environment.clearEnvironment(LLEnvironment::ENV_LOCAL);
+		environment.setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
+		environment.updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 	}
 	else if (command == "bluehorizonr") {
 		LLColor3 bluehorizon=psky->getBlueHorizon();
@@ -4281,6 +4304,78 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		// replaced by combined routine below
 		//params->mCurParams.setEastAngle (F_TWO_PI * val);
 	//}
+	else if (command == "sunazim") { // sun azimuth
+		// The pitch value reported by getEulerAngles is useless here so we need to do it another way : get the yaw, substract it from the final value we want
+		// (effectively cancelling the original yaw), and do a global rotate of the initial quaternion by this new value around Z.
+		val -= F_TWO_PI * floor((val + F_PI) / F_TWO_PI); // wrap the angle between to -PI..PI (this is better than clamping it)
+		LLQuaternion orig_quat = psky->getSunRotation();
+		F32 roll;
+		F32 pitch;
+		F32 yaw;
+		orig_quat.getEulerAngles(&roll, &pitch, &yaw);
+		LLQuaternion rotation_world;
+		rotation_world.setEulerAngles(0.0, 0.0, val - yaw); // rotation of (val - yaw) radians around Z axis
+		rotation_world.normalize();
+		LLQuaternion new_quat = orig_quat * rotation_world; // global rotation
+		psky->setSunRotation(new_quat);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+	}
+	else if (command == "sunelev") { // sun elevation
+		// Here it is a bit easier since the reported yaw value is useful. Create a rotation around Y for the pitch, global rotate it by the reported yaw, the result
+		// is the rotation we want.
+		val = (double)llclamp((F32)val, -F_PI_BY_TWO, F_PI_BY_TWO); // clamp instead of wrapping
+		val = -val; // when the sun is above the horizon, the pitch is negative (pitch is a rotation around axis Y, so when the sun is east and we look south, it goes up by following a clockwise path, hence negative)
+		LLQuaternion orig_quat = psky->getSunRotation();
+		F32 roll;
+		F32 pitch;
+		F32 yaw;
+		orig_quat.getEulerAngles(&roll, &pitch, &yaw);
+		LLQuaternion pitch_quat;
+		pitch_quat.setAngleAxis(val, 0, 1, 0);
+		LLQuaternion yaw_quat;
+		yaw_quat.setAngleAxis(yaw, 0, 0, 1);
+		LLQuaternion new_quat = pitch_quat * yaw_quat;
+		psky->setSunRotation(new_quat);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+	}
+	else if (command == "moonazim") { // moon azimuth
+		// The pitch value reported by getEulerAngles is useless here so we need to do it another way : get the yaw, substract it from the final value we want
+		// (effectively cancelling the original yaw), and do a global rotate of the initial quaternion by this new value around Z.
+		val -= F_TWO_PI * floor((val + F_PI) / F_TWO_PI); // wrap the angle between to -PI..PI (this is better than clamping it)
+		LLQuaternion orig_quat = psky->getMoonRotation();
+		F32 roll;
+		F32 pitch;
+		F32 yaw;
+		orig_quat.getEulerAngles(&roll, &pitch, &yaw);
+		LLQuaternion rotation_world;
+		rotation_world.setEulerAngles(0.0, 0.0, val - yaw); // rotation of (val - yaw) radians around Z axis
+		rotation_world.normalize();
+		LLQuaternion new_quat = orig_quat * rotation_world; // global rotation
+		psky->setMoonRotation(new_quat);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+	}
+	else if (command == "moonelev") { // moon elevation
+		// Here it is a bit easier since the reported yaw value is useful. Create a rotation around Y for the pitch, global rotate it by the reported yaw, the result
+		// is the rotation we want.
+		val = (double)llclamp((F32)val, -F_PI_BY_TWO, F_PI_BY_TWO); // clamp instead of wrapping
+		val = -val; // when the sun is above the horizon, the pitch is negative (pitch is a rotation around axis Y, so when the sun is east and we look south, it goes up by following a clockwise path, hence negative)
+		LLQuaternion orig_quat = psky->getMoonRotation();
+		F32 roll;
+		F32 pitch;
+		F32 yaw;
+		orig_quat.getEulerAngles(&roll, &pitch, &yaw);
+		LLQuaternion pitch_quat;
+		pitch_quat.setAngleAxis(val, 0, 1, 0);
+		LLQuaternion yaw_quat;
+		yaw_quat.setAngleAxis(yaw, 0, 0, 1);
+		LLQuaternion new_quat = pitch_quat * yaw_quat;
+		psky->setMoonRotation(new_quat);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+	}
 	else if (command == "sunmoonposition" || command == "eastangle")
 	{
 		// It's not possible to reliable read back these values because any point on the eastangle/sunmoonposition sphere
@@ -4298,22 +4393,22 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 			val -= 1.0;
 		}
 		
-    if (command == "eastangle")
-    {
-    	east_sun.mV[0] = F_TWO_PI * val;
-    	previousEastAngle = val;
-    }
-    else // it's sunmoonposition
-    {
-    	east_sun.mV[1] = F_TWO_PI * val;
-    	previousSunMoonPosition = val;
-    }
+		if (command == "eastangle")
+		{
+    		east_sun.mV[0] = F_TWO_PI * val;
+    		previousEastAngle = val;
+		}
+		else // it's sunmoonposition
+		{
+    		east_sun.mV[1] = F_TWO_PI * val;
+    		previousSunMoonPosition = val;
+		}
 
-    LLQuaternion sunquat  = convert_azimuth_and_elevation_to_quat(-east_sun.mV[0], east_sun.mV[1]);
-    // original WL moon dir was diametrically opposed to the sun dir
-    LLQuaternion moonquat = convert_azimuth_and_elevation_to_quat(-east_sun.mV[0] + F_PI, -east_sun.mV[1]);
-    psky->setMoonRotation(moonquat);
-    psky->setSunRotation(sunquat);
+		LLQuaternion sunquat  = convert_azimuth_and_elevation_to_quat(-east_sun.mV[0], east_sun.mV[1]);
+		// original WL moon dir was diametrically opposed to the sun dir
+		LLQuaternion moonquat = convert_azimuth_and_elevation_to_quat(-east_sun.mV[0] + F_PI, -east_sun.mV[1]);
+		psky->setMoonRotation(moonquat);
+		psky->setSunRotation(sunquat);
  		psky->update();
 		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);   
 	}
@@ -4449,6 +4544,13 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		//updateAndSave (&(params->mCloudScale));
 	}
 
+	else if (command == "cloudvariance") {
+		//val = (F32)llclamp((double)val, 0.0, 1.0);
+		psky->setCloudVariance(val);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCurParams.setCloudScrollY (val+10);
+	}
 	else if (command == "cloudscrollx") {
 		psky->setCloudScrollRateX(val + 10);
 		psky->update();
@@ -4461,21 +4563,84 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCurParams.setCloudScrollY (val+10);
 	}
+	else if (command == "moisturelevel") {
+		//val = (F32)llclamp((double)val, 0.0, 1.0);
+		psky->setSkyMoistureLevel(val);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCurParams.setCloudScrollY (val+10);
+	}
+	else if (command == "dropletradius") {
+		//val = (F32)llclamp((double)val, 5.0, 1000.0);
+		psky->setSkyDropletRadius(val);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCurParams.setCloudScrollY (val+10);
+	}
+	else if (command == "icelevel") {
+		//val = (F32)llclamp((double)val, 0.0, 1.0);
+		psky->setSkyIceLevel(val);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCurParams.setCloudScrollY (val+10);
+	}
+	else if (command == "sunimage") {
+		LLUUID id;
+		id.set(option, FALSE);
+		psky->setSunTextureId(id);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+	}
+	else if (command == "moonimage") {
+		LLUUID id;
+		id.set(option, FALSE);
+		psky->setMoonTextureId(id);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+	}
+	else if (command == "cloudimage") {
+		LLUUID id;
+		id.set(option, FALSE);
+		psky->setCloudNoiseTextureId(id);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+	}
 	// sunglowfocus 0-0.5, sunglowsize 0-2, scenegamma 0-10, starbrightness 0-2
 	// cloudcolor rgb 0-1, cloudxydensity xyd 0-1, cloudcoverage 0-1, cloudscale 0-1, clouddetail xyd 0-1
 	// cloudscrollx 0-1, cloudscrolly 0-1, drawclassicclouds 0/1
 
 	else if (command == "preset") {
+		// Find all the environment assets contained in the Environment folder and all its sub-folders, and nowhere else.
+		// If we find at least one which name matches the option, activate it, otherwise do nothing.
 //		params->loadPreset (option);
-		/*** NEEDS CHANGE FOR EEP ***
-		LLEnvManagerNew::getInstance()->useSkyPreset(option);
-		***/
+		LLUUID env_root_folder_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_SETTINGS);
+		if (env_root_folder_id != LLUUID::null) {
+			LLViewerInventoryCategory* env_root_folder = gInventory.getCategory(env_root_folder_id);
+			LL_INFOS() << "env_root_folder : " << env_root_folder->getName() << LL_ENDL;
+			LLFindSettings collector;
+			LLInventoryModel::cat_array_t cats;
+			LLInventoryModel::item_array_t items;
+			gInventory.collectDescendentsRecIf(env_root_folder_id, cats, items, TRUE, FALSE, collector);
+			LLInventoryModel::item_array_t::const_iterator it = items.begin();
+			const LLInventoryModel::item_array_t::const_iterator it_end = items.end();
+			LLStringUtil::toLower(option); // make sure we compare without caring about the case
+			for (; it_end != it; ++it)
+			{
+				LLViewerInventoryItem* item = *it;
+				if (item) {
+					std::string item_name = item->getName();
+					LLStringUtil::toLower(item_name);
+					if (item_name == option) {
+						LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, item->getAssetUUID());
+						LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
+						break;
+					}
+				}
+			}
+		}
+
 	}
 
-	// send the current parameters to shaders
-	/*** NEEDS CHANGE FOR EEP ***
-	LLWLParamManager::getInstance()->propagateParameters();
-	***/
 	return TRUE;
 }
 
@@ -4554,7 +4719,53 @@ std::string RRInterface::getEnvironment (std::string command)
 	//else if (command == "sunmoonposition")		res = params->mCurParams.getSunAngle()/F_TWO_PI;
 	//else if (command == "eastangle")			res = params->mCurParams.getEastAngle()/F_TWO_PI;
 	
-	else if (command=="eastangle" || command=="sunmoonposition")
+	else if (command == "sunazim") { // sun azimuth
+		LLQuaternion orig_quat = psky->getSunRotation();
+		F32 roll;
+		F32 pitch;
+		F32 yaw;
+		orig_quat.getEulerAngles(&roll, &pitch, &yaw);
+		res = (F64)yaw;
+	}
+	else if (command == "sunelev") { // sun elevation
+		// The pitch value reported by getEulerAngles is useless here so we need to do it another way : get the yaw, rotate around Z by the same amount
+		// to get the local pitch to become the global pitch, and then return the pitch.
+		LLQuaternion orig_quat = psky->getSunRotation();
+		F32 roll;
+		F32 pitch;
+		F32 yaw;
+		orig_quat.getEulerAngles(&roll, &pitch, &yaw);
+		LLQuaternion rotation_world;
+		rotation_world.setEulerAngles(0.0, 0.0, -yaw); // rotation of (-yaw) radians around Z axis
+		rotation_world.normalize();
+		LLQuaternion new_quat = orig_quat * rotation_world; // global rotation
+		new_quat.getEulerAngles(&roll, &pitch, &yaw);
+		res = -(F64)pitch; // report the negative pitch
+	}
+	else if (command == "moonazim") { // moon azimuth
+		LLQuaternion orig_quat = psky->getMoonRotation();
+		F32 roll;
+		F32 pitch;
+		F32 yaw;
+		orig_quat.getEulerAngles(&roll, &pitch, &yaw);
+		res = (F64)yaw;
+	}
+	else if (command == "moonelev") { // moon elevation
+		// The pitch value reported by getEulerAngles is useless here so we need to do it another way : get the yaw, rotate around Z by the same amount
+		// to get the local pitch to become the global pitch, and then return the pitch.
+		LLQuaternion orig_quat = psky->getMoonRotation();
+		F32 roll;
+		F32 pitch;
+		F32 yaw;
+		orig_quat.getEulerAngles(&roll, &pitch, &yaw);
+		LLQuaternion rotation_world;
+		rotation_world.setEulerAngles(0.0, 0.0, -yaw); // rotation of (-yaw) radians around Z axis
+		rotation_world.normalize();
+		LLQuaternion new_quat = orig_quat * rotation_world; // global rotation
+		new_quat.getEulerAngles(&roll, &pitch, &yaw);
+		res = -(F64)pitch; // report the negative pitch
+	}
+	else if (command == "eastangle" || command == "sunmoonposition")
 	{
 		// It's debatable whether this should return live values read back from the system or the local
 		// values used to pair with with a setenv command. We'll go the live value route since it's
@@ -4615,13 +4826,20 @@ std::string RRInterface::getEnvironment (std::string command)
 	//else if (command == "cloudcoverage")	res = params->mCloudCoverage.x;
 	else if (command == "cloudscale")		res = psky->getCloudScale();
 	//else if (command == "cloudscale")		res = params->mCloudScale.x;
+	else if (command == "cloudvariance") res = psky->getCloudVariance();
 
-	else if (command == "cloudscrollx") res = psky->getCloudScrollRate().mV[0] - 10;
-	else if (command == "cloudscrolly") res = psky->getCloudScrollRate().mV[1] - 10;
+	else if (command == "cloudscrollx")  res = psky->getCloudScrollRate().mV[0] - 10;
+	else if (command == "cloudscrolly")  res = psky->getCloudScrollRate().mV[1] - 10;
+	else if (command == "moisturelevel") res = psky->getSkyMoistureLevel();
+	else if (command == "dropletradius") res = psky->getSkyDropletRadius();
+	else if (command == "icelevel")      res = psky->getSkyIceLevel();
+	else if (command == "sunimage")      { str << psky->getSunTextureId().asString(); preformatted = true; }
+	else if (command == "moonimage")     { str << psky->getMoonTextureId().asString(); preformatted = true; }
+	else if (command == "cloudimage")    { str << psky->getCloudNoiseTextureId().asString(); preformatted = true; }
 	//else if (command == "cloudscrollx") res = params->mCurParams.getCloudScrollX() - 10;
 	//else if (command == "cloudscrolly") res = params->mCurParams.getCloudScrollY() - 10;
 
-	//*** NEEDS CHANGE FOR EEP *** else if (command == "preset") return getLastLoadedPreset();
+	else if (command == "preset") return getLastLoadedPreset();
 
 	if (!preformatted) str << res;
 	return str.str();

@@ -2076,6 +2076,21 @@ bool LLFindWearables::operator()(LLInventoryCategory* cat,
 	return FALSE;
 }
 
+//MK
+bool LLFindSettings::operator()(LLInventoryCategory* cat,
+	LLInventoryItem* item)
+{
+	if (item)
+	{
+		if (item->getType() == LLAssetType::AT_SETTINGS)
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+//mk
+
 LLFindWearablesEx::LLFindWearablesEx(bool is_worn, bool include_body_parts)
 :	mIsWorn(is_worn)
 ,	mIncludeBodyParts(include_body_parts)

@@ -380,6 +380,22 @@ public:
 							LLInventoryItem* item);
 };
 
+//MK
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Class LLFindSettings
+//
+// Collects environment settings assets based on item type.
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+class LLFindSettings : public LLInventoryCollectFunctor
+{
+public:
+	LLFindSettings() {}
+	virtual ~LLFindSettings() {}
+	virtual bool operator()(LLInventoryCategory* cat,
+		LLInventoryItem* item);
+};
+//mk
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Class LLFindWearablesEx
 //
