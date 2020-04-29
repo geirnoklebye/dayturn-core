@@ -701,7 +701,22 @@ void handleRenderFriendsOnlyChanged(const LLSD& newvalue)
 	}
 }
 // </FS:Ansariel>
-////////////////////////////////////////////////////////////////////////////
+// <FS:Ansariel> Allow instant change of keyboard layout
+void handleKeyboardLayoutChanged(const LLSD& newvalue)
+{
+    std::string keyBindingFileName("keys.xml");
+    if (newvalue.asBoolean())
+    {
+        keyBindingFileName = "keys_azerty.xml";
+    }
+
+    std::string key_bindings_file = gDirUtilp->findFile(keyBindingFileName,
+                                                        gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, ""),
+                                                        gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS, ""));
+
+    gViewerKeyboard.loadBindingsXML(key_bindings_file);
+}
+// </FS:Ansariel>////////////////////////////////////////////////////////////////////////////
 
 
 void settings_setup_listeners()
@@ -866,6 +881,7 @@ void settings_setup_listeners()
     gSavedPerAccountSettings.getControl("FSStaticEyes")->getSignal()->connect(boost::bind(&handleStaticEyesChanged));
 	// <FS:Ansariel> FIRE-20288: Option to render friends only
 	gSavedPerAccountSettings.getControl("FSRenderFriendsOnly")->getSignal()->connect(boost::bind(&handleRenderFriendsOnlyChanged, _2));
+    gSavedSettings.getControl("FSUseAzertyKeyboardLayout")->getCommitSignal()->connect(boost::bind(&handleKeyboardLayoutChanged, _2));
 	// KKA-668 See if we can re-enable ALM (yes if RLV set RRD and the setting didn't persist, no if RRD was set manually and is still over threshold)
 	if (gSavedSettings.getBOOL("KokuaReinstateALM"))
 	{

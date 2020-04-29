@@ -11,7 +11,8 @@
 		Tastatur:
 	</text>
 	<check_box label="Mit Pfeiltasten bewegen" name="arrow_keys_move_avatar_check"/>
-	<check_box label="Drücken-drücken-halten, um zu rennen" name="tap_tap_hold_to_run"/>
+    <check_box label="AZERTY-Tastaturlayout verwenden" name="FSUseAzertyKeyboardLayout"/>
+    <check_box label="Drücken-drücken-halten, um zu rennen" name="tap_tap_hold_to_run"/>
 	<text name="mouse_lbl">
 		Maus:
 	</text>
