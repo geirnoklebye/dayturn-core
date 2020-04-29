@@ -21021,7 +21021,17 @@
     <key>Value</key>
     <integer>0</integer>
   </map>
-    <key>FSShowRegionGridCoordinates</key>
+  <key>FSUseAzertyKeyboardLayout</key>
+  <map>
+   <key>Comment</key>
+    <string>Uses a keyboard layout suitable for keyboards with AZERTY layout.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>    <key>FSShowRegionGridCoordinates</key>
     <map>
       <key>Comment</key>
       <string>Show the grid coordinates of each region in the world map.</string>
