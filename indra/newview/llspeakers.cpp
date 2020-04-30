@@ -368,7 +368,7 @@ void LLSpeakerMgr::initVoiceModerateMode()
 void LLSpeakerMgr::update(BOOL resort_ok)
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShowNearby))
 	{
 		return;
 	}
@@ -491,7 +491,7 @@ void LLSpeakerMgr::update(BOOL resort_ok)
 void LLSpeakerMgr::updateSpeakerList()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShowNearby))
 	{
 		return;
 	}
@@ -1031,7 +1031,7 @@ void LLLocalSpeakerMgr::updateSpeakerList()
 {
 //MK
 	// When @shownames is active, the list of nearby speakers must be emptied completely
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShowNearby))
 	{
 		for (speaker_map_t::iterator speaker_it = mSpeakers.begin(); speaker_it != mSpeakers.end(); ++speaker_it)
 		{

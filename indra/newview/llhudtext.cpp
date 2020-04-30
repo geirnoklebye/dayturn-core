@@ -289,7 +289,7 @@ void LLHUDText::setString(const std::string &text_utf8)
 				if (gAgent.getRegion()) str = gAgent.mRRInterface.stringReplaceWholeWord(str, gAgent.getRegion()->getName(), "(Region hidden)");
 				local_wtext = str; //utf8str_to_wstring(str, str.length());
 			}
-			if (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags)
+			if (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby)
 			{
 				std::string str = local_wtext; //wstring_to_utf8str(local_wtext, local_wtext.length());
 				str = gAgent.mRRInterface.getCensoredMessage(str);

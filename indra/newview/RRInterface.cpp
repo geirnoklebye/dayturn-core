@@ -519,9 +519,9 @@ void refreshCachedVariable (std::string var)
 	}
 
 #ifndef DISABLE_SHOWNEARBY
-	else if (var == "shownames" || var == "shownames_sec" || var == "shownametags") {
-#else
 	else if (var == "shownames" || var == "shownames_sec" || var == "shownametags" || var == "shownearby") {
+#else
+	else if (var == "shownames" || var == "shownames_sec" || var == "shownametags") {
 #endif
 		if (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby) {
 //			LLSideTray::getInstance()->childSetVisible("nearby_panel", false);
@@ -1273,7 +1273,11 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 		// Actions to do AFTER inserting the new behav
 		// KKA-635 refresh nametags and also handle shownames & shownametags including exceptions
 		if (action=="showhovertextall" || action=="showloc" || canon_action=="shownames" || canon_action=="shownametags"
+#ifndef DISABLE_SHOWNEARBY
+			|| action=="showhovertexthud" || action=="showhovertextworld" || action == "shownearby" ) {
+#else
 			|| action=="showhovertexthud" || action=="showhovertextworld" ) {
+#endif
 			updateAllHudTexts();
 			LLVOAvatar::invalidateNameTags();
 		}
@@ -1366,7 +1370,11 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 			// Actions to do AFTER removing the behav
 			// KKA-635 refresh nametags and also handle shownames & shownametags including exceptions
 			if (action=="showhovertextall" || action=="showloc" || canon_action=="shownames" || canon_action=="shownametags"
+#ifndef DISABLE_SHOWNEARBY
+				|| action=="showhovertexthud" || action=="showhovertextworld" || action == "shownearby") {
+#else
 				|| action=="showhovertexthud" || action=="showhovertextworld" ) {
+#endif
 				updateAllHudTexts();
 				LLVOAvatar::invalidateNameTags();
 			}
