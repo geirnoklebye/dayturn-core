@@ -1121,7 +1121,7 @@ void LLPanelPeople::updateRecentList()
 	mRecentList->setDirty();
 
 //MK
-	if (gRRenabled && ((gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags) || gAgent.mRRInterface.mContainsShowNearby))
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
 	{
 		LLPanel* nearby_tab = getChild<LLPanel>(NEARBY_TAB_NAME);
 		if (nearby_tab && nearby_tab->getVisible())
