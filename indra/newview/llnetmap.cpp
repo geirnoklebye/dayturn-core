@@ -445,106 +445,110 @@ void LLNetMap::draw()
 
 		LLWorld::getInstance()->getAvatars(&avatar_ids, &positions, gAgentCamera.getCameraPositionGlobal());
 
+		// new for @shownearby - don't draw nearby green dots at all
+		if (!gRRenabled || !gAgent.mRRInterface.mContainsShowNearby)
+		{
 		// Draw avatars
 		for (U32 i = 0; i < avatar_ids.size(); i++)
-		{
-			LLUUID uuid = avatar_ids[i];
-			// Skip self, we'll draw it later
-			if (uuid == gAgent.getID()) continue;
-
-			pos_map = globalPosToView(positions[i]);
-
-			if (uuid == gAgent.getID()) {
-				//
-				//	no need to plot our own position here
-				//	as that will be taken care of later
-				//
-				continue;
-			}
-
-			pos_map = globalPosToView(positions[i]);
-			bool show_as_friend = (LLAvatarTracker::instance().getBuddyInfo(uuid) != NULL);
-
-//MK
-				// Don't show as friend under @shownames, since it can give away an
-				// information about the avatars who are around
-				if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
-				{
-					show_as_friend = false;
-				}
-//mk
-			LLColor4 color = show_as_friend ? map_avatar_friend_color : map_avatar_color;
-
-			unknown_relative_z = false;
-
-			if (positions[i].mdV[VZ] == -1.f) {
-				if (camera_position.mV[VZ] >= COARSEUPDATE_MAX_Z) {
-					//
-					//	no exact data and cam
-					//	is high up.  we don't
-					//	know if avatar is above
-					//	or below us
-					//
-					unknown_relative_z = true;
-				}
-				else {
-					//
-					//	no exact data but cam is
-					//	below 1020.  avatar is
-					//	definitely above us so
-					//	bump Z-offset so we get
-					//	the "up" chevron
-					//
-					pos_map.mV[VZ] = F32_MAX;
-				}
-			}
-
-			LLWorldMapView::drawAvatar(
-				pos_map.mV[VX], pos_map.mV[VY], 
-				color, 
-				pos_map.mV[VZ], mDotRadius,
-				unknown_relative_z);
-
-			if(uuid.notNull())
 			{
-				bool selected = false;
-				uuid_vec_t::iterator sel_iter = sSelected.begin();
-				for (; sel_iter != sSelected.end(); sel_iter++)
-				{
-					if(*sel_iter == uuid)
+				LLUUID uuid = avatar_ids[i];
+				// Skip self, we'll draw it later
+				if (uuid == gAgent.getID()) continue;
+
+				pos_map = globalPosToView(positions[i]);
+
+				if (uuid == gAgent.getID()) {
+					//
+					//	no need to plot our own position here
+					//	as that will be taken care of later
+					//
+					continue;
+				}
+
+				pos_map = globalPosToView(positions[i]);
+				bool show_as_friend = (LLAvatarTracker::instance().getBuddyInfo(uuid) != NULL);
+
+	//MK
+					// Don't show as friend under @shownames, since it can give away an
+					// information about the avatars who are around
+					if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
 					{
-						selected = true;
-						break;
+						show_as_friend = false;
+					}
+	//mk
+				LLColor4 color = show_as_friend ? map_avatar_friend_color : map_avatar_color;
+
+				unknown_relative_z = false;
+
+				if (positions[i].mdV[VZ] == -1.f) {
+					if (camera_position.mV[VZ] >= COARSEUPDATE_MAX_Z) {
+						//
+						//	no exact data and cam
+						//	is high up.  we don't
+						//	know if avatar is above
+						//	or below us
+						//
+						unknown_relative_z = true;
+					}
+					else {
+						//
+						//	no exact data but cam is
+						//	below 1020.  avatar is
+						//	definitely above us so
+						//	bump Z-offset so we get
+						//	the "up" chevron
+						//
+						pos_map.mV[VZ] = F32_MAX;
 					}
 				}
-				if(selected)
+
+				LLWorldMapView::drawAvatar(
+					pos_map.mV[VX], pos_map.mV[VY], 
+					color, 
+					pos_map.mV[VZ], mDotRadius,
+					unknown_relative_z);
+
+				if(uuid.notNull())
 				{
-					if( (pos_map.mV[VX] < 0) ||
-						(pos_map.mV[VY] < 0) ||
-						(pos_map.mV[VX] >= getRect().getWidth()) ||
-						(pos_map.mV[VY] >= getRect().getHeight()) )
+					bool selected = false;
+					uuid_vec_t::iterator sel_iter = sSelected.begin();
+					for (; sel_iter != sSelected.end(); sel_iter++)
 					{
-						S32 x = ll_round( pos_map.mV[VX] );
-						S32 y = ll_round( pos_map.mV[VY] );
-						LLWorldMapView::drawTrackingCircle( getRect(), x, y, color, 1, 10);
-					} else
+						if(*sel_iter == uuid)
+						{
+							selected = true;
+							break;
+						}
+					}
+					if(selected)
 					{
-						LLWorldMapView::drawTrackingDot(pos_map.mV[VX],pos_map.mV[VY],color,0.f);
+						if( (pos_map.mV[VX] < 0) ||
+							(pos_map.mV[VY] < 0) ||
+							(pos_map.mV[VX] >= getRect().getWidth()) ||
+							(pos_map.mV[VY] >= getRect().getHeight()) )
+						{
+							S32 x = ll_round( pos_map.mV[VX] );
+							S32 y = ll_round( pos_map.mV[VY] );
+							LLWorldMapView::drawTrackingCircle( getRect(), x, y, color, 1, 10);
+						} else
+						{
+							LLWorldMapView::drawTrackingDot(pos_map.mV[VX],pos_map.mV[VY],color,0.f);
+						}
 					}
 				}
-			}
 
-			if (local_mouse) {
-				F32 dist_to_cursor_squared = dist_vec_squared(
-					LLVector2(pos_map.mV[VX], pos_map.mV[VY]),
-					LLVector2(local_mouse_x, local_mouse_y)
-				);
+				if (local_mouse) {
+					F32 dist_to_cursor_squared = dist_vec_squared(
+						LLVector2(pos_map.mV[VX], pos_map.mV[VY]),
+						LLVector2(local_mouse_x, local_mouse_y)
+					);
 
-				if (dist_to_cursor_squared < min_pick_dist_squared) {
-					if (dist_to_cursor_squared < closest_dist_squared) {
-						closest_dist_squared = dist_to_cursor_squared;
-						mClosestAgentToCursor = uuid;
-						mClosestAgentPosition = positions[i];
+					if (dist_to_cursor_squared < min_pick_dist_squared) {
+						if (dist_to_cursor_squared < closest_dist_squared) {
+							closest_dist_squared = dist_to_cursor_squared;
+							mClosestAgentToCursor = uuid;
+							mClosestAgentPosition = positions[i];
+						}
 					}
 				}
 			}
