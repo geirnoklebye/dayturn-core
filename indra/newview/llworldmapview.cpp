@@ -502,6 +502,11 @@ void LLWorldMapView::draw()
 						if (region && region->getHandle() == info->getHandle())
 						{
 							++agent_count; // Bump by 1 if we're in this region
+							// @shownearby - force this back to 0, ie no caption
+							if (gRRenabled && gAgent.mRRInterface.mContainsShowNearby)
+							{
+								agent_count = 0;
+							}
 						}
 						if (agent_count > 0)
 						{
@@ -590,7 +595,7 @@ void LLWorldMapView::draw()
 	// Drawn this after the current agent avatar so one can see nearby people
 	if (mapShowPeople && (level <= DRAW_SIMINFO_THRESHOLD))
 	{
-		drawAgents();
+		drawAgents();			
 	}
 
 	// Always draw tracking information
