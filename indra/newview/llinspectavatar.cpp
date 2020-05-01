@@ -199,7 +199,7 @@ BOOL LLInspectAvatar::postBuild(void)
 void LLInspectAvatar::onOpen(const LLSD& data)
 {
 //MK
-	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
 	{
 		closeFloater();		
 	}
