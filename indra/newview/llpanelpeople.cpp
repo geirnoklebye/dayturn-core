@@ -85,6 +85,7 @@
 #include "llnotificationhandler.h"
 #include "llnotificationmanager.h"
 #include "fskeywords.h"
+#include "llstartup.h"
 //ca
 
 #define FRIEND_LIST_UPDATE_TIMEOUT	0.5
@@ -853,20 +854,25 @@ void LLPanelPeople::updateFriendList()
 
 void LLPanelPeople::giveMessage(const LLUUID& agent_id, const LLAvatarName& av_name, const std::string& postMsg)
 {
-	//LLPanelPeople::reportToNearbyChat(av_name.getCompleteName(TRUE, FALSE) + postMsg);
-	LLChat chat;
-	chat.mText = postMsg;
-	chat.mSourceType = CHAT_SOURCE_SYSTEM;
-	chat.mFromName = av_name.getCompleteName(TRUE, FALSE);
-	chat.mFromID = agent_id;
-	chat.mChatType = CHAT_TYPE_RADAR;
-	// FS:LO FIRE-1439 - Clickable avatar names on local chat radar crossing reports
-	LLSD args;
-	LLNotificationsUI::LLNotificationManager::instance().onChat(chat, args);
-
-	if (FSKeywords::getInstance()->chatContainsKeyword(chat, true))
+	// Don't emit any messages until late in the startup process. Before this they're mostly wrong
+	// since it's us that's arriving in the region, not the agents who were already there
+	if (LLStartUp::getStartupState() >= STATE_CLEANUP)
 	{
-		FSKeywords::notify(chat);
+		//LLPanelPeople::reportToNearbyChat(av_name.getCompleteName(TRUE, FALSE) + postMsg);
+		LLChat chat;
+		chat.mText = postMsg;
+		chat.mSourceType = CHAT_SOURCE_SYSTEM;
+		chat.mFromName = av_name.getCompleteName(TRUE, FALSE);
+		chat.mFromID = agent_id;
+		chat.mChatType = CHAT_TYPE_RADAR;
+		// FS:LO FIRE-1439 - Clickable avatar names on local chat radar crossing reports
+		LLSD args;
+		LLNotificationsUI::LLNotificationManager::instance().onChat(chat, args);
+
+		if (FSKeywords::getInstance()->chatContainsKeyword(chat, true))
+		{
+			FSKeywords::notify(chat);
+		}
 	}
 }
 
