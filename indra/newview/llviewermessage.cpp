@@ -4717,10 +4717,14 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 
 		if (kokua_performance_agent_enable)
 		{
-			ca_performance_test_threshold("Agent", "RegionExceeds", LL_SIM_STAT_NUMAGENTMAIN, "%.0f", "%.0f", TRUE);
-			ca_performance_test_threshold("Agent", "NearbyExceeds", LL_SIM_STAT_NUMAGENTCHILD, "%.0f", "%.0f", TRUE);
-			ca_performance_test_delta("Agent", "RegionChange", LL_SIM_STAT_NUMAGENTMAIN, "%.0f", "%.0f", "%+.0f");
+			// @shownames - don't give agent count change notifications
+			if (!gRRenabled || !gAgent.mRRInterface.mContainsShowNearby)
+			{
+				ca_performance_test_threshold("Agent", "RegionExceeds", LL_SIM_STAT_NUMAGENTMAIN, "%.0f", "%.0f", TRUE);
+				ca_performance_test_delta("Agent", "RegionChange", LL_SIM_STAT_NUMAGENTMAIN, "%.0f", "%.0f", "%+.0f");
+			}
 			ca_performance_test_delta("Agent", "NearbyChange", LL_SIM_STAT_NUMAGENTCHILD, "%.0f", "%.0f", "%+.0f");
+			ca_performance_test_threshold("Agent", "NearbyExceeds", LL_SIM_STAT_NUMAGENTCHILD, "%.0f", "%.0f", TRUE);
 		}
 
 		if (kokua_performance_timing_enable)
