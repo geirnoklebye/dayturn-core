@@ -180,26 +180,31 @@ static void ca_give_message_trans(std::string msg, LLStringUtil::format_map_t ar
 	// we can deliver via chat & chat toast or as chat & notification
 
 	static LLCachedControl<bool> ca_use_notifications(gSavedSettings, "KokuaPerformanceUseNotifications");
-	
-	if (ca_use_notifications)
-	{
-		// all notifications have to be pre-declared, which is a problem for the
-		// region entry message which has a number of dynamic sections. The solution
-		// is we have a single notification where the whole message is passed as
-		// one parameter
-		LLSD nargs;
-		nargs["MESSAGE"] = LLTrans::getString(msg, args);
-		LLNotificationsUtil::add("CA_Performance_Compound", nargs);
-	}
-	else
-	{
-		LLChat chat;
-		chat.mFromID = LLUUID::null;
-		chat.mSourceType = CHAT_SOURCE_SYSTEM;
-		chat.mText = LLTrans::getString(msg, args);
 
-		LLSD none;
-		LLNotificationsUI::LLNotificationManager::instance().onChat(chat, none);
+	// Don't emit any messages until late in the startup process. Before this they're mostly wrong
+	// since it's us that's arriving in the region, not the agents who were already there
+	if (LLStartUp::getStartupState() >= STATE_CLEANUP)
+	{
+		if (ca_use_notifications)
+		{
+			// all notifications have to be pre-declared, which is a problem for the
+			// region entry message which has a number of dynamic sections. The solution
+			// is we have a single notification where the whole message is passed as
+			// one parameter
+			LLSD nargs;
+			nargs["MESSAGE"] = LLTrans::getString(msg, args);
+			LLNotificationsUtil::add("CA_Performance_Compound", nargs);
+		}
+		else
+		{
+			LLChat chat;
+			chat.mFromID = LLUUID::null;
+			chat.mSourceType = CHAT_SOURCE_SYSTEM;
+			chat.mText = LLTrans::getString(msg, args);
+
+			LLSD none;
+			LLNotificationsUI::LLNotificationManager::instance().onChat(chat, none);
+		}
 	}
 }
 
