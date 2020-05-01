@@ -950,6 +950,12 @@ void LLWorldMapView::drawAgents()
 		{
 			continue;
 		}
+		// @shownearby - skip for the agent's region
+		LLViewerRegion *region = gAgent.getRegion();
+		if (region && region->getHandle() == handle && gRRenabled && gAgent.mRRInterface.mContainsShowNearby)
+		{
+			continue;
+		}
 		LLSimInfo::item_info_list_t::const_iterator it = siminfo->getAgentLocation().begin();
 		while (it != siminfo->getAgentLocation().end())
 		{
