@@ -595,7 +595,7 @@ void LLWorldMapView::draw()
 	// Drawn this after the current agent avatar so one can see nearby people
 	if (mapShowPeople && (level <= DRAW_SIMINFO_THRESHOLD))
 	{
-		drawAgents();			
+		drawAgents();
 	}
 
 	// Always draw tracking information
