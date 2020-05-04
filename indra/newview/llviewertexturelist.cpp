@@ -1388,8 +1388,6 @@ S32Megabytes LLViewerTextureList::getMaxVideoRamSetting(bool get_recommended, fl
 		{
 			max_texmem = (S32Megabytes)128;
 		}
-
-		LL_WARNS() << "VRAM amount not detected, defaulting to " << max_texmem << " MB" << LL_ENDL;
 	}
 
 	S32Megabytes system_ram = gSysMemory.getPhysicalMemoryKB(); // In MB

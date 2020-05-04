@@ -743,7 +743,8 @@ bool LLGLManager::initGL()
 		// <FS:Ansariel> VRAM detection logging
 		LL_INFOS("RenderInit") << "VRAM Detected (ATIMemInfo):" << mVRAM << LL_ENDL;
 	}
-	else if (mHasNVXMemInfo)
+
+	if (mHasNVXMemInfo && mVRAM == 0)
 	{
 		S32 dedicated_memory;
 		glGetIntegerv(GL_GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, &dedicated_memory);
