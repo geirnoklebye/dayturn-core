@@ -61,7 +61,7 @@ typedef BOOL ( WINAPI* PfnCoSetProxyBlanket )( IUnknown* pProxy, DWORD dwAuthnSv
                                                OLECHAR* pServerPrincName, DWORD dwAuthnLevel, DWORD dwImpLevel,
                                                RPC_AUTH_IDENTITY_HANDLE pAuthInfo, DWORD dwCapabilities );
 
-HRESULT GetVideoMemoryViaWMI( WCHAR* strInputDeviceID, DWORD* pdwAdapterRam )
+HRESULT GetVideoMemoryViaWMI(WCHAR* strInputDeviceID, DWORD* pdwAdapterRam)
 {
     HRESULT hr;
     bool bGotMemory = false;
@@ -703,6 +703,8 @@ BOOL LLDXHardware::getInfo(BOOL vram_only, bool disable_wmi)
         }
 
 		// Get device 0
+		// By default 0 device is the primary one, howhever in case of various hybrid graphics
+		// like itegrated AMD and PCI AMD GPUs system might switch.
 		LL_DEBUGS("AppInit") << "devices_containerp->GetChildContainer" << LL_ENDL;
 		hr = devices_containerp->GetChildContainer(L"0", &device_containerp);
 		if(FAILED(hr) || !device_containerp)

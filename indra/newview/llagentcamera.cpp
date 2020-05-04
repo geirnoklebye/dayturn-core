@@ -299,6 +299,11 @@ LLAgentCamera::~LLAgentCamera()
 void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera, BOOL movement)
 // </FS:CR>
 {
+	if (gDisconnected)
+	{
+		return;
+	}
+
 //MK
 	if (gRRenabled)
 	{
