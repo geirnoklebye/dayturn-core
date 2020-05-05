@@ -139,7 +139,7 @@
     left_delta="0"
     name="FSUseAzertyKeyboardLayout"
     width="237"
-    top_pad="0"/>
+    top_pad="1"/>
   <check_box
    control_name="ResetCameraOnMovement"
    follows="left|top"
