@@ -133,7 +133,7 @@
   <check_box
     control_name="FSUseAzertyKeyboardLayout"
     follows="left|top"
-    height="20"
+    height="16"
     label="Use AZERTY keyboard layout"
     layout="topleft"
     left_delta="0"
