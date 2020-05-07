@@ -243,7 +243,7 @@ public:
 
 	// Non Virtuals
 	LLHandle<LLUICtrl> getHandle() const { return getDerivedHandle<LLUICtrl>(); }
-	BOOL			getIsChrome() const;
+	bool			getIsChrome() const;
 	
 	void			setTabStop( BOOL b );
 	BOOL			hasTabStop() const;
