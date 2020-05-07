@@ -84,7 +84,7 @@ private:
 
 	void populateNearMe();
 	void populateFriend();
-	BOOL visibleItemsSelected() const; // Returns true if any items in the current tab are selected.
+	bool visibleItemsSelected() const; // Returns true if any items in the current tab are selected.
 
     static void findCoro(std::string url, LLUUID mQueryID, std::string mName);
 	void find();

@@ -389,7 +389,7 @@ void LLFloaterAvatarPicker::draw()
 	}
 }
 
-BOOL LLFloaterAvatarPicker::visibleItemsSelected() const
+bool LLFloaterAvatarPicker::visibleItemsSelected() const
 {
 	LLPanel* active_panel = getChild<LLTabContainer>("ResidentChooserTabs")->getCurrentPanel();
 
@@ -405,7 +405,7 @@ BOOL LLFloaterAvatarPicker::visibleItemsSelected() const
 	{
 		return getChild<LLScrollListCtrl>("Friends")->getFirstSelectedIndex() >= 0;
 	}
-	return FALSE;
+	return false;
 }
 
 /*static*/
