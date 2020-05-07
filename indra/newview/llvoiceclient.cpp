@@ -717,7 +717,7 @@ BOOL LLVoiceClient::isParticipantAvatar(const LLUUID& id)
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 }
 
