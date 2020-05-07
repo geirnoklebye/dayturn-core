@@ -1349,6 +1349,11 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 // is in the standard viewer code (or Marine's viewer). However it is needed the rest of the time to prevent attachments bouncing
 // back on after being detached by a RLV operation
 //
+// CA The problems this routine causes at login outweight its possible role in preventing attachments bouncing back on 
+// (bear in mind Kokua's COF related code is highly influence by Firestorm/KB now) so I am tending back to believing
+// it's more harmful than useful. However, this time I'm going to leave behind plenty of logging so any future misbehaviours
+// can be checked to see if it's a scenario this routine would have caught
+//
 //MK
 	// When calling this function, one of two purposes are expected :
 	// - If this is the first time (i.e. immediately after logging on), look at all the links in the COF, request to wear the items that are not worn
@@ -1386,8 +1391,8 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
                                 std::string attachment_point_name;
                                 if (!gAgentAvatarp->getAttachedPointName(linked_item->getUUID(), attachment_point_name))
                                 {
-                                    //LL_INFOS() << "Removing links for " << linked_item->getName() << LL_ENDL;
-                                    LLAppearanceMgr::instance().removeCOFItemLinks(linked_item->getUUID());
+                                    LL_INFOS() << "Would have removed links for " << linked_item->getName() << LL_ENDL;
+                                    //LLAppearanceMgr::instance().removeCOFItemLinks(linked_item->getUUID());
                                 }
                             }
                         }
@@ -1395,7 +1400,8 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
                 }
                 LLUUID item_id(inv_item->getUUID());
             }
-            return;
+            LL_INFOS() << "Would have skipped rest of routine" << LL_ENDL;
+            //return;
         }
     }
 //mk
@@ -1444,12 +1450,12 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 
 				if (remove_attachment)
 				{
-					// LL_INFOS() << "found object to remove, id " << objectp->getID() << ", item " << objectp->getAttachmentItemID() << LL_ENDL;
+					LL_INFOS() << "found object to remove, id " << objectp->getID() << ", item " << objectp->getAttachmentItemID() << ", name " << objectp->getAttachmentItemName()<< LL_ENDL;
 					objects_to_remove.push_back(objectp);
 				}
 				else
 				{
-					// LL_INFOS() << "found object to keep, id " << objectp->getID() << ", item " << objectp->getAttachmentItemID() << LL_ENDL;
+					LL_INFOS() << "found object to keep, id " << objectp->getID() << ", item " << objectp->getAttachmentItemID() << ", name " << objectp->getAttachmentItemName()<< LL_ENDL;
 					current_item_ids.insert(object_item_id);
 					objects_to_retain.push_back(objectp);
 				}
@@ -1472,9 +1478,9 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 			items_to_add.push_back(*it);
 		}
 	}
-	// S32 remove_count = objects_to_remove.size();
-	// S32 add_count = items_to_add.size();
-	// LL_INFOS() << "remove " << remove_count << " add " << add_count << LL_ENDL;
+	S32 remove_count = objects_to_remove.size();
+	S32 add_count = items_to_add.size();
+	LL_INFOS() << "remove " << remove_count << " add " << add_count << LL_ENDL;
 
 //MK
     if (gRRenabled)
