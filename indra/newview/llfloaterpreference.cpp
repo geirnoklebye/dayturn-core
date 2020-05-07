@@ -1436,12 +1436,12 @@ void LLFloaterPreference::refreshEnabledState()
 
 	//Deferred/SSAO/Shadows
 	bool bumpshiny = gGLManager.mHasCubeMap && LLCubeMap::sUseCubeMaps && LLFeatureManager::getInstance()->isFeatureAvailable("RenderObjectBump") && gSavedSettings.getbool("RenderObjectBump");
-	BOOL shaders = gSavedSettings.getBOOL("WindLightUseAtmosShaders");
-	BOOL enabled = LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") &&
+	bool shaders = gSavedSettings.getbool("WindLightUseAtmosShaders");
+	bool enabled = LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") &&
 						bumpshiny &&
 						shaders && 
 						gGLManager.mHasFramebufferObject &&
-						(ctrl_wind_light->get()) ? TRUE : FALSE;
+						(ctrl_wind_light->get()) ? true : false;
 
 	ctrl_deferred->setEnabled(enabled);
 
@@ -1489,7 +1489,7 @@ void LLFloaterPreference::refreshEnabledStateAdvanced()
 	// Bump & Shiny	
 	LLCheckBoxCtrl* bumpshiny_ctrl = getChild<LLCheckBoxCtrl>("BumpShiny");
 	bool bumpshiny = gGLManager.mHasCubeMap && LLCubeMap::sUseCubeMaps && LLFeatureManager::getInstance()->isFeatureAvailable("RenderObjectBump");
-	bumpshiny_ctrl->setEnabled(bumpshiny ? TRUE : FALSE);
+	bumpshiny_ctrl->setEnabled(bumpshiny ? true : false);
     
 	// Avatar Mode
 	// Avatar Render Mode
@@ -1514,10 +1514,10 @@ void LLFloaterPreference::refreshEnabledStateAdvanced()
     //Deferred/SSAO/Shadows
     LLCheckBoxCtrl* ctrl_deferred = getChild<LLCheckBoxCtrl>("UseLightShaders");
     
-    BOOL enabled = LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") &&
-                        ((bumpshiny_ctrl && bumpshiny_ctrl->get()) ? TRUE : FALSE) &&
+    bool enabled = LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") &&
+                        ((bumpshiny_ctrl && bumpshiny_ctrl->get()) ? true : false) &&
                         gGLManager.mHasFramebufferObject &&
-                        (ctrl_wind_light->get()) ? TRUE : FALSE;
+                        (ctrl_wind_light->get()) ? true : false;
 
     ctrl_deferred->setEnabled(enabled);
 
