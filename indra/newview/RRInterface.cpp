@@ -1824,10 +1824,11 @@ static void force_sit(LLUUID object_uuid)
 			return;
 		}
 
-		if (gAgent.mRRInterface.mContainsInteract)
-		{
-			return;
-		}
+		// @interact shouldn't prevent force-sit traps etc from working, so disable this cheeck
+		//if (gAgent.mRRInterface.mContainsInteract)
+		//{
+		//	return;
+		//}
 
 		if (gAgent.mRRInterface.contains("sit"))
 		{
