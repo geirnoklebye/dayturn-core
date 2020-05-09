@@ -6,7 +6,7 @@
  layout="topleft"
  name="floaterbulkrename"
  title="RENAME CONTENT"
- width="410">
+ width="450">
     <floater.string
      name="nothing_to_modify_text">
         Selection contains no editable contents.
@@ -74,7 +74,7 @@
      control_name="BulkChangeIncludeGestures"
      height="16"
      name="check_gesture"
-     left="95"
+     left="105"
      width="16"
      top="25" />
     <icon
@@ -90,7 +90,7 @@
      height="16"
      layout="topleft"
      name="check_notecard"
-     left="95"
+     left="105"
      width="16"
      top_pad="5" />
     <icon
@@ -105,7 +105,7 @@
      control_name="BulkChangeIncludeObjects"
      height="16"
      name="check_object"
-     left="95"
+     left="105"
      top_pad="5"
      width="16" />
    <icon
@@ -120,7 +120,7 @@
      height="16"
      name="check_script"
      top="25"
-     left="180"
+     left="200"
      width="16"
      />
     <icon
@@ -136,7 +136,7 @@
      height="16"
      name="check_sound"
      top_pad="5"
-     left="180"
+     left="200"
      width="16" />
     <icon
      height="16"
@@ -150,7 +150,7 @@
      height="16"
      name="check_texture"
      top_pad="5"
-     left="180"
+     left="200"
      width="16" />
     <icon
      height="16"
@@ -163,7 +163,7 @@
     control_name="BulkChangeIncludeSettings"
     height="16"
     name="check_settings"
-    left="245"
+    left="275"
     top="25"
     width="16" />
   <icon
@@ -178,7 +178,7 @@
     layout="topleft"
    name="check_all"
      label="√ All"
-     left="290"
+     left="320"
      top="26"
      width="115">
       <button.commit_callback
@@ -207,7 +207,7 @@
      left="10"
      name="newperms"
      top="90"
-     width="370">
+     width="410">
         Rename content using regular expressions
     </text>
     <text
@@ -220,7 +220,7 @@
      mouse_opaque="false"
      name="text_search"
      top_pad="5"
-     width="370">
+     width="410">
        Search term to match (regular expression):
     </text>
     <line_editor
@@ -232,7 +232,7 @@
      left="10"
      right="-10"
      name="search_term"
-     width="370">
+     width="410">
        New Script
     </line_editor>
     <text
@@ -245,7 +245,7 @@
      mouse_opaque="false"
      name="text_replace"
      top_pad="5"
-     width="370">
+     width="410">
        Replace matched search term with:
     </text>
     <line_editor
@@ -257,7 +257,7 @@
      left="10"
      right="-10"
      name="replace_term"
-     width="370">
+     width="410">
        Renamed $&amp;
     </line_editor>
     <text
@@ -270,7 +270,7 @@
      mouse_opaque="false"
      name="text_help1"
      top_pad="5"
-     width="370">
+     width="410">
        ^ start  $ end  . any  \d digit  \w alpha-numeric  \D or \W inverts \d or \w
     </text>
     <text
@@ -283,7 +283,7 @@
      mouse_opaque="false"
      name="text_help2"
      top_pad="5"
-     width="370">
+     width="410">
          \ escape next character  x|y x or y  [xyz] any of x,y,z  x* 0 or more x
     </text>
     <text
@@ -296,7 +296,7 @@
      mouse_opaque="false"
      name="text_help3"
      top_pad="5"
-     width="370">
+     width="410">
        x+ 1 or more x  x{n} exactly n of x  $&amp; is matched string in replace term
     </text>
     <scroll_list
@@ -307,13 +307,13 @@
      left="10"
      name="queue output"
      top_pad="1"
-     width="385" />
+     width="425" />
     <button
      follows="left|top"
      height="23"
      label="OK"
      layout="topleft"
-     left="110"
+     left="150"
      name="ok"
      top_pad="10"
      width="90">
