@@ -178,6 +178,7 @@
 #include "fsfloaterimport.h"
 #include "kokuachatbar.h"
 #include "kokuarlvfloaters.h"
+#include "kokuafloaterbulkrename.h"
 // NaCl - Sound explorer
 #include "fsfloaterposestand.h"
 #include "NACLfloaterexploresounds.h"
@@ -227,6 +228,7 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("ban_duration", "floater_ban_duration.xml", &LLFloaterReg::build<LLFloaterBanDuration>);
 	LLFloaterReg::add("beacons", "floater_beacons.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterBeacons>);
 	LLFloaterReg::add("bulk_perms", "floater_bulk_perms.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterBulkPermission>);
+	LLFloaterReg::add("bulk_rename", "floater_bulk_rename.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<KokuaFloaterBulkRename>);
 	LLFloaterReg::add("buy_currency", "floater_buy_currency.xml", &LLFloaterBuyCurrency::buildFloater);
 	LLFloaterReg::add("buy_currency_html", "floater_buy_currency_html.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterBuyCurrencyHTML>);	
 	LLFloaterReg::add("buy_land", "floater_buy_land.xml", &LLFloaterBuyLand::buildFloater);

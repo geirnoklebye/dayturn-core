@@ -781,6 +781,7 @@ set(viewer_SOURCE_FILES
 	  kokuarlvfloaters.cpp
 	  kokuarlvextras.cpp
 	  kokuachatbar.cpp
+	  kokuafloaterbulkrename.cpp
     )
 
 set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING
@@ -1444,6 +1445,7 @@ set(viewer_HEADER_FILES
 	  kokuarlvfloaters.h
 	  kokuarlvextras.h
 	  kokuachatbar.h
+	  kokuafloaterbulkrename.h
     )
     
 # Generate the build version here to avoid rebuilding all of newview each time
