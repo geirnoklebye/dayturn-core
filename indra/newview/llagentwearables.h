@@ -206,9 +206,6 @@ public:
 	void		setInitialWearablesUpdateReceived()	{ mInitialWearablesUpdateReceived = true; }
 	void		setWearablesLoaded()				{ mWearablesLoaded = true; }
 
-	void		checkModifiableShape();
-	bool		hasModifiableShape()				{ return mHasModifiableShape; }
-	void		setShapeAvatarOffset(bool send_update = true);
 //mk from HB
 
 //MK
@@ -250,11 +247,6 @@ private:
 	static bool		mInitialWearablesLoaded;
 // [/SL:KB]
 	BOOL			mWearablesLoaded;
-//MK from HB
-	bool				mHasModifiableShape;
-	LLViewerWearable*	mLastWornShape;
-	F32					mSavedOffset;
-//mk from HB
 
 	/**
 	 * True if agent's outfit is being changed now.

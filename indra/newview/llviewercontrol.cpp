@@ -122,16 +122,6 @@ static bool handleRestrainedLoveLoggingChanged(const LLSD& newvalue)
 	return true;
 }
 
-static bool handleRestrainedLoveOffsetAvatarChanged(const LLSD& newvalue)
-{
-	if (isAgentAvatarValid())
-	{
-		gAgentWearables.setShapeAvatarOffset();
-	}
-	//gAgent.sendAgentSetAppearance();
-	return true;
-}
-
 static bool handleRestrainedLoveLastStandingLocationChanged(const LLSD& newvalue)
 {
 	// Do not let the user change these values manually (could lead to cheating through @standtp)
@@ -819,9 +809,6 @@ void settings_setup_listeners()
 //MK
 	gSavedSettings.getControl("RestrainedLoveDebug")->getSignal()->connect(boost::bind(&handleRestrainedLoveDebugChanged, _2));
 	gSavedSettings.getControl("RestrainedLoveLogging")->getSignal()->connect(boost::bind(&handleRestrainedLoveLoggingChanged, _2));
-	gSavedPerAccountSettings.getControl("RestrainedLoveOffsetAvatarX")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
-	gSavedPerAccountSettings.getControl("RestrainedLoveOffsetAvatarY")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
-	gSavedPerAccountSettings.getControl("RestrainedLoveOffsetAvatarZ")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
 	gSavedPerAccountSettings.getControl("RestrainedLoveLastStandingLocation")->getSignal()->connect(boost::bind(&handleRestrainedLoveLastStandingLocationChanged, _2));
 	gSavedSettings.getControl("RenderDeferredShowInvisiprims")->getSignal()->connect(boost::bind(&handleRenderDeferredShowInvisiprimsChanged, _2));
 	gSavedSettings.getControl("RestrainedLoveCamDistNbGradients")->getSignal()->connect(boost::bind(&handleRestrainedLoveCamDistNbGradientsChanged, _2));

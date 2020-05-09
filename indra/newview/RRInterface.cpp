@@ -120,7 +120,6 @@ BOOL RRInterface::sCanOoc = TRUE;
 std::string RRInterface::sRecvimMessage = "The Resident you messaged is prevented from reading your instant messages at the moment, please try again later.";
 std::string RRInterface::sSendimMessage = "*** IM blocked by sender's viewer";
 std::string RRInterface::sBlacklist = "";
-F32 RRInterface::sLastAvatarZOffsetCommit = 1.f;
 F32 RRInterface::sLastOutfitChange = -1000.f;
 U32 RRInterface::mCamDistNbGradients = 40;
 BOOL RRInterface::sRenderLimitRenderedThisFrame = FALSE;
@@ -808,7 +807,6 @@ RRInterface::RRInterface():
 
 	mLastObjectSatOn = LLUUID::null;
 
-	sLastAvatarZOffsetCommit = 1.f; // So a first shape update will be done shortly after the viewer has started
 	sLastOutfitChange = -1000.f;
 	updateCameraLimits();
 	updateLimits();
@@ -2169,7 +2167,6 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 		return res;
 	}
     else if (command == "adjustheight") { // adjustheight:adjustment_centimeters=force or adjustheight:ref_pelvis_to_foot;scalar[;delta]=force
-//        if (!gSavedPerAccountSettings.controlExists("RestrainedLoveOffsetAvatarZ")) {
         if (!gSavedPerAccountSettings.controlExists("AvatarHoverOffsetZ")) {
             return FALSE;
         }
@@ -2197,7 +2194,6 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 			else if (val < -2.0f) {
                 val = -2.0f;
             }
-//            gSavedPerAccountSettings.setF32("RestrainedLoveOffsetAvatarZ", val);
             gSavedPerAccountSettings.setF32("AvatarHoverOffsetZ", val);
         }
 	}
