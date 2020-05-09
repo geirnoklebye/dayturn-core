@@ -387,7 +387,6 @@ static std::string gLaunchFileOnQuit;
 const char* const VIEWER_WINDOW_CLASSNAME = "Second Life";
 
 //MK
-const F32 Z_OFFSET_THROTTLE_DELAY = 1.f;	// in seconds
 const F32 OUTFIT_CLEANUP_DELAY = 1.f;	// in seconds
 //mk
 
