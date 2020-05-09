@@ -4417,8 +4417,7 @@ void process_kill_object(LLMessageSystem *mesgsys, void **user_data)
 
 	if (need_cof_resync)
 	{
-		//CA: Use Kitty's version of this since we have it already rather than Henri's additions for the same purpose
-		LLAppearanceMgr::instance().syncCofVersionAndRefresh();
+		LLAppearanceMgr::instance().requestServerAppearanceUpdate();
 	}
 }
 //CA Imported code from Henri Beachamp ends above this comment

@@ -9893,22 +9893,12 @@ void handle_rebake_textures(void*)
 	gAgentAvatarp->forceBakeAllTextures(slam_for_debug);
 	if (gAgent.getRegion() && gAgent.getRegion()->getCentralBakeVersion())
 	{
-// [SL:KB] - Patch: Appearance-Misc | Checked: 2015-06-27 (Catznip-3.7)
-		if (!gAgent.getRegionCapability("IncrementCOFVersion").empty())
-		{
-			LLAppearanceMgr::instance().syncCofVersionAndRefresh();
-		}
-		else
-		{
 //MK from HB
-			gAgentWearables.checkModifiableShape();
 			LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy;
 			LLAppearanceMgr::instance().enforceCOFItemRestrictions (cb);
 //mk from HB
 			LLAppearanceMgr::instance().requestServerAppearanceUpdate();
-		}
-// [/SL:KB]
-//		LLAppearanceMgr::instance().requestServerAppearanceUpdate();
+
 		avatar_tex_refresh(gAgentAvatarp); // <FS:CR> FIRE-11800 - Refresh the textures too
 	}
 	reset_mesh_lod(gAgentAvatarp); // <FS:Ansariel> Reset Mesh LOD
