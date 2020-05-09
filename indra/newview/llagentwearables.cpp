@@ -66,10 +66,6 @@ bool LLAgentWearables::mInitialWearablesLoaded = false;
 
 using namespace LLAvatarAppearanceDefines;
 
-//MK
-const F32 OFFSET_FACTOR = 0.66f; // This factor is arbitrary and is supposed to align the baked avatar Hover setting with the offset we wanted to apply in the first place.
-//mk
-
 ///////////////////////////////////////////////////////////////////////////////
 
 void set_default_permissions(LLViewerInventoryItem* item)
