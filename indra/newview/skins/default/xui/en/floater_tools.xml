@@ -2791,11 +2791,20 @@ even though the user gets a free copy.
              width="90" />
             <button
              follows="left|top"
-             height="23"
+             height="20"
              label="Permissions"
              layout="topleft"
              left_pad="5"
              name="button permissions"
+             top="8"
+             width="80" />
+            <button
+             follows="left|top"
+             height="20"
+             label="Bulk Rename"
+             layout="topleft"
+             top_pad="1"
+             name="button bulk_rename"
              width="80" />
             <button
              top="8"
