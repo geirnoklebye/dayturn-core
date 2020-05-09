@@ -892,7 +892,7 @@ void LLAgent::handleServerFeaturesTransition()
 	{
 		mRebakeNeeded = false;
 		// and again use KB's version rather than adding HB's
-    LLAppearanceMgr::instance().syncCofVersionAndRefresh();
+    LLAppearanceMgr::instance().requestServerAppearanceUpdate();
   }
 }
 
