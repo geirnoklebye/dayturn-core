@@ -234,7 +234,7 @@ BOOL LLVOWater::updateGeometry(LLDrawable *drawable)
 
 	mDrawable->movePartition();
 	LLPipeline::sCompiles++;
-	return TRUE;
+	return true;
 }
 
 void LLVOWater::initClass()
