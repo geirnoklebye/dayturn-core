@@ -117,7 +117,8 @@ bool LLVertexBuffer::sMapped = false;
 bool LLVertexBuffer::sUseStreamDraw = true;
 bool LLVertexBuffer::sUseVAO = false;
 bool LLVertexBuffer::sPreferStreamDraw = false;
-
+// <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
+LLVertexBuffer* LLVertexBuffer::sUtilityBuffer = NULL;
 
 U32 LLVBOPool::genBuffer()
 {
@@ -569,7 +570,8 @@ void LLVertexBuffer::setupClientArrays(U32 data_mask)
 static LLTrace::BlockTimerStatHandle FTM_VB_DRAW_ARRAYS("drawArrays");
 void LLVertexBuffer::drawArrays(U32 mode, const std::vector<LLVector3>& pos, const std::vector<LLVector3>& norm)
 {
-	LL_RECORD_BLOCK_TIME(FTM_VB_DRAW_ARRAYS);
+	// <FS:ND/> Fast timers can have measurable impact in frequent places. A better all around solution would be to disable all fast timers until the fast timer view is open. But we're not there yet.
+	//LL_RECORD_BLOCK_TIME(FTM_VB_DRAW_ARRAYS);
 	llassert(!LLGLSLShader::sNoFixedFunction || LLGLSLShader::sCurBoundShaderPtr != NULL);
 	gGL.syncMatrices();
 
@@ -590,79 +592,234 @@ void LLVertexBuffer::drawArrays(U32 mode, const std::vector<LLVector3>& pos, con
 		return;
 	}
 
-	unbind();
-	
-	setupClientArrays(MAP_VERTEX | MAP_NORMAL);
+	// <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
+	//unbind();
+	//
+	//setupClientArrays(MAP_VERTEX | MAP_NORMAL);
 
-	LLGLSLShader* shader = LLGLSLShader::sCurBoundShaderPtr;
+	//LLGLSLShader* shader = LLGLSLShader::sCurBoundShaderPtr;
 
-	if (shader)
+	//if (shader)
+	//{
+	//	S32 loc = LLVertexBuffer::TYPE_VERTEX;
+	//	if (loc > -1)
+	//	{
+	//		glVertexAttribPointerARB(loc, 3, GL_FLOAT, GL_FALSE, 0, pos[0].mV);
+	//	}
+	//	loc = LLVertexBuffer::TYPE_NORMAL;
+	//	if (loc > -1)
+	//	{
+	//		glVertexAttribPointerARB(loc, 3, GL_FLOAT, GL_FALSE, 0, norm[0].mV);
+	//	}
+	//}
+	//else
+	//{
+	//	glVertexPointer(3, GL_FLOAT, 0, pos[0].mV);
+	//	glNormalPointer(GL_FLOAT, 0, norm[0].mV);
+	//}
+	//LLGLSLShader::startProfile();
+	//glDrawArrays(sGLMode[mode], 0, count);
+	//LLGLSLShader::stopProfile(count, mode);
+	U32 start_pos = 0;
+	U32 remaining = pos.size();
+
+	while (remaining > 0)
 	{
-		S32 loc = LLVertexBuffer::TYPE_VERTEX;
-		if (loc > -1)
+		count = llmin(remaining, 65536u);
+		start_pos = pos.size() - remaining;
+		remaining -= count;
+
+		bool has_buffer = true;
+		if (!sUtilityBuffer)
 		{
-			glVertexAttribPointerARB(loc, 3, GL_FLOAT, GL_FALSE, 0, pos[0].mV);
+			sUtilityBuffer = new LLVertexBuffer(MAP_VERTEX | MAP_NORMAL | MAP_TEXCOORD0, GL_STREAM_DRAW);
+			has_buffer = sUtilityBuffer->allocateBuffer(count, count, true);
 		}
-		loc = LLVertexBuffer::TYPE_NORMAL;
-		if (loc > -1)
+		if (sUtilityBuffer->getNumVerts() < (S32)count)
 		{
-			glVertexAttribPointerARB(loc, 3, GL_FLOAT, GL_FALSE, 0, norm[0].mV);
+			has_buffer = sUtilityBuffer->resizeBuffer(count, count);
+		}
+
+		if (has_buffer)
+		{
+			LLStrider<LLVector3> vertex_strider;
+			LLStrider<LLVector3> normal_strider;
+			sUtilityBuffer->getVertexStrider(vertex_strider);
+			sUtilityBuffer->getNormalStrider(normal_strider);
+			for (U32 i = 0; i < count; ++i)
+			{
+				*(vertex_strider++) = pos[start_pos + i];
+				*(normal_strider++) = norm[start_pos + i];
+			}
+
+			sUtilityBuffer->setBuffer(MAP_VERTEX | MAP_NORMAL);
+			LLGLSLShader::startProfile();
+			sUtilityBuffer->drawArrays(mode, 0, count);
+			LLGLSLShader::stopProfile(count, mode);
+		}
+		else
+		{
+			unbind();
+
+			setupClientArrays(MAP_VERTEX | MAP_NORMAL);
+
+			LLGLSLShader* shader = LLGLSLShader::sCurBoundShaderPtr;
+
+			if (shader)
+			{
+				S32 loc = LLVertexBuffer::TYPE_VERTEX;
+				if (loc > -1)
+				{
+					glVertexAttribPointerARB(loc, 3, GL_FLOAT, GL_FALSE, 0, pos[start_pos].mV);
+				}
+				loc = LLVertexBuffer::TYPE_NORMAL;
+				if (loc > -1)
+				{
+					glVertexAttribPointerARB(loc, 3, GL_FLOAT, GL_FALSE, 0, norm[start_pos].mV);
+				}
+			}
+			else
+			{
+				glVertexPointer(3, GL_FLOAT, 0, pos[start_pos].mV);
+				glNormalPointer(GL_FLOAT, 0, norm[start_pos].mV);
+			}
+			LLGLSLShader::startProfile();
+			glDrawArrays(sGLMode[mode], 0, count);
+			LLGLSLShader::stopProfile(count, mode);
 		}
 	}
-	else
-	{
-		glVertexPointer(3, GL_FLOAT, 0, pos[0].mV);
-		glNormalPointer(GL_FLOAT, 0, norm[0].mV);
-	}
-	LLGLSLShader::startProfile();
-	glDrawArrays(sGLMode[mode], 0, count);
-	LLGLSLShader::stopProfile(count, mode);
+	// </FS:Ansariel>
 }
 
 //static
-void LLVertexBuffer::drawElements(U32 mode, const LLVector4a* pos, const LLVector2* tc, S32 num_indices, const U16* indicesp)
+// <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
+//void LLVertexBuffer::drawElements(U32 mode, const LLVector4a* pos, const LLVector2* tc, S32 num_indices, const U16* indicesp)
+void LLVertexBuffer::drawElements(U32 mode, const S32 num_vertices, const LLVector4a* pos, const LLVector2* tc, S32 num_indices, const U16* indicesp)
+// </FS:Ansariel>
 {
 	llassert(!LLGLSLShader::sNoFixedFunction || LLGLSLShader::sCurBoundShaderPtr != NULL);
 
+	// <FS:Ansariel> Crash fix due to invalid calls to drawElements by Drake Arconis
+	if (num_vertices <= 0)
+	{
+		LL_WARNS() << "Called drawElements with 0 vertices" << LL_ENDL;
+		return;
+	}
+
+	if (num_indices <= 0)
+	{
+		LL_WARNS() << "Called drawElements with 0 indices" << LL_ENDL;
+		return;
+	}
+	// </FS:Ansariel>
+
 	gGL.syncMatrices();
 
+	// <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
+	bool has_buffer = true;
+	if (!sUtilityBuffer)
+	{
+		sUtilityBuffer = new LLVertexBuffer(MAP_VERTEX | MAP_NORMAL | MAP_TEXCOORD0, GL_STREAM_DRAW);
+		has_buffer = sUtilityBuffer->allocateBuffer(num_vertices, num_indices, true);
+	}
+	if (sUtilityBuffer->getNumVerts() < num_vertices || sUtilityBuffer->getNumIndices() < num_indices)
+	{
+		has_buffer = sUtilityBuffer->resizeBuffer(llmax(sUtilityBuffer->getNumVerts(), num_vertices), llmax(sUtilityBuffer->getNumIndices(), num_indices));
+	}
+	// </FS:Ansariel>
+
 	U32 mask = LLVertexBuffer::MAP_VERTEX;
+	// <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
+	if (has_buffer)
+	{
+		LLStrider<U16> index_strider;
+		LLStrider<LLVector3> vertex_strider;
+		sUtilityBuffer->getIndexStrider(index_strider);
+		sUtilityBuffer->getVertexStrider(vertex_strider);
+		const S32 index_size = ((num_indices * sizeof(U16)) + 0xF) & ~0xF;
+		const S32 vertex_size = ((num_vertices * 4 * sizeof(F32)) + 0xF) & ~0xF;
+		LLVector4a::memcpyNonAliased16((F32*)index_strider.get(), (F32*)indicesp, index_size);
+		LLVector4a::memcpyNonAliased16((F32*)vertex_strider.get(), (F32*)pos, vertex_size);
+	}
+	// </FS:Ansariel>
 	if (tc)
 	{
 		mask = mask | LLVertexBuffer::MAP_TEXCOORD0;
+		// <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
+		if (has_buffer)
+		{
+			LLStrider<LLVector2> tc_strider;
+			sUtilityBuffer->getTexCoord0Strider(tc_strider);
+			const S32 tc_size = ((num_vertices * 2 * sizeof(F32)) + 0xF) & ~0xF;
+			LLVector4a::memcpyNonAliased16((F32*)tc_strider.get(), (F32*)tc, tc_size);
+		}
+		// </FS:Ansariel>
 	}
 
-	unbind();
-	
-	setupClientArrays(mask);
+	// <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
+	//unbind();
+	//
+	//setupClientArrays(mask);
 
-	if (LLGLSLShader::sNoFixedFunction)
+	//if (LLGLSLShader::sNoFixedFunction)
+	//{
+	//	S32 loc = LLVertexBuffer::TYPE_VERTEX;
+	//	glVertexAttribPointerARB(loc, 3, GL_FLOAT, GL_FALSE, 16, pos);
+
+	//	if (tc)
+	//	{
+	//		loc = LLVertexBuffer::TYPE_TEXCOORD0;
+	//		glVertexAttribPointerARB(loc, 2, GL_FLOAT, GL_FALSE, 0, tc);
+	//	}
+	//}
+	//else
+	//{
+	//	glTexCoordPointer(2, GL_FLOAT, 0, tc);
+	//	glVertexPointer(3, GL_FLOAT, 16, pos);
+	//}
+
+	//LLGLSLShader::startProfile();
+	//glDrawElements(sGLMode[mode], num_indices, GL_UNSIGNED_SHORT, indicesp);
+	//LLGLSLShader::stopProfile(num_indices, mode);
+	if (has_buffer)
 	{
-		S32 loc = LLVertexBuffer::TYPE_VERTEX;
-		glVertexAttribPointerARB(loc, 3, GL_FLOAT, GL_FALSE, 16, pos);
-
-		if (tc)
-		{
-			loc = LLVertexBuffer::TYPE_TEXCOORD0;
-			glVertexAttribPointerARB(loc, 2, GL_FLOAT, GL_FALSE, 0, tc);
-		}
+		sUtilityBuffer->setBuffer(mask);
+		LLGLSLShader::startProfile();
+		sUtilityBuffer->draw(mode, num_indices, 0);
+		LLGLSLShader::stopProfile(num_indices, mode);
 	}
 	else
 	{
-		glTexCoordPointer(2, GL_FLOAT, 0, tc);
-		glVertexPointer(3, GL_FLOAT, 16, pos);
-	}
+		unbind();
+		
+		setupClientArrays(mask);
 
-	LLGLSLShader::startProfile();
-	glDrawElements(sGLMode[mode], num_indices, GL_UNSIGNED_SHORT, indicesp);
-	LLGLSLShader::stopProfile(num_indices, mode);
+		if (LLGLSLShader::sNoFixedFunction)
+		{
+			S32 loc = LLVertexBuffer::TYPE_VERTEX;
+			glVertexAttribPointerARB(loc, 3, GL_FLOAT, GL_FALSE, 16, pos);
+
+			if (tc)
+			{
+				loc = LLVertexBuffer::TYPE_TEXCOORD0;
+				glVertexAttribPointerARB(loc, 2, GL_FLOAT, GL_FALSE, 0, tc);
+			}
+		}
+		else
+		{
+			glTexCoordPointer(2, GL_FLOAT, 0, tc);
+			glVertexPointer(3, GL_FLOAT, 16, pos);
+		}
+
+		LLGLSLShader::startProfile();
+		glDrawElements(sGLMode[mode], num_indices, GL_UNSIGNED_SHORT, indicesp);
+		LLGLSLShader::stopProfile(num_indices, mode);
+	}
+	// </FS:Ansariel>
 }
 
 void LLVertexBuffer::validateRange(U32 start, U32 end, U32 count, U32 indices_offset) const
 {
-    llassert(start < (U32)mNumVerts);
-    llassert(end < (U32)mNumVerts);
-
 	if (start >= (U32) mNumVerts ||
 	    end >= (U32) mNumVerts)
 	{
@@ -682,9 +839,6 @@ void LLVertexBuffer::validateRange(U32 start, U32 end, U32 count, U32 indices_of
 		U16* idx = ((U16*) getIndicesPointer())+indices_offset;
 		for (U32 i = 0; i < count; ++i)
 		{
-            llassert(idx[i] >= start);
-            llassert(idx[i] <= end);
-
 			if (idx[i] < start || idx[i] > end)
 			{
 				LL_ERRS() << "Index out of range: " << idx[i] << " not in [" << start << ", " << end << "]" << LL_ENDL;
@@ -703,7 +857,6 @@ void LLVertexBuffer::validateRange(U32 start, U32 end, U32 count, U32 indices_of
 			for (U32 i = start; i < end; i++)
 			{
 				S32 idx = (S32) (v[i][3]+0.25f);
-                llassert(idx >= 0);
 				if (idx < 0 || idx >= shader->mFeatures.mIndexedTextureChannels)
 				{
 					LL_ERRS() << "Bad texture index found in vertex data stream." << LL_ENDL;
@@ -857,7 +1010,8 @@ void LLVertexBuffer::drawArrays(U32 mode, U32 first, U32 count) const
 	}
 
 	{
-		LL_RECORD_BLOCK_TIME(FTM_GL_DRAW_ARRAYS);
+		// <FS:ND/> Fast timers can have measurable impact in frequent places. A better all around solution would be to disable all fast timers until the fast timer view is open. But we're not there yet.
+		//LL_RECORD_BLOCK_TIME(FTM_GL_DRAW_ARRAYS);
 		stop_glerror();
 		LLGLSLShader::startProfile();
 		stop_glerror();
@@ -917,6 +1071,11 @@ void LLVertexBuffer::cleanupClass()
 	sStreamVBOPool.cleanup();
 	sDynamicVBOPool.cleanup();
 	sDynamicCopyVBOPool.cleanup();
+	// <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
+	delete sUtilityBuffer;
+	sUtilityBuffer = NULL;
+	// </FS:Ansariel>
+
 }
 
 //----------------------------------------------------------------------------
@@ -949,15 +1108,15 @@ S32 LLVertexBuffer::determineUsage(S32 usage)
 	{ //only stream_draw and dynamic_draw are supported when using VBOs, dynamic draw is the default
 		if (ret_usage != GL_DYNAMIC_COPY_ARB)
 		{
-		    if (sDisableVBOMapping)
-		    { //always use stream draw if VBO mapping is disabled
-			    ret_usage = GL_STREAM_DRAW_ARB;
-		    }
-		    else
-		    {
-			    ret_usage = GL_DYNAMIC_DRAW_ARB;
-		    }
-	    }
+		if (sDisableVBOMapping)
+		{ //always use stream draw if VBO mapping is disabled
+			ret_usage = GL_STREAM_DRAW_ARB;
+		}
+		else
+		{
+			ret_usage = GL_DYNAMIC_DRAW_ARB;
+		}
+	}
 	}
 	
 	return ret_usage;
@@ -1389,7 +1548,8 @@ void LLVertexBuffer::setupVertexArray()
 		return;
 	}
 
-	LL_RECORD_BLOCK_TIME(FTM_SETUP_VERTEX_ARRAY);
+	// <FS:ND/> Fast timers can have measurable impact in frequent places. A better all around solution would be to disable all fast timers until the fast timer view is open. But we're not there yet.
+	//LL_RECORD_BLOCK_TIME(FTM_SETUP_VERTEX_ARRAY);
 #if GL_ARB_vertex_array_object
 	glBindVertexArray(mGLArray);
 #endif
@@ -1478,7 +1638,7 @@ void LLVertexBuffer::setupVertexArray()
 				//glVertexattribIPointer requires GLSL 1.30 or later
 				if (gGLManager.mGLSLVersionMajor > 1 || gGLManager.mGLSLVersionMinor >= 30)
 				{
-					glVertexAttribIPointer(i, attrib_size[i], attrib_type[i], sTypeSize[i], (const GLvoid*) mOffsets[i]); 
+					glVertexAttribIPointer(i, attrib_size[i], attrib_type[i], sTypeSize[i], (const GLvoid*) (ptrdiff_t)mOffsets[i]); 
 				}
 #endif
 			}
@@ -1629,7 +1789,8 @@ volatile U8* LLVertexBuffer::mapVertexBuffer(S32 type, S32 index, S32 count, boo
 					if (map_range)
 					{
 #ifdef GL_ARB_map_buffer_range
-						LL_RECORD_BLOCK_TIME(FTM_VBO_MAP_BUFFER_RANGE);
+						// <FS:ND/> Fast timers can have measurable impact in frequent places. A better all around solution would be to disable all fast timers until the fast timer view is open. But we're not there yet.
+						//LL_RECORD_BLOCK_TIME(FTM_VBO_MAP_BUFFER_RANGE);
 						S32 offset = mOffsets[type] + sTypeSize[type]*index;
 						S32 length = (sTypeSize[type]*count+0xF) & ~0xF;
 						src = (U8*) glMapBufferRange(GL_ARRAY_BUFFER_ARB, offset, length, 
@@ -1653,7 +1814,8 @@ volatile U8* LLVertexBuffer::mapVertexBuffer(S32 type, S32 index, S32 count, boo
 							}
 						}
 
-						LL_RECORD_BLOCK_TIME(FTM_VBO_MAP_BUFFER);
+						// <FS:ND/> Fast timers can have measurable impact in frequent places. A better all around solution would be to disable all fast timers until the fast timer view is open. But we're not there yet.
+						//LL_RECORD_BLOCK_TIME(FTM_VBO_MAP_BUFFER);
 						src = (U8*) glMapBufferRange(GL_ARRAY_BUFFER_ARB, 0, mSize, 
 							GL_MAP_WRITE_BIT | 
 							GL_MAP_FLUSH_EXPLICIT_BIT);
@@ -1818,7 +1980,8 @@ volatile U8* LLVertexBuffer::mapIndexBuffer(S32 index, S32 count, bool map_range
 					if (map_range)
 					{
 #ifdef GL_ARB_map_buffer_range
-						LL_RECORD_BLOCK_TIME(FTM_VBO_MAP_INDEX_RANGE);
+						// <FS:ND/> Fast timers can have measurable impact in frequent places. A better all around solution would be to disable all fast timers until the fast timer view is open. But we're not there yet.
+						//LL_RECORD_BLOCK_TIME(FTM_VBO_MAP_INDEX_RANGE);
 						S32 offset = sizeof(U16)*index;
 						S32 length = sizeof(U16)*count;
 						src = (U8*) glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER_ARB, offset, length, 
@@ -1830,7 +1993,8 @@ volatile U8* LLVertexBuffer::mapIndexBuffer(S32 index, S32 count, bool map_range
 					else
 					{
 #ifdef GL_ARB_map_buffer_range
-						LL_RECORD_BLOCK_TIME(FTM_VBO_MAP_INDEX);
+						// <FS:ND/> Fast timers can have measurable impact in frequent places. A better all around solution would be to disable all fast timers until the fast timer view is open. But we're not there yet.
+						//LL_RECORD_BLOCK_TIME(FTM_VBO_MAP_INDEX);
 						src = (U8*) glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER_ARB, 0, sizeof(U16)*mNumIndices, 
 							GL_MAP_WRITE_BIT | 
 							GL_MAP_FLUSH_EXPLICIT_BIT);
@@ -1854,7 +2018,8 @@ volatile U8* LLVertexBuffer::mapIndexBuffer(S32 index, S32 count, bool map_range
 				}
 				else
 				{
-					LL_RECORD_BLOCK_TIME(FTM_VBO_MAP_INDEX);
+					// <FS:ND/> Fast timers can have measurable impact in frequent places. A better all around solution would be to disable all fast timers until the fast timer view is open. But we're not there yet.
+					//LL_RECORD_BLOCK_TIME(FTM_VBO_MAP_INDEX);
 					map_range = false;
 					src = (U8*) glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
 				}
@@ -1923,7 +2088,8 @@ void LLVertexBuffer::unmapBuffer()
 
 	if (mMappedData && mVertexLocked)
 	{
-		LL_RECORD_BLOCK_TIME(FTM_VBO_UNMAP);
+		// <FS:ND/> Fast timers can have measurable impact in frequent places. A better all around solution would be to disable all fast timers until the fast timer view is open. But we're not there yet.
+		//LL_RECORD_BLOCK_TIME(FTM_VBO_UNMAP);
 		bindGLBuffer(true);
 		updated_all = mIndexLocked; //both vertex and index buffers done updating
 
@@ -1978,7 +2144,8 @@ void LLVertexBuffer::unmapBuffer()
 						S32 length = sTypeSize[region.mType]*region.mCount;
 						if (gGLManager.mHasMapBufferRange)
 						{
-							LL_RECORD_BLOCK_TIME(FTM_VBO_FLUSH_RANGE);
+							// <FS:ND/> Fast timers can have measurable impact in frequent places. A better all around solution would be to disable all fast timers until the fast timer view is open. But we're not there yet.
+							//LL_RECORD_BLOCK_TIME(FTM_VBO_FLUSH_RANGE);
 #ifdef GL_ARB_map_buffer_range
 							glFlushMappedBufferRange(GL_ARRAY_BUFFER_ARB, offset, length);
 #endif
@@ -2008,7 +2175,8 @@ void LLVertexBuffer::unmapBuffer()
 	
 	if (mMappedIndexData && mIndexLocked)
 	{
-		LL_RECORD_BLOCK_TIME(FTM_IBO_UNMAP);
+		// <FS:ND/> Fast timers can have measurable impact in frequent places. A better all around solution would be to disable all fast timers until the fast timer view is open. But we're not there yet.
+		//LL_RECORD_BLOCK_TIME(FTM_IBO_UNMAP);
 		bindGLIndices();
 		if(!mMappable)
 		{
@@ -2021,7 +2189,7 @@ void LLVertexBuffer::unmapBuffer()
 					S32 length = sizeof(U16)*region.mCount;
 					if (mIndicesSize >= length + offset)
 					{
-					glBufferSubDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, offset, length, (U8*) mMappedIndexData+offset);
+						glBufferSubDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, offset, length, (U8*) mMappedIndexData+offset);
 					}
 					else
 					{
@@ -2059,7 +2227,8 @@ void LLVertexBuffer::unmapBuffer()
 						S32 length = sizeof(U16)*region.mCount;
 						if (gGLManager.mHasMapBufferRange)
 						{
-							LL_RECORD_BLOCK_TIME(FTM_IBO_FLUSH_RANGE);
+							// <FS:ND/> Fast timers can have measurable impact in frequent places. A better all around solution would be to disable all fast timers until the fast timer view is open. But we're not there yet.
+							//LL_RECORD_BLOCK_TIME(FTM_IBO_FLUSH_RANGE);
 #ifdef GL_ARB_map_buffer_range
 							glFlushMappedBufferRange(GL_ELEMENT_ARRAY_BUFFER_ARB, offset, length);
 #endif
@@ -2191,15 +2360,26 @@ bool LLVertexBuffer::getWeightStrider(LLStrider<F32>& strider, S32 index, S32 co
 	return VertexBufferStrider<F32,TYPE_WEIGHT>::get(*this, strider, index, count, map_range);
 }
 
-bool LLVertexBuffer::getWeight4Strider(LLStrider<LLVector4>& strider, S32 index, S32 count, bool map_range)
+// <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
+//bool LLVertexBuffer::getWeight4Strider(LLStrider<LLVector4>& strider, S32 index, S32 count, bool map_range)
+//{
+//	return VertexBufferStrider<LLVector4,TYPE_WEIGHT4>::get(*this, strider, index, count, map_range);
+//}
+//
+//bool LLVertexBuffer::getClothWeightStrider(LLStrider<LLVector4>& strider, S32 index, S32 count, bool map_range)
+//{
+//	return VertexBufferStrider<LLVector4,TYPE_CLOTHWEIGHT>::get(*this, strider, index, count, map_range);
+//}
+bool LLVertexBuffer::getWeight4Strider(LLStrider<LLVector4a>& strider, S32 index, S32 count, bool map_range)
 {
-	return VertexBufferStrider<LLVector4,TYPE_WEIGHT4>::get(*this, strider, index, count, map_range);
+	return VertexBufferStrider<LLVector4a,TYPE_WEIGHT4>::get(*this, strider, index, count, map_range);
 }
 
-bool LLVertexBuffer::getClothWeightStrider(LLStrider<LLVector4>& strider, S32 index, S32 count, bool map_range)
+bool LLVertexBuffer::getClothWeightStrider(LLStrider<LLVector4a>& strider, S32 index, S32 count, bool map_range)
 {
-	return VertexBufferStrider<LLVector4,TYPE_CLOTHWEIGHT>::get(*this, strider, index, count, map_range);
+	return VertexBufferStrider<LLVector4a,TYPE_CLOTHWEIGHT>::get(*this, strider, index, count, map_range);
 }
+// </FS:Ansariel>
 
 //----------------------------------------------------------------------------
 
@@ -2209,7 +2389,8 @@ bool LLVertexBuffer::bindGLArray()
 	if (mGLArray && sGLRenderArray != mGLArray)
 	{
 		{
-			LL_RECORD_BLOCK_TIME(FTM_BIND_GL_ARRAY);
+			// <FS:ND/> Fast timers can have measurable impact in frequent places. A better all around solution would be to disable all fast timers until the fast timer view is open. But we're not there yet.
+			//LL_RECORD_BLOCK_TIME(FTM_BIND_GL_ARRAY);
 #if GL_ARB_vertex_array_object
 			glBindVertexArray(mGLArray);
 #endif
@@ -2260,7 +2441,8 @@ bool LLVertexBuffer::bindGLIndices(bool force_bind)
 	bool ret = false;
 	if (useVBOs() && (force_bind || (mGLIndices && (mGLIndices != sGLRenderIndices || !sIBOActive))))
 	{
-		LL_RECORD_BLOCK_TIME(FTM_BIND_GL_INDICES);
+		// <FS:ND/> Fast timers can have measurable impact in frequent places. A better all around solution would be to disable all fast timers until the fast timer view is open. But we're not there yet.
+		//LL_RECORD_BLOCK_TIME(FTM_BIND_GL_INDICES);
 		/*if (sMapped)
 		{
 			LL_ERRS() << "VBO bound while another VBO mapped!" << LL_ENDL;
@@ -2326,35 +2508,37 @@ void LLVertexBuffer::setBuffer(U32 data_mask)
 			{
 				
 				U32 unsatisfied_mask = (required_mask & ~data_mask);
+				// <FS:Ansariel> Infinite loop fix by Drake Arconis
+				//U32 i = 0;
 
-                for (U32 i = 0; i < TYPE_MAX; i++)
-                {
+				//while (i < TYPE_MAX)
+				for (U32 i = 0; i < TYPE_MAX; i++)
+				// </FS:Ansariel>
+				{
                     U32 unsatisfied_flag = unsatisfied_mask & (1 << i);
-                    switch (unsatisfied_flag)
-                    {
-                        case 0: break;
-                        case MAP_VERTEX: LL_INFOS() << "Missing vert pos" << LL_ENDL; break;
-                        case MAP_NORMAL: LL_INFOS() << "Missing normals" << LL_ENDL; break;
-                        case MAP_TEXCOORD0: LL_INFOS() << "Missing TC 0" << LL_ENDL; break;
-                        case MAP_TEXCOORD1: LL_INFOS() << "Missing TC 1" << LL_ENDL; break;
-                        case MAP_TEXCOORD2: LL_INFOS() << "Missing TC 2" << LL_ENDL; break;
-                        case MAP_TEXCOORD3: LL_INFOS() << "Missing TC 3" << LL_ENDL; break;
-                        case MAP_COLOR: LL_INFOS() << "Missing vert color" << LL_ENDL; break;
-                        case MAP_EMISSIVE: LL_INFOS() << "Missing emissive" << LL_ENDL; break;
-                        case MAP_TANGENT: LL_INFOS() << "Missing tangent" << LL_ENDL; break;
-                        case MAP_WEIGHT: LL_INFOS() << "Missing weight" << LL_ENDL; break;
-                        case MAP_WEIGHT4: LL_INFOS() << "Missing weightx4" << LL_ENDL; break;
-                        case MAP_CLOTHWEIGHT: LL_INFOS() << "Missing clothweight" << LL_ENDL; break;
-                        case MAP_TEXTURE_INDEX: LL_INFOS() << "Missing tex index" << LL_ENDL; break;
-                        default: LL_INFOS() << "Missing who effin knows: " << unsatisfied_flag << LL_ENDL;
-                    }
-                }
+					switch (unsatisfied_flag)
+					{
+						case MAP_VERTEX: LL_INFOS() << "Missing vert pos" << LL_ENDL; break;
+						case MAP_NORMAL: LL_INFOS() << "Missing normals" << LL_ENDL; break;
+						case MAP_TEXCOORD0: LL_INFOS() << "Missing TC 0" << LL_ENDL; break;
+						case MAP_TEXCOORD1: LL_INFOS() << "Missing TC 1" << LL_ENDL; break;
+						case MAP_TEXCOORD2: LL_INFOS() << "Missing TC 2" << LL_ENDL; break;
+						case MAP_TEXCOORD3: LL_INFOS() << "Missing TC 3" << LL_ENDL; break;
+						case MAP_COLOR: LL_INFOS() << "Missing vert color" << LL_ENDL; break;
+						case MAP_EMISSIVE: LL_INFOS() << "Missing emissive" << LL_ENDL; break;
+						case MAP_TANGENT: LL_INFOS() << "Missing tangent" << LL_ENDL; break;
+						case MAP_WEIGHT: LL_INFOS() << "Missing weight" << LL_ENDL; break;
+						case MAP_WEIGHT4: LL_INFOS() << "Missing weightx4" << LL_ENDL; break;
+						case MAP_CLOTHWEIGHT: LL_INFOS() << "Missing clothweight" << LL_ENDL; break;
+						case MAP_TEXTURE_INDEX: LL_INFOS() << "Missing tex index" << LL_ENDL; break;
+						default: LL_INFOS() << "Missing who effin knows: " << unsatisfied_flag << LL_ENDL;
+					}					
+				}
 
-                // TYPE_INDEX is beyond TYPE_MAX, so check for it individually
-                if (unsatisfied_mask & (1 << TYPE_INDEX))
-                {
-                   LL_INFOS() << "Missing indices" << LL_ENDL;
-                }
+            if (unsatisfied_mask & (1 << TYPE_INDEX))
+            {
+               LL_INFOS() << "Missing indices" << LL_ENDL;
+            }
 
 				LL_ERRS() << "Shader consumption mismatches data provision." << LL_ENDL;
 			}
@@ -2450,8 +2634,10 @@ void LLVertexBuffer::setBuffer(U32 data_mask)
 			sGLRenderIndices = mGLIndices;
 		}
 	}
-
-	if (!mGLArray)
+	// <FS:ND> Need to setup (activate/deactivate) client arrays with VAOs too
+	// if( !mGLArray )
+	if (!sUseVAO && !mGLArray)
+	// </FS:ND>
 	{
 		setupClientArrays(data_mask);
 	}
