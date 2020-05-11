@@ -37,10 +37,6 @@
 #include "llglslshader.h"
 #include "llmemory.h"
 
-//MK
-#define LL_VBO_POOLING 0
-//mk
-
 //Next Highest Power Of Two
 //helper function, returns first number > v that is a power of 2, or v if v is already a power of 2
 U32 nhpo2(U32 v)
@@ -160,10 +156,6 @@ volatile U8* LLVBOPool::allocate(U32& name, U32 size, bool for_seed)
 	
 	volatile U8* ret = NULL;
 
-//MK
-#if LL_VBO_POOLING
-//mk
-
 	U32 i = vbo_block_index(size);
 
 	if (mFreeList.size() <= i)
@@ -252,35 +244,6 @@ volatile U8* LLVBOPool::allocate(U32& name, U32 size, bool for_seed)
 
 		mFreeList[i].pop_front();
 	}
-//MK
-#else //no pooling
- 
-	glGenBuffersARB(1, &name);
-	glBindBufferARB(mType, name);
-
-	if (mType == GL_ARRAY_BUFFER_ARB)
-	{
-		LLVertexBuffer::sAllocatedBytes += size;
-	}
-	else
-	{
-		LLVertexBuffer::sAllocatedIndexBytes += size;
-	}
-
-	if (LLVertexBuffer::sDisableVBOMapping || mUsage != GL_DYNAMIC_DRAW_ARB)
-	{
-		glBufferDataARB(mType, size, 0, mUsage);
-		ret = (U8*) ll_aligned_malloc_16(size);
-	}
-	else
-	{ //always use a true hint of static draw when allocating non-client-backed buffers
-		glBufferDataARB(mType, size, 0, GL_STATIC_DRAW_ARB);
-	}
-
-	glBindBufferARB(mType, 0);
-
-#endif
-//mk
 
 	return ret;
 }
@@ -289,11 +252,6 @@ void LLVBOPool::release(U32 name, volatile U8* buffer, U32 size)
 {
 	llassert(vbo_block_size(size) == size);
 
-//MK
-#if LL_VBO_POOLING
-
-	U32 i = vbo_block_index(size);
-//mk
 	deleteBuffer(name);
 	ll_aligned_free_fallback((U8*) buffer);
 
@@ -305,21 +263,6 @@ void LLVBOPool::release(U32 name, volatile U8* buffer, U32 size)
 	{
 		LLVertexBuffer::sAllocatedIndexBytes -= size;
 	}
-//MK
-#else //no pooling
-	glDeleteBuffersARB(1, &name);
-	ll_aligned_free_16((U8*) buffer);
-
-	if (mType == GL_ARRAY_BUFFER_ARB)
-	{
-		LLVertexBuffer::sAllocatedBytes -= size;
-	}
-	else
-	{
-		LLVertexBuffer::sAllocatedIndexBytes -= size;
-	}
-#endif
-//mk
 }
 
 void LLVBOPool::seedPool()
@@ -404,10 +347,7 @@ const S32 LLVertexBuffer::sTypeSize[LLVertexBuffer::TYPE_MAX] =
 	sizeof(F32),	   // TYPE_WEIGHT,
 	sizeof(LLVector4), // TYPE_WEIGHT4,
 	sizeof(LLVector4), // TYPE_CLOTHWEIGHT,
-//MK
-////	sizeof(LLVector4), // TYPE_TEXTURE_INDEX (actually exists as position.w), no extra data, but stride is 16 bytes
-	sizeof(U32),	   // TYPE_TEXTURE_INDEX (actually exists as position.w), no extra data, but stride is 16 bytes
-//mk
+	sizeof(LLVector4), // TYPE_TEXTURE_INDEX (actually exists as position.w), no extra data, but stride is 16 bytes
 };
 
 static const std::string vb_type_name[] =
