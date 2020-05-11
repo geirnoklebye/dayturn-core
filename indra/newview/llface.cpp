@@ -486,7 +486,10 @@ U16 LLFace::getGeometryAvatar(
 						LLStrider<LLVector3> &normals,
 						LLStrider<LLVector2> &tex_coords,
 						LLStrider<F32>		 &vertex_weights,
-						LLStrider<LLVector4> &clothing_weights)
+						// <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
+						//LLStrider<LLVector4> &clothing_weights)
+						LLStrider<LLVector4a> &clothing_weights)
+						// </FS:Ansariel>
 {
 	if (mVertexBuffer.notNull())
 	{
@@ -577,16 +580,27 @@ void LLFace::renderSelected(LLViewerTexture *imagep, const LLColor4& color)
 					glPolygonOffset(-1.f, -1.f);
 					gGL.multMatrix((F32*) volume->getRelativeXform().mMatrix);
 					const LLVolumeFace& vol_face = rigged->getVolumeFace(getTEOffset());
-					LLVertexBuffer::unbind();
-					glVertexPointer(3, GL_FLOAT, 16, vol_face.mPositions);
-					if (vol_face.mTexCoords)
+					// <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
+					if (LLGLSLShader::sNoFixedFunction)
 					{
-						glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-						glTexCoordPointer(2, GL_FLOAT, 8, vol_face.mTexCoords);
+						LLVertexBuffer::drawElements(LLRender::TRIANGLES, vol_face.mNumVertices, vol_face.mPositions, vol_face.mTexCoords, vol_face.mNumIndices, vol_face.mIndices);
 					}
-					gGL.syncMatrices();
-					glDrawElements(GL_TRIANGLES, vol_face.mNumIndices, GL_UNSIGNED_SHORT, vol_face.mIndices);
-					glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+					else
+					{
+					// </FS:Ansariel>
+						LLVertexBuffer::unbind();
+						glVertexPointer(3, GL_FLOAT, 16, vol_face.mPositions);
+						if (vol_face.mTexCoords)
+						{
+							glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+							glTexCoordPointer(2, GL_FLOAT, 8, vol_face.mTexCoords);
+						}
+						gGL.syncMatrices();
+						glDrawElements(GL_TRIANGLES, vol_face.mNumIndices, GL_UNSIGNED_SHORT, vol_face.mIndices);
+						glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+					// <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
+					}
+					// </FS:Ansariel>
 				}
 			}
 		}
@@ -622,7 +636,9 @@ void renderFace(LLDrawable* drawable, LLFace *face)
         if (volume)
         {
             const LLVolumeFace& vol_face = volume->getVolumeFace(face->getTEOffset());
-            LLVertexBuffer::drawElements(LLRender::TRIANGLES, vol_face.mPositions, NULL, vol_face.mNumIndices, vol_face.mIndices);
+            // <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
+            //LLVertexBuffer::drawElements(LLRender::TRIANGLES, vol_face.mPositions, NULL, vol_face.mNumIndices, vol_face.mIndices);
+            LLVertexBuffer::drawElements(LLRender::TRIANGLES, vol_face.mNumVertices, vol_face.mPositions, NULL, vol_face.mNumIndices, vol_face.mIndices);
         }
     }
 }
@@ -640,6 +656,10 @@ void LLFace::renderOneWireframe(const LLColor4 &color, F32 fogCfx, bool wirefram
         }
         else
         {
+            // <FS:Ansariel> Don't use fixed functions when using shader renderer; found by Drake Arconis
+            if (!LLGLSLShader::sNoFixedFunction)
+            {
+            // </FS:Ansariel>
             LLGLEnable fog(GL_FOG);
             glFogi(GL_FOG_MODE, GL_LINEAR);
             float d = (LLViewerCamera::getInstance()->getPointOfInterest() - LLViewerCamera::getInstance()->getOrigin()).magVec();
@@ -647,6 +667,9 @@ void LLFace::renderOneWireframe(const LLColor4 &color, F32 fogCfx, bool wirefram
             glFogf(GL_FOG_START, d);
             glFogf(GL_FOG_END, d*(1 + (LLViewerCamera::getInstance()->getView() / LLViewerCamera::getInstance()->getDefaultFOV())));
             glFogfv(GL_FOG_COLOR, fogCol.mV);
+            // <FS:Ansariel> Don't use fixed functions when using shader renderer; found by Drake Arconis
+            }
+            // </FS:Ansariel>
 
             gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);
             {
@@ -918,7 +941,7 @@ BOOL LLFace::genVolumeBBoxes(const LLVolume &volume, S32 f,
 		//VECTORIZE THIS
 		LLMatrix4a mat_vert;
 		mat_vert.loadu(mat_vert_in);
-        LLVector4a new_extents[2];
+        // LLVector4a new_extents[2]; <FS:ND/> Unused.
 
 		llassert(less_than_max_mag(face.mExtents[0]));
 		llassert(less_than_max_mag(face.mExtents[1]));
@@ -1180,14 +1203,16 @@ bool LLFace::canRenderAsMask()
 		return false;
 	}
 	
-	if ((te->getColor().mV[3] == 1.0f) && // can't treat as mask if we have face alpha
-		(te->getGlow() == 0.f) && // glowing masks are hard to implement - don't mask
-		getTexture()->getIsAlphaMask()) // texture actually qualifies for masking (lazily recalculated but expensive)
+	if ((te->getColor().mV[3] == 1.0f) &&			// can't treat as mask if we have face alpha
+		(te->getGlow() == 0.f) &&					// glowing masks are hard to implement - don't mask
+		!getViewerObject()->isHUDAttachment() &&	// Fix from CoolVL: hud attachments are NOT maskable (else they would get affected by day light)
+		getTexture()->getIsAlphaMask())				// texture actually qualifies for masking (lazily recalculated but expensive)
 	{
 		if (LLPipeline::sRenderDeferred)
 		{
-			if (getViewerObject()->isHUDAttachment() || te->getFullbright())
-			{ //hud attachments and fullbright objects are NOT subject to the deferred rendering pipe
+			// Fix from CoolVL: hud attachments are NOT maskable at all - see above
+			if (/*!getViewerObject()->isHUDAttachment() &&*/ te->getFullbright())
+			{ //fullbright objects are NOT subject to the deferred rendering pipe
 				return LLPipeline::sAutoMaskAlphaNonDeferred;
 			}
 			else
@@ -1244,11 +1269,15 @@ void LLFace::cacheFaceInVRAM(const LLVolumeFace& vf)
 
 	if (vf.mWeights)
 	{
-		LLStrider<LLVector4> f_wght;
+		// <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
+		//LLStrider<LLVector4> f_wght;
+		LLStrider<LLVector4a> f_wght;
 		buff->getWeight4Strider(f_wght);
 		for (U32 i = 0; i < vf.mNumVertices; ++i)
 		{
-			(*f_wght++).set(vf.mWeights[i].getF32ptr());
+			// <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
+			//(*f_wght++).set(vf.mWeights[i].getF32ptr());
+			(*f_wght++) = vf.mWeights[i];
 		}
 	}
 
@@ -1362,7 +1391,9 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 	LLStrider<LLColor4U> colors;
 	LLStrider<LLVector3> tangent;
 	LLStrider<U16> indicesp;
-	LLStrider<LLVector4> wght;
+	// <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
+	//LLStrider<LLVector4> wght;
+	LLStrider<LLVector4a> wght;
 
 	BOOL full_rebuild = force_rebuild || mDrawablep->isState(LLDrawable::REBUILD_VOLUME);
 	
@@ -1402,7 +1433,10 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 		clearState(GLOBAL);
 	}
 
-	LLColor4U color = tep->getColor();
+	// <FS:ND> Protection against faces w/o te set.
+	// LLColor4U color = tep->getColor();
+	LLColor4U color = (tep ? tep->getColor() : LLColor4());
+	// </FS:ND>
 
 	if (rebuild_color)
 	{ //decide if shiny goes in alpha channel of color
@@ -1732,7 +1766,11 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 				bump_t_primary_light_ray.load3((offset_multiple * t_scale * primary_light_ray).mV);
 			}
 
-			U8 texgen = getTextureEntry()->getTexGen();
+			// <FS:ND> FIRE-14261 Guard against null textures
+			// U8 texgen = getTextureEntry()->getTexGen();
+			U8 texgen = getTextureEntry() ? getTextureEntry()->getTexGen() : LLTextureEntry::TEX_GEN_DEFAULT;
+			// </FS:ND>
+			
 			if (rebuild_tcoord && texgen != LLTextureEntry::TEX_GEN_DEFAULT)
 			{ //planar texgen needs binormals
 				mVObjp->getVolume()->genTangents(f);
@@ -1776,7 +1814,10 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 			LLVector4a scalea;
 			scalea.load3(scale.mV);
 
-			LLMaterial* mat = tep->getMaterialParams().get();
+			// <FS:ND> Protection against faces w/o te set.
+			// LLMaterial* mat = tep->getMaterialParams().get();
+			LLMaterial* mat = tep ? tep->getMaterialParams().get() : 0;
+			// </FS:ND>
 
 			bool do_bump = bump_code && mVertexBuffer->hasDataType(LLVertexBuffer::TYPE_TEXCOORD1);
 
@@ -1800,7 +1841,14 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 						if (!do_xform)
 						{
 							LL_RECORD_BLOCK_TIME(FTM_FACE_TEX_QUICK_NO_XFORM);
-							S32 tc_size = (num_vertices*2*sizeof(F32)+0xF) & ~0xF;
+
+							// <FS:ND> Don't round up, or there's high risk to write past buffer
+
+							// S32 tc_size = (num_vertices*2*sizeof(F32)+0xF) & ~0xF;
+							S32 tc_size = (num_vertices*2*sizeof(F32));
+
+							// </FS:ND>
+
 							LLVector4a::memcpyNonAliased16((F32*) tex_coords0.get(), (F32*) vf.mTexCoords, tc_size);
 						}
 						else
@@ -2213,8 +2261,14 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 		{
 			LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_WEIGHTS);
 			mVertexBuffer->getWeight4Strider(wght, mGeomIndex, mGeomCount, map_range);
-			F32* weights = (F32*) wght.get();
-			LLVector4a::memcpyNonAliased16(weights, (F32*) vf.mWeights, num_vertices*4*sizeof(F32));
+			// <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
+			//F32* weights = (F32*) wght.get();
+			//LLVector4a::memcpyNonAliased16(weights, (F32*) vf.mWeights, num_vertices*4*sizeof(F32));
+			for (S32 i = 0; i < num_vertices; ++i)
+			{
+				*(wght++) = vf.mWeights[i];
+			}
+			// </FS:Ansariel>
 			if (map_range)
 			{
 				mVertexBuffer->flush();

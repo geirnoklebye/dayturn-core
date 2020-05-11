@@ -3405,7 +3405,9 @@ void LLModelPreview::genBuffers(S32 lod, bool include_skin_weights)
 			LLStrider<LLVector3> normal_strider;
 			LLStrider<LLVector2> tc_strider;
 			LLStrider<U16> index_strider;
-			LLStrider<LLVector4> weights_strider;
+			// <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
+			//LLStrider<LLVector4> weights_strider;
+			LLStrider<LLVector4a> weights_strider;
 
 			vb->getVertexStrider(vertex_strider);
 			vb->getIndexStrider(index_strider);
@@ -3451,7 +3453,9 @@ void LLModelPreview::genBuffers(S32 lod, bool include_skin_weights)
                                                              //should not cause floating point precision issues.
 					}
 
-					*(weights_strider++) = w;
+					// <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
+					//*(weights_strider++) = w;
+					(*(weights_strider++)).loadua(w.mV);
 				}
 			}
 
@@ -4148,7 +4152,9 @@ BOOL LLModelPreview::render()
 							LLStrider<LLVector3> position;
 							buffer->getVertexStrider(position);
 
-							LLStrider<LLVector4> weight;
+							// <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
+							//LLStrider<LLVector4> weight;
+							LLStrider<LLVector4a> weight;
 							buffer->getWeight4Strider(weight);
 
 							//quick 'n dirty software vertex skinning
@@ -4170,7 +4176,10 @@ BOOL LLModelPreview::render()
 							for (U32 j = 0; j < buffer->getNumVerts(); ++j)
 							{
                                 LLMatrix4a final_mat;
-                                F32 *wptr = weight[j].mV;
+                                // <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
+                                //F32 *wptr = weight[j].mV;
+                                F32 *wptr = weight[j].getF32ptr();
+                                // </FS:Ansariel>
                                 LLSkinningUtil::getPerVertexSkinMatrix(wptr, mat, true, final_mat, max_joints);
 
 								//VECTORIZE THIS
@@ -4292,11 +4301,13 @@ void LLModelPreview::setPreviewLOD(S32 lod)
 		combo_box->setCurrentByIndex((NUM_LOD-1)-mPreviewLOD); // combo box list of lods is in reverse order
 		mFMP->childSetValue("lod_file_" + lod_name[mPreviewLOD], mLODFile[mPreviewLOD]);
 
-		LLComboBox* combo_box2 = mFMP->getChild<LLComboBox>("preview_lod_combo2");
-		combo_box2->setCurrentByIndex((NUM_LOD-1)-mPreviewLOD); // combo box list of lods is in reverse order
-		
-		LLComboBox* combo_box3 = mFMP->getChild<LLComboBox>("preview_lod_combo3");
-		combo_box3->setCurrentByIndex((NUM_LOD-1)-mPreviewLOD); // combo box list of lods is in reverse order
+		// <FS:Ansariel> Doesn't exist as of 16-06-2017
+		//LLComboBox* combo_box2 = mFMP->getChild<LLComboBox>("preview_lod_combo2");
+		//combo_box2->setCurrentByIndex((NUM_LOD-1)-mPreviewLOD); // combo box list of lods is in reverse order
+		//
+		//LLComboBox* combo_box3 = mFMP->getChild<LLComboBox>("preview_lod_combo3");
+		//combo_box3->setCurrentByIndex((NUM_LOD-1)-mPreviewLOD); // combo box list of lods is in reverse order
+		// </FS:Ansariel>
 
 		LLColor4 highlight_color = LLUIColorTable::instance().getColor("MeshImportTableHighlightColor");
 		LLColor4 normal_color = LLUIColorTable::instance().getColor("MeshImportTableNormalColor");
