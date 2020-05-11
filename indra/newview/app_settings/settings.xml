@@ -14082,17 +14082,6 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
-    <key>ShowFPSStats</key>
-    <map>
-      <key>Comment</key>
-      <string>Show the FPS Indicator in the status overlay</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>0</integer>
-    </map>
     <key>ShowNetStats</key>
     <map>
       <key>Comment</key>
