@@ -2274,9 +2274,9 @@ BOOL RRInterface::answerOnChat (std::string channel, std::string msg)
 		KokuaFloaterRLVConsole::getBase()->addCommandReply(msg);
 	}
 	else {
-		// If the message is too long, truncate
-		if (msg.length() > 255) {
-			msg = msg.substr(0, 255);
+		// If the message is too long, truncate (254 chars instead of 255 becuase of LLTemplateMessageBuilder::addData() )
+		if (msg.length() > 254) {
+			msg = msg.substr(0, 254);
 		}
 		gMessageSystem->newMessage("ScriptDialogReply");
 		gMessageSystem->nextBlock("AgentData");
