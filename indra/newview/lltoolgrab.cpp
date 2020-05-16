@@ -415,7 +415,9 @@ void LLToolGrabBase::startGrab()
 	LLVector3d grab_start_global = root->getPositionGlobal();
 
 //MK
-	if (gRRenabled && (!gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection) || gAgent.mRRInterface.mContainsEdit))
+//CA: Don't return early for edit as this point, it breaks touch handling if still permitted (no touches delivered on physical, only the first on non-phys)
+//	if (gRRenabled && (!gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection) || gAgent.mRRInterface.mContainsEdit))
+	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
 	{
 		return;
 	}
@@ -510,8 +512,10 @@ void LLToolGrabBase::handleHoverActive(S32 x, S32 y, MASK mask)
 	}
 
 //MK
+//CA: Add the cleanup call for tidier early exit
 	if (gRRenabled && (!gAgent.mRRInterface.canTouch(objectp, mGrabPick.mIntersection) || gAgent.mRRInterface.mContainsEdit))
 	{
+		setMouseCapture(FALSE);
 		return;
 	}
 //mk
@@ -792,6 +796,16 @@ void LLToolGrabBase::handleHoverNonPhysical(S32 x, S32 y, MASK mask)
 		setMouseCapture(FALSE);
 		return;
 	}
+
+//MK
+//CA: Non-phys drags weren't being prevented at all; this clause added to fix that
+	if (gRRenabled && (!gAgent.mRRInterface.canTouch(objectp, mGrabPick.mIntersection) || gAgent.mRRInterface.mContainsEdit))
+	{
+		LL_INFOS() << "*** Taking early exit from handleHoverNonPhys" << LL_ENDL;
+		setMouseCapture(FALSE);
+		return;
+	}
+//mk
 
 	LLPickInfo pick = mGrabPick;
 	pick.mMousePt = LLCoordGL(x, y);
