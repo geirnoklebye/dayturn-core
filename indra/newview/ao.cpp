@@ -475,8 +475,9 @@ void FloaterAO::onClickReload()
 	mSelectedSet = 0;
 	mSelectedState = 0;
 
-	AOEngine::instance().reload(false);
+	AOEngine::instance().reload(AOEngine::instance().mReloadCalledFromTimer);
 	updateList();
+	AOEngine::instance().mReloadCalledFromTimer = FALSE;
 }
 
 void FloaterAO::onClickAdd()
