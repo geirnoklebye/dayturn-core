@@ -102,7 +102,7 @@ class AOEngine
 		void enable_stands(BOOL yes);
 		const LLUUID override(const LLUUID& motion, BOOL start);
 		void tick();
-		void update();
+		void update(bool);
 		void reload(bool);
 		void reloadStateAnimations(AOSet::AOState* state);
 		void clear( bool );

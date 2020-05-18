@@ -1166,7 +1166,7 @@ BOOL AOEngine::removeAnimation(const AOSet* set, AOSet::AOState* state, S32 inde
 		LLInventoryModel* model = &gInventory;
 		model->changeItemParent(item, gInventory.findCategoryUUIDForType(LLFolderType::FT_LOST_AND_FOUND), FALSE);
 		LLNotificationsUtil::add("AOForeignItemsFound", LLSD());
-		update();
+		update(false);
 		return FALSE;
 	}
 
@@ -1308,7 +1308,7 @@ void AOEngine::reloadStateAnimations(AOSet::AOState* state)
 	updateSortOrder(state);
 }
 
-void AOEngine::update()
+void AOEngine::update(bool aFromTimer)
 {
 	if (mAOFolder.isNull())
 	{
@@ -1467,8 +1467,12 @@ void AOEngine::update()
 		mTimerCollection.enableInventoryTimer(FALSE);
 		mTimerCollection.enableSettingsTimer(TRUE);
 
-		LL_INFOS("AOEngine") << "sending update signal" << LL_ENDL;
-		mUpdatedSignal();
+		// don't send it if we're on a timer tick - can cause a crash when deletion of old sets is attempted
+		if (!aFromTimer)
+		{
+			LL_INFOS("AOEngine") << "sending update signal" << LL_ENDL;
+			mUpdatedSignal();
+		}
 		enable(mEnabled);
 	}
 }
@@ -1885,7 +1889,7 @@ void AOEngine::tick()
 		else
 		{
 			LL_INFOS("AOEngine") << "AO basic folder structure intact." << LL_ENDL;
-			update();
+			update(true);
 		}
 	}
 }
