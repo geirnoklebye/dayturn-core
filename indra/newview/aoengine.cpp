@@ -1467,12 +1467,9 @@ void AOEngine::update(bool aFromTimer)
 		mTimerCollection.enableInventoryTimer(FALSE);
 		mTimerCollection.enableSettingsTimer(TRUE);
 
-		// don't send it if we're on a timer tick - can cause a crash when deletion of old sets is attempted
-		if (!aFromTimer)
-		{
-			LL_INFOS("AOEngine") << "sending update signal" << LL_ENDL;
-			mUpdatedSignal();
-		}
+		mReloadCalledFromTimer = aFromTimer;
+		LL_INFOS("AOEngine") << "sending update signal" << LL_ENDL;
+		mUpdatedSignal();
 		enable(mEnabled);
 	}
 }
