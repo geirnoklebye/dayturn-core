@@ -4473,7 +4473,6 @@ void handle_reset_view()
 	if(gSavedSettings.getBOOL("ResetViewTurnsAvatar"))
 		gAgentCamera.resetView();
 	// </FS:Zi>
-	gAgentCamera.switchCameraPreset(CAMERA_PRESET_REAR_VIEW);
 	reset_view_final( TRUE );
 	LLFloaterCamera::resetCameraMode();
 }
