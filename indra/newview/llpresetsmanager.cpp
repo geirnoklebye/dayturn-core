@@ -94,6 +94,11 @@ void LLPresetsManager::createCameraDefaultPresets()
 	bool is_default_created = createDefaultCameraPreset(PRESETS_REAR_VIEW);
 	is_default_created |= createDefaultCameraPreset(PRESETS_FRONT_VIEW);
 	is_default_created |= createDefaultCameraPreset(PRESETS_SIDE_VIEW);
+	is_default_created |= createDefaultCameraPreset(PRESETS_CLOSER_VIEW);
+	is_default_created |= createDefaultCameraPreset(PRESETS_FPS_VIEW);
+	is_default_created |= createDefaultCameraPreset(PRESETS_LEFT_VIEW);
+	is_default_created |= createDefaultCameraPreset(PRESETS_RIGHT_VIEW);
+	is_default_created |= createDefaultCameraPreset(PRESETS_TOP_VIEW);
 
 	if (is_default_created)
 	{
@@ -170,6 +175,10 @@ void LLPresetsManager::loadPresetNamesFromDir(const std::string& subdirectory, p
 				{
 					continue;
 				}
+				if (default_option == DEFAULT_HIDE_IF_ICON && isDefaultCameraPresetWithIcon(name))
+				{
+					continue;
+				}
 				if ((default_option == DEFAULT_HIDE) || (default_option == DEFAULT_BOTTOM))
 				{
 					if (isDefaultCameraPreset(name))
@@ -214,6 +223,11 @@ void LLPresetsManager::loadPresetNamesFromDir(const std::string& subdirectory, p
 			mPresetNames.push_back(PRESETS_FRONT_VIEW);
 			mPresetNames.push_back(PRESETS_REAR_VIEW);
 			mPresetNames.push_back(PRESETS_SIDE_VIEW);
+			mPresetNames.push_back(PRESETS_CLOSER_VIEW);
+			mPresetNames.push_back(PRESETS_FPS_VIEW);
+			mPresetNames.push_back(PRESETS_LEFT_VIEW);
+			mPresetNames.push_back(PRESETS_RIGHT_VIEW);
+			mPresetNames.push_back(PRESETS_TOP_VIEW);
 		}
 	}
 
@@ -348,6 +362,26 @@ bool LLPresetsManager::savePreset(const std::string& subdirectory, std::string n
 				else if (PRESETS_FRONT_VIEW == name)
 				{
 					new_camera_preset = CAMERA_PRESET_FRONT_VIEW;
+				}
+				else if (PRESETS_CLOSER_VIEW == name)
+				{
+					new_camera_preset = CAMERA_PRESET_CLOSER_VIEW;
+				}
+				else if (PRESETS_FPS_VIEW == name)
+				{
+					new_camera_preset = CAMERA_PRESET_FPS_VIEW;
+				}
+				else if (PRESETS_LEFT_VIEW == name)
+				{
+					new_camera_preset = CAMERA_PRESET_LEFT_VIEW;
+				}
+				else if (PRESETS_RIGHT_VIEW == name)
+				{
+					new_camera_preset = CAMERA_PRESET_RIGHT_VIEW;
+				}
+				else if (PRESETS_TOP_VIEW == name)
+				{
+					new_camera_preset = CAMERA_PRESET_TOP_VIEW;
 				}
 			}
 			else 
@@ -536,14 +570,25 @@ bool LLPresetsManager::deletePreset(const std::string& subdirectory, std::string
 	return sts;
 }
 
-bool LLPresetsManager::isDefaultCameraPreset(std::string preset_name)
+bool LLPresetsManager::isDefaultCameraPresetWithIcon(std::string preset_name)
 {
 	return (preset_name == PRESETS_REAR_VIEW || preset_name == PRESETS_SIDE_VIEW || preset_name == PRESETS_FRONT_VIEW);
 }
 
+bool LLPresetsManager::isDefaultCameraPreset(std::string preset_name)
+{
+//	return (preset_name == PRESETS_REAR_VIEW || preset_name == PRESETS_SIDE_VIEW || preset_name == PRESETS_FRONT_VIEW);
+	return (preset_name == PRESETS_REAR_VIEW  || preset_name == PRESETS_SIDE_VIEW || preset_name == PRESETS_FRONT_VIEW
+		|| preset_name == PRESETS_CLOSER_VIEW || preset_name == PRESETS_FPS_VIEW  || preset_name == PRESETS_LEFT_VIEW
+		|| preset_name == PRESETS_RIGHT_VIEW  || preset_name == PRESETS_TOP_VIEW);
+}
+
 bool LLPresetsManager::isTemplateCameraPreset(std::string preset_name)
 {
-	return (preset_name == PRESETS_REAR || preset_name == PRESETS_SIDE || preset_name == PRESETS_FRONT);
+//	return (preset_name == PRESETS_REAR || preset_name == PRESETS_SIDE || preset_name == PRESETS_FRONT);
+	return (preset_name == PRESETS_REAR   || preset_name == PRESETS_SIDE || preset_name == PRESETS_FRONT
+		||  preset_name == PRESETS_CLOSER || preset_name == PRESETS_FPS  || preset_name == PRESETS_LEFT
+		||  preset_name == PRESETS_RIGHT  || preset_name == PRESETS_TOP);
 }
 
 void LLPresetsManager::resetCameraPreset(std::string preset_name)

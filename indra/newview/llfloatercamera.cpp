@@ -634,7 +634,7 @@ void LLFloaterCamera::fromFreeToPresets()
 
 void LLFloaterCamera::populatePresetCombo()
 {
-	LLPresetsManager::getInstance()->setPresetNamesInComboBox(PRESETS_CAMERA, mPresetCombo, EDefaultOptions::DEFAULT_HIDE);
+	LLPresetsManager::getInstance()->setPresetNamesInComboBox(PRESETS_CAMERA, mPresetCombo, EDefaultOptions::DEFAULT_HIDE_IF_ICON);
 	std::string active_preset_name = gSavedSettings.getString("PresetCameraActive");
 	if (active_preset_name.empty())
 	{

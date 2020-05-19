@@ -39,17 +39,28 @@ static const std::string PRESETS_CAMERA = "camera";
 static const std::string PRESETS_REAR = "Rear";
 static const std::string PRESETS_FRONT = "Front";
 static const std::string PRESETS_SIDE = "Side";
+static const std::string PRESETS_CLOSER = "Closer";
+static const std::string PRESETS_FPS = "FPS";
+static const std::string PRESETS_LEFT = "Left";
+static const std::string PRESETS_RIGHT = "Right";
+static const std::string PRESETS_TOP = "Top";
 static const std::string PRESETS_VIEW_SUFFIX = " View";
 static const std::string PRESETS_REAR_VIEW = PRESETS_REAR + PRESETS_VIEW_SUFFIX;
 static const std::string PRESETS_FRONT_VIEW = PRESETS_FRONT + PRESETS_VIEW_SUFFIX;
 static const std::string PRESETS_SIDE_VIEW = PRESETS_SIDE + PRESETS_VIEW_SUFFIX;
+static const std::string PRESETS_CLOSER_VIEW = PRESETS_CLOSER + PRESETS_VIEW_SUFFIX;
+static const std::string PRESETS_FPS_VIEW = PRESETS_FPS + PRESETS_VIEW_SUFFIX;
+static const std::string PRESETS_LEFT_VIEW = PRESETS_LEFT + PRESETS_VIEW_SUFFIX;
+static const std::string PRESETS_RIGHT_VIEW = PRESETS_RIGHT + PRESETS_VIEW_SUFFIX;
+static const std::string PRESETS_TOP_VIEW = PRESETS_TOP + PRESETS_VIEW_SUFFIX;
 
 enum EDefaultOptions
 {
 	DEFAULT_SHOW,
 	DEFAULT_TOP,
 	DEFAULT_BOTTOM,
-	DEFAULT_HIDE				// Do not display "Default" in a list
+	DEFAULT_HIDE,				// Do not display "Default" in a list
+	DEFAULT_HIDE_IF_ICON        // Special case of Hide which only hides the three camera modes that have icons
 };
 
 class LLPresetsManager : public LLSingleton<LLPresetsManager>
@@ -79,6 +90,7 @@ public:
 
 	bool isTemplateCameraPreset(std::string preset_name);
 	bool isDefaultCameraPreset(std::string preset_name);
+	bool isDefaultCameraPresetWithIcon(std::string preset_name);
 	void resetCameraPreset(std::string preset_name);
 	bool createDefaultCameraPreset(std::string preset_name, bool force_reset = false);
 
