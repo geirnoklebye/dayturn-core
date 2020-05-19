@@ -60,6 +60,13 @@ enum ECameraPreset
 
 	/** Current view when a preset is saved */
 	CAMERA_PRESET_CUSTOM
+
+	// additional for Kokua, reimplementing Marine's coded additions as preset files
+	,CAMERA_PRESET_CLOSER_VIEW,
+	CAMERA_PRESET_FPS_VIEW,
+	CAMERA_PRESET_LEFT_VIEW,
+	CAMERA_PRESET_RIGHT_VIEW,
+	CAMERA_PRESET_TOP_VIEW
 };
 
 //------------------------------------------------------------------------
