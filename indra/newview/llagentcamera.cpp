@@ -212,20 +212,9 @@ void LLAgentCamera::init()
 	mCameraPreset = (ECameraPreset) gSavedSettings.getU32("CameraPresetType");
 
 	mCameraOffsetInitial = gSavedSettings.getControl("CameraOffsetRearView");
-//MK
-	// More camera presets
-	mCameraOffsetInitial[CAMERA_PRESET_LEFT_VIEW] = gSavedSettings.getControl("CameraOffsetLeftView");
-	mCameraOffsetInitial[CAMERA_PRESET_RIGHT_VIEW] = gSavedSettings.getControl("CameraOffsetRightView");
-	mCameraOffsetInitial[CAMERA_PRESET_TOPDOWN_VIEW] = gSavedSettings.getControl("CameraOffsetTopView");
-//mk
+
 	mFocusOffsetInitial = gSavedSettings.getControl("FocusOffsetRearView");
 
-//MK
-	// More camera presets
-	mFocusOffsetInitial[CAMERA_PRESET_LEFT_VIEW] = gSavedSettings.getControl("FocusOffsetLeftView");
-	mFocusOffsetInitial[CAMERA_PRESET_RIGHT_VIEW] = gSavedSettings.getControl("FocusOffsetRightView");
-	mFocusOffsetInitial[CAMERA_PRESET_TOPDOWN_VIEW] = gSavedSettings.getControl("FocusOffsetTopView");
-//mk
 
 	mCameraCollidePlane.clearVec();
 	mCurrentCameraDistance = getCameraOffsetInitial().magVec() * gSavedSettings.getF32("CameraOffsetScale");
