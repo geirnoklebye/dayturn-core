@@ -4776,7 +4776,6 @@ void handle_reset_view()
 		return;
 	}
 //mk
-	gAgentCamera.switchCameraPreset(CAMERA_PRESET_REAR_VIEW);
 	reset_view_final( TRUE );
 	LLFloaterCamera::resetCameraMode();
 }

@@ -28,8 +28,8 @@
         follows="top|right"
         layout="topleft"
         top="0"
-        left="-700"
-        width="695"
+        left="-720"
+        width="715"
         height="19"
         orientation="horizontal">
 			  <layout_panel
@@ -145,7 +145,7 @@
             follows="top|left"
             layout="topleft"
             height="19"
-            width="110"
+            width="130"
             auto_resize="false"
             user_resize="false"
             visible="true">
@@ -167,10 +167,18 @@
             <icon
              follows="left|top"
              height="16"
-             image_name="Presets_Icon"
+     image_name="Cam_FreeCam_Off"
              left_pad="0"
              top="2"
-             name="presets_icon"
+     name="presets_icon_camera"
+             width="18" />
+            <icon
+             follows="left|top"
+             height="16"
+             image_name="Presets_Icon"
+             left_pad="4"
+             top="2"
+             name="presets_icon_graphic"
              width="18" />
         </layout_panel>
 

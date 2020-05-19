@@ -42,6 +42,7 @@ class LLUUID;
 class LLFrameTimer;
 class LLLayoutPanel;
 class LLStatGraph;
+class LLPanelPresetsCameraPulldown;
 class LLPanelPresetsPulldown;
 class LLPanelVolumePulldown;
 class LLPanelNearByMedia;
@@ -148,6 +149,7 @@ private:
 	void onClickBuyCurrency();
 	void onVolumeChanged(const LLSD& newvalue);
 
+	void onMouseEnterPresetsCamera();
 	void onMouseEnterPresets();
 	void onMouseEnterVolume();
 	void onMouseEnterNearbyMedia();
@@ -288,7 +290,8 @@ private:
 
 	LLStatGraph	*mSGBandwidth;
 	LLStatGraph	*mSGPacketLoss;
-	LLIconCtrl	*mIconPresets;
+	LLIconCtrl	*mIconPresetsCamera;
+	LLIconCtrl	*mIconPresetsGraphic;
 	LLButton	*mBtnVolume;
 	LLTextBox	*mBoxBalance;
 	LLButton	*mStreamToggle;		// ## Zi: Media/Stream separation
@@ -306,6 +309,7 @@ private:
 	BOOL			mAudioStreamEnabled;
 	LLFrameTimer*	mBalanceTimer;
 	LLFrameTimer*	mHealthTimer;
+	LLPanelPresetsCameraPulldown* mPanelPresetsCameraPulldown;
 	LLPanelPresetsPulldown* mPanelPresetsPulldown;
 	LLPanelVolumePulldown* mPanelVolumePulldown;
 	LLPanelNearByMedia*	mPanelNearByMedia;

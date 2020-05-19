@@ -1,4 +1,4 @@
-/** 
+﻿/** 
  * @File llvoavatar.cpp
  * @brief Implementation of LLVOAvatar class which is a derivation of LLViewerObject
  *
@@ -7904,7 +7904,7 @@ void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 	mRoot->updateWorldMatrixChildren();
 
 	stopMotion(ANIM_AGENT_BODY_NOISE);
-
+	
 //MK
 	// Seems there is a bug when sitting while already in Mouselook mode, pitch axis is
 	// inverted. A solution to this is to switch to third person look, then immediately
@@ -7916,7 +7916,7 @@ void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 		gAgentCamera.changeCameraToMouselook(FALSE);
 	}
 //mk
-
+	gAgentCamera.setInitSitRot(gAgent.getFrameAgent().getQuaternion());
 }
 
 //-----------------------------------------------------------------------------
