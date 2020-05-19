@@ -201,29 +201,32 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                top="4" />
            </layout_panel>
            <layout_panel
-            height="18">
+           	follows="left|top|right"
+           	min_height="24"
+           	max_height="24"
+            height="24">
            <text
                name="Range:"
                type="string"
-               follows="top|left"
+               follows="left|right"
                layout="topleft"
                height="16"
-               width="145"
+               width="100"
                top_pad="8"
                left="7"
                length="3">
-                 Avatars within radius of [m]
+                 Avatars within [m]
              </text>
              <slider
                name="near_me_range"
                control_name="NearMeRange"
                tool_tip="Select how far from you people will be to be shown in list below"
-               follows="top|left|right"
+               follows="left|right"
                layout="topleft"
-	       top_delta="-2"
-               left_pad="10"
+               can_edit_text="true"
+               left_pad="4"
 	       width="200"
-               height="16"
+               height="18"
                decimal_digits="0"
                increment="5.0"
                initial_value="130"
@@ -231,7 +234,7 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                min_val="5" />
            </layout_panel>
            <layout_panel
-             height="213"
+             height="203"
              layout="topleft"
              min_dim="120"
              mouse_opaque="false"
