@@ -1529,6 +1529,16 @@ const AOSet* AOEngine::getDefaultSet() const
 
 void AOEngine::selectSet(AOSet* set)
 {
+	LL_DEBUGS("AOEngine") << "select set " << set << " current " << mCurrentSet << LL_ENDL;
+	
+	// take an early exit to prevent cycling rapidly through animations as the set is reselected
+	// during a make default operation
+	if (mEnabled && (mCurrentSet == set))
+	{
+		LL_DEBUGS("AOEngine") << "selectSet called for currently selected set, returning early" << LL_ENDL;
+		return;
+	}
+	
 	if (mEnabled && mCurrentSet)
 	{
 		AOSet::AOState* state = mCurrentSet->getStateByRemapID(mLastOverriddenMotion);

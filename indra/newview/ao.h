@@ -91,7 +91,7 @@ class FloaterAO
 		void onClickMore();
 		void onClickLess();
 
-		void onAnimationChanged(const LLUUID& animation, const std::string set, const std::string name);
+		void onAnimationChanged(const LLUUID& animation, const std::string state, const std::string name);
 
 		void reloading(BOOL yes);
 
@@ -111,8 +111,9 @@ class FloaterAO
 		AOSet::AOState* mSelectedState;
 
 		LLPanel* mReloadCoverPanel;
-		std::string mLastSet;
+		std::string mLastState;
 		std::string mLastName;
+		LLUUID mLastUUID;
 
 		// Full interface
 
