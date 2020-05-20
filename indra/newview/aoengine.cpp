@@ -429,12 +429,12 @@ void AOEngine::enable(BOOL yes)
 			}
 
 			gAgent.sendAnimationRequest(animation, ANIM_REQUEST_START);
-			mAnimationChangedSignal(state->mAnimations[state->mCurrentAnimation].mInventoryUUID);
+			mAnimationChangedSignal(state->mAnimations[state->mCurrentAnimation].mInventoryUUID, state->mName, state->mAnimations[state->mCurrentAnimation].mName);
 		}
 	}
 	else
 	{
-		mAnimationChangedSignal(LLUUID::null);
+		mAnimationChangedSignal(LLUUID::null, "", "");
 
 		if (mLastOverriddenMotion == ANIM_AGENT_SIT)
 		{
@@ -555,7 +555,7 @@ const LLUUID AOEngine::override(const LLUUID& pMotion, BOOL start)
 		return animation;
 	}
 
-	mAnimationChangedSignal(LLUUID::null);
+	mAnimationChangedSignal(LLUUID::null, "", "");
 
 	// clean up stray animations as an additional safety measure
 	// unless current motion is ANIM_AGENT_TYPE, which is a special
@@ -690,7 +690,7 @@ const LLUUID AOEngine::override(const LLUUID& pMotion, BOOL start)
 
 		if (animation.notNull() && state->mCurrentAnimation < state->mAnimations.size())
 		{
-			mAnimationChangedSignal(state->mAnimations[state->mCurrentAnimation].mInventoryUUID);
+			mAnimationChangedSignal(state->mAnimations[state->mCurrentAnimation].mInventoryUUID, state->mName, state->mAnimations[state->mCurrentAnimation].mName);
 		}
 
 		setStateCycleTimer(state);
@@ -899,14 +899,14 @@ void AOEngine::cycle(eCycleMode cycleMode)
 		return;
 	}
 
-	mAnimationChangedSignal(LLUUID::null);
+	mAnimationChangedSignal(LLUUID::null, "", "");
 
 	state->mCurrentAnimationID = animation;
 	if (animation.notNull())
 	{
 		LL_DEBUGS("AOEngine") << "requesting animation start for motion " << gAnimLibrary.animationName(mLastMotion) << ": " << animation << LL_ENDL;
 		gAgent.sendAnimationRequest(animation, ANIM_REQUEST_START);
-		mAnimationChangedSignal(state->mAnimations[state->mCurrentAnimation].mInventoryUUID);
+		mAnimationChangedSignal(state->mAnimations[state->mCurrentAnimation].mInventoryUUID, state->mName, state->mAnimations[state->mCurrentAnimation].mName);
 	}
 	else
 	{
