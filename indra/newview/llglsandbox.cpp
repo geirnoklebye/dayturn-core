@@ -554,6 +554,14 @@ void LLViewerParcelMgr::renderOneSegment(F32 x1, F32 y1, F32 x2, F32 y2, F32 hei
 		gGL.texCoord2f(tex_coord2*0.5f+0.5f, z*0.5f);
 		gGL.vertex3f(x2, y2, z);
 
+		// <FS:Ansariel> Remove QUADS rendering mode
+		gGL.texCoord2f(tex_coord1*0.5f+0.5f, z1*0.5f);
+		gGL.vertex3f(x1, y1, z1);
+
+		gGL.texCoord2f(tex_coord2*0.5f+0.5f, z*0.5f);
+		gGL.vertex3f(x2, y2, z);
+		// </FS:Ansariel>
+
 		gGL.texCoord2f(tex_coord1*0.5f+0.5f, z*0.5f);
 		gGL.vertex3f(x1, y1, z);
 	}
