@@ -32,6 +32,9 @@
 //
 // KDU core header files
 //
+#if LL_DARWIN
+#pragma clang diagnostic ignored "-Wreturn-type"
+#endif
 #define KDU_NO_THREADS
 #include "kdu_elementary.h"
 #include "kdu_messaging.h"

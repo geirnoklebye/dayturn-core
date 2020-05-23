@@ -27,6 +27,14 @@
 #ifndef LL_LLKDUMEM_H
 #define LL_LLKDUMEM_H
 
+
+//<FS:TS> Silence Clang warning the flag doesn't for some reason
+#if LL_DARWIN
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#pragma clang diagnostic ignored "-Wreturn-type"
+#endif
+//</FS:TS>
+
 // Support classes for reading and writing from memory buffers in KDU
 #define KDU_NO_THREADS
 
@@ -41,6 +49,7 @@
 #include "include_kdu_xxxx.h"
 
 #include "kdu_sample_processing.h"
+#include "kdu_utils.h"
 #include "image_local.h"
 #include "stdtypes.h"
 
