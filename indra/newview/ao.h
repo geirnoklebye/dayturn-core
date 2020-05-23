@@ -87,6 +87,7 @@ class FloaterAO
 		void onChangeCycleTime();
 		void onClickPrevious();
 		void onClickNext();
+		void onClickRandom();
 
 		void onClickMore();
 		void onClickLess();
@@ -131,7 +132,7 @@ class FloaterAO
 
 		LLComboBox* mStateSelector;
 		LLScrollListCtrl* mAnimationList;
-		LLScrollListItem* mCurrentBoldItem;
+		LLUUID mCurrentBoldItemID;
 		LLButton* mMoveUpButton;
 		LLButton* mMoveDownButton;
 		LLButton* mTrashButton;
@@ -144,6 +145,7 @@ class FloaterAO
 
 		LLButton* mPreviousButton;
 		LLButton* mNextButton;
+		LLButton* mRandomButton;
 		LLButton* mLessButton;
 
 		// Small interface
@@ -154,6 +156,7 @@ class FloaterAO
 		LLButton* mMoreButton;
 		LLButton* mPreviousButtonSmall;
 		LLButton* mNextButtonSmall;
+		LLButton* mRandomButtonSmall;
 		LLCheckBoxCtrl* mOverrideSitsCheckBoxSmall;
 
 		BOOL mCanDragAndDrop;
