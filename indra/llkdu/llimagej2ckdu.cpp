@@ -136,6 +136,9 @@ private:
 // Kakadu specific implementation
 //
 void set_default_colour_weights(kdu_params *siz);
+// <FS:CR> Various missing prototypes
+LLImageJ2CImpl* fallbackCreateLLImageJ2CImpl();
+// </FS:CR>
 
 // Factory function: see declaration in llimagej2c.cpp
 LLImageJ2CImpl* fallbackCreateLLImageJ2CImpl()
@@ -161,6 +164,13 @@ private:
 	bool mUseYCC;
 	kdu_dims mDims;
 	kdu_sample_allocator mAllocator;
+
+	// <FS:ND> KDU 8.0.1 compatibiliy
+#if KDU_MAJOR_VERSION >= 8
+	kdu_push_pull_params mPushPullParams;
+#endif
+	// </FS:ND>
+	
 	kdu_tile_comp mComps[4];
 	kdu_line_buf mLines[4];
 	kdu_pull_ifc mEngines[4];
@@ -520,6 +530,15 @@ bool LLImageJ2CKDU::decodeImpl(LLImageJ2C &base, LLImageRaw &raw_image, F32 deco
 		}
 	}
 
+	// <FS:Techwolf Lupindo> texture comment metadata reader
+	// <FS:LO> get_text() will return a NULL pointer if no comment exists, but will return a proper null terminated string even if the comment is ""
+	if(mCodeStreamp->get_comment().get_text())
+	{
+		raw_image.mComment.assign(mCodeStreamp->get_comment().get_text());
+	}
+	// </FS:LO>
+	// </FS:Techwolf Lupindo>
+
 	// These can probably be grabbed from what's saved in the class.
 	kdu_dims dims;
 	mCodeStreamp->get_dims(0,dims);
@@ -718,6 +737,7 @@ bool LLImageJ2CKDU::encodeImpl(LLImageJ2C &base, const LLImageRaw &raw_image, co
 			// cannot be open or are very blurry. Avoiding that last layer prevents the problem to happen.
 			if ((base.getWidth() >= 32) || (base.getHeight() >= 32))
 			{
+				if( nb_layers >= MAX_NB_LAYERS ) nb_layers = MAX_NB_LAYERS-1; // <FS:ND/> Adjust layer index in case we reached the arrays end.
 				layer_bytes[nb_layers++] = 0;
 			}
 			codestream.access_siz()->parse_string("Creversible=yes");
@@ -1051,6 +1071,7 @@ void LLImageJ2CKDU::findDiscardLevelsBoundaries(LLImageJ2C &base)
 		cleanupCodeStream();
 		codestream_out.destroy();
 		delete[] output_buffer;	
+		delete[] layer_bytes; // <FS:ND/> Don't leak those
 	}
 	return;
 }
@@ -1295,6 +1316,19 @@ LLKDUDecodeState::LLKDUDecodeState(kdu_tile tile, kdu_byte *buf, S32 row_gap,
 		}
 		bool use_shorts = (mComps[c].get_bit_depth(true) <= 16);
 		mLines[c].pre_create(&mAllocator,mDims.size.x,mReversible[c],use_shorts,0,0);
+
+		// <FS:ND> KDU 8.0.1 compatibiliy
+#if KDU_MAJOR_VERSION >= 8
+		if (res.which() == 0) // No DWT levels used
+		{
+			mEngines[c] = kdu_decoder(res.access_subband(LL_BAND),&mAllocator,mPushPullParams,use_shorts);
+        }
+		else
+		{
+			mEngines[c] = kdu_synthesis(res,&mAllocator,mPushPullParams,use_shorts);
+        }
+#else
+		// </FS:ND>
 		if (res.which() == 0) // No DWT levels used
 		{
 			mEngines[c] = kdu_decoder(res.access_subband(LL_BAND),&mAllocator,use_shorts);
@@ -1303,6 +1337,8 @@ LLKDUDecodeState::LLKDUDecodeState(kdu_tile tile, kdu_byte *buf, S32 row_gap,
 		{
 			mEngines[c] = kdu_synthesis(res,&mAllocator,use_shorts);
 		}
+#endif // <FS:ND/> KDU 8.0.1 compatibiliy
+				
 	}
 	mAllocator.finalize(*codestreamp); // Actually creates buffering resources
 	for (c = 0; c < mNumComponents; c++)
