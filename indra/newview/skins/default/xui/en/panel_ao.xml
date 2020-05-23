@@ -261,7 +261,7 @@
 
 		<layout_panel
 			name="next_previous_buttons_stack_left"
-			width="90"
+			width="60"
 			height="20"
 			user_resize="false"
 			follows="all"
@@ -273,7 +273,27 @@
 			tool_tip="Switch to previous animation of the current state."
 			left="0"
 			top="0"
-			width="88"
+			width="58"
+			height="20"
+			follows="all"
+			layout="topleft" />
+
+		</layout_panel>
+		<layout_panel
+			name="next_previous_buttons_stack_any"
+			width="60"
+			height="20"
+			user_resize="false"
+			follows="all"
+			layout="topleft">
+
+		<button
+			name="ao_random"
+			label="Any"
+			tool_tip="Switch to random animation of the current state."
+			left="0"
+			top="0"
+			width="58"
 			height="20"
 			follows="all"
 			layout="topleft" />
@@ -281,7 +301,7 @@
 		</layout_panel>
 		<layout_panel
 			name="next_previous_buttons_stack_right"
-			width="90"
+			width="60"
 			height="20"
 			user_resize="false"
 			follows="all"
@@ -293,7 +313,7 @@
 			tool_tip="Switch to next animation of the current state."
 			left="2"
 			top="0"
-			width="88"
+			width="58"
 			height="20"
 			follows="all"
 			layout="topleft" />
@@ -447,7 +467,17 @@
 		tool_tip="Switch to previous animation of the current state."
 		left="0"
 		top_pad="4"
-		width="62"
+		width="40"
+		height="20"
+		follows="left|top"
+		layout="topleft" />
+
+	<button
+		name="ao_random_small"
+		label="Any"
+		tool_tip="Switch to random animation of the current state."
+		left_pad="4"
+		width="40"
 		height="20"
 		follows="left|top"
 		layout="topleft" />
@@ -457,7 +487,7 @@
 		image_overlay="ForwardArrow_Off"
 		tool_tip="Switch to next animation of the current state."
 		left_pad="4"
-		width="62"
+		width="40"
 		height="20"
 		follows="left|top"
 		layout="topleft" />
