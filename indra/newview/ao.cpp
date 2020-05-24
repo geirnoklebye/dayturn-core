@@ -731,14 +731,7 @@ void FloaterAO::onClickTrash()
 	}
 
 	mAnimationList->deleteSelectedItems();
-	// it's not enough to just clear the remembered bold item here - our displayed list is now out of step
-	// with the underlying data structures. It's also possible to trash the currently playing anim within the UI, which will
-	// keep playing until a cycle occurs or a new selection is made
 	mCurrentBoldItemID = LLUUID::null;
-	updateList();
-	onAnimationChanged(mLastUUID, mLastState, mLastName);
-	// and kick onto a valid animation in the current state
-	AOEngine::instance().cycle(AOEngine::CycleNext);
 }
 
 void FloaterAO::updateCycleParameters()
@@ -875,8 +868,8 @@ void FloaterAO::onAnimationChanged(const LLUUID& animation, const std::string st
 	std::vector<LLScrollListItem*> item_list = mAnimationList->getAllData();
 	std::vector<LLScrollListItem*>::const_iterator iter;
 	
-	bool found_bold = (animation == LLUUID::null); // allow early exit if we aren't going to find something to embolden
-	bool found_unbold = false; // no early exit possible here - if LLUUID::null we have to clear bold on everything
+	// after trying various ways to make the unbold smart, I'm settling on a brute force approach - go through the whole
+	// list and clear every item except the one we want bold
 		
 	for (iter = item_list.begin(); iter != item_list.end(); ++iter)
 	{
@@ -887,21 +880,15 @@ void FloaterAO::onAnimationChanged(const LLUUID& animation, const std::string st
 		// longer valid because the scroll list has been rebuilt at least twice, but uuids won't have changed
 		//
 		// beware - UserData can be null sometimes now that we don't take an early exit above, so checks are needed
-		if (!found_unbold && (!id || *id == mCurrentBoldItemID || mCurrentBoldItemID == LLUUID::null))
+		LLScrollListText* column = (LLScrollListText*)item->getColumn(1);
+		if (id && *id == animation)
 		{
-			LLScrollListText* column = (LLScrollListText*)item->getColumn(1);
-			column->setFontStyle(LLFontGL::NORMAL);
-			// Only allow the early exit if we were looking for a specified item and not on a null ptr item
-			if (id && (mCurrentBoldItemID != LLUUID::null)) found_unbold = true;
-		}
-		// don't if-else this in case we get called for the same pose twice
-		if (!found_bold && id && *id == animation)
-		{
-			LLScrollListText* column = (LLScrollListText*)item->getColumn(1);
 			column->setFontStyle(LLFontGL::BOLD);
-			found_bold = true;
 		}
-		if (found_bold && found_unbold) continue;
+		else
+		{
+			column->setFontStyle(LLFontGL::NORMAL);
+		}
 	}
 	mCurrentBoldItemID = animation;
 }

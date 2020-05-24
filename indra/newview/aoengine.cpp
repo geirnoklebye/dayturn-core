@@ -885,7 +885,9 @@ void AOEngine::cycle(eCycleMode cycleMode)
 		else if (cycleMode == CycleNext)
 		{
 			state->mCurrentAnimation++;
-			if (state->mCurrentAnimation == state->mAnimations.size())
+			// if some anims have just been deleted, this can be beyond the end of the list
+			// so make this check >= instead of == to catch it and avoid a crash
+			if (state->mCurrentAnimation >= state->mAnimations.size())
 			{
 				state->mCurrentAnimation = 0;
 			}
@@ -1207,6 +1209,8 @@ BOOL AOEngine::removeAnimation(const AOSet* set, AOSet::AOState* state, S32 inde
 		updateSortOrder(state);
 	}
 
+	// we need the UI to resync since we deleted something
+	mTimerCollection.enableReloadTimer(TRUE);
 	return TRUE;
 }
 
