@@ -1926,7 +1926,6 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
                         LLViewerAudio::getInstance()->startInternetStreamWithAutoFade(LLStringUtil::null);
                     }
                 }
-                }
 			}
 			else
 			{
@@ -1935,6 +1934,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 				LLViewerAudio::getInstance()->stopInternetStreamWithAutoFade();
 			}
 		}//if gAudiop
+	}
 };
 
 
