@@ -2921,7 +2921,7 @@ bool LLAppViewer::initConfiguration()
 	//
 	// Set the name of the window
 	//
-	gWindowTitle = LLTrans::getString("APP_NAME") + " " + LLVersionInfo::getVersion();
+	gWindowTitle = LLTrans::getString("APP_NAME") + " " + LLVersionInfo::instance().getVersion();
 #if LL_DEBUG
 	gWindowTitle += std::string(" [DEBUG]");
 #endif
@@ -3222,8 +3222,8 @@ LLSD LLAppViewer::getViewerInfo() const
 		boost::erase_tail(channel, 4);
 	}
 	url += LLURI::escape(channel) + "/";
-	url += LLURI::escape(versionInfo.getVersion());
-
+	url += LLURI::escape(LLVersionInfo::instance().getVersion());
+	info["VIEWER_RELEASE_NOTES_URL"] = url;
 #if LL_MSVC
 	info["COMPILER"] = "MSVC";
 	info["COMPILER_VERSION"] = _MSC_VER;

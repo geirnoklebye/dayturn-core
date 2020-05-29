@@ -124,9 +124,9 @@ std::string LLVersionInfo::getChannelAndVersion()
 std::string LLVersionInfo::getChannel()
 {
 	// <FS:Ansariel> Above macro hackery results in extra quotes - fix it if it happens
-	if (LLStringUtil::startsWith(sWorkingChannelName, "\"") && sWorkingChannelName.size() > 2)
+	if (LLStringUtil::startsWith(mWorkingChannelName, "\"") && mWorkingChannelName.size() > 2)
 	{
-		sWorkingChannelName = sWorkingChannelName.substr(1, sWorkingChannelName.size() - 2);
+		mWorkingChannelName = mWorkingChannelName.substr(1, mWorkingChannelName.size() - 2);
 	}
 	// </FS:Ansariel>
 	return mWorkingChannelName;
