@@ -3296,11 +3296,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b4dbed659ab788456f3a77a294bd3f48</string>
+              <string>18409e0aeb11cf66bc633e269ce257cb</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///D:/kokua/3p-ndphysicsstub\ndPhysicsStub-1.0-windows64-201462303.tar.bz2</string>
+              <string>file:///D:/kokua/3p-ndphysicsstub/ndPhysicsStub-1.0-windows64-201501507.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
