@@ -3282,11 +3282,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a73088e519d2b340e01538ae205e09e4</string>
+              <string>b4dbed659ab788456f3a77a294bd3f48</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-1.0-windows-201504262316.tar.bz2</string>
+              <string>file:///D:/kokua/3p-ndphysicsstub\ndPhysicsStub-1.0-windows64-201462303.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -3296,11 +3296,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b5f498e3b005a29af8c11d1a3f86ac6d</string>
+              <string>b4dbed659ab788456f3a77a294bd3f48</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-0.5.1-windows64-201701061926.tar.bz2</string>
+              <string>file:///D:/kokua/3p-ndphysicsstub\ndPhysicsStub-1.0-windows64-201462303.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
