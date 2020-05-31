@@ -6004,13 +6004,6 @@ void LLSelectMgr::renderSilhouettes(BOOL for_hud)
 	}
 //mk
 
-//MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
-	{
-		return;
-	}
-//mk
-
 	gGL.getTexUnit(0)->bind(mSilhouetteImagep);
 	LLGLSPipelineSelection gls_select;
 	LLGLEnable blend(GL_BLEND);
