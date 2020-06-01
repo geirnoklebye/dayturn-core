@@ -1869,7 +1869,7 @@ endif (FMODEX)
 
 # <FS:Ansariel> Output device selection
 # set_source_files_properties(llstartup.cpp PROPERTIES COMPILE_FLAGS "${LLSTARTUP_COMPILE_FLAGS}")
-set_source_files_properties(llstartup.cpp llfloaterpreference.cpp PROPERTIES COMPILE_FLAGS "${LLSTARTUP_COMPILE_FLAGS}")
+set_source_files_properties(llstartup.cpp llfloaterpreference.cpp llprogressview.cpp PROPERTIES COMPILE_FLAGS "${LLSTARTUP_COMPILE_FLAGS}")
 # </FS:Ansariel>
 
 list(APPEND viewer_SOURCE_FILES ${viewer_HEADER_FILES})
@@ -2298,7 +2298,7 @@ if (DARWIN)
   set(MACOSX_BUNDLE_BUNDLE_NAME "Kokua")
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${VIEWER_SHORT_VERSION}")
   set(MACOSX_BUNDLE_BUNDLE_VERSION "${VIEWER_SHORT_VERSION}${VIEWER_MACOSX_PHASE}${VIEWER_REVISION}")
-  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © Linden Research, Inc. 2018")
+  set(MACOSX_BUNDLE_COPYRIGHT "Copyright Â© Linden Research, Inc. 2018")
   set(MACOSX_BUNDLE_NSMAIN_NIB_FILE "Kokua.nib")
   set(MACOSX_BUNDLE_NSPRINCIPAL_CLASS "LLApplication")
 
