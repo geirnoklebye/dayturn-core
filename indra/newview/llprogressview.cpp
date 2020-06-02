@@ -402,14 +402,31 @@ void LLProgressView::initLogos()
     std::string temp_str = gDirUtilp->getExpandedFilename(LL_PATH_DEFAULT_SKIN, "textures", "3p_icons");
 
     temp_str += gDirUtilp->getDirDelimiter();
+	
+	//declare this here so we can cope with LL_FMODSTUDIO not defined
+    S32 pad_y;
+    texture_start_x++;
+
+#if LL_USEKDU
+    // kakadu image size is 419x75
+    icon_width = 140;
+    icon_height = 25;
+    pad_y = 0;
+    loadLogo(temp_str + "kakadu_logo.png",
+        image_codec,
+        LLRect(texture_start_x, texture_start_y + pad_y + icon_height, texture_start_x + icon_width, texture_start_y + pad_y),
+        default_clip,
+        default_clip);
+
+    texture_start_x += icon_width + default_pad;
+#endif
 
 #ifdef LL_FMODSTUDIO
     // original image size is 264x96, it is on longer side but
     // with no internal paddings so it gets additional padding
     icon_width = 77;
     icon_height = 21;
-    S32 pad_y = 4;
-    texture_start_x++;
+    pad_y = 4;
     loadLogo(temp_str + "fmod_logo.png",
         image_codec,
         LLRect(texture_start_x, texture_start_y + pad_y + icon_height, texture_start_x + icon_width, texture_start_y + pad_y),
@@ -418,6 +435,8 @@ void LLProgressView::initLogos()
 
     texture_start_x += icon_width + default_pad + 1;
 #endif
+
+#if LL_HAVOK_TPV
     // original image size is 342x113, central element is on a larger side
     // plus internal padding, so it gets slightly more height than desired 32
     icon_width = 88;
@@ -430,12 +449,15 @@ void LLProgressView::initLogos()
         default_clip);
 
     texture_start_x += icon_width + default_pad;
+#endif
 
     // 108x41
-    icon_width = 74;
+    icon_width = 81;
+    icon_height = default_height;
+	pad_y = -1;
     loadLogo(temp_str + "vivox_logo.png",
         image_codec,
-        LLRect(texture_start_x, texture_start_y + default_height, texture_start_x + icon_width, texture_start_y),
+        LLRect(texture_start_x, texture_start_y + pad_y + icon_height, texture_start_x + icon_width, texture_start_y + pad_y),
         default_clip,
         default_clip);
 }
