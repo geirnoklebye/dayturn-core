@@ -1092,11 +1092,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>30480287e6f08500307cb709c39f400c</string>
+              <string>c1c8c8338b43356f1302ac06365f668a</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-darwin64-191621825.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.01-darwin64-201551348.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -1145,7 +1145,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.00.01</string>
+        <string>2.01.01</string>
       </map>
       <key>fontconfig</key>
       <map>
