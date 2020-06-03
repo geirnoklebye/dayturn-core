@@ -978,7 +978,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.64-darwin-201612111122.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodex/downloads/fmodex-4.44.64-darwin-201612111122.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -992,7 +992,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.64-darwin64-201612150046.tar.bz2</string>
+              <string>http://bitbucket.org/kokuaprivate/3p-fmodex/downloads/fmodex-4.44.64-darwin64-201612150046.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -1006,7 +1006,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.64-linux-201612101845.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodex/downloads/fmodex-4.44.64-linux-201612101845.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1020,7 +1020,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.64-linux64-201612101748.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodex/downloads/fmodex-4.44.64-linux64-201612101748.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1034,7 +1034,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.64-windows-201612090445.tar.bz2</string>
+              <string>http://bitbucket.org/kokuaprivate/3p-fmodex/downloads/fmodex-4.44.64-windows-201612090445.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -1048,7 +1048,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.64-windows64-201612090447.tar.bz2</string>
+              <string>http://bitbucket.org/kokuaprivate/3p-fmodex/downloads/fmodex-4.44.64-windows64-201612090447.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
@@ -1080,7 +1080,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodstudio/downloads/fmodstudio-2.00.01-darwin-191621840.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-darwin-191621840.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -1094,7 +1094,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodstudio/downloads/fmodstudio-2.00.01-darwin64-191621825.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-darwin64-191621825.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -1108,7 +1108,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodstudio/downloads/fmodstudio-2.00.01-linux64-191641905.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-linux64-191641905.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1122,7 +1122,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodstudio/downloads/fmodstudio-2.00.01-windows-191652331.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-windows-191652331.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -1136,7 +1136,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodstudio/downloads/fmodstudio-2.00.01-windows64-191652341.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-windows64-191652341.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
@@ -2457,11 +2457,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>15d78d6dd888de5b43a8da53ad63c54a</string>
+              <string>a647a899b05a180e13347dce567a6b6b</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///media/nicky/Data/git/3p-kdu/kdu-8.0.4.201440222-linux64-201440222.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.4.201530654-linux64-201530654.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2482,17 +2482,15 @@
           <map>
             <key>archive</key>
             <map>
-              <key>hash</key>
-              <string>3dfeb869c781a766874f0aedc7d4fcef</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/ct2/55188/512576/kdu-7.10.4.539108-windows64-539108.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.4.201521836-windows64-201521836-vs2017.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>7.10.4.539108</string>
+        <string>8.0.4.201530654</string>
       </map>
       <key>libhunspell</key>
       <map>
