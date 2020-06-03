@@ -1120,11 +1120,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>86fd9096acd615e354506b6496c22d89</string>
+              <string>3b6a63d52fa1f6f5c5777cd7d9ae1cc7</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-windows-191652331.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.01-windows-201552115.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -1134,11 +1134,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e2151300ac4be4e4e7c3278c0ccb7919</string>
+              <string>6aeacca7c0377943ba4a6a3640afaacf</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-windows64-191652341.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.01-windows64-201552106.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
