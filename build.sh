@@ -149,8 +149,8 @@ pre_build()
      "${SIGNING[@]}" \
        ;
     then
-        echo "autobuild configure failed; appending CMakeFiles/CMakeOutput.log" 1>&2
-        cat "${abs_build_dir}/CMakeFiles/CMakeOutput.log" 1>&2
+        echo "autobuild configure failed; saving CMakeOutput.log as an output" 1>&2
+        python_cmd "$helpers/codeticket.py" addoutput "CMakeOutput.log" "${abs_build_dir}/CMakeFiles/CMakeOutput.log" --mimetype text/plain
         fatal "$variant configuration failed"
     fi
 
