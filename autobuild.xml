@@ -1968,6 +1968,8 @@
           <map>
             <key>archive</key>
             <map>
+              <key>a0c4405c9e44d4a0135fe20ba8cfbace</key>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/ct2/4693/14627/havok_source-2012.1-2-darwin64-504680.tar.bz2</string>
               <key>dir_structure</key>
               <map>
                 <key>LICENSES</key>
@@ -1985,8 +1987,6 @@
               <string>md5</string>
               <key>url</key>
               <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.36.201602041656-linux64-201602041656.tar.bz2</string>
-              <string>a0c4405c9e44d4a0135fe20ba8cfbace</string>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/ct2/4693/14627/havok_source-2012.1-2-darwin64-504680.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3292,11 +3292,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>18409e0aeb11cf66bc633e269ce257cb</string>
+              <string>4578c796d2b2c6757f5b38b195496d93</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///D:/kokua/3p-ndphysicsstub/ndPhysicsStub-1.0-windows64-201501507.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/p64_3p-ndphysicsstub-vs2017/downloads/ndPhysicsStub-1.0-windows64-201581747.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
