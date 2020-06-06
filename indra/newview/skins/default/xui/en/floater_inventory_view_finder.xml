@@ -244,7 +244,7 @@
      layout="topleft"
      left="8"
      name="check_transferrable"
-     top_pad="6"
+     top_pad="4"
      width="144" />
     <view_border
      bevel_style="none"
@@ -253,7 +253,7 @@
      layout="topleft"
      left="10"
      name="horiz_separator"
-     top_pad="10"
+     top_pad="6"
      width="260"/>
     <check_box
      height="16"
@@ -298,7 +298,7 @@
      layout="topleft"
      left_delta="0"
      name="- OR -"
-     top="378"
+     top_pad="0"
      width="144">
         - OR -
     </text>
@@ -306,7 +306,7 @@
      height="16"
      layout="topleft"
      name="date_search_direction"
-     top="388"
+     top_pad="0"
      left="8"
      width="270">
      <radio_item
@@ -320,7 +320,7 @@
       layout="topleft"
       name="older"
       top_delta="0"
-      left="120" />
+      left="130" />
     </radio_group>
     <spinner
      follows="left|top"
@@ -331,7 +331,7 @@
      left_delta="0"
      max_val="240000"
      name="spin_hours_ago"
-     top_pad="4"
+     top_pad="2"
      width="64" />
     <text
      name="label_hours"
