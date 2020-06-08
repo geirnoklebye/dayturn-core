@@ -4776,8 +4776,8 @@ void handle_reset_view()
 		return;
 	}
 //mk
-	// KKA-720, this line was removed in the camera presets viewer, but we need it back to prevent avatar always turning to camera
-	gAgentCamera.switchCameraPreset(CAMERA_PRESET_REAR_VIEW);
+	// KKA-720, better version of fix based on recommendation from FS:Ansariel in BUG-228864
+	gAgentCamera.setFocusOnAvatar(TRUE, FALSE, FALSE); 
 	reset_view_final( TRUE );
 	LLFloaterCamera::resetCameraMode();
 }
