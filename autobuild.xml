@@ -328,9 +328,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>038853b97307a9b65de20c4c50098023</string>
+              <string>690927798e3200dc8ae8fa0c7b18abf5</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/9675/45694/boost-1.65.1-linux64-509640.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-boost-git/downloads/boost-1.72-linux64-201601907.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -498,9 +500,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c90613240ba3e3a171d3379275ae4ee3</string>
+              <string>780bf46a8e93000378a0896dd0c3cd63</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/9695/45732/colladadom-2.3.509683-linux64-509683.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-colladadom-git/downloads/colladadom-2.3.201621932-linux64-201621932.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -535,7 +539,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.3.539922</string>
+        <string>2.3.201621932</string>
       </map>
       <key>curl</key>
       <map>
@@ -1841,11 +1845,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>6144f0d870aa8dc0bd38ad2703f37a45</string>
+              <string>d24db0797e3c5d2f233da13625427f64</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201601261238-linux64-201601261238.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201610128-linux64-201610128.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1880,7 +1884,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.7.0.539876</string>
+        <string>1.7.0.201610128</string>
       </map>
       <key>gperftools</key>
       <map>

@@ -135,7 +135,7 @@ if (LINUX)
       -pthread
       )
     
-    add_definitions(-std=gnu++11)
+    add_definitions(-std=gnu++14)
     add_definitions(-DAPPID=kokua)
   # force this platform to accept TOS via external browser #DKO  will break use internal browser
   #add_definitions(-DEXTERNAL_TOS)
