@@ -153,7 +153,7 @@
 	         mouse_opaque="false"
 	         name="location_combo"
 	         top_delta="0"
-                width="355">
+                width="168">
              <combo_list
              mouse_wheel_opaque="true"/>
 	        </location_input>
