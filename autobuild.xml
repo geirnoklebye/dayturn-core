@@ -3126,6 +3126,34 @@
             <key>name</key>
             <string>darwin64</string>
           </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>ad9aba5e2c43a37b6530a0d2de64df1c</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokuaprivate/llphysicsextensions_tpv/downloads/llphysicsextensions_tpv-1.0.542327-windows-542327.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+          <key>windows64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>46689ff1442a8eccac3a7f3258308e1e</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokuaprivate/llphysicsextensions_tpv/downloads/llphysicsextensions_tpv-1.0.542327-windows64-542327.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows64</string>
+          </map>
         </map>
         <key>source_type</key>
         <string>hg</string>
