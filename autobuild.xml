@@ -3100,6 +3100,38 @@
         <key>version</key>
         <string>1.0.504712</string>
       </map>
+      <key>llphysicsextensions_tpv</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright (c) 2010, Linden Research, Inc.</string>
+        <key>license</key>
+        <string>commercial</string>
+        <key>license_file</key>
+        <string>LICENSES/llphysicsextensions.txt</string>
+        <key>name</key>
+        <string>llphysicsextensions_tpv</string>
+        <key>platforms</key>
+        <map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>2aa4ec0d72bbe4b755730f1bf92b39e7</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokuaprivate/llphysicsextensions_tpv/downloads/llphysicsextensions_tpv-1.0.542327-darwin64-542327.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
+        </map>
+        <key>source_type</key>
+        <string>hg</string>
+        <key>version</key>
+        <string>1.0.542327</string>
+      </map>
       <key>mesa</key>
       <map>
         <key>license</key>
@@ -5088,13 +5120,6 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
           <key>name</key>
           <string>linux64</string>
         </map>
-<!-- There are changes below to force building with VS2013 on dual VS2013+VS2017 systems. This should be
-**** overwritten by the original value ( ${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN} ) once the VS2017 merge is done
-**** but will need manual attention since the change will be newer on this side of the merge.
-**** The original lines have had **** prefixes added to force a merge conflict.
-**** Also note the hardwired definition of vc120 within the build output folder path name. This file on the
-**** VS2017 side has had that changed to vc150.
--->
         <key>windows</key>
         <map>
           <key>build_directory</key>
@@ -5126,9 +5151,6 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-<!--
-****                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
--->
                   <string>Visual Studio 12 2013 Win64</string>
                 </array>
               </map>
@@ -5162,9 +5184,6 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-<!--
-****                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
--->
                   <string>Visual Studio 12 2013 Win64</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
@@ -5197,9 +5216,6 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-<!--
-****                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
--->
                   <string>Visual Studio 12 2013 Win64</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
@@ -5232,9 +5248,6 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-<!--
-****                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
--->
                   <string>Visual Studio 12 2013 Win64</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
