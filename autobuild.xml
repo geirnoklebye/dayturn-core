@@ -2489,9 +2489,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>129e3e29f32d9132b9279be55908f0dd</string>
+              <string>073e581c9f30dd573ae29fbd5f7a7984</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.4.201531056-windows64-201531056-vs2013.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.4.201521836-windows64-201521836-vs2017.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
@@ -3146,8 +3146,10 @@
             <map>
               <key>hash</key>
               <string>ad9aba5e2c43a37b6530a0d2de64df1c</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/ct2/30341/257307/llphysicsextensions_tpv-1.0.542327-windows-542327.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/llphysicsextensions_tpv/downloads/llphysicsextensions_tpv-1.0.542327-windows-542327.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -3158,11 +3160,13 @@
             <map>
               <key>hash</key>
               <string>46689ff1442a8eccac3a7f3258308e1e</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/ct2/30341/257307/llphysicsextensions_tpv-1.0.542327-windows64-542327.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/llphysicsextensions_tpv/downloads/llphysicsextensions_tpv-1.0.542327-windows64-542327.tar.bz2</string>
             </map>
             <key>name</key>
-            <string>windows</string>
+            <string>windows64</string>
           </map>
         </map>
         <key>version</key>
@@ -5187,7 +5191,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>Visual Studio 12 2013 Win64</string>
+                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
                 </array>
               </map>
               <key>default</key>
@@ -5220,7 +5224,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>Visual Studio 12 2013 Win64</string>
+                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
               </map>
@@ -5252,7 +5256,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>Visual Studio 12 2013 Win64</string>
+                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
               </map>
@@ -5284,7 +5288,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>Visual Studio 12 2013 Win64</string>
+                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
               </map>
