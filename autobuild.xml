@@ -3131,11 +3131,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ad9aba5e2c43a37b6530a0d2de64df1c</string>
+              <string>27c1cd158e323af96026d85d2334caf5</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/llphysicsextensions_tpv/downloads/llphysicsextensions_tpv-1.0.542327-windows-542327.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/llphysicsextensions_tpv/downloads/llphysicsextensions_tpv-1.0.511060-windows-511060.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -3145,11 +3145,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>46689ff1442a8eccac3a7f3258308e1e</string>
+              <string>65183e2fbd4044aeca35ff9e70ac38ac</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/llphysicsextensions_tpv/downloads/llphysicsextensions_tpv-1.0.542327-windows64-542327.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/llphysicsextensions_tpv/downloads/llphysicsextensions_tpv-1.0.511060-windows64-511060.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
