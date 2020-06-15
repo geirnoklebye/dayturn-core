@@ -1094,11 +1094,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>30480287e6f08500307cb709c39f400c</string>
+              <string>c1c8c8338b43356f1302ac06365f668a</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-darwin64-191621825.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.01-darwin64-201551348.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -1108,11 +1108,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e93df9c5ad80afe1668f6de86c212684</string>
+              <string>a9883f93eee2ca65c25640a1f68a3850</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-linux64-191641905.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.01-linux64-201552238.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1122,11 +1122,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>86fd9096acd615e354506b6496c22d89</string>
+              <string>3b6a63d52fa1f6f5c5777cd7d9ae1cc7</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-windows-191652331.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.01-windows-201552115.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -1136,18 +1136,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e2151300ac4be4e4e7c3278c0ccb7919</string>
+              <string>6aeacca7c0377943ba4a6a3640afaacf</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-windows64-191652341.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.01-windows64-201552106.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>2.00.01</string>
+        <string>2.01.01</string>
       </map>
       <key>fontconfig</key>
       <map>
@@ -2437,9 +2437,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ccfd8eacd1ebe92715944094064ba2e4</string>
+              <string>83df9cdecf5d627296852d9e09c2ab68</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/ct2/55187/512570/kdu-7.10.4.539108-darwin64-539108.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.4.201531820-darwin64-201531820.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -2486,15 +2488,17 @@
           <map>
             <key>archive</key>
             <map>
+              <key>hash</key>
+              <string>129e3e29f32d9132b9279be55908f0dd</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.4.201521836-windows64-201521836-vs2017.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.4.201531056-windows64-201531056-vs2013.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>8.0.4.201530654</string>
+        <string>8.0.4.201531820</string>
       </map>
       <key>libhunspell</key>
       <map>
@@ -5183,7 +5187,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
+                  <string>Visual Studio 12 2013 Win64</string>
                 </array>
               </map>
               <key>default</key>
@@ -5216,9 +5220,8 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
+                  <string>Visual Studio 12 2013 Win64</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
-                  <string>-DUSE_KDU=FALSE</string>
                 </array>
               </map>
               <key>name</key>
@@ -5249,9 +5252,8 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
+                  <string>Visual Studio 12 2013 Win64</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
-                  <string>-DUSE_KDU=FALSE</string>
                 </array>
               </map>
               <key>name</key>
@@ -5282,9 +5284,8 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
+                  <string>Visual Studio 12 2013 Win64</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
-                  <string>-DUSE_KDU=FALSE</string>
                 </array>
               </map>
               <key>name</key>
