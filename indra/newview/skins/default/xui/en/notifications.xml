@@ -12004,6 +12004,16 @@ Creating animation link for animation "[NAME]" failed!
      name="okbutton"
      yestext="OK"/>
   </notification>
+  <notification
+    icon="alertmodal.tga"
+	name="NoHavok"
+	type="alertmodal">
+	Some functions like [FEATURE] are not included in this version of [APP_NAME]. If you would like to use [FEATURE], please download a version of [APP_NAME] containing Havok support
+	<form name="form">
+		<ignore name="ignore"
+		text="No Havok Warning"/>
+	</form>
+	</notification>
    <!-- <FS:Zi> Backup Settings -->
   <notification
    icon="alertmodal.tga"
