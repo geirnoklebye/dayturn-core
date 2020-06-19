@@ -1092,11 +1092,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>30480287e6f08500307cb709c39f400c</string>
+              <string>c1c8c8338b43356f1302ac06365f668a</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-darwin64-191621825.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.01-darwin64-201551348.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -1106,11 +1106,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e93df9c5ad80afe1668f6de86c212684</string>
+              <string>a9883f93eee2ca65c25640a1f68a3850</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-linux64-191641905.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.01-linux64-201552238.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1120,11 +1120,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>86fd9096acd615e354506b6496c22d89</string>
+              <string>3b6a63d52fa1f6f5c5777cd7d9ae1cc7</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-windows-191652331.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.01-windows-201552115.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -1134,18 +1134,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e2151300ac4be4e4e7c3278c0ccb7919</string>
+              <string>6aeacca7c0377943ba4a6a3640afaacf</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.00.01-windows64-191652341.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.01-windows64-201552106.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>2.00.01</string>
+        <string>2.01.01</string>
       </map>
       <key>fontconfig</key>
       <map>
@@ -2424,6 +2424,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>4209ee5060697805fc28d716af884d1d</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.5.201670936-darwin64-201670936.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -2441,11 +2455,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a647a899b05a180e13347dce567a6b6b</string>
+              <string>16b51f82e085a9fe70eb2dc28cfac98f</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.4.201530654-linux64-201530654.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.5.201670952-linux64-201670952.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2466,15 +2480,19 @@
           <map>
             <key>archive</key>
             <map>
+              <key>hash</key>
+              <string>0fffa378f9491f576d2a049026c2ce35</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.4.201521836-windows64-201521836-vs2017.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.5.201670902-windows64-201670902-vs2013.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>8.0.4.201530654</string>
+        <string>8.0.5.201670936</string>
       </map>
       <key>libhunspell</key>
       <map>
@@ -3081,6 +3099,78 @@
         </map>
         <key>version</key>
         <string>1.0.504712</string>
+      </map>
+      <key>llphysicsextensions_tpv</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright (c) 2010, Linden Research, Inc.</string>
+        <key>license</key>
+        <string>commercial</string>
+        <key>license_file</key>
+        <string>LICENSES/llphysicsextensions.txt</string>
+        <key>name</key>
+        <string>llphysicsextensions_tpv</string>
+        <key>platforms</key>
+        <map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>2aa4ec0d72bbe4b755730f1bf92b39e7</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokuaprivate/llphysicsextensions_tpv/downloads/llphysicsextensions_tpv-1.0.542327-darwin64-542327.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>711f4ec769e4b5f59ba25ee43c11bcbc</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/4724/14846/llphysicsextensions_stub-1.0.504712-linux64-504712.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>27c1cd158e323af96026d85d2334caf5</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokuaprivate/llphysicsextensions_tpv/downloads/llphysicsextensions_tpv-1.0.511060-windows-511060.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+          <key>windows64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>65183e2fbd4044aeca35ff9e70ac38ac</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokuaprivate/llphysicsextensions_tpv/downloads/llphysicsextensions_tpv-1.0.511060-windows64-511060.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows64</string>
+          </map>
+        </map>
+        <key>source_type</key>
+        <string>hg</string>
+        <key>version</key>
+        <string>1.0.542327</string>
       </map>
       <key>mesa</key>
       <map>
@@ -5126,11 +5216,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-<!--
-****                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
--->
                   <string>Visual Studio 12 2013 Win64</string>
-                  <string>-URLV_ALWAYS_ON</string>
                 </array>
               </map>
               <key>default</key>
@@ -5163,13 +5249,8 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-<!--
-****                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
--->
                   <string>Visual Studio 12 2013 Win64</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
-                  <string>-DUSE_KDU=FALSE</string>
-                  <string>-URLV_ALWAYS_ON</string>
                 </array>
               </map>
               <key>name</key>
@@ -5200,13 +5281,8 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-<!--
-****                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
--->
                   <string>Visual Studio 12 2013 Win64</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
-                  <string>-DUSE_KDU=FALSE</string>
-                  <string>-URLV_ALWAYS_ON</string>
                 </array>
               </map>
               <key>name</key>
@@ -5237,13 +5313,8 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-<!--
-****                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
--->
                   <string>Visual Studio 12 2013 Win64</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
-                  <string>-DUSE_KDU=FALSE</string>
-                  <string>-URLV_ALWAYS_ON</string>
                 </array>
               </map>
               <key>name</key>

@@ -394,6 +394,13 @@ BOOL LLFloaterModelPreview::postBuild()
 	{
 		validate_url = llformat("http://secondlife.%s.lindenlab.com/my/account/mesh.php",current_grid.c_str());
 	}
+// <FS:CR> Show an alert dialog if Havok not included in this build as functionality will be limited
+#ifndef HAVOK_TPV
+	LLSD args;
+	args["FEATURE"] = getString("no_havok");
+	LLNotificationsUtil::add("NoHavok", args);
+#endif
+// </FS:CR>
 	getChild<LLTextBox>("warning_message")->setTextArg("[VURL]", validate_url);
 
 	mUploadBtn = getChild<LLButton>("ok_btn");
@@ -484,6 +491,13 @@ void LLFloaterModelPreview::disableViewOption(const std::string& option)
 
 void LLFloaterModelPreview::loadModel(S32 lod)
 {
+	// <FS:Ansariel> FIRE-15204: Viewer crashes when clicking "upload model" quickly twice then closing both filepickers
+	if (mModelPreview->mLoading)
+	{
+		return;
+	}
+	// </FS:Ansariel>
+
 	mModelPreview->mLoading = true;
 	if (lod == LLModel::LOD_PHYSICS)
 	{
@@ -496,6 +510,13 @@ void LLFloaterModelPreview::loadModel(S32 lod)
 
 void LLFloaterModelPreview::loadModel(S32 lod, const std::string& file_name, bool force_disable_slm)
 {
+	// <FS:Ansariel> FIRE-15204: Viewer crashes when clicking "upload model" quickly twice then closing both filepickers
+	if (mModelPreview->mLoading)
+	{
+		return;
+	}
+	// </FS:Ansariel>
+
 	mModelPreview->mLoading = true;
 
 	mModelPreview->loadModel(file_name, lod, force_disable_slm);
@@ -1317,6 +1338,7 @@ LLModelPreview::LLModelPreview(S32 width, S32 height, LLFloater* fmp)
 , mResetJoints( false )
 , mModelNoErrors( true )
 , mLastJointUpdate( false )
+, mHasDegenerate( false )
 {
 	mNeedsUpdate = TRUE;
 	mCameraDistance = 0.f;
@@ -1373,6 +1395,10 @@ LLModelPreview::~LLModelPreview()
 	// glod.dll!glodGetGroupParameteriv()  + 0x119 bytes	
 	// glod.dll!glodShutdown()  + 0x77 bytes	
 	//
+
+	// WS: Mark the preview avatar as dead, when the floater closes. Prevents memleak!
+	mPreviewAvatar->markDead();
+	//*HACK : *TODO : turn this back on when we understand why this crashes
 	//glodShutdown();
 	if(mModelLoader)
 	{
@@ -2806,8 +2832,20 @@ void LLModelPreview::genLODs(S32 which_lod, U32 decimation, bool enforce_tri_lim
 
 void LLModelPreview::updateStatusMessages()
 {
+// bit mask values for physics errors. used to prevent overwrite of single line status
+// TODO: use this to provied multiline status
+	enum PhysicsError
+	{
+		NONE=0,
+		NOHAVOK=1,
+		DEGENERATE=2,
+		TOOMANYHULLS=4,
+		TOOMANYVERTSINHULL=8
+	};
+
 	assert_main_thread();
 
+	U32 has_physics_error{ PhysicsError::NONE }; // physics error bitmap
 	//triangle/vertex/submesh count for each mesh asset for each lod
 	std::vector<S32> tris[LLModel::NUM_LODS];
 	std::vector<S32> verts[LLModel::NUM_LODS];
@@ -2897,41 +2935,59 @@ void LLModelPreview::updateStatusMessages()
 		mMaxTriangleLimit = total_tris[LLModel::LOD_HIGH];
 	}
 
-	bool has_degenerate = false;
-
+	mHasDegenerate = false;
 	{//check for degenerate triangles in physics mesh
 		U32 lod = LLModel::LOD_PHYSICS;
 		const LLVector4a scale(0.5f);
-		for (U32 i = 0; i < mModel[lod].size() && !has_degenerate; ++i)
+		for (U32 i = 0; i < mModel[lod].size() && !mHasDegenerate; ++i)
 		{ //for each model in the lod
 			if (mModel[lod][i] && mModel[lod][i]->mPhysics.mHull.empty())
 			{ //no decomp exists
 				S32 cur_submeshes = mModel[lod][i]->getNumVolumeFaces();
-				for (S32 j = 0; j < cur_submeshes && !has_degenerate; ++j)
+				for (S32 j = 0; j < cur_submeshes && !mHasDegenerate; ++j)
 				{ //for each submesh (face), add triangles and vertices to current total
 					LLVolumeFace& face = mModel[lod][i]->getVolumeFace(j);
-					for (S32 k = 0; (k < face.mNumIndices) && !has_degenerate; )
+					for (S32 k = 0; (k < face.mNumIndices) && !mHasDegenerate; )
 					{
-						U16 index_a = face.mIndices[k+0];
-						U16 index_b = face.mIndices[k+1];
-						U16 index_c = face.mIndices[k+2];
+						U16 index_a = face.mIndices[k + 0];
+						U16 index_b = face.mIndices[k + 1];
+						U16 index_c = face.mIndices[k + 2];
 
-						LLVector4a v1; v1.setMul(face.mPositions[index_a], scale);
-						LLVector4a v2; v2.setMul(face.mPositions[index_b], scale);
-						LLVector4a v3; v3.setMul(face.mPositions[index_c], scale);
-
-						if (ll_is_degenerate(v1,v2,v3))
+						if (index_c == 0 && index_b == 0 && index_a == 0) // test in reverse as 3rd index is less likely to be 0 in a normal case
 						{
-							has_degenerate = true;
+							LL_DEBUGS("MeshValidation") << "Empty placeholder triangle (3 identical index 0 verts) ignored" << LL_ENDL;
 						}
 						else
 						{
-							k += 3;
+							LLVector4a v1; v1.setMul(face.mPositions[index_a], scale);
+							LLVector4a v2; v2.setMul(face.mPositions[index_b], scale);
+							LLVector4a v3; v3.setMul(face.mPositions[index_c], scale);
+							if (ll_is_degenerate(v1, v2, v3))
+							{
+								mHasDegenerate = true;
+							}
 						}
+						k += 3;
 					}
 				}
 			}
 		}
+	}
+
+	// flag degenerates here rather than deferring to a MAV error later
+	// <FS>
+	//mFMP->childSetVisible("physics_status_message_text", mHasDegenerate); //display or clear
+	//auto degenerateIcon = mFMP->getChild<LLIconCtrl>("physics_status_message_icon");
+	//degenerateIcon->setVisible(mHasDegenerate);
+	// </FS>
+	if (mHasDegenerate)
+	{
+		has_physics_error |= PhysicsError::DEGENERATE;
+		// <FS>
+		//mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_degenerate_triangles"));
+		//LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Error");
+		//degenerateIcon->setImage(img);
+		// </FS>
 	}
 
 	mFMP->childSetTextArg("submeshes_info", "[SUBMESHES]", llformat("%d", total_submeshes[LLModel::LOD_HIGH]));
@@ -3041,14 +3097,17 @@ void LLModelPreview::updateStatusMessages()
 
 	//warn if hulls have more than 256 points in them
 	BOOL physExceededVertexLimit = FALSE;
-	for (U32 i = 0; mModelNoErrors && i < mModel[LLModel::LOD_PHYSICS].size(); ++i)
+	for (U32 i = 0; mModelNoErrors && (i < mModel[LLModel::LOD_PHYSICS].size()); ++i)
 	{
 		LLModel* mdl = mModel[LLModel::LOD_PHYSICS][i];
 
 		if (mdl)
 		{
-			for (U32 j = 0; j < mdl->mPhysics.mHull.size(); ++j)
-			{
+			// <FS:Beq> Better error handling
+			auto num_hulls = mdl->mPhysics.mHull.size();
+			for (U32 j = 0; j < num_hulls; ++j)
+			{		
+			// </FS:Beq>
 				if (mdl->mPhysics.mHull[j].size() > 256)
 				{
 					physExceededVertexLimit = TRUE;
@@ -3056,18 +3115,82 @@ void LLModelPreview::updateStatusMessages()
 					break;
 				}
 			}
+			// <FS:Beq> Better error handling
+			if (num_hulls > 256) // decomp cannot have more than 256 hulls (http://wiki.secondlife.com/wiki/Mesh/Mesh_physics)
+			{
+				LL_INFOS() << "Physical model " << mdl->mLabel << " exceeds 256 hull limitation." << LL_ENDL;
+				has_physics_error |= PhysicsError::TOOMANYHULLS;
+			}
+			// </FS:Beq>
 		}
 	}
-	mFMP->childSetVisible("physics_status_message_text", physExceededVertexLimit);
-	LLIconCtrl* physStatusIcon = mFMP->getChild<LLIconCtrl>("physics_status_message_icon");
-	physStatusIcon->setVisible(physExceededVertexLimit);
+
 	if (physExceededVertexLimit)
 	{
-		mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_vertex_limit_exceeded"));
-		LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Warning");
-		physStatusIcon->setImage(img);
+		has_physics_error |= PhysicsError::TOOMANYVERTSINHULL;
 	}
 
+// <FS:Beq> standardise error handling
+	//if (!(has_physics_error & PhysicsError::DEGENERATE)){ // only update this field (incluides clearing it) if it is not already in use.
+	//	mFMP->childSetVisible("physics_status_message_text", physExceededVertexLimit);
+	//	LLIconCtrl* physStatusIcon = mFMP->getChild<LLIconCtrl>("physics_status_message_icon");
+	//	physStatusIcon->setVisible(physExceededVertexLimit);
+	//	if (physExceededVertexLimit)
+	//	{
+	//		mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_vertex_limit_exceeded"));
+	//		LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Warning");
+	//		physStatusIcon->setImage(img);
+	//	}
+	//}
+#ifndef HAVOK_TPV 
+	has_physics_error |= PhysicsError::NOHAVOK;
+#endif 
+
+	auto physStatusIcon = mFMP->getChild<LLIconCtrl>("physics_status_message_icon");
+
+	if (has_physics_error != PhysicsError::NONE)
+	{
+		mFMP->childSetVisible("physics_status_message_text", true); //display or clear
+		physStatusIcon->setVisible(true);
+		// The order here is important. 
+		if (has_physics_error & PhysicsError::TOOMANYHULLS)
+		{
+			mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_hull_limit_exceeded"));
+			LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Error");
+			physStatusIcon->setImage(img);
+		}
+		else if (has_physics_error & PhysicsError::TOOMANYVERTSINHULL)
+		{
+			mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_vertex_limit_exceeded"));
+			LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Error");
+			physStatusIcon->setImage(img);
+		}
+		else if (has_physics_error & PhysicsError::DEGENERATE)
+		{
+			mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_degenerate_triangles"));
+			LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Error");
+			physStatusIcon->setImage(img);
+		}
+		else if (has_physics_error & PhysicsError::NOHAVOK)
+		{
+			mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_no_havok"));
+			LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Warning");
+			physStatusIcon->setImage(img);
+		}
+		else
+		{
+			// This should not happen
+			mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_unknown_error"));
+			LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Warning");
+			physStatusIcon->setImage(img);
+		}
+	}
+	else
+	{
+		mFMP->childSetVisible("physics_status_message_text", false); //display or clear
+		physStatusIcon->setVisible(false);
+	}
+// </FS:Beq>
 	if (getLoadState() >= LLModelLoader::ERROR_PARSING)
 	{
 		mModelNoErrors = false;
@@ -3094,12 +3217,18 @@ void LLModelPreview::updateStatusMessages()
 			mModelNoErrors = false;
 		}
 	}
-
-	// Todo: investigate use of has_degenerate and include into mModelNoErrors upload blocking mechanics
-	// current use of has_degenerate won't block upload permanently - later checks will restore the button
-	if (!mModelNoErrors || has_degenerate)
+	// <FS:Beq> Improve the error checking the TO DO here is no longer applicable but not an FS comment so edited to stop it being picked up
+	//if (!mModelNoErrors || mHasDegenerate)
+	if (!gSavedSettings.getBOOL("FSIgnoreClientsideMeshValidation") && (!mModelNoErrors || (has_physics_error > PhysicsError::NOHAVOK))) // block for all cases of phsyics error except NOHAVOK
+	// </FS:Beq>
 	{
 		mFMP->childDisable("ok_btn");
+		mFMP->childDisable("calculate_btn");
+	}
+	else
+	{
+		mFMP->childEnable("ok_btn");
+		mFMP->childEnable("calculate_btn");
 	}
 
     if (mModelNoErrors && mLodsWithParsingError.empty())

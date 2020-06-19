@@ -11,6 +11,7 @@
  name="Model Preview"
  title="UPLOAD MESH MODEL"
  help_topic="upload_model" >
+ <string name="no_havok">mesh upload with physics</string>
 
   <string name="status_idle"></string>
   <string name="status_parse_error">Error: Dae parsing issue - see log for details.</string>
@@ -18,7 +19,7 @@
   <string name="status_material_mismatch">Error: Material of model is not a subset of reference model.</string>
   <string name="status_reading_file">Loading...</string>
   <string name="status_generating_meshes">Generating Meshes...</string>
-  <string name="status_vertex_number_overflow">Error: Vertex number is more than 65534, aborted!</string>
+  <string name="status_vertex_number_overflow">Error: Vertex number is more than 65535, aborted!</string>
   <string name="bad_element">Error: element is invalid</string>
   <string name="high">High</string>
   <string name="medium">Medium</string>
@@ -32,7 +33,11 @@
   <string name="mesh_status_too_many_vertices">Level of detail has too many vertices.</string>
   <string name="mesh_status_missing_lod">Missing required level of detail.</string>
   <string name="mesh_status_invalid_material_list">LOD materials are not a subset of reference model.</string>
-  <string name="phys_status_vertex_limit_exceeded">Some physical hulls exceed vertex limitations.</string>
+  <string name="phys_status_vertex_limit_exceeded">Some physical hulls exceed the vertex limit (256); try an alternative 'Analyze Method'.</string>
+  <string name="phys_status_hull_limit_exceeded">Some models exceed the hull limit (256); try 'simplify'.</string>
+  <string name="phys_status_degenerate_triangles">Physics mesh too dense; remove the small, thin triangles (see preview).</string>
+  <string name="phys_status_no_havok">This version contains no Havok support and is not recommended for physics upload in SL. Results may be unpredictable.</string>
+  <string name="phys_status_unknown_error">An unrecognized error was detected.</string>
   <string name="layer_all">All</string> <!-- Text to display in physics layer combo box for "all layers" -->
   <string name="decomposing">Analyzing...</string>
   <string name="simplifying">Simplifying...</string>
@@ -755,8 +760,9 @@
                       name="first_step_name"
                       text_color="White"
                       top_pad="0"
-                      width="210">
-                      Step 1: Level of Detail
+                      width="210"
+                      valign="center">
+                      Step 1: Pick a physics model
                     </text>
                     <combo_box
                       follows="left|top"
@@ -819,7 +825,7 @@
                       name="method_label"
                       text_color="White"
                       top_pad="0">
-                      Step 2: Analyze
+                      Step 2: Convert to hulls (optional)
                     </text>
                     <text
                       follows="top|left"
