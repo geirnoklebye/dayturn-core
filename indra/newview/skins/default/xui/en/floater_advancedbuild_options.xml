@@ -366,6 +366,16 @@
      mouse_opaque="true"
      radio_style="false"
     />  
+    <check_box
+     enabled_control="RenderParcelSelection"
+     follows="left|bottom"
+     height="16"
+     bottom_delta="22"
+     left_delta="10"
+     label="...up to maximum build height"
+     name="FSRenderParcelSelectionToMaxBuildHeight"
+     control_name="FSRenderParcelSelectionToMaxBuildHeight"
+     width="190"/>
   <!--
   Holding for future work cant get the listener function to run for here
      <check_box
@@ -390,7 +400,7 @@
      label="Limit Select Distance"
      enabled="true"
      bottom_delta="22"
-     left_delta="0"
+     left_delta="-10"
      height="16"
      width="270"
      follows="left|bottom"
