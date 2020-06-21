@@ -1081,6 +1081,25 @@ void set_default_colour_weights(kdu_params *siz)
 {
 	kdu_params *cod = siz->access_cluster(COD_params);
 	assert(cod != NULL);
+//KKA-726: as of KDU 8.0.5 some of these parameters moved from COD to ENC
+	kdu_params *enc = siz->access_cluster(ENC_params);
+	assert(enc != NULL);
+
+bool is_ge_805 = false;
+#if KDU_MAJOR_VERSION > 8
+	is_ge_805 = true;
+#elif KDU_MAJOR_VERSION == 8
+#if KDU_MINOR_VERSION > 0
+ is_ge_805 = true;
+#elif KDU_PATCH_VERSION >=5
+ is_ge_805 = true;
+#endif
+#endif
+
+	if (!is_ge_805)
+	{
+		enc = cod; // 804 and below - all in COD 
+	}
 
 	bool can_use_ycc = true;
 	bool rev0 = false;
@@ -1117,7 +1136,7 @@ void set_default_colour_weights(kdu_params *siz)
 		return;
 	}
 	float weight;
-	if (cod->get(Clev_weights,0,0,weight) || cod->get(Cband_weights,0,0,weight))
+	if (enc->get(Clev_weights,0,0,weight) || enc->get(Cband_weights,0,0,weight))
 	{
 		// Weights already specified explicitly -> nothing to do
 		return; 
@@ -1127,16 +1146,16 @@ void set_default_colour_weights(kdu_params *siz)
 	// at EPFL, for a viewing distance of 15 cm and a display resolution of
 	// 300 DPI.
 
-	cod->parse_string("Cband_weights:C0="
+	enc->parse_string("Cband_weights:C0="
 		"{0.0901},{0.2758},{0.2758},"
 		"{0.7018},{0.8378},{0.8378},{1}");
-	cod->parse_string("Cband_weights:C1="
+	enc->parse_string("Cband_weights:C1="
 		"{0.0263},{0.0863},{0.0863},"
 		"{0.1362},{0.2564},{0.2564},"
 		"{0.3346},{0.4691},{0.4691},"
 		"{0.5444},{0.6523},{0.6523},"
 		"{0.7078},{0.7797},{0.7797},{1}");
-	cod->parse_string("Cband_weights:C2="
+	enc->parse_string("Cband_weights:C2="
 		"{0.0773},{0.1835},{0.1835},"
 		"{0.2598},{0.4130},{0.4130},"
 		"{0.5040},{0.6464},{0.6464},"
