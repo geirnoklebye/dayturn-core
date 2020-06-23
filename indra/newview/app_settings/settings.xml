@@ -10183,7 +10183,7 @@
     <key>Type</key>
     <string>F32</string>
     <key>Value</key>
-    <real>0.125</real>
+    <real>0.02</real>
   </map>
   <key>MediaRollOffMin</key>
   <map>
@@ -10194,7 +10194,7 @@
     <key>Type</key>
     <string>F32</string>
     <key>Value</key>
-    <real>10.0</real>
+    <real>40.0</real>
   </map>
   <key>MediaRollOffMax</key>
   <map>
@@ -10205,7 +10205,7 @@
     <key>Type</key>
     <string>F32</string>
     <key>Value</key>
-    <real>30.0</real>
+    <real>80.0</real>
   </map>
   <key>RecentItemsSortOrder</key>
     <map>
@@ -20170,6 +20170,17 @@
     <map>
       <key>Comment</key>
       <string>Disables VRAM detection via WMI probing on Windows systems</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>FSRenderParcelSelectionToMaxBuildHeight</key>
+    <map>
+      <key>Comment</key>
+      <string>Shows the parcel boundary up to the maximum build height instead of just 0.66m above ground</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>

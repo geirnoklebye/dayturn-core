@@ -133,7 +133,7 @@
 #include "stringize.h"
 #include "llcoros.h"
 #include "llexception.h"
-#include "cef/dullahan.h"
+#include "cef/dullahan_version.h"
 #include "vlc/libvlc_version.h"
 
 // Third party library includes
@@ -3323,12 +3323,16 @@ LLSD LLAppViewer::getViewerInfo() const
 	cef_ver_codec << ".";
 	cef_ver_codec << DULLAHAN_VERSION_MINOR;
 	cef_ver_codec << ".";
+	cef_ver_codec << DULLAHAN_VERSION_POINT;
+	cef_ver_codec << ".";
 	cef_ver_codec << DULLAHAN_VERSION_BUILD;
 
-	cef_ver_codec << " / CEF: ";
+	cef_ver_codec << std::endl;
+	cef_ver_codec << "  CEF: ";
 	cef_ver_codec << CEF_VERSION;
 
-	cef_ver_codec << " / Chromium: ";
+	cef_ver_codec << std::endl;
+	cef_ver_codec << "  Chromium: ";
 	cef_ver_codec << CHROME_VERSION_MAJOR;
 	cef_ver_codec << ".";
 	cef_ver_codec << CHROME_VERSION_MINOR;
