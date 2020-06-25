@@ -1456,7 +1456,6 @@ class LinuxManifest(ViewerManifest):
         with self.prefix(src=os.path.join(pkgdir, 'bin', config), dst="bin"):
             self.path( "chrome-sandbox" )
             self.path( "dullahan_host" )
-            self.path( "natives_blob.bin" )
             self.path( "snapshot_blob.bin" )
             self.path( "v8_context_snapshot.bin" )
             #self.path( "libffmpegsumo.so" ) 

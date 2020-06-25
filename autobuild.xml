@@ -837,6 +837,40 @@
         <key>version</key>
         <string>1.7.0.202005311828_81.3.10_gb223419_chromium-81.0.4044.138</string>
       </map>
+      <key>dullahan-gcc5</key>
+      <map>
+        <key>canonical_repo</key>
+        <string>https://bitbucket.org/lindenlab/3p-dullahan</string>
+        <key>copyright</key>
+        <string>Copyright (c) 2017, Linden Research, Inc.</string>
+        <key>description</key>
+        <string>A headless browser SDK that uses the Chromium Embedded Framework (CEF). It is designed to make it easier to write applications that render modern web content directly to a memory buffer, inject synthesized mouse and keyboard events as well as interact with web based features like JavaScript or cookies.</string>
+        <key>license</key>
+        <string>MPL</string>
+        <key>license_file</key>
+        <string>LICENSES/LICENSE.txt</string>
+        <key>name</key>
+        <string>dullahan-gcc5</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>7725e9abe4bf84d11bc7286c74467026</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/p64_3p-dullahan-fs/downloads/dullahan_gcc5-1.7.0.202005301906_81.3.10_gb223419_chromium-81.0.4044.138-linux64-201511706.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>1.7.0.202005301906_81.3.10_gb223419_chromium-81.0.4044.138</string>
+      </map>
       <key>elfio</key>
       <map>
         <key>license</key>
