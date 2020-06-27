@@ -1665,7 +1665,6 @@ class Linux_x86_64_Manifest(LinuxManifest):
 
             #cef plugin
             self.path( "libcef.so" )
-            self.path( "libminigbm.so" )
 
             # Vivox runtimes
             with self.prefix(src=relpkgdir, dst="../bin"):
