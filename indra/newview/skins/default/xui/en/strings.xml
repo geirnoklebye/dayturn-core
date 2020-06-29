@@ -592,6 +592,7 @@ http://secondlife.com/support for help fixing this problem.
 	<string name="dictionary_files">Dictionaries</string>
 
 <string name="backup_files">Object Backups</string>
+	<string name="collada_files">COLLADA Models</string>
 
   <!-- LSL Usage Hover Tips -->
   <!-- NOTE: For now these are set as translate="false", until DEV-40761 is implemented (to internationalize the rest of tooltips in the same window).
