@@ -135,6 +135,21 @@
           width="200">
             Use precise controls
         </text>
+   <button
+     follows="left|top"
+     visible="false"
+     height="20"
+     image_overlay="ForwardArrow_Off"
+     top_pad="-20"
+     left="200"
+     layout="topleft"
+     name="expand_btn"
+     tool_tip="Select previous linked part or face"
+     width="12">
+	  <button.commit_callback
+	     function="CameraPresets.Resize"
+	     parameter="expand" />
+    </button>
         </panel>
     </panel>
     <panel
@@ -252,5 +267,19 @@
         <button.commit_callback
           function="CameraPresets.Save"/>
       </button>
+   <button
+     follows="left|top"
+     height="20"
+     image_overlay="BackArrow_Off"
+     top_pad="-21"
+     left="157"
+     layout="topleft"
+     name="contract_btn"
+     tool_tip="Select previous linked part or face"
+     width="12">
+	  <button.commit_callback
+	     function="CameraPresets.Resize"
+	     parameter="contract" />
+    </button>
   </panel>
 </floater>
