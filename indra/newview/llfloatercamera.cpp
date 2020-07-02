@@ -352,6 +352,7 @@ LLFloaterCamera::LLFloaterCamera(const LLSD& val)
 {
 	LLHints::getInstance()->registerHintTarget("view_popup", getHandle());
 	mCommitCallbackRegistrar.add("CameraPresets.ChangeView", boost::bind(&LLFloaterCamera::onClickCameraItem, _2));
+	mCommitCallbackRegistrar.add("CameraPresets.Resize", boost::bind(&LLFloaterCamera::onClickResize, _2));
 	mCommitCallbackRegistrar.add("CameraPresets.Save", boost::bind(&LLFloaterCamera::onSavePreset, this));
 	mCommitCallbackRegistrar.add("CameraPresets.ShowPresetsList", boost::bind(&LLFloaterReg::showInstance, "camera_presets", LLSD(), FALSE));
 }
@@ -567,6 +568,29 @@ void LLFloaterCamera::onClickCameraItem(const LLSD& param)
 		if (camera_floater)
 			camera_floater->switchMode(CAMERA_CTRL_MODE_PAN);
 		switchToPreset(name);
+	}
+}
+
+/*static*/
+void LLFloaterCamera::onClickResize(const LLSD& param)
+{
+	std::string name = param.asString();
+
+	LLFloaterCamera* camera_floater = LLFloaterCamera::findInstance();
+ 
+	if ("expand" == name)
+	{
+		camera_floater->getChildView("expand_btn")->setVisible(FALSE);
+		camera_floater->getChildView("contract_btn")->setVisible(TRUE);
+		camera_floater->getChildView("buttons_panel")->setVisible(TRUE);
+		camera_floater->reshape(FLOATERCAMERA_MAX_WIDTH, camera_floater->getRect().getHeight());
+	}
+	else if ("contract" == name)
+	{
+		camera_floater->getChildView("expand_btn")->setVisible(TRUE);
+		camera_floater->getChildView("contract_btn")->setVisible(FALSE);
+		camera_floater->getChildView("buttons_panel")->setVisible(FALSE);
+		camera_floater->reshape(FLOATERCAMERA_MIN_WIDTH, camera_floater->getRect().getHeight());
 	}
 }
 

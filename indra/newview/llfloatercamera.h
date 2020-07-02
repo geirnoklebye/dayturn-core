@@ -32,6 +32,9 @@
 #include "lltextbox.h"
 #include "llflatlistview.h"
 
+#define FLOATERCAMERA_MIN_WIDTH 230
+#define FLOATERCAMERA_MAX_WIDTH 400
+
 class LLJoystickCameraRotate;
 class LLJoystickCameraTrack;
 class LLFloaterReg;
@@ -60,6 +63,8 @@ public:
 	static bool inFreeCameraMode();
 	/* callback for camera items selection changing */
 	static void onClickCameraItem(const LLSD& param);
+	/* Kokua addition for expand/contract floater */
+	static void onClickResize(const LLSD& param);
 
 	static void onLeavingMouseLook();
 
