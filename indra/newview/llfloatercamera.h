@@ -65,6 +65,9 @@ public:
 	static void onClickCameraItem(const LLSD& param);
 	/* Kokua addition for expand/contract floater */
 	static void onClickResize(const LLSD& param);
+	/* Kokua addition to persist the expand/contract setting */
+	static void doResize(bool reduced);
+	static bool handleKokuaCameraPresetsHidden(const LLSD& newvalue);
 
 	static void onLeavingMouseLook();
 
