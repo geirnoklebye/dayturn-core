@@ -320,6 +320,7 @@ void LLFloaterCamera::onOpen(const LLSD& key)
 	mClosed = FALSE;
 
 	populatePresetCombo();
+	doResize(gSavedSettings.getBOOL("KokuaCameraPresetsHidden"));
 }
 
 void LLFloaterCamera::onClose(bool app_quitting)
@@ -379,6 +380,7 @@ BOOL LLFloaterCamera::postBuild()
 
 		mPresetCombo->setCommitCallback(boost::bind(&LLFloaterCamera::onCustomPresetSelected, this));
 		LLPresetsManager::getInstance()->setPresetListChangeCameraCallback(boost::bind(&LLFloaterCamera::populatePresetCombo, this));
+		gSavedSettings.getControl("KokuaCameraPresetsHidden")->getCommitSignal()->connect(boost::bind(&handleKokuaCameraPresetsHidden, _2));
 	}
 
 	update();
@@ -572,25 +574,45 @@ void LLFloaterCamera::onClickCameraItem(const LLSD& param)
 }
 
 /*static*/
+bool LLFloaterCamera::handleKokuaCameraPresetsHidden(const LLSD& newvalue)
+{
+  LLFloaterCamera::doResize(newvalue.asBoolean());
+	return true;
+}
+
+
+/*static*/
+void LLFloaterCamera::doResize(bool reduced)
+{
+	LLFloaterCamera* camera_floater = LLFloaterCamera::findInstance();
+
+	camera_floater->getChildView("expand_btn")->setVisible(reduced);
+	camera_floater->getChildView("contract_btn")->setVisible(!reduced);
+	camera_floater->getChildView("buttons_panel")->setVisible(!reduced);
+
+	if (reduced)
+	{
+		camera_floater->reshape(FLOATERCAMERA_MIN_WIDTH, camera_floater->getRect().getHeight());
+	}
+	else		
+	{
+		camera_floater->reshape(FLOATERCAMERA_MAX_WIDTH, camera_floater->getRect().getHeight());
+	}
+	gSavedSettings.setBOOL("KokuaCameraPresetsHidden",reduced);
+}
+
+/*static*/
 void LLFloaterCamera::onClickResize(const LLSD& param)
 {
 	std::string name = param.asString();
-
-	LLFloaterCamera* camera_floater = LLFloaterCamera::findInstance();
  
 	if ("expand" == name)
 	{
-		camera_floater->getChildView("expand_btn")->setVisible(FALSE);
-		camera_floater->getChildView("contract_btn")->setVisible(TRUE);
-		camera_floater->getChildView("buttons_panel")->setVisible(TRUE);
-		camera_floater->reshape(FLOATERCAMERA_MAX_WIDTH, camera_floater->getRect().getHeight());
+		doResize(false);
 	}
 	else if ("contract" == name)
 	{
-		camera_floater->getChildView("expand_btn")->setVisible(TRUE);
-		camera_floater->getChildView("contract_btn")->setVisible(FALSE);
-		camera_floater->getChildView("buttons_panel")->setVisible(FALSE);
-		camera_floater->reshape(FLOATERCAMERA_MIN_WIDTH, camera_floater->getRect().getHeight());
+		doResize(true);
 	}
 }
 
