@@ -1334,10 +1334,17 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 // back on after being detached by a RLV operation
 //
 // CA The problems this routine causes at login outweight its possible role in preventing attachments bouncing back on 
-// (bear in mind Kokua's COF related code is highly influence by Firestorm/KB now) so I am tending back to believing
+// (bear in mind Kokua's COF related code is highly influenced by Firestorm/KB now) so I am tending back to believing
 // it's more harmful than useful. However, this time I'm going to leave behind plenty of logging so any future misbehaviours
 // can be checked to see if it's a scenario this routine would have caught
 //
+// CA KKA-731 As rather expected, problems are now beginning to surface around attachments returning after getting
+// detached by a RLV command. In addition, if Marine's routine below is allowed to run we also start seeing KKA-706
+// again (where the effects of a deformer stop happening if a different item is manually removed from the outfit).
+// That leads to the conclusion that enabling this routine (and particularly its early exit) is harmful to the
+// the majority of Kokua's attachment code which leans towards Firestorm/KB. Furthermore, we need to solve the
+// problem of returning attachments some other way (ideally by making the way that FS/KB tackle it actually
+// work here). 
 //MK
 	// When calling this function, one of two purposes are expected :
 	// - If this is the first time (i.e. immediately after logging on), look at all the links in the COF, request to wear the items that are not worn
@@ -1447,6 +1454,8 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 		}
 	}
 
+	// KKA-731 - this is the bit of code that results in just detached items returning. As an experiment, we'll restrict it
+	// to just logging what it wanted to do if called after avatar is fully loaded
 	for (LLInventoryModel::item_array_t::iterator it = obj_item_array.begin();
 		 it != obj_item_array.end();
 		 ++it)
@@ -1459,7 +1468,15 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 		else
 		{
 			// Requested attachment is not worn yet.
-			items_to_add.push_back(*it);
+			if (!gAgentAvatarp->isFullyLoaded())
+			{
+				LL_INFOS() << "Not fully loaded, permitting addition of item " << linked_id << " name " << (*it).get()->getName() << LL_ENDL;
+				items_to_add.push_back(*it);
+			}
+			else
+			{
+				LL_INFOS() << "Fully loaded, otherwise we would have (re-)attached item " << linked_id << " name " << (*it).get()->getName() << LL_ENDL;				
+			}
 		}
 	}
 	S32 remove_count = objects_to_remove.size();
@@ -1470,10 +1487,7 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
     if (gRRenabled)
     {
         gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
-        // CA The extra MK code above causes problems at login so the following change ensures it won't start working until
-        // the second call after the avatar is fully loaded, which aligns the timing with the revised calling location of this
-        // routine
-        if (gAgentAvatarp->isFullyLoaded()) gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall = FALSE;
+        gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall = FALSE;
         gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = FALSE;
     }
 //mk
