@@ -1456,6 +1456,8 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 
 	// KKA-731 - this is the bit of code that results in just detached items returning. As an experiment, we'll restrict it
 	// to just logging what it wanted to do if called after avatar is fully loaded
+	// KKA-736 - the change for KKA-731 breaks manual outfit changing, so next we'll try using Marine's control flag to decide
+	// whether to let things get added
 	for (LLInventoryModel::item_array_t::iterator it = obj_item_array.begin();
 		 it != obj_item_array.end();
 		 ++it)
@@ -1468,9 +1470,9 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 		else
 		{
 			// Requested attachment is not worn yet.
-			if (!gAgentAvatarp->isFullyLoaded())
+			if (!gAgentAvatarp->isFullyLoaded() || !gRRenabled || gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually)
 			{
-				LL_INFOS() << "Not fully loaded, permitting addition of item " << linked_id << " name " << (*it).get()->getName() << LL_ENDL;
+				LL_INFOS() << "Not fully loaded/a manual change, permitting addition of item " << linked_id << " name " << (*it).get()->getName() << LL_ENDL;
 				items_to_add.push_back(*it);
 			}
 			else
