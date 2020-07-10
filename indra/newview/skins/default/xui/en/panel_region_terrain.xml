@@ -80,15 +80,13 @@
      type="string"
      length="1"
      follows="left|top"
-     height="40"
+     height="20"
      layout="topleft"
      left="10"
      name="detail_texture_text"
-     top="95"
-     width="300"
-     word_wrap="true">
-        Terrain Textures (requires 1024 x 1024, 24 bit .tga files)
-        Terrain Textures (requires 512x512, 24 bit .tga files). OpenSim allows textures up to 1024x1024.
+     top="110"
+     width="300">
+        Terrain Textures (requires 512x512, 24 bit .tga files)
     </text>
     <texture_picker
      follows="left|top"
@@ -97,7 +95,7 @@
      left_delta="0"
      name="texture_detail_0"
      default_image_id="0bc58228-74a0-7e83-89bc-5c23464bcec5"
-     top_delta="25"
+     top_delta="20"
      width="100" />
     <texture_picker
      follows="left|top"
