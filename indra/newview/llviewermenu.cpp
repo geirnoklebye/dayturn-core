@@ -50,9 +50,9 @@
 #include "llagentui.h"
 #include "llagentwearables.h"
 #include "llagentpilot.h"
-// [SL:KB] - Patch: Appearance-PhantomAttach | Checked: Catznip-5.0
+//MK from KB
 #include "llattachmentsmgr.h"
-// [/SL:KB]
+//mk from kb
 #include "llcompilequeue.h"
 #include "llconsole.h"
 #include "lldebugview.h"
@@ -2005,12 +2005,12 @@ class LLAdvancedRebakeTextures : public view_listener_t
 	}
 };
 
-// [SL:KB] - Patch: Appearance-PhantomAttach | Checked: Catznip-5.0
+//MK from KB
 void handle_refresh_attachments()
 {
 	LLAttachmentsMgr::instance().refreshAttachments();
 }
-// [/SL:KB]
+//mk from kb
 
 ///////////////////////////
 // REFRESH SCENE SHADERS //
@@ -9011,6 +9011,10 @@ void handle_rebake_textures(void*)
 		avatar_tex_refresh(gAgentAvatarp); // <FS:CR> FIRE-11800 - Refresh the textures too
 	}
 	reset_mesh_lod(gAgentAvatarp); // <FS:Ansariel> Reset Mesh LOD
+//MK
+	// Refresh the attachments for good measure.
+	LLAttachmentsMgr::instance().refreshAttachments();
+//mk
 	gAgentAvatarp->setIsCrossingRegion(false); // <FS:Ansariel> FIRE-12004: Attachments getting lost on TP
 }
 
@@ -10057,10 +10061,9 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAdvancedCheckDebugCharacterVis(), "Advanced.CheckDebugCharacterVis");
 	view_listener_t::addMenu(new LLAdvancedDumpAttachments(), "Advanced.DumpAttachments");
 	view_listener_t::addMenu(new LLAdvancedRebakeTextures(), "Advanced.RebakeTextures");
-	view_listener_t::addMenu(new LLAdvancedRefreshScene(), "Advanced.RefreshScene");
-// [SL:KB] - Patch: Appearance-PhantomAttach | Checked: Catznip-5.0
+//MK from KB
 	commit.add("Advanced.RefreshAttachments", boost::bind(&handle_refresh_attachments));
-// [/SL:KB]
+//mk from kb
 	view_listener_t::addMenu(new LLAdvancedDebugAvatarTextures(), "Advanced.DebugAvatarTextures");
 	view_listener_t::addMenu(new LLAdvancedDumpAvatarLocalTextures(), "Advanced.DumpAvatarLocalTextures");
 	// Advanced > Network
