@@ -1085,7 +1085,40 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 	{
 		if (LLWearableType::getAssetType((LLWearableType::EType)j) == LLAssetType::AT_CLOTHING)
 		{
-			removeWearable((LLWearableType::EType)j, true, 0);
+//MK
+				// Actually we do not need to remove all clothes when updating the outfit, or else the avatar finds itself nude
+				// for a second, and the shoe base disappears as well. This can become very annoying after a while.
+				// The "wearables" array contains all the wearables (bodyparts included) that must be worn and no other.
+				// => Only remove clothes that we know have changed in the array of new wearables.
+
+				for (unsigned int index = 0; index < MAX_CLOTHING_PER_TYPE; ++index)
+				{
+					bool remove_this = true;
+					// cur_wearable is the piece of clothing we are wearing on index "index" on the layer "j" (ex : WT_SHIRT, WT_PANTS...)
+					LLViewerWearable* cur_wearable = getViewerWearable ((LLWearableType::EType)j, index);
+
+					S32 count = wearables.size();
+					llassert(items.size() == count);
+					S32 i;
+					for (i = 0; i < count; i++)
+					{
+						// new_wearable represents each of the wearables we are supposed to update, every cur_wearable that is not
+						// part of the "wearables" array must be removed
+						LLViewerWearable* new_wearable = wearables[i];
+						if (cur_wearable && cur_wearable->getItemID() == new_wearable->getItemID())
+						{
+							remove_this = false;
+							LL_INFOS() << "not removing old wearable " << cur_wearable->getName() << LL_ENDL;
+						}
+					}
+
+					if (remove_this)
+					{
+////			removeWearable((LLWearableType::EType)j, true, 0);
+						removeWearable((LLWearableType::EType)j, false, index);
+					}
+				}
+//mk
 		}
 	}
 
@@ -1098,33 +1131,59 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 		if (new_wearable)
 		{
 			const LLWearableType::EType type = new_wearable->getType();
-
+		
 			LLUUID old_wearable_id = new_wearable->getItemID();
 			new_wearable->setName(new_item->getName());
 			new_wearable->setItemID(new_item->getUUID());
 
-			if (LLWearableType::getAssetType(type) == LLAssetType::AT_BODYPART)
+//MK
+			// We did not remove the items that are already worn in order to avoid unnecessary updates,
+			// hence we do not want to wear the new ones either or they will stack.
+			bool wear_this = true;
+
+			for (S32 type = 0; type < (S32)LLWearableType::WT_COUNT && wear_this; type++)
 			{
-				// exactly one wearable per body part
-				setWearable(type,0,new_wearable);
-				if (old_wearable_id.notNull())
+				if (LLWearableType::getAssetType((LLWearableType::EType)type) == LLAssetType::AT_CLOTHING)
 				{
-					// we changed id before setting wearable, update old item manually
-					// to complete the swap.
-					gInventory.addChangedMask(LLInventoryObserver::LABEL, old_wearable_id);
+					for (unsigned int index = 0; index < MAX_CLOTHING_PER_TYPE && wear_this; ++index)
+					{
+						LLViewerWearable* cur_wearable = getViewerWearable ((LLWearableType::EType)type, index);
+						if (cur_wearable && cur_wearable->getItemID() == new_wearable->getItemID())
+						{
+							wear_this = false;
+							LL_INFOS() << "not wearing new wearable " << new_wearable->getName() << LL_ENDL;
+						}
+					}
 				}
 			}
-			else
+
+			if (wear_this)
 			{
-				pushWearable(type,new_wearable);
+//mk
+				if (LLWearableType::getAssetType(type) == LLAssetType::AT_BODYPART)
+				{
+					// exactly one wearable per body part
+					setWearable(type,0,new_wearable);
+					if (old_wearable_id.notNull())
+					{
+						// we changed id before setting wearable, update old item manually
+						// to complete the swap.
+						gInventory.addChangedMask(LLInventoryObserver::LABEL, old_wearable_id);
+					}
+				}
+				else
+				{
+					pushWearable(type,new_wearable);
 //MK
 					// Notify that this layer has been worn
 					gAgent.mRRInterface.notify (LLUUID::null, "worn legally " + gAgent.mRRInterface.getOutfitLayerAsString(type), "");
 //mk
+				}
+				const BOOL removed = FALSE;
+				wearableUpdated(new_wearable, removed);
+//MK
 			}
-
-			const BOOL removed = FALSE;
-			wearableUpdated(new_wearable, removed);
+//mk
 		}
 	}
 
@@ -1321,23 +1380,6 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 													LLInventoryModel::item_array_t& items_to_add)
 
 {
-
-// CA This routine now causes problems at login (probably because the timing of when it gets called is later in Kokua than it
-// is in the standard viewer code (or Marine's viewer). However it is needed the rest of the time to prevent attachments bouncing
-// back on after being detached by a RLV operation
-//
-// CA The problems this routine causes at login outweight its possible role in preventing attachments bouncing back on 
-// (bear in mind Kokua's COF related code is highly influenced by Firestorm/KB now) so I am tending back to believing
-// it's more harmful than useful. However, this time I'm going to leave behind plenty of logging so any future misbehaviours
-// can be checked to see if it's a scenario this routine would have caught
-//
-// CA KKA-731 As rather expected, problems are now beginning to surface around attachments returning after getting
-// detached by a RLV command. In addition, if Marine's routine below is allowed to run we also start seeing KKA-706
-// again (where the effects of a deformer stop happening if a different item is manually removed from the outfit).
-// That leads to the conclusion that enabling this routine (and particularly its early exit) is harmful to the
-// the majority of Kokua's attachment code which leans towards Firestorm/KB. Furthermore, we need to solve the
-// problem of returning attachments some other way (ideally by making the way that FS/KB tackle it actually
-// work here). 
 //MK
 	// When calling this function, one of two purposes are expected :
 	// - If this is the first time (i.e. immediately after logging on), look at all the links in the COF, request to wear the items that are not worn
@@ -1351,41 +1393,39 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 
     if (gRRenabled)
     {
-        if (gAgentAvatarp && !gAgentAvatarp->getIsCloud() && !gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall && !gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually)
-        {
-            LLInventoryModel::cat_array_t cat_array;
-            LLInventoryModel::item_array_t item_array;
-            gInventory.collectDescendents(LLAppearanceMgr::instance().getCOF(), cat_array, item_array, LLInventoryModel::EXCLUDE_TRASH);
-            for (S32 i = 0; i < item_array.size(); i++)
-            {
-                const LLViewerInventoryItem* inv_item = item_array.at(i).get();
-                if (inv_item)
-                {
-                    if (LLAssetType::AT_LINK == inv_item->getActualType())
-                    {
-                        const LLViewerInventoryItem* linked_item = inv_item->getLinkedItem();
-                        if (NULL == linked_item)
-                        {
-                            // Broken link => remove
-                        }
-                        else
-                        {
-                            if (LLAssetType::AT_OBJECT == linked_item->getType())
-                            {
-                                std::string attachment_point_name;
-                                if (!gAgentAvatarp->getAttachedPointName(linked_item->getUUID(), attachment_point_name))
-                                {
-                                    LL_INFOS() << "Would have removed links for " << linked_item->getName() << LL_ENDL;
-                                    //LLAppearanceMgr::instance().removeCOFItemLinks(linked_item->getUUID());
-                                }
-                            }
-                        }
-                    }
-                }
-                LLUUID item_id(inv_item->getUUID());
-            }
-            LL_INFOS() << "Would have skipped rest of routine" << LL_ENDL;
-            //return;
+		if (gAgentAvatarp && !gAgentAvatarp->getIsCloud() && !gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall && !gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually)
+		{
+			LLInventoryModel::cat_array_t cat_array;
+			LLInventoryModel::item_array_t item_array;
+			gInventory.collectDescendents(LLAppearanceMgr::instance().getCOF(),cat_array,item_array,LLInventoryModel::EXCLUDE_TRASH);
+			for (S32 i=0; i<item_array.size(); i++)
+			{
+				const LLViewerInventoryItem* inv_item = item_array.at(i).get();
+				if (inv_item)
+				{
+					if (LLAssetType::AT_LINK == inv_item->getActualType())
+					{
+						const LLViewerInventoryItem* linked_item = inv_item->getLinkedItem();
+						if (NULL == linked_item)
+						{
+							// Broken link => remove
+						}
+						else
+						{
+							if (LLAssetType::AT_OBJECT == linked_item->getType())
+							{
+								std::string attachment_point_name;
+								if (!gAgentAvatarp->getAttachedPointName(linked_item->getUUID(), attachment_point_name))
+								{
+									LLAppearanceMgr::instance().removeCOFItemLinks(linked_item->getUUID());
+								}
+							}
+						}
+					}
+				}
+				LLUUID item_id(inv_item->getUUID());
+			}
+			return;
         }
     }
 //mk
@@ -1447,10 +1487,6 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 		}
 	}
 
-	// KKA-731 - this is the bit of code that results in just detached items returning. As an experiment, we'll restrict it
-	// to just logging what it wanted to do if called after avatar is fully loaded
-	// KKA-736 - the change for KKA-731 breaks manual outfit changing, so next we'll try using Marine's control flag to decide
-	// whether to let things get added
 	for (LLInventoryModel::item_array_t::iterator it = obj_item_array.begin();
 		 it != obj_item_array.end();
 		 ++it)
@@ -1463,15 +1499,7 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 		else
 		{
 			// Requested attachment is not worn yet.
-			if (!gAgentAvatarp->isFullyLoaded() || !gRRenabled || gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually)
-			{
-				LL_INFOS() << "Not fully loaded/a manual change, permitting addition of item " << linked_id << " name " << (*it).get()->getName() << LL_ENDL;
-				items_to_add.push_back(*it);
-			}
-			else
-			{
-				LL_INFOS() << "Fully loaded, otherwise we would have (re-)attached item " << linked_id << " name " << (*it).get()->getName() << LL_ENDL;				
-			}
+			items_to_add.push_back(*it);
 		}
 	}
 	S32 remove_count = objects_to_remove.size();

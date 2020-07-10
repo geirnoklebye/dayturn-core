@@ -2198,7 +2198,7 @@ void LLAppearanceMgr::updateCOF(const LLUUID& category, bool append)
 	{
 		LLInventoryModel::cat_array_t* cats; // unused here
 		LLInventoryModel::item_array_t* items;
-		gInventory.getDirectDescendentsOf (idOutfit, cats, items);
+		gInventory.getDirectDescendentsOf (cof, cats, items);
 		S32 count = items->size();
 		LLViewerInventoryItem* item = NULL;
 		for (S32 i = 0; i < count; ++i) {
