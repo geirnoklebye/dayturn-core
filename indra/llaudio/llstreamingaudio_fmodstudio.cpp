@@ -37,7 +37,7 @@ inline bool Check_FMOD_Error(FMOD_RESULT result, const char *string)
 {
 	if (result == FMOD_OK)
 		return false;
-	LL_WARNS("AudioImpl") << string << " Error: " << FMOD_ErrorString(result) << LL_ENDL;
+	LL_WARNS_ONCE("AudioImpl") << string << " Error: " << FMOD_ErrorString(result) << LL_ENDL;
 	return true;
 }
 
