@@ -158,16 +158,16 @@ void LLWearableData::eraseWearable(const LLWearableType::EType type, U32 index)
 	}
 }
 
-//void LLWearableData::clearWearableType(const LLWearableType::EType type)
-//{
-//	wearableentry_map_t::iterator wearable_iter = mWearableDatas.find(type);
-//	if (wearable_iter == mWearableDatas.end())
-//	{
-//		return;
-//	}
-//	wearableentry_vec_t& wearable_vec = wearable_iter->second;
-//	wearable_vec.clear();
-//}
+void LLWearableData::clearWearableType(const LLWearableType::EType type)
+{
+	wearableentry_map_t::iterator wearable_iter = mWearableDatas.find(type);
+	if (wearable_iter == mWearableDatas.end())
+	{
+		return;
+	}
+	wearableentry_vec_t& wearable_vec = wearable_iter->second;
+	wearable_vec.clear();
+}
 
 bool LLWearableData::swapWearables(const LLWearableType::EType type, U32 index_a, U32 index_b)
 {
