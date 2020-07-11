@@ -655,8 +655,8 @@ void LLPluginProcessChild::createConsole()
 		return;
 	}
 
-	int crt_o_filedesc = _open_osfhandle((long)std_o_handle, _O_TEXT);
-	int crt_e_filedesc = _open_osfhandle((long)std_e_handle, _O_TEXT);
+	int crt_o_filedesc = _open_osfhandle((intptr_t)std_o_handle, _O_TEXT);
+	int crt_e_filedesc = _open_osfhandle((intptr_t)std_e_handle, _O_TEXT);
 	if ((crt_o_filedesc == -1) || (crt_e_filedesc == -1))
 	{
 		LL_WARNS("PluginChild") << "_open_osfhandle failed" << LL_ENDL;

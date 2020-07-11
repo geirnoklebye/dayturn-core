@@ -70,7 +70,9 @@ list(APPEND
 
 add_executable(windows-crash-logger WIN32 ${win_crash_logger_SOURCE_FILES})
 
+
 target_link_libraries(windows-crash-logger
+    ${LEGACY_STDIO_LIBS}
     ${BREAKPAD_EXCEPTION_HANDLER_LIBRARIES}
     ${LLCRASHLOGGER_LIBRARIES}
     ${LLWINDOW_LIBRARIES}
@@ -81,7 +83,7 @@ target_link_libraries(windows-crash-logger
     ${LLCOREHTTP_LIBRARIES}
     ${LLCOMMON_LIBRARIES}
     ${BOOST_CONTEXT_LIBRARY}
-    ${BOOST_COROUTINE_LIBRARY}
+    ${BOOST_FIBER_LIBRARY}
     ${WINDOWS_LIBRARIES}
     dxguid
     ${GOOGLE_PERFTOOLS_LIBRARIES}
