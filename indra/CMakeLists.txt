@@ -48,6 +48,11 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
       "Build type.  One of: Debug Release RelWithDebInfo" FORCE)
 endif (NOT CMAKE_BUILD_TYPE)
+if (HAVOK_TPV)
+  add_definitions(-DHAVOK_TPV=1)
+  message("-- Compiling with Havok libraries")
+endif (HAVOK_TPV)
+#</FS:AW optional opensim support>
 #<FS:Ansariel> Support for test builds
 option(TESTBUILD "Generating test build" OFF)
 if(TESTBUILD AND TESTBUILDPERIOD)
