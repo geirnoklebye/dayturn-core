@@ -61,7 +61,7 @@ if (EXISTS ${CMAKE_SOURCE_DIR}/Server.cmake)
   set(INSTALL_PROPRIETARY ON CACHE BOOL "Install proprietary binaries")
 endif (EXISTS ${CMAKE_SOURCE_DIR}/Server.cmake)
 set(TEMPLATE_VERIFIER_OPTIONS "" CACHE STRING "Options for scripts/template_verifier.py")
-set(TEMPLATE_VERIFIER_MASTER_URL "http://bitbucket.org/lindenlab/master-message-template/raw/tip/message_template.msg" CACHE STRING "Location of the master message template")
+set(TEMPLATE_VERIFIER_MASTER_URL "https://bitbucket.org/lindenlab/master-message-template-git/raw/HEAD/message_template.msg" CACHE STRING "Location of the master message template")
 
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
@@ -231,7 +231,14 @@ set(VERSION_BUILD "0" CACHE STRING "Revision number passed in from the outside")
 set(USESYSTEMLIBS OFF CACHE BOOL "Use libraries from your system rather than Linden-supplied prebuilt libraries.")
 
 set(USE_PRECOMPILED_HEADERS ON CACHE BOOL "Enable use of precompiled header directives where supported.")
-
+# <FS:ND> When using Havok, we have to turn OpenSim support off
+if (HAVOK_TPV)
+  if (LINUX)
+    message("-- Compiling with Havok libraries is not supported on Linux - switching to HACD")
+    set(HAVOK_TPV OFF)
+  endif (LINUX)
+endif (HAVOK_TPV)
+# </FS:ND>
 source_group("CMake Rules" FILES CMakeLists.txt)
 
 endif(NOT DEFINED ${CMAKE_CURRENT_LIST_FILE}_INCLUDED)

@@ -1862,10 +1862,6 @@ if (USE_KDU)
   set(LLSTARTUP_COMPILE_FLAGS "${LLSTARTUP_COMPILE_FLAGS} -DLL_USEKDU")
 endif (USE_KDU)
 
-if (HAVOK_TPV)
-  set(LLSTARTUP_COMPILE_FLAGS "${LLSTARTUP_COMPILE_FLAGS} -DLL_HAVOK_TPV")
-endif (HAVOK_TPV)
-
 # <FS:Ansariel> Output device selection
 # set_source_files_properties(llstartup.cpp PROPERTIES COMPILE_FLAGS "${LLSTARTUP_COMPILE_FLAGS}")
 set_source_files_properties(llstartup.cpp llfloaterpreference.cpp llprogressview.cpp PROPERTIES COMPILE_FLAGS "${LLSTARTUP_COMPILE_FLAGS}")
