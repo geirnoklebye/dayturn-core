@@ -17694,6 +17694,19 @@
       <key>Value</key>
       <real>300.0</real>
     </map>
+  <key>LastJ2CVersion</key>
+  <map>
+    <key>Comment</key>
+    <string>Last used J2C engine version</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>String</string>
+    <key>Value</key>
+    <string></string>
+    <key>Backup</key>
+    <integer>0</integer>
+  </map>
     <key>GroupMembersSortOrder</key>
     <map>
       <key>Comment</key>
