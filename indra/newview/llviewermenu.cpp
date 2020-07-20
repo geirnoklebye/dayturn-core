@@ -6121,7 +6121,10 @@ class LLToolsSelectNextPartFace : public view_listener_t
                         new_te = to_select->getNumTEs() - 1;
                     }
                 }
-                LLSelectMgr::getInstance()->addAsIndividual(to_select, new_te, FALSE);
+				//KKA-744 change this to the same method used when clicking on a face so that the
+				//build floater will get populated with the object name/description for this face
+                //LLSelectMgr::getInstance()->addAsIndividual(to_select, new_te, FALSE);
+				LLSelectMgr::getInstance()->selectObjectOnly(to_select, new_te);
             }
             else
             {
