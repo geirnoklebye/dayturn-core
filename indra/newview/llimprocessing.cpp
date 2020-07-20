@@ -1546,12 +1546,13 @@ void LLIMProcessing::requestOfflineMessages()
         && gAgent.getRegion()->capabilitiesReceived())
     {
         std::string cap_url = gAgent.getRegionCapability("ReadOfflineMsgs");
-        // <FS:Ansariel> Optional legacy offline messages
-        if (!gSavedSettings.getBOOL("FSUseReadOfflineMsgsCap"))
-        {
-            cap_url = "";
-        }
-        // </FS:Ansariel>
+        // KKA-699 - start using the new cap now that simulator fixes are in place
+        //// <FS:Ansariel> Optional legacy offline messages
+        //if (!gSavedSettings.getBOOL("FSUseReadOfflineMsgsCap"))
+        //{
+        //    cap_url = "";
+        //}
+        //// </FS:Ansariel>
 
         // Auto-accepted inventory items may require the avatar object
         // to build a correct name.  Likewise, inventory offers from
