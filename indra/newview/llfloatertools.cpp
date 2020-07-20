@@ -481,13 +481,45 @@ void LLFloaterTools::refresh()
 	LLLocale locale(LLLocale::USER_LOCALE);
 	
 	// <FS:KC>
+	// KKA-744 Various tweaks for more information
 	std::string desc_string;
 	std::string num_string;
-	bool enable_link_count = true;
+	S32 linkset_num = 0;
 	S32 prim_count = LLSelectMgr::getInstance()->getSelection()->getObjectCount();
+		
+	//KKA-744 Show the linkset number when working with faces too, so we need it either way
+	if (prim_count == 1)
+	{
+		LLViewerObject* objectp = LLSelectMgr::getInstance()->getSelection()->getFirstObject();
+		if (objectp && objectp->getRootEdit())
+		{
+			LLViewerObject::child_list_t children = objectp->getRootEdit()->getChildren();
+			if (children.empty())
+			{
+				linkset_num = 0;
+			}
+			else if (objectp->getRootEdit()->isSelected())
+				linkset_num = 1; //root prim is always link one
+			else
+			{
+				S32 index = 1;
+				for (LLViewerObject::child_list_t::iterator iter = children.begin(); iter != children.end(); ++iter)
+				{
+					index++;
+					if ((*iter)->isSelected())
+					{
+						linkset_num = index;
+						break;
+					}
+				}
+			}
+		}
+	}
+
 	if (prim_count == 1 && LLToolMgr::getInstance()->getCurrentTool() == LLToolFace::getInstance())
 	{
-		desc_string = getString("selected_faces");
+		//KKA-744 show the linkset id as well as face number(s)
+		desc_string = llformat("%s %d  %s",getString("link_number"),linkset_num,getString("selected_faces"));
 		
 		LLViewerObject* objectp = LLSelectMgr::getInstance()->getSelection()->getFirstRootObject();
 		LLSelectNode* nodep = LLSelectMgr::getInstance()->getSelection()->getFirstRootNode();
@@ -517,33 +549,15 @@ void LLFloaterTools::refresh()
 	else if (prim_count == 1 && gSavedSettings.getBOOL("EditLinkedParts"))
 	{
 		desc_string = getString("link_number");
-		LLViewerObject* objectp = LLSelectMgr::getInstance()->getSelection()->getFirstObject();
-		if (objectp && objectp->getRootEdit())
-		{
-			LLViewerObject::child_list_t children = objectp->getRootEdit()->getChildren();
-			if (children.empty())
-				num_string = "0"; //a childless prim is always link zero, and unhappy
-			else if (objectp->getRootEdit()->isSelected())
-				num_string = "1"; //root prim is always link one
-			else
-			{
-				S32 index = 1;
-				for (LLViewerObject::child_list_t::iterator iter = children.begin(); iter != children.end(); ++iter)
-				{
-					index++;
-					if ((*iter)->isSelected())
-					{
-						LLResMgr::getInstance()->getIntegerString(num_string, index);
-						break;
-					}
-				}
-			}
-		}
+		num_string = llformat("%d",linkset_num);
 	}
 	else
 	{
-		enable_link_count = false;
+		//KKA-741 display a selected linkset total if we can't show something more detailed
+		desc_string = getString("link_total");
+		num_string = llformat("%d",LLSelectMgr::getInstance()->getSelection()->getObjectCount());		
 	}
+
 	getChild<LLUICtrl>("link_num_obj_count")->setTextArg("[DESC]", desc_string);
 	getChild<LLUICtrl>("link_num_obj_count")->setTextArg("[NUM]", num_string);
 	// </FS:KC>
@@ -631,8 +645,9 @@ void LLFloaterTools::refresh()
 	}
 
 	// <FS> disable the object and prim counts if nothing selected
+	// KKA-744 we now toggle visibility rather than enabled and always have something to show if there's a selection
 	bool have_selection = ! LLSelectMgr::getInstance()->getSelection()->isEmpty();
-	getChildView("link_num_obj_count")->setEnabled(have_selection && enable_link_count);
+	getChildView("link_num_obj_count")->setVisible(have_selection);
 	// </FS>
 
 	// Refresh child tabs

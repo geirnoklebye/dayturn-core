@@ -68,7 +68,7 @@
     </floater.string>
     <floater.string
      name="status_selectcount">
-        [OBJ_COUNT] objects selected, land impact [LAND_IMPACT]
+        [OBJ_COUNT] object(s) selected, land impact [LAND_IMPACT]
     </floater.string>
     <floater.string
      name="status_remaining_capacity">
@@ -77,6 +77,10 @@
 	<floater.string
 	  name="link_number">
 		Link number:
+	</floater.string>
+	<floater.string
+	  name="link_total">
+		Total objects in linkset(s):
 	</floater.string>
 	<floater.string
 	  name="selected_faces">
@@ -805,7 +809,7 @@
      left="10"
      name="link_num_obj_count"
 	 tool_tip="Link number may not be accurate."
-     width="143">
+     width="280">
         [DESC] [NUM]
     </text>
     <text
@@ -965,6 +969,10 @@
             <panel.string
              name="Sale Mixed">
                 Mixed Sale
+            </panel.string>
+            <panel.string
+             name="multiple selection">
+                Multiple selection
             </panel.string>
             <text
              follows="left|top"
