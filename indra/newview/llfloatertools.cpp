@@ -519,7 +519,7 @@ void LLFloaterTools::refresh()
 	if (prim_count == 1 && LLToolMgr::getInstance()->getCurrentTool() == LLToolFace::getInstance())
 	{
 		//KKA-744 show the linkset id as well as face number(s)
-		desc_string = llformat("%s %d  %s",getString("link_number"),linkset_num,getString("selected_faces"));
+		desc_string = getString("link_number") + llformat(" %d  ",linkset_num) + getString("selected_faces");
 		
 		LLViewerObject* objectp = LLSelectMgr::getInstance()->getSelection()->getFirstRootObject();
 		LLSelectNode* nodep = LLSelectMgr::getInstance()->getSelection()->getFirstRootNode();
