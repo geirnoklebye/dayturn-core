@@ -4473,7 +4473,10 @@ void LLSelectMgr::selectionSetObjectName(const std::string& name)
 	std::string name_copy(name);
 
 	// we only work correctly if 1 object is selected.
-	if(mSelectedObjects->getRootObjectCount() == 1)
+// FIRE-777
+	if(mSelectedObjects->getRootObjectCount() >= 1)
+//	if(mSelectedObjects->getRootObjectCount() == 1)
+// /FIRE-777
 	{
 		sendListToRegions("ObjectName",
 						  packAgentAndSessionID,
@@ -4482,7 +4485,10 @@ void LLSelectMgr::selectionSetObjectName(const std::string& name)
 						  (void*)(&name_copy),
 						  SEND_ONLY_ROOTS);
 	}
-	else if(mSelectedObjects->getObjectCount() == 1)
+// FIRE-777
+	else if(mSelectedObjects->getObjectCount() >= 1)
+//	else if(mSelectedObjects->getObjectCount() == 1)
+// /FIRE-777
 	{
 		sendListToRegions("ObjectName",
 						  packAgentAndSessionID,
@@ -4498,7 +4504,10 @@ void LLSelectMgr::selectionSetObjectDescription(const std::string& desc)
 	std::string desc_copy(desc);
 
 	// we only work correctly if 1 object is selected.
-	if(mSelectedObjects->getRootObjectCount() == 1)
+// FIRE-777
+	if(mSelectedObjects->getRootObjectCount() >= 1)
+//	if(mSelectedObjects->getRootObjectCount() == 1)
+// /FIRE-777
 	{
 		sendListToRegions("ObjectDescription",
 						  packAgentAndSessionID,
@@ -4507,7 +4516,10 @@ void LLSelectMgr::selectionSetObjectDescription(const std::string& desc)
 						  (void*)(&desc_copy),
 						  SEND_ONLY_ROOTS);
 	}
-	else if(mSelectedObjects->getObjectCount() == 1)
+// FIRE-777
+	else if(mSelectedObjects->getObjectCount() >= 1)
+//	else if(mSelectedObjects->getObjectCount() == 1)
+// /FIRE-777
 	{
 		sendListToRegions("ObjectDescription",
 						  packAgentAndSessionID,
