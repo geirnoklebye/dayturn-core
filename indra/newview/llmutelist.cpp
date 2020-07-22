@@ -63,6 +63,8 @@
 #include "llviewerobjectlist.h"
 #include "lltrans.h"
 
+#include "exogroupmutelist.h"
+
 namespace 
 {
 	// This method is used to return an object to mute given an object id.
@@ -695,6 +697,9 @@ void LLMuteList::requestFromServer(const LLUUID& agent_id)
 	msg->nextBlockFast(_PREHASH_MuteData);
 	msg->addU32Fast(_PREHASH_MuteCRC, crc.getCRC());
 	gAgent.sendReliableMessage();
+
+	//KKA-743 we need to instantiate exogroupmutelist so that it can register its observer
+	exoGroupMuteList::instance().getFilePath();
 }
 
 //-----------------------------------------------------------------------------

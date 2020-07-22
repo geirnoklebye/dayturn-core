@@ -21,25 +21,30 @@
 #define EXO_GROUPMUTELIST_H
 
 #include "lluuid.h"
+#include "llmutelist.h"
 
-class exoGroupMuteList : public LLSingleton<exoGroupMuteList>
+class exoGroupMuteList : public LLSingleton<exoGroupMuteList>, LLMuteListObserver
 {
 	LLSINGLETON(exoGroupMuteList);
+	~exoGroupMuteList();
 
 public:
 	bool isMuted(const LLUUID &group) const;
 	void add(const LLUUID &group);
 	void remove(const LLUUID &group);
 	bool loadMuteList();
+	//KKA-743 called by mute list
+	virtual void onChange();
+	std::string getFilePath() const;
 
 private:
 	bool saveMuteList();
-	std::string getFilePath() const;
 	
 	std::set<LLUUID> mMuted;
 
 	// <FS:Ansariel> Server-side storage
 	std::string getMutelistString(const LLUUID& group) const;
+	LLUUID extractUUID(std::string muteListString);
 };
 
 #endif

@@ -30,12 +30,48 @@
 #include "llmutelist.h"
 #include "llviewernetwork.h"
 
+#define EXOGROUPMUTE_TAG "Group:"
+
 exoGroupMuteList::exoGroupMuteList()
 : mMuted()
 {
 	// <FS:Ansariel> Server-side storage
 	//loadMuteList();
+	// KKA-743
+	// There's a hole here where IM conversations can get started during login before the mute list has arrived
+	// from the server. As a defence, add an observer on the mute list and each time we see a change we'll kill
+	// group sessions for any muted groups
+	LLMuteList::getInstance()->addObserver(this);
+}
 
+exoGroupMuteList::~exoGroupMuteList()
+{
+	LLMuteList::getInstance()->removeObserver(this);
+}
+
+// KKA-743
+// Wait for the mute list to report as being loaded and then stop any group IM sessions
+// which managed to get going while we were logging in/waiting for the mute list
+
+void exoGroupMuteList::onChange()
+{
+	if (LLMuteList::getInstance()->isLoaded())
+	{
+		std::vector<LLMute> mutes = LLMuteList::instance().getMutes();
+		std::vector<LLMute>::const_iterator mute_it = mutes.begin();
+
+		for (; mute_it != mutes.end(); ++mute_it)
+		{
+			std::string mName = mute_it->mName;
+			LLUUID gID = extractUUID(mName);
+
+			if (gID != LLUUID::null)
+			{
+				LLGroupActions::endIM(gID);
+			}
+		}
+		LLMuteList::getInstance()->removeObserver(this);
+	}
 }
 
 bool exoGroupMuteList::isMuted(const LLUUID& group) const
@@ -125,6 +161,15 @@ std::string exoGroupMuteList::getFilePath() const
 // <FS:Ansariel> Server-side storage
 std::string exoGroupMuteList::getMutelistString(const LLUUID& group) const
 {
-	return std::string("Group:" + group.asString());
+	return std::string(EXOGROUPMUTE_TAG + group.asString());
 }
 // </FS:Ansariel> Server-side storage
+
+LLUUID exoGroupMuteList::extractUUID(std::string muteListString)
+{
+	if (muteListString.find(EXOGROUPMUTE_TAG) == 0)
+	{
+		return (LLUUID)muteListString.substr(strlen(EXOGROUPMUTE_TAG));
+	}
+	return LLUUID::null;
+}
