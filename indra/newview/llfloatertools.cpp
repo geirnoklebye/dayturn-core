@@ -485,6 +485,7 @@ void LLFloaterTools::refresh()
 	std::string desc_string;
 	std::string num_string;
 	S32 linkset_num = 0;
+	S32 faces_num = 0;
 	S32 prim_count = LLSelectMgr::getInstance()->getSelection()->getObjectCount();
 		
 	//KKA-744 Show the linkset number when working with faces too, so we need it either way
@@ -513,6 +514,7 @@ void LLFloaterTools::refresh()
 					}
 				}
 			}
+			faces_num = objectp->getNumTEs();
 		}
 	}
 
@@ -529,12 +531,12 @@ void LLFloaterTools::refresh()
 			nodep = LLSelectMgr::getInstance()->getSelection()->getFirstNode();
 		}
 
-		if (objectp && objectp->getNumTEs() == LLSelectMgr::getInstance()->getSelection()->getTECount())
+		if (objectp && faces_num == LLSelectMgr::getInstance()->getSelection()->getTECount())
 			num_string = "ALL_SIDES";
 		else if (objectp && nodep)
 		{
 			//S32 count = 0;
-			for (S32 i = 0; i < objectp->getNumTEs(); i++)
+			for (S32 i = 0; i < faces_num; i++)
 			{
 				if (nodep->isTESelected(i))
 				{
@@ -548,12 +550,13 @@ void LLFloaterTools::refresh()
 	}
 	else if (prim_count == 1 && gSavedSettings.getBOOL("EditLinkedParts"))
 	{
+		//KKA-744 display total number of faces when one link item is selected
 		desc_string = getString("link_number");
-		num_string = llformat("%d",linkset_num);
+		num_string = llformat("%d ",linkset_num) + getString("total_faces") + llformat(" %d",faces_num);
 	}
 	else
 	{
-		//KKA-741 display a selected linkset total if we can't show something more detailed
+		//KKA-744 display a selected linkset total if we can't show something more detailed
 		desc_string = getString("link_total");
 		num_string = llformat("%d",LLSelectMgr::getInstance()->getSelection()->getObjectCount());		
 	}
