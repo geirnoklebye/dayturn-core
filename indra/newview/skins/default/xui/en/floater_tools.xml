@@ -83,6 +83,10 @@
 		Total objects in linkset(s):
 	</floater.string>
 	<floater.string
+	  name="total_faces">
+		Face count:
+	</floater.string>
+	<floater.string
 	  name="selected_faces">
 		Face(s):
 	</floater.string>
