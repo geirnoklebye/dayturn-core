@@ -248,7 +248,6 @@ private:
 
 	// <FS:Ansariel> Mask texture if desired
 	BOOL						mIsMasked;    
-	BOOL						mBakeTextureEnabled;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
