@@ -1138,7 +1138,7 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
                     }
                     info->mObjectID = LLUUID::null;
                     info->mFromObject = TRUE;
-		}
+            }
 
 		info->mIM = dialog;
 		info->mFromID = from_id;

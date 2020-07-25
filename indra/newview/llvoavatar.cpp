@@ -2521,6 +2521,7 @@ S32 LLVOAvatar::setTETexture(const U8 te, const LLUUID& uuid)
 }
 
 static LLTrace::BlockTimerStatHandle FTM_AVATAR_UPDATE("Avatar Update");
+static LLTrace::BlockTimerStatHandle FTM_AVATAR_UPDATE_COMPLEXITY("Avatar Update Complexity");
 static LLTrace::BlockTimerStatHandle FTM_JOINT_UPDATE("Update Joints");
 
 //------------------------------------------------------------------------
@@ -2565,7 +2566,7 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
 
 	// <FS:CR> Use LLCachedControl
 	static LLCachedControl<bool> disable_all_render_types(gSavedSettings, "DisableAllRenderTypes");
-	if (!(gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_AVATAR))
+	if (!(gPipeline.hasRenderType(mIsControlAvatar ? LLPipeline::RENDER_TYPE_CONTROL_AV : LLPipeline::RENDER_TYPE_AVATAR))
 		//&& !(gSavedSettings.getBOOL("DisableAllRenderTypes")) && !isSelf())
 		&& !(disable_all_render_types) && !isSelf())
 	// </FS:CR>
@@ -2574,7 +2575,6 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
 	}
 
     // Update should be happening max once per frame.
-	const S32 upd_freq = 4; // force update every upd_freq frames.
 	if ((mLastAnimExtents[0]==LLVector3())||
 		(mLastAnimExtents[1])==LLVector3())
 	{
@@ -2582,6 +2582,7 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
 	}
 	else
 	{
+		const S32 upd_freq = 4; // force update every upd_freq frames.
 		mNeedsExtentUpdate = ((LLDrawable::getCurrentFrame()+mID.mData[0])%upd_freq==0);
 	}
     
@@ -2666,7 +2667,40 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
 	}
 		
 	idleUpdateNameTag( mLastRootPos );
-	idleUpdateRenderComplexity();
+
+    // Complexity has stale mechanics, but updates still can be very rapid
+    // so spread avatar complexity calculations over frames to lesen load from
+    // rapid updates and to make sure all avatars are not calculated at once.
+    S32 compl_upd_freq = 20;
+    if (isControlAvatar())
+    {
+        // animeshes do not (or won't) have impostors nor change outfis,
+        // no need for high frequency
+        compl_upd_freq = 100;
+    }
+    else if (mLastRezzedStatus <= 0) //cloud or  init
+    {
+        compl_upd_freq = 60;
+    }
+    else if (isSelf())
+    {
+        compl_upd_freq = 5;
+    }
+    else if (mLastRezzedStatus == 1) //'grey', not fully loaded
+    {
+        compl_upd_freq = 40;
+    }
+    else if (isInMuteList()) //cheap, buffers value from search
+    {
+        compl_upd_freq = 100;
+    }
+
+    if ((LLFrameTimer::getFrameCount() + mID.mData[0]) % compl_upd_freq == 0)
+    {
+        LL_RECORD_BLOCK_TIME(FTM_AVATAR_UPDATE_COMPLEXITY);
+        idleUpdateRenderComplexity();
+    }
+    idleUpdateDebugInfo();
 }
 
 void LLVOAvatar::idleUpdateVoiceVisualizer(bool voice_enabled)
@@ -2995,7 +3029,10 @@ F32 LLVOAvatar::calcMorphAmount()
 void LLVOAvatar::idleUpdateLipSync(bool voice_enabled)
 {
 	// Use the Lipsync_Ooh and Lipsync_Aah morphs for lip sync
-	if ( voice_enabled && (LLVoiceClient::getInstance()->lipSyncEnabled()) && LLVoiceClient::getInstance()->getIsSpeaking( mID ) )
+    if ( voice_enabled
+        && mLastRezzedStatus > 0 // no point updating lip-sync for clouds
+        && (LLVoiceClient::getInstance()->lipSyncEnabled())
+        && LLVoiceClient::getInstance()->getIsSpeaking( mID ) )
 	{
 		F32 ooh_morph_amount = 0.0f;
 		F32 aah_morph_amount = 0.0f;
@@ -4258,6 +4295,11 @@ void LLVOAvatar::computeUpdatePeriod()
 		{ //background avatars are REALLY slow updating impostors
 			mUpdatePeriod = 16;
 		}
+		else if (mLastRezzedStatus <= 0)
+		{
+			// Don't update cloud avatars too often
+			mUpdatePeriod = 8;
+		}
 		else if ( shouldImpostor(3) )
 		{ //back 25% of max visible avatars are slow updating impostors
 			mUpdatePeriod = 8;
@@ -4651,15 +4693,15 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
     // Set mUpdatePeriod and visible based on distance and other criteria.
 	//--------------------------------------------------------------------
     computeUpdatePeriod();
-    visible = (LLDrawable::getCurrentFrame()+mID.mData[0])%mUpdatePeriod == 0 ? TRUE : FALSE;
+    bool needs_update = (LLDrawable::getCurrentFrame()+mID.mData[0])%mUpdatePeriod == 0 ? TRUE : FALSE;
 
 	//--------------------------------------------------------------------
-    // Early out if not visible and not self
+	// Early out if does not need update and not self
 	// don't early out for your own avatar, as we rely on your animations playing reliably
 	// for example, the "turn around" animation when entering customize avatar needs to trigger
 	// even when your avatar is offscreen
 	//--------------------------------------------------------------------
-	if (!visible && !isSelf())
+	if (!needs_update && !isSelf())
 	{
 		updateMotions(LLCharacter::HIDDEN_UPDATE);
 		return FALSE;
@@ -4708,12 +4750,17 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 	mSpeed = speed;
 
 	// update animations
-	if (mSpecialRenderMode == 1) // Animation Preview
+	if (!visible)
+	{
+		updateMotions(LLCharacter::HIDDEN_UPDATE);
+	}
+	else if (mSpecialRenderMode == 1) // Animation Preview
 	{
 		updateMotions(LLCharacter::FORCE_UPDATE);
 	}
 	else
 	{
+		// Might be better to do HIDDEN_UPDATE if cloud
 		updateMotions(LLCharacter::NORMAL_UPDATE);
 	}
 
@@ -4741,10 +4788,13 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 	// Update child joints as needed.
 	mRoot->updateWorldMatrixChildren();
 
-	// System avatar mesh vertices need to be reskinned.
-	mNeedsSkin = TRUE;
+    if (visible)
+    {
+        // System avatar mesh vertices need to be reskinned.
+        mNeedsSkin = TRUE;
+    }
 
-	return TRUE;
+	return visible;
 }
 
 //-----------------------------------------------------------------------------
@@ -7311,7 +7361,7 @@ LLDrawable *LLVOAvatar::createDrawable(LLPipeline *pipeline)
 	pipeline->allocDrawable(this);
 	mDrawable->setLit(FALSE);
 
-	LLDrawPoolAvatar *poolp = (LLDrawPoolAvatar*) gPipeline.getPool(LLDrawPool::POOL_AVATAR);
+	LLDrawPoolAvatar *poolp = (LLDrawPoolAvatar*)gPipeline.getPool(mIsControlAvatar ? LLDrawPool::POOL_CONTROL_AV : LLDrawPool::POOL_AVATAR);
 
 //MK
 	if (poolp)
@@ -7324,7 +7374,7 @@ LLDrawable *LLVOAvatar::createDrawable(LLPipeline *pipeline)
 	//this face will be splitted into several if its vertex buffer is too long.
 	mDrawable->setState(LLDrawable::ACTIVE);
 	mDrawable->addFace(poolp, NULL);
-	mDrawable->setRenderType(LLPipeline::RENDER_TYPE_AVATAR);
+	mDrawable->setRenderType(mIsControlAvatar ? LLPipeline::RENDER_TYPE_CONTROL_AV : LLPipeline::RENDER_TYPE_AVATAR);
 	
 	mNumInitFaces = mDrawable->getNumFaces() ;
 
@@ -7349,7 +7399,7 @@ static LLTrace::BlockTimerStatHandle FTM_UPDATE_AVATAR("Update Avatar");
 BOOL LLVOAvatar::updateGeometry(LLDrawable *drawable)
 {
 	LL_RECORD_BLOCK_TIME(FTM_UPDATE_AVATAR);
- 	if (!(gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_AVATAR)))
+	if (!(gPipeline.hasRenderType(mIsControlAvatar ? LLPipeline::RENDER_TYPE_CONTROL_AV : LLPipeline::RENDER_TYPE_AVATAR)))
 	{
 		return TRUE;
 	}
@@ -10689,7 +10739,7 @@ void LLVOAvatar::onActiveOverrideMeshesChanged()
 U32 LLVOAvatar::getPartitionType() const
 { 
 	// Avatars merely exist as drawables in the bridge partition
-	return LLViewerRegion::PARTITION_BRIDGE;
+	return mIsControlAvatar ? LLViewerRegion::PARTITION_CONTROL_AV : LLViewerRegion::PARTITION_AVATAR;
 }
 
 //static
@@ -10857,7 +10907,10 @@ void LLVOAvatar::idleUpdateRenderComplexity()
 
     // Render Complexity
     calculateUpdateRenderComplexity(); // Update mVisualComplexity if needed	
+}
 
+void LLVOAvatar::idleUpdateDebugInfo()
+{
 	if (gPipeline.hasRenderDebugMask(LLPipeline::RENDER_DEBUG_AVATAR_DRAW_INFO))
 	{
 		std::string info_line;

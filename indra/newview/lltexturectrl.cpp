@@ -442,7 +442,7 @@ BOOL LLFloaterTexturePicker::postBuild()
 	getChild<LLComboBox>("l_bake_use_texture_combo_box")->setCommitCallback(onBakeTextureSelect, this);
 	getChild<LLCheckBoxCtrl>("hide_base_mesh_region")->setCommitCallback(onHideBaseMeshRegionCheck, this);
 
-	setBakeTextureEnabled(FALSE);
+	setBakeTextureEnabled(TRUE);
 	return TRUE;
 }
 
@@ -1179,8 +1179,7 @@ LLTextureCtrl::LLTextureCtrl(const LLTextureCtrl::Params& p)
 	// <FS:Ansariel> Mask texture if desired
 	mIsMasked(FALSE),
 	// </FS:Ansariel> Mask texture if desired   
-	mFallbackImage(p.fallback_image),
-	mBakeTextureEnabled(FALSE)
+	mFallbackImage(p.fallback_image)
 {
 
 	// Default of defaults is white image for diff tex
@@ -1373,7 +1372,7 @@ void LLTextureCtrl::showPicker(BOOL take_focus)
 		}
 		if (texture_floaterp)
 		{
-			texture_floaterp->setBakeTextureEnabled(mBakeTextureEnabled);
+			texture_floaterp->setBakeTextureEnabled(TRUE);
 		}
 
 		LLFloater* root_floater = gFloaterView->getParentFloater(this);
@@ -1552,7 +1551,6 @@ void LLTextureCtrl::setImageAssetID( const LLUUID& asset_id )
 
 void LLTextureCtrl::setBakeTextureEnabled(BOOL enabled)
 {
-	mBakeTextureEnabled = enabled;
 	LLFloaterTexturePicker* floaterp = (LLFloaterTexturePicker*)mFloaterHandle.get();
 	if (floaterp)
 	{

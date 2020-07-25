@@ -632,11 +632,6 @@ void LLDrawPoolWLSky::prerender()
 	//LL_INFOS() << "wlsky prerendering pass." << LL_ENDL;
 }
 
-LLDrawPoolWLSky *LLDrawPoolWLSky::instancePool()
-{
-	return new LLDrawPoolWLSky();
-}
-
 LLViewerTexture* LLDrawPoolWLSky::getTexture()
 {
 	return NULL;
