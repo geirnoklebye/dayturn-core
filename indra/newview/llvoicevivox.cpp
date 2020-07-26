@@ -817,6 +817,11 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
             static const U32 portrange = 100;
             std::string host(gSavedSettings.getString("VivoxVoiceHost"));
             U32 port = portbase + portoffset;
+            // Chorazin: Re-implement VoiceMultiInstance here (see comments below)            
+            if (gSavedSettings.getBOOL("VoiceMultiInstance"))
+            {
+            	port = 30000 + ll_rand(20000);
+            }
             portoffset = (portoffset + 1) % portrange;
             params.args.add("-i");
             params.args.add(STRINGIZE(host << ':' << port));
@@ -865,19 +870,22 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
                 params.args.add("-st");
                 params.args.add(shutdown_timeout);
             }
-						// <FS:Ansariel> Voice in multiple instances; by Latif Khalifa
-						if (gSavedSettings.getBOOL("VoiceMultiInstance"))
-						{
-							S32 port_nr = 30000 + ll_rand(20000);
-							LLControlVariable* voice_port = gSavedSettings.getControl("VivoxVoicePort");
-							if (voice_port)
-							{
-								voice_port->setValue(LLSD(port_nr), false);
-								params.args.add("-i");
-								params.args.add(llformat("127.0.0.1:%u",  gSavedSettings.getU32("VivoxVoicePort")));
-							}
-						}
-						// </FS:Ansariel>
+            // Chorazin: This interacts badly with the VOICE-88 fix above. The fix is to do the
+            // randomising above within the VOICE-88 additions, otherwise we can get commands with
+            // two ports specified which results in no voice connection and viewer stalls every 2 secs.
+//						// <FS:Ansariel> Voice in multiple instances; by Latif Khalifa
+//						if (gSavedSettings.getBOOL("VoiceMultiInstance"))
+//						{
+//							S32 port_nr = 30000 + ll_rand(20000);
+//							LLControlVariable* voice_port = gSavedSettings.getControl("VivoxVoicePort");
+//							if (voice_port)
+//							{
+//								voice_port->setValue(LLSD(port_nr), false);
+//								params.args.add("-i");
+//								params.args.add(llformat("127.0.0.1:%u",  gSavedSettings.getU32("VivoxVoicePort")));
+//							}
+//						}
+//						// </FS:Ansariel>
             params.cwd = gDirUtilp->getAppRODataDir();
 
 #           ifdef VIVOX_HANDLE_ARGS
