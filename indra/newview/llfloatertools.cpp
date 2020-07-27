@@ -557,8 +557,12 @@ void LLFloaterTools::refresh()
 	else
 	{
 		//KKA-744 display a selected linkset total if we can't show something more detailed
-		desc_string = getString("link_total");
-		num_string = llformat("%d",LLSelectMgr::getInstance()->getSelection()->getObjectCount());		
+		//...providing there's a selection
+		if ( ! LLSelectMgr::getInstance()->getSelection()->isEmpty())
+		{
+			desc_string = getString("link_total");
+			num_string = llformat("%d",LLSelectMgr::getInstance()->getSelection()->getObjectCount());
+		}
 	}
 
 	getChild<LLUICtrl>("link_num_obj_count")->setTextArg("[DESC]", desc_string);
