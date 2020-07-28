@@ -985,7 +985,7 @@ void LLLocationInputCtrl::refreshMaturityButton()
 	}
 
 //MK (CA)
-	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc && gSavedSettings.getBOOL("KokuaRLVShowlocHidesMaturity"))
 	{
 		button_visible = false;
 	}

@@ -364,6 +364,21 @@
               name="KokuaIMRestrictionWarning"
               tool_tip="Provides a warning before the event when sending or receiving IMs is blocked for this person/group"
               width="270"/>
+          <check_box
+              top_pad="0"
+              layout="topleft"
+              follows="left|top"
+              enabled="true"
+              font="SansSerifSmall"
+              height="20"
+              initial_value="true"
+              control_name="KokuaRLVShowlocHidesMaturity"
+              enabled_control="RestrainedLove"
+              label="@showloc suppresses maturity information in navigation bar"
+              left="25"
+              name="KokuaRLVShowlocHidesMaturity"
+              tool_tip="@showloc suppresses maturity information in navigation bar"
+              width="270"/>
           <!-- reminder: if more controls are added here, add them to the delete list in llfloaterpreference.cpp for RLV always-on mode -->
         </panel>
         

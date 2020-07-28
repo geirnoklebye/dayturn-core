@@ -106,7 +106,10 @@ BOOL LLAgentUI::buildLocationString(std::string& str, ELocationFormat fmt,const 
 		parcel_name = "(Parcel hidden)";
 		region_name = "(Region hidden)";
 		pos_x = pos_y = pos_z = 9999;
-		sim_access_string = "(Maturity hidden)"; // CA addition
+		if (gSavedSettings.getBOOL("KokuaRLVShowlocHidesMaturity"))
+		{
+			sim_access_string = "(Maturity hidden)"; // CA addition
+		}
 	}
 //mk
 	std::string buffer;
