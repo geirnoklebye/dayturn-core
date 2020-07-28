@@ -984,6 +984,13 @@ void LLLocationInputCtrl::refreshMaturityButton()
 		break;
 	}
 
+//MK (CA)
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		button_visible = false;
+	}
+//mk (CA)
+
 	mMaturityButton->setVisible(button_visible);
 	mMaturityButton->setToolTip(rating_tooltip);
 	if(rating_image)
