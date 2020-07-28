@@ -634,6 +634,7 @@ BOOL LLFloaterPreference::postBuild()
 	delete getChild<LLUICtrl>("RestrainedLoveHeadMouselookRenderRigged");
 	delete getChild<LLUICtrl>("KokuaRLVShowOtherNameTags");
 	delete getChild<LLUICtrl>("KokuaIMRestrictionWarning");
+	delete getChild<LLUICtrl>("KokuaRLVShowlocHidesMaturity");
 #endif
 	
 	// Hook up and init for filtering
