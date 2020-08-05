@@ -474,8 +474,17 @@ void LLFloaterCamera::switchMode(ECameraControlMode mode)
 		break;
 
 	case CAMERA_CTRL_MODE_FREE_CAMERA:
-		sFreeCamera = true;
-		activate_camera_tool();
+		// KKA-748 change so that a second click on Object View deselects the mode without selecting another mode, so leaving the camera where it is
+		if (sFreeCamera)
+		{
+			sFreeCamera = false;
+			clear_camera_tool();
+		}
+		else
+		{
+			sFreeCamera = true;
+			activate_camera_tool();
+		}
 		break;
 
 	case CAMERA_CTRL_MODE_PRESETS:
@@ -525,7 +534,9 @@ void LLFloaterCamera::updateItemsSelection()
 	getChild<LLPanelCameraItem>("front_view")->setValue(argument);
 	argument["selected"] = gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK;
 	getChild<LLPanelCameraItem>("mouselook_view")->setValue(argument);
-	argument["selected"] = mCurrMode == CAMERA_CTRL_MODE_FREE_CAMERA;
+	//KKA-748 include sFreeCamera in the validation so that the item will deselect as sFreeCamera toggles
+	//argument["selected"] = mCurrMode == CAMERA_CTRL_MODE_FREE_CAMERA;
+	argument["selected"] = (sFreeCamera && mCurrMode == CAMERA_CTRL_MODE_FREE_CAMERA);
 	getChild<LLPanelCameraItem>("object_view")->setValue(argument);
 }
 
