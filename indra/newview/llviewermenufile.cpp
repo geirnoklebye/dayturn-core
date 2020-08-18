@@ -696,6 +696,9 @@ class LLFileTakeSnapshotToDisk : public view_listener_t
 		S32 width = gViewerWindow->getWindowWidthRaw();
 		S32 height = gViewerWindow->getWindowHeightRaw();
 
+		bool render_ui = gSavedSettings.getBOOL("RenderUIInSnapshot");
+		bool render_hud = gSavedSettings.getBOOL("RenderHUDInSnapshot");
+
 		if (gSavedSettings.getBOOL("HighResSnapshot") && (!gRRenabled || (gRRenabled && !gAgent.mRRInterface.hasLockedHuds())))
 		{
 			//KKA-594 - In High Res snapshots there is currently a bug where hud rendering doesn't take account of this and
@@ -704,6 +707,10 @@ class LLFileTakeSnapshotToDisk : public view_listener_t
 			//LL fix, which will be compatible with this change 
 			width *= 2;
 			height *= 2;
+			// KKA-751/KKA_594 - disable the LL change
+			// not compatible wirh UI/HUD
+			//render_ui = false;
+			//render_hud = false;
 		}
 
 		if (gViewerWindow->rawSnapshot(raw,
@@ -711,7 +718,8 @@ class LLFileTakeSnapshotToDisk : public view_listener_t
 									   height,
 									   TRUE,
 									   FALSE,
-									   gSavedSettings.getBOOL("RenderUIInSnapshot"),
+									   render_ui,
+									   render_hud,
 									   FALSE))
 		{
 			LLPointer<LLImageFormatted> formatted;
