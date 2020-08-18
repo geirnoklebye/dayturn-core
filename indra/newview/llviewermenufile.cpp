@@ -707,10 +707,8 @@ class LLFileTakeSnapshotToDisk : public view_listener_t
 			//LL fix, which will be compatible with this change 
 			width *= 2;
 			height *= 2;
-			// KKA-751/KKA_594 - disable the LL change
-			// not compatible wirh UI/HUD
-			//render_ui = false;
-			//render_hud = false;
+			render_ui = false;
+			render_hud = false;
 		}
 
 		if (gViewerWindow->rawSnapshot(raw,
