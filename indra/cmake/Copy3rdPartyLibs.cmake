@@ -190,7 +190,7 @@ elseif(DARWIN)
         libndofdev.dylib
         libnghttp2.dylib
         libnghttp2.14.dylib
-        libnghttp2.14.14.0.dylib
+        libnghttp2.14.19.0.dylib
        )
     if (FMODSTUDIO)
       set(debug_files ${debug_files} libfmodstudioL.dylib)
