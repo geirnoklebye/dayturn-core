@@ -881,7 +881,7 @@ LLMeshRepoThread::~LLMeshRepoThread()
 void LLMeshRepoThread::run()
 {
 	LLCDResult res = LLConvexDecomposition::initThread();
-	if (res != LLCD_OK && LLConvexDecomposition::isFunctional())
+	if (res != LLCD_OK)
 	{
 		LL_WARNS(LOG_MESH) << "Convex decomposition unable to be loaded.  Expect severe problems." << LL_ENDL;
 	}
@@ -1147,7 +1147,7 @@ void LLMeshRepoThread::run()
 	}
 
 	res = LLConvexDecomposition::quitThread();
-	if (res != LLCD_OK && LLConvexDecomposition::isFunctional())
+	if (res != LLCD_OK)
 	{
 		LL_WARNS(LOG_MESH) << "Convex decomposition unable to be quit." << LL_ENDL;
 	}
@@ -3474,11 +3474,6 @@ void LLMeshRepository::init()
 	mMeshMutex = new LLMutex();
 	
 	LLConvexDecomposition::getInstance()->initSystem();
-
-    if (!LLConvexDecomposition::isFunctional())
-    {
-        LL_INFOS(LOG_MESH) << "Using STUB for LLConvexDecomposition" << LL_ENDL;
-    }
 
 	mDecompThread = new LLPhysicsDecomp();
 	mDecompThread->start();
