@@ -3049,6 +3049,11 @@ bool sort_by_linked_uuid(const LLViewerInventoryItem* item1, const LLViewerInven
 	return item1->getLinkedUUID() < item2->getLinkedUUID();
 }
 
+//CA: Using getActualDescription doesn't follow links however for this we do want to get to the ultimate item. This resolves
+//issues with outfits appearing dirty when they aren't because the getActualDescription mismatches while getDescription does
+//Also - promote the debugging here to INFO and add detail so we're ready for any future debugging around outfit cleanliness
+//Also - back out my previous fix since that's subsumed by changing to getDescription
+
 void LLAppearanceMgr::updateIsDirty()
 {
 	LLUUID cof = getCOF();
@@ -3096,7 +3101,7 @@ void LLAppearanceMgr::updateIsDirty()
 
 		if(outfit_items.size() != cof_items.size())
 		{
-			LL_DEBUGS("Avatar") << "item count different - base " << outfit_items.size() << " cof " << cof_items.size() << LL_ENDL;
+			LL_INFOS("Avatar") << "item count different - base " << outfit_items.size() << " cof " << cof_items.size() << LL_ENDL;
 			// Current outfit folder should have one more item than the outfit folder.
 			// this one item is the link back to the outfit folder itself.
 			mOutfitIsDirty = true;
@@ -3112,29 +3117,32 @@ void LLAppearanceMgr::updateIsDirty()
 			LLViewerInventoryItem *item1 = cof_items.at(i);
 			LLViewerInventoryItem *item2 = outfit_items.at(i);
 			
-			bool fix_description = false;
-			if (item1->getActualDescription()=="(No Description)" && item2->getActualDescription()=="") fix_description = true;
-			if (item2->getActualDescription()=="(No Description)" && item1->getActualDescription()=="") fix_description = true;
-
 			if (item1->getLinkedUUID() != item2->getLinkedUUID() || 
 				item1->getName() != item2->getName() ||
-				(!fix_description && (item1->getActualDescription() != item2->getActualDescription())))
+//				item1->getActualDescription() != item2->getActualDescription())
+				item1->getDescription() != item2->getDescription())
 			{
 				if (item1->getLinkedUUID() != item2->getLinkedUUID())
 				{
-					LL_DEBUGS("Avatar") << "link id different " << LL_ENDL;
+					LL_INFOS("Avatar") << "link id different for " << item1->getName() << " cof LinkedUUID " << item1->getLinkedUUID() << " outfit LinkedUUID " << item2->getLinkedUUID() << LL_ENDL;
 				}
 				else
 				{
 					if (item1->getName() != item2->getName())
 					{
-						LL_DEBUGS("Avatar") << "name different " << item1->getName() << " " << item2->getName() << LL_ENDL;
+						LL_INFOS("Avatar") << "name different " << item1->getName() << " " << item2->getName() << LL_ENDL;
 					}
-					if (item1->getActualDescription() != item2->getActualDescription())
+//					if (item1->getActualDescription() != item2->getActualDescription())
+//					{
+//						LL_DEBUGS("Avatar") << "desc different " << item1->getActualDescription()
+//											<< " " << item2->getActualDescription() 
+//											<< " names " << item1->getName() << " " << item2->getName() << LL_ENDL;
+//					}
+					if (item1->getDescription() != item2->getDescription())
 					{
-						LL_DEBUGS("Avatar") << "desc different " << item1->getActualDescription()
-											<< " " << item2->getActualDescription() 
-											<< " names " << item1->getName() << " " << item2->getName() << LL_ENDL;
+						LL_INFOS("Avatar") << "desc different cof='" << item1->getDescription()
+											<< "' outfit='" << item2->getDescription() 
+											<< "' names cof=" << item1->getName() << " outfit=" << item2->getName() << LL_ENDL;
 					}
 				}
 				mOutfitIsDirty = true;
@@ -3143,7 +3151,7 @@ void LLAppearanceMgr::updateIsDirty()
 		}
 	}
 	llassert(!mOutfitIsDirty);
-	LL_DEBUGS("Avatar") << "clean" << LL_ENDL;
+	LL_INFOS("Avatar") << "clean" << LL_ENDL;
 }
 
 // *HACK: Must match name in Library or agent inventory
