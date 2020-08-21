@@ -1634,7 +1634,7 @@ bool LLAppViewer::doFrame()
 			{
 				LL_PROFILE_ZONE_NAMED_CATEGORY_APP( "df Display" )
 				pingMainloopTimeout("Main:Display");
-				gGLActive = TRUE;
+				gGLActive = true;
 
 				display();
 
@@ -1643,7 +1643,7 @@ bool LLAppViewer::doFrame()
 					pingMainloopTimeout("Main:Snapshot");
 					LLFloaterSnapshot::update(); // take snapshots
 					LLFloaterOutfitSnapshot::update();
-				gGLActive = FALSE;
+				gGLActive = false;
 			}
 		}
 		}
