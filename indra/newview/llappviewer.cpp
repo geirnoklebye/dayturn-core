@@ -1050,7 +1050,7 @@ bool LLAppViewer::init()
 	//
 	// Initialize the window
 	//
-	gGLActive = TRUE;
+	gGLActive = true;
 	initWindow();
 	LL_INFOS("InitInfo") << "Window is initialized." << LL_ENDL ;
 
@@ -1236,7 +1236,7 @@ bool LLAppViewer::init()
 	  LLNotificationsUtil::add("CorruptedProtectedDataStore");
 	}
 
-	gGLActive = FALSE;
+	gGLActive = false;
 #if 0 // no updater for Dayturn
 //#if LL_RELEASE_FOR_DOWNLOAD 
     // Skip updater if this is a non-interactive instance
@@ -1262,7 +1262,7 @@ bool LLAppViewer::init()
         // add LEAP mode command-line argument to whichever of these we selected
         updater.args.add("leap");
         // UpdaterServiceSettings
-        if (gSavedSettings.getBOOL("FirstLoginThisInstall"))
+        if (gSavedSettings.getbool("FirstLoginThisInstall"))
         {
             // Befor first login, treat this as 'manual' updates,
             // updater won't install anything, but required updates
@@ -1275,7 +1275,7 @@ bool LLAppViewer::init()
         // channel
         updater.args.add(LLVersionInfo::instance().getChannel());
         // testok
-        updater.args.add(stringize(gSavedSettings.getBOOL("UpdaterWillingToTest")));
+        updater.args.add(stringize(gSavedSettings.getbool("UpdaterWillingToTest")));
         // ForceAddressSize
         updater.args.add(stringize(gSavedSettings.getU32("ForceAddressSize")));
 
@@ -1635,14 +1635,14 @@ bool LLAppViewer::doFrame()
 			{
 				LL_PROFILE_ZONE_NAMED_CATEGORY_APP( "df Display" )
 				pingMainloopTimeout("Main:Display");
-				gGLActive = TRUE;
+				gGLActive = true;
 
 				display();
 
 				pingMainloopTimeout("Main:Snapshot");
 				LLFloaterSnapshot::update(); // take snapshots
 					LLFloaterOutfitSnapshot::update();
-				gGLActive = FALSE;
+				gGLActive = false;
 			}
 		}
 
@@ -4983,13 +4983,13 @@ void LLAppViewer::idle()
 	if (LLStartUp::getStartupState() < STATE_STARTED)
 	{
 		// Skip rest if idle startup returns false (essentially, no world yet)
-		gGLActive = TRUE;
+		gGLActive = true;
 		if (!idle_startup())
 		{
-			gGLActive = FALSE;
+			gGLActive = false;
 			return;
 		}
-		gGLActive = FALSE;
+		gGLActive = false;
 	}
 
 	
@@ -5341,7 +5341,7 @@ void LLAppViewer::idle()
 	// forcibly quit if it has taken too long
 	if (mQuitRequested)
 	{
-		gGLActive = TRUE;
+		gGLActive = true;
 		idleShutdown();
 	}
 }

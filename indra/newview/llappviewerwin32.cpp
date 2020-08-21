@@ -534,7 +534,7 @@ int APIENTRY WINMAIN(HINSTANCE hInstance,
 		}
 #endif
 
-		gGLActive = TRUE;
+		gGLActive = true;
 
 		viewer_app_ptr->cleanup();
 
