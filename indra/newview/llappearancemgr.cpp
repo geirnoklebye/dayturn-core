@@ -840,7 +840,7 @@ void LLWearableHoldingPattern::onAllComplete()
 
 	if (isAgentAvatarValid())
 	{
-		LL_DEBUGS("Avatar") << self_av_string() << "Updating " << mObjItems.size() << " attachments" << LL_ENDL;
+		LL_INFOS("Avatar") << self_av_string() << "Updating " << mObjItems.size() << " attachments" << LL_ENDL;
 		LLAgentWearables::llvo_vec_t objects_to_remove;
 		LLAgentWearables::llvo_vec_t objects_to_retain;
 		LLInventoryModel::item_array_t items_to_add;
@@ -850,7 +850,7 @@ void LLWearableHoldingPattern::onAllComplete()
 													   objects_to_retain,
 													   items_to_add);
 
-		LL_DEBUGS("Avatar") << self_av_string() << "Removing " << objects_to_remove.size()
+		LL_INFOS("Avatar") << self_av_string() << "Removing " << objects_to_remove.size()
 							<< " attachments" << LL_ENDL;
 
 		// Here we remove the attachment pos overrides for *all*
@@ -861,7 +861,7 @@ void LLWearableHoldingPattern::onAllComplete()
 
 		if (objects_to_remove.size() || items_to_add.size())
 		{
-			LL_DEBUGS("Avatar") << "ATT will remove " << objects_to_remove.size()
+			LL_INFOS("Avatar") << "ATT will remove " << objects_to_remove.size()
 								<< " and add " << items_to_add.size() << " items" << LL_ENDL;
 		}
 
@@ -887,7 +887,7 @@ void LLWearableHoldingPattern::onAllComplete()
 		}
 		
 		// Add new attachments to match those requested.
-		LL_DEBUGS("Avatar") << self_av_string() << "Adding " << items_to_add.size() << " attachments" << LL_ENDL;
+		LL_INFOS("Avatar") << self_av_string() << "Adding " << items_to_add.size() << " attachments" << LL_ENDL;
 		LLAgentWearables::userAttachMultipleAttachments(items_to_add);
 	}
 
@@ -2497,6 +2497,14 @@ void LLAppearanceMgr::updateAppearanceFromCOF(bool enforce_item_restrictions,
 	remove_non_link_items(wear_items);
 	remove_non_link_items(obj_items);
 	remove_non_link_items(gest_items);
+// CA: Filter out duplicates (based on a change by KB)
+	LL_INFOS() << "Removing duplicates, before wear: " << wear_items.size() << " obj: " << obj_items.size() << " gest: " << gest_items.size() << LL_ENDL;
+	removeDuplicateItems(wear_items);
+	removeDuplicateItems(obj_items);
+	removeDuplicateItems(gest_items);
+	filterWearableItems(wear_items, LLAgentWearables::MAX_CLOTHING_LAYERS, LLAgentWearables::MAX_CLOTHING_LAYERS);
+	LL_INFOS() << "Removing duplicates, after wear: " << wear_items.size() << " obj: " << obj_items.size() << " gest: " << gest_items.size() << LL_ENDL;
+// CA: End duplicate filtering
 
 	dumpItemArray(wear_items,"asset_dump: wear_item");
 	dumpItemArray(obj_items,"asset_dump: obj_item");
@@ -3176,10 +3184,10 @@ bool sort_by_linked_uuid(const LLViewerInventoryItem* item1, const LLViewerInven
 	return item1->getLinkedUUID() < item2->getLinkedUUID();
 }
 
-//CA: Using getActualDescription doesn't follow links however for this we do want to get to the ultimate item. This resolves
-//issues with outfits appearing dirty when they aren't because the getActualDescription mismatches while getDescription does
-//Also - promote the debugging here to INFO and add detail so we're ready for any future debugging around outfit cleanliness
-//Also - back out my previous fix since that's subsumed by changing to getDescription
+//CA: One cause of erroneous dirty status is comparisons of the same object failing because one description is "" and the other
+//is "(No Description") in their ActualDescription. Another is duplicate items in the COF that haven't yet been filtered out
+//during login. We address the description problems by requiring both Description and Actual Description to fail comparison
+//for an item to be considered different
 
 void LLAppearanceMgr::updateIsDirty()
 {
@@ -3210,6 +3218,10 @@ void LLAppearanceMgr::updateIsDirty()
 		LLInventoryModel::item_array_t cof_items;
 		gInventory.collectDescendentsIf(cof, cof_cats, cof_items,
 									  LLInventoryModel::EXCLUDE_TRASH, collector);
+		// CA: this resolves duplicates within context of the comparison, but cleaning up the actual COF happens in updateAppearanceFromCOF
+		LL_INFOS("Avatar") << "cof size before duplicate removal: " << cof_items.size() << LL_ENDL;
+		removeDuplicateItems(cof_items);
+		LL_INFOS("Avatar") << "cof size after duplicate removal: " << cof_items.size() << LL_ENDL;
 
 		LLInventoryModel::cat_array_t outfit_cats;
 		LLInventoryModel::item_array_t outfit_items;
@@ -3247,7 +3259,8 @@ void LLAppearanceMgr::updateIsDirty()
 			if (item1->getLinkedUUID() != item2->getLinkedUUID() || 
 				item1->getName() != item2->getName() ||
 //				item1->getActualDescription() != item2->getActualDescription())
-				item1->getDescription() != item2->getDescription())
+				((item1->getActualDescription() != item2->getActualDescription())
+				&& (item1->getDescription() != item2->getDescription())))
 			{
 				if (item1->getLinkedUUID() != item2->getLinkedUUID())
 				{
@@ -3259,17 +3272,13 @@ void LLAppearanceMgr::updateIsDirty()
 					{
 						LL_INFOS("Avatar") << "name different " << item1->getName() << " " << item2->getName() << LL_ENDL;
 					}
-//					if (item1->getActualDescription() != item2->getActualDescription())
-//					{
-//						LL_DEBUGS("Avatar") << "desc different " << item1->getActualDescription()
-//											<< " " << item2->getActualDescription() 
-//											<< " names " << item1->getName() << " " << item2->getName() << LL_ENDL;
-//					}
-					if (item1->getDescription() != item2->getDescription())
+					if ((item1->getActualDescription() != item2->getActualDescription()) || (item1->getDescription() != item2->getDescription()))
 					{
-						LL_INFOS("Avatar") << "desc different cof='" << item1->getDescription()
-											<< "' outfit='" << item2->getDescription() 
-											<< "' names cof=" << item1->getName() << " outfit=" << item2->getName() << LL_ENDL;
+						LL_INFOS("Avatar") << "actual desc different cof='" << item1->getActualDescription()
+											<< "' outfit= '" << item2->getActualDescription() 
+											<< "' desc cof= '" << item1->getDescription()
+											<< "' outfit = '" << item2->getDescription()
+											<< " names cof=" << item1->getName() << " outfit=" << item2->getName() << LL_ENDL;
 					}
 				}
 				mOutfitIsDirty = true;
@@ -4464,6 +4473,7 @@ public:
 		for(S32 i = 0; i < count; ++i)
 		{
 			ids.push_back(item_array.at(i)->getUUID());
+			LL_INFOS() << "item id " << item_array.at(i)->getUUID() << " name " << item_array.at(i)->getName() << LL_ENDL;
 		}
 		
 		gInventory.removeObserver(this);
