@@ -2435,6 +2435,10 @@ void LLAppearanceMgr::updateAppearanceFromCOF(bool enforce_item_restrictions,
 	removeDuplicateItems(gest_items);
 	filterWearableItems(wear_items, LLAgentWearables::MAX_CLOTHING_LAYERS, LLAgentWearables::MAX_CLOTHING_LAYERS);
 	LL_INFOS() << "Removing duplicates, after wear: " << wear_items.size() << " obj: " << obj_items.size() << " gest: " << gest_items.size() << LL_ENDL;
+	// CA: Do this again so it reflects the housekeeping just done
+	// update dirty flag to see if the state of the COF matches
+	// the saved outfit stored as a folder link
+	updateIsDirty();
 // CA: End duplicate filtering
 
 	dumpItemArray(wear_items,"asset_dump: wear_item");
