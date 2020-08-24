@@ -489,7 +489,17 @@ void LLSidepanelAppearance::fetchInventory()
 				if (!attached_object) continue;
 				const LLUUID& item_id = attached_object->getAttachmentItemID();
 				if (item_id.isNull()) continue;
-				ids.push_back(item_id);
+				//CA Sometimes duplicates appear in this list while things are getting aligned behind the
+				//scenes, esepcially when using a different computer to the previous login and the cached information
+				//turns out to need refreshing from the server, so rather than tweak the logic there, we just drop them at the UI level
+				if (std::find(ids.begin(),ids.end(),item_id) == ids.end())
+				{
+					ids.push_back(item_id);
+				}
+				else
+				{
+					LL_INFOS() << "Dropped duplicate " << item_id << " name " << attached_object->getAttachmentItemName() << LL_ENDL;
+				}
 			}
 		}
 	}
