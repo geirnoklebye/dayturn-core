@@ -68,6 +68,8 @@
 #include "lltranslate.h"
 #include "llautoreplace.h"
 #include "chatbar_as_cmdline.h"
+#include "kokuarlvmode.h" // for RLV_ALWAYS_ON
+
 S32 LLFloaterIMNearbyChat::sLastSpecialChatChannel = 0;
 
 const S32 EXPANDED_HEIGHT = 266;
