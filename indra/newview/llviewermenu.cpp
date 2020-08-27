@@ -6854,7 +6854,12 @@ void handle_edit_outfit()
 
 void handle_reload_outfit()
 {
-	LLAppearanceMgr::instance().reloadCurrentOutfit();
+	LLAppearanceMgr::instance().reloadCurrentOutfit(); // adds current outfit to itself, useful for giving unattached items a second chance
+}
+
+void handle_revert_outfit()
+{
+	LLAppearanceMgr::instance().wearBaseOutfit(); // normally called when cancelling out of Edit Outfit, useful for sanitising the COF
 }
 
 void handle_edit_shape()
@@ -9839,6 +9844,7 @@ void initialize_menus()
 	commit.add("CustomizeAvatar", boost::bind(&handle_customize_avatar));
 	commit.add("EditOutfit", boost::bind(&handle_edit_outfit));
 	commit.add("ReloadOutfit", boost::bind(&handle_reload_outfit));
+	commit.add("RevertOutfit", boost::bind(&handle_revert_outfit));
 	commit.add("EditShape", boost::bind(&handle_edit_shape));
 	commit.add("HoverHeight", boost::bind(&handle_hover_height));
 	commit.add("EditPhysics", boost::bind(&handle_edit_physics));
