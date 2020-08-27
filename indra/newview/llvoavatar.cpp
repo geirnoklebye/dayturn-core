@@ -9632,13 +9632,15 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 
     bool slam_params = false;
     applyParsedAppearanceMessage(*contents, slam_params);
-//CA - KKA-750 keep the rebake disabled, causes flashes of grey on outfit adjustments
+//CA KKA-750 (revised) I'd have preferred to keep the call to handle_rebake textures disabled,
+//   however we need it as part of stopping the COF getting too far away from reality
+//
 //MK
 	// we need to rebake the textures too, which has the effect of sanitizing the COF by 
 	// making it consistent with what we see on the screen.
 	if (isSelf())
 	{
-//		handle_rebake_textures(NULL); // included in llviewermenu
+		handle_rebake_textures(NULL); // included in llviewermenu
 	}
 
 	// We also need to reset the skeleton of this avatar because Bento-animated attachments 
@@ -9647,7 +9649,6 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 	// avatar in T-pose, potentially ruining some delicate positioning.
 	if (!LLSelectMgr::getInstance()->getSelection()->getObjectCount() || !LLSelectMgr::getInstance()->getSelection()->isAttachment())
 	{
-// KKA-750, however this is needed
 		resetSkeleton(false);
 	}
 //mk

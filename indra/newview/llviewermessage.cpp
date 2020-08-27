@@ -2300,6 +2300,12 @@ bool LLOfferInfo::inventory_task_offer_callback(const LLSD& notification, const 
 				// but user can mute object after receiving message
 				accept = false;
 			}
+//MK
+			if (gRRenabled)
+			{
+				gAgent.mRRInterface.notify (LLUUID::null, "declined inv_offer " + folder_name, "");
+			}
+//mk
 			break;
 	}
 
