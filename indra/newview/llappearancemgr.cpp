@@ -3246,6 +3246,28 @@ void LLAppearanceMgr::onFirstFullyVisible()
 	if (gAgent.isFirstLogin()) {
 		copyLibraryGestures();
 	}
+
+	// CA: Sometimes the initial outfit loading ends up with duplicates in the COF which arrive after the
+	// calls to clean up duplicates happen as part of outfit processing. If we detect this has happened
+	// we use wearBaseOutfit (ie the same as cancelling out of Edit Outfit on the base outfit) to force
+	// the sanitising code to get applied again, followed by a SyncCofVersionAndRefresh to clean up
+	// the upstream dataset
+	LLUUID cof = getCOF();
+	LLIsValidItemLink collector;
+	LLInventoryModel::cat_array_t cof_cats;
+	LLInventoryModel::item_array_t cof_items;
+	gInventory.collectDescendentsIf(cof, cof_cats, cof_items,
+								  LLInventoryModel::EXCLUDE_TRASH, collector);
+
+	LLInventoryModel::item_array_t dedup_cof_items = cof_items;
+	removeDuplicateItems(dedup_cof_items);
+	LL_INFOS() << "COF current size: " << cof_items.size() << " without duplicates: " << dedup_cof_items.size() << LL_ENDL;
+	if (cof_items.size() != dedup_cof_items.size())
+	{
+		LL_WARNS() << "Reloading base outfit to clean up COF duplicates" << LL_ENDL;
+		wearBaseOutfit();
+		syncCofVersionAndRefresh();
+	}
 }
 
 // update "dirty" state - defined outside class to allow for calling
