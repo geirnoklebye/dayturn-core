@@ -1318,6 +1318,7 @@ static void removeDuplicateItems(LLInventoryModel::item_array_t& items)
 	{
 		new_items.push_back(*it);
 	}
+	LL_INFOS() << "Original size: " << items.size() << " without duplicates: " << new_items.size() << LL_ENDL; 
 	items = new_items;
 }
 
