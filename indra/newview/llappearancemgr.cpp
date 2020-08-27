@@ -1318,6 +1318,7 @@ static void removeDuplicateItems(LLInventoryModel::item_array_t& items)
 	{
 		new_items.push_back(*it);
 	}
+	LL_INFOS() << "Original size: " << items.size() << " without duplicates: " << new_items.size() << LL_ENDL; 
 	items = new_items;
 }
 
@@ -3188,11 +3189,6 @@ bool sort_by_linked_uuid(const LLViewerInventoryItem* item1, const LLViewerInven
 	return item1->getLinkedUUID() < item2->getLinkedUUID();
 }
 
-//CA: One cause of erroneous dirty status is comparisons of the same object failing because one description is "" and the other
-//is "(No Description") in their ActualDescription. Another is duplicate items in the COF that haven't yet been filtered out
-//during login. We address the description problems by requiring both Description and Actual Description to fail comparison
-//for an item to be considered different
-
 void LLAppearanceMgr::updateIsDirty()
 {
 	LLUUID cof = getCOF();
@@ -3222,10 +3218,6 @@ void LLAppearanceMgr::updateIsDirty()
 		LLInventoryModel::item_array_t cof_items;
 		gInventory.collectDescendentsIf(cof, cof_cats, cof_items,
 									  LLInventoryModel::EXCLUDE_TRASH, collector);
-		// CA: this resolves duplicates within context of the comparison, but cleaning up the actual COF happens in updateAppearanceFromCOF
-		LL_INFOS("Avatar") << "cof size before duplicate removal: " << cof_items.size() << LL_ENDL;
-		removeDuplicateItems(cof_items);
-		LL_INFOS("Avatar") << "cof size after duplicate removal: " << cof_items.size() << LL_ENDL;
 
 		LLInventoryModel::cat_array_t outfit_cats;
 		LLInventoryModel::item_array_t outfit_items;
@@ -3259,16 +3251,14 @@ void LLAppearanceMgr::updateIsDirty()
 		{
 			LLViewerInventoryItem *item1 = cof_items.at(i);
 			LLViewerInventoryItem *item2 = outfit_items.at(i);
-			
+
 			if (item1->getLinkedUUID() != item2->getLinkedUUID() || 
 				item1->getName() != item2->getName() ||
-//				item1->getActualDescription() != item2->getActualDescription())
-				((item1->getActualDescription() != item2->getActualDescription())
-				&& (item1->getDescription() != item2->getDescription())))
+				item1->getActualDescription() != item2->getActualDescription())
 			{
 				if (item1->getLinkedUUID() != item2->getLinkedUUID())
 				{
-					LL_INFOS("Avatar") << "link id different for " << item1->getName() << " cof LinkedUUID " << item1->getLinkedUUID() << " outfit LinkedUUID " << item2->getLinkedUUID() << LL_ENDL;
+					LL_INFOS("Avatar") << "link id different " << LL_ENDL;
 				}
 				else
 				{
@@ -3276,13 +3266,11 @@ void LLAppearanceMgr::updateIsDirty()
 					{
 						LL_INFOS("Avatar") << "name different " << item1->getName() << " " << item2->getName() << LL_ENDL;
 					}
-					if ((item1->getActualDescription() != item2->getActualDescription()) || (item1->getDescription() != item2->getDescription()))
+					if (item1->getActualDescription() != item2->getActualDescription())
 					{
-						LL_INFOS("Avatar") << "actual desc different cof='" << item1->getActualDescription()
-											<< "' outfit= '" << item2->getActualDescription() 
-											<< "' desc cof= '" << item1->getDescription()
-											<< "' outfit = '" << item2->getDescription()
-											<< " names cof=" << item1->getName() << " outfit=" << item2->getName() << LL_ENDL;
+						LL_INFOS("Avatar") << "desc different " << item1->getActualDescription()
+											<< " " << item2->getActualDescription() 
+											<< " names " << item1->getName() << " " << item2->getName() << LL_ENDL;
 					}
 				}
 				mOutfitIsDirty = true;
@@ -3384,6 +3372,28 @@ void LLAppearanceMgr::onFirstFullyVisible()
 	// then copy default gestures from the library.
 	if (gAgent.isFirstLogin()) {
 		copyLibraryGestures();
+	}
+
+	// CA: Sometimes the initial outfit loading ends up with duplicates in the COF which arrive after the
+	// calls to clean up duplicates happen as part of outfit processing. If we detect this has happened
+	// we use wearBaseOutfit (ie the same as cancelling out of Edit Outfit on the base outfit) to force
+	// the sanitising code to get applied again, followed by a SyncCofVersionAndRefresh to clean up
+	// the upstream dataset
+	LLUUID cof = getCOF();
+	LLIsValidItemLink collector;
+	LLInventoryModel::cat_array_t cof_cats;
+	LLInventoryModel::item_array_t cof_items;
+	gInventory.collectDescendentsIf(cof, cof_cats, cof_items,
+								  LLInventoryModel::EXCLUDE_TRASH, collector);
+
+	LLInventoryModel::item_array_t dedup_cof_items = cof_items;
+	removeDuplicateItems(dedup_cof_items);
+	LL_INFOS() << "COF current size: " << cof_items.size() << " without duplicates: " << dedup_cof_items.size() << LL_ENDL;
+	if (cof_items.size() != dedup_cof_items.size())
+	{
+		LL_WARNS() << "Reloading base outfit to clean up COF duplicates" << LL_ENDL;
+		wearBaseOutfit();
+		syncCofVersionAndRefresh();
 	}
 }
 
@@ -3905,6 +3915,105 @@ void LLAppearanceMgr::serverAppearanceUpdateCoro(LLCoreHttpUtil::HttpCoroutineAd
 
     } while (bRetry);
 }
+
+// [SL:KB] - Patch: Appearance-Misc
+// Bad hack but if the viewer and server COF versions get out of sync all appearance requests will start to fail from that point on and require a relog to fix
+void LLAppearanceMgr::syncCofVersionAndRefresh()
+{
+	LLCoros::instance().launch("syncCofVersionAndRefreshCoro",
+		boost::bind(&LLAppearanceMgr::syncCofVersionAndRefreshCoro, this));
+}
+
+void LLAppearanceMgr::syncCofVersionAndRefreshCoro()
+{
+	// If we don't have a region, report it as an error
+	if (gAgent.getRegion() == NULL)
+	{
+		LL_WARNS("Avatar") << "Region not set, cannot request cof_version increment" << LL_ENDL;
+		return;
+	}
+
+	std::string url = gAgent.getRegion()->getCapability("IncrementCOFVersion");
+	if (url.empty())
+	{
+		LL_WARNS("Avatar") << "No cap for IncrementCofVersion." << LL_ENDL;
+		return;
+	}
+
+	LL_INFOS("Avatar") << "Requesting cof_version be incremented via capability to: " << url << LL_ENDL;
+
+	LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t httpAdapter(
+		new LLCoreHttpUtil::HttpCoroutineAdapter("syncCofVersionAndRefreshCoro", LLCore::HttpRequest::DEFAULT_POLICY_ID));
+
+	llcoro::suspend();
+	S32 retryCount(0);
+	bool bRetry;
+	do
+	{
+		// Actually send the request.
+		LL_DEBUGS("Avatar") << "Will send request COF sync" << LL_ENDL;
+
+		bRetry = false;
+		LLCore::HttpRequest::ptr_t httpRequest(new LLCore::HttpRequest());
+
+		LLSD result = httpAdapter->getAndSuspend(httpRequest, url);
+
+		LLSD httpResults = result[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS];
+		LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD(httpResults);
+
+		if (!status)
+		{
+			std::string message = (result.has("error")) ? result["error"].asString() : status.toString();
+			LL_WARNS("Avatar") << "Appearance Failure. server responded with \"" << message << "\"" << LL_ENDL;
+
+			// Wait for a 1/2 second before trying again.  Just to keep from asking too quickly.
+			if (++retryCount > BAKE_RETRY_MAX_COUNT)
+			{
+				LL_WARNS("Avatar") << "COF increment retry count exceeded!" << LL_ENDL;
+				break;
+			}
+			F32 timeout = pow(BAKE_RETRY_TIMEOUT, static_cast<float>(retryCount)) - 1.0f;
+
+			LL_WARNS("Avatar") << "COF increment retry #" << retryCount << " in " << timeout << " seconds." << LL_ENDL;
+
+			llcoro::suspendUntilTimeout(timeout);
+			bRetry = true;
+		}
+		else
+		{
+			LL_INFOS("Avatar") << "Successfully incremented agent's COF." << LL_ENDL;
+
+			result.erase(LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS);
+
+			if (!result.isMap())
+			{
+				LL_WARNS("Avatar") << "Malformed response contents" << LL_ENDL;
+				bRetry = true;
+				continue;
+			}
+
+			// Slam the server version onto the local version
+			LLViewerInventoryCategory* pCOF = gInventory.getCategory(LLAppearanceMgr::instance().getCOF());
+			if (pCOF)
+			{
+				S32 cofVersion = result["version"].asInteger();
+				LL_INFOS("Avatar") << "Slamming server COF version: was " << pCOF->getVersion() << " now " << cofVersion << LL_ENDL;
+				pCOF->setVersion(cofVersion);
+				llassert(gAgentAvatarp->mLastUpdateReceivedCOFVersion < cofVersion);
+				gAgentAvatarp->mLastUpdateReceivedCOFVersion = cofVersion;
+			}
+
+			// The viewer version tends to be ahead of the server version so make sure our new request doesn't appear to be stale
+			gAgentAvatarp->mLastUpdateRequestCOFVersion = gAgentAvatarp->mLastUpdateReceivedCOFVersion;
+
+		}
+
+	} while (bRetry);
+
+	// Try and request an update even if we fail
+	LLAppearanceMgr::instance().requestServerAppearanceUpdate();
+}
+// [/SL:KB]
 
 /*static*/
 void LLAppearanceMgr::debugAppearanceUpdateCOF(const LLSD& content)

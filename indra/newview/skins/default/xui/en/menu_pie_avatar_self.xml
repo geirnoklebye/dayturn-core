@@ -428,7 +428,14 @@
 			    <pie_slice.on_enable
 			     function="Edit.ReloadOutfit" />
 			  </pie_slice>
-        <pie_separator />
+			  <pie_slice label="Revert My Outfit"
+					layout="topleft"
+					name="Revert Outfit">
+			    <pie_slice.on_click
+			     function="RevertOutfit" />
+			    <pie_slice.on_enable
+			     function="Edit.RevertOutfit" />
+			  </pie_slice>
 
         <pie_slice label="Edit Outfit"
            name="Edit My Outfit">

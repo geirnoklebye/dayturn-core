@@ -229,6 +229,14 @@
     <menu_item_call.on_enable
      function="Edit.ReloadOutfit" />
   </menu_item_call>
+  <menu_item_call label="Revert My Outfit"
+		layout="topleft"
+		name="Revert Outfit">
+    <menu_item_call.on_click
+     function="RevertOutfit" />
+    <menu_item_call.on_enable
+     function="Edit.RevertOutfit" />
+  </menu_item_call>
     <menu_item_call label="Edit My Shape" 
     layout="topleft"
     name="Edit My Shape">
