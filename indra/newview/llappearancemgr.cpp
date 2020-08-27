@@ -3061,11 +3061,6 @@ bool sort_by_linked_uuid(const LLViewerInventoryItem* item1, const LLViewerInven
 	return item1->getLinkedUUID() < item2->getLinkedUUID();
 }
 
-//CA: One cause of erroneous dirty status is comparisons of the same object failing because one description is "" and the other
-//is "(No Description") in their ActualDescription. Another is duplicate items in the COF that haven't yet been filtered out
-//during login. We address the description problems by requiring both Description and Actual Description to fail comparison
-//for an item to be considered different
-
 void LLAppearanceMgr::updateIsDirty()
 {
 	LLUUID cof = getCOF();
@@ -3095,10 +3090,6 @@ void LLAppearanceMgr::updateIsDirty()
 		LLInventoryModel::item_array_t cof_items;
 		gInventory.collectDescendentsIf(cof, cof_cats, cof_items,
 									  LLInventoryModel::EXCLUDE_TRASH, collector);
-		// CA: this resolves duplicates within context of the comparison, but cleaning up the actual COF happens in updateAppearanceFromCOF
-		LL_INFOS("Avatar") << "cof size before duplicate removal: " << cof_items.size() << LL_ENDL;
-		removeDuplicateItems(cof_items);
-		LL_INFOS("Avatar") << "cof size after duplicate removal: " << cof_items.size() << LL_ENDL;
 
 		LLInventoryModel::cat_array_t outfit_cats;
 		LLInventoryModel::item_array_t outfit_items;
@@ -3132,16 +3123,14 @@ void LLAppearanceMgr::updateIsDirty()
 		{
 			LLViewerInventoryItem *item1 = cof_items.at(i);
 			LLViewerInventoryItem *item2 = outfit_items.at(i);
-			
+
 			if (item1->getLinkedUUID() != item2->getLinkedUUID() || 
 				item1->getName() != item2->getName() ||
-//				item1->getActualDescription() != item2->getActualDescription())
-				((item1->getActualDescription() != item2->getActualDescription())
-				&& (item1->getDescription() != item2->getDescription())))
+				item1->getActualDescription() != item2->getActualDescription())
 			{
 				if (item1->getLinkedUUID() != item2->getLinkedUUID())
 				{
-					LL_INFOS("Avatar") << "link id different for " << item1->getName() << " cof LinkedUUID " << item1->getLinkedUUID() << " outfit LinkedUUID " << item2->getLinkedUUID() << LL_ENDL;
+					LL_INFOS("Avatar") << "link id different " << LL_ENDL;
 				}
 				else
 				{
@@ -3149,13 +3138,11 @@ void LLAppearanceMgr::updateIsDirty()
 					{
 						LL_INFOS("Avatar") << "name different " << item1->getName() << " " << item2->getName() << LL_ENDL;
 					}
-					if ((item1->getActualDescription() != item2->getActualDescription()) || (item1->getDescription() != item2->getDescription()))
+					if (item1->getActualDescription() != item2->getActualDescription())
 					{
-						LL_INFOS("Avatar") << "actual desc different cof='" << item1->getActualDescription()
-											<< "' outfit= '" << item2->getActualDescription() 
-											<< "' desc cof= '" << item1->getDescription()
-											<< "' outfit = '" << item2->getDescription()
-											<< " names cof=" << item1->getName() << " outfit=" << item2->getName() << LL_ENDL;
+						LL_INFOS("Avatar") << "desc different " << item1->getActualDescription()
+											<< " " << item2->getActualDescription() 
+											<< " names " << item1->getName() << " " << item2->getName() << LL_ENDL;
 					}
 				}
 				mOutfitIsDirty = true;
