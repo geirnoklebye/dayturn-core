@@ -261,6 +261,22 @@
                 <menu_item_call.on_click
                  function="Advanced.RefreshAttachments" />
             </menu_item_call>
+					  <menu_item_call label="Reload My Outfit"
+							layout="topleft"
+							name="Reload Outfit">
+					    <menu_item_call.on_click
+					     function="ReloadOutfit" />
+					    <menu_item_call.on_enable
+					     function="Edit.ReloadOutfit" />
+					  </menu_item_call>
+					  <menu_item_call label="Revert My Outfit"
+							layout="topleft"
+							name="Revert Outfit">
+					    <menu_item_call.on_click
+					     function="RevertOutfit" />
+					    <menu_item_call.on_enable
+					     function="Edit.RevertOutfit" />
+					  </menu_item_call>
             <menu_item_separator/>
 		<menu_item_call
                     label="Reset Default Male Avatar (Character Test)"
