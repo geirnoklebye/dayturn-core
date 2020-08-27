@@ -236,11 +236,18 @@ public:
 	typedef boost::signals2::signal<void ()> attachments_changed_signal_t;
 	boost::signals2::connection setAttachmentsChangedCallback(attachments_changed_callback_t cb);
 
+// [SL:KB] - Patch: Appearance-Misc
+	void syncCofVersionAndRefresh();
+// [/SL:KB]
 
 private:
     void serverAppearanceUpdateCoro(LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t &httpAdapter);
 
-    static void debugAppearanceUpdateCOF(const LLSD& content);
+// [SL:KB] - Patch: Appearance-Misc
+	void syncCofVersionAndRefreshCoro();
+// [/SL:KB]
+
+	static void debugAppearanceUpdateCOF(const LLSD& content);
 
 	std::string		mAppearanceServiceURL;
 
