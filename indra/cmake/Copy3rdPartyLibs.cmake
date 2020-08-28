@@ -127,13 +127,23 @@ if(WINDOWS)
         MESSAGE(WARNING "New MSVC_VERSION ${MSVC_VERSION} of MSVC: adapt Copy3rdPartyLibs.cmake")
     endif (MSVC80)
 
+# harvesting the VS runtimes from the Windows folder allows for the possibility of them being out of step with the SDK being used to build
+#    if(ADDRESS_SIZE EQUAL 32)
+#        # this folder contains the 32bit DLLs.. (yes really!)
+#        set(registry_find_path "[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows;Directory]/SysWOW64")
+#    else(ADDRESS_SIZE EQUAL 32)
+#        # this folder contains the 64bit DLLs.. (yes really!)
+#        set(registry_find_path "[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows;Directory]/System32")
+#    endif(ADDRESS_SIZE EQUAL 32)
+
+# Alternative version grabbing the right files to go with the build tools
     if(ADDRESS_SIZE EQUAL 32)
-        # this folder contains the 32bit DLLs.. (yes really!)
-        set(registry_find_path "[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows;Directory]/SysWOW64")
+        # grab the right redist
+        set(registry_find_path "$ENV{VCTOOLSREDISTDIR}\\x86\\Microsoft.VC141.CRT")
     else(ADDRESS_SIZE EQUAL 32)
-        # this folder contains the 64bit DLLs.. (yes really!)
-        set(registry_find_path "[HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows;Directory]/System32")
+        set(registry_find_path "$ENV{VCTOOLSREDISTDIR}\\x64\\Microsoft.VC141.CRT")
     endif(ADDRESS_SIZE EQUAL 32)
+		MESSAGE(STATUS "Path for redist libs: ${registry_find_path}")
 
     # Having a string containing the system registry path is a start, but to
     # get CMake to actually read the registry, we must engage some other
