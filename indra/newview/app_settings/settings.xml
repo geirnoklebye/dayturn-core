@@ -92,6 +92,17 @@
         <real>0.0</real>
       </array>
     </map>
+    <key>KokuaRLVNoForceLowResSnapshots</key>
+    <map>
+      <key>Comment</key>
+    <string>If 0 high res snapshots will be forced to low res when HUDs are locked so that the HUDs are correctly plotted. Setting 1 disables this behaviour resulting in a high res snapshot with incorrectly drawn HUDs</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
     <key>KokuaRLVShowlocHidesMaturity</key>
     <map>
       <key>Comment</key>

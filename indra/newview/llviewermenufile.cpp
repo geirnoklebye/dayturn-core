@@ -698,17 +698,24 @@ class LLFileTakeSnapshotToDisk : public view_listener_t
 
 		bool render_ui = gSavedSettings.getBOOL("RenderUIInSnapshot");
 		bool render_hud = gSavedSettings.getBOOL("RenderHUDInSnapshot");
+		bool no_force_low = gSavedSettings.getBOOL("KokuaRLVNoForceLowResSnapshots");
 
-		if (gSavedSettings.getBOOL("HighResSnapshot") && (!gRRenabled || (gRRenabled && !gAgent.mRRInterface.hasLockedHuds())))
+		if (gSavedSettings.getBOOL("HighResSnapshot") && (!gRRenabled || (gRRenabled && (!gAgent.mRRInterface.hasLockedHuds() || no_force_low))))
 		{
 			//KKA-594 - In High Res snapshots there is currently a bug where hud rendering doesn't take account of this and
 			//huds end up appearing four times, once in each quadrant. The LL resolution will be to prevent the hud rendering
 			//however for RLV we want to keep the huds in place so we force a non-High Res snapshot instead. SL-11898 is the 
-			//LL fix, which will be compatible with this change 
+			//LL fix, which will be compatible with this change
+			//
+			//KKA-754 - Extension: KokuaRLVNoForceLowResScnapshots - keeps high rez with incorrectly drawn huds 
 			width *= 2;
 			height *= 2;
-			render_ui = false;
-			render_hud = false;
+			if (!gRRenabled || (gRRenabled && !gAgent.mRRInterface.hasLockedHuds()))
+			{
+				// if huds are not locked, force them and the UI to off per the LL fix
+				render_ui = false;
+				render_hud = false;
+			}
 		}
 
 		if (gViewerWindow->rawSnapshot(raw,
