@@ -2426,6 +2426,19 @@
        parameter="RestrainedLoveDebug" />
     </menu_item_check>
     <menu_item_check
+     label="Exclude =channel Debug Messages"
+     name="Exclude =channel Debug Messages">
+      <menu_item_check.on_enable
+       function="CheckControl"
+       parameter="RestrainedLoveDebug" />
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="KokuaRestrainedLoveDebugExcludesChannels" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="KokuaRestrainedLoveDebugExcludesChannels" />
+    </menu_item_check>
+    <menu_item_check
      label="Forbid offers to #RLV"
      name="Forbid offers to #RLV">
       <menu_item_check.on_check
