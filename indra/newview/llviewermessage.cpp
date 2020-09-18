@@ -3060,7 +3060,6 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 							std::string param;
 							if (gAgent.mRRInterface.parseCommand(command,behav,option,param))
 							{
-								LL_INFOS() << "Read param as " << param << LL_ENDL;
 								if((S32)atoi(param.c_str()) != 0)
 								{
 									return;
