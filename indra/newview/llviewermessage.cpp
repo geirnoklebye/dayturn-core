@@ -3050,10 +3050,25 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 					if (gAgent.mRRInterface.handleCommand(obj_id, command))
 					{
 						static LLCachedControl<bool> restrained_love_debug(gSavedSettings, "RestrainedLoveDebug");
+						static LLCachedControl<bool> kokua_restrained_love_debug_excludes_channels(gSavedSettings, "KokuaRestrainedLoveDebugExcludesChannels");
 
 						if (!restrained_love_debug)
 						{
 							return;
+						}
+
+						if (kokua_restrained_love_debug_excludes_channels)
+						{
+							std::string behav;
+							std::string option;
+							std::string param;
+							if (gAgent.mRRInterface.parseCommand(command,behav,option,param))
+							{
+								if((S32)atoi(param.c_str()) != 0)
+								{
+									return;
+								}
+							}
 						}
 						verb = " executes command: ";
 					}
