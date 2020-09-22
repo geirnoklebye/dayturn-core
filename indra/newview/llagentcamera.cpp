@@ -364,6 +364,18 @@ void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera, BOOL moveme
 	resetPanDiff();
 	resetOrbitDiff();
 	mHUDTargetZoom = 1.f;
+
+    if (LLSelectMgr::getInstance()->mAllowSelectAvatar)
+    {
+        // resetting camera also resets position overrides in debug mode 'AllowSelectAvatar'
+        LLObjectSelectionHandle selected_handle = LLSelectMgr::getInstance()->getSelection();
+        if (selected_handle->getObjectCount() == 1
+            && selected_handle->getFirstObject() != NULL
+            && selected_handle->getFirstObject()->isAvatar())
+        {
+            LLSelectMgr::getInstance()->resetObjectOverrides(selected_handle);
+        }
+    }
 // <FS:CR> FIRE-8798: Option to prevent camera reset on movement
 	}
 // </FS:CR>

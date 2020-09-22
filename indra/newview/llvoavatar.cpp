@@ -2518,6 +2518,7 @@ S32 LLVOAvatar::setTETexture(const U8 te, const LLUUID& uuid)
 }
 
 static LLTrace::BlockTimerStatHandle FTM_AVATAR_UPDATE("Avatar Update");
+static LLTrace::BlockTimerStatHandle FTM_AVATAR_UPDATE_COMPLEXITY("Avatar Update Complexity");
 static LLTrace::BlockTimerStatHandle FTM_JOINT_UPDATE("Update Joints");
 
 //------------------------------------------------------------------------
@@ -2571,7 +2572,6 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
 	}
 
     // Update should be happening max once per frame.
-	const S32 upd_freq = 4; // force update every upd_freq frames.
 	if ((mLastAnimExtents[0]==LLVector3())||
 		(mLastAnimExtents[1])==LLVector3())
 	{
@@ -2579,6 +2579,7 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
 	}
 	else
 	{
+		const S32 upd_freq = 4; // force update every upd_freq frames.
 		mNeedsExtentUpdate = ((LLDrawable::getCurrentFrame()+mID.mData[0])%upd_freq==0);
 	}
     
@@ -2663,7 +2664,40 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
 	}
 		
 	idleUpdateNameTag( mLastRootPos );
-	idleUpdateRenderComplexity();
+
+    // Complexity has stale mechanics, but updates still can be very rapid
+    // so spread avatar complexity calculations over frames to lesen load from
+    // rapid updates and to make sure all avatars are not calculated at once.
+    S32 compl_upd_freq = 20;
+    if (isControlAvatar())
+    {
+        // animeshes do not (or won't) have impostors nor change outfis,
+        // no need for high frequency
+        compl_upd_freq = 100;
+    }
+    else if (mLastRezzedStatus <= 0) //cloud or  init
+    {
+        compl_upd_freq = 60;
+    }
+    else if (isSelf())
+    {
+        compl_upd_freq = 5;
+    }
+    else if (mLastRezzedStatus == 1) //'grey', not fully loaded
+    {
+        compl_upd_freq = 40;
+    }
+    else if (isInMuteList()) //cheap, buffers value from search
+    {
+        compl_upd_freq = 100;
+    }
+
+    if ((LLFrameTimer::getFrameCount() + mID.mData[0]) % compl_upd_freq == 0)
+    {
+        LL_RECORD_BLOCK_TIME(FTM_AVATAR_UPDATE_COMPLEXITY);
+        idleUpdateRenderComplexity();
+    }
+    idleUpdateDebugInfo();
 }
 
 void LLVOAvatar::idleUpdateVoiceVisualizer(bool voice_enabled)
@@ -2992,7 +3026,10 @@ F32 LLVOAvatar::calcMorphAmount()
 void LLVOAvatar::idleUpdateLipSync(bool voice_enabled)
 {
 	// Use the Lipsync_Ooh and Lipsync_Aah morphs for lip sync
-	if ( voice_enabled && (LLVoiceClient::getInstance()->lipSyncEnabled()) && LLVoiceClient::getInstance()->getIsSpeaking( mID ) )
+    if ( voice_enabled
+        && mLastRezzedStatus > 0 // no point updating lip-sync for clouds
+        && (LLVoiceClient::getInstance()->lipSyncEnabled())
+        && LLVoiceClient::getInstance()->getIsSpeaking( mID ) )
 	{
 		F32 ooh_morph_amount = 0.0f;
 		F32 aah_morph_amount = 0.0f;
@@ -3371,7 +3408,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 			std::string title_str = title->getString();
 			LLStringFn::replace_ascii_controlchars(title_str,LL_UNKNOWN_CHAR);
 			addNameTagLine(title_str, name_tag_color, LLFontGL::NORMAL,
-				LLFontGL::getFontSansSerifSmall());
+				LLFontGL::getFontSansSerifSmall(), true);
 		}
 
 		static LLUICachedControl<bool> show_display_names("NameTagShowDisplayNames", true);
@@ -3395,7 +3432,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 			if (show_display_names)
 			{
 				addNameTagLine(av_name.getDisplayName(), name_tag_color, LLFontGL::NORMAL,
-					LLFontGL::getFontSansSerif());
+					LLFontGL::getFontSansSerif(), true);
 			}
 			// Suppress SLID display if display name matches exactly (ugh)
 			if (show_usernames && !av_name.isDisplayNameDefault())
@@ -3403,7 +3440,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				// *HACK: Desaturate the color
 				LLColor4 username_color = name_tag_color * 0.83f;
 				addNameTagLine(av_name.getUserName(), username_color, LLFontGL::NORMAL,
-					LLFontGL::getFontSansSerifSmall());
+					LLFontGL::getFontSansSerifSmall(), true);
 			}
 		}
 		else
@@ -3411,7 +3448,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 			const LLFontGL* font = LLFontGL::getFontSansSerif();
 			std::string full_name = LLCacheName::buildFullName( firstname->getString(), lastname->getString() );
 			have_name = !full_name.empty();
-			addNameTagLine(full_name, name_tag_color, LLFontGL::NORMAL, font);
+			addNameTagLine(full_name, name_tag_color, LLFontGL::NORMAL, font, true);
 		}
 
 		//
@@ -3571,7 +3608,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 	}
 }
 
-void LLVOAvatar::addNameTagLine(const std::string& line, const LLColor4& color, S32 style, const LLFontGL* font)
+void LLVOAvatar::addNameTagLine(const std::string& line, const LLColor4& color, S32 style, const LLFontGL* font, const bool use_ellipses)
 {
 	llassert(mNameText);
 	if (mVisibleChat)
@@ -3580,7 +3617,7 @@ void LLVOAvatar::addNameTagLine(const std::string& line, const LLColor4& color, 
 	}
 	else
 	{
-		mNameText->addLine(line, color, (LLFontGL::StyleFlags)style, font);
+		mNameText->addLine(line, color, (LLFontGL::StyleFlags)style, font, use_ellipses);
 	}
     mNameIsSet |= !line.empty();
 }
@@ -4147,6 +4184,11 @@ void LLVOAvatar::computeUpdatePeriod()
 		{ //background avatars are REALLY slow updating impostors
 			mUpdatePeriod = 16;
 		}
+		else if (mLastRezzedStatus <= 0)
+		{
+			// Don't update cloud avatars too often
+			mUpdatePeriod = 8;
+		}
 		else if ( shouldImpostor(3) )
 		{ //back 25% of max visible avatars are slow updating impostors
 			mUpdatePeriod = 8;
@@ -4533,15 +4575,15 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
     // Set mUpdatePeriod and visible based on distance and other criteria.
 	//--------------------------------------------------------------------
     computeUpdatePeriod();
-    visible = (LLDrawable::getCurrentFrame()+mID.mData[0])%mUpdatePeriod == 0 ? TRUE : FALSE;
+    bool needs_update = (LLDrawable::getCurrentFrame()+mID.mData[0])%mUpdatePeriod == 0;
 
 	//--------------------------------------------------------------------
-    // Early out if not visible and not self
+	// Early out if does not need update and not self
 	// don't early out for your own avatar, as we rely on your animations playing reliably
 	// for example, the "turn around" animation when entering customize avatar needs to trigger
 	// even when your avatar is offscreen
 	//--------------------------------------------------------------------
-	if (!visible && !isSelf())
+	if (!needs_update && !isSelf())
 	{
 		updateMotions(LLCharacter::HIDDEN_UPDATE);
 		return FALSE;
@@ -4590,12 +4632,17 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 	mSpeed = speed;
 
 	// update animations
-	if (mSpecialRenderMode == 1) // Animation Preview
+	if (!visible)
+	{
+		updateMotions(LLCharacter::HIDDEN_UPDATE);
+	}
+	else if (mSpecialRenderMode == 1) // Animation Preview
 	{
 		updateMotions(LLCharacter::FORCE_UPDATE);
 	}
 	else
 	{
+		// Might be better to do HIDDEN_UPDATE if cloud
 		updateMotions(LLCharacter::NORMAL_UPDATE);
 	}
 
@@ -4623,10 +4670,13 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 	// Update child joints as needed.
 	mRoot->updateWorldMatrixChildren();
 
-	// System avatar mesh vertices need to be reskinned.
-	mNeedsSkin = TRUE;
+    if (visible)
+    {
+        // System avatar mesh vertices need to be reskinned.
+        mNeedsSkin = TRUE;
+    }
 
-	return TRUE;
+	return visible;
 }
 
 //-----------------------------------------------------------------------------
@@ -10556,7 +10606,10 @@ void LLVOAvatar::idleUpdateRenderComplexity()
 
     // Render Complexity
     calculateUpdateRenderComplexity(); // Update mVisualComplexity if needed	
+}
 
+void LLVOAvatar::idleUpdateDebugInfo()
+{
 	if (gPipeline.hasRenderDebugMask(LLPipeline::RENDER_DEBUG_AVATAR_DRAW_INFO))
 	{
 		std::string info_line;
