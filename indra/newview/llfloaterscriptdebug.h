@@ -42,7 +42,8 @@ public:
     static void show(const LLUUID& object_id);
 
     /*virtual*/ void closeFloater(bool app_quitting = false);
-	static void addScriptLine(const std::string &utf8mesg, const std::string &user_name, const LLColor4& color, const LLUUID& source_id);
+  //KKA-757 add optional bool parameter to flag when a RLV command is coming through (so a different icon can be used)
+	static void addScriptLine(const std::string &utf8mesg, const std::string &user_name, const LLColor4& color, const LLUUID& source_id, bool rlvCommand=false);
 
 protected:
 	static LLFloater* addOutputWindow(const LLUUID& object_id);

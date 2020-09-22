@@ -125,7 +125,7 @@ LLFloater* LLFloaterScriptDebug::addOutputWindow(const LLUUID &object_id)
 	return floaterp;
 }
 
-void LLFloaterScriptDebug::addScriptLine(const std::string &utf8mesg, const std::string &user_name, const LLColor4& color, const LLUUID& source_id)
+void LLFloaterScriptDebug::addScriptLine(const std::string &utf8mesg, const std::string &user_name, const LLColor4& color, const LLUUID& source_id, bool rlv_cmd)
 {
 	LLViewerObject* objectp = gObjectList.findObject(source_id);
 	std::string floater_label;
@@ -134,18 +134,21 @@ void LLFloaterScriptDebug::addScriptLine(const std::string &utf8mesg, const std:
 	std::string prefix = utf8mesg.substr(0, 4);
 	std::string message = (prefix == "/me " || prefix == "/me'") ? user_name + utf8mesg.substr(3) : utf8mesg;
 
+	// KKA-757 add new bool to indicate whether we've been called to display RLV debug or traditional usage such as script runtime errors
+	std::string icon = (rlv_cmd ? "rlv_command.png" : "script_error.j2c");
+
 	if (objectp)
 	{
 		if(objectp->isHUDAttachment())
 		{
 			if (isAgentAvatarValid())
 			{
-				((LLViewerObject*)gAgentAvatarp)->setIcon(LLViewerTextureManager::getFetchedTextureFromFile("script_error.j2c", FTT_LOCAL_FILE, TRUE, LLGLTexture::BOOST_UI));
+				((LLViewerObject*)gAgentAvatarp)->setIcon(LLViewerTextureManager::getFetchedTextureFromFile(icon, FTT_LOCAL_FILE, TRUE, LLGLTexture::BOOST_UI));
 			}
 		}
 		else
 		{
-			objectp->setIcon(LLViewerTextureManager::getFetchedTextureFromFile("script_error.j2c", FTT_LOCAL_FILE, TRUE, LLGLTexture::BOOST_UI));
+			objectp->setIcon(LLViewerTextureManager::getFetchedTextureFromFile(icon, FTT_LOCAL_FILE, TRUE, LLGLTexture::BOOST_UI));
 		}
 		floater_label = llformat("%s(%.0f, %.0f, %.0f)",
 						user_name.c_str(),
