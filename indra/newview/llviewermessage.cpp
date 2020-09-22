@@ -128,6 +128,9 @@
 
 //MK
 #include "llfloaterimsession.h"
+//CA for KKA-757
+#include "llfloaterscriptdebug.h"
+//ca
 //mk
 
 #if LL_MSVC
@@ -3045,6 +3048,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 					//{
 					//	obj_id = object->getRootEdit()->getID();
 					//}
+					static LLCachedControl<bool> kokua_restrained_love_debug_to_script_debug_floater(gSavedSettings, "KokuaRestrainedLoveDebugToScriptDebugFloater");
 
 					KokuaRLVFloaterSupport::addNameToLocalCache(obj_id, from_name); // CA: Since it's known here we can run with that name until we find it's an attachment we can interrogate
 					if (gAgent.mRRInterface.handleCommand(obj_id, command))
@@ -3075,6 +3079,15 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 					else
 					{
 						verb = " fails command: ";
+					}
+					//KKA-757 Add option to divert it to the script debug/error floater instead
+					if (kokua_restrained_love_debug_to_script_debug_floater)
+					{
+						LLColor4 txt_color;
+						LLViewerChat::getChatColor(chat,txt_color);
+						// include the name in the actual text so that it appears in the all pane with the name
+						LLFloaterScriptDebug::addScriptLine(from_name + verb + mesg_str, from_name, txt_color, obj_id, true);
+						return;						
 					}
 				}
 				//				else if (gRRenabled && mesg_str.length() >= 2 && mesg_str.substr (0, 2) == "\t") // this is a remark, only visible to non-RLV users

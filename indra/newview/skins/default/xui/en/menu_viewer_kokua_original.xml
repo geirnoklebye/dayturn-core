@@ -2415,6 +2415,11 @@
        function="Rlv.ListRlvRestrictions" />
     </menu_item_call>
     <menu_item_separator/>
+    <menu
+     create_jump_keys="true"
+     label="RLV Debug Messages"
+     name="RLV Debug Messages"
+     tear_off="true">
     <menu_item_check
      label="Show Debug Messages"
      name="Show Debug Messages">
@@ -2425,6 +2430,7 @@
        function="ToggleControl"
        parameter="RestrainedLoveDebug" />
     </menu_item_check>
+    <menu_item_separator/>
     <menu_item_check
      label="Exclude =channel Debug Messages"
      name="Exclude =channel Debug Messages">
@@ -2438,6 +2444,20 @@
        function="ToggleControl"
        parameter="KokuaRestrainedLoveDebugExcludesChannels" />
     </menu_item_check>
+    <menu_item_check
+     label="Show in Script Debug floater"
+     name="Show in Script Debug floater">
+      <menu_item_check.on_enable
+       function="CheckControl"
+       parameter="RestrainedLoveDebug" />
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="KokuaRestrainedLoveDebugToScriptDebugFloater" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="KokuaRestrainedLoveDebugToScriptDebugFloater" />
+    </menu_item_check>
+    </menu>
     <menu_item_check
      label="Forbid offers to #RLV"
      name="Forbid offers to #RLV">
