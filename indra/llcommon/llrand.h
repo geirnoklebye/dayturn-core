@@ -28,11 +28,15 @@
 #define LL_LLRAND_H
 
 // CA: As of XCode 12 these includes throw a tautological-compare warning-as-error so disable the warning
+#if LL_DARWIN
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wtautological-compare"
+#endif
 #include <boost/random/lagged_fibonacci.hpp>
 #include <boost/random/mersenne_twister.hpp>
+#if LL_DARWIN
 #pragma clang diagnostic pop
+#endif
 
 /**
  * Use the boost random number generators if you want a stateful
