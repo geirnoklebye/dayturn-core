@@ -436,7 +436,7 @@ void LLProgressView::initLogos()
     texture_start_x += icon_width + default_pad + 1;
 #endif
 
-#ifdef HAVOK_TPV
+#ifdef LL_HAVOK
     // original image size is 342x113, central element is on a larger side
     // plus internal padding, so it gets slightly more height than desired 32
     icon_width = 88;
@@ -571,6 +571,7 @@ void LLProgressView::onCancelButtonClicked(void*)
 	// cancel is pressed while teleporting inside region (EXT-4911)
 	if (LLStartUp::getStartupState() < STATE_STARTED)
 	{
+		LL_INFOS() << "User requesting quit during login" << LL_ENDL;
 		LLAppViewer::instance()->requestQuit();
 	}
 	else

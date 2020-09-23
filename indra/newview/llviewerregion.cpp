@@ -300,6 +300,11 @@ void LLViewerRegionImpl::requestBaseCapabilitiesCoro(U64 regionHandle)
 
         ++mSeedCapAttempts;
 
+        if (LLApp::isExiting())
+        {
+            return;
+        }
+
         regionp = LLWorld::getInstance()->getRegionFromHandle(regionHandle);
         if (!regionp) //region was removed
         {
@@ -414,6 +419,11 @@ void LLViewerRegionImpl::requestBaseCapabilitiesCompleteCoro(U64 regionHandle)
             break;  // no retry
         }
 
+        if (LLApp::isExiting())
+        {
+            break;
+        }
+
         regionp = LLWorld::getInstance()->getRegionFromHandle(regionHandle);
         if (!regionp) //region was removed
         {
@@ -515,6 +525,11 @@ void LLViewerRegionImpl::requestSimulatorFeatureCoro(std::string url, U64 region
         {
             LL_WARNS("AppInit", "SimulatorFeatures") << "HttpStatus error retrying" << LL_ENDL;
             continue;  
+        }
+
+        if (LLApp::isExiting())
+        {
+            break;
         }
 
         // remove the http_result from the llsd
@@ -3198,7 +3213,7 @@ void LLViewerRegion::setCapabilitiesReceived(bool received)
 	{
 		mCapabilitiesReceivedSignal(getRegionID());
 
-		//LLFloaterPermsDefault::sendInitialPerms();
+		LLFloaterPermsDefault::sendInitialPerms();
 
 		// This is a single-shot signal. Forget callbacks to save resources.
 		mCapabilitiesReceivedSignal.disconnect_all_slots();
