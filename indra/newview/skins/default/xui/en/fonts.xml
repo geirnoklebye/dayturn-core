@@ -12,6 +12,7 @@
       <file>msyh.ttc</file>
       <file load_collection="true">Cambria.ttc</file>
       <file>malgun.ttf</file>
+      <file>micross.ttf</file>
       <file>segoeui.ttf</file>
       <file>seguisym.ttf</file>>
       <file>seguiemj.ttf</file>
@@ -28,6 +29,7 @@
       <file>华文细黑.ttf</file>
       <file>PingFang.ttc</file>
       <file>STIXGeneral.otf</file>
+      <file>Thonburi.ttc</file>
       <file>AppleSDGothicNeo.ttc</file>
       <file>Menlo.ttc</file>
     </os>
