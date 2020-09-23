@@ -111,7 +111,11 @@ if(WINDOWS)
         set(debug_files ${debug_files} fmodexL64.dll)
         endif(ADDRESS_SIZE EQUAL 32)
     endif(FMODEX)
-    
+ 
+    if (OPENAL)
+        list(APPEND release_files openal32.dll alut.dll)
+    endif (OPENAL)
+   
     #*******************************
     # Copy MS C runtime dlls, required for packaging.
     if (MSVC80)

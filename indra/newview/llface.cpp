@@ -153,7 +153,7 @@ void LLFace::init(LLDrawable* drawablep, LLViewerObject* objp)
 	}
 
 	mTEOffset		= -1;
-	mTextureIndex = 255;
+	mTextureIndex = FACE_DO_NOT_BATCH_TEXTURES;
 
 	setDrawable(drawablep);
 	mVObjp = objp;
@@ -184,6 +184,7 @@ void LLFace::destroy()
 		if(mTexture[i].notNull())
 		{
 			mTexture[i]->removeFace(i, this) ;
+			mTexture[i] = NULL;
 		}
 	}
 	
@@ -203,7 +204,6 @@ void LLFace::destroy()
 		{
 			mDrawPoolp->removeFace(this);
 		}
-	
 		mDrawPoolp = NULL;
 	}
 
@@ -212,7 +212,7 @@ void LLFace::destroy()
 		delete mTextureMatrix;
 		mTextureMatrix = NULL;
 
-		if (mDrawablep.notNull())
+		if (mDrawablep)
 		{
 			LLSpatialGroup* group = mDrawablep->getSpatialGroup();
 			if (group)
@@ -224,7 +224,7 @@ void LLFace::destroy()
 	}
 	
 	setDrawInfo(NULL);
-		
+
 	mDrawablep = NULL;
 	mVObjp = NULL;
 }
@@ -456,13 +456,13 @@ void LLFace::setTextureIndex(U8 index)
 	{
 		mTextureIndex = index;
 
-		if (mTextureIndex != 255)
+		if (mTextureIndex != FACE_DO_NOT_BATCH_TEXTURES)
 		{
 			mDrawablep->setState(LLDrawable::REBUILD_POSITION);
 		}
 		else
 		{
-			if (mDrawInfo && mDrawInfo->mTextureList.size() <= 1)
+			if (mDrawInfo && !mDrawInfo->mTextureList.empty())
 			{
 				LL_ERRS() << "Face with no texture index references indexed texture draw info." << LL_ENDL;
 			}
@@ -538,7 +538,7 @@ void LLFace::updateCenterAgent()
 
 void LLFace::renderSelected(LLViewerTexture *imagep, const LLColor4& color)
 {
-	if (mDrawablep->getSpatialGroup() == NULL)
+	if (mDrawablep == NULL || mDrawablep->getSpatialGroup() == NULL)
 	{
 		return;
 	}
@@ -546,7 +546,7 @@ void LLFace::renderSelected(LLViewerTexture *imagep, const LLColor4& color)
 	mDrawablep->getSpatialGroup()->rebuildGeom();
 	mDrawablep->getSpatialGroup()->rebuildMesh();
 		
-	if(mDrawablep.isNull() || mVertexBuffer.isNull())
+	if(mVertexBuffer.isNull())
 	{
 		return;
 	}
@@ -1583,7 +1583,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 			mVertexBuffer->bindForFeedback(0, LLVertexBuffer::TYPE_VERTEX, mGeomIndex, mGeomCount);
 
-			U8 index = mTextureIndex < 255 ? mTextureIndex : 0;
+			U8 index = mTextureIndex < FACE_DO_NOT_BATCH_TEXTURES ? mTextureIndex : 0;
 
 			S32 val = 0;
 			U8* vp = (U8*) &val;
@@ -2130,7 +2130,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 			LLVector4a texIdx;
 
-			S32 index = mTextureIndex < 255 ? mTextureIndex : 0;
+			S32 index = mTextureIndex < FACE_DO_NOT_BATCH_TEXTURES ? mTextureIndex : 0;
 
 			F32 val = 0.f;
 			S32* vp = (S32*) &val;
@@ -2737,7 +2737,7 @@ S32 LLFace::renderElements(const U16 *index_array) const
 
 S32 LLFace::renderIndexed()
 {
-	if(mDrawablep.isNull() || mDrawPoolp == NULL)
+	if(mDrawablep == NULL || mDrawPoolp == NULL)
 	{
 		return 0;
 	}

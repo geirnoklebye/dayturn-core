@@ -3408,7 +3408,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 			std::string title_str = title->getString();
 			LLStringFn::replace_ascii_controlchars(title_str,LL_UNKNOWN_CHAR);
 			addNameTagLine(title_str, name_tag_color, LLFontGL::NORMAL,
-				LLFontGL::getFontSansSerifSmall());
+				LLFontGL::getFontSansSerifSmall(), true);
 		}
 
 		static LLUICachedControl<bool> show_display_names("NameTagShowDisplayNames", true);
@@ -3432,7 +3432,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 			if (show_display_names)
 			{
 				addNameTagLine(av_name.getDisplayName(), name_tag_color, LLFontGL::NORMAL,
-					LLFontGL::getFontSansSerif());
+					LLFontGL::getFontSansSerif(), true);
 			}
 			// Suppress SLID display if display name matches exactly (ugh)
 			if (show_usernames && !av_name.isDisplayNameDefault())
@@ -3440,7 +3440,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				// *HACK: Desaturate the color
 				LLColor4 username_color = name_tag_color * 0.83f;
 				addNameTagLine(av_name.getUserName(), username_color, LLFontGL::NORMAL,
-					LLFontGL::getFontSansSerifSmall());
+					LLFontGL::getFontSansSerifSmall(), true);
 			}
 		}
 		else
@@ -3448,7 +3448,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 			const LLFontGL* font = LLFontGL::getFontSansSerif();
 			std::string full_name = LLCacheName::buildFullName( firstname->getString(), lastname->getString() );
 			have_name = !full_name.empty();
-			addNameTagLine(full_name, name_tag_color, LLFontGL::NORMAL, font);
+			addNameTagLine(full_name, name_tag_color, LLFontGL::NORMAL, font, true);
 		}
 
 		//
@@ -3608,7 +3608,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 	}
 }
 
-void LLVOAvatar::addNameTagLine(const std::string& line, const LLColor4& color, S32 style, const LLFontGL* font)
+void LLVOAvatar::addNameTagLine(const std::string& line, const LLColor4& color, S32 style, const LLFontGL* font, const bool use_ellipses)
 {
 	llassert(mNameText);
 	if (mVisibleChat)
@@ -3617,7 +3617,7 @@ void LLVOAvatar::addNameTagLine(const std::string& line, const LLColor4& color, 
 	}
 	else
 	{
-		mNameText->addLine(line, color, (LLFontGL::StyleFlags)style, font);
+		mNameText->addLine(line, color, (LLFontGL::StyleFlags)style, font, use_ellipses);
 	}
     mNameIsSet |= !line.empty();
 }
@@ -4575,7 +4575,7 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
     // Set mUpdatePeriod and visible based on distance and other criteria.
 	//--------------------------------------------------------------------
     computeUpdatePeriod();
-    bool needs_update = (LLDrawable::getCurrentFrame()+mID.mData[0])%mUpdatePeriod == 0 ? TRUE : FALSE;
+    bool needs_update = (LLDrawable::getCurrentFrame()+mID.mData[0])%mUpdatePeriod == 0;
 
 	//--------------------------------------------------------------------
 	// Early out if does not need update and not self
