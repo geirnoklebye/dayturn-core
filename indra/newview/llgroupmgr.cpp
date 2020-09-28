@@ -1651,7 +1651,7 @@ void LLGroupMgr::sendGroupPropertiesRequest(const LLUUID& group_id)
 	LL_DEBUGS("GrpMgr") << "LLGroupMgr::sendGroupPropertiesRequest" << LL_ENDL;
 	// This will happen when we get the reply
 	//LLGroupMgrGroupData* group_datap = createGroupData(group_id);
-
+	
     if (LLGroupMgr::getInstance()->hasPendingPropertyRequest(group_id))
     {
         LL_DEBUGS("GrpMgr") << "LLGroupMgr::sendGroupPropertiesRequest suppressed repeat for " << group_id << LL_ENDL;

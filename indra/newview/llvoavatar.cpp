@@ -2695,8 +2695,8 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
     if ((LLFrameTimer::getFrameCount() + mID.mData[0]) % compl_upd_freq == 0)
     {
         LL_RECORD_BLOCK_TIME(FTM_AVATAR_UPDATE_COMPLEXITY);
-        idleUpdateRenderComplexity();
-    }
+	idleUpdateRenderComplexity();
+}
     idleUpdateDebugInfo();
 }
 
@@ -4672,8 +4672,8 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 
     if (visible)
     {
-        // System avatar mesh vertices need to be reskinned.
-        mNeedsSkin = TRUE;
+	// System avatar mesh vertices need to be reskinned.
+	mNeedsSkin = TRUE;
     }
 
 	return visible;
