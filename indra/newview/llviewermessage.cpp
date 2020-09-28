@@ -2714,7 +2714,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 	msg->getU8("ChatData", "ChatType", type_temp);
 	chat.mChatType = (EChatType)type_temp;
 
-	//CA KKA-757 the script warning/debug floater needs a valid from_id to put stuff in the right panel
+	//CA KKA-761 the script warning/debug floater needs a valid from_id to put stuff in the right panel
 	//   Although this is a bit clumsy (zap it, then unzap it) it'll make for easier merging
 	if (gRRenabled && chat.mChatType == CHAT_TYPE_DEBUG_MSG)
 	{
