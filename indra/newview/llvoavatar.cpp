@@ -3233,7 +3233,7 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 		{
 			render_name = FALSE;
 		}
-		else if (gAgent.mRRInterface.mCamDistDrawMin < EXTREMUM && gAgentAvatarp && gAgentAvatarp != this)
+		else if (gAgent.mRRInterface.mVisionRestricted && gAgentAvatarp && gAgentAvatarp != this)
 		{
 			LLVector3 head_pos = gAgentAvatarp->mHeadp->getWorldPosition();
 

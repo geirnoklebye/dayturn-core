@@ -1313,7 +1313,7 @@ class LLAdvancedToggleWireframe : public view_listener_t
 		// then force wireframe to FALSE, as it could help cheating through.
 		if (gRRenabled)
 		{
-			if (gAgent.mRRInterface.hasLockedHuds() || gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+			if (gAgent.mRRInterface.hasLockedHuds() || gAgent.mRRInterface.mVisionRestricted)
 			{
 				gUseWireframe = FALSE;
 			}

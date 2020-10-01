@@ -543,7 +543,7 @@ void LLHUDEffectLookAt::render()
 {
 
 //MK
-		if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+		if (gRRenabled && gAgent.mRRInterface.mVisionRestricted)
 		{
 			return;
 		}
@@ -665,7 +665,7 @@ void LLHUDEffectLookAt::update()
 		}
 	}
 //MK
-		if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+		if (gRRenabled && gAgent.mRRInterface.mVisionRestricted)
 		{
 			return;
 		}

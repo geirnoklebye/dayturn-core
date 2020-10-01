@@ -445,7 +445,7 @@ void LLHUDText::updateVisibility()
 
 
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMin < EXTREMUM)
+	if (gRRenabled && gAgent.mRRInterface.mVisionRestricted)
 	{
 		mLastDistance = (mPositionAgent - (isAgentAvatarValid() ? gAgentAvatarp->mHeadp->getWorldPosition() : gAgent.getPositionAgent())).magVec();
 	}
