@@ -7023,10 +7023,12 @@ void handle_look_at_selection(const LLSD& param)
 
 void handle_zoom_to_object(LLUUID object_id)
 {
+//MK
 	if (gRRenabled && gAgent.mRRInterface.contains("camunlock"))
 	{
 		return;
 	}
+//mk
 
 	const F32 PADDING_FACTOR = 2.f;
 
