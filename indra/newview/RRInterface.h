@@ -30,8 +30,8 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2092700"
-#define RR_VERSION "2.09.27.00"
+#define RR_VERSION_NUM "2092800"
+#define RR_VERSION "2.09.28.00"
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
@@ -258,7 +258,7 @@ public:
 
 	BOOL checkCameraLimits (BOOL and_correct = FALSE);
 	BOOL updateCameraLimits ();
-	void drawRenderLimit ();
+	void drawRenderLimit (BOOL force_opaque = FALSE);
 	void drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 alpha);
 
 	void updateLimits();
