@@ -73,7 +73,7 @@ if (LINUX)
       ${LLMATH_LIBRARIES}
       ${LLRENDER_LIBRARIES}
       ${LLVFS_LIBRARIES}
-      ${LLWINDOW_LIBRARIES}
+# not needed, provokes CMP0038 self-linking CMAKE warnings      ${LLWINDOW_LIBRARIES}
       ${LLXML_LIBRARIES}
       ${UI_LIBRARIES}     # for GTK
       ${SDL_LIBRARY}
