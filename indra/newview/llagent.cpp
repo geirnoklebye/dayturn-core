@@ -400,6 +400,15 @@ bool LLAgent::isActionAllowed(const LLSD& sdname)
 			retval = FALSE;
 		}
 	}
+	//KKA-765 add the enable/disable code
+	else if (param == "setenv")
+	{
+		retval = TRUE;
+		if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+		{
+			retval = FALSE;
+		}
+	}
 //ca
 
 	return retval;
