@@ -2101,9 +2101,8 @@ void LLModelPreview::updateStatusMessages()
     }
 	// <FS:Beq> Improve the error checking the TO DO here is no longer applicable but not an FS comment so edited to stop it being picked up
 	//if (!mModelNoErrors || mHasDegenerate)
-	if (!gSavedSettings.getBOOL("FSIgnoreClientsideMeshValidation") && (!mModelNoErrors || (has_physics_error > PhysicsError::NOHAVOK))) // block for all cases of phsyics error except NOHAVOK
+    if (!gSavedSettings.getBOOL("FSIgnoreClientsideMeshValidation") && (!mModelNoErrors || (has_physics_error > PhysicsError::NOHAVOK))) // block for all cases of phsyics error except NOHAVOK
 	// </FS:Beq>
-    if (!mModelNoErrors || mHasDegenerate)
     {
         mFMP->childDisable("ok_btn");
         mFMP->childDisable("calculate_btn");
