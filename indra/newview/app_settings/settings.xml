@@ -17691,6 +17691,17 @@
       <key>Value</key>
       <real>300.0</real>
     </map>
+    <key>FSIgnoreClientsideMeshValidation</key>
+    <map>
+      <key>Comment</key>
+      <string>Treat the errors from Clientside mesh validation as warnings and do not block upload. This setting allows you to fall back on server side checks and per Grid quality control levels.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
   <key>LastJ2CVersion</key>
   <map>
     <key>Comment</key>
