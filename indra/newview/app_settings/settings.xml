@@ -8979,7 +8979,7 @@
     <integer>0</integer>
   </map>
   <key>MigrateCacheDirectory</key>
-    <map>
+  <map>
       <key>Comment</key>
       <string>Check for old version of disk cache to migrate to current location</string>
       <key>Persist</key>
@@ -10372,7 +10372,6 @@
       <key>Value</key>
 	  <integer>13</integer>
     </map>
-
   <key>PreviewAmbientColor</key>
   <map>
     <key>Comment</key>
@@ -10389,8 +10388,6 @@
       <real>1.0</real>
     </array>
   </map>
-
-
   <key>PreviewDiffuse0</key>
   <map>
     <key>Comment</key>
@@ -21224,4 +21221,5 @@
     </map>
   </map>
 </llsd>
+
 
