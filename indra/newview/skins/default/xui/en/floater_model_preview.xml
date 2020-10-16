@@ -12,6 +12,7 @@
  title="UPLOAD MODEL"
  help_topic="upload_model"
  legacy_header_height="25">
+ <string name="no_havok">mesh upload with physics</string>
 
   <string name="status_idle"></string>
   <string name="status_parse_error">Error: Dae parsing issue - see log for details.</string>
