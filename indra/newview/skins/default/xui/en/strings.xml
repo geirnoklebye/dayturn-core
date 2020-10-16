@@ -4458,5 +4458,8 @@ and report the problem.
   <string name="Kokua_IMBlock_Both">Incoming and outgoing messages will be replaced by RLV default text</string>
   <string name="Kokua_IMBlock_Send">Outgoing messages will be replaced by RLV default text</string>
   <string name="Kokua_IMBlock_Rcv">Incoming messages will be replaced by RLV default text</string>
-  
+  <string name="InvFolder Settings">Settings</string>
+  <string name="sky">Sky</string>
+  <string name="water">Water</string>
+  <string name="day">Day</string>  
 </strings>

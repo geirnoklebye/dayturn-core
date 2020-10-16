@@ -138,6 +138,8 @@ public:
 		U8* buffer,
 		U32 length,
 		LLXMLNodePtr& node, 
+		//CA: pass down the filename too for a more informative error message
+		const std::string& filename,
 		LLXMLNode* defaults);
 	static bool parseStream(
 		std::istream& str,

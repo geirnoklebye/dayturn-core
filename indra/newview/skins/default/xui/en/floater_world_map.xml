@@ -535,7 +535,6 @@
       Location:
       </text>
       <spinner
-        control_name="Teleport_Coordinate_X"
         decimal_digits="0"
         follows="right|bottom"
         height="23"
@@ -551,7 +550,6 @@
           function="WMap.Coordinates" />
       </spinner>
       <spinner
-        control_name="Teleport_Coordinate_Y"
         decimal_digits="0"
         follows="right|bottom"
         height="23"
@@ -567,7 +565,6 @@
           function="WMap.Coordinates" />
       </spinner>
       <spinner
-        control_name="Teleport_Coordinate_Z"
         decimal_digits="0"
         follows="right|bottom"
         height="23"

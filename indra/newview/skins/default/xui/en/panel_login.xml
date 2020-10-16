@@ -155,7 +155,6 @@
     control_name="RememberPassword"
     follows="left|top"
     font="SansSerifMedium"
-    text_color="EmphasisColor"
     height="16"
     left="330"
     bottom_delta="0"
