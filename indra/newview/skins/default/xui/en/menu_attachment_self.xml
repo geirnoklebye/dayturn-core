@@ -195,6 +195,7 @@ name="Edit Outfit">
      function="ReloadOutfit" />
     <menu_item_call.on_enable
      function="Edit.ReloadOutfit" />
+  </menu_item_call>
   <menu_item_call label="Revert My Outfit"
 		layout="topleft"
 		name="Revert Outfit">
