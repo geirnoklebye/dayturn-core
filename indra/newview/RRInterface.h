@@ -30,8 +30,8 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2092801"
-#define RR_VERSION "2.09.28.01"
+#define RR_VERSION_NUM "2092802"
+#define RR_VERSION "2.09.28.02"
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
