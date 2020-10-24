@@ -85,7 +85,7 @@ public:
 
 	LLCharacter	*mCharacter;
 
-	BOOL				mFlipFeet;
+	bool				mFlipFeet;
 
 	LLPointer<LLJointState>	mPelvisState;
 
@@ -109,7 +109,7 @@ public:
 
 	LLQuaternion		mLastGoodPelvisRotation;
 	LLVector3			mLastGoodPosition;
-	BOOL				mTrackAnkles;
+	bool				mTrackAnkles;
 
 	S32					mFrameNum;
 } LL_ALIGN_POSTFIX(16);

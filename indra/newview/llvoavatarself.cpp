@@ -173,7 +173,7 @@ LLVOAvatarSelf::LLVOAvatarSelf(const LLUUID& id,
     mInitialMetric(true),
     mMetricSequence(0)
 {
-	mMotionController.mIsSelf = TRUE;
+	mMotionController.mIsSelf = true;
 
 	LL_DEBUGS() << "Marking avatar as self " << id << LL_ENDL;
 }
