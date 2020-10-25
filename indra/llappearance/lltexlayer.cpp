@@ -741,7 +741,7 @@ BOOL LLTexLayerInfo::createVisualParams(LLAvatarAppearance *appearance)
 	{
 		LLTexLayerParamColorInfo * color_info = *color_info_iter;
 		LLTexLayerParamColor* param_color = new LLTexLayerParamColor(appearance);
-		if (!param_color->setInfo(color_info, TRUE))
+		if (!param_color->setInfo(color_info, true))
 		{
 			LL_WARNS() << "NULL TexLayer Color Param could not be added to visual param list. Deleting." << LL_ENDL;
 			delete param_color;
@@ -755,7 +755,7 @@ BOOL LLTexLayerInfo::createVisualParams(LLAvatarAppearance *appearance)
 	{
 		LLTexLayerParamAlphaInfo * alpha_info = *alpha_info_iter;
 		LLTexLayerParamAlpha* param_alpha = new LLTexLayerParamAlpha(appearance);
-		if (!param_alpha->setInfo(alpha_info, TRUE))
+		if (!param_alpha->setInfo(alpha_info, true))
 		{
 			LL_WARNS() << "NULL TexLayer Alpha Param could not be added to visual param list. Deleting." << LL_ENDL;
 			delete param_alpha;
@@ -804,7 +804,7 @@ bool LLTexLayerInterface::setInfo(const LLTexLayerInfo *info, LLWearable* wearab
 		if (!wearable)
 			{
 				param_color = new LLTexLayerParamColor(this);
-				if (!param_color->setInfo(*iter, TRUE))
+				if (!param_color->setInfo(*iter, true))
 				{
 					mInfo = NULL;
 					return false;
@@ -831,7 +831,7 @@ bool LLTexLayerInterface::setInfo(const LLTexLayerInfo *info, LLWearable* wearab
 			if (!wearable)
 			{
 				param_alpha = new LLTexLayerParamAlpha( this );
-				if (!param_alpha->setInfo(*iter, TRUE))
+				if (!param_alpha->setInfo(*iter, true))
 				{
 					mInfo = NULL;
 					return false;
