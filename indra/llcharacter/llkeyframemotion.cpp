@@ -558,7 +558,7 @@ LLMotion::LLMotionInitStatus LLKeyframeMotion::onInitialize(LLCharacter *charact
 	U8 *anim_data;
 	S32 anim_file_size;
 
-	BOOL success = FALSE;
+	bool success = false;
 	LLFileSystem* anim_file = new LLFileSystem(mID, LLAssetType::AT_ANIMATION);
 	if (!anim_file || !anim_file->getSize())
 	{
@@ -1622,7 +1622,7 @@ bool LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id, boo
 		// scan position curve keys
 		//---------------------------------------------------------------------
 		PositionCurve *pCurve = &joint_motion->mPositionCurve;
-		BOOL is_pelvis = joint_motion->mJointName == "mPelvis";
+		bool is_pelvis = joint_motion->mJointName == "mPelvis";
 		for (S32 k = 0; k < joint_motion->mPositionCurve.mNumKeys; k++)
 		{
 			U16 time_short;
@@ -1861,7 +1861,7 @@ bool LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id, boo
 
 			if (!constraintp->mTargetConstraintDir.isExactlyZero())
 			{
-				constraintp->mUseTargetOffset = TRUE;
+				constraintp->mUseTargetOffset = true;
 	//			constraintp->mTargetConstraintDir *= constraintp->mSourceConstraintOffset.magVec();
 			}
 

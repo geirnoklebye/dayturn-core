@@ -207,29 +207,29 @@ LLVisualParam::~LLVisualParam()
 // setInfo()
 //-----------------------------------------------------------------------------
 
-BOOL LLVisualParam::setInfo(LLVisualParamInfo *info)
+bool LLVisualParam::setInfo(LLVisualParamInfo *info)
 {
 	llassert(mInfo == NULL);
 	if (info->mID < 0)
-		return FALSE;
+		return false;
 	mInfo = info;
 	mID = info->mID;
 	setWeight(getDefaultWeight(), FALSE );
-	return TRUE;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
 // parseData()
 //-----------------------------------------------------------------------------
-BOOL LLVisualParam::parseData(LLXmlTreeNode *node)
+bool LLVisualParam::parseData(LLXmlTreeNode *node)
 {
 	LLVisualParamInfo *info = new LLVisualParamInfo;
 
 	info->parseXml(node);
 	if (!setInfo(info))
-		return FALSE;
+		return false;
 	
-	return TRUE;
+	return true;
 }
 */
 

@@ -558,8 +558,7 @@ void LLMotionController::updateIdleActiveMotions()
 //-----------------------------------------------------------------------------
 void LLMotionController::updateMotionsByType(LLMotion::LLMotionBlendType anim_type)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
-	BOOL update_result = TRUE;
+	bool update_result = true;
 	U8 last_joint_signature[LL_CHARACTER_MAX_ANIMATED_JOINTS];
 
 	memset(&last_joint_signature, 0, sizeof(U8) * LL_CHARACTER_MAX_ANIMATED_JOINTS);
@@ -575,11 +574,11 @@ void LLMotionController::updateMotionsByType(LLMotion::LLMotionBlendType anim_ty
 			continue;
 		}
 
-		BOOL update_motion = FALSE;
+		bool update_motion = false;
 
 		if (motionp->getPose()->getWeight() < 1.f)
 		{
-			update_motion = TRUE;
+			update_motion = true;
 		}
 		else
 		{
@@ -591,7 +590,7 @@ void LLMotionController::updateMotionsByType(LLMotion::LLMotionBlendType anim_ty
 				if ((*current_signature | test_signature) > (*current_signature))
 				{
 					*current_signature |= test_signature;
-					update_motion = TRUE;
+					update_motion = true;
 				}
 
 				*((U32*)&last_joint_signature[i * 4]) = *(U32*)&(mJointSignature[1][i * 4]);
@@ -601,7 +600,7 @@ void LLMotionController::updateMotionsByType(LLMotion::LLMotionBlendType anim_ty
 				if ((*current_signature | test_signature) > (*current_signature))
 				{
 					*current_signature |= test_signature;
-					update_motion = TRUE;
+					update_motion = true;
 				}
 			}
 		}
@@ -822,7 +821,7 @@ void LLMotionController::updateMotions(bool force_update)
     // The use_quantum optimization or possibly the associated code in setTimeStamp()
     // does not work as implemented.
     // Currently setting mTimeStep to nonzero is disabled elsewhere.
-	BOOL use_quantum = (mTimeStep != 0.f);
+	bool use_quantum = (mTimeStep != 0.f);
 
 	// Always update mPrevTimerElapsed
 	F32 cur_time = mTimer.getElapsedTimeF32();
@@ -895,7 +894,7 @@ void LLMotionController::updateMotions(bool force_update)
 		
 		if (use_quantum)
 		{
-			mPoseBlender.blendAndCache(TRUE);
+			mPoseBlender.blendAndCache(true);
 		}
 		else
 		{

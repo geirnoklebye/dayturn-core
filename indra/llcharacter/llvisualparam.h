@@ -113,11 +113,11 @@ public:
 	// (They can not be virtual because they use specific derived Info classes)
 	LLVisualParamInfo*		getInfo() const { return mInfo; }
 	//   This sets mInfo and calls initialization functions
-	BOOL					setInfo(LLVisualParamInfo *info);
+	bool					setInfo(LLVisualParamInfo *info);
 
 	// Virtual functions
 	//  Pure virtuals
-	//virtual BOOL			parseData( LLXmlTreeNode *node ) = 0;
+	//virtual bool			parseData( LLXmlTreeNode *node ) = 0;
 	virtual void			apply( ESex avatar_sex ) = 0;
 	//  Default functions
 	virtual void			setWeight(F32 weight);
@@ -152,7 +152,7 @@ public:
 	F32						getLastWeight() const	{ return mLastWeight; }
 	void					setLastWeight(F32 val) { mLastWeight = val; }
 	bool					isAnimating() const	{ return mIsAnimating; }
-	BOOL					isTweakable() const { return (getGroup() == VISUAL_PARAM_GROUP_TWEAKABLE)  || (getGroup() == VISUAL_PARAM_GROUP_TWEAKABLE_NO_TRANSMIT); }
+	bool					isTweakable() const { return (getGroup() == VISUAL_PARAM_GROUP_TWEAKABLE)  || (getGroup() == VISUAL_PARAM_GROUP_TWEAKABLE_NO_TRANSMIT); }
 
 	LLVisualParam*			getNextParam()		{ return mNext; }
 	void					setNextParam( LLVisualParam *next );
