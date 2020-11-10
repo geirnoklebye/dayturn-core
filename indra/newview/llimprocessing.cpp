@@ -201,6 +201,7 @@ void inventory_offer_handler(LLOfferInfo* info)
     if (gSavedSettings.getBOOL("AutoAcceptNewInventory")
         && (info->mType == LLAssetType::AT_NOTECARD
         || info->mType == LLAssetType::AT_LANDMARK
+		|| gSavedSettings.getBOOL("KokuaAutoAcceptAnyNewInventory") // RLV version will need protection against auto-accepting to RLV
         || info->mType == LLAssetType::AT_TEXTURE))
     {
         // For certain types, just accept the items into the inventory,

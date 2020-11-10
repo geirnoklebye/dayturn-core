@@ -104,6 +104,16 @@
      top_pad="3"
      width="350" />
     <check_box
+     control_name="KokuaAutoAcceptAnyNewInventory"
+     enabled_control="AutoAcceptNewInventory"
+     height="16"
+     label="Accept all types (in addition to notecards, landmarks and textures)"
+     layout="topleft"
+     left="40"
+     name="kokua_auto_accept_any_new_inventory"
+     top_pad="3"
+     width="350" />
+    <check_box
      control_name="ShowInInventory"
      height="16"
      layout="topleft"

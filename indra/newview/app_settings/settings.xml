@@ -476,7 +476,18 @@
       <string>Boolean</string>
       <key>Value</key>
       <real>0</real>
-    </map>   
+    </map>
+    <key>KokuaAutoAcceptAnyNewInventory</key>   
+    <map>
+    	<key>Comment</key>
+    	<string>When enabled all types of inventory are automatically accepted, otherwise only applies to notecards, landmarks and textures</string>
+    	<key>Persist</key>
+    	<integer>1</integer>
+    	<key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>    
   <key>PieMenuPopupFontEffect</key>
   <map>
     <key>Comment</key>
