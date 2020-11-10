@@ -62,6 +62,7 @@
 
 #include <boost/regex.hpp>
 #include "boost/lexical_cast.hpp"
+#include "fscommon.h"
 #include "fskeywords.h"
 #if LL_MSVC
 // disable boost::lexical_cast warning
@@ -325,6 +326,65 @@ void inventory_offer_handler(LLOfferInfo* info)
             p.payload = payload;
             LLPostponedNotification::add<LLPostponedOfferNotification>(p, info->mFromID, false);
         }
+        // <FS:Ansariel> FIRE-19540: Log auto-accepted inventory to nearby chat
+        else if (gSavedSettings.getBOOL("FSLogAutoAcceptInventoryToChat"))
+        {
+            std::string message_type;
+            LLStringUtil::format_map_t chat_args;
+            
+            chat_args["OBJECT_TYPE"] = (!typestr.empty() ? LLTrans::getString(typestr) : "");
+            chat_args["DESC"] = msg;
+
+            if (info->mFromObject)
+            {
+                std::string str_pos;
+                std::string::size_type idx_start = info->mDesc.rfind(" ( http://");
+                std::string::size_type idx_end = info->mDesc.find(" )", idx_start);
+                if (idx_start != std::string::npos && idx_end != std::string::npos)
+                {
+                    LLSLURL url_pos(info->mDesc.substr(idx_start + 3, idx_end - (idx_start + 3)));
+                    str_pos = "&slurl=" + LLURI::escape(url_pos.getLocationString());
+                }
+
+                chat_args["OBJECT_NAME"] = "[" + LLSLURL("objectim", info->mObjectID, "").getSLURLString() + "?name=" + LLURI::escape(info->mFromName) + "&owner=" + info->mFromID.asString() + (info->mFromGroup ? "&groupowned=true" : "") + str_pos + " " + info->mFromName + "]";
+                message_type = "InvOfferAutoAcceptObject";
+            }
+            else
+            {
+				// RLVa does an anonymising check here - need to recode it for RLV in MKRLV branch
+                std::string name_slurl = LLSLURL("agent", info->mFromID, "inspect").getSLURLString();
+
+                chat_args["USER_NAME"] = name_slurl;
+                message_type = "InvOfferAutoAcceptUser";
+            }
+
+            report_to_nearby_chat(LLTrans::getString(message_type, chat_args));
+        }
+        // </FS:Ansariel>
+
+        // <FS:Ansariel> Show offered inventory also if auto-accept is enabled (FIRE-5101)
+        if (bAutoAccept && gSavedSettings.getBOOL("ShowNewInventory"))
+        {
+            LLViewerInventoryCategory* catp = NULL;
+            catp = (LLViewerInventoryCategory*)gInventory.getCategory(info->mObjectID);
+            LLViewerInventoryItem* itemp = NULL;
+            if(!catp)
+            {
+                itemp = (LLViewerInventoryItem*)gInventory.getItem(info->mObjectID);
+            }
+
+            LLOpenAgentOffer* open_agent_offer = new LLOpenAgentOffer(info->mObjectID, info->mFromName, false);
+            open_agent_offer->startFetch();
+            if(catp || (itemp && itemp->isFinished()))
+            {
+                open_agent_offer->done();
+            }
+            else
+            {
+                gInventory.addObserver(open_agent_offer);
+            }
+        }
+        // </FS:Ansariel> Show offered inventory also if auto-accept is enabled (FIRE-5101)
     }
 
     LLFirstUse::newInventory();
