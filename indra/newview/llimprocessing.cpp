@@ -351,8 +351,11 @@ void inventory_offer_handler(LLOfferInfo* info)
             }
             else
             {
-				// RLVa does an anonymising check here - need to recode it for RLV in MKRLV branch
                 std::string name_slurl = LLSLURL("agent", info->mFromID, "inspect").getSLURLString();
+				if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+				{
+					name_slurl = gAgent.mRRInterface.getCensoredMessage(info->mFromName);
+				}
 
                 chat_args["USER_NAME"] = name_slurl;
                 message_type = "InvOfferAutoAcceptUser";
