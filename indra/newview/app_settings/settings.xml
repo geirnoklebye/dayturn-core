@@ -20231,6 +20231,17 @@
     <key>Value</key>
     <integer>1</integer>
   </map>    
+    <key>FSLogAutoAcceptInventoryToChat</key>
+    <map>
+      <key>Comment</key>
+      <string>If enabled, auto-accepted inventory items will be logged to nearby chat.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
     <key>FSExperimentalLostAttachmentsFix</key>
     <map>
       <key>Comment</key>

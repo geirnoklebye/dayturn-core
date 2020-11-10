@@ -2877,6 +2877,8 @@ If you continue to receive this message, please contact Second Life support for 
 	<string name="InvOfferOwnedByUnknownUser">owned by an unknown user</string>
 	<string name="InvOfferGaveYou">gave you</string>
 	<string name="InvOfferDecline">You decline [DESC] from &lt;nolink&gt;[NAME]&lt;/nolink&gt;.</string>
+	<string name="InvOfferAutoAcceptObject">An object named [OBJECT_NAME] gave you this [OBJECT_TYPE]: [DESC]</string>
+	<string name="InvOfferAutoAcceptUser">[USER_NAME] gave you this [OBJECT_TYPE]: [DESC]</string>
 
 	<!-- group money -->
 	<string name="GroupMoneyTotal">Total</string>
