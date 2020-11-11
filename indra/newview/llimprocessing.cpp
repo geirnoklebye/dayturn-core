@@ -207,6 +207,16 @@ void inventory_offer_handler(LLOfferInfo* info)
         // For certain types, just accept the items into the inventory,
         // and possibly open them on receipt depending upon "ShowNewInventory".
         bAutoAccept = true;
+
+		// Do not auto accept into #RLV to avoid possible abuse - #RLV gives should always raise a prompt		
+		std::string folder_name(info->mDesc);
+		if (gRRenabled && !gSavedSettings.getBOOL("RestrainedLoveForbidGiveToRLV") &&
+			info->mType == LLAssetType::AT_CATEGORY &&
+			gAgent.mRRInterface.getRlvShare() &&
+			(folder_name.find(RR_RLV_REDIR_FOLDER_PREFIX) == 0 || folder_name.find(RR_RLV_REDIR_FOLDER_PREFIX) == 1))
+		{
+			bAutoAccept = false;
+		}
     }
 
     // Strip any SLURL from the message display. (DEV-2754)
