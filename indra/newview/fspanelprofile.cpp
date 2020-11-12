@@ -68,6 +68,7 @@
 #include "llviewerparcelmgr.h"
 #include "llviewerregion.h"
 #include "llworldmap.h"
+#include "llviewermenu.h"
 
 static LLPanelInjector<FSPanelProfile> t_panel_profile("panel_profile_secondlife");
 static LLPanelInjector<FSPanelProfileWeb> t_panel_web("panel_profile_web");

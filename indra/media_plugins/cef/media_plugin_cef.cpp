@@ -104,7 +104,9 @@ private:
 	bool mCanCut;
 	bool mCanCopy;
 	bool mCanPaste;
+    std::string mRootCachePath;
 	std::string mCachePath;
+	std::string mContextCachePath;
 
 #ifdef LL_LINUX
 	std::string mCookiePath;
@@ -482,7 +484,6 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			}
 			else if (message_name == "cleanup")
 			{
-				mVolumeCatcher.setVolume(0); // Hack: masks CEF exit issues
 				mCEFLib->requestExit();
 			}
 			else if (message_name == "force_exit")
@@ -554,7 +555,9 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				settings.accept_language_list = mHostLanguage;
 				settings.background_color = 0xffffffff;
 				settings.cache_enabled = true;
+				settings.root_cache_path = mRootCachePath;
 				settings.cache_path = mCachePath;
+				settings.context_cache_path = mContextCachePath;
 #ifdef LL_LINUX
 				settings.cookie_store_path = mCookiePath;
 #endif
@@ -613,9 +616,25 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			else if (message_name == "set_user_data_path")
 			{
 				std::string user_data_path_cache = message_in.getValue("cache_path");
-				std::string user_data_path_cookies = message_in.getValue("cookies_path");
+				std::string subfolder = message_in.getValue("username");
 
-				mCachePath = user_data_path_cache + "cef_cache";
+				mRootCachePath = user_data_path_cache + "cef_cache";
+                if (!subfolder.empty())
+                {
+                    std::string delim;
+#if LL_WINDOWS
+                    // media plugin doesn't have access to gDirUtilp
+                    delim = "\\";
+#else
+                    delim = "/";
+#endif
+                    mCachePath = mRootCachePath + delim + subfolder;
+                }
+                else
+                {
+                    mCachePath = mRootCachePath;
+                }
+                mContextCachePath = ""; // disabled by ""
 #ifdef LL_LINUX
 				mCookiePath = user_data_path_cookies + "cef_cookies";
 #endif

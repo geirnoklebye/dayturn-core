@@ -53,26 +53,31 @@ bool FSExportPermsCheck::canExportNode(LLSelectNode* node, bool dae)
 		F32 max_object_size = DEFAULT_MAX_PRIM_SCALE;
 		LLVector3 vec = object->getScale();
 		if (vec.mV[VX] > max_object_size || vec.mV[VY] > max_object_size || vec.mV[VZ] > max_object_size)
+		{
 			exportable = (creator == LLUUID("7ffd02d0-12f4-48b4-9640-695708fd4ae4") // Zwagoth Klaar
-						  || creator == gAgentID);
+				|| creator == gAgentID);
+		}
 	}
+
 	// We've got perms on the object itself, let's check for sculptmaps and meshes!
 	if (exportable)
 	{
-		LLVOVolume *volobjp = NULL;
+		exportable = false;
+		LLVOVolume* volobjp = NULL;
+
 		if (object->getPCode() == LL_PCODE_VOLUME)
 		{
 			volobjp = (LLVOVolume *)object;
 		}
+
 		if (volobjp && volobjp->isSculpted())
 		{
-			const LLSculptParams *sculpt_params = (const LLSculptParams *)object->getParameterEntry(LLNetworkData::PARAMS_SCULPT);
-			if(volobjp->isMesh())
+			const LLSculptParams* sculpt_params = (const LLSculptParams *)object->getParameterEntry(LLNetworkData::PARAMS_SCULPT);
+			if (volobjp->isMesh())
 			{
 				if (dae)
 				{
-					LLSD mesh_header = gMeshRepo.getMeshHeader(sculpt_params->getSculptTexture());
-					exportable = mesh_header["creator"].asUUID() == gAgentID;
+					exportable = gMeshRepo.getCreatorFromHeader(sculpt_params->getSculptTexture()) == gAgentID;
 				}
 				else
 				{
@@ -88,6 +93,7 @@ bool FSExportPermsCheck::canExportNode(LLSelectNode* node, bool dae)
 				{
 					exportable = (LLUUID(imagep->mComment["a"]) == gAgentID);
 				}
+
 				if (!exportable)
 				{
 					LLUUID asset_id = sculpt_params->getSculptTexture();
@@ -98,21 +104,26 @@ bool FSExportPermsCheck::canExportNode(LLSelectNode* node, bool dae)
 													LLInventoryModel::INCLUDE_TRASH,
 													asset_id_matches);
 						
-					for (S32 i = 0; i < items.size(); ++i)
+					for (S32 i = 0; i < items.size() && !exportable; ++i)
 					{
 						const LLPermissions perms = items[i]->getPermissions();
 						exportable = perms.getCreator() == gAgentID;
 					}
 				}
+
 				if (!exportable)
+				{
 					LL_INFOS("export") << "Sculpt map has failed permissions check." << LL_ENDL;
+				}
 			}
 		}
 		else
 		{
+			// No sculpt or mesh
 			exportable = true;
 		}
 	}
+
 	return exportable;
 }
 
