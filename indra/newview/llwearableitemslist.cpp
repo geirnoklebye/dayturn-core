@@ -622,41 +622,7 @@ bool LLWearableItemCreationDateComparator::doCompare(const LLPanelInventoryListI
 
 	return date1 > date2;
 }
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
 
-// [SL:KB] - Patch: Inventory-AttachmentEdit - Checked: 2010-09-04 (Catznip-2.2.0a) | Added: Catznip-2.1.2a
-// TODO-Catznip: [Catznip-2.1.3] This function is duplicated in llpanelwearing.cpp so find a better place where it can be shared instead
-static void edit_item(const LLUUID& idItem)
-{
-	const LLViewerInventoryItem* pItem = gInventory.getItem(idItem);
-	if (!pItem)
-		return;
-
-	switch (pItem->getType())
-	{
-		case LLAssetType::AT_BODYPART:
-		case LLAssetType::AT_CLOTHING:
-			LLAgentWearables::editWearable(idItem);
-			break;
-		case LLAssetType::AT_OBJECT:
-			handle_attachment_edit(idItem);
-			break;
-		default:
-			break;
-	}
-}
-// [/SL:KB]
-
-static void touch_item(const LLUUID &id)
-{
-	const LLViewerInventoryItem *item = gInventory.getItem(id);
-
-	if (item && item->getType() == LLAssetType::AT_OBJECT) {
-		handle_attachment_touch(id);
-	}
-}
 
 static LLWearableItemTypeNameComparator WEARABLE_TYPE_NAME_COMPARATOR;
 static const LLWearableItemTypeNameComparator WEARABLE_TYPE_LAYER_COMPARATOR;

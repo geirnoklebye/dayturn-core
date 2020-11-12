@@ -53,39 +53,6 @@ static void edit_outfit()
 	LLFloaterSidePanelContainer::showPanel("appearance", LLSD().with("type", "edit_outfit"));
 }
 
-// [SL:KB] - Patch: Inventory-AttachmentEdit - Checked: 2010-09-04 (Catznip-2.2.0a) | Added: Catznip-2.1.2a
-static void edit_item(const LLUUID& idItem)
-{
-	const LLViewerInventoryItem* pItem = gInventory.getItem(idItem);
-	if (!pItem)
-		return;
-
-	switch (pItem->getType())
-	{
-		case LLAssetType::AT_BODYPART:
-		case LLAssetType::AT_CLOTHING:
-			LLAgentWearables::editWearable(idItem);
-			break;
-		case LLAssetType::AT_OBJECT:
-			handle_attachment_edit(idItem);
-			break;
-		default:
-			break;
-	}
-}
-// [/SL:KB]
-
-static void touch_item(const LLUUID &id)
-{
-	const LLViewerInventoryItem *item = gInventory.getItem(id);
-
-	if (item && item->getType() == LLAssetType::AT_OBJECT) {
-		handle_attachment_touch(id);
-	}
-}
-
-//////////////////////////////////////////////////////////////////////////
-
 class LLWearingGearMenu
 {
 public:
