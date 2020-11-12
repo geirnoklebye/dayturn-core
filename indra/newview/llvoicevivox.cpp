@@ -1771,6 +1771,12 @@ bool LLVivoxVoiceClient::waitForChannel()
             return false;
         }
 
+        if (sShuttingDown)
+        {
+            logoutOfVivox(true);
+            return false;
+        }
+
         if (LLVoiceClient::instance().getVoiceEffectEnabled())
         {
             retrieveVoiceFonts();

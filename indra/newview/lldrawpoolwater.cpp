@@ -171,7 +171,7 @@ void LLDrawPoolWater::render(S32 pass)
 //mk
 
 	// See if we are rendering water as opaque or not
-	if (!gSavedSettings.getBOOL("RenderTransparentWater"))
+	if (!LLPipeline::sRenderTransparentWater)
 	{
 		// render water for low end hardware
 		renderOpaqueLegacyWater();

@@ -155,6 +155,7 @@ BEGIN
             VALUE "FileDescription", "Kokua Release Version"
             VALUE "FileVersion", "${VIEWER_VERSION_MAJOR}.${VIEWER_VERSION_MINOR}.${VIEWER_VERSION_PATCH}.${VIEWER_VERSION_REVISION}"
             VALUE "InternalName", "Kokua Release Version"
+            VALUE "LegalCopyright", "Copyright (c) 2020, Linden Research, Inc."
             VALUE "OriginalFilename", "Kokua.exe"
             VALUE "ProductName", "Kokua"
             VALUE "ProductVersion", "2012.08.02"

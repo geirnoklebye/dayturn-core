@@ -30,7 +30,6 @@
 #include <boost/signals2.hpp>
 
 #include "llpanel.h"
-#include "lloutputmonitorctrl.h"
 #include "llbutton.h"
 #include "lltextbox.h"
 #include "llstyle.h"
@@ -39,6 +38,7 @@
 #include "llavatarpropertiesprocessor.h"
 
 class LLAvatarIconCtrl;
+class LLOutputMonitorCtrl;
 class LLAvatarName;
 class LLIconCtrl;
 

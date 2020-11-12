@@ -64,6 +64,7 @@
 #include "llstring.h"
 #include "llurlaction.h"
 #include "llviewercontrol.h"
+#include "llviewermenu.h"
 #include "llviewerobjectlist.h"
 
 // additional Kokua headers
