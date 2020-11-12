@@ -555,11 +555,12 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				settings.accept_language_list = mHostLanguage;
 				settings.background_color = 0xffffffff;
 				settings.cache_enabled = true;
-				settings.root_cache_path = mRootCachePath;
 				settings.cache_path = mCachePath;
-				settings.context_cache_path = mContextCachePath;
 #ifdef LL_LINUX
 				settings.cookie_store_path = mCookiePath;
+#else
+				settings.root_cache_path = mRootCachePath;
+				settings.context_cache_path = mContextCachePath;
 #endif
 				settings.cookies_enabled = mCookiesEnabled;
 				settings.disable_gpu = mDisableGPU;
@@ -619,6 +620,9 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				std::string subfolder = message_in.getValue("username");
 
 				mRootCachePath = user_data_path_cache + "cef_cache";
+#ifdef LL_LINUX
+				std::string user_data_path_cookies = message_in.getValue("cookies_path");
+#endif
                 if (!subfolder.empty())
                 {
                     std::string delim;
