@@ -57,6 +57,7 @@
 #include "llfloaterreg.h"
 #include "llfirstuse.h"
 #include "llnotificationsutil.h"
+#include "llpanelprofile.h"
 #include "lltrans.h"
 #include "llvoiceclient.h"
 #include "llgroupactions.h"
@@ -452,30 +453,7 @@ void FSPanelProfile::openGroupProfile()
 
 void FSPanelProfile::onAvatarNameCache(const LLUUID& agent_id, const LLAvatarName& av_name)
 {
-    getChild<LLUICtrl>("complete_name")->setValue( av_name.getCompleteName() );
-
-    //[ADD: FIRE-2266: SJ] make sure username is always filled even when Displaynames are not enabled
-    std::string username = av_name.mUsername;
-    if (username.empty())
-    {
-        username = LLCacheName::buildUsername(av_name.mDisplayName);
-    }
-
-    //[ADD: FIRE-2266: SJ] Adding link to webprofiles on profile which opens Web Profiles in browser
-    std::string url;
-    if (LLGridManager::getInstance()->isInProductionGrid())
-    {
-        url = gSavedSettings.getString("WebProfileURL");
-    }
-    else
-    {
-        url = gSavedSettings.getString("WebProfileNonProductionURL");
-    }
-    LLSD subs;
-    subs["AGENT_NAME"] = username;
-    url = LLWeb::expandURLSubstitutions(url,subs);
-    LLStringUtil::toLower(url);
-    getChild<LLUICtrl>("web_profile_text")->setValue( url );
+	getChild<LLUICtrl>("complete_name")->setValue( av_name.getCompleteName() );
 }
 
 void FSPanelProfile::fillCommonData(const LLAvatarData* avatar_data)
@@ -859,25 +837,22 @@ void FSPanelProfileWeb::apply(LLAvatarData* data)
 
 void FSPanelProfileWeb::onAvatarNameCache(const LLUUID& agent_id, const LLAvatarName& av_name)
 {
-    //[ADD: FIRE-2266: SJ] make sure username is always filled even when Displaynames are not enabled
-    std::string username = av_name.mUsername;
-    if (username.empty())
-    {
-        username = LLCacheName::buildUsername(av_name.mDisplayName);
-    }
+	std::string username = av_name.getAccountName();
+	if (username.empty())
+	{
+		username = LLCacheName::buildUsername(av_name.getDisplayName());
+	}
+	else
+	{
+		LLStringUtil::replaceChar(username, ' ', '.');
+	}
 
-    std::string url;
-    if (LLGridManager::getInstance()->isInProductionGrid())
-    {
-        url = gSavedSettings.getString("WebProfileURL");
-    }
-    else
-    {
-        url = gSavedSettings.getString("WebProfileNonProductionURL");
-    }
-    LLSD subs;
-    subs["AGENT_NAME"] = username;
-    mURLWebProfile = LLWeb::expandURLSubstitutions(url,subs);
+	mURLWebProfile = getProfileURL(username);
+	if (mURLWebProfile.empty())
+	{
+		return;
+	}
+
 
     childSetEnabled("web_profile", true);
     childSetVisible("profile_html",true);
