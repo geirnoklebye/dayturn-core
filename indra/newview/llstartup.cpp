@@ -3957,22 +3957,6 @@ bool process_login_success_response()
 		LL_INFOS("LLStartup") << "map-server-url : no map-server-url answer, we use the default setting for the map : " << map_server_url << LL_ENDL;
 	}
 	
-	std::string web_profile_url = response["web_profile_url"];
-	if(!web_profile_url.empty())
-	{
-		// We got an answer from the grid -> use that for map for the current session
-		gSavedSettings.setString("WebProfileURL", web_profile_url); 
-		LL_INFOS("LLStartup") << "map-server-url : we got an answer from the grid : " << web_profile_url << LL_ENDL;
-	}
-	else
-	{
-		// No answer from the grid -> use the default setting for current session 
-		web_profile_url = "https://my.secondlife.com/[AGENT_NAME]";
-		gSavedSettings.setString("WebProfileURL", web_profile_url); 
-		LL_INFOS("LLStartup") << "web_profile_url : no web_profile_url answer, we use the default setting for the web : " << web_profile_url << LL_ENDL;
-	}
-
-
 	// Default male and female avatars allowing the user to choose their avatar on first login.
 	// These may be passed up by SLE to allow choice of enterprise avatars instead of the standard
 	// "new ruth."  Not to be confused with 'initial-outfit' below 
