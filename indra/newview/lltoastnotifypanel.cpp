@@ -401,7 +401,9 @@ void LLToastNotifyPanel::init( LLRect rect, bool show_images )
             {
                 // we are using default width for script buttons so we can determinate button_rows
                 //to get a number of rows we divide the required width of the buttons to button_panel_width
-                S32 button_rows = llceil(F32(buttons.size() - 1) * (BUTTON_WIDTH + h_pad) / button_panel_width);
+                // KKA-773 S32 button_rows = llceil(F32(buttons.size() - 1) * (BUTTON_WIDTH + h_pad) / button_panel_width);
+                // KKA-773 The above line incorrectly assumes the last button on a row gets padding space (see comment above), plus -1 should be -2 (block, ignore)
+                S32 button_rows = llceil(F32(buttons.size() - 2) * (BUTTON_WIDTH + h_pad) / (button_panel_width + h_pad)); //KKA-773 quickfix
                 //S32 button_rows = (buttons.size() - 1) * (BUTTON_WIDTH + h_pad) / button_panel_width;
                 //reserve one row for the ignore_btn
                 button_rows++;
