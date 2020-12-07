@@ -1,76 +1,54 @@
-﻿Updated 1 October 2018
+﻿Updated 1 December 2020
 
 ================
 Contributing Code to Kokua
 
 --------------------------
 
-Contributing one patch with less than 3 files touched can be submitted as a diff or patch file. Please open a ticket and attach the file to a ticket.
+Contributing one patch with less than 3 files touched can be submitted as a diff or patch file. Please open a jira issue and attach the file to the issue.
 
-Tickets are found on SourceForge at https://sourceforge.net/p/team-purple/kokua/tickets/
+Our issue tracker is at https://kokua.atlassian.net/secure/Dashboard.jspa
 
 Contributions by frequent contributors or Kokua Team members requires a formalized work flow as outlined below.
 
-Kokua repositories use mercurial bookmarks instead of branches. Reference mercurial wiki https://www.mercurial-scm.org/wiki/Bookmarks
+Kokua repositories use git branches. We do not specify a master branch because the Kokua repo maintains three different releases so there is no single "master". Kokua-MKRLV is the closest we have to a master branch and if you clone kokua-release repository it will default to Kokua-MKRLV as that is the most popular Kokua variant (and also usually the most recently committed to since it gets updated in the last stage of the work flow below).
 
 Work Flow:
 
-On bitbucket fork kokua-sl to your Bitbucket account. The repository name will default to kokua-sl, but can be named as desired.
+On bitbucket fork kokua-release to your Bitbucket account. The repository name will default to kokua-release but can be named as desired.
 
-Open the repository and notice bookmark icons that are named Kokua-MKRLV and KokuaSL-NORLV; these represent our current working default branches that are assigned to bookmarks. If the bookmarks where not there two (2) default branches would be present. The bookmarks tie the bookmark names to each default branch mercurial hash. 
+Now is when you should clone your fork to your local file system. 
 
-When LindenLab updated to autobuild 1.1 most custom build variables were moved a repository. The kokua repository should be cloned as follows:
+We use SmartGit for graphical display of our repositories. Open the repository and notice branches named Kokua-MKRLV and Kokua-NORLV; these represent our most used branches.
 
-hg clone https://bitbucket.org/kokua/viewer-build-variables
+Our workflow starts with lindenlab/viewer master branch which is assigned branch LL-VIEWER-RELEASE-TIP within kokua-release repository. At this point we should be able
+
+Next, LL-VIEWER-RELEASE-TIP is merged into Kokua-NORLV. This binds the latest SL default viewer to Kokua-NORLV which becomes a kokua deliverable. The merge is usually taken from one commit behind the LL tip to avoid including the version number increment which LL perform after promoting a release.
+
+Then, Kokua-NORLV is merged into Kokua-MKRLV. Two deliverables, Kokua-MKRLV and Kokua-FTRLV may result from building the Kokua-MKRLV branch. 
+
+When contributing a change it should be implemented first on Kokua-NORLV and then merged to Kokua-MRKLV. There are two exceptions to this. The first is when the change is only for the with-RLV versions of Kokua - make the change on the Kokua-MKRLV branch. The other is when it's likely the commit will be modified after being accepted - in this case it's simpler to only commit on NORLV and leave us to do the merge to MKRLV once the NORLV code is approved. 
+
+
+When LindenLab updated to autobuild 1.1 most custom build variables were moved to a repository. The kokua custom repository should be cloned as follows:
+
+git clone https://bitbucket.org/kokua/viewer-build-variables.git
 
 The variables file in this repository contains custom build variables for windows macOS and linux.
 
 An environment variable must be set in order for autobuild to see custom build variables throughout configure and build phases.
 
-Follow each operating systems procedure for persistent set of environment variables. 
+Follow each operating systems procedure for persistent setting of environment variables. 
 
 For linux it is:
 
 export AUTOBUILD_VARIABLES_FILE=/home/<user>/viewer-build-variables/variables
 
-Using mercurial command hg clone place you forked kokua repository on your local file system. Example: 
+If not already done, use git clone to place your forked kokua repository on your local file system. Example: 
 
- 
-For OpenSim version:
+Example:
 
-hg clone https://bitbucket.org/kokua/kokua-os
-
-Or SecondLife version:
-
-hg clone https://bitbucket.org/kokua/kokua-sl 
-
-An important step is to pull and update Bookmarks from your repository. This allows the bookmarks to advance to the tip with each commit.
-
-A bookmark pull command is hg pull -B KokuaNT https://bitbucket.org/kokua/kokua-os --Notice that it is a capital B. Now repeat with Kokua-MKRLV bookmark.
-
-If your bitbucket repository's bookmarks have fallen behind or do not show up then push the bookmark name. For example:
-
-hg push -B KokuaNT https://bitbucket.org/xxxxx/kokua-os notice the capital B again. Capital B is for bookmark exchange only. No changes are made to the working tree.
-
-Next use hg update to activate the bookmarks. "hg update KokuaSL-NORLV" and then "hg update Kokua-MKRLV". Your working tree is now at Kokua-MKRLV.
-
-If you want to work on KokuaSL-NORLV just "hg update KokuaSL-NORLV". In a terminal enter "hg bookmarks" and terminal response will be a list of all bookmarks
-
-with an * next to the active bookmark.
- 
-Use of the tortoisehg program will allow a graphical view of bookmarks and provides bookmark management. In tortioisehg right click on a commit and
-
-and select Bookmarks... a popup will show bookmark management options. 
-
-Any collaborative repository system will be fraught with frustrations and what seems as lost time resolving merge conflicts if the users
-
-of the system do not check for incoming upstream changes before beginning work. Any upstream incoming changes should be pulled and
-
-merged before beginning work. Use of mercurial queues MQ can be helpful by working in a patch queue and by uninstalling patches and pulling
-
-and merging upstream and then reinstall from the patch queue. This insures that your changes are always on top of the upstream repository.
-
-Once sure that no upstream incoming are pending and you ready for merge into upstream push to your bitbucket repo and submit a pull request.
+git clone https://bitbucket.org/kokua/kokua-release.git
 
 
 
@@ -99,7 +77,7 @@ sudo apt-get update
 
 sudo apt-get upgrade
 
-sudo apt-get install --install-recommends bison bzip2 cmake curl flex g++-4.8 m4 mercurial python2.7 python2.7-dev python-pip
+sudo apt-get install --install-recommends bison bzip2 cmake curl flex g++-5.4,m4 mercurial python2.7 python2.7-dev python-pip
 
 sudo apt-get install --install-recommends pulseaudio
 
@@ -113,15 +91,11 @@ Install autobuild into python
 
 -   If building lindenlab viewer64 code base use autobuild-1.1
 
--       sudo pip install hg+http://bitbucket.org/lindenlab/autobuild-1.1#egg=autobuild
-
--   Otherwise use autobuild-1.0
-
--       sudo pip install hg+http://bitbucket.org/lindenlab/autobuild-1.0#egg=autobuild
+-       sudo pip install git+http://bitbucket.org/lindenlab/autobuild-1.1#egg=autobuild
 
 Install optional tools
 
-sudo apt-get install --install-recommends tortoisehg kdiff3 mc
+sudo apt-get install --install-recommends git kdiff3 mc
 
 Optionally install gcc-version 4.6 which is needed to build library archives,
 
@@ -155,108 +129,34 @@ Open your vm and follow instructions for 64 bit from above.
 Below is a sample ~/.hgrc (mercurial.ini) file. This uses tortoisehg or command line mercurial, kdiff3 as a merge tool and gedit as a visual editor.
 The visual editor may be changed based on personal perference.
 
-[tortoisehg]
-
-defaultwidget = mq
-
-opentabsaftercurrent = True
-
-authorcolor = True
-
-longsummary = True
-
-[extensions]
-
-hgext.bookmarks =
-
-hgext.extdiff =
-
-hgext.convert =
-
-color =
-
-fetch =
-
-hgext.mq=
-
-transplant=
-
-eol =
-
-
-[extdiff]
-
-cmd.kdiff3 = 
-
-[merge-tools]
-
-kdiff3.priority=1
-
-kdiff3.args=--L1 base --L2 local --L3 other $base $local $other -o $output
-
-kdiff3.fixeol=True
-
-kdiff3.gui=True
-
-[tortoisehg]
-
-authorcolor = True
-
-vdiff = kdiff3
-
-editor = gedit
-
-[diff-tools]
-
-kdiff3.diffargs=--L1 '$plabel1' --L2 '$clabel' $parent $child
-
-[ui]
-
-username = Nicky Perian <nickyperian@yahoo.com
-
-ssh = ssh -C
-
-[patch]
-
-eol = auto
-
-[hooks]
-
-#pretxncommit = python:~/hg-tools/coding_policy.py:hook
-
-#pretxnchangegroup = python:~/hg-tools/coding_policy.py:hook
-
-----------------------
-As an options add this to you bash history file ~/.bashrc
-
-Otherwise enter into the terminal before autobuild configure step
-
-Skip the export for 32 bit builds.
+As an option add this to you bash history file ~/.bashrc
 
 export AUTOBUILD_PLATFORM_OVERRIDE='linux64'
 
 
--  hg clone https://bitbucket.org/kokua/kokua-os
+-  git clone https://bitbucket.org/kokua/kokua-release
 
-  KokuaSL-NORLV can be built with opensource or properity audio engine. The opensource solution uses openal for sounds and gstreamer for streaming music and audio visual files like mp4's. Use of the properity FMOD Ex library for sounds and streaming audio is supported but, the FMOD Ex library must be provided separately.
+  Kokua-NORLV can be built with opensource or properity audio engine. The opensource solution uses openal for sounds. Use of the propriety FMOD Studio library for sounds and streaming audio is supported but, the FMOD Studio library must be provided separately.
 
--  Configure for an openal and gstreamer build:
+-  Configure for an openal build:
 
 Following assumes a clean build tree.
 
-cd Kokua-SL
+cd Kokua-release
 
-Update the source tree to KokuaSL-NORLV. This is a build without RLV or if you want RLV it would be hg update Kokua-MKRLV
+Update the source tree to Kokua-NORLV. This is a build without RLV or if you want RLV it would be git checkout Kokua-MKRLV
 
-hg update KokuaSL-NORLV
-
-autobuild configure -A 64 -c ReleaseOS -- -DLL_TESTS:BOOL=OFF -DFMODEX:BOOL=OFF -DOPENAL:BOOL=ON -DPACKAGE:BOOL=ON 2>&1 |tee configure.log
+git checkout Kokua-NORLV
+
+autobuild configure -A 64 -c ReleaseOS -- -DLL_TESTS:BOOL=OFF -DUSE_KDU:BOOL=OFF -DHAVOK_TPV:BOOL=OFF -DFMODSSTUDIO:BOOL=OFF -DOPENAL:BOOL=ON -DPACKAGE:BOOL=ON 2>&1 |tee configure.log
+
+Note: Kokua is built with various libraries which have restrictions on their distribution in source form. For this reason we do not recommend self-builds of Kokua unless it's specifically for contributing code.
 
 - Build the viewer
 
 -autobuild build -A 64 -c ReleaseOS 2>&1 |tee build.log
 
-- Configuration and building takes about 1.5 hours on a 2 core machine.
+- Configuration and building typically takes 30-45 minutes for NORLV or MKRLV depending on the hardware. FTRLV and MKRLV use substantially the same code so building one after the other is much quicker with only changed files needing compilation.
 
 - Test the build
 
@@ -270,41 +170,45 @@ This places the viewer in /opt/kokua-install and places a Kokua menu entry under
 
 sudo is the preferred method as the chrome-sandbox a part of Chrome Embedded Framework requires root permissions.
 
+Note: The install.sh script takes a backup of the previous installed version and may error if installs are done in quick succession. If this happens simply delete the backup folder and retry.
 
 Windows
 
-Reference: https://wiki.secondlife.com/wiki/Visual_Studio_2013_Viewer_Builds
+Below assumes a working Visual Studio 2017 installed.
+
+Reference:https://wiki.secondlife.com/wiki/Visual_Studio_Viewer_Builds
 
 You will need these items before you begin:
 
--  An installer for Windows 7 Pro 64bit
+-  An installer for Windows 10 Pro 64bit
 
 -  A valid Windows Product key
 
--  An installer for Visual Studio 2013
+-  An installer for Visual Studio 2017
 
--  A valid license for Visual Studio 2013
+-  A valid license for Visual Studio 2017
 
-- Install Windows 7 Pro 64bit using your own product key
+- Install Windows 10 Pro 64bit using your own product key
 
 - Keep running Windows Update (Start Menu -> All Programs -> Windows Update) until clicking on "Check for Updates" there tells you everything is up to date.
 
 - Depending on the age of the install media you started with, this could take a really long time and many, many iterations.
 
-==Microsoft Visual Studio 2013 Pro==
+==Microsoft Visual Studio 2017 Pro==
 
-- Install VS 2013 Pro
+- Install VS 2017 Pro
 
-- Note: If you don't own a copy of VS 2013 Pro, you might consider installing the 
+- Note: If you don't own a copy of VS 2017 Pro, you might consider installing the 
 
-- [http://www.visualstudio.com/en-us/news/vs2013-community-vs.aspx Community Version]
+- [http://www.visualstudio.com/en-us/news/vs2017-community-vs.aspx Community Version]
 
 - Run the installer as Administrator (right click, "Run as administrator")
 
 - Uncheck all the "Optional features to install:" - they are not required
 
-- Download and install VS2013 Service Packs and updates
+- Download and install VS2017 Service Packs and updates
 
+************Below needs confirmation.********************
 - [http://www.visualstudio.com/en-us/downloads/download-visual-studio-vs#DownloadFamilies_5 Update 4 ] 
 
 - is the most recent '''released''' version at time of writing (2015-01)
@@ -319,17 +223,9 @@ You will need these items before you begin:
 
 - At the Installation Options screen, set everything except the DirectX Headers and Libs to "This feature will not be installed"
 
-==Tortoise Hg==
-
-- Download and install [http://tortoisehg.bitbucket.org/download/ TortoiseHg 3.2.3] (64bit)
-
-- Note: No option available to install as Administrator
-
-- Use default options (path, components etc.)
-
 ==CMake==
 
-- Download and install [http://www.cmake.org/download/ CMake 3.1.0] (32bit is only option)
+- Download and install [http://www.cmake.org/download/ CMake 3.18.04] (32bit is only option)
 
 - Run the installer as Administrator (right click, "Run as administrator")
 
@@ -339,8 +235,6 @@ You will need these items before you begin:
 
 ==Cygwin==
 
-- Cygwin is not required for current builds. If you want to build older version of Kokua you may want to install it. Or, if you need the unix/linux tools.
-
 - Download and install [http://cygwin.com/install.html Cygwin 64] (64bit)
 
 - Run the installer as Administrator (right click, "Run as administrator")
@@ -349,18 +243,13 @@ You will need these items before you begin:
 
 - Add additional packages:
 
-- Devel/bison
-
-- Devel/flex
-
 - Devel/patch
 
 - Use default options for everything else
 
 ==Python==
-- Download and install [https://www.python.org/ftp/python/2.7.8/python-2.7.8.msi Python 2.7.8 (32bit)] Do not install version 2.7.9
 
-- it doesn't work for our setup currently
+- Download and install [https://www.python.org/ftp/python/2.7.17/python-2.7.17.msi Python 2.7.17 (32bit)] 
 
 - Note: No option available to install as Administrator
 
@@ -370,17 +259,13 @@ You will need these items before you begin:
 
 ==Intermediate check==
 
-- Confirm things are installed properly so far|
+- Confirm things are installed properly so far
 
 - Open a Cygwin terminal and type:
 
--  bison --version
-
 -  cmake --version
 
--  flex --version
-
--  hg --version
+-  git --version
 
 -  python --version
 
@@ -420,15 +305,7 @@ You will need these items before you begin:
 
 -   If building lindenlab viewer64 code base use autobuild-1.1
 
--       Run pip install hg+http://bitbucket.org/lindenlab/autobuild-1.1#egg=autobuild
-
--   Otherwise use autobuild-1.0
-
--       Run pip install hg+http://bitbucket.org/lindenlab/autobuild-1.0#egg=autobuild
-
--   Autobuild will be installed.  Earlier versions of autobuild could be made to work by just putting the source files
-
--  into your path correctly; this is no longer true - autobuild must be installed as described here.
+-       Run pip install git+http://bitbucket.org/lindenlab/autobuild-1.1#egg=autobuild
 
 - Update system PATH
 
@@ -438,80 +315,65 @@ You will need these items before you begin:
 
 ==NSIS (Unicode)==
 
--  You must install the Unicode version http://www.scratchpaper.com/ and not the one from the NSIS page
+-  Install V3 for packaging under Windows
 
--  Not strictly required for developers (although it's useful)
 
-==Check Paths in VS 2013==
+==Check Paths in VS 2017==
 
-Open Developer Command Prompt for VS2013 C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Tools\VsDevCmd.bat
+Open Developer Command Prompt for VS2017 C:\Program Files (x86)\Microsoft Visual Studio 2017\Common7\Tools\VsDevCmd.bat
 
 This command prompt is kinda hard to find on newer windows versions. Use File Explorer to locate VsDevCmd.bat then,
 
 right click and send shortcut to Desktop.
 
-In Developer Command Prompt for VS2013
+In Developer Command Prompt for VS2017
 
 Verify that these version request.
 
 -  cmake --version
 
--  hg --version
+-  git --version
 
 -  python --version
 
 -  autobuild --version
 
 ==Get source and compile==
+Use git to clone kokua-release repository to your local machine. For example: 
 
--  Stable source code repositories
+-   git clone https://bitbucket.org/kokua/kokua-release
 
--   OpenSim https://bitbucket.org/kokua/kokua-os
+-   This will place a folder with the source code typically in <pathto>/kokua-release
 
--   SecondLife https://bitbucket.org/kokua/kokua-sl
+-   cd kokua-release 
 
--  Development source code repositories
+-   git checkout Kokua-NORLV
 
--   OpenSim https://bitbucket.org/kokua/kokua-os
-
--   SecondLife https://bitbucket.org/kokua/kokua-sl
-
--   Use mercurial to clone one of the above respostories to your local machine. For example: 
-
--   hg clone https://bitbucket.org/kokua/kokua-os
-
--   This will place a folder with the source code typically in /Users/xxxx/kokua-os
-
--   cd kokua-os 
-
--   hg update -rKokua-MKRLV
-
--   autobuild configure -c ReleaseOS -- -DCMAKE_VERBOSE_MAKEFILE:BOOL=FALSE -DLL_TESTS:BOOL=OFF \
-    -DPACKAGE:BOOL=FALSE  -DOPENAL:BOOL=FALSE -DFMODEX:BOOL=ON
+-   autobuild configure -c ReleaseOS -A 64 -- -DCMAKE_VERBOSE_MAKEFILE:BOOL=FALSE -DLL_TESTS:BOOL=OFF -DPACKAGE:BOOL=FALSE -DOPENAL:BOOL=TRUE -DFMODSTUDIO:BOOL=OFF -DUSE_KDU:BOOL=OFF -DHAVOK_TPV:BOOL=OFF
     
-    autobuild build -c ReleaseOS
+    autobuild build --no-configure -c ReleaseOS -A 64
  
 -  The above will produce a command line build without an install program.
 
--  In folder /Users/xxxx/kokua-os/build-vc120/newview/Release find an right click on file kokuaos-bin.exe and select Send to->Desktop (create shortcut)
+-  In folder <pathto>kokua-release/build-vc150/newview/Release find and right click on file kokua-bin.exe and select Send to->Desktop (create shortcut)
 
--  Select Desktop and right click the kokuaos-bin.exe shortcut and click Properties.
+-  Select Desktop and right click the kokua-bin.exe shortcut and click Properties.
 
--  Edit Start in to "C:\Users\xxxx\kokua-os\indra\newview". This allows use of working tree skin and settings files.
+-  Edit Start in to "<pathto>\kokua-release\indra\newview". This allows use of working tree skin and settings files.
 
--  Click on the kokuaos-bin.exe shortcut and the viewer should startup and run.
+-  Click on the kokua-bin.exe shortcut and the viewer should startup and run.
 
--  Optionally, Visual Studio 2013 program may be used to build the viewer.
+-  Optionally, Visual Studio 2017 program may be used to build the viewer.
 
--  After the autobuild configure step, start Visual Studio 2013 and open the solution from C:\Users\xxxx\Kokua-OS\build-vc120\KokuaOS.sln
+-  After the autobuild configure step, start Visual Studio 2017 and open the solution from <pathto>\Kokua-release\build-vc150\Kokua.sln
 
 -  Follow the steps below to confirm or set the Start up project and Debugging working directory...
 
--  In the Solution Exployer click on kokua-bin, then from the main menu Project select Set as startup project.    
+-  In the Solution Explorer click on kokua-bin, then from the main menu Project select Set as startup project.    
 
--  From main menu Project open kokuaos-bin Properties, then in kokuaos-bin Properties window chose Debugging, then Working directory.
+-  From main menu Project open kokua-bin Properties, then in kokua-bin Properties window chose Debugging, then Working directory.
 
--  At the right side a down arrow expanders. From there use Browse or Edit and set to /Users/xxxx/kokua-os/build-vc120/newview/Release
+-  At the right side a down arrow expanders. From there use Browse or Edit and set to <pathto>/kokua-release/build-vc150/newview/Release
 
 -  And Apply to write the property page to memory.
 
@@ -524,18 +386,20 @@ Mac
 
 --------
 
-The current development environment is XCode 7.3 running on OS X 10.11.4 where the viewer is built 32-bit with OS X SDK 10.11 and Deployment Target of OS X 10.9.
+The current development environment is XCode 12.2 running on OS X 11.0.1 where the viewer is built 64-bit with OS X SDK 11.0 and Deployment Target of OS X 10.9.
 
-Still building for i386 as there are dependencies in the LL code to old Carbon framework that prevents successfull 64-bit build. A 32-bit build is not such a big issue on OS X as the application can use the full 32-bit address space of 4 GB which should be sufficient unless you run in an OpenSim grid with very large VAR regions.
 
-You can both build from the command line in terminal or build the XCode project that is generated duing configuration.
+You can both build from the command line in terminal or build the XCode project that is generated during configuration.
 
 NOTE: On Upgrading XCode to a new version you probably should delete the Derived Data folder that is found in Development/XCode as it may contain links to old system library locations preventing your build from linking.
 	
     -- 
+There are two programs external to MacOS that allow other programming tools installation that do not touch MacOS installer methods.
 
-Linden’s version of autobuild requires a different version of Python than the system installed so the best way to get it installed is to first install MacPorts from https://www.macports.org with the latest current release (2.3.3).
+These are macports https://www.macports.org and homebrew https://brew.sh . 
 
+Linden’s version of autobuild requires a different version of Python than the MacOS system installed so the best way to get it installed is to first install MacPorts or HomeBrew.
+ 
 With MacPorts installed, in terminal install the following ports:
 
 • sudo port install python27
@@ -546,7 +410,18 @@ With MacPorts installed, in terminal install the following ports:
 
 When prompted by the installer run python_select to use the version you just installed. It will be installed in /opt/local/bin
 
-If you have newer versions of Xcode installed then you also need to run xcode-select to make sure you use 6.4 for your build
+HomeBrew has the advantage by using similar commands for Linux and MacOS.
+
+•  brew install python27
+
+•  brew install py27-pip
+
+•  brew install cmake
+
+
+Homebrew installs packages to their own directory and the symlinks their files into /usr/local.
+
+If you have newer versions of Xcode installed then you also need to run xcode-select to make sure you use currently installed Xcode for your build.
 
 --
 
@@ -554,11 +429,9 @@ Xcode should have created the directory ~/Library/Developer during installation.
 
 In terminal cd to the above directory and type the command:
 
-hg clone https://bitbucket.org/lindenlab/autobuild-1.1
+Using Pip Install auto build python dependencies by typing:
 
-Pip Install auto build python dependencies by typing:
-
-sudo pip install ‘hg+https://bitbucket.org/lindenlab/autobuild-1.1#egg=autobuild'
+sudo pip install ‘git+https://bitbucket.org/lindenlab/autobuild-1.1#egg=autobuild'
 
 If everything goes well it should be installed in /opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/autobuild
 
@@ -568,7 +441,7 @@ alias autobuild="/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin
 
 export AUTOBUILD=/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/autobuild
 
-Then source your .bash_profile
+Then source your.bash_profile
 
 --
 
@@ -586,21 +459,17 @@ The root cause of this is that it tries to run autobuild by spawning a shell fro
 
 To build Kokua first download the Kokua source code with the following command in terminal:
 
-For the OpenSim version:
-
-hg clone https://bitbucket.org/kokua/kokua-os
-
 For the SecondLife version:
 
-hg clone https://bitbucket.org/kokua/kokua-sl 
+git clone https://bitbucket.org/kokua/kokua-release 
 
 You can configure the build with:
 
-autobuild configure -A 64 -c RelWithDebInfoOS — -DKDU:BOOL=FALSE -DFMODEX:BOOL=TRUE -DLL_TESTS:BOOL=FALSE -DOPENAL:BOOL=FALSE
+autobuild configure -c ReleaseOS -A 64 -- -DCMAKE_VERBOSE_MAKEFILE:BOOL=FALSE -DLL_TESTS:BOOL=OFF -DPACKAGE:BOOL=FALSE -DOPENAL:BOOL=TRUE -DFMODSTUDIO:BOOL=OFF -DUSE_KDU:BOOL=OFF -DHAVOK_TPV:BOOL=OFF
 
 or 
 
-autobuild configure -c -A 64 ReleaseOS — -DKDU:BOOL=FALSE -DFMODEX:BOOL=TRUE -DLL_TESTS:BOOL=FALSE -DOPENAL:BOOL=FALSE
+autobuild configure -c RelWithDebInfoOS -A 64 -- -DCMAKE_VERBOSE_MAKEFILE:BOOL=FALSE -DLL_TESTS:BOOL=OFF -DPACKAGE:BOOL=FALSE -DOPENAL:BOOL=TRUE -DFMODSTUDIO:BOOL=OFF -DUSE_KDU:BOOL=OFF -DHAVOK_TPV:BOOL=OFF
 
 When you have made sure your configuration is working (and compiles in Xcode) you can also compile on the command line by substituting configure with build in the two commands above. 
 
