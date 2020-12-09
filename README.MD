@@ -1,9 +1,13 @@
 ﻿Updated 1 December 2020
 
 ================
-Contributing Code to Kokua
+Please note: We do not provide support for self-building outside of the active Kokua team. This is due in part to the use of licenced components which we cannot share
+
+in buildable form and also the limited resources of the current team. Before trying to build Kokua make sure that you can successfully build the standard LL Viewer.
 
 --------------------------
+
+Contributing Code to Kokua
 
 Contributing one patch with less than 3 files touched can be submitted as a diff or patch file. Please open a jira issue and attach the file to the issue.
 
