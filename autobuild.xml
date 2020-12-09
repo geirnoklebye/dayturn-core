@@ -1106,11 +1106,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a9883f93eee2ca65c25640a1f68a3850</string>
+              <string>f2a7f3149e241a71799171ccb49e8d43</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.01-linux64-201552238.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.06-linux64-203442043.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
