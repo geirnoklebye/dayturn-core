@@ -55,12 +55,24 @@
    show_text="true"
    width="240"
    top_pad="5"/>
+  <check_box
+   top_pad="6"
+   follows="left|top"
+   height="16"
+   initial_value="false"
+   label="Clicking your avatar keeps camera position"
+   layout="topleft"
+   left="74"
+   name="clickonavatarkeepscamera"
+   width="270"
+   control_name="ClickOnAvatarKeepsCamera"
+   tool_tip="Normally, clicking on your avatar resets the camera position. This option removes this behavior."/>
   <text
   follows="left|top"
   type="string"
   length="1"
   height="10"
-  left="80"
+  left="78"
   name="heading2"
   width="270"
   top_pad="3">
@@ -72,7 +84,7 @@
      follows="left|top"
      label="Build/Edit"
      layout="topleft"
-     left_delta="30"
+     left_delta="5"
      name="edit_camera_movement"
      tool_tip="Use automatic camera positioning when entering and exiting edit mode"
      width="280"

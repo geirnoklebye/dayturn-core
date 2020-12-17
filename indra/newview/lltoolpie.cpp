@@ -461,7 +461,8 @@ BOOL LLToolPie::handleLeftClickPick()
 		gViewerWindow->hideCursor();
 		LLToolCamera::getInstance()->setMouseCapture(TRUE);
 		LLToolCamera::getInstance()->pickCallback(mPick);
-		gAgentCamera.setFocusOnAvatar(TRUE, TRUE);
+		if(!gSavedSettings.getBOOL("ClickOnAvatarKeepsCamera")) // <FS:Zi> keep camera in place when clicking on ourselves
+			gAgentCamera.setFocusOnAvatar(TRUE, TRUE);
 
 		return TRUE;
 	}
