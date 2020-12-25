@@ -47,7 +47,7 @@ class LLScrollListCtrl;
 class LLViewerObject;
 struct 	LLEntryAndEdCore;
 class LLMenuBarGL;
-class LLFloaterScriptSearch;
+//class LLFloaterScriptSearch;
 class LLKeywordToken;
 class LLVFS;
 class LLViewerInventoryItem;
@@ -78,7 +78,7 @@ class LLScriptEdCore : public LLPanel
 	friend class LLPreviewScript;
 	friend class LLPreviewLSL;
 	friend class LLLiveLSLEditor;
-	friend class LLFloaterScriptSearch;
+//	friend class LLFloaterScriptSearch;
 	friend class LLScriptEdContainer;
 	friend class LLFloaterGotoLine;
 
@@ -196,6 +196,7 @@ private:
 	LLUUID			mAssociatedExperience;
 	BOOL			mScriptRemoved;
 	BOOL			mSaveDialogShown;
+	LLScriptEditor*		mCurrentEditor;
 
 	LLScriptEdContainer* mContainer; // parent view
 
@@ -231,6 +232,10 @@ public:
 	virtual void callbackLSLCompileFailed(const LLSD& compile_errors);
 
 	/*virtual*/ BOOL postBuild();
+
+// [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-11-05 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
+	LLScriptEditor* getEditor() { return (mScriptEd) ? mScriptEd->mEditor : NULL; }
+// [/SL:KB]
 
 protected:
 	virtual void draw();
@@ -283,6 +288,10 @@ public:
 	/*virtual*/ BOOL postBuild();
 	
     void setIsNew() { mIsNew = TRUE; }
+
+// [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-11-05 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
+	LLScriptEditor* getEditor() { return (mScriptEd) ? mScriptEd->mEditor : NULL; }
+// [/SL:KB]
 
 	static void setAssociatedExperience( LLHandle<LLLiveLSLEditor> editor, const LLSD& experience );
 	static void onToggleExperience(LLUICtrl *ui, void* userdata);

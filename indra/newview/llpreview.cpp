@@ -51,6 +51,12 @@
 #include "lltrans.h"
 #include "roles_constants.h"
 
+// [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-11-05 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
+#include "llfloatersearchreplace.h"
+#include "llpreviewnotecard.h"
+#include "llpreviewscript.h"
+#include "llscripteditor.h"
+// [/SL:KB]
 // Constants
 
 LLPreview::LLPreview(const LLSD& key)
@@ -116,7 +122,12 @@ const LLInventoryItem *LLPreview::getItem() const
 	else if (mObjectUUID.isNull())
 	{
 		// it's an inventory item, so get the item.
-		item = gInventory.getItem(mItemUUID);
+// [SL:KB] - Patch: UI-Notecards | Checked: 2010-09-11 (Catznip-2.1.2d) | Added: Catznip-2.1.2d
+		if (LLInventoryType::IT_NONE == mAuxItem->getInventoryType())
+			item = gInventory.getItem(mItemUUID);
+		else
+			item = mAuxItem;
+// [/SL:KB]
 	}
 	else
 	{
@@ -230,9 +241,17 @@ void LLPreview::refreshFromItem()
 		LLUIString title = getString("Title", args);
 		setTitle(title.getString());
 	}
-	getChild<LLUICtrl>("desc")->setValue(item->getDescription());
+	// <FS:Ansariel> Is called from ctor when controls aren't created yet
+	//getChild<LLUICtrl>("desc")->setValue(item->getDescription());
 
-	getChildView("desc")->setEnabled(canModify(mObjectUUID, item));
+	//getChildView("desc")->setEnabled(canModify(mObjectUUID, item));
+	LLUICtrl* desc_control = findChild<LLUICtrl>("desc");
+	if (desc_control)
+	{
+		desc_control->setValue(item->getDescription());
+		desc_control->setEnabled(canModify(mObjectUUID, item));
+	}
+	// </FS:Ansariel>
 }
 
 // static
@@ -525,6 +544,29 @@ void LLMultiPreview::tabOpen(LLFloater* opened_floater, bool from_click)
 	{
 		opened_preview->loadAsset();
 	}
+// [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-11-05 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
+	LLFloaterSearchReplace* pSearchFloater = LLFloaterReg::getTypedInstance<LLFloaterSearchReplace>("search_replace");
+	if ( (pSearchFloater) && (pSearchFloater->getDependee() == this) )
+	{
+		LLPreviewNotecard* pPreviewNotecard = NULL; LLPreviewLSL* pPreviewScript = NULL; LLLiveLSLEditor* pPreviewScriptLive = NULL;
+		if ((pPreviewNotecard = dynamic_cast<LLPreviewNotecard*>(opened_preview)) != NULL)
+		{
+			LLFloaterSearchReplace::show(pPreviewNotecard->getEditor());
+		}
+		else if ((pPreviewScript = dynamic_cast<LLPreviewLSL*>(opened_preview)) != NULL)
+		{
+			LLFloaterSearchReplace::show(pPreviewScript->getEditor());
+		}
+		else if ((pPreviewScriptLive = dynamic_cast<LLLiveLSLEditor*>(opened_preview)) != NULL)
+		{
+			LLFloaterSearchReplace::show(pPreviewScriptLive->getEditor());
+		}
+		else
+		{
+			pSearchFloater->setVisible(FALSE);
+		}
+	}
+// [/SL:KB]
 }
 
 
