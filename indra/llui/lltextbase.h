@@ -303,6 +303,9 @@ public:
 								bg_readonly_color,
 								bg_writeable_color,
 								bg_focus_color,
+// [SL:KB] - Patch: Control-TextHighlight | Checked: 2013-12-30 (Catznip-3.6)
+								bg_highlighted_color,
+// [/SL:KB]
 								text_selected_color,
 								bg_selected_color;
 
@@ -467,6 +470,9 @@ public:
 
 	// cursor manipulation
 	bool					setCursor(S32 row, S32 column);
+// [SL:KB] - Patch: UI-Notecards | Checked: 2010-09-12 (Catznip-2.1.2d) | Added: Catznip-2.1.2d
+	S32						getCursorPos() { return mCursorPos; }
+// [/SL:KB
 	bool					setCursorPos(S32 cursor_pos, bool keep_cursor_offset = false);
 	void					startOfLine();
 	void					endOfLine();
@@ -477,6 +483,13 @@ public:
 
 	bool					scrolledToStart();
 	bool					scrolledToEnd();
+
+// [SL:KB] - Patch: Control-TextHighlight | Checked: 2013-12-30 (Catznip-3.6)
+	// highlighting
+	void					clearHighlights();
+	void					refreshHighlights();
+	void					setHighlightWord(const std::string& strHighlight, bool fCaseInsensitive);
+// [/SL:KB]
 
 	const LLFontGL*			getFont() const					{ return mFont; }
 
@@ -518,6 +531,10 @@ protected:
 	};
 	struct line_end_compare;
 	typedef std::vector<LLTextSegmentPtr> segment_vec_t;
+// [SL:KB] - Patch: Control-TextHighlight | Checked: 2013-12-30 (Catznip-3.6)
+	typedef std::pair<S32, S32> range_pair_t;
+	typedef std::list<range_pair_t> highlight_list_t;
+// [/SL:KB]
 
 	// Abstract inner base class representing an undoable editor command.
 	// Concrete sub-classes can be defined for operations such as insert, remove, etc.
@@ -573,6 +590,9 @@ protected:
 
 	// draw methods
 	virtual void					drawSelectionBackground(); // draws the black box behind the selected text
+// [SL:KB] - Patch: Control-TextHighlight | Checked: 2013-12-30 (Catznip-3.6)
+	void							drawHighlightsBackground(const highlight_list_t& highlights, const LLColor4& color);
+// [/SL:KB]
 	void							drawCursor();
 	void							drawText();
 
@@ -661,6 +681,9 @@ protected:
 	LLUIColor					mFocusBgColor;
 	LLUIColor					mTextSelectedColor;
 	LLUIColor					mSelectedBGColor;
+// [SL:KB] - Patch: Control-TextHighlight | Checked: 2013-12-30 (Catznip-3.6)
+	LLUIColor					mHighlightedBGColor;
+// [/SL:KB]
 
 	// cursor
 	S32							mCursorPos;			// I-beam is just after the mCursorPos-th character.
@@ -682,6 +705,14 @@ protected:
 	std::list<std::pair<U32, U32> > mMisspellRanges;
 	std::vector<std::string>		mSuggestionList;
 
+// [SL:KB] - Patch: Control-TextHighlight | Checked: 2013-12-30 (Catznip-3.6)
+	// highlighting
+	LLWString					mHighlightWord;
+	bool						mHighlightCaseInsensitive;
+	highlight_list_t			mHighlights;
+	bool						mHighlightsDirty;
+// [/SL:KB]
+
 	// configuration
 	S32							mHPad;				// padding on left of text
 	S32							mVPad;				// padding above text
@@ -689,7 +720,7 @@ protected:
 	LLFontGL::VAlign			mVAlign;
 	F32							mLineSpacingMult;	// multiple of line height used as space for a single line of text (e.g. 1.5 to get 50% padding)
 	S32							mLineSpacingPixels;	// padding between lines
-	bool						mBorderVisible;
+	bool						mBorderVisible; 
 	bool                		mParseHTML;			// make URLs interactive
 	bool						mForceUrlsExternal; // URLs from this textbox will be opened in external browser
 	bool						mParseHighlights;	// highlight user-defined keywords

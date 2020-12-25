@@ -59,6 +59,9 @@
 #include "lluictrlfactory.h"
 #include "llviewerassetupload.h"
 
+// [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-11-05 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
+#include "llfloatersearchreplace.h"
+// [/SL:KB]
 ///----------------------------------------------------------------------------
 /// Class LLPreviewNotecard
 ///----------------------------------------------------------------------------
@@ -137,6 +140,13 @@ void LLPreviewNotecard::draw()
 	LLPreview::draw();
 }
 
+// [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-11-05 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
+bool LLPreviewNotecard::hasAccelerators() const
+{
+	return true;
+}
+// [/SL:KB]
+
 // virtual
 BOOL LLPreviewNotecard::handleKeyHere(KEY key, MASK mask)
 {
@@ -145,6 +155,14 @@ BOOL LLPreviewNotecard::handleKeyHere(KEY key, MASK mask)
 		saveIfNeeded();
 		return TRUE;
 	}
+
+// [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-11-05 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
+	if(('F' == key) && (MASK_CONTROL == (mask & MASK_CONTROL)))
+	{
+		LLFloaterSearchReplace::show(getEditor());
+		return TRUE;
+	}
+// [/SL:KB]
 
 	return LLPreview::handleKeyHere(key, mask);
 }
@@ -190,6 +208,13 @@ const LLInventoryItem* LLPreviewNotecard::getDragItem()
 	}
 	return NULL;
 }
+
+// [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-11-05 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
+LLTextEditor* LLPreviewNotecard::getEditor()
+{
+	return getChild<LLViewerTextEditor>("Notecard Editor");
+}
+// [/SL:KB]
 
 bool LLPreviewNotecard::hasEmbeddedInventory()
 {

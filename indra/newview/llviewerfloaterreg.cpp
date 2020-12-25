@@ -180,6 +180,7 @@
 #include "kokuafloaterbulkrename.h"
 // NaCl - Sound explorer
 #include "fsfloaterposestand.h"
+#include "llfloatersearchreplace.h"
 #include "NACLfloaterexploresounds.h"
 // NaCl End
 
@@ -424,5 +425,6 @@ void LLViewerFloaterReg::registerFloaters()
     	// <FS:CR> FIRE-6310: Include Legacy Search
 	LLFloaterReg::add("search_legacy", "floater_fs_search_legacy.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterSearchLegacy>);
 	LLFloaterReg::add("publish_classified_fs", "floater_publish_classified.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSPublishClassifiedFloater>);
+	LLFloaterReg::add("search_replace", "floater_search_replace.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterSearchReplace>);
 	LLFloaterReg::registerControlVariables(); // Make sure visibility and rect controls get preserved when saving
 }

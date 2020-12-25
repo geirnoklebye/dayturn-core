@@ -36,6 +36,7 @@
 #include "llexternaleditor.h"
 #include "llfilepicker.h"
 #include "llfloaterreg.h"
+#include "llfloatersearchreplace.h"
 #include "llinventorydefines.h"
 #include "llinventorymodel.h"
 #include "llkeyboard.h"
@@ -148,6 +149,8 @@ bool LLLiveLSLFile::loadFile()
 /// ---------------------------------------------------------------------------
 /// LLFloaterScriptSearch
 /// ---------------------------------------------------------------------------
+// <FS> Replaced by LLFloaterSearchReplace
+#if 0
 class LLFloaterScriptSearch : public LLFloater
 {
 public:
@@ -322,6 +325,8 @@ void LLFloaterScriptSearch::onSearchBoxCommit()
 		mEditorCore->mEditor->selectNext(mSearchBox->getValue().asString(), caseChk->get());
 	}
 }
+#endif
+// </FS>
 
 /// ---------------------------------------------------------------------------
 /// LLScriptEdCore
@@ -360,6 +365,7 @@ LLScriptEdCore::LLScriptEdCore(
 	mLiveFile(NULL),
 	mLive(live),
 	mContainer(container),
+	mCurrentEditor(NULL),
 	// <FS:Ansariel> FIRE-20818: User-selectable font and size for script editor
 	mFontNameChangedCallbackConnection(),
 	mFontSizeChangedCallbackConnection(),
@@ -380,12 +386,13 @@ LLScriptEdCore::~LLScriptEdCore()
 	deleteBridges();
 
 	// If the search window is up for this editor, close it.
-	LLFloaterScriptSearch* script_search = LLFloaterScriptSearch::getInstance();
-	if (script_search && script_search->getEditorCore() == this)
-	{
-		script_search->closeFloater();
-		delete script_search;
-	}
+//	LLFloaterScriptSearch* script_search = LLFloaterScriptSearch::getInstance();
+//	if (script_search && script_search->getEditorCore() == this)
+//	{
+//		script_search->closeFloater();
+//		delete script_search;
+//	}
+
 
 	delete mLiveFile;
 	if (mSyntaxIDConnection.connected())
@@ -463,6 +470,7 @@ BOOL LLScriptEdCore::postBuild()
 
 	mEditor = getChild<LLScriptEditor>("Script Editor");
 
+	mCurrentEditor = mEditor;
 	// <FS:Ansariel> FIRE-20818: User-selectable font and size for script editor
 	mFontNameChangedCallbackConnection = gSavedSettings.getControl("FSScriptingFontName")->getSignal()->connect(boost::bind(&LLScriptEdCore::onFontChanged, this));
 	mFontSizeChangedCallbackConnection = gSavedSettings.getControl("FSScriptingFontSize")->getSignal()->connect(boost::bind(&LLScriptEdCore::onFontChanged, this));
@@ -560,7 +568,10 @@ void LLScriptEdCore::initMenu()
 	menuItem->setEnableCallback(boost::bind(&LLTextEditor::canDeselect, mEditor));
 
 	menuItem = getChild<LLMenuItemCallGL>("Search / Replace...");
-	menuItem->setClickCallback(boost::bind(&LLFloaterScriptSearch::show, this));
+//	menuItem->setClickCallback(boost::bind(&LLFloaterScriptSearch::show, this));
+// [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-10-26 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
+	menuItem->setClickCallback(boost::bind(&LLFloaterSearchReplace::show, mEditor));
+// [/SL:KB]
 
 	menuItem = getChild<LLMenuItemCallGL>("Go to line...");
 	menuItem->setClickCallback(boost::bind(&LLFloaterGotoLine::show, this));
@@ -1674,7 +1685,11 @@ void LLPreviewLSL::onSearchReplace(void* userdata)
 {
 	LLPreviewLSL* self = (LLPreviewLSL*)userdata;
 	LLScriptEdCore* sec = self->mScriptEd; 
-	LLFloaterScriptSearch::show(sec);
+//	LLFloaterScriptSearch::show(sec);
+// [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-10-26 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
+	LLFloaterSearchReplace* floater = LLFloaterSearchReplace::show(sec->mCurrentEditor);
+	floater->setCanReplace(sec->mCurrentEditor == sec->mEditor);
+// [/SL:KB]
 }
 
 // static
@@ -2338,7 +2353,11 @@ void LLLiveLSLEditor::onSearchReplace(void* userdata)
 	LLLiveLSLEditor* self = (LLLiveLSLEditor*)userdata;
 
 	LLScriptEdCore* sec = self->mScriptEd; 
-	LLFloaterScriptSearch::show(sec);
+//	LLFloaterScriptSearch::show(sec);
+// [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-10-26 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
+	LLFloaterSearchReplace* floater = LLFloaterSearchReplace::show(sec->mCurrentEditor);
+	floater->setCanReplace(sec->mCurrentEditor == sec->mEditor);
+// [/SL:KB]
 }
 
 struct LLLiveLSLSaveData

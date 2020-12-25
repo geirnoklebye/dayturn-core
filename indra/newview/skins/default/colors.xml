@@ -880,6 +880,9 @@
      name="TextBgWriteableColor"
      reference="LtGray" />
     <color
+     name="TextBgHighlightColor"
+     reference="EmphasisColorLight" />
+    <color
      name="TextCursorColor"
      reference="Black" />
     <color
