@@ -5,9 +5,13 @@
 	<color
 	 name="EmphasisColor"
 	 reference="Kokua" />
+	<!-- This is purposely not in Kokua purple because that creates visibility issues with the orange text highlighting in script editing -->
+	<color
+	 name="EmphasisColorLight"
+	 value="0.95 0.95 0.0 1" />
 	<color
 	 name="EmphasisColor_13"
-	 value="Kokua_13" />
+	 reference="Kokua_13" />
 	<color
      name="EmphasisColor_35"
 	 reference="Kokua_42" />
