@@ -2892,7 +2892,7 @@
              name="Scene Load Statistics"
              shortcut="control|shift|2">
                 <on_click
-                 function="Floater.Show"
+                 function="Floater.Toggle"
                  parameter="scene_load_stats" />
             </menu_item_call>
             <menu_item_call
@@ -2900,7 +2900,7 @@
              name="Script Statistics"
              shortcut="control|shift|8">
                 <on_click
-                 function="Floater.Show"
+                 function="Floater.Toggle"
                  parameter="script_stats" />
             </menu_item_call>
       <menu_item_check
