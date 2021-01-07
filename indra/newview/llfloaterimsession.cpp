@@ -1116,6 +1116,13 @@ void LLFloaterIMSession::processIMTyping(const LLUUID& from_id, BOOL typing)
 		// other user stopped typing
 		removeTypingIndicator(from_id);
 	}
+	//KKA-779 Add a FS-style "is typing" indication in Conversations floater
+	LLFloaterIMContainer* im_box = LLFloaterIMContainer::findInstance();
+	if (im_box)
+	{
+		LL_INFOS() << "Updating status to " << typing << LL_ENDL;
+		im_box->setConversationItemWidgetIsTyping(mSessionID, typing);
+	}
 }
 
 void LLFloaterIMSession::processAgentListUpdates(const LLSD& body)

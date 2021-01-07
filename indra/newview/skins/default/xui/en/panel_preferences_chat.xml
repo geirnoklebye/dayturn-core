@@ -166,6 +166,17 @@
         name="kokua_reopen_chat_bar_at_login"
         width="330">
     </check_box>
+    <check_box
+        control_name="KokuaIsTypingNotificationInConversationsTabs"
+        height="16"
+        label="Add a typing indication in Conversations Floater when other party is typing in IM"
+        follows="top|left"
+        layout="topleft"
+        top_pad="4"
+        left="20"
+        name="kokua_is_typing_notification_in_conversations_tabs"
+        width="330">
+    </check_box>
     <text
         layout="topleft"
         left="24"

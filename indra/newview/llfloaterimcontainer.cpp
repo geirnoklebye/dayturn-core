@@ -2196,6 +2196,18 @@ void LLFloaterIMContainer::flashConversationItemWidget(const LLUUID& session_id,
 	}
 }
 
+//KKA-779 Add a FS-style "is typing" indication in Conversations floater
+void LLFloaterIMContainer::setConversationItemWidgetIsTyping(const LLUUID& session_id, bool is_typing)
+{
+  //Finds the conversation line item to update typing state using the session_id
+	LLConversationViewSession * widget = dynamic_cast<LLConversationViewSession *>(get_ptr_in_map(mConversationsWidgets,session_id));
+
+	if (widget)
+	{
+		widget->setIsTyping(is_typing);
+	}
+}
+
 void LLFloaterIMContainer::highlightConversationItemWidget(const LLUUID& session_id, bool is_highlighted)
 {
 	//Finds the conversation line item to highlight using the session_id

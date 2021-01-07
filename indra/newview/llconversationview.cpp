@@ -118,6 +118,21 @@ void LLConversationViewSession::setFlashState(bool flash_state)
 	mFlashTimer->stopFlashing();
 }
 
+//KKA-779 Add a FS-style "is typing" indication in Conversations floater
+void LLConversationViewSession::setIsTyping(bool is_typing)
+{
+	LLUIString mTypingStart;
+	LLConversationItem* vmi = dynamic_cast<LLConversationItem*>(getViewModelItem());
+	mTypingStart = LLTrans::getString("IM_typing_start_string");
+	mTypingStart.setArg("[NAME]", vmi->getDisplayName());
+	if (mSessionTitle && gSavedSettings.getBOOL("KokuaIsTypingNotificationInConversationsTabs"))
+	{
+		std::string title = is_typing ? mTypingStart.getString() : vmi->getDisplayName();
+		mSessionTitle->setText(title);
+	}
+}
+
+
 void LLConversationViewSession::setHighlightState(bool hihglight_state)
 {
 	mFlashStateOn = hihglight_state;

@@ -89,6 +89,7 @@ public:
 
 	/*virtual*/ void setFlashState(bool flash_state);
 	void setHighlightState(bool hihglight_state);
+	void setIsTyping(bool is_typing); //KKA-779 Add a FS-style "is typing" indication in Conversations floater
 
 	LLFloater* getSessionFloater();
 	bool isInActiveVoiceChannel() { return mIsInActiveVoiceChannel; }
