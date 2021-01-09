@@ -283,7 +283,8 @@ BOOL LLToolPie::handleLeftClickPick()
 
 	if (mPick.mPickType != LLPickInfo::PICK_LAND)
 	{
-		LLViewerParcelMgr::getInstance()->deselectLand();
+		// KKA-781 don't trash the land selection if clicking on a HUD
+		if (!(object && object->isHUDAttachment())) LLViewerParcelMgr::getInstance()->deselectLand();
 	}
 	
 	if (object)
