@@ -146,6 +146,12 @@ if [ "${BINARY_TYPE}" == "ELF 32-bit LSB executable" ]; then
 else
 	export LD_LIBRARY_PATH="$PWD/lib:$PWD/lib/lib32:${LD_LIBRARY_PATH}"
 fi
+FSJEMALLOC="$(pwd)/lib/libjemalloc.so"
+if [ -f ${FSJEMALLOC} ]
+then
+	echo "Using jemalloc"
+	export LD_PRELOAD="${LD_PRELOAD}:${FSJEMALLOC}"
+fi
 
 export FS_CEF_PRELOAD=libcef.so
 
