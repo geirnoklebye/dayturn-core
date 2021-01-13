@@ -58,6 +58,7 @@ include(ViewerManager)
 # include(VisualLeakDetector)
 include(ZLIB)
 include(URIPARSER)
+include(jemalloc)
 
 # <FS:ND> if using ndPhysicsstub this variable will be unset, we don't need to build any stub code viewer side in that case
 if( LLPHYSICSEXTENSIONS_SRC_DIR )
