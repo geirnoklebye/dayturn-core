@@ -1225,6 +1225,7 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 			(folder_name.find(RR_RLV_REDIR_FOLDER_PREFIX) == 0 || folder_name.find(RR_RLV_REDIR_FOLDER_PREFIX) == 1))
 		{
 			info->mFolderID = gAgent.mRRInterface.getRlvShare()->getUUID();
+			info->mTransactionID = session_id.notNull() ? session_id : aux_id;
 		}
 		else
 		{
