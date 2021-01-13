@@ -182,10 +182,6 @@ void main()
 		
 		
 	vec3 diff_tex = texture2DRect(diffuseRect, frag.xy).rgb;
-    // SL-12005 Projector light pops as we get closer, more objectionable than being in wrong color space.
-    //          We can't switch to linear here unless we do it everywhere*
-	// *gbuffer is sRGB, convert to linear whenever sampling from it
-    diff_tex.rgb = srgb_to_linear(diff_tex.rgb);
 
 	vec3 dlit = vec3(0, 0, 0);
 	
@@ -226,7 +222,6 @@ void main()
 	
 	
 	vec4 spec = texture2DRect(specularRect, frag.xy);
-	
 	if (spec.a > 0.0)
 	{
 		dlit *= min(da*6.0, 1.0) * dist_atten;
