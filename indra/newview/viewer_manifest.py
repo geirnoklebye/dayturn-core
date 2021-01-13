@@ -1644,6 +1644,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libhunspell-1.3.so*")
             self.path("libGLOD.so")
             self.path("libfreetype.so.*.*")
+            self.path("libjemalloc.so*")
 
             #cef plugin
             self.path( "libcef.so" )

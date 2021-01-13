@@ -101,6 +101,7 @@ set(cmake_SOURCE_FILES
 #    WebKitLibPlugin.cmake
     XmlRpcEpi.cmake
     ZLIB.cmake
+    jemalloc.cmake
     )
 else (LINUX)
 set(cmake_SOURCE_FILES
