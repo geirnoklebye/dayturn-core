@@ -350,7 +350,9 @@ void LLToolGrabBase::startSpin()
 	LLViewerObject *root = (LLViewerObject *)objectp->getRoot();
 	mSpinRotation = root->getRotation();
 //MK
-	if (gRRenabled && (!gAgent.mRRInterface.canTouch(objectp, mGrabPick.mIntersection) || gAgent.mRRInterface.mContainsEdit))
+//CA: KKA-787 Updated this to only operate with touch denied, not edit. Otherwise, scripts get a very brief touch_start, touch, touch_end sequence
+//and may malfunction if they're timing touches or changing state on a touch (and so dropping the touch_end event)
+	if (gRRenabled && !gAgent.mRRInterface.canTouch(objectp, mGrabPick.mIntersection))
 	{
 		return;
 	}
@@ -801,7 +803,9 @@ void LLToolGrabBase::handleHoverNonPhysical(S32 x, S32 y, MASK mask)
 
 //MK
 //CA: Non-phys drags weren't being prevented at all; this clause added to fix that
-	if (gRRenabled && (!gAgent.mRRInterface.canTouch(objectp, mGrabPick.mIntersection) || gAgent.mRRInterface.mContainsEdit))
+//CA: KKA-787 Updated this to only operate with touch denied, not edit. Otherwise, scripts get a very brief touch_start, touch, touch_end sequence
+//and may malfunction if they're timing touches or changing state on a touch (and so dropping the touch_end event)
+	if (gRRenabled && !gAgent.mRRInterface.canTouch(objectp, mGrabPick.mIntersection))
 	{
 		LL_INFOS() << "*** Taking early exit from handleHoverNonPhys" << LL_ENDL;
 		setMouseCapture(FALSE);
