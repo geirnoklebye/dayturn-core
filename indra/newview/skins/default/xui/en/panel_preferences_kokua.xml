@@ -379,6 +379,21 @@
               name="KokuaRLVShowlocHidesMaturity"
               tool_tip="@showloc suppresses maturity information in navigation bar"
               width="270"/>
+          <check_box
+              top_pad="0"
+              layout="topleft"
+              follows="left|top"
+              enabled="true"
+              font="SansSerifSmall"
+              height="20"
+              initial_value="true"
+              control_name="RestrainedLoveShowRedirectChatTyping"
+              enabled_control="RestrainedLove"
+              label="Send typing notifications while chat is being redirected"
+              left="25"
+              name="RestrainedLoveShowRedirectChatTyping"
+              tool_tip="When enabled typing notifications will be issued for redirected chat and the typing animation may trigger"
+              width="270"/>
           <!-- reminder: if more controls are added here, add them to the delete list in llfloaterpreference.cpp for RLV always-on mode -->
         </panel>
         

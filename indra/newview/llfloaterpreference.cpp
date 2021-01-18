@@ -635,6 +635,7 @@ BOOL LLFloaterPreference::postBuild()
 	delete getChild<LLUICtrl>("KokuaRLVShowOtherNameTags");
 	delete getChild<LLUICtrl>("KokuaIMRestrictionWarning");
 	delete getChild<LLUICtrl>("KokuaRLVShowlocHidesMaturity");
+	delete getChild<LLUICtrl>("RestrainedLoveShowRedirectChatTyping");
 #endif
 	
 	// Hook up and init for filtering

@@ -2236,6 +2236,16 @@
        parameter="RestrainedLoveShowEllipsis" />
     </menu_item_check>
     <menu_item_check
+     label="Show redirected chat typing"
+     name="ShowRedirectChatTyping">
+      <menu_item_check.on_check
+    	 function="CheckControl"
+    	 parameter="RestrainedLoveShowRedirectChatTyping" />
+      <menu_item_check.on_click
+    	 function="ToggleControl"
+    	 parameter="RestrainedLoveShowRedirectChatTyping" />
+    </menu_item_check>
+    <menu_item_check
      label="Double-click to replace items"
      name="RestrainedLoveDoubleClickWear">
       <menu_item_check.on_check
