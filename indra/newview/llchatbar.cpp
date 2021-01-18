@@ -561,7 +561,7 @@ void LLChatBar::onInputEditorKeystroke( LLLineEditor* caller, void* userdata )
 	if( (length > 0) && (raw_text[0] != '/') )  // forward slash is used for escape (eg. emote) sequences
 	{
 //MK
-		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:"))
+		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:") || gSavedSettings.getBOOL("RestrainedLoveShowRedirectChatTyping"))
 //mk
 			gAgent.startTyping();
 	}
@@ -691,7 +691,7 @@ void LLChatBar::sendChatFromViewer(const LLWString &wtext, EChatType type, BOOL 
 			type = CHAT_TYPE_WHISPER;
 		}
 		
-		if (gAgent.mRRInterface.containsSubstr ("redirchat:"))
+		if (gAgent.mRRInterface.containsSubstr ("redirchat:") && !gSavedSettings.getBOOL("RestrainedLoveShowRedirectChatTyping"))
 		{
 			animate = false;
 		}

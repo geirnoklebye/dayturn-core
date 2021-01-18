@@ -1159,6 +1159,17 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
+    <key>RestrainedLoveShowRedirectChatTyping</key>
+    <map>
+      <key>Comment</key>
+      <string>Sends typing start messages (and may trigger the typing animation) while @redirchat is in effect</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <boolean>0</boolean>
+    </map>
     <key>ShowProfileFloaters</key>
     <map>
       <key>Comment</key>

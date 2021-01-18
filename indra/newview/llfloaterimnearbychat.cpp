@@ -493,7 +493,7 @@ void LLFloaterIMNearbyChat::onChatBoxKeystrokeWithText(LLChatEntry* lmInputEdito
 //mk
 	{
 //MK
-		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:"))
+		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:") || gSavedSettings.getBOOL("RestrainedLoveShowRedirectChatTyping"))
 //mk
 		gAgent.startTyping();
 	}
@@ -841,7 +841,7 @@ void LLFloaterIMNearbyChat::sendChatFromViewer(const LLWString &wtext, EChatType
 			type = CHAT_TYPE_WHISPER;
 		}
 		
-		if (gAgent.mRRInterface.containsSubstr ("redirchat:"))
+		if (gAgent.mRRInterface.containsSubstr ("redirchat:") && !gSavedSettings.getBOOL("RestrainedLoveShowRedirectChatTyping"))
 		{
 			animate = false;
 		}
