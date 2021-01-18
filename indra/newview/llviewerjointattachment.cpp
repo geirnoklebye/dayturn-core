@@ -385,24 +385,28 @@ void LLViewerJointAttachment::removeObject(LLViewerObject *object)
 			// Now notify that this object has been detached and will be reattached right away
 			gAgent.mRRInterface.notify (LLUUID::null, "detached illegally " + getName(), "");
 
-			std::deque<AssetAndTarget>::iterator it = gAgent.mRRInterface.mAssetsToReattach.begin();
-			bool found = false;
-			bool found_for_this_point = false;
-			for (; it != gAgent.mRRInterface.mAssetsToReattach.end(); ++it)
+			//KKA-788 if it no longer exists it won't be coming back
+			if (inv_item && inv_item_id != LLUUID::null)
 			{
-				if (it->uuid == inv_item_id) found = true;
-				if (it->attachpt == target_attachpt) found_for_this_point = true;
-			}
+				std::deque<AssetAndTarget>::iterator it = gAgent.mRRInterface.mAssetsToReattach.begin();
+				bool found = false;
+				bool found_for_this_point = false;
+				for (; it != gAgent.mRRInterface.mAssetsToReattach.end(); ++it)
+				{
+					if (it->uuid == inv_item_id) found = true;
+					if (it->attachpt == target_attachpt) found_for_this_point = true;
+				}
 
-			if (!found && !found_for_this_point)
-			{
-				AssetAndTarget at;
-				at.uuid = inv_item_id;
-				at.attachpt = target_attachpt;
-				gAgent.mRRInterface.mReattachTimer.reset();
-				gAgent.mRRInterface.mAssetsToReattach.push_back(at);
-				// Little hack : store this item's asset id into the list of restrictions so they are automatically reapplied when it is reattached
-				gAgent.mRRInterface.replace(object->getRootEdit()->getID(), inv_item_id);
+				if (!found && !found_for_this_point)
+				{
+					AssetAndTarget at;
+					at.uuid = inv_item_id;
+					at.attachpt = target_attachpt;
+					gAgent.mRRInterface.mReattachTimer.reset();
+					gAgent.mRRInterface.mAssetsToReattach.push_back(at);
+					// Little hack : store this item's asset id into the list of restrictions so they are automatically reapplied when it is reattached
+					gAgent.mRRInterface.replace(object->getRootEdit()->getID(), inv_item_id);
+				}
 			}
 		}
 		else {
