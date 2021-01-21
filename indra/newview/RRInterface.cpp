@@ -3975,6 +3975,9 @@ void updateAndSave (WLFloatControl* floatControl)
 BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 {
 	// command is "setenv_<something>"
+
+	option = stringReplace(option, "/", ";"); // Catznip uses "/" for some reason, but ";" should be used for consistency ("/" is used for folders and some folder commands have multiple options separated by ";")
+	
 	double val = atof (option.c_str());
 
 	int length = 7; // size of "setenv_"
@@ -4090,6 +4093,18 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		//}
 		//updateAndSave(&(params->mBlueHorizon));
 	}
+	else if (command == "bluehorizon") {
+		LLColor3 bluehorizon = psky->getBlueHorizon();
+		std::deque<std::string> tokens = parse(option, ";");
+		bluehorizon.mV[0] = atof(tokens.at(0).c_str()) * 2;
+		bluehorizon.mV[1] = atof(tokens.at(1).c_str()) * 2;
+		bluehorizon.mV[2] = atof(tokens.at(2).c_str()) * 2;
+		psky->setBlueHorizon(bluehorizon);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mBlueHorizon.r = val*2;
+		//updateAndSave (&(params->mBlueHorizon));
+	}
 
 	else if (command == "bluedensityr") {
 		LLColor3 bluedensity=psky->getBlueDensity();
@@ -4143,6 +4158,18 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		//}
 		//updateAndSave(&(params->mBlueDensity));
 	}
+	else if (command == "bluedensity") {
+		LLColor3 bluedensity = psky->getBlueDensity();
+		std::deque<std::string> tokens = parse(option, ";");
+		bluedensity.mV[0] = atof(tokens.at(0).c_str()) * 2;
+		bluedensity.mV[1] = atof(tokens.at(1).c_str()) * 2;
+		bluedensity.mV[2] = atof(tokens.at(2).c_str()) * 2;
+		psky->setBlueDensity(bluedensity);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mBlueDensity.r = val*2;
+		//updateAndSave (&(params->mBlueDensity));
+	}
 
 	else if (command == "hazehorizon") {
 		psky->setHazeHorizon(val); // original bug, slider only goes up to 1.0
@@ -4188,7 +4215,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		//updateAndSave (&(params->mMaxAlt));
 	}
 
-	else if (command == "sunmooncolorr") {
+	else if (command == "sunmooncolorr" || command == "sunlightcolorr") {
 		LLColor3 suncolour=psky->getSunlightColor();
 		suncolour.mV[0] = val * 3;
 		psky->setSunlightColor(suncolour);
@@ -4197,7 +4224,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		//params->mSunlight.r = val*3;
 		//updateAndSave (&(params->mSunlight));
 	}
-	else if (command == "sunmooncolorg") {
+	else if (command == "sunmooncolorg" || command == "sunlightcolorg") {
 		LLColor3 suncolour=psky->getSunlightColor();
 		suncolour.mV[1] = val * 3;
 		psky->setSunlightColor(suncolour);
@@ -4206,7 +4233,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		//params->mSunlight.g = val*3;
 		//updateAndSave (&(params->mSunlight));
 	}
-	else if (command == "sunmooncolorb") {
+	else if (command == "sunmooncolorb" || command == "sunlightcolorb") {
 		LLColor3 suncolour=psky->getSunlightColor();
 		suncolour.mV[2] = val * 3;
 		psky->setSunlightColor(suncolour);
@@ -4215,7 +4242,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		//params->mSunlight.b = val*3;
 		//updateAndSave (&(params->mSunlight));
 	}
-	else if (command == "sunmooncolori") {
+	else if (command == "sunmooncolori" || command == "sunlightcolori") {
 		LLColor3 suncolor=psky->getSunlightColor();
 		F32 old_intensity = llmax(suncolor.mV[0], suncolor.mV[1], suncolor.mV[2]);
 		// original bug, *2 used here, *3 elsewhere for sunmooncolor
@@ -4240,6 +4267,18 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		//	params->mSunlight.b *= val * 2 / old_intensity;
 		//}
 		//updateAndSave(&(params->mSunlight));
+	}
+	else if (command == "sunmooncolor" || command == "sunlightcolor") {
+		LLColor3 suncolour = psky->getSunlightColor();
+		std::deque<std::string> tokens = parse(option, ";");
+		suncolour.mV[0] = atof(tokens.at(0).c_str()) * 3;
+		suncolour.mV[1] = atof(tokens.at(1).c_str()) * 3;
+		suncolour.mV[2] = atof(tokens.at(2).c_str()) * 3;
+		psky->setSunlightColor(suncolour);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mSunlight.r = val*3;
+		//updateAndSave (&(params->mSunlight));
 	}
 
 	else if (command == "ambientr") {
@@ -4284,16 +4323,16 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		psky->setAmbientColor(ambientcolor);
 		psky->update();
 		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
-		//F32 old_intensity = llmax(params->mAmbient.r, params->mAmbient.g, params->mAmbient.b);
-		//if (val == 0 || old_intensity == 0) {
-		//	params->mAmbient.r = params->mAmbient.g = params->mAmbient.b = val * 2;
-		//}
-		//else {
-		//	params->mAmbient.r *= val * 2 / old_intensity;
-		//	params->mAmbient.g *= val * 2 / old_intensity;
-		//	params->mAmbient.b *= val * 2 / old_intensity;
-		//}
-		//updateAndSave(&(params->mAmbient));
+	}
+	else if (command == "ambient") { // vector3 (we don't care about intensity)
+		LLColor3 ambientcolor = psky->getAmbientColor();
+		std::deque<std::string> tokens = parse(option, ";");
+		ambientcolor.mV[0] = atof(tokens.at(0).c_str()) * 3;
+		ambientcolor.mV[1] = atof(tokens.at(1).c_str()) * 3;
+		ambientcolor.mV[2] = atof(tokens.at(2).c_str()) * 3;
+		psky->setAmbientColor(ambientcolor);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 	}
 	else if (command == "sunglowfocus") {
 		// still needs a fudge to match UI values to internal
@@ -4328,7 +4367,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		// replaced by combined routine below
 		//params->mCurParams.setEastAngle (F_TWO_PI * val);
 	//}
-	else if (command == "sunazim") { // sun azimuth
+	else if (command == "sunazim" || command == "sunazimuth") { // sun azimuth
 		// The pitch value reported by getEulerAngles is useless here so we need to do it another way : get the yaw, substract it from the final value we want
 		// (effectively cancelling the original yaw), and do a global rotate of the initial quaternion by this new value around Z.
 		val -= F_TWO_PI * floor((val + F_PI) / F_TWO_PI); // wrap the angle between to -PI..PI (this is better than clamping it)
@@ -4345,7 +4384,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		psky->update();
 		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 	}
-	else if (command == "sunelev") { // sun elevation
+	else if (command == "sunelev" || command == "sunelevation") { // sun elevation
 		// Here it is a bit easier since the reported yaw value is useful. Create a rotation around Y for the pitch, global rotate it by the reported yaw, the result
 		// is the rotation we want.
 		val = (double)llclamp((F32)val, -F_PI_BY_TWO, F_PI_BY_TWO); // clamp instead of wrapping
@@ -4364,7 +4403,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		psky->update();
 		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 	}
-	else if (command == "moonazim") { // moon azimuth
+	else if (command == "moonazim" || command == "moonazimuth") { // moon azimuth
 		// The pitch value reported by getEulerAngles is useless here so we need to do it another way : get the yaw, substract it from the final value we want
 		// (effectively cancelling the original yaw), and do a global rotate of the initial quaternion by this new value around Z.
 		val -= F_TWO_PI * floor((val + F_PI) / F_TWO_PI); // wrap the angle between to -PI..PI (this is better than clamping it)
@@ -4381,7 +4420,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		psky->update();
 		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 	}
-	else if (command == "moonelev") { // moon elevation
+	else if (command == "moonelev" || command == "moonelevation") { // moon elevation
 		// Here it is a bit easier since the reported yaw value is useful. Create a rotation around Y for the pitch, global rotate it by the reported yaw, the result
 		// is the rotation we want.
 		val = (double)llclamp((F32)val, -F_PI_BY_TWO, F_PI_BY_TWO); // clamp instead of wrapping
@@ -4496,8 +4535,20 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		//}
 		//updateAndSave(&(params->mCloudColor));
 	}
+	else if (command == "cloudcolor") {
+		LLColor3 cloudcolor = psky->getCloudColor();
+		std::deque<std::string> tokens = parse(option, ";");
+		cloudcolor.mV[0] = atof(tokens.at(0).c_str());
+		cloudcolor.mV[1] = atof(tokens.at(1).c_str());
+		cloudcolor.mV[2] = atof(tokens.at(2).c_str());
+		psky->setCloudColor(cloudcolor);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCloudColor.r = val;
+		//updateAndSave (&(params->mCloudColor));
+	}
 
-	else if (command == "cloudx") {
+	else if (command == "cloudx" || command == "clouddensityx") {
 		LLColor3 clouddetail=psky->getCloudPosDensity1();
 		clouddetail.mV[0] = val;
 		psky->setCloudPosDensity1(clouddetail);
@@ -4506,7 +4557,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		//params->mCloudMain.r = val;
 		//updateAndSave (&(params->mCloudMain));
 	}
-	else if (command == "cloudy") {
+	else if (command == "cloudy" || command == "clouddensityy") {
 		LLColor3 clouddetail=psky->getCloudPosDensity1();
 		clouddetail.mV[1] = val;
 		psky->setCloudPosDensity1(clouddetail);
@@ -4515,13 +4566,25 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		//params->mCloudMain.g = val;
 		//updateAndSave (&(params->mCloudMain));
 	}
-	else if (command == "cloudd") {
+	else if (command == "cloudd" || command == "clouddensityd") {
 		LLColor3 clouddetail=psky->getCloudPosDensity1();
 		clouddetail.mV[2] = val;
 		psky->setCloudPosDensity1(clouddetail);
 		psky->update();
 		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCloudMain.b = val;
+		//updateAndSave (&(params->mCloudMain));
+	}
+	else if (command == "cloud" || command == "clouddensity") {
+		LLColor3 clouddetail = psky->getCloudPosDensity1();
+		std::deque<std::string> tokens = parse(option, ";");
+		clouddetail.mV[0] = atof(tokens.at(0).c_str());
+		clouddetail.mV[1] = atof(tokens.at(1).c_str());
+		clouddetail.mV[2] = atof(tokens.at(2).c_str());
+		psky->setCloudPosDensity1(clouddetail);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCloudMain.r = val;
 		//updateAndSave (&(params->mCloudMain));
 	}
 
@@ -4550,6 +4613,18 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		psky->update();
 		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCloudDetail.b = val;
+		//updateAndSave (&(params->mCloudDetail));
+	}
+	else if (command == "clouddetail") {
+		LLColor3 clouddetail = psky->getCloudPosDensity2();
+		std::deque<std::string> tokens = parse(option, ";");
+		clouddetail.mV[0] = atof(tokens.at(0).c_str());
+		clouddetail.mV[1] = atof(tokens.at(1).c_str());
+		clouddetail.mV[2] = atof(tokens.at(2).c_str());
+		psky->setCloudPosDensity2(clouddetail);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCloudDetail.r = val;
 		//updateAndSave (&(params->mCloudDetail));
 	}
 
@@ -4587,6 +4662,15 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCurParams.setCloudScrollY (val+10);
 	}
+	else if (command == "cloudscroll") {
+		std::deque<std::string> tokens = parse(option, ";");
+		psky->setCloudScrollRateX(atof(tokens.at(0).c_str()) + 10);
+		psky->setCloudScrollRateY(atof(tokens.at(1).c_str()) + 10);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		//params->mCurParams.setCloudScrollX (val+10);
+	}
+
 	else if (command == "moisturelevel") {
 		//val = (F32)llclamp((double)val, 0.0, 1.0);
 		psky->setSkyMoistureLevel(val);
@@ -4608,24 +4692,39 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCurParams.setCloudScrollY (val+10);
 	}
-	else if (command == "sunimage") {
+	else if (command == "sunimage" || command == "suntexture") {
 		LLUUID id;
 		id.set(option, FALSE);
 		psky->setSunTextureId(id);
 		psky->update();
 		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 	}
-	else if (command == "moonimage") {
+	else if (command == "moonimage" || command == "moontexture") {
 		LLUUID id;
 		id.set(option, FALSE);
 		psky->setMoonTextureId(id);
 		psky->update();
 		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 	}
-	else if (command == "cloudimage") {
+	else if (command == "cloudimage" || command == "cloudtexture") {
 		LLUUID id;
 		id.set(option, FALSE);
 		psky->setCloudNoiseTextureId(id);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+	}
+	else if (command == "sunscale") {
+		psky->setSunScale((F32)val);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+	}
+	else if (command == "moonscale") {
+		psky->setMoonScale((F32)val);
+		psky->update();
+		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+	}
+	else if (command == "moonbrightness") {
+		psky->setMoonBrightness((F32)val);
 		psky->update();
 		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 	}
@@ -4633,31 +4732,41 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	// cloudcolor rgb 0-1, cloudxydensity xyd 0-1, cloudcoverage 0-1, cloudscale 0-1, clouddetail xyd 0-1
 	// cloudscrollx 0-1, cloudscrolly 0-1, drawclassicclouds 0/1
 
-	else if (command == "preset") {
+	else if (command == "preset" || command == "asset") {
 		// Find all the environment assets contained in the Environment folder and all its sub-folders, and nowhere else.
 		// If we find at least one which name matches the option, activate it, otherwise do nothing.
-//		params->loadPreset (option);
-		LLUUID env_root_folder_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_SETTINGS);
-		if (env_root_folder_id != LLUUID::null) {
-			LLViewerInventoryCategory* env_root_folder = gInventory.getCategory(env_root_folder_id);
-			LL_INFOS() << "env_root_folder : " << env_root_folder->getName() << LL_ENDL;
-			LLFindSettings collector;
-			LLInventoryModel::cat_array_t cats;
-			LLInventoryModel::item_array_t items;
-			gInventory.collectDescendentsRecIf(env_root_folder_id, cats, items, TRUE, FALSE, collector);
-			LLInventoryModel::item_array_t::const_iterator it = items.begin();
-			const LLInventoryModel::item_array_t::const_iterator it_end = items.end();
-			LLStringUtil::toLower(option); // make sure we compare without caring about the case
-			for (; it_end != it; ++it)
-			{
-				LLViewerInventoryItem* item = *it;
-				if (item) {
-					std::string item_name = item->getName();
-					LLStringUtil::toLower(item_name);
-					if (item_name == option) {
-						LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, item->getAssetUUID());
-						LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
-						break;
+		// If the parameter is a UUID, apply immediately without searching in the inventory.
+		if (LLUUID::validate(option))
+		{
+			LLUUID uuid(option);
+			LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, uuid);
+			LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
+		}
+		else
+		{
+	//		params->loadPreset (option);
+			LLUUID env_root_folder_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_SETTINGS);
+			if (env_root_folder_id != LLUUID::null) {
+				LLViewerInventoryCategory* env_root_folder = gInventory.getCategory(env_root_folder_id);
+				LL_INFOS() << "env_root_folder : " << env_root_folder->getName() << LL_ENDL;
+				LLFindSettings collector;
+				LLInventoryModel::cat_array_t cats;
+				LLInventoryModel::item_array_t items;
+				gInventory.collectDescendentsRecIf(env_root_folder_id, cats, items, TRUE, FALSE, collector);
+				LLInventoryModel::item_array_t::const_iterator it = items.begin();
+				const LLInventoryModel::item_array_t::const_iterator it_end = items.end();
+				LLStringUtil::toLower(option); // make sure we compare without caring about the case
+				for (; it_end != it; ++it)
+				{
+					LLViewerInventoryItem* item = *it;
+					if (item) {
+						std::string item_name = item->getName();
+						LLStringUtil::toLower(item_name);
+						if (item_name == option) {
+							LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, item->getAssetUUID());
+							LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
+							break;
+						}
 					}
 				}
 			}
@@ -4670,24 +4779,22 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 
 std::string RRInterface::getEnvironment (std::string command)
 {
-	F64 res = 0;
 	int length = 7; // size of "getenv_"
 	command = command.substr (length);
 	//LLWLParamManager* params = LLWLParamManager::getInstance();
 	LLSettingsSky::ptr_t psky = LLEnvironment::instance().getCurrentSky();
-	bool preformatted = false; // true if the routine wants to set up its own response
 	std::stringstream str; // needs definition here so that preformatting routines can write direct
 
 	if (command == "daytime") {
 		/*** NEEDS CHANGE FOR EEP ***
-		if (params->mAnimator.mIsRunning && params->mAnimator.getTimeType() == LLWLAnimator::TIME_LINDEN) res = -1;
-		else res = params->mAnimator.getDayTime();
+		if (params->mAnimator.mIsRunning && params->mAnimator.getTimeType() == LLWLAnimator::TIME_LINDEN) str << -1;
+		else str << params->mAnimator.getDayTime();
 		***/
 		// This command is now deprecated so any script that asks the time of day will be given "0" or "1" as a response depending on whether the sun is below or above the horizon respectively,
 		// unless the environment is set to "region", in which case it will give "-1" instead.
 		if (getLastLoadedPreset() == "")
 		{
-			res = -1.0;
+			str << -1.0;
 		}
 		else
 		{
@@ -4708,82 +4815,59 @@ std::string RRInterface::getEnvironment (std::string command)
 			}
 			if (pitch > 0.0) // pitch > 0 means the sun is below the horizon
 			{
-				res = 0.0;
+				str << 0.0;
 			}
 			else
 			{
-				res = 1.0;
+				str << 1.0;
 			}
 		}
 	}
 
-	else if (command == "bluehorizonr") res = (psky->getBlueHorizon().mV[0])/2;
-	else if (command == "bluehorizong") res = (psky->getBlueHorizon().mV[1])/2;
-	else if (command == "bluehorizonb") res = (psky->getBlueHorizon().mV[2])/2;
-	else if (command == "bluehorizoni") res = max (max (psky->getBlueHorizon().mV[0], psky->getBlueHorizon().mV[1]), psky->getBlueHorizon().mV[2]) / 2;
-	//else if (command == "bluehorizonr") res = params->mBlueHorizon.r/2;
-	//else if (command == "bluehorizong") res = params->mBlueHorizon.g/2;
-	//else if (command == "bluehorizonb") res = params->mBlueHorizon.b/2;
-	//else if (command == "bluehorizoni") res = max (max (params->mBlueHorizon.r, params->mBlueHorizon.g), params->mBlueHorizon.b) / 2;
+	else if (command == "bluehorizonr") str << (psky->getBlueHorizon().mV[0])/2;
+	else if (command == "bluehorizong") str << (psky->getBlueHorizon().mV[1])/2;
+	else if (command == "bluehorizonb") str << (psky->getBlueHorizon().mV[2])/2;
+	else if (command == "bluehorizoni") str << max(max(psky->getBlueHorizon().mV[0], psky->getBlueHorizon().mV[1]), psky->getBlueHorizon().mV[2]) / 2;
+	else if (command == "bluehorizon")  str << (psky->getBlueHorizon().mV[0]) / 2 << ";" << (psky->getBlueHorizon().mV[1]) / 2 << ";" << (psky->getBlueHorizon().mV[2]) / 2;
 
-	else if (command == "bluedensityr") res = (psky->getBlueDensity().mV[0])/2;
-	else if (command == "bluedensityg") res = (psky->getBlueDensity().mV[1])/2;
-	else if (command == "bluedensityb") res = (psky->getBlueDensity().mV[2])/2;
-	else if (command == "bluedensityi") res = max (max (psky->getBlueDensity().mV[0], psky->getBlueDensity().mV[1]), psky->getBlueDensity().mV[2]) / 2;
-	//else if (command == "bluedensityr") res = params->mBlueDensity.r/2;
-	//else if (command == "bluedensityg") res = params->mBlueDensity.g/2;
-	//else if (command == "bluedensityb") res = params->mBlueDensity.b/2;
-	//else if (command == "bluedensityi") res = max (max (params->mBlueDensity.r, params->mBlueDensity.g), params->mBlueDensity.b) / 2;
+	else if (command == "bluedensityr") str << (psky->getBlueDensity().mV[0])/2;
+	else if (command == "bluedensityg") str << (psky->getBlueDensity().mV[1])/2;
+	else if (command == "bluedensityb") str << (psky->getBlueDensity().mV[2])/2;
+	else if (command == "bluedensityi") str << max (max (psky->getBlueDensity().mV[0], psky->getBlueDensity().mV[1]), psky->getBlueDensity().mV[2]) / 2;
+	else if (command == "bluedensity")  str << (psky->getBlueDensity().mV[0]) / 2 << ";" << (psky->getBlueDensity().mV[1]) / 2 << ";" << (psky->getBlueDensity().mV[2]) / 2;
 
-	else if (command == "hazehorizon")  res = psky->getHazeHorizon();
-	else if (command == "hazedensity")  res = psky->getHazeDensity() / 4; //original bug: windlight slider goes up to 4
-	//else if (command == "hazehorizon")  res = params->mHazeHorizon.x;
-	//else if (command == "hazedensity")  res = params->mHazeDensity.x;
+	else if (command == "hazehorizon")  str << psky->getHazeHorizon();
+	else if (command == "hazedensity")  str << psky->getHazeDensity() / 4; //original bug: windlight slider goes up to 4
 
-	else if (command == "densitymultiplier")  res = psky->getDensityMultiplier()*1000;
-	else if (command == "distancemultiplier") res = psky->getDistanceMultiplier();
-	else if (command == "maxaltitude")        res = psky->getMaxY();
-	//else if (command == "densitymultiplier")  res = params->mDensityMult.x*1000;
-	//else if (command == "distancemultiplier") res = params->mDistanceMult.x;
-	//else if (command == "maxaltitude")        res = params->mMaxAlt.x;
+	else if (command == "densitymultiplier")  str << psky->getDensityMultiplier()*1000;
+	else if (command == "distancemultiplier") str << psky->getDistanceMultiplier();
+	else if (command == "maxaltitude")        str << psky->getMaxY();
 
-	else if (command == "sunmooncolorr") res = (psky->getSunlightColor().mV[0])/3;
-	else if (command == "sunmooncolorg") res = (psky->getSunlightColor().mV[1])/3;
-	else if (command == "sunmooncolorb") res = (psky->getSunlightColor().mV[2])/3;
-	else if (command == "sunmooncolori") res = max (max (psky->getSunlightColor().mV[0], psky->getSunlightColor().mV[1]), psky->getSunlightColor().mV[2]) / 3;
-	//else if (command == "sunmooncolorr") res = params->mSunlight.r/3;
-	//else if (command == "sunmooncolorg") res = params->mSunlight.g/3;
-	//else if (command == "sunmooncolorb") res = params->mSunlight.b/3;
-	//else if (command == "sunmooncolori") res = max (max (params->mSunlight.r, params->mSunlight.g), params->mSunlight.b) / 3;
+	else if (command == "sunmooncolorr" || command == "sunlightcolorr") str << (psky->getSunlightColor().mV[0])/3;
+	else if (command == "sunmooncolorg" || command == "sunlightcolorg") str << (psky->getSunlightColor().mV[1])/3;
+	else if (command == "sunmooncolorb" || command == "sunlightcolorb") str << (psky->getSunlightColor().mV[2])/3;
+	else if (command == "sunmooncolori" || command == "sunlightcolori") str << max (max (psky->getSunlightColor().mV[0], psky->getSunlightColor().mV[1]), psky->getSunlightColor().mV[2]) / 3;
+	else if (command == "sunmooncolor" || command == "sunlightcolor")  str << (psky->getSunlightColor().mV[0]) / 3 << ";" << (psky->getSunlightColor().mV[1]) / 3 << ";" << (psky->getSunlightColor().mV[2]) / 3;
 
-	else if (command == "ambientr") res = (psky->getAmbientColor().mV[0])/3;
-	else if (command == "ambientg") res = (psky->getAmbientColor().mV[1])/3;
-	else if (command == "ambientb") res = (psky->getAmbientColor().mV[2])/3;
-	else if (command == "ambienti") res = max (max (psky->getAmbientColor().mV[0], psky->getAmbientColor().mV[1]), psky->getAmbientColor().mV[2]) / 3;
-	//else if (command == "ambientr") res = params->mAmbient.r/3;
-	//else if (command == "ambientg") res = params->mAmbient.g/3;
-	//else if (command == "ambientb") res = params->mAmbient.b/3;
-	//else if (command == "ambienti") res = max (max (params->mAmbient.r, params->mAmbient.g), params->mAmbient.b) / 3;
+	else if (command == "ambientr") str << (psky->getAmbientColor().mV[0])/3;
+	else if (command == "ambientg") str << (psky->getAmbientColor().mV[1])/3;
+	else if (command == "ambientb") str << (psky->getAmbientColor().mV[2])/3;
+	else if (command == "ambienti") str << max (max (psky->getAmbientColor().mV[0], psky->getAmbientColor().mV[1]), psky->getAmbientColor().mV[2]) / 3;
+	else if (command == "ambient")  str << (psky->getAmbientColor().mV[0]) / 3 << ";" << (psky->getAmbientColor().mV[1]) / 3 << ";" << (psky->getAmbientColor().mV[2]) / 3;
 
-	if (command == "sunglowfocus")	res = (-psky->getGlow().mV[2]) / 5; // negation is intended, 5 is SLIDER_SCALE_GLOW_B
-	//else if (command == "sunglowfocus")	res = -params->mGlow.b/5;
-	if (command == "sunglowsize")		res = 2 - psky->getGlow().mV[0] / 20; // 2 is UI size, 20 is SLIDER_SCALE_GLOW_R
-	//else if (command == "sunglowsize")		res = 2-params->mGlow.r/20;
-	else if (command == "scenegamma")		res = psky->getGamma();
-	//else if (command == "scenegamma")		res = params->mWLGamma.x;
+	else if (command == "sunglowfocus")	str << (-psky->getGlow().mV[2]) / 5; // negation is intended, 5 is SLIDER_SCALE_GLOW_B
+	else if (command == "sunglowsize")		str << 2 - psky->getGlow().mV[0] / 20; // 2 is UI size, 20 is SLIDER_SCALE_GLOW_R
+	else if (command == "scenegamma")		str << psky->getGamma();
 
-	//else if (command == "sunmoonposition")		res = params->mCurParams.getSunAngle()/F_TWO_PI;
-	//else if (command == "eastangle")			res = params->mCurParams.getEastAngle()/F_TWO_PI;
-	
-	else if (command == "sunazim") { // sun azimuth
+	else if (command == "sunazim" || command == "sunazimuth") { // sun azimuth
 		LLQuaternion orig_quat = psky->getSunRotation();
 		F32 roll;
 		F32 pitch;
 		F32 yaw;
 		orig_quat.getEulerAngles(&roll, &pitch, &yaw);
-		res = (F64)yaw;
+		str << (F64)yaw;
 	}
-	else if (command == "sunelev") { // sun elevation
+	else if (command == "sunelev" || command == "sunelevation") { // sun elevation
 		// The pitch value reported by getEulerAngles is useless here so we need to do it another way : get the yaw, rotate around Z by the same amount
 		// to get the local pitch to become the global pitch, and then return the pitch.
 		LLQuaternion orig_quat = psky->getSunRotation();
@@ -4800,17 +4884,17 @@ std::string RRInterface::getEnvironment (std::string command)
 		if (roll <= -F_PI_BY_TWO || roll >= F_PI_BY_TWO) {
 			pitch = -pitch;
 		}
-		res = -(F64)pitch; // report the negative pitch
+		str << -(F64)pitch; // report the negative pitch
 	}
-	else if (command == "moonazim") { // moon azimuth
+	else if (command == "moonazim" || command == "moonazimuth") { // moon azimuth
 		LLQuaternion orig_quat = psky->getMoonRotation();
 		F32 roll;
 		F32 pitch;
 		F32 yaw;
 		orig_quat.getEulerAngles(&roll, &pitch, &yaw);
-		res = (F64)yaw;
+		str << (F64)yaw;
 	}
-	else if (command == "moonelev") { // moon elevation
+	else if (command == "moonelev" || command == "moonelevation") { // moon elevation
 		// The pitch value reported by getEulerAngles is useless here so we need to do it another way : get the yaw, rotate around Z by the same amount
 		// to get the local pitch to become the global pitch, and then return the pitch.
 		LLQuaternion orig_quat = psky->getMoonRotation();
@@ -4826,7 +4910,7 @@ std::string RRInterface::getEnvironment (std::string command)
 		if (roll <= -F_PI_BY_TWO || roll >= F_PI_BY_TWO) {
 			pitch = -pitch;
 		}
-		res = -(F64)pitch; // report the negative pitch
+		str << -(F64)pitch; // report the negative pitch
 	}
 	else if (command == "eastangle" || command == "sunmoonposition")
 	{
@@ -4850,61 +4934,53 @@ std::string RRInterface::getEnvironment (std::string command)
 		while (sunmoonposition < 0.0) sunmoonposition+=1.0;
 		while (sunmoonposition > 1.0) sunmoonposition-=1.0; // strictly should be >= however the API says 0.0 to 1.0
 
-		// original return values, will get ignored due to use of preformatted option
-		if (command == "eastangle") res = eastangle;
-		else res = sunmoonposition;
+		if (command == "eastangle") str << eastangle;
+		else str << sunmoonposition;
 			
-		preformatted = true; // override the automatic formatting so we can make our own reply
 		if (command == "eastangle") str << eastangle << "," << sunmoonposition;
 		else str << sunmoonposition << "," << eastangle;	
 	}
 	
-	else if (command == "starbrightness")		res = psky->getStarBrightness();
-	//else if (command == "starbrightness")		res = params->mCurParams.getStarBrightness();
+	else if (command == "starbrightness")		str << psky->getStarBrightness();
+	//else if (command == "starbrightness")		str << params->mCurParams.getStarBrightness();
 
-	else if (command == "cloudcolorr") res = (psky->getCloudColor().mV[0]);
-	else if (command == "cloudcolorg") res = (psky->getCloudColor().mV[1]);
-	else if (command == "cloudcolorb") res = (psky->getCloudColor().mV[2]);
-	else if (command == "cloudcolori") res = max (max (psky->getCloudColor().mV[0], psky->getCloudColor().mV[1]), psky->getCloudColor().mV[2]);
-	//else if (command == "cloudcolorr") res = params->mCloudColor.r;
-	//else if (command == "cloudcolorg") res = params->mCloudColor.g;
-	//else if (command == "cloudcolorb") res = params->mCloudColor.b;
-	//else if (command == "cloudcolori") res = max (max (params->mCloudColor.r, params->mCloudColor.g), params->mCloudColor.b);
+	else if (command == "cloudcolorr") str << (psky->getCloudColor().mV[0]);
+	else if (command == "cloudcolorg") str << (psky->getCloudColor().mV[1]);
+	else if (command == "cloudcolorb") str << (psky->getCloudColor().mV[2]);
+	else if (command == "cloudcolori") str << max (max (psky->getCloudColor().mV[0], psky->getCloudColor().mV[1]), psky->getCloudColor().mV[2]);
+	else if (command == "cloudcolor")  str << (psky->getCloudColor().mV[0]) << ";" << (psky->getCloudColor().mV[1]) << ";" << (psky->getCloudColor().mV[2]);
 
-	else if (command == "cloudx")  res = (psky->getCloudPosDensity1().mV[0]);
-	else if (command == "cloudy")  res = (psky->getCloudPosDensity1().mV[1]);
-	else if (command == "cloudd")  res = (psky->getCloudPosDensity1().mV[2]);
-	//else if (command == "cloudx")  res = params->mCloudMain.r;
-	//else if (command == "cloudy")  res = params->mCloudMain.g;
-	//else if (command == "cloudd")  res = params->mCloudMain.b;
+	else if (command == "cloudx" || command == "clouddensityx")  str << (psky->getCloudPosDensity1().mV[0]);
+	else if (command == "cloudy" || command == "clouddensityy")  str << (psky->getCloudPosDensity1().mV[1]);
+	else if (command == "cloudd" || command == "clouddensityd")  str << (psky->getCloudPosDensity1().mV[2]);
+	else if (command == "cloud" || command == "clouddensity")    str << (psky->getCloudPosDensity1().mV[0]) << ";" << (psky->getCloudPosDensity1().mV[1]) << ";" << (psky->getCloudPosDensity1().mV[2]);
 
-	else if (command == "clouddetailx") res = (psky->getCloudPosDensity2().mV[0]);
-	else if (command == "clouddetaily") res = (psky->getCloudPosDensity2().mV[1]);
-	else if (command == "clouddetaild") res = (psky->getCloudPosDensity2().mV[2]);
-	//else if (command == "clouddetailx")  res = params->mCloudDetail.r;
-	//else if (command == "clouddetaily")  res = params->mCloudDetail.g;
-	//else if (command == "clouddetaild")  res = params->mCloudDetail.b;
+	else if (command == "clouddetailx") str << (psky->getCloudPosDensity2().mV[0]);
+	else if (command == "clouddetaily") str << (psky->getCloudPosDensity2().mV[1]);
+	else if (command == "clouddetaild") str << (psky->getCloudPosDensity2().mV[2]);
+	else if (command == "clouddetail")  str << (psky->getCloudPosDensity2().mV[0]) << ";" << (psky->getCloudPosDensity2().mV[1]) << ";" << (psky->getCloudPosDensity2().mV[2]);
 
-	else if (command == "cloudcoverage")	res = psky->getCloudShadow();
-	//else if (command == "cloudcoverage")	res = params->mCloudCoverage.x;
-	else if (command == "cloudscale")		res = psky->getCloudScale();
-	//else if (command == "cloudscale")		res = params->mCloudScale.x;
-	else if (command == "cloudvariance") res = psky->getCloudVariance();
+	else if (command == "cloudcoverage")	str << psky->getCloudShadow();
+	else if (command == "cloudscale")		str << psky->getCloudScale();
+	else if (command == "cloudvariance") str << psky->getCloudVariance();
 
-	else if (command == "cloudscrollx")  res = psky->getCloudScrollRate().mV[0] - 10;
-	else if (command == "cloudscrolly")  res = psky->getCloudScrollRate().mV[1] - 10;
-	else if (command == "moisturelevel") res = psky->getSkyMoistureLevel();
-	else if (command == "dropletradius") res = psky->getSkyDropletRadius();
-	else if (command == "icelevel")      res = psky->getSkyIceLevel();
-	else if (command == "sunimage")      { str << psky->getSunTextureId().asString(); preformatted = true; }
-	else if (command == "moonimage")     { str << psky->getMoonTextureId().asString(); preformatted = true; }
-	else if (command == "cloudimage")    { str << psky->getCloudNoiseTextureId().asString(); preformatted = true; }
-	//else if (command == "cloudscrollx") res = params->mCurParams.getCloudScrollX() - 10;
-	//else if (command == "cloudscrolly") res = params->mCurParams.getCloudScrollY() - 10;
+	else if (command == "cloudscrollx")  str << psky->getCloudScrollRate().mV[0] - 10;
+	else if (command == "cloudscrolly")  str << psky->getCloudScrollRate().mV[1] - 10;
+	else if (command == "cloudscroll")   str << psky->getCloudScrollRate().mV[0] - 10 << ";" << psky->getCloudScrollRate().mV[1] - 10;
 
-	else if (command == "preset") return getLastLoadedPreset();
+	else if (command == "moisturelevel") str << psky->getSkyMoistureLevel();
+	else if (command == "dropletradius") str << psky->getSkyDropletRadius();
+	else if (command == "icelevel")      str << psky->getSkyIceLevel();
+	else if (command == "sunimage" || command == "suntexture")        str << psky->getSunTextureId().asString();
+	else if (command == "moonimage" || command == "moontexture")      str << psky->getMoonTextureId().asString();
+	else if (command == "cloudimage" || command == "cloudtexture")    str << psky->getCloudNoiseTextureId().asString();
 
-	if (!preformatted) str << res;
+	else if (command == "sunscale") str << psky->getSunScale();
+	else if (command == "moonscale") str << psky->getMoonScale();
+	else if (command == "moonbrightness") str << psky->getMoonBrightness();
+
+	else if (command == "preset" || command == "asset") return getLastLoadedPreset();
+
 	return str.str();
 }
 
@@ -6042,8 +6118,13 @@ BOOL RRInterface::updateCameraLimits ()
 		mCamDistDrawMin = 0.4f;
 	}
 
-	if (mCamDistDrawMax < mCamDistDrawMin && mCamDistDrawMin < EXTREMUM) { // sort the two limits in order
-		mCamDistDrawMax = mCamDistDrawMin;
+	if (mCamDistDrawMax < mCamDistDrawMin) { // sort the two limits in order
+		if (mCamDistDrawMin < EXTREMUM) {
+			mCamDistDrawMax = mCamDistDrawMin;
+		}
+		else {
+			mCamDistDrawMin = mCamDistDrawMax;
+		}
 	}
 
 	if (mCamDistMax >= mCamDistDrawMin) { // make sure we can't move the camera outside the minimum render limit
@@ -6258,6 +6339,12 @@ void RRInterface::drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 a
 		return;
 	}
 	//gGL.pushMatrix();
+	//if (alpha >= 1.0)
+	//{
+	//	LLGLDisable blend(GL_BLEND);
+	//	LLGLDisable test(GL_ALPHA_TEST);
+	//}
+
 	{
 		gGL.pushMatrix();
 		//gGL.loadIdentity();
