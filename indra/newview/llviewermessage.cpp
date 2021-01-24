@@ -7535,7 +7535,8 @@ bool callback_script_dialog(const LLSD& notification, const LLSD& response)
 		}
 	}
 
-	if (0 <= button_idx)
+	// CA: If this is going to channel 0 and redirchat/sendchat are active don't send it
+	if (0 <= button_idx && (!gRRenabled || notification["payload"]["chat_channel"].asInteger() || ( !(gAgent.mRRInterface.containsSubstr("redirchat:") || gAgent.mRRInterface.containsSubstr("sendchat")))))
 	{
 		LLMessageSystem* msg = gMessageSystem;
 		msg->newMessage("ScriptDialogReply");
