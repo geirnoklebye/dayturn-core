@@ -4915,11 +4915,8 @@ std::string RRInterface::getEnvironment (std::string command)
 	else if (command == "eastangle" || command == "sunmoonposition")
 	{
 		// It's debatable whether this should return live values read back from the system or the local
-		// values used to pair with with a setenv command. We'll go the live value route since it's
+		// values used to pair with a setenv command. We'll go the live value route since it's
 		// quite possible that things have changed since RLV was last used to write the environment 
-		//
-		// This routine has an experimental extension where it can return value,value. Comment out if not desired.
-		//
 
 		LLVector3 az_alt = convert_direction_to_azimuth_and_elevation(psky->getSunDirection());
 
@@ -4934,11 +4931,8 @@ std::string RRInterface::getEnvironment (std::string command)
 		while (sunmoonposition < 0.0) sunmoonposition+=1.0;
 		while (sunmoonposition > 1.0) sunmoonposition-=1.0; // strictly should be >= however the API says 0.0 to 1.0
 
-		if (command == "eastangle") str << eastangle;
-		else str << sunmoonposition;
-			
-		if (command == "eastangle") str << eastangle << "," << sunmoonposition;
-		else str << sunmoonposition << "," << eastangle;	
+		if (command == "eastangle") str << eastangle << ";" << sunmoonposition;
+		else str << sunmoonposition << ";" << eastangle;	
 	}
 	
 	else if (command == "starbrightness")		str << psky->getStarBrightness();
