@@ -1193,10 +1193,10 @@ bool LLAppViewer::init()
 	}
 
 	gGLActive = FALSE;
-#if LL_RELEASE_FOR_DOWNLOAD 
+#if 0 // no updater for Kokua
+//#if LL_RELEASE_FOR_DOWNLOAD 
     if (!gSavedSettings.getBOOL("CmdLineSkipUpdater"))
     {
-/*
 #if !LL_LINUX
 	LLProcess::Params updater;
 	updater.desc = "updater process";
@@ -1256,15 +1256,13 @@ bool LLAppViewer::init()
 		LLLeap::create("", leap, false); // exception=false
 	}
 #endif //!LL_LINUX
-*/
-	}
 	if (gSavedSettings.getBOOL("QAMode") && gSavedSettings.getS32("QAModeEventHostPort") > 0)
 	{
 		LL_WARNS("InitInfo") << "QAModeEventHostPort DEPRECATED: "
 							 << "lleventhost no longer supported as a dynamic library"
 							 << LL_ENDL;
 	}
-#endif
+#endif // LL_RELEASE_FOR_DOWNLOAD in LL or 0 for Kokua
 
 	LLTextUtil::TextHelpers::iconCallbackCreationFunction = create_text_segment_icon_from_url_match;
 
