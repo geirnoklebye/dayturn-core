@@ -985,8 +985,39 @@ namespace action_give_inventory
 			return;
 		}
 
+//MK
+		// Create an empty list of names and an empty list of UUIDs that will be the final lists.
+		// For each avatar UUID in the original lists, if it is an exception to "share", add it to the final lists.
+		// If no "share" restriction is active, add the avatar so the final lists are the same as the original ones.
+		uuid_vec_t avatar_uuids_final;
+		std::vector<LLAvatarName> avatar_names_final;
+
+		// we iterate on one list but we need to copy two lists => iterate on the second one at the same time (the assert above ensures they both have the same size).
+		uuid_vec_t::const_iterator it_uuids = avatar_uuids.begin();
+		std::vector<LLAvatarName>::const_iterator it_names = avatar_names.begin();
+
+		for (; it_uuids != avatar_uuids.end(); ++it_uuids)
+		{
+			// No RLV or no share restriction or share restriction but this avatar is an exception => add to the final lists, otherwise ignore.
+			if (!gRRenabled || !gAgent.mRRInterface.containsWithoutException("share", it_uuids->asString())) // we have to test for the restriction at each step because of the "_sec" option
+			{
+				avatar_uuids_final.push_back(*it_uuids);
+				avatar_names_final.push_back(*it_names);
+			}
+			it_names++;
+		}
+		// If we have no avatar to give our stuff to because of the "share" restriction, bail now.
+		if (avatar_uuids_final.size() == 0)
+		{
+			return;
+		}
+//mk
+
 		std::string residents;
-		LLAvatarActions::buildResidentsString(avatar_names, residents, true);
+//MK
+		//LLAvatarActions::buildResidentsString(avatar_names, residents, true);
+		LLAvatarActions::buildResidentsString(avatar_names_final, residents, true);
+//mk
 
 		std::string items;
 		build_items_string(inventory_selected_uuids, items);
@@ -1011,8 +1042,12 @@ namespace action_give_inventory
 		LLSD substitutions;
 		substitutions["RESIDENTS"] = residents;
 		substitutions["ITEMS"] = items;
-		LLShareInfo::instance().mAvatarNames = avatar_names;
-		LLShareInfo::instance().mAvatarUuids = avatar_uuids;
+//MK
+		////LLShareInfo::instance().mAvatarNames = avatar_names;
+		////LLShareInfo::instance().mAvatarUuids = avatar_uuids;
+		LLShareInfo::instance().mAvatarNames = avatar_names_final;
+		LLShareInfo::instance().mAvatarUuids = avatar_uuids_final;
+//mk
 		LLNotificationsUtil::add(notification, substitutions, LLSD(), boost::bind(&give_inventory_cb, _1, _2, inventory_selected_uuids));
 	}
 }

@@ -194,6 +194,12 @@ bool LLGiveInventory::doGiveInventoryItem(const LLUUID& to_agent,
 									  const LLUUID& im_session_id/* = LLUUID::null*/)
 
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.containsWithoutException ("share", to_agent.asString()))
+	{
+		return false;
+	}
+//mk
 	bool res = true;
 	LL_INFOS() << "LLGiveInventory::giveInventory()" << LL_ENDL;
 	if (!isInventoryGiveAcceptable(item))
@@ -229,6 +235,12 @@ bool LLGiveInventory::doGiveInventoryCategory(const LLUUID& to_agent,
 											  const std::string& notification_name)
 
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.containsWithoutException("share", to_agent.asString()))
+	{
+		return false;
+	}
+//mk
 	if (!cat)
 	{
 		return false;

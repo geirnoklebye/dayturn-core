@@ -1682,6 +1682,13 @@ static void show_object_sharing_confirmation(const std::string name,
 		llassert(NULL != inv_item);
 		return;
 	}
+//MK
+	if (gRRenabled && gAgent.mRRInterface.containsWithoutException("share", dest_agent.asString()))
+	{
+		return;
+	}
+//mk
+
 	LLSD substitutions;
 	substitutions["RESIDENTS"] = name;
 	substitutions["ITEMS"] = inv_item->getName();
