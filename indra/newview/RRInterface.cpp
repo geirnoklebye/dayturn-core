@@ -99,6 +99,7 @@
 #include "llversioninfo.h"
 //CA
 #include "RRInterfaceHelper.h"
+#include "RRInterfaceVersion.h"
 #include "kokuarlvfloaters.h"
 #include "lluicolor.h"
 #include "lluicolortable.h"

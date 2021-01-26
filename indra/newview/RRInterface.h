@@ -30,8 +30,7 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2092900"
-#define RR_VERSION "2.09.29.00"
+// Looking for the version number? See RRInterfaceVersion.h
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
