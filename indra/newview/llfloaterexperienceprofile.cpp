@@ -325,10 +325,18 @@ void LLFloaterExperienceProfile::refreshExperience( const LLSD& experience )
     bool has_slurl = mLocationSLURL.length()>0;
     locationPanel->setVisible(has_slurl);
     mLocationSLURL = LLSLURL(mLocationSLURL).getSLURLString();
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		mLocationSLURL = "";
+	}
+//mk
+
     child->setText(mLocationSLURL);
 
 
     child = getChild<LLTextBox>(EDIT TF_SLURL);
+
     if(has_slurl)
     {
         child->setText(mLocationSLURL);
