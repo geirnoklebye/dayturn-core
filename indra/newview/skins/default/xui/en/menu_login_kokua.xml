@@ -41,7 +41,7 @@
         <menu_item_call.on_click
             function="PromptShowURL"
             name="wiki_kokua_viewer_org_url"
-            parameter="WebLaunchExternalTarget,http://wiki.kokuaviewer.org/wiki/Support" />
+            parameter="WebLaunchExternalTarget,https://kokua.atlassian.net/wiki/spaces/KKA/overview?mode=global" />
         </menu_item_call>
         <menu_item_call
          label="How to..."
@@ -74,11 +74,11 @@
                  parameter="http://wiki.secondlife.com"/>
         </menu_item_call>
         <menu_item_call
-             label="[APP_NAME]  Wiki"
+             label="[APP_NAME] Home"
              name="KWiki">
              <menu_item_call.on_click
                  function="Advanced.ShowURL"
-                 parameter="http://wiki.kokuaviewer.org/wiki" />
+                 parameter="https://kokua.atlassian.net/wiki/spaces/KKA/overview?mode=global" />
         </menu_item_call>
         <menu_item_call
              label="Community Forums"
@@ -110,11 +110,11 @@
                  parameter="http://community.secondlife.com/t5/Blogs/ct-p/Blogs"/>
         </menu_item_call>
         <menu_item_call
-             label="[APP_NAME] Blog"
+             label="[APP_NAME] Home"
              name="Kokua Blog">
              <menu_item_call.on_click
                  function="Advanced.ShowURL"
-                 parameter="http://blog.kokuaviewer.org"/>
+                 parameter="https://kokua.atlassian.net/wiki/spaces/KKA/overview?mode=global"/>
         </menu_item_call>
         <menu_item_separator/>       
         <menu_item_call
@@ -122,7 +122,7 @@
              name="Report Bug">
                 <menu_item_call.on_click
                  function="Advanced.ShowURL"
-                 parameter="http://sourceforge.net/p/team-purple/kokua/tickets/?source=navbar"/>
+                 parameter="https://kokua.atlassian.net/secure/Dashboard.jspa"/>
             </menu_item_call>
         <menu_item_separator/>
         <menu_item_call
