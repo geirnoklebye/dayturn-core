@@ -374,6 +374,8 @@ public:
 	static F32 previousEastAngle; // remember it since we can't reliably read it back
 	static F32 previousSunMoonPosition ; // remember it since we can't reliably read it back
 
+	BOOL mSitGroundOnStandUp; // when TRUE, automatically sit down on the ground when we're done standing up from an object (this is used for the @sitground command which must be asynchronous)
+
 private:
 	bool mScriptsEnabledOnce; // to know if we have been in a script enabled area at least once (so that no-script areas prevent detaching only when we have logged in there)
 	BOOL mInventoryFetched; // FALSE at first, used to fetch RL Share inventory once upon login
