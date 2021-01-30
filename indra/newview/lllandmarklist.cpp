@@ -107,16 +107,11 @@ LLLandmark* LLLandmarkList::getAsset(const LLUUID& asset_uuid, loaded_callback_t
             return NULL;
         }
 
-	// KKA-792 This callback can fire immediately resulting in the entry getting added to mRequestedList *after* an attempt has
-	// been made to delete it, thus it stays around for ever. Worse, the list then grows to a size where the newly added
-	// throttle kicks in and no further landmarks get fetched. Fix: write to mRequestedList first
-
-		mRequestedList[asset_uuid] = gFrameTimeSeconds; // KKA-792
 		gAssetStorage->getAssetData(asset_uuid,
 									LLAssetType::AT_LANDMARK,
 									LLLandmarkList::processGetAssetReply,
 									NULL);
-		//mRequestedList[asset_uuid] = gFrameTimeSeconds; // KKA-792
+		mRequestedList[asset_uuid] = gFrameTimeSeconds;
 	}
 	return NULL;
 }
