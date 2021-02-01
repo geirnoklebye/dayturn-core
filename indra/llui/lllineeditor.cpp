@@ -1529,7 +1529,6 @@ BOOL LLLineEditor::handleKeyHere(KEY key, MASK mask )
 	if ( gFocusMgr.getKeyboardFocus() == this )
 	{
 		LLLineEditorRollback rollback( this );
-		LL_INFOS() << "lineeditor keyhere" << LL_ENDL;
 
 		if( !handled )
 		{
