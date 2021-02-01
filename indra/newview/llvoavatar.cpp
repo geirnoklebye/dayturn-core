@@ -6158,7 +6158,14 @@ BOOL LLVOAvatar::processSingleAnimationStateChange( const LLUUID& anim_id, BOOL 
 //MK
 			if (gRRenabled)
 			{
-				gAgent.mRRInterface.notify(LLUUID::null, "unsat ground legally", "");
+				if (gAgent.mRRInterface.mContainsUnsit)
+				{
+					gAgent.mRRInterface.notify(LLUUID::null, "unsat ground illegally", "");
+				}
+				else
+				{
+					gAgent.mRRInterface.notify(LLUUID::null, "unsat ground legally", "");
+				}
 			}
 //mk
 		}
