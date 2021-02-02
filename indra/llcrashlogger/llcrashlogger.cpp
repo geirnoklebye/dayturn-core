@@ -468,7 +468,9 @@ bool LLCrashLogger::sendCrashLog(std::string dump_dir)
 	out_file.close();
     
 	bool sent = false;
-    
+
+	// CA: KKA-795 It looks like LL have turned off their log receiver as part of cloud uplift and Kokua doesn't have its own receiver, so...
+#if 0 // KKA-795 don't bother sending anything 
     if(mCrashHost != "")
 	{
         LL_WARNS("CRASHREPORT") << "Sending crash data to server from CrashHostUrl '" << mCrashHost << "'" << LL_ENDL;
@@ -485,7 +487,7 @@ bool LLCrashLogger::sendCrashLog(std::string dump_dir)
         updateApplication("Using default server...");
 		sent = runCrashLogPost(mAltCrashHost, post_data, std::string("Sending to default server"), CRASH_UPLOAD_RETRIES, CRASH_UPLOAD_TIMEOUT);
 	}
-    
+#endif // KKA-795 don't bother sending anything   
 	mSentCrashLogs = sent;
     
 	return sent;
