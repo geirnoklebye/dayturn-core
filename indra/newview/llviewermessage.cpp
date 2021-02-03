@@ -130,6 +130,7 @@
 #include "fsareasearch.h"
 
 #include "animationexplorer.h"		// <FS:Zi> Animation Explorer
+#include "NACLfloaterexploresounds.h" // KKA-796 adding Block to Sound Explorer
 
 extern void on_new_message(const LLSD& msg);
 
@@ -4111,6 +4112,13 @@ void process_object_properties(LLMessageSystem *msg, void **user_data)
 	if(explorer)
 	{
 		explorer->requestNameCallback(msg);
+	}
+
+	//KKA-796 Sound explorer uses this to get object names for muting
+	NACLFloaterExploreSounds* soundexplorer=LLFloaterReg::findTypedInstance<NACLFloaterExploreSounds>("sound_explorer");
+	if(soundexplorer)
+	{
+		soundexplorer->requestNameCallback(msg);
 	}
 }
 
