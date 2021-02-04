@@ -289,6 +289,7 @@ set(viewer_SOURCE_FILES
     llfloatergesture.cpp
     llfloatergodtools.cpp
     llfloatergotoline.cpp
+    llfloatergroupactions.cpp
     llfloatergridstatus.cpp
     llfloatergroupbulkban.cpp
     llfloatergroupinvite.cpp
@@ -961,6 +962,7 @@ set(viewer_HEADER_FILES
     llfloatergodtools.h
     llfloatergotoline.h
     llfloatergridstatus.h
+    llfloatergroupactions.h
     llfloatergroupbulkban.h
     llfloatergroupinvite.h
     llfloatergroups.h

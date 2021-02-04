@@ -59,6 +59,18 @@ public:
 	 */
 	static void show(const LLUUID& group_id);
 
+// [SL:KB] - Patch: Notification-GroupCreateNotice | Checked: 2012-02-16 (Catznip-3.2)
+	/**
+	 * Show group information panel.
+	 */
+	static void showNotices(const LLUUID& group_id);
+
+	/**
+	 * Show the group's chat history.
+	 */
+	static void viewChatHistory(const LLUUID& group_id);
+// [/SL:KB]
+
 	/**
 	 * Show group inspector floater.
 	 */
@@ -72,7 +84,10 @@ public:
 	/**
 	 * Refresh group notices panel.
 	 */
-	static void refresh_notices();
+// [SL:KB] - Patch: UI-GroupFloaters | Checked: 2011-01-23 (Catznip-2.5)
+	static void refresh_notices(const LLUUID& group_id);
+// [/SL:KB]
+//	static void refresh_notices();
 
 	/**
 	 * Refresh group information panel.
@@ -96,6 +111,14 @@ public:
 
 	/// Returns if the current user is a member of the group
 	static bool isInGroup(const LLUUID& group_id);
+
+// [SL:KB] - Patch: Notification-GroupCreateNotice | Checked: 2012-02-16 (Catznip-3.2)
+	// Returns true if the current user has the specified power in the group
+	static bool hasPowerInGroup(const LLUUID& group_id, U64 power);
+
+	// Returns true if there is a chat transcript for the specified group
+	static bool hasChatHistory(const LLUUID& group_id);
+// [/SL:KB]
 
 	/**
 	 * Start a group voice call.

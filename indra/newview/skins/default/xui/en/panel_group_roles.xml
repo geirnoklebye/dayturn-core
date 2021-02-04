@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <panel
- height="760"
+ height="750"
  label="Members &amp; Roles"
  layout="topleft"
  left="0"
@@ -34,7 +34,7 @@
         <panel
          border="false"
          follows="all"
-         height="350"
+         height="303"
          label="MEMBERS"
          layout="topleft"
          left="0"
@@ -68,7 +68,7 @@ clicking on their names.
          <filter_editor
          layout="topleft"
          top="5"
-         left="3"
+         left="5"
          right="-5"
          height="22"
          search_button_visible="false"
@@ -108,7 +108,7 @@ clicking on their names.
              height="23"
              follows="top|left"
              label="Invite"
-             left="3"
+             left="5"
              name="member_invite"
              width="100" />
             <button
@@ -128,7 +128,7 @@ clicking on their names.
         </panel>
         <panel
          border="false"
-         height="350"
+         height="303"
          label="ROLES"
          layout="topleft"
          left="0"
@@ -272,7 +272,7 @@ clicking on their names.
       <scroll_list
        column_padding="0"
        draw_stripes="true"
-       height="200"
+       height="280"
        follows="left|top|right"
        layout="topleft"
        left="0"
@@ -292,8 +292,7 @@ clicking on their names.
          width="20" />
         <scroll_list.columns
          label=""
-         name="action"
-         width="270" />
+         name="action" />
       </scroll_list>
     </panel>
     <panel
@@ -319,7 +318,7 @@ clicking on their names.
       <name_list
            column_padding="0"
            draw_heading="true"
-           height="400"
+           height="350"
            follows="left|top|right"
            layout="topleft"
            left="0"
@@ -479,7 +478,6 @@ clicking on their names.
      follows="left|top"
      left="5"
      top="5"
-         text_color="EmphasisColor"
      name="static"
      width="300">
       Role Name
@@ -494,7 +492,6 @@ clicking on their names.
      max_length_bytes="20"
      name="role_name"
      top_pad="0"
-         background_image_disabled="TextField_Plain"
      width="300">
     </line_editor>
     <text
@@ -503,7 +500,6 @@ clicking on their names.
      layout="topleft"
      follows="left|top"
      left="5"
-         text_color="EmphasisColor"
      name="static3"
      top_pad="5"
      width="300">
@@ -519,7 +515,6 @@ clicking on their names.
      max_length_bytes="20"
      name="role_title"
      top_pad="0"
-         background_image_disabled="TextField_Plain"
      width="300">
     </line_editor>
     <text
@@ -527,10 +522,9 @@ clicking on their names.
          height="16"
          layout="topleft"
          follows="left|top"
-         left="3"
-         text_color="EmphasisColor"
+         left="5"
          name="static2"
-         top_pad="10"
+         top_pad="5"
          width="200">
       Description
     </text>
@@ -612,40 +606,40 @@ clicking on their names.
        width="20" />
       <scroll_list.columns
        label=""
-       name="action"
-/>
+       name="action" />
     </scroll_list>
-        </panel>
+  </panel>
   <panel
-           height="90"
-           background_visible="false"
-           bg_alpha_color="FloaterUnfocusBorderColor"
-           layout="topleft"
-           follows="top|left|right"
-           left="0"
-           right="-1"
-           width="313"
-           mouse_opaque="false"
-        name="roles_header"
-        top_pad="3"
-            visible="false">
-            <text_editor
-            bg_readonly_color="Transparent"
-            text_readonly_color="EmphasisColor"
-            font="SansSerifSmall"
-            type="string"
-            enabled="false"        halign="left"
-            layout="topleft"
-            top_pad="0"
-            follows="left|top|right"
-            left="0"
-            right="-1"
-            height="90"
-            max_length="512"
-            name="role_action_description"
-            word_wrap="true">
+   height="90"
+   background_visible="false"
+   bg_alpha_color="FloaterUnfocusBorderColor"
+   layout="topleft"
+   follows="top|left|right"
+   left="0"
+   right="-1"
+   width="313"
+   mouse_opaque="false"
+   name="roles_header"
+   top_pad="3"
+   visible="false">
+    <text_editor
+     bg_readonly_color="Transparent"
+     text_readonly_color="EmphasisColor"
+     font="SansSerifSmall"
+     type="string"
+     enabled="false"
+     halign="left"
+     layout="topleft"
+     top_pad="0"
+     follows="left|top|right"
+     left="0"
+     right="-1"
+     height="90"
+     max_length="512"
+     name="role_action_description"
+     word_wrap="true">
       This Ability is &apos;Eject Members from this Group&apos;. Only an Owner can eject another Owner.
-            </text_editor>
+    </text_editor>
   </panel>
   <panel
     height="424"
@@ -685,7 +679,7 @@ clicking on their names.
      layout="topleft"
      follows="left|top"
      left="5"
-         name="static2"
+     name="static2"
      top_pad="1"
      width="300">
       Roles with this ability
@@ -705,7 +699,7 @@ clicking on their names.
      layout="topleft"
      follows="left|top"
      left="5"
-         name="static3"
+     name="static3"
      top_pad="5"
      width="300">
       Members with this ability

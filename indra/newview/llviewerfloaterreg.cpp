@@ -83,6 +83,9 @@
 #include "llfloatergodtools.h"
 #include "llfloatergridstatus.h"
 #include "llfloatergroups.h"
+// [SL:KB] - Patch: Notification-GroupCreateNotice | Checked: 2012-02-16 (Catznip-3.2)
+#include "llfloatergroupactions.h"
+// [/SL:KB]
 #include "llfloaterhelpbrowser.h"
 #include "llfloaterhoverheight.h"
 #include "llfloaterhud.h"
@@ -164,6 +167,9 @@
 #include "llfloaterimnearbychat.h"
 #include "llpanelblockedlist.h"
 #include "llpanelclassified.h"
+// [SL:KB] - Patch: UI-ProfileGroupFloaters | Checked: 2011-01-23 (Catznip-2.5)
+#include "llpanelgroup.h"
+// [/SL:KB]
 #include "llpreviewanim.h"
 #include "llpreviewgesture.h"
 #include "llpreviewnotecard.h"
@@ -264,7 +270,9 @@ void LLViewerFloaterReg::registerFloaters()
     LLFloaterReg::add("experiences", "floater_experiences.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterExperiences>);
 	LLFloaterReg::add("experience_profile", "floater_experienceprofile.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterExperienceProfile>);
 	LLFloaterReg::add("experience_search", "floater_experience_search.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterExperiencePicker>);
-
+// [SL:KB] - Patch: UI-ProfileGroupFloaters | Checked: 2011-01-23 (Catznip-2.5)
+	LLFloaterReg::add("floater_group_info", "floater_group_info.xml", &LLFloaterReg::build<LLFloaterGroupInfo>);
+// [/SL:KB]
 //<FS:KC legacy profiles>
 	LLFloaterReg::add("floater_profile", "floater_profile_view.xml",&LLFloaterReg::build<FSFloaterProfile>);
 //</FS:KC legacy profiles>
@@ -275,6 +283,9 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("gestures", "floater_gesture.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterGesture>);
 	LLFloaterReg::add("god_tools", "floater_god_tools.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterGodTools>);
 	LLFloaterReg::add("grid_status", "floater_grid_status.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterGridStatus>);
+// [SL:KB] - Patch: Notification-GroupCreateNotice | Checked: 2012-02-16 (Catznip-3.2)
+	LLFloaterReg::add("group_create_notice", "floater_group_create_notice.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterGroupCreateNotice>);
+// [/SL:KB]
 	LLFloaterReg::add("group_picker", "floater_choose_group.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterGroupPicker>);
 
 	LLFloaterReg::add("help_browser", "floater_help_browser.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterHelpBrowser>);
