@@ -46,6 +46,9 @@ public:
 	// KKA-666 we need a canSit and canInteract for lltoolpie.cpp - do them here rather than make merging RRInterface harder
 	bool canSit(LLViewerObject* pObj, const LLVector3& pickIntersect);	
 	bool canInteract(LLViewerObject* pObj, const LLVector3& pickIntersect);	
+	// KKA-801 the can send IM and can receive IM tests became more complex with the addition of group IM features so centralise the tests in here
+	static bool cannotSendIM(const LLUUID& im_session_id, const std::string &other_party);
+	static bool cannotRecvIM(const LLUUID& im_session_id, const std::string &other_party);
 private:
 	U32 mLaunchTimestamp; // timestamp of the beginning of this session
 	std::string kokuaGetDummyName (std::string name); // private because this doesn't do the exception detection - call kokuaGetCensoredMessage(string, true) instead

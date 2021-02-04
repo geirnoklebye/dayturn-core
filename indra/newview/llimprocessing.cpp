@@ -58,6 +58,7 @@
 //MK
 #include "llagentui.h"
 #include "llfloaterimsession.h"
+#include "kokuarlvextras.h"
 //mk
 
 #include <boost/regex.hpp>
@@ -604,7 +605,7 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 			////					&& to_id.notNull()) //not global message
 			&& to_id.notNull() //not global message
 			// agent is not forbidden to receive IMs or the sender is an exception => send Busy response
-			&& (!gRRenabled || (!gAgent.mRRInterface.containsWithoutException("recvim", from_id.asString()) && !gAgent.mRRInterface.contains("recvimfrom:" + from_id.asString())))
+			&& (!KokuaRLVExtras::cannotRecvIM(session_id, from_id.asString()))
 			)
 //mk
 		{
@@ -830,8 +831,7 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 			buffer = saved + message;
 
 //MK
-			if (gRRenabled && (gAgent.mRRInterface.containsWithoutException("recvim", from_id.asString())
-				|| gAgent.mRRInterface.contains("recvimfrom:" + from_id.asString())))
+			if (KokuaRLVExtras::cannotRecvIM(session_id, from_id.asString()))
 			{
 				// agent is forbidden to receive IMs and the sender is no exception
 				buffer = separator_string + saved + "...";
@@ -1317,8 +1317,7 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 	break;
 
 //MK
-	if (gRRenabled && (gAgent.mRRInterface.containsWithoutException("recvim")
-		|| gAgent.mRRInterface.contains("recvimfrom:" + from_id.asString())))
+	if (KokuaRLVExtras::cannotRecvIM(session_id, from_id.asString()))
 	{
 		// agent is forbidden to receive IMs
 		return;
@@ -1485,8 +1484,7 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 			buffer = message;
 
 //MK (by CA)
-			if (gRRenabled && (gAgent.mRRInterface.containsWithoutException("recvim", from_id.asString())
-				|| gAgent.mRRInterface.contains("recvimfrom:" + from_id.asString())))
+			if (KokuaRLVExtras::cannotRecvIM(session_id, from_id.asString()))
 			{
 				// agent is forbidden to receive IMs and the sender is no exception
 				buffer = "...";
@@ -1535,27 +1533,14 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 			buffer = saved + message;
 
 //MK (by CA)
-			if (gRRenabled)
+			if (KokuaRLVExtras::cannotRecvIM(session_id, from_id.asString()))
 			{
-				LLIMModel::LLIMSession* session = LLIMModel::getInstance()->findIMSession(session_id);
-				if (session)
 				{
-					std::string all_groups = "allgroups"; // by default, "allgroups" means "allow to send IMs to all groups", but this name may be replaced by a specific group name
-					std::string group_name = session->mName;
-					group_name = gAgent.mRRInterface.stringReplace(session->mName, ",", ""); // remove the "," from the group name to check against the RLV restrictions as "," is supposed to be a high-level separator
-					group_name = gAgent.mRRInterface.stringReplace(session->mName, ";", ""); // ";" could also be a separator in the future so let's preemptively remove it here
-					if (((gAgent.mRRInterface.containsWithoutException("recvim", from_id.asString()) || gAgent.mRRInterface.contains("recvimfrom:" + from_id.asString()))
-						&& gAgent.mRRInterface.containsWithoutException("recvim", group_name) && gAgent.mRRInterface.containsWithoutException("recvim", all_groups))
-						|| gAgent.mRRInterface.contains("recvimfrom:" + group_name)
-						|| gAgent.mRRInterface.contains("recvimfrom:" + all_groups)
-						)
-					{
-						// agent is forbidden to receive IMs and the receiver (avatar or group) is no exception
-						buffer = saved + "...";
+					// agent is forbidden to receive IMs and the receiver (avatar or group) is no exception
+					buffer = saved + "...";
 
-						// this is a group IM, do not send the sender a personal reply about the restriction since otherwise
-						// the sender will get spammed with as many replies as recipients who are under @recvim at the time
-					}
+					// this is a group IM, do not send the sender a personal reply about the restriction since otherwise
+					// the sender will get spammed with as many replies as recipients who are under @recvim at the time
 				}
 			}
 //mk (by CA)

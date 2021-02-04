@@ -33,6 +33,7 @@
 #include "llagentcamera.h"
 #include "llavatarnamecache.h"
 #include "llerror.h"
+#include "llimview.h"
 #include "llsdserialize.h" 
 #include "llworld.h"
 #include "RRInterface.h"
@@ -343,4 +344,79 @@ bool KokuaRLVExtras::canInteract(LLViewerObject* pObj, const LLVector3& pickInte
 	return
 		( (!pObj) || (pObj->isHUDAttachment()) ||
 			( !gAgent.mRRInterface.mContainsInteract && gAgent.mRRInterface.canTouchFar(pObj, pickIntersect)) );
+}
+
+// KKA-801 The can send IM and can receive IM tests became more complex with the addition of group IM features
+// so I'd rather have the tests in only one place rather than duplicated around
+bool KokuaRLVExtras::cannotSendIM(const LLUUID& im_session_id, const std::string& other_party)
+{
+	LLIMModel::LLIMSession* session = LLIMModel::getInstance()->findIMSession(im_session_id);
+		
+	if (gRRenabled)
+	{
+		if (session)
+		{
+			if (session->isGroupChat())
+			{
+				std::string all_groups = "allgroups"; // by default, "allgroups" means "allow to send IMs to all groups", but this name may be replaced by a specific group name
+				std::string group_name = session->mName;
+				group_name = gAgent.mRRInterface.stringReplace(session->mName, ",", ""); // remove the "," from the group name to check against the RLV restrictions as "," is supposed to be a high-level separator
+				group_name = gAgent.mRRInterface.stringReplace(session->mName, ";", ""); // ";" could also be a separator in the future so let's preemptively remove it here
+				if ((gAgent.mRRInterface.containsWithoutException("sendim", group_name) && gAgent.mRRInterface.containsWithoutException("sendim", all_groups))
+				|| gAgent.mRRInterface.contains("sendimto:" + group_name)
+				|| gAgent.mRRInterface.contains("sendimto:" + all_groups)
+				)
+				{
+					// user is forbidden to send IMs and the receiver group is no exception
+					return true;
+				}
+			}
+			else
+			{
+				if (gAgent.mRRInterface.containsWithoutException("sendim", other_party)
+				|| gAgent.mRRInterface.contains("sendimto:" + other_party)
+				)
+				{
+					// user is forbidden to send IMs and the receiver avatar is no exception
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+bool KokuaRLVExtras::cannotRecvIM(const LLUUID& im_session_id, const std::string& other_party)
+{
+	LLIMModel::LLIMSession* session = LLIMModel::getInstance()->findIMSession(im_session_id);
+	if (gRRenabled)
+	{
+		if (session)
+		{
+			if (session->isGroupChat())
+			{
+				std::string all_groups = "allgroups"; // by default, "allgroups" means "allow to send IMs to all groups", but this name may be replaced by a specific group name
+				std::string group_name = session->mName;
+				group_name = gAgent.mRRInterface.stringReplace(session->mName, ",", ""); // remove the "," from the group name to check against the RLV restrictions as "," is supposed to be a high-level separator
+				group_name = gAgent.mRRInterface.stringReplace(session->mName, ";", ""); // ";" could also be a separator in the future so let's preemptively remove it here
+				if (((gAgent.mRRInterface.containsWithoutException("recvim", other_party) || gAgent.mRRInterface.contains("recvimfrom:" + other_party))
+					&& gAgent.mRRInterface.containsWithoutException("recvim", group_name) && gAgent.mRRInterface.containsWithoutException("recvim", all_groups))
+					|| gAgent.mRRInterface.contains("recvimfrom:" + group_name)
+					|| gAgent.mRRInterface.contains("recvimfrom:" + all_groups)
+					)
+				{
+					return true;
+				}
+			}
+			else
+			{
+				if (gAgent.mRRInterface.containsWithoutException("recvim", other_party)
+					|| gAgent.mRRInterface.contains("recvimfrom:" + other_party))
+				{
+					return true;
+				}			
+			}
+		}
+	}
+	return false;
 }

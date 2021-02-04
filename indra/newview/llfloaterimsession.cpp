@@ -65,6 +65,7 @@
 #include "llnotificationmanager.h"
 #include "llautoreplace.h"
 #include "llcorehttputil.h"
+#include "kokuarlvextras.h"
 
 const F32 ME_TYPING_TIMEOUT = 4.0f;
 const F32 OTHER_TYPING_TIMEOUT = 9.0f;
@@ -327,34 +328,10 @@ void LLFloaterIMSession::sendMsg(const std::string& msg)
 ////	const std::string utf8_text = utf8str_truncate(msg, MAX_MSG_BUF_SIZE - 1);
 	std::string utf8_text = utf8str_truncate(msg, MAX_MSG_BUF_SIZE - 1);
 
-	LLIMModel::LLIMSession* session = LLIMModel::getInstance()->findIMSession(mSessionID);
-	if (gRRenabled && session)
+	if (KokuaRLVExtras::cannotSendIM(mSessionID, mOtherParticipantUUID.asString()))
 	{
-		if (session->isGroupChat())
-		{
-			std::string all_groups = "allgroups"; // by default, "allgroups" means "allow to send IMs to all groups", but this name may be replaced by a specific group name
-			std::string group_name = session->mName;
-			group_name = gAgent.mRRInterface.stringReplace(session->mName, ",", ""); // remove the "," from the group name to check against the RLV restrictions as "," is supposed to be a high-level separator
-			group_name = gAgent.mRRInterface.stringReplace(session->mName, ";", ""); // ";" could also be a separator in the future so let's preemptively remove it here
-			if ((gAgent.mRRInterface.containsWithoutException("sendim", group_name) && gAgent.mRRInterface.containsWithoutException("sendim", all_groups))
-			|| gAgent.mRRInterface.contains("sendimto:" + group_name)
-			|| gAgent.mRRInterface.contains("sendimto:" + all_groups)
-			)
-			{
-				// user is forbidden to send IMs and the receiver group is no exception
-				utf8_text = RRInterface::sSendimMessage; // signal both the sender and the receiver
-			}
-		}
-		else
-		{
-			if (gAgent.mRRInterface.containsWithoutException("sendim", mOtherParticipantUUID.asString())
-			|| gAgent.mRRInterface.contains("sendimto:" + mOtherParticipantUUID.asString())
-			)
-			{
-				// user is forbidden to send IMs and the receiver avatar is no exception
-				utf8_text = RRInterface::sSendimMessage; // signal both the sender and the receiver
-			}
-		}
+		// user is forbidden to send IMs and the receiver is no exception
+		utf8_text = RRInterface::sSendimMessage; // signal both the sender and the receiver
 	}
 
 //mk
@@ -904,12 +881,12 @@ void LLFloaterIMSession::sessionInitReplyReceived(const LLUUID& im_session_id)
 	//*TODO here we should remove "starting session..." warning message if we added it in postBuild() (IB)
 
 	//KKA-670 Give an early warning if this is going to be blocked or the reply will be (group IMs come through here, 1-to-1 through llavataractions)
+	//KKA-801 Update and centralise this following introduction of group IM controls in RLV 2.9.29.0
 	if (gSavedSettings.getBOOL("KokuaIMRestrictionWarning"))
 	{
-		bool cannot_send = (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("sendim", mOtherParticipantUUID.asString())
-			|| gAgent.mRRInterface.contains ("sendimto:"+mOtherParticipantUUID.asString())));
-		bool cannot_receive = (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", mOtherParticipantUUID.asString())
-			|| gAgent.mRRInterface.contains ("recvimfrom:"+mOtherParticipantUUID.asString())));
+		bool cannot_send = KokuaRLVExtras::cannotSendIM(im_session_id, mOtherParticipantUUID.asString());
+		bool cannot_receive =KokuaRLVExtras::cannotRecvIM(im_session_id, mOtherParticipantUUID.asString());
+	
 		if (cannot_send)
 		{
 			if (cannot_receive)

@@ -80,6 +80,7 @@
 #include "fsfloaterprofile.h"
 #include "llavatarname.h"
 #include "llagentui.h"
+#include "kokuarlvextras.h"
 
 extern LLVOAvatar *find_avatar_from_object(LLViewerObject *object);
 extern LLVOAvatar *find_avatar_from_object(const LLUUID &object_id);
@@ -204,12 +205,11 @@ static void on_avatar_name_cache_start_im(const LLUUID& agent_id,
 		LLFloaterIMContainer::getInstance()->showConversation(session_id);
 
 		//KKA-670 Give an early warning if this is going to be blocked or the reply will be (this covers 1-to-1, group is in llfloaterimsession)
+		//KKA-801 Centralise the logic since it got more complex with the addition of group features
 		if (gSavedSettings.getBOOL("KokuaIMRestrictionWarning"))
 		{
-			bool cannot_send = (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("sendim", agent_id.asString())
-				|| gAgent.mRRInterface.contains ("sendimto:"+agent_id.asString())));
-			bool cannot_receive = (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", agent_id.asString())
-				|| gAgent.mRRInterface.contains ("recvimfrom:"+agent_id.asString())));
+			bool cannot_send = KokuaRLVExtras::cannotSendIM(session_id, agent_id.asString());
+			bool cannot_receive = KokuaRLVExtras::cannotRecvIM(session_id, agent_id.asString());
 			if (cannot_send)
 			{
 				if (cannot_receive)
