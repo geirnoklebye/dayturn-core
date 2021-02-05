@@ -2821,11 +2821,11 @@ If you continue to receive this message, please contact Second Life support for 
   <string name="DoNotDisturbModeResponseDefault">This resident has turned on &apos;Do Not Disturb&apos; and will see your message later.</string>
 
 	<!-- Mute -->
-	<string name="MuteByName">(By name)</string>
-	<string name="MuteAgent">(Resident)</string>
-	<string name="MuteObject">(Object)</string>
-	<string name="MuteGroup">(Group)</string>
-	<string name="MuteExternal">(External)</string>
+	<string name="MuteByName">By Name</string>
+	<string name="MuteAgent">Resident</string>
+	<string name="MuteObject">Object</string>
+	<string name="MuteGroup">Group</string>
+	<string name="MuteExternal">External</string>
 
 	<!-- Region/Estate Covenant -->
 	<string name="RegionNoCovenant">There is no Covenant provided for this Estate.</string>
@@ -4177,6 +4177,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_Appearance_Label">Appearance</string>
   <string name="Command_Area_Search_Label">Area search</string>
   <string name="Command_Avatar_Label">Avatar</string>
+  <string name="Command_Block_Label">Block/Derender</string>
   <string name="Command_Build_Label">Build</string>
   <string name="Command_Chat_Label">Chat</string>
   <string name="Command_Chat_Bar_Label">Chat bar</string>
@@ -4212,6 +4213,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_Appearance_Tooltip">Change your avatar</string>
   <string name="Command_Area_Search_Tooltip">Search the local area for objects</string>
   <string name="Command_Avatar_Tooltip">Choose a complete avatar</string>
+  <string name="Command_Block_Tooltip">Muting and derendering objects, avatars and avatar effects</string>
   <string name="Command_Build_Tooltip">Building objects and reshaping terrain</string>
   <string name="Command_Chat_Tooltip">Chat with people nearby using text</string>
   <string name="Command_Chat_Bar_Tooltip">Text input for chatting with nearby people</string>

@@ -62,7 +62,7 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
      layout="topleft"
      left="3"
      name="tabs"
-     tab_min_width="70"
+     tab_min_width="77"
      tab_height="30"
      tab_position="top"
      top="0"
@@ -105,7 +105,7 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                  text_color="Black"
                  text_pad_left="10"
                  top="4"
-                 width="178" />
+                 width="145" />
                 <button
                  commit_callback.function="People.Gear"
                  follows="right"
@@ -168,6 +168,23 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                     <commit_callback
                      function="People.DelFriend" />
                  </dnd_button>
+                <button
+                 follows="right"
+                 height="25"
+                 image_hover_unselected="Toolbar_Middle_Over"
+                 image_overlay="Command_Block_Icon"
+                 image_selected="Toolbar_Middle_Selected"
+                 image_unselected="Toolbar_Middle_Off"
+                 layout="topleft"
+                 left_pad="2"
+                 name="show_block_btn"
+                 tool_tip="Show Blocked floater"
+                 top_delta="0"
+                 width="31">
+                    <commit_callback
+                     function="Floater.Toggle"
+                     parameter="blocked" />
+                </button>
             </panel>
 
 
@@ -242,7 +259,7 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
              <avatar_list
                allow_select="true"
                follows="all"
-               height="211"
+               height="201"
                ignore_online_status="true"
                layout="topleft"
                left="3"
@@ -291,7 +308,7 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                  text_color="Black"
                  text_pad_left="10"
                  top="4"
-                 width="177" />
+                 width="144" />
                 <button
                  commit_callback.function="People.Gear"
                  follows="right"
@@ -353,6 +370,23 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                     <commit_callback
                      function="People.DelFriend" />
                 </dnd_button>
+                <button
+                 follows="right"
+                 height="25"
+                 image_hover_unselected="Toolbar_Middle_Over"
+                 image_overlay="Command_Block_Icon"
+                 image_selected="Toolbar_Middle_Selected"
+                 image_unselected="Toolbar_Middle_Off"
+                 layout="topleft"
+                 left_pad="2"
+                 name="show_block_btn"
+                 tool_tip="Show Blocked floater"
+                 top_delta="0"
+                 width="31">
+                    <commit_callback
+                     function="Floater.Toggle"
+                     parameter="blocked" />
+                </button>
             </panel>
             <accordion
        		 background_visible="true"
@@ -453,7 +487,7 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                  text_color="Black"
                  text_pad_left="10"
                  top="4"
-                 width="177" />
+                 width="144" />
                 <menu_button
                  follows="right"
                  height="25"
@@ -516,6 +550,23 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                     <commit_callback
                      function="People.Group.Minus" />
                 </dnd_button>
+                <button
+                 follows="right"
+                 height="25"
+                 image_hover_unselected="Toolbar_Middle_Over"
+                 image_overlay="Command_Block_Icon"
+                 image_selected="Toolbar_Middle_Selected"
+                 image_unselected="Toolbar_Middle_Off"
+                 layout="topleft"
+                 left_pad="2"
+                 name="show_block_btn"
+                 tool_tip="Show Blocked floater"
+                 top_delta="0"
+                 width="31">
+                    <commit_callback
+                     function="Floater.Toggle"
+                     parameter="blocked" />
+                </button>
             </panel>
             <text
                 type="string"
@@ -579,7 +630,7 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                  text_color="Black"
                  text_pad_left="10"
                  top="4"
-                 width="177" />
+                 width="144" />
                 <button
                  commit_callback.function="People.Gear"
                  follows="right"
@@ -642,6 +693,23 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                     <commit_callback
                      function="People.DelFriend" />
                  </dnd_button>
+                <button
+                 follows="right"
+                 height="25"
+                 image_hover_unselected="Toolbar_Middle_Over"
+                 image_overlay="Command_Block_Icon"
+                 image_selected="Toolbar_Middle_Selected"
+                 image_unselected="Toolbar_Middle_Off"
+                 layout="topleft"
+                 left_pad="2"
+                 name="show_block_btn"
+                 tool_tip="Show Blocked floater"
+                 top_delta="0"
+                 width="31">
+                    <commit_callback
+                     function="Floater.Toggle"
+                     parameter="blocked" />
+                </button>
             </panel>
             <avatar_list
              allow_select="true"
@@ -658,7 +726,7 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
         </panel>
 
 <!-- ================================= BLOCKED tab ========================== -->
-
+<!--
         <panel
          background_opaque="true"
          background_visible="true"
@@ -686,5 +754,6 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
            top="0"
            right="-1" />
         </panel>
+-->
     </tab_container>
 </panel>

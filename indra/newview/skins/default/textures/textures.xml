@@ -132,6 +132,7 @@ with the same filename but different name
   <texture name="Command_Appearance_Icon"   file_name="toolbar_icons/appearance.png"   preload="true" />
   <texture name="Command_Area_Search_Icon"  file_name="toolbar_icons/area_search.png"   preload="true" />
   <texture name="Command_Avatar_Icon"       file_name="toolbar_icons/avatars.png"      preload="true" />
+  <texture name="Command_Block_Icon"        file_name="toolbar_icons/block.png"        preload="true" />
   <texture name="Command_Build_Icon"        file_name="toolbar_icons/build.png"        preload="true" />
   <texture name="Command_Chat_Icon"         file_name="toolbar_icons/chat.png"         preload="true" />
   <texture name="Command_Chat_Bar_Icon"     file_name="toolbar_icons/chat_bar.png"     preload="true" />

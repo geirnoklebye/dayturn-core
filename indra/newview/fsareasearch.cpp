@@ -63,6 +63,9 @@
 #include "fsscrolllistctrl.h"
 #include "llviewermediafocus.h"
 #include "lltoolmgr.h"
+#include "llmutelist.h"
+#include "llderenderlist.h"
+#include "llfloaterblocked.h"
 
 // max number of objects that can be (de-)selected in a single packet.
 const S32 MAX_OBJECTS_PER_PACKET = 255;
@@ -1595,7 +1598,7 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 	switch(c)
 	{
 	case 't': // touch
-	case 'l': // blacklist
+	case 'm': // block/mute
 	{
 		std::vector<LLScrollListItem*> selected = mResultList->getAllSelected();
 
@@ -1613,40 +1616,14 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 				}
 			}
 				break;
-			case 'l': // blacklist
+			case 'm': // mute
 			{
 				LLUUID object_id = (*item_it)->getUUID();
-				LLViewerObject* objectp = gObjectList.findObject(object_id);
-//				if (objectp)
-// [RLVa:KB] - Checked: RLVa-2.0.0 | FS-specific
-				// Don't allow derendering of own attachments when RLVa is enabled
-//				if ( (objectp) && (gAgentID != objectp->getID()) && ((!RlvActions::isRlvEnabled()) || (!objectp->isAttachment()) || (!objectp->permYouOwner())) )
-// [/RLVa:KB]
-				{
-					std::string region_name;
-					LLViewerRegion* region = objectp->getRegion();
-					if (region)
-					{
-						region_name = objectp->getRegion()->getName();
-					}
-//					FSAssetBlacklist::getInstance()->addNewItemToBlacklist(object_id, mFSAreaSearch->mObjectDetails[object_id].name, region_name, LLAssetType::AT_OBJECT);
 
-					mFSAreaSearch->mObjectDetails.erase(object_id);
-					LLSelectMgr::getInstance()->deselectObjectOnly(objectp);
-					gObjectList.addDerenderedItem(object_id, true);
-					gObjectList.killObject(objectp);
-					if (LLViewerRegion::sVOCacheCullingEnabled && region)
-					{
-						region->killCacheEntry(objectp->getLocalID());
-					}
-
-					LLTool* tool = LLToolMgr::getInstance()->getCurrentTool();
-					LLViewerObject* tool_editing_object = tool->getEditingObject();
-					if (tool_editing_object && tool_editing_object->mID == object_id)
-					{
-						tool->stopEditing();
-					}
-				}
+				LLMute mute(object_id,  mFSAreaSearch->mObjectDetails[object_id].name, LLMute::OBJECT);
+				LLMuteList::getInstance()->add(mute);
+				LLFloaterBlocked::showMuteAndSelect(mute.mID);
+				LL_INFOS() << "Called mutelist for id " << object_id << " and name " << mFSAreaSearch->mObjectDetails[object_id].name << LL_ENDL;
 			}
 				break;
 			default:
@@ -1799,6 +1776,7 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 	case 'd': // delete
 	case 'r': // return
 	case 's': // script queue actions
+	case 'l': // derender (session or persistent)
 	{
 		// select the objects first
 		LLSelectMgr::getInstance()->deselectAll();
@@ -1810,7 +1788,7 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 			LLUUID object_id = (*item_it)->getUUID();
 			LLViewerObject* objectp = gObjectList.findObject(object_id);
 			// if we arrived here with a child prim, switch to its root
-			if (objectp != objectp->getRootEdit())
+			if (objectp && objectp != objectp->getRootEdit())
 			{
 				objectp = objectp->getRootEdit();
 				object_id = objectp->getID();
@@ -1818,7 +1796,14 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 			if (objectp)
 			{
 				LLSelectMgr::getInstance()->selectObjectAndFamily(objectp);
-				if ( c == 'r' || c == 's' )
+				if(c == 'l') // derender
+				{
+					LLSelectMgr::getInstance()->selectObjectAndFamily(objectp);
+					LLSelectNode* node = LLSelectMgr::getInstance()->getSelection()->findNode(objectp);
+					node->mName = mFSAreaSearch->mObjectDetails[object_id].name;
+					node->mValid = true;
+				}
+				else if ( c == 'r' || c == 's' )
 				{
 					// need to set permissions for object return
 					LLSelectNode* node = LLSelectMgr::getInstance()->getSelection()->findNode(objectp);
@@ -1893,6 +1878,12 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 			break;
 		case 'r': // return
 			handle_object_return();
+			break;
+		case 'l': // derender
+			{
+				action = action.erase(0,1);
+				handle_object_derender(action);
+			}
 			break;
 		case 's': // script queue
 			{

@@ -132,12 +132,28 @@
 		 parameter="delete"/>
 	</menu_item_call>
 	<menu_item_call
-	 label="Derender"
+	 label="Block (Mute)"
 	 layout="topleft"
-	 name="blacklist_object">
+	 name="mute_object">
 		<menu_item_call.on_click
 		 function="AreaSearch.Action"
-		 parameter="l_blacklist"/>
+		 parameter="m_mute"/>
+	</menu_item_call>
+	<menu_item_call
+	 label="Session Derender"
+	 layout="topleft"
+	 name="blacklist_session">
+		<menu_item_call.on_click
+		 function="AreaSearch.Action"
+		 parameter="lsession"/>
+	</menu_item_call>
+	<menu_item_call
+	 label="Permanent Derender"
+	 layout="topleft"
+	 name="blacklist_perm">
+		<menu_item_call.on_click
+		 function="AreaSearch.Action"
+		 parameter="lpersistent"/>
 	</menu_item_call>
 <!-- <menu_item_separator
 	 layout="topleft"/>  -->

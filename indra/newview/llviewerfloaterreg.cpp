@@ -29,7 +29,9 @@
 
 #include "llfloaterreg.h"
 #include "llviewerfloaterreg.h"
-
+// [SL:KB] - Patch UI-Floaters | Checked: Catznip-5.2
+#include "llcallbacklist.h"
+// [/SL:KB]
 #include "llcommandhandler.h"
 #include "animationexplorer.h"
 #include "ao.h"				// ## Zi: Animation Overrider
@@ -54,6 +56,9 @@
 #include "llfloaterbanduration.h"
 #include "llfloaterbigpreview.h"
 #include "llfloaterbeacons.h"
+// [SL:KB] - Patch: World-Derender | Checked: Catznip-3.2
+#include "llfloaterblocked.h"
+// [/SL:KB]
 #include "llfloaterbuildoptions.h"
 #include "llfloaterbulkpermission.h"
 #include "llfloaterbump.h"
@@ -228,11 +233,14 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("auction", "floater_auction.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterAuction>);
 	LLFloaterReg::add("avatar", "floater_avatar.xml",  (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterAvatar>);
 	LLFloaterReg::add("avatar_picker", "floater_avatar_picker.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterAvatarPicker>);
-	LLFloaterReg::add("avatar_render_settings", "floater_avatar_render_settings.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterAvatarRenderSettings>);
+//	LLFloaterReg::add("avatar_render_settings", "floater_avatar_render_settings.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterAvatarRenderSettings>);
 	LLFloaterReg::add("avatar_textures", "floater_avatar_textures.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterAvatarTextures>);
 
 	LLFloaterReg::add("ban_duration", "floater_ban_duration.xml", &LLFloaterReg::build<LLFloaterBanDuration>);
 	LLFloaterReg::add("beacons", "floater_beacons.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterBeacons>);
+// [SL:KB] - Patch: World-Derender | Checked: Catznip-3.2
+	LLFloaterReg::add("blocked", "floater_blocked.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterBlocked>);
+// [/SL:KB]
 	LLFloaterReg::add("bulk_perms", "floater_bulk_perms.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterBulkPermission>);
 	LLFloaterReg::add("bulk_rename", "floater_bulk_rename.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<KokuaFloaterBulkRename>);
 	LLFloaterReg::add("buy_currency", "floater_buy_currency.xml", &LLFloaterBuyCurrency::buildFloater);
@@ -439,3 +447,64 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("search_replace", "floater_search_replace.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterSearchReplace>);
 	LLFloaterReg::registerControlVariables(); // Make sure visibility and rect controls get preserved when saving
 }
+
+// [SL:KB] - Patch UI-Floaters | Checked: Catznip-5.2
+// static
+void LLFloaterReg::cycleFloaters(const std::string& floater_name)
+{
+	static std::map<std::string, LLSD> s_FloaterParams = {
+		{ "delete_pref_preset", LLSD("graphic") },
+		{ "env_delete_preset", LLSD("day_cycle") },
+		{ "env_edit_sky", LLSD("edit") },
+		{ "env_edit_water", LLSD("edit") },
+		{ "env_edit_day_cycle", LLSD("edit") },
+		{ "impanel", LLSD().with("show", false) },
+		{ "im_container", LLSD().with("show", false) },
+		{ "incoming_call", LLSD().with("notify_box_type", "VoiceInviteGroup") },
+		{ "load_pref_preset", LLSD("graphic") },
+		{ "save_pref_preset", LLSD("graphic") }
+	};
+
+	build_map_t::const_iterator itFloater = sBuildMap.begin();
+	if (!floater_name.empty())
+	{
+		itFloater = sBuildMap.find(floater_name);
+		if (sBuildMap.end() != itFloater)
+			itFloater++;
+	}
+
+	while (sBuildMap.end() != itFloater)
+	{
+		LLSD sdParam;
+		auto itFloaterParam = s_FloaterParams.find(itFloater->first);
+		if (s_FloaterParams.end() != itFloaterParam)
+			sdParam = itFloaterParam->second;
+		if ( (sdParam.has("show")) && ((!sdParam["show"].asBoolean())) )
+		{
+			itFloater++;
+			continue;
+		}
+
+		// Clean up the old floater
+		if (LLFloater* pFloater = LLFloaterReg::findInstance(floater_name, sdParam))
+		{
+			pFloater->closeHostedFloater();
+		}
+		else
+		{
+			LLFloaterReg::const_instance_list_t floaters = LLFloaterReg::getFloaterList(floater_name);
+			for (LLFloater* pFloater : floaters)
+				if (pFloater)
+					pFloater->closeHostedFloater();
+		}
+
+
+		// Open the new floater
+		LLFloaterReg::showInstance(itFloater->first, sdParam, true);
+
+		// Schedule a call back for the next one
+		doAfterInterval(boost::bind(LLFloaterReg::cycleFloaters, itFloater->first), 5.f);
+		break;
+	}
+}
+// [/SL:KB]
