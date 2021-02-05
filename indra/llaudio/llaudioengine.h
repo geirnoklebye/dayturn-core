@@ -334,6 +334,7 @@ public:
 	const LLUUID &getID() const		{ return mID; }
   // NaCl - Sound Explorer
   const LLUUID &getLogID() const { return mLogID; }
+  void setSourceID(const LLUUID& id) {mSourceID = id; }
   // NaCl End
 	bool isDone() const;
 	bool isMuted() const { return mSourceMuted; }
