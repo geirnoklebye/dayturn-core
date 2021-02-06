@@ -177,6 +177,18 @@
          top_pad="1"
          width="180"
          name="hud_check" />
+        <text
+         type="string"
+         length="1"
+         follows="left|top"
+         height="13"
+         layout="topleft"
+         left="50"
+         name="rlv_hud_label"
+         top_pad="0"
+         width="200">
+         (forced on if any RLV locked)
+        </text>
         <check_box
          label="Freeze frame (fullscreen)"
          layout="topleft"
