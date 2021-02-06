@@ -2401,7 +2401,6 @@ void LLKeyframeMotion::onLoadComplete(LLVFS *vfs,
 			if (motionp->deserialize(dp, asset_uuid))
 			{
 				motionp->mAssetStatus = ASSET_LOADED;
-				LL_INFOS() << "Loaded: " << motionp->getID() << LL_ENDL;
 			}
 			else
 			{
