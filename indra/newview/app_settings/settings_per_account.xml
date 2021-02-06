@@ -561,7 +561,18 @@
         <integer>2</integer>
       </map>
     <!-- Firestorm settings -->
-	<key>FSKeywordOn</key>
+    <key>FSShowOnlyActiveGestures</key>
+    <map>
+        <key>Comment</key>
+            <string>Show only active gestures in the gestures floater</string>
+        <key>Persist</key>
+            <integer>1</integer>
+        <key>Type</key>
+            <string>Boolean</string>
+        <key>Value</key>
+            <string>0</string>
+    </map>
+    <key>FSKeywordOn</key>
 	<map>
 		<key>Comment</key>
 			<string>Turns on keyword alerts</string>

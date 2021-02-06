@@ -88,20 +88,33 @@
                  tool_tip="Make new gesture"
                  top_delta="0"
                  width="18" />
-              <button
-                 follows="bottom|left"
-                 font="SansSerifBigBold"
-                 height="10"
-                 image_hover_selected="Activate_Checkmark"
-                 image_selected="Activate_Checkmark"
-                 image_unselected="Activate_Checkmark"
-                 layout="topleft"
-                 left_pad="5"
-                 name="activate_btn"
-                 tool_tip="Activate/Deactivate selected gesture"
-                 top="10"
-                 width="10" />
-              <button
+                 <button
+                    follows="bottom|left"
+                    font="SansSerifBigBold"
+                    height="10"
+                    image_hover_selected="Activate_Checkmark"
+                    image_selected="Activate_Checkmark"
+                    image_unselected="Activate_Checkmark"
+                    layout="topleft"
+                    left_pad="5"
+                    name="activate_btn"
+                    tool_tip="Activate/Deactivate selected gesture"
+                    top="10"
+                    width="10" />
+                 <check_box
+                    control_name="FSShowOnlyActiveGestures"
+                    height="18"
+                    label="Active only"
+                    layout="topleft"
+                    follows="bottom|left"
+                    left_pad="25"
+                    top="5"
+                    name="FSShowOnlyActiveGestures"
+                    width="100">
+                      <check_box.commit_callback
+                       function="Gesture.Action.RefreshList" />
+                 </check_box>
+                 <button
                  follows="bottom|right"
                  font="SansSerifBigBold"
                  height="18"
