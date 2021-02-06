@@ -2395,7 +2395,7 @@ void LLKeyframeMotion::onLoadComplete(LLVFS *vfs,
 			U8* buffer = new U8[size];
 			file.read((U8*)buffer, size);	/*Flawfinder: ignore*/
 
-			LL_INFOS("Animation") << "Loading keyframe data for: " << motionp->getName() << ":" << motionp->getID() << " (" << size << " bytes)" << LL_ENDL;
+			LL_DEBUGS("Animation") << "Loading keyframe data for: " << motionp->getName() << ":" << motionp->getID() << " (" << size << " bytes)" << LL_ENDL;
 			
 			LLDataPackerBinaryBuffer dp(buffer, size);
 			if (motionp->deserialize(dp, asset_uuid))
