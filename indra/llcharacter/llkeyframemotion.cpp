@@ -433,6 +433,7 @@ LLKeyframeMotion::LLKeyframeMotion(const LLUUID &id)
 	: LLMotion(id),
 		mJointMotionList(NULL),
 		mPelvisp(NULL),
+		mCharacter(NULL), // <FS:Ansariel> Uninitialized pointer fix by Drake Arconis
 		mLastSkeletonSerialNum(0),
 		mLastUpdateTime(0.f),
 		mLastLoopedTime(0.f),
@@ -667,7 +668,7 @@ BOOL LLKeyframeMotion::onActivate()
 	{
 		LLUUID emote_anim_id = gAnimLibrary.stringToAnimState(mJointMotionList->mEmoteName);
 		// don't start emote if already active to avoid recursion
-		if (!mCharacter->isMotionActive(emote_anim_id))
+		if (emote_anim_id != LLUUID::null && !mCharacter->isMotionActive(emote_anim_id))
 		{
 			mCharacter->startMotion( emote_anim_id );
 		}
@@ -1243,12 +1244,14 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	if (!dp.unpackU16(version, "version"))
 	{
 		LL_WARNS() << "can't read version number for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 
 	if (!dp.unpackU16(sub_version, "sub_version"))
 	{
 		LL_WARNS() << "can't read sub version number for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 
@@ -1261,6 +1264,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 #if LL_RELEASE
 		LL_WARNS() << "Bad animation version " << version << "." << sub_version 
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 #else
 		LL_ERRS() << "Bad animation version " << version << "." << sub_version
@@ -1272,6 +1276,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "can't read animation base_priority"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 	mJointMotionList->mBasePriority = (LLJoint::JointPriority) temp_priority;
@@ -1285,6 +1290,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "bad animation base_priority " << mJointMotionList->mBasePriority
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 
@@ -1295,6 +1301,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "can't read duration"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 	
@@ -1303,6 +1310,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "invalid animation duration"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 
@@ -1313,6 +1321,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "can't read optional_emote_animation"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 
@@ -1320,6 +1329,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "Malformed animation mEmoteName==mID"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 
@@ -1331,6 +1341,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "can't read loop point"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 
@@ -1339,6 +1350,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "can't read loop point"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 
@@ -1346,6 +1358,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "can't read loop"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 
@@ -1357,6 +1370,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "can't read easeIn"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 
@@ -1365,6 +1379,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "can't read easeOut"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 
@@ -1376,6 +1391,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "can't read hand pose"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 	
@@ -1383,6 +1399,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "invalid LLHandMotion::eHandPose index: " << word
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 	
@@ -1396,6 +1413,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "can't read number of joints"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 
@@ -1403,12 +1421,14 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "no joints"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 	else if (num_motions > LL_CHARACTER_MAX_ANIMATED_JOINTS)
 	{
 		LL_WARNS() << "too many joints"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 
@@ -1431,6 +1451,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 		{
 			LL_WARNS() << "can't read joint name"
                        << " for animation " << asset_id << LL_ENDL;
+			delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 			return FALSE;
 		}
 
@@ -1438,6 +1459,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 		{
 			LL_WARNS() << "attempted to animate special " << joint_name << " joint"
                        << " for animation " << asset_id << LL_ENDL;
+			delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 			return FALSE;
 		}
 				
@@ -1480,6 +1502,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 		{
 			LL_WARNS() << "can't read joint priority."
                        << " for animation " << asset_id << LL_ENDL;
+			delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 			return FALSE;
 		}
 
@@ -1487,6 +1510,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 		{
 			LL_WARNS() << "joint priority unknown - too low."
                        << " for animation " << asset_id << LL_ENDL;
+			delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 			return FALSE;
 		}
 		
@@ -1506,6 +1530,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 		{
 			LL_WARNS() << "can't read number of rotation keys"
                        << " for animation " << asset_id << LL_ENDL;
+			delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 			return FALSE;
 		}
 
@@ -1532,6 +1557,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				{
 					LL_WARNS() << "can't read rotation key (" << k << ")"
                                << " for animation " << asset_id << LL_ENDL;
+					delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 					return FALSE;
 				}
 
@@ -1542,6 +1568,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				{
 					LL_WARNS() << "can't read rotation key (" << k << ")"
                                << " for animation " << asset_id << LL_ENDL;
+					delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 					return FALSE;
 				}
 
@@ -1551,6 +1578,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				{
 					LL_WARNS() << "invalid frame time"
                                << " for animation " << asset_id << LL_ENDL;
+					delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 					return FALSE;
 				}
 			}
@@ -1593,6 +1621,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 			{
 				LL_WARNS() << "can't read rotation key (" << k << ")"
                            << " for animation " << asset_id << LL_ENDL;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 
@@ -1606,6 +1635,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 		{
 			LL_WARNS() << "can't read number of position keys"
                        << " for animation " << asset_id << LL_ENDL;
+			delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 			return FALSE;
 		}
 
@@ -1632,6 +1662,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				{
 					LL_WARNS() << "can't read position key (" << k << ")"
                                << " for animation " << asset_id << LL_ENDL;
+					delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 					return FALSE;
 				}
 			}
@@ -1641,6 +1672,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				{
 					LL_WARNS() << "can't read position key (" << k << ")"
                                << " for animation " << asset_id << LL_ENDL;
+					delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 					return FALSE;
 				}
 
@@ -1683,6 +1715,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 			{
 				LL_WARNS() << "can't read position key (" << k << ")"
                            << " for animation " << asset_id << LL_ENDL;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 			
@@ -1705,6 +1738,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 	{
 		LL_WARNS() << "can't read number of constraints"
                    << " for animation " << asset_id << LL_ENDL;
+		delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 		return FALSE;
 	}
 
@@ -1730,6 +1764,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "can't read constraint chain length"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 			constraintp->mChainLength = (S32) byte;
@@ -1739,6 +1774,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "invalid constraint chain length"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 
@@ -1747,6 +1783,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "can't read constraint type"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 			
@@ -1755,6 +1792,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "invalid constraint type"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 			constraintp->mConstraintType = (EConstraintType)byte;
@@ -1766,6 +1804,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "can't read source volume name"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 
@@ -1777,6 +1816,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "not a valid source constraint volume " << str
 						   << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Beq> avoid mem-leak as per others
 				return FALSE;
 			}
 
@@ -1785,6 +1825,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "can't read constraint source offset"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 			
@@ -1793,6 +1834,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "non-finite constraint source offset"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 			
@@ -1801,6 +1843,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "can't read target volume name"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 
@@ -1820,6 +1863,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 					LL_WARNS() << "not a valid target constraint volume " << str
 							   << " for animation " << asset_id << LL_ENDL;
 					delete constraintp;
+					delete mJointMotionList; // <FS:Beq> avoid mem-leak as per others
 					return FALSE;
 				}
 			}
@@ -1829,6 +1873,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "can't read constraint target offset"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 
@@ -1837,6 +1882,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "non-finite constraint target offset"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 			
@@ -1845,6 +1891,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "can't read constraint target direction"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 
@@ -1853,6 +1900,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "non-finite constraint target direction"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 
@@ -1867,6 +1915,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "can't read constraint ease in start time"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 
@@ -1875,6 +1924,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "can't read constraint ease in stop time"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 
@@ -1883,6 +1933,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "can't read constraint ease out start time"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 
@@ -1891,6 +1942,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				LL_WARNS() << "can't read constraint ease out stop time"
                            << " for animation " << asset_id << LL_ENDL;
 				delete constraintp;
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 
@@ -1902,6 +1954,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 			// get joint to which this collision volume is attached
 			if (!joint)
 			{
+				delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 				return FALSE;
 			}
 			for (S32 i = 0; i < constraintp->mChainLength + 1; i++)
@@ -1912,6 +1965,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 					LL_WARNS() << "Joint with no parent: " << joint->getName()
                                << " Emote: " << mJointMotionList->mEmoteName
                                << " for animation " << asset_id << LL_ENDL;
+					delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 					return FALSE;
 				}
 				joint = parent;
@@ -1924,6 +1978,7 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 					{
 						LL_WARNS() << "Invalid joint " << j
                                    << " for animation " << asset_id << LL_ENDL;
+						delete mJointMotionList; // <FS:Ansariel> Mem-leak fix by Drake Arconis
 						return FALSE;
 					}
 					
@@ -1937,7 +1992,10 @@ BOOL LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				{
 					LL_WARNS() << "No joint index for constraint " << i
                                << " for animation " << asset_id << LL_ENDL;
-					delete constraintp;
+					// <FS:Ansariel> Mem-leak fix by Drake Arconis
+					//delete constraintp;
+					delete mJointMotionList;
+					// </FS:Ansariel>
 					return FALSE;
 				}
 			}
@@ -2337,12 +2395,13 @@ void LLKeyframeMotion::onLoadComplete(LLVFS *vfs,
 			U8* buffer = new U8[size];
 			file.read((U8*)buffer, size);	/*Flawfinder: ignore*/
 
-			LL_DEBUGS("Animation") << "Loading keyframe data for: " << motionp->getName() << ":" << motionp->getID() << " (" << size << " bytes)" << LL_ENDL;
+			LL_INFOS("Animation") << "Loading keyframe data for: " << motionp->getName() << ":" << motionp->getID() << " (" << size << " bytes)" << LL_ENDL;
 			
 			LLDataPackerBinaryBuffer dp(buffer, size);
 			if (motionp->deserialize(dp, asset_uuid))
 			{
 				motionp->mAssetStatus = ASSET_LOADED;
+				LL_INFOS() << "Loaded: " << motionp->getID() << LL_ENDL;
 			}
 			else
 			{
