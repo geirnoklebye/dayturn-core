@@ -10213,6 +10213,20 @@ class LLViewCheckHUDAttachments : public view_listener_t
 	}
 };
 
+// KKA-804 It's a FAQ why hud attachments can't be turned off, the usual answer being that a hud item is undetachable
+// Head off the FAQ by only enabling the control when it's possible to change it
+class LLViewEnableHUDAttachments : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		if (gRRenabled && gAgent.mRRInterface.mHasLockedHuds)
+		{
+			return false;
+		}
+		return true;
+	}
+};
+
 class LLEditEnableTakeOff : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -10861,6 +10875,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLViewStatusAway(), "View.Status.CheckAway");
 	view_listener_t::addMenu(new LLViewStatusDoNotDisturb(), "View.Status.CheckDoNotDisturb");
 	view_listener_t::addMenu(new LLViewCheckHUDAttachments(), "View.CheckHUDAttachments");
+	view_listener_t::addMenu(new LLViewEnableHUDAttachments(), "View.EnableHUDAttachments"); //KKA-804
 	// <FS:Zi> Add reset camera angles menu
 	view_listener_t::addMenu(new LLViewResetCameraAngles(), "View.ResetCameraAngles");
 	// </FS:Zi>	
