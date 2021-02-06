@@ -388,14 +388,9 @@ void LLFloaterSnapshot::Impl::updateControls(LLFloaterSnapshotBase* floater)
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mHasLockedHuds)
 	{
-		floater->childSetEnabled("hud_check",FALSE);		
+		floater->childSetValue("hud_check", TRUE);
 		gSavedSettings.setBOOL( "RenderHUDInSnapshot", TRUE );
 	}
-	else
-	{
-		floater->childSetEnabled("hud_check",TRUE);		
-	}
-	floater->childSetValue("hud_check", gSavedSettings.getBOOL("RenderHUDInSnapshot")); //KKA-804 - follow the control variable, not the other way around
 //mk
 	if (current_panel)
 	{
@@ -522,9 +517,8 @@ void LLFloaterSnapshotBase::ImplBase::onClickUICheck(LLUICtrl *ctrl, void* data)
 // static
 void LLFloaterSnapshotBase::ImplBase::onClickHUDCheck(LLUICtrl *ctrl, void* data)
 {
-	// KKA-804 change this to follow the control setting, not the other way around
-	// LLCheckBoxCtrl *check = (LLCheckBoxCtrl *)ctrl;
-	gSavedSettings.setBOOL( "RenderHUDInSnapshot", !gSavedSettings.getBOOL( "RenderHUDInSnapshot") );
+	LLCheckBoxCtrl *check = (LLCheckBoxCtrl *)ctrl;
+	gSavedSettings.setBOOL( "RenderHUDInSnapshot", check->get() );
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mHasLockedHuds)
 	{
@@ -1007,12 +1001,6 @@ BOOL LLFloaterSnapshot::postBuild()
 	{
 		getChild<LLUICtrl>("hud_check")->setValue(TRUE);
 		gSavedSettings.setBOOL( "RenderHUDInSnapshot", TRUE );
-		getChild<LLUICtrl>("hud_check")->setEnabled(FALSE);
-	}
-	else
-	{
-		getChild<LLUICtrl>("hud_check")->setEnabled(TRUE);
-
 	}
 //mk
 

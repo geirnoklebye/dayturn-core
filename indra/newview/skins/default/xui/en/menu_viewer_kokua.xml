@@ -356,8 +356,6 @@
          label="Show HUD Attachments"
          name="Show HUD Attachments"
          shortcut="alt|shift|H">
-           <menu_item_check.on_enable
-            function="View.EnableHUDAttachments" />
            <menu_item_check.on_check
             function="View.CheckHUDAttachments" />
             <menu_item_check.on_click
@@ -2732,8 +2730,6 @@
              label="Show HUD Attachments"
              name="Show HUD Attachments"
              shortcut="alt|shift|H">
-                <menu_item_check.on_enable
-                 function="View.EnableHUDAttachments" />
                 <menu_item_check.on_check
                  function="View.CheckHUDAttachments" />
                 <menu_item_check.on_click
