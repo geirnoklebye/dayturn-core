@@ -123,7 +123,7 @@ void LLViewerGesture::doTrigger( BOOL send_chat )
 		else
 		{
 			LLUUID anim_id = gAnimLibrary.stringToAnimState(mAnimation);
-			gAgent.sendAnimationRequest(anim_id, ANIM_REQUEST_START);
+			if (anim_id != LLUUID::null) gAgent.sendAnimationRequest(anim_id, ANIM_REQUEST_START);
 		}
 	}
 
