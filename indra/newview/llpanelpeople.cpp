@@ -1115,18 +1115,6 @@ void LLPanelPeople::updateRecentList()
 
 	LLRecentPeople::instance().get(mRecentList->getIDs());
 	mRecentList->setDirty();
-
-//MK
-{
-		LLPanel* nearby_tab = getChild<LLPanel>(NEARBY_TAB_NAME);
-		if (nearby_tab && nearby_tab->getVisible())
-		{
-//			nearby_tab->setVisible(FALSE);
-			nearby_tab->childSetVisible("avatar_list", FALSE);
-		}
-		return;
-	}
-//mk
 }
 
 //MK
