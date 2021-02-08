@@ -265,6 +265,8 @@ void LLDerenderList::removeObjects(LLDerenderEntry::EEntryType eType, const uuid
 					}
 				}
 				break;
+			default:
+				break;
 		}
 
 		const LLDerenderEntry* pEntry = *itEntry;

@@ -73,7 +73,7 @@ public:
 	const std::string& getFilterString() const override { return m_strFilter; }
 	void setFilterString(const std::string& strFilter) override;
 protected:
-	void refresh();
+	void refresh() override;
 	void removePicker();
 	void selectEntry(const LLSD& sdValue) { LLMute muteEntry(sdValue["id"].asUUID(), sdValue["name"].asString()); selectEntry(muteEntry); }
 	void selectEntry(const LLMute& muteEntry);
@@ -127,7 +127,7 @@ public:
 	 * Member functions
 	 */
 protected:
-	void refresh();
+	void refresh() override;
 
 	/*
 	 * Event handlers
@@ -170,7 +170,7 @@ public:
 	const std::string& getFilterString() const override { return m_strFilter; }
 	void setFilterString(const std::string& strFilter) override;
 protected:
-	void refresh();
+	void refresh() override;
 	void removePicker();
 	void updateButtons();
 
