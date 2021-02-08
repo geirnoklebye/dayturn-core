@@ -612,9 +612,6 @@ void LLScreenChannel::showToastsBottom()
 
 	LLDockableFloater* floater = dynamic_cast<LLDockableFloater*>(LLDockableFloater::getInstanceHandle().get());
 
-	// <FS:Ansariel> Show toasts in front of other floaters
-	BOOL toasts_in_front = gSavedSettings.getBOOL("FSShowToastsInFront");
-
 	// Use a local variable instead of mToastList.
 	// mToastList can be modified during recursive calls and then all iteratos will be invalidated.
 	std::vector<ToastElem> vToastList( mToastList );
@@ -697,10 +694,7 @@ void LLScreenChannel::showToastsBottom()
 			// EXT-2653: it is necessary to prevent overlapping for secondary showed toasts
 			toast->setVisible(TRUE);
 		}		
-		// <FS:Ansariel> Show toasts in front of other floaters
-		//if(!toast->hasFocus())
-		if(!toast->hasFocus() && !toasts_in_front)
-		// </FS:Ansariel> Show toasts in front of other floaters
+		if(!toast->hasFocus())
 		{
 			// Fixing Z-order of toasts (EXT-4862)
 			// Next toast will be positioned under this one.
@@ -768,9 +762,6 @@ void LLScreenChannel::showToastsTop()
 	updateRect();
 
 	LLDockableFloater* floater = dynamic_cast<LLDockableFloater*>(LLDockableFloater::getInstanceHandle().get());
-
-	// <FS:Ansariel> Show toasts in front of other floaters
-	BOOL toasts_in_front = gSavedSettings.getBOOL("FSShowToastsInFront");
 
 	// Use a local variable instead of mToastList.
 	// mToastList can be modified during recursive calls and then all iteratos will be invalidated.
@@ -859,10 +850,7 @@ void LLScreenChannel::showToastsTop()
 			// EXT-2653: it is necessary to prevent overlapping for secondary showed toasts
 			toast->setVisible(TRUE);
 		}		
-		// <FS:Ansariel> Show toasts in front of other floaters
-		//if (!toast->hasFocus())
-		if (!toast->hasFocus() && !toasts_in_front)
-		// </FS:Ansariel> Show toasts in front of other floaters
+		if (!toast->hasFocus())
 		{
 			// Fixing Z-order of toasts (EXT-4862)
 			// Next toast will be positioned under this one.

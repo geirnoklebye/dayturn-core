@@ -112,10 +112,7 @@ LLToast::LLToast(const LLToast::Params& p)
 	mNotification(p.notification),
 	mIsHidden(false),
 	mHideBtnPressed(false),
-	// <FS:Ansariel> Show toasts in front of other floaters
-	//mIsTip(p.is_tip),
-	mIsTip(p.is_tip || gSavedSettings.getBOOL("FSShowToastsInFront")),
-	// </FS:Ansariel> Show toasts in front of other floaters
+	mIsTip(p.is_tip),
 	mWrapperPanel(NULL),
 	mIsFading(false),
 	mIsHovered(false)
@@ -130,13 +127,6 @@ LLToast::LLToast(const LLToast::Params& p)
 
 	setBackgroundOpaque(TRUE); // *TODO: obsolete
 	updateTransparency();
-	
-	// <FS:Ansariel> Show toasts in front of other floaters
-	if (gSavedSettings.getBOOL("FSShowToastsInFront"))
-	{
-		setFrontmost(FALSE);
-	}
-	// </FS:Ansariel> Show toasts in front of other floaters
 
 	if(p.panel())
 	{
