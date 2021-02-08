@@ -36,6 +36,10 @@
 #include <glob.h>
 #include <pwd.h>
 
+//CA set this to 1 if you want to use skins within the source folder hierarchy when running the app
+//from within the build structure. if set to 0 it will use those packaged with it which is safer
+//but precludes edit-test-edit on xml files
+#define SKINS_FROM_SOURCE_TREE 0
 
 static std::string getCurrentUserHome(char* fallback)
 {
@@ -90,6 +94,21 @@ LLDir_Linux::LLDir_Linux()
 #else
 	mAppRODataDir = tmp_str;
 #endif
+		// CA: This is a hugely dangerous thing to do. On Windows doing this
+		// is relatively safe because the skins etc are copied over to the build-*
+		// folders as part of packaging and it's those copies that are referenced
+		// when the app is run from within the build folders. However on Darwin
+		// there is no intermediate copy and instead it points back to the source
+		// file structure. This is a really bad idea for Kokua where there are
+		// three different targets that could be built and is the cause of a
+		// long-running, perplexing problem where a RLV version would fail to
+		// start because it couldn't locate kokua_rlv_names.xml (because the
+		// source structure had been changed to a non-RLV checkout). The pain
+		// this causes outweighs the benefits of on-the-fly xml editing/testing
+		// so this is going to be disabled by an #if construct so that the 
+		// original behaviour can be applied if it's needed for xml testing
+
+#if SKINS_FROM_SOURCE_TREE
     std::string::size_type build_dir_pos = mExecutableDir.rfind("/build-linux-");
     if (build_dir_pos != std::string::npos)
     {
@@ -100,9 +119,12 @@ LLDir_Linux::LLDir_Linux()
     }
     else
     {
+#endif
 		// ...normal installation running
 		mSkinBaseDir = mAppRODataDir + mDirDelimiter + "skins";
-    }	
+#if SKINS_FROM_SOURCE_TREE
+    }
+#endif
 
 	mOSUserDir = getCurrentUserHome(tmp_str);
 	mOSUserAppDir = "";
