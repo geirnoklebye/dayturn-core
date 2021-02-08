@@ -5621,9 +5621,10 @@ LLRect LLViewerWindow::getChatConsoleRect()
 
 	console_rect.mLeft   += CONSOLE_PADDING_LEFT; 
 
-	static const BOOL CHAT_FULL_WIDTH = gSavedSettings.getBOOL("ChatFullWidth");
-
-	if (CHAT_FULL_WIDTH)
+	// <FS:Ansariel> This also works without relog!
+	static LLCachedControl<bool> chatFullWidth(gSavedSettings, "ChatFullWidth");
+	if (chatFullWidth)
+	// </FS:Ansariel>
 	{
 		console_rect.mRight -= CONSOLE_PADDING_RIGHT;
 	}
@@ -5631,7 +5632,13 @@ LLRect LLViewerWindow::getChatConsoleRect()
 	{
 		// Make console rect somewhat narrow so having inventory open is
 		// less of a problem.
-		console_rect.mRight  = console_rect.mLeft + 2 * getWindowWidthScaled() / 3;
+
+		//AO, Have console reuse/respect the desired nearby popup width set in NearbyToastWidth
+		//console_rect.mRight  = console_rect.mLeft + 2 * getWindowWidthScaled() / 3;
+		static LLCachedControl<S32> nearbyToastWidth(gSavedSettings, "NearbyToastWidth");
+		F32 percentage = nearbyToastWidth / 100.0;
+		console_rect.mRight = S32((console_rect.mRight - CONSOLE_PADDING_RIGHT ) * percentage);
+		//</AO>
 	}
 
 	return console_rect;

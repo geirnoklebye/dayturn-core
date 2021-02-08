@@ -9071,13 +9071,32 @@
     <key>OverflowToastHeight</key>
     <map>
       <key>Comment</key>
-      <string>Height of an overflow toast</string>
+      <string>Height of an overflow toast (Currently unused)</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
       <string>S32</string>
       <key>Value</key>
       <integer>72</integer>
+    </map>
+    <key>NearbyToastWidth</key>
+    <map>
+      <key>Comment</key>
+      <string>Width of nearby chat toasts in percent of screen width</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>S32</string>
+      <key>Value</key>
+      <integer>33</integer>
+      <key>SanityCheckType</key>
+      <string>GreaterThanEquals</string>
+      <key>SanityValue</key>
+      <array>
+        <integer>10</integer>
+      </array>
+      <key>SanityComment</key>
+      <string>If you make this too small your viewer might crash.</string>
     </map>
     <key>NotifyMoneyChange</key>
     <map>
@@ -19392,6 +19411,17 @@
 			<key>Value</key>
 			<string>key2name</string>
 		</map>
+  <key>FSShowToastsInFront</key>
+  <map>
+    <key>Comment</key>
+    <string>Show toasts in front of other floaters if enabled</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>
 		<key>FSCmdLineOfferTp</key>
 		<map>
 			<key>Comment</key>
@@ -19482,6 +19512,17 @@
 			<key>Value</key>
 			<integer>0</integer>
 		</map>
+		    <key>FSNearbyChatToastsOffset</key>
+		    <map>
+		      <key>Comment</key>
+		      <string>Vertical offset of the nearby chat toasts</string>
+		      <key>Persist</key>
+		      <integer>1</integer>
+		      <key>Type</key>
+		      <string>S32</string>
+		      <key>Value</key>
+		      <integer>20</integer>
+		    </map>
 		  <key>FSShowInboxFolder</key>
 		  <map>
 		    <key>Comment</key>

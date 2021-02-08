@@ -612,6 +612,9 @@ void LLScreenChannel::showToastsBottom()
 
 	LLDockableFloater* floater = dynamic_cast<LLDockableFloater*>(LLDockableFloater::getInstanceHandle().get());
 
+	// <FS:Ansariel> Show toasts in front of other floaters
+	BOOL toasts_in_front = gSavedSettings.getBOOL("FSShowToastsInFront");
+
 	// Use a local variable instead of mToastList.
 	// mToastList can be modified during recursive calls and then all iteratos will be invalidated.
 	std::vector<ToastElem> vToastList( mToastList );
@@ -627,7 +630,9 @@ void LLScreenChannel::showToastsBottom()
 				return;
 			}
 
-			bottom = toast->getRect().mTop - toast->getTopPad();
+			// <FS:Ansariel> Unify chiclet calculation
+			//bottom = toast->getRect().mTop + toast->getTopPad();
+			bottom = toast->getRect().mTop;
 			toast_margin = gSavedSettings.getS32("ToastGap");
 		}
 
@@ -692,7 +697,10 @@ void LLScreenChannel::showToastsBottom()
 			// EXT-2653: it is necessary to prevent overlapping for secondary showed toasts
 			toast->setVisible(TRUE);
 		}		
-		if(!toast->hasFocus())
+		// <FS:Ansariel> Show toasts in front of other floaters
+		//if(!toast->hasFocus())
+		if(!toast->hasFocus() && !toasts_in_front)
+		// </FS:Ansariel> Show toasts in front of other floaters
 		{
 			// Fixing Z-order of toasts (EXT-4862)
 			// Next toast will be positioned under this one.
@@ -754,11 +762,15 @@ void LLScreenChannel::showToastsTop()
 
 	LLRect	toast_rect;	
 	S32		top = channel_rect.mTop;
+	S32		toast_margin = 0; // <FS:Ansariel> Unify chiclet calculation
 	std::vector<ToastElem>::reverse_iterator it;
 
 	updateRect();
 
 	LLDockableFloater* floater = dynamic_cast<LLDockableFloater*>(LLDockableFloater::getInstanceHandle().get());
+
+	// <FS:Ansariel> Show toasts in front of other floaters
+	BOOL toasts_in_front = gSavedSettings.getBOOL("FSShowToastsInFront");
 
 	// Use a local variable instead of mToastList.
 	// mToastList can be modified during recursive calls and then all iteratos will be invalidated.
@@ -775,8 +787,12 @@ void LLScreenChannel::showToastsTop()
 				return;
 			}
 
-			top = toast->getRect().mBottom - toast->getTopPad();
-			gSavedSettings.getS32("ToastGap");
+			// <FS:Ansariel> Unify chiclet calculation
+			//top = toast->getRect().mBottom - toast->getTopPad();
+			//gSavedSettings.getS32("ToastGap");
+			top = toast->getRect().mBottom;
+			toast_margin = gSavedSettings.getS32("ToastGap");
+			// </FS:Ansariel>
 		}
 
 		LLToast* toast = it->getToast();
@@ -788,7 +804,10 @@ void LLScreenChannel::showToastsTop()
 
 		toast_rect = toast->getRect();
 		toast_rect.setLeftTopAndSize(channel_rect.mRight - toast_rect.getWidth(),
-			top, toast_rect.getWidth(),
+			// <FS:Ansariel> Unify chiclet calculation
+			//top, toast_rect.getWidth(),
+			top - toast_margin, toast_rect.getWidth(),
+			// </FS:Ansariel>
 			toast_rect.getHeight());
 		toast->setRect(toast_rect);
 
@@ -805,7 +824,8 @@ void LLScreenChannel::showToastsTop()
 				toast->translate(0, shift);
 			}
 
-			LLRect channel_rect = getChannelRect();
+			// <FS:Ansariel> Already defined
+			//LLRect channel_rect = getChannelRect();
 			// don't show toasts if there is not enough space
 			if(toast_rect.mBottom < channel_rect.mBottom)
 			{
@@ -839,7 +859,10 @@ void LLScreenChannel::showToastsTop()
 			// EXT-2653: it is necessary to prevent overlapping for secondary showed toasts
 			toast->setVisible(TRUE);
 		}		
-		if (!toast->hasFocus())
+		// <FS:Ansariel> Show toasts in front of other floaters
+		//if (!toast->hasFocus())
+		if (!toast->hasFocus() && !toasts_in_front)
+		// </FS:Ansariel> Show toasts in front of other floaters
 		{
 			// Fixing Z-order of toasts (EXT-4862)
 			// Next toast will be positioned under this one.
