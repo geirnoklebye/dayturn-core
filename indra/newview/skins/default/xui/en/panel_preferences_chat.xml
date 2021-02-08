@@ -1175,18 +1175,6 @@
          width="80">
             %
         </text>
-      <check_box
-       control_name="FSShowToastsInFront"
-       height="16"
-       initial_value="true"
-       label="Show toasts in front of other windows"
-       layout="topleft"
-       left="10"
-       name="FSShowToastsInFront"
-       top_pad="10"
-       width="256" />
-
         </panel>
-
 </tab_container>
 </panel>

@@ -196,7 +196,10 @@ private:
 void LLFloaterIMNearbyChatScreenChannel::reshapePanel(LLFloaterIMNearbyChatToastPanel* panel)
 {
 	S32 percentage = gSavedSettings.getS32("NearbyToastWidth");
-	panel->reshape(gViewerWindow->getWindowWidthRaw() * percentage / 100, panel->getRect().getHeight(), TRUE);
+	//CA: As ported from FS, this called getWindowWidthRaw, however that gets confused by
+	//eg Windows UI scaling; called the Scaled version seems to give the intended result when
+	//running with Windows UI scaling set to something other than 100%
+	panel->reshape(gViewerWindow->getWindowWidthScaled() * percentage / 100, panel->getRect().getHeight(), TRUE);
 }
 
 void LLFloaterIMNearbyChatScreenChannel::updateSize(LLRect old_world_rect, LLRect new_world_rect)
