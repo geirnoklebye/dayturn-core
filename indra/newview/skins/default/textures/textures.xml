@@ -132,6 +132,7 @@ with the same filename but different name
   <texture name="Command_Appearance_Icon"   file_name="toolbar_icons/appearance.png"   preload="true" />
   <texture name="Command_Area_Search_Icon"  file_name="toolbar_icons/area_search.png"   preload="true" />
   <texture name="Command_Avatar_Icon"       file_name="toolbar_icons/avatars.png"      preload="true" />
+  <texture name="Command_Block_Icon"        file_name="toolbar_icons/block.png"        preload="true" />
   <texture name="Command_Build_Icon"        file_name="toolbar_icons/build.png"        preload="true" />
   <texture name="Command_Chat_Icon"         file_name="toolbar_icons/chat.png"         preload="true" />
   <texture name="Command_Chat_Bar_Icon"     file_name="toolbar_icons/chat_bar.png"     preload="true" />
@@ -708,11 +709,12 @@ with the same filename but different name
   <texture name="Toolbar_Right_Flash" file_name="containers/Toolbar_Right_Flash.png" preload="false" scale.left="1" scale.bottom="4" scale.top="24" scale.right="26" />
 
   <texture name="Tooltip" file_name="widgets/Tooltip.png" preload="true" scale.left="2" scale.top="16" scale.right="100" scale.bottom="3" />
-
+  <texture name="transparent" file_name="transparent.j2c" preload="true" />
   <texture name="TrashItem_Disabled" file_name="icons/TrashItem_Disabled.png" preload="false" />
   <texture name="TrashItem_Off" file_name="icons/TrashItem_Off.png" preload="false" />
   <texture name="TrashItem_Press" file_name="icons/TrashItem_Press.png" preload="false" />
 
+  <texture name="sound_explorer" file_name="toolbar_icons/sound_explorer.png" preload="true" />
   <texture name="Unread_Chiclet" file_name="bottomtray/Unread_Chiclet.png" preload="false" />
 
   <texture name="UpArrow_Off" file_name="icons/UpArrow_Off.png" preload="false" />

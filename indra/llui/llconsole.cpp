@@ -60,6 +60,7 @@ LLConsole::LLConsole(const LLConsole::Params& p)
 	LLFixedBuffer(p.max_lines),
 	mLinePersistTime(p.persist_time), // seconds
 	mFont(p.font),
+	mColorEnabled(false),
 	mConsoleWidth(0),
 	mConsoleHeight(0)
 {
@@ -382,9 +383,30 @@ void LLConsole::update()
 
 		while (!mLines.empty())
 		{
+			LLColor4 lineColor = LLColor4::white;
+			LLWString line = mLines.front();
+			if (mColorEnabled)
+			{
+				if (line.find(logDebug) != std::string::npos)
+				{
+					lineColor = LLColor4::grey1;
+				}
+				else if (line.find(logInfo) != std::string::npos)
+				{
+					lineColor = LLColor4::cyan;
+				}
+				else if (line.find(logWarning) != std::string::npos)
+				{
+					lineColor = LLColor4::yellow;
+				}
+				else if (line.find(logError) != std::string::npos)
+				{
+					lineColor = LLColor4::red;
+				}
+			}
 			mParagraphs.push_back(
-				Paragraph(	mLines.front(), 
-							LLColor4::white, 
+				Paragraph(	line, 
+							lineColor, 
 							mTimer.getElapsedTimeF32(), 
 							mFont, 
 							(F32)getRect().getWidth()));

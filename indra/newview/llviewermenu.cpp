@@ -57,6 +57,9 @@
 #include "llcompilequeue.h"
 #include "llconsole.h"
 #include "lldebugview.h"
+// [SL:KB] - Patch: World-Derender | Checked: 2011-12-15 (Catznip-3.2)
+#include "llderenderlist.h"
+// [/SL:KB]
 #include "llenvironment.h"
 #include "llfilepicker.h"
 #include "llfirstuse.h"
@@ -94,6 +97,9 @@
 #include "llinventoryfunctions.h"
 #include "lllogininstance.h" // <FS:AW  opensim destinations and avatar picker>
 #include "llpanellogin.h"
+// [SL:KB] - World-Mute | Checked: 2013-07-10 (Catznip-3.5)
+#include "llfloaterblocked.h"
+// [/SL:KB]
 #include "llpanelblockedlist.h"
 #include "llpanelmaininventory.h"
 #include "llmarketplacefunctions.h"
@@ -2664,35 +2670,6 @@ void cleanup_menus()
 // Object pie menu
 //-----------------------------------------------------------------------------
 
-// Andromeda Rage:  Derender functionality, inspired by Phoenix
-class LLObjectDerender : public view_listener_t
-{
-    bool handleEvent(const LLSD& userdata)
-    {
-        LLViewerObject* slct = LLSelectMgr::getInstance()->getSelection()->getFirstObject();
-        if(!slct)return true;
-        LLUUID id = slct->getID();
-        LLObjectSelectionHandle selection = LLSelectMgr::getInstance()->getSelection();
-        LLUUID root_key;
-        LLSelectNode* node = selection->getFirstRootNode();
-        if(node)root_key = node->getObject()->getID();
-        if(root_key.notNull())
-        {
-            id = root_key;
-        }
-        LLSelectMgr::getInstance()->removeObjectFromSelections(id);
-
-        if (!(id == gAgentID))
-        {
-            LLViewerObject *objectp = gObjectList.findObject(id);
-            {
-                gObjectList.killObject(objectp, true);
-            }
-        }
-        return true;
-    }
-};
-
 // <FS:Zi> Texture Refresh
 void destroy_texture(const LLUUID& id)		// will be used by the texture refresh functions below
 {
@@ -3592,7 +3569,10 @@ class LLObjectMute : public view_listener_t
 		else
 		{
 			LLMuteList::getInstance()->add(mute);
-			LLPanelBlockedList::showPanelAndSelect(mute.mID);
+// [SL:KB] - World-Mute | Checked: 2013-07-10 (Catznip-3.5)
+			LLFloaterBlocked::showMuteAndSelect(mute.mID);
+// [/SL:KB]
+//			LLPanelBlockedList::showPanelAndSelect(mute.mID);
 		}
 		
 		return true;
@@ -6565,6 +6545,42 @@ void handle_force_delete(void*)
 	LLSelectMgr::getInstance()->selectForceDelete();
 }
 
+// [SL:KB] - Patch: World-Derender | Checked: 2012-06-08 (Catznip-3.3)
+void handle_view_blocked(const LLSD& sdParam)
+{
+	if (LLVOAvatar* pAvatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject()))
+	{
+		std::string strParam = sdParam.asString();
+		if (BLOCKED_TAB_NAME == strParam)
+			strParam = BLOCKED_PARAM_NAME;
+		else if (DERENDER_TAB_NAME == strParam)
+			strParam = DERENDER_PARAM_NAME;
+		else if (EXCEPTION_TAB_NAME == strParam)
+			strParam = EXCEPTION_PARAM_NAME;
+
+		LLFloaterReg::showInstance("blocked", LLSD().with(strParam, pAvatar->getID()));
+	}
+	else
+	{
+		LLFloaterReg::showInstance("blocked", sdParam);
+	}
+}
+
+void handle_object_derender(const LLSD& sdParam)
+{
+	std::vector<LLUUID> idList;
+	if (LLDerenderList::instance().addSelection("persistent" == sdParam.asString(), &idList))
+	{
+		LLFloaterReg::showInstance("blocked", LLSD().with("derender_to_select", idList.front()));
+	}
+}
+
+bool enable_object_derender()
+{
+	return LLDerenderList::canAddSelection();
+}
+// [/SL:KB]
+
 class LLViewEnableJoystickFlycam : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -7825,7 +7841,10 @@ class LLMuteParticle : public view_listener_t
 			else
 			{
 				LLMuteList::getInstance()->add(mute);
-				LLPanelBlockedList::showPanelAndSelect(mute.mID);
+// [SL:KB] - World-Mute | Checked: 2013-12-12 (Catznip-3.6)
+				LLFloaterBlocked::showMuteAndSelect(mute.mID);
+// [/SL:KB]
+//				LLPanelBlockedList::showPanelAndSelect(mute.mID);
 			}
 		}
 
@@ -10879,7 +10898,9 @@ void initialize_menus()
 	// <FS:Zi> Add reset camera angles menu
 	view_listener_t::addMenu(new LLViewResetCameraAngles(), "View.ResetCameraAngles");
 	// </FS:Zi>	
-
+// [SL:KB] - Patch: World-RenderExceptions | Checked: Catznip-5.2
+	commit.add("View.Blocked", boost::bind(&handle_view_blocked, _2));
+// [/SL:KB]
 	// Me > Movement
 	view_listener_t::addMenu(new LLAdvancedAgentFlyingInfo(), "Agent.getFlying");
 
@@ -11070,6 +11091,9 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAdvancedCheckXUINames(), "Advanced.CheckXUINames");
 	view_listener_t::addMenu(new LLAdvancedSendTestIms(), "Advanced.SendTestIMs");
 	commit.add("Advanced.FlushNameCaches", boost::bind(&handle_flush_name_caches));
+// [SL:KB] - Patch UI-Floaters | Checked: Catznip-5.2
+	commit.add("Advanced.CycleAllFloaters", boost::bind(&LLFloaterReg::cycleFloaters, LLStringUtil::null));
+// [/SL:KB]
 
 	// Advanced > Character > Grab Baked Texture
 	view_listener_t::addMenu(new LLAdvancedGrabBakedTexture(), "Advanced.GrabBakedTexture");
@@ -11188,7 +11212,6 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAvatarCheckImpostorMode(), "Avatar.CheckImpostorMode");
 	view_listener_t::addMenu(new LLAvatarSetImpostorMode(), "Avatar.SetImpostorMode");
 	view_listener_t::addMenu(new LLObjectMute(), "Avatar.Mute");
-	view_listener_t::addMenu(new LLObjectDerender(), "Object.Derender");
 	view_listener_t::addMenu(new LLAvatarAddFriend(), "Avatar.AddFriend");
 	view_listener_t::addMenu(new LLAvatarRemoveFriend(), "Avatar.RemoveFriend");
 	view_listener_t::addMenu(new LLAvatarAddContact(), "Avatar.AddContact");
@@ -11229,6 +11252,10 @@ void initialize_menus()
 	commit.add("Object.SitOrStand", boost::bind(&handle_object_sit_or_stand));
 	commit.add("Object.Teleport", boost::bind(&handle_object_teleport));
 	commit.add("Object.Delete", boost::bind(&handle_object_delete));
+// [SL:KB] - Patch: World-Derender | Checked: 2011-12-15 (Catznip-3.2)
+	commit.add("Object.Derender", boost::bind(&handle_object_derender, _2));
+	enable.add("Object.EnableDerender", boost::bind(&enable_object_derender));
+// [/SL:KB]
 	view_listener_t::addMenu(new LLObjectAttachToAvatar(true), "Object.AttachToAvatar");
 	view_listener_t::addMenu(new LLObjectAttachToAvatar(false), "Object.AttachAddToAvatar");
 	view_listener_t::addMenu(new LLObjectReturn(), "Object.Return");

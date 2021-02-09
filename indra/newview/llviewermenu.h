@@ -104,6 +104,7 @@ void handle_object_touch();
 bool enable_object_open();
 void handle_object_open();
 void handle_object_scripts(std::string action);
+void handle_object_derender(const LLSD& sdParam);
 
 //MK
 void handle_object_edit();

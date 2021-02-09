@@ -65,6 +65,7 @@ protected:
 public:
 	// call once per frame to pull data out of LLFixedBuffer
 	static void updateClass();
+	void enableColor(BOOL enable) { mColorEnabled = enable; }
 
 	//A paragraph color segment defines the color of text in a line 
 	//of text that was received for console display.  It has no 
@@ -148,7 +149,11 @@ private:
 	const LLFontGL*	mFont;
 	S32			mConsoleWidth;
 	S32			mConsoleHeight;
-
+	const LLWString logDebug = utf8str_to_wstring("Z DEBUG"); //define these so we can avoid some processing per item
+	const LLWString logInfo = utf8str_to_wstring("Z INFO");
+	const LLWString logWarning = utf8str_to_wstring("Z WARNING");
+	const LLWString logError = utf8str_to_wstring("Z ERROR");
+	bool mColorEnabled;
 };
 
 extern LLConsole* gConsole;

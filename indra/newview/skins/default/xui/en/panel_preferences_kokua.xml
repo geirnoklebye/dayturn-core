@@ -90,6 +90,17 @@
                 width="400" />
             <check_box
                 enabled="true"
+                name="ShowGroupFloaters"
+                control_name="ShowGroupFloaters"
+                label="Group settings open in a new floater rather than within the People floater"
+                tool_tip="Allows multiple group windows to be open at the same time"
+                layout="topleft"
+                follows="left|top"
+                left="15"
+                height="16"
+                width="400" />
+            <check_box
+                enabled="true"
                 name="WindowTitleGridName"
                 control_name="WindowTitleGridName"
                 label="Show the grid's name in the viewer window's title bar"

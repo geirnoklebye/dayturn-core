@@ -46,6 +46,16 @@
            is_running_function="Floater.IsOpen"
            is_running_parameters="avatar"
            />
+  <command name="block"
+           available_in_toybox="true"
+           icon="Command_Block_Icon"
+           label_ref="Command_Block_Label"
+           tooltip_ref="Command_Block_Tooltip"
+           execute_function="Floater.Toggle"
+           execute_parameters="blocked"
+           is_running_function="Floater.IsOpen"
+           is_running_parameters="blocked"
+           />
   <command name="build"
            available_in_toybox="true"
            icon="Command_Build_Icon"
@@ -322,6 +332,16 @@
            is_running_function="Floater.IsOpen"
            is_running_parameters="animation_overrider"
            checkbox_control="UseAO"
+           />
+  <command name="soundexplorer"
+           available_in_toybox="true"
+           icon="sound_explorer"
+           label_ref="Command_Sound_Explorer_Label"
+           tooltip_ref="Command_Sound_Explorer_Tooltip"
+           execute_function="Floater.Toggle"
+           execute_parameters="sound_explorer"
+           is_running_function="Floater.IsOpen"
+           is_running_parameters="sound_explorer"
            />
   <command name="legacy_search"
            available_in_toybox="true"
