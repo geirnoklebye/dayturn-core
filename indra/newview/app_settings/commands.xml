@@ -305,6 +305,16 @@
            is_running_parameters="animation_overrider"
            checkbox_control="UseAO"
            />
+  <command name="soundexplorer"
+           available_in_toybox="true"
+           icon="sound_explorer"
+           label_ref="Command_Sound_Explorer_Label"
+           tooltip_ref="Command_Sound_Explorer_Tooltip"
+           execute_function="Floater.Toggle"
+           execute_parameters="sound_explorer"
+           is_running_function="Floater.IsOpen"
+           is_running_parameters="sound_explorer"
+           />
   <command name="legacy_search"
            available_in_toybox="true"
            icon="Command_Search_Icon"
