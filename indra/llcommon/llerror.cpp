@@ -208,14 +208,16 @@ namespace {
 		virtual void recordMessage(LLError::ELevel level,
 					   const std::string& message) override
 		{
-            static std::string s_ansi_error = createANSI("31"); // red
-            static std::string s_ansi_warn  = createANSI("34"); // blue
-            static std::string s_ansi_debug = createANSI("35"); // magenta
+            static std::string s_ansi_error = createANSI("31"); // was 31 red
+            static std::string s_ansi_warn  = createANSI("93"); // bright yellow was 34 blue
+            static std::string s_ansi_info  = createANSI("96"); // bright cyan
+            static std::string s_ansi_debug = createANSI("37"); // white was 35 magenta
 
 			if (mUseANSI)
 			{
                 writeANSI((level == LLError::LEVEL_ERROR) ? s_ansi_error :
                           (level == LLError::LEVEL_WARN)  ? s_ansi_warn :
+                          (level == LLError::LEVEL_INFO)  ? s_ansi_info :
                                                             s_ansi_debug, message);
 			}
             else
