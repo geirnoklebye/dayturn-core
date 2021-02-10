@@ -144,7 +144,11 @@ void LLWorld::destroyClass()
 
 LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host)
 {
-	LL_INFOS() << "Add region with handle: " << region_handle << " on host " << host << LL_ENDL;
+	bool suppress = gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging");
+	if (!suppress)
+	{
+		LL_INFOS() << "Add region with handle: " << region_handle << " on host " << host << LL_ENDL;
+	}
 	LLViewerRegion *regionp = getRegionFromHandle(region_handle);
 	std::string seedUrl;
 	if (regionp)
@@ -154,7 +158,10 @@ LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host)
 		if (host == old_host && regionp->isAlive())
 		{
 			// This is a duplicate for the same host and it's alive, don't bother.
-			LL_INFOS() << "Region already exists and is alive, using existing region" << LL_ENDL;
+			if (!suppress)
+			{
+				LL_INFOS() << "Region already exists and is alive, using existing region" << LL_ENDL;
+			}
 			return regionp;
 		}
 
@@ -178,7 +185,10 @@ LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host)
 	}
 	else
 	{
-		LL_INFOS() << "Region does not exist, creating new one" << LL_ENDL;
+		if (!suppress)
+		{
+			LL_INFOS() << "Region does not exist, creating new one" << LL_ENDL;
+		}
 	}
 
 	U32 iindex = 0;
@@ -186,9 +196,11 @@ LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host)
 	from_region_handle(region_handle, &iindex, &jindex);
 	S32 x = (S32)(iindex/mWidth);
 	S32 y = (S32)(jindex/mWidth);
-	LL_INFOS() << "Adding new region (" << x << ":" << y << ")" 
-		<< " on host: " << host << LL_ENDL;
-
+	if (!suppress)
+	{
+		LL_INFOS() << "Adding new region (" << x << ":" << y << ")" 
+			<< " on host: " << host << LL_ENDL;
+	}
 	LLVector3d origin_global;
 
 	origin_global = from_region_handle(region_handle);
@@ -1174,7 +1186,10 @@ void process_enable_simulator(LLMessageSystem *msg, void **user_data)
 	LLWorld::getInstance()->addRegion(handle, sim);
 
 	// give the simulator a message it can use to get ip and port
-	LL_INFOS() << "simulator_enable() Enabling " << sim << " with code " << msg->getOurCircuitCode() << LL_ENDL;
+	if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
+	{
+		LL_INFOS() << "simulator_enable() Enabling " << sim << " with code " << msg->getOurCircuitCode() << LL_ENDL;
+	}	
 	msg->newMessageFast(_PREHASH_UseCircuitCode);
 	msg->nextBlockFast(_PREHASH_CircuitCode);
 	msg->addU32Fast(_PREHASH_Code, msg->getOurCircuitCode());
