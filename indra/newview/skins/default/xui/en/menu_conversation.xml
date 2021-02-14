@@ -67,13 +67,27 @@
         <on_click function="Avatar.DoToSelected" parameter="voice_call"/>
         <on_enable function="Avatar.EnableItem" parameter="can_call" />
     </menu_item_call>
-    <menu_item_call
-     label="Chat history..."
-     layout="topleft"
-     name="chat_history">
+	  <menu_item_call
+	   label="Create Notice..."
+	   layout="topleft"
+	   name="create_notice">
+        <on_click function="Group.DoToSelected" parameter="create_notice"/>
+        <on_enable function="Avatar.EnableItem" parameter="can_create_notice"/>
+	  </menu_item_call>
+	  <menu_item_call
+	   label="Chat History..."
+	   layout="topleft"
+	   name="chat_history">
         <on_click function="Avatar.DoToSelected" parameter="chat_history"/>
         <on_enable function="Avatar.EnableItem" parameter="can_chat_history"/>
-    </menu_item_call>	
+	  </menu_item_call>
+	  <menu_item_call
+	   label="View Notices..."
+	   layout="topleft"
+	   name="view_notices">
+        <on_click function="Group.DoToSelected" parameter="view_notices"/>
+        <on_enable function="Avatar.EnableItem" parameter="can_view_notices"/>
+	  </menu_item_call>
     <menu_item_separator layout="topleft" name="separator_chat_history"/>	
     <menu_item_call
      label="Add friend"

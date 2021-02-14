@@ -1344,6 +1344,14 @@ void LLFloaterIMContainer::doToSelectedGroup(const LLSD& userdata)
     {
         LLGroupActions::leave(mSelectedSession);
     }
+    else if (action == "create_notice")
+  	{
+		 		LLFloaterReg::showInstance("group_create_notice", LLSD().with("group", mSelectedSession));     			
+  	}
+  	else if (action == "view_notices")
+  	{
+				LLGroupActions::showNotices(mSelectedSession);		
+  	}
 }
 
 bool LLFloaterIMContainer::enableContextMenuItem(const LLSD& userdata)
@@ -1434,6 +1442,18 @@ bool LLFloaterIMContainer::enableContextMenuItem(const std::string& item, uuid_v
     if ("can_view_profile" == item)
     {
 		return is_single_select;
+	}
+
+	// if it's a group see if we can enable create notice
+	if ("can_create_notice" == item && is_single_select)
+	{
+		return single_id.notNull() && LLGroupActions::hasPowerInGroup(single_id, GP_NOTICES_SEND);
+	}
+
+	// if it's a group see if we can enable read notice
+	if ("can_view_notices" == item && is_single_select)
+	{
+		return single_id.notNull(); // a "real" (not "none") group is selected
 	}
 
     bool is_moderator_option = ("can_moderate_voice" == item) || ("can_allow_text_chat" == item) || ("can_mute" == item) || ("can_unmute" == item);
