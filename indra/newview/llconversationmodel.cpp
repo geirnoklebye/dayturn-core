@@ -421,7 +421,9 @@ void LLConversationItemSession::buildContextMenu(LLMenuGL& menu, U32 flags)
     {
         items.push_back(std::string("close_conversation"));
         addVoiceOptions(items);
+        items.push_back(std::string("create_notice"));
         items.push_back(std::string("chat_history"));
+        items.push_back(std::string("view_notices"));
         items.push_back(std::string("separator_chat_history"));
         items.push_back(std::string("group_profile"));
         items.push_back(std::string("activate_group"));
