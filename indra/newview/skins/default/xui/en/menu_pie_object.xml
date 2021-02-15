@@ -307,20 +307,7 @@
                     <pie_slice.on_visible
                      function="Avatar.EnableResetSkeleton"/>
             </pie_slice>
-        </pie_menu>
-        <pie_menu
-            name="DerenderMenu"
-            label="Derender &gt;">
-            <pie_slice
-                
-enabled="true"
-            label="Derender"
-            name="Derender">
-            <pie_slice.on_click
-                function="Object.Derender" />
-        </pie_slice>
-        </pie_menu>
-        
+        </pie_menu>        
 <pie_slice
             enabled="false"
             label="Report..."
@@ -393,16 +380,44 @@ enabled="true"
 
         <pie_menu
         name="mute_menu"
-        label="Mute &gt;">
-        
-<pie_slice
+        label="Manage &gt;">        
+				<pie_slice
             enabled="true"
-            label="Mute"
+            label="Block (Mute)"
             name="Object Mute">
             <pie_slice.on_click
                 function="Object.Mute" />
-<!--            <pie_slice.on_enable
-                    function="Object.EnableMute" /> -->
+	          <pie_slice.on_enable
+                 function="Object.EnableMute" />
+        </pie_slice>
+				<pie_slice
+            enabled="true"
+            label="Unblock"
+            name="Object Unmute">
+            <pie_slice.on_click
+                function="Object.Mute" />
+	          <pie_slice.on_enable
+                 function="Object.EnableUnmute" />
+        </pie_slice>
+				<pie_slice
+            enabled="true"
+            label="Session Derender"
+            name="Object Session Derender">
+            <pie_slice.on_click
+                function="Object.Derender"
+                parameter="temporary" />
+	          <pie_slice.on_enable
+                 function="Object.EnableDerender" />
+        </pie_slice>
+				<pie_slice
+            enabled="true"
+            label="Perm. Derender"
+            name="Object Perm Derender">
+            <pie_slice.on_click
+                function="Object.Derender"
+                parameter="persistent" />
+	          <pie_slice.on_enable
+                 function="Object.EnableDerender" />
         </pie_slice>
         <pie_slice
             enabled="false"
@@ -411,8 +426,7 @@ enabled="true"
             <pie_slice.on_click
                 function="Particle.Mute" />
             <pie_slice.on_enable
-                function="EnableMuteParticle" 
-/>
+                function="EnableMuteParticle" />
         </pie_slice>
     </pie_menu>
         

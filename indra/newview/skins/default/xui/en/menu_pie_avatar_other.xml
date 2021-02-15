@@ -165,6 +165,14 @@
                 <pie_slice.on_click
                     function="Avatar.TexRefresh" />
             </pie_slice>
+            <pie_slice
+                enabled="true"
+                label="Exceptions..."
+                name="Exceptions">
+                <pie_slice.on_click
+                    function="View.Blocked"
+                    parameter="avatar_rendering_tab" />
+            </pie_slice>
         </pie_menu>
         <pie_slice
             enabled="true"
