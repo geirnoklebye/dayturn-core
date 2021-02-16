@@ -1494,10 +1494,7 @@ void LLSpatialBridge::setVisible(LLCamera& camera_in, std::vector<LLDrawable*>* 
 				LLVOAvatar* avatarp = (LLVOAvatar*) objparent;
 				if (avatarp->isVisible())
 				{
-					// <FS:Ansariel> Fix LL impostor hacking
-					//impostor = objparent->isAvatar() && ((LLVOAvatar*) objparent)->isImpostor();
-					impostor = objparent->isAvatar() && avatarp->isImpostor() && !avatarp->needsImpostorUpdate();
-					// </FS:Ansariel>
+					impostor = objparent->isAvatar() && ((LLVOAvatar*) objparent)->isImpostor();
 					loaded   = objparent->isAvatar() && ((LLVOAvatar*) objparent)->isFullyLoaded();
 				}
 				else
@@ -1587,10 +1584,7 @@ void LLSpatialBridge::updateDistance(LLCamera& camera_in, bool force_update)
 			if (parent && parent->getVObj())
 			{
 				LLVOAvatar* av = parent->getVObj()->asAvatar();
-				// <FS:Ansariel> Fix LL impostor hacking
-				//if (av && av->isImpostor())
-				if (av && av->isImpostor() && !av->needsImpostorUpdate())
-				// </FS:Ansariel>
+				if (av && av->isImpostor())
 				{
 					return;
 				}
