@@ -2848,10 +2848,7 @@ void LLVOAvatar::idleUpdateMisc(bool detailed_update)
 	BOOL visible = isVisible() || mNeedsAnimUpdate;
 
 	// update attachments positions
-	// <FS:Ansariel> Fix LL impostor hacking; No detailed updates if muted when using no impostors
-	//if (detailed_update || !sUseImpostors)
-	if (detailed_update || (!sUseImpostors && !isInMuteList()))
-	// </FS:Ansariel>
+	if (detailed_update || !sUseImpostors)
 	{
 		LL_RECORD_BLOCK_TIME(FTM_ATTACHMENT_UPDATE);
 		for (attachment_map_t::iterator iter = mAttachmentPoints.begin(); 
@@ -4277,12 +4274,10 @@ void LLVOAvatar::computeUpdatePeriod()
 	if (mDrawable.notNull()
         && isVisible() 
 ////        && (!isSelf() || visually_muted)
-        && (!isSelf() || visually_muted || silhouette)
+		&& (!isSelf() || visually_muted || silhouette)
         && !isUIAvatar()
-	// <FS:Ansariel> Fix LL impostor hacking; Adjust update period for muted avatars if using no impostors
-        //&& sUseImpostors
-        && (sUseImpostors || isInMuteList() || silhouette)
-	// </FS:Ansariel>
+////		&& sUseImpostors
+		&& (sUseImpostors || silhouette)
         && !mNeedsAnimUpdate 
         && !sFreezeCounter)
 //mk
@@ -10588,11 +10583,8 @@ BOOL LLVOAvatar::updateLOD()
     {
         return FALSE;
     }
- 
-	// <FS:Ansariel> Fix LL impostor hacking
-	//if (isImpostor() && 0 != mDrawable->getNumFaces() && mDrawable->getFace(0)->hasGeometry())
-	if (isImpostor() && (isSilhouette() || !needsImpostorUpdate()) && 0 != mDrawable->getNumFaces() && mDrawable->getFace(0)->hasGeometry())
-	// </FS:Ansariel>
+    
+	if (isImpostor() && 0 != mDrawable->getNumFaces() && mDrawable->getFace(0)->hasGeometry())
 	{
 		return TRUE;
 	}
@@ -10798,10 +10790,7 @@ void LLVOAvatar::updateImpostors()
 		LLVOAvatar* avatar = (LLVOAvatar*) *iter;
 		if (!avatar->isDead() && avatar->isVisible()
 			&& (
-                // <FS:Ansariel> Fix LL impostor hacking; Generate new impostor if update is needed
-                //(avatar->isImpostor() || LLVOAvatar::AV_DO_NOT_RENDER == avatar->getVisualMuteSettings()) && avatar->needsImpostorUpdate())
-                avatar->isImpostor() && avatar->needsImpostorUpdate())
-                // </FS:Ansariel>
+                (avatar->isImpostor() || LLVOAvatar::AV_DO_NOT_RENDER == avatar->getVisualMuteSettings()) && avatar->needsImpostorUpdate())
             )
 		{
             avatar->calcMutedAVColor();
@@ -10815,29 +10804,12 @@ void LLVOAvatar::updateImpostors()
 // virtual
 BOOL LLVOAvatar::isImpostor()
 {
-	// <FS:Ansariel> Fix LL impostor hacking
-	// IMPORTANT: LLPipeline::generateImpostor() will set sUseImporstors = FALSE when generating
-	//            an impostor. If checking for isImpostor() somewhere else to skip parts in the
-	//            rendering process, an additional check for needsImpostorUpdate() needs to be
-	//            done to determine if the particular part can really be skipped
-	//            (mNeedsImpostorUpdate = FALSE) or is currently needed to generate the
-	//            impostor (mNeedsImpostorUpdate = TRUE).
-	//
-	// CA: This optimisation doesn't play well with @camavdist, so all instances of it are updated
-	// to take isSilhouette() into account
-
-	//return sUseImpostors && (isVisuallyMuted() || (mUpdatePeriod >= IMPOSTOR_PERIOD)) ? TRUE : FALSE;
-	
-	if (sUseImpostors)
-	{
-		return (isVisuallyMuted() || isSilhouette() || (mUpdatePeriod >= IMPOSTOR_PERIOD));
-	}
-	else
-	{
-		return (LLVOAvatar::AV_DO_NOT_RENDER == getVisualMuteSettings() || isInMuteList() || (isSilhouette() && mUpdatePeriod >= IMPOSTOR_PERIOD));
-	}
-	// </FS:Ansariel>
+//MK
+////	return sUseImpostors && (isVisuallyMuted() || (mUpdatePeriod >= IMPOSTOR_PERIOD)) ? TRUE : FALSE;
+	return sUseImpostors && (isVisuallyMuted() || isSilhouette() || (mUpdatePeriod >= IMPOSTOR_PERIOD)) ? TRUE : FALSE;
+//mk
 }
+
 
 BOOL LLVOAvatar::shouldImpostor(const U32 rank_factor) const
 {

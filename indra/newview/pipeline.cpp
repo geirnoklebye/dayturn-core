@@ -3108,12 +3108,9 @@ void LLPipeline::markVisible(LLDrawable *drawablep, LLCamera& camera)
 					if (vobj) // this test may not be needed, see above
 					{
 						LLVOAvatar* av = vobj->asAvatar();
-						// <FS:Ansariel> Fix LL impostor hacking; Don't render impostored avatars unless it needs an update
-						//if (av && (av->isImpostor() 
-						//	|| av->isInMuteList()
-						//	|| (LLVOAvatar::AV_DO_NOT_RENDER == av->getVisualMuteSettings() && !av->needsImpostorUpdate()) ))
-						if (av && av->isImpostor() && (av->isSilhouette() || !av->needsImpostorUpdate()))
-						// </FS:Ansariel>
+						if (av && (av->isImpostor() 
+							|| av->isInMuteList() 
+							|| (LLVOAvatar::AV_DO_NOT_RENDER == av->getVisualMuteSettings() && !av->needsImpostorUpdate()) ))
 						{
 							return;
 						}
