@@ -1854,7 +1854,8 @@ bool idle_startup()
 				LLUUID id = LLUUID::generateNewID();
 				std::string name = "Viewer Startup";
 				KokuaRLVFloaterSupport::addNameToLocalCache(id, name);
-				gAgent.mRRInterface.handleCommand(id, "camavdist:0=n,shownames=n,showloc=n,showworldmap=n,showminimap=n,tploc=n,tplm=n,tplure=n,camdrawmin:1=n,camdrawmax:1.1=n,camdrawalphamin:0=n,camdrawalphamax:1=n,camtextures=n");
+				//KKA-810: add startim, share, shownearby, showhovertextworld and tplocal
+				gAgent.mRRInterface.handleCommand(id, "camavdist:0=n,startim=n,share=n,shownearby=n,showhovertextworld=n,tplocal=n,shownames=n,showloc=n,showworldmap=n,showminimap=n,tploc=n,tplm=n,tplure=n,camdrawmin:1=n,camdrawmax:1.1=n,camdrawalphamin:0=n,camdrawalphamax:1=n,camtextures=n");
 			}
 		}
 //mk
