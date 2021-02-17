@@ -6223,12 +6223,14 @@ BOOL RRInterface::updateCameraLimits ()
 
 	// Use impostors if we use silhouettes or if the outer sphere is 99% opaque or more
 	if (mShowavsDistMax < EXTREMUM || mCamDistDrawAlphaMax >= ALPHA_ALMOST_OPAQUE) {
-		LLVOAvatar::sUseImpostors = TRUE;
+		LLVOAvatar::sLimitNonImpostors = TRUE;
 		LLVOAvatar::updateImpostorRendering(LLVOAvatar::sMaxNonImpostors); // simply refresh the value so we're sure impostors will be used
 	}
 	else {
 		if (LLStartUp::getStartupState() >= STATE_STARTED) {
-			LLVOAvatar::sUseImpostors = gSavedSettings.getBOOL("RenderUseImpostors");
+			//Control RenderUseImpostors is unreferenced elsewhere - update this to the same as LLVOAvatar
+			//LLVOAvatar::sLimitNonImpostors = gSavedSettings.getBOOL("RenderUseImpostors");
+			LLVOAvatar::sLimitNonImpostors = (0 != LLVOAvatar::sMaxNonImpostors);
 		}
 
 	}

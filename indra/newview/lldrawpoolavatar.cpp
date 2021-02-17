@@ -585,15 +585,12 @@ void LLDrawPoolAvatar::renderShadow(S32 pass)
 	{
 		return;
 	}
-
-	BOOL impostor = avatarp->isImpostor();
-	if (impostor 
-		// <FS:Ansariel> Fix LL impostor hacking; No shadow for impostors
-		//&& LLVOAvatar::AV_DO_NOT_RENDER != avatarp->getVisualMuteSettings()
-		//&& LLVOAvatar::AV_ALWAYS_RENDER != avatarp->getVisualMuteSettings())
-		)
-		// </FS:Ansariel>
+	LLVOAvatar::AvatarOverallAppearance oa = avatarp->getOverallAppearance();
+	BOOL impostor = !LLPipeline::sImpostorRender && avatarp->isImpostor();
+	if (oa == LLVOAvatar::AOA_INVISIBLE ||
+		(impostor && oa == LLVOAvatar::AOA_JELLYDOLL))
 	{
+		// No shadows for jellydolled or invisible avs.
 		return;
 	}
 	
@@ -1497,7 +1494,7 @@ void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 		return;
 	}
 
-	LLVOAvatar *avatarp;
+	LLVOAvatar *avatarp = NULL;
 
 	if (single_avatar)
 	{
@@ -1561,20 +1558,25 @@ void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 		return;
 	}
 
-	BOOL impostor = avatarp->isImpostor() && !single_avatar;
+	BOOL impostor = !LLPipeline::sImpostorRender && avatarp->isImpostor() && !single_avatar;
 
-	// <FS:Ansariel> Fix LL impostor hacking; Don't render impostored avatars unless it needs an update
-	//if (( avatarp->isInMuteList()
-	//	  || impostor 
-	//	  || (LLVOAvatar::AV_DO_NOT_RENDER == avatarp->getVisualMuteSettings() && !avatarp->needsImpostorUpdate()) ) && pass != 0)
-	if (impostor && (avatarp->isSilhouette() || !avatarp->needsImpostorUpdate()) && pass != 0)
-	// </FS:Ansariel>
+	if (( avatarp->isInMuteList() 
+		  || impostor 
+		  || (LLVOAvatar::AOA_NORMAL != avatarp->getOverallAppearance() && !avatarp->needsImpostorUpdate()) ) && pass != 0)
+//		  || (LLVOAvatar::AV_DO_NOT_RENDER == avatarp->getVisualMuteSettings() && !avatarp->needsImpostorUpdate()) ) && pass != 0)
 	{ //don't draw anything but the impostor for impostored avatars
 		return;
 	}
 	
 	if (pass == 0 && !impostor && LLPipeline::sUnderWaterRender)
 	{ //don't draw foot shadows under water
+		return;
+	}
+
+	LLVOAvatar *attached_av = avatarp->getAttachedAvatar();
+	if (attached_av && LLVOAvatar::AOA_NORMAL != attached_av->getOverallAppearance())
+	{
+		// Animesh attachment of a jellydolled or invisible parent - don't show
 		return;
 	}
 
@@ -1585,10 +1587,8 @@ void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 			LLVOAvatar::sNumVisibleAvatars++;
 		}
 
-		// <FS:Ansariel> Fix LL impostor hacking
-		//if (impostor || (LLVOAvatar::AV_DO_NOT_RENDER == avatarp->getVisualMuteSettings() && !avatarp->needsImpostorUpdate()))
-		if (impostor && (avatarp->isSilhouette() || !avatarp->needsImpostorUpdate()))
-		// </FS:Ansariel>
+//		if (impostor || (LLVOAvatar::AV_DO_NOT_RENDER == avatarp->getVisualMuteSettings() && !avatarp->needsImpostorUpdate()))
+		if (impostor || (LLVOAvatar::AOA_NORMAL != avatarp->getOverallAppearance() && !avatarp->needsImpostorUpdate()))
 		{
 			if (LLPipeline::sRenderDeferred && !LLPipeline::sReflectionRender && avatarp->mImpostor.isComplete()) 
 			{
