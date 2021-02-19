@@ -32,6 +32,9 @@
 #include "llcallingcard.h" // for avatar tracker
 #include "llfloaterwebcontent.h"
 #include "llvoiceclient.h"
+// [FS:CR] Contact sets
+#include "lggcontactsets.h"
+#include <boost/signals2.hpp>
 
 class LLAvatarList;
 class LLAvatarName;
@@ -43,7 +46,7 @@ class LLNetMap;
 
 // Firestorm declarations
 class LLMenuGL;
-class FSRadarListCtrl;
+//class FSRadarListCtrl;
 
 class LLPanelPeople 
 	: public LLPanel
@@ -168,6 +171,7 @@ private:
 	LLAvatarList*			mOnlineFriendList;
 	LLAvatarList*			mAllFriendList;
 	LLAvatarList*			mNearbyList;
+	LLAvatarList*			mContactSetList;	// [FS:CR] Contact sets
 	LLAvatarList*			mRecentList;
 	LLGroupList*			mGroupList;
 	LLNetMap*				mMiniMap;
@@ -200,7 +204,18 @@ private:
     };
     std::map < LLUUID, radarFields > lastRadarSweep;
     //mk
-    
+	// [FS:CR] Contact sets
+	bool					onContactSetsEnable(const LLSD& userdata);
+	void					onContactSetsMenuItemClicked(const LLSD& userdata);
+	void					handlePickerCallback(const uuid_vec_t& ids, const std::string& set);
+	void					refreshContactSets();
+	void					generateContactList(const std::string& contact_set);
+	void					generateCurrentContactList();
+	
+	void					updateContactSets(LGGContactSets::EContactSetUpdate type);
+	boost::signals2::connection mContactSetChangedConnection;
+	LLComboBox* mContactSetCombo;
+	// [/FS:CR]    
 };
 
 #endif //LL_LLPANELPEOPLE_H

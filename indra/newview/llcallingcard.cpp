@@ -54,7 +54,7 @@
 #include "llviewerobjectlist.h"
 #include "llvoavatar.h"
 #include "llavataractions.h"
-
+#include "lggcontactsets.h"
 //MK
 #include "llfloaterimnearbychat.h"
 #include "fskeywords.h"
@@ -766,7 +766,13 @@ void LLAvatarTracker::processNotify(LLMessageSystem* msg, bool online)
 			// *TODO: get actual inventory id
 			gInventory.addChangedMask(LLInventoryObserver::CALLING_CARD, LLUUID::null);
 		}
-		if(chat_notify)
+		//[FIX FIRE-3522 : SJ] Notify Online/Offline to Nearby Chat even if chat_notify isnt true
+		
+		// <FS:PP> Attempt to speed up things a little
+		// if(chat_notify||LGGContactSets::getInstance()->notifyForFriend(agent_id)||gSavedSettings.getBOOL("OnlineOfflinetoNearbyChat"))
+		static LLCachedControl<bool> OnlineOfflinetoNearbyChat(gSavedSettings, "OnlineOfflinetoNearbyChat");
+		if(chat_notify || LGGContactSets::getInstance()->notifyForFriend(agent_id) || OnlineOfflinetoNearbyChat)
+		// </FS:PP>
 		{
 			// Look up the name of this agent for the notification
 			LLAvatarNameCache::get(agent_id,boost::bind(&on_avatar_name_cache_notify,_1, _2, online, payload));
@@ -823,7 +829,12 @@ static void on_avatar_name_cache_notify(const LLUUID& agent_id,
 	// are other ways of seeing if a friend has changed online state, eg the
 	// Friends list which is traditionally untouched by RLV commands)
 	
-	if (gSavedSettings.getBOOL("OnlineOfflinetoNearbyChat")) {
+	// [FIRE-3522 : SJ] Only show Online/Offline toast for groups which have enabled "Show notice for this set" and in the settingpage of CS is checked that the messages need to be in Toasts
+	//                  or for groups which have enabled "Show notice for this set" and in the settingpage of CS is checked that the messages need to be in Nearby Chat
+	static LLCachedControl<bool> OnlineOfflinetoNearbyChat(gSavedSettings, "OnlineOfflinetoNearbyChat");
+	static LLCachedControl<bool> FSContactSetsNotificationNearbyChat(gSavedSettings, "FSContactSetsNotificationNearbyChat");
+	if ((OnlineOfflinetoNearbyChat) || (FSContactSetsNotificationNearbyChat && LGGContactSets::getInstance()->notifyForFriend(agent_id)))
+	{
 		LLChat chat;
 		chat.mText = online ? LLTrans::getString("OnlineStatusPhrase") : LLTrans::getString("OfflineStatusPhrase");
 	  chat.mSourceType = CHAT_SOURCE_SYSTEM;

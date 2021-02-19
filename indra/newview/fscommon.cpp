@@ -30,10 +30,11 @@
 #include "material_codes.h"
 #include "fscommon.h"
 #include "llagent.h"
-#include "llfloatersidepanelcontainer.h"
-#include "llnotificationmanager.h"
+#include "llavatarnamecache.h"
 #include "llfloaterperms.h"
+#include "llfloatersidepanelcontainer.h"
 #include "llinventorymodel.h"
+#include "llnotificationmanager.h"
 #include "llpanel.h"
 #include "llparcel.h"
 #include "lltooldraganddrop.h"
@@ -47,6 +48,11 @@
 extern BOOL gIsInSecondLife; //Opensim or SecondLife
 using namespace boost::posix_time;
 using namespace boost::gregorian;
+static const std::string LL_LINDEN = "Linden";
+static const std::string LL_MOLE = "Mole";
+static const std::string LL_PRODUCTENGINE = "ProductEngine";
+static const std::string LL_SCOUT = "Scout";
+static const std::string LL_TESTER = "Tester";
 
 S32 FSCommon::sObjectAddMsg = 0;
 
@@ -252,6 +258,26 @@ void FSCommon::applyDefaultBuildPreferences(LLViewerObject* object)
 	gMessageSystem->addBOOL(_PREHASH_IsPhantom, gSavedSettings.getBOOL("FSBuildPrefs_Phantom"));
 	gMessageSystem->addBOOL("CastsShadows", FALSE );
 	gMessageSystem->sendReliable(object->getRegion()->getHost());
+}
+
+bool FSCommon::isLinden(const LLUUID& av_id)
+{
+	std::string first_name, last_name;
+	LLAvatarName av_name;
+	if (LLAvatarNameCache::get(av_id, &av_name))
+	{
+		std::istringstream full_name(av_name.getUserName());
+		full_name >> first_name >> last_name;
+	}
+	else
+	{
+		gCacheName->getFirstLastName(av_id, first_name, last_name);
+	}
+	return (last_name == LL_LINDEN ||
+			last_name == LL_MOLE ||
+			last_name == LL_PRODUCTENGINE ||
+			last_name == LL_SCOUT ||
+			last_name == LL_TESTER);
 }
 
 bool FSCommon::isDefaultTexture(const LLUUID& asset_id)

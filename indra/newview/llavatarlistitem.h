@@ -139,6 +139,9 @@ public:
 	void setShoutRangeColor(const LLUIColor& shoutRangeColor);
 	void setBeyondShoutRangeColor(const LLUIColor& beyondShoutRangeColor);
 	// [/Ansariel: Colorful radar]
+	
+	//colouring based on contact sets
+	void setUseContactColors(bool use) { mUseContactColors = use;};
 
 	/*virtual*/ BOOL handleDoubleClick(S32 x, S32 y, MASK mask);
 
@@ -164,6 +167,9 @@ protected:
 	bool mShowDisplayName;
 	bool mShowUsername;
 	bool mShowFirstSeen;
+	
+	//name colouring based on contactsets
+	bool mUseContactColors;
 	
 	// [Ansariel: Colorful radar]
 	bool mUseRangeColors;

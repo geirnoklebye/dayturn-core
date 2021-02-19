@@ -131,11 +131,15 @@ set(viewer_SOURCE_FILES
     ao.cpp
     aoengine.cpp
     aoset.cpp
+    chatbar_as_cmdline.cpp	
+    daeexport.cpp
     exogroupmutelist.cpp
     fscommon.cpp
     fsareasearch.cpp
     fsareasearchmenu.cpp    
     fsexportperms.cpp
+    fsfloateraddtocontactset.cpp
+    fsfloatercontactsetconfiguration.cpp
     fsfloaterexport.cpp
     fsfloaterimport.cpp
     fsfloaterposestand.cpp
@@ -150,8 +154,7 @@ set(viewer_SOURCE_FILES
     fspose.cpp
     fsscrolllistctrl.cpp
     groupchatlistener.cpp
-    chatbar_as_cmdline.cpp	
-    daeexport.cpp
+    lggcontactsets.cpp
     llaccountingcostmanager.cpp
     llaisapi.cpp
     llagent.cpp
@@ -807,12 +810,16 @@ set(viewer_HEADER_FILES
     ao.h
     aoengine.h
     aoset.h
+    chatbar_as_cmdline.h
+    daeexport.h
     exogroupmutelist.h
     floaterhop.h
 	fsareasearch.h
     fsareasearchmenu.h
     fscommon.h
     fsexportperms.h
+    fsfloateraddtocontactset.h
+    fsfloatercontactsetconfiguration.h
     fsfloaterexport.h    
     fsfloaterimport.h
     fsfloaterposestand.h
@@ -827,9 +834,8 @@ set(viewer_HEADER_FILES
     fspose.h
     fsscrolllistctrl.h
     groupchatlistener.h
-    chatbar_as_cmdline.h
     llaccountingcost.h
-    daeexport.h
+    lggcontactsets.h
     llaccountingcostmanager.h
     llaisapi.h
     llagent.h

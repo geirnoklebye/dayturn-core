@@ -98,6 +98,10 @@ public:
 	/// Provide some fallback for agents that return errors.
 	void handleAgentError(const LLUUID& agent_id);
 
+	// Force a re-fetch of the most recent data, but keep the current
+	// data in cache
+	void fetch(const LLUUID& agent_id); // FS:TM used in LGGContactSets
+
 	// Compute name expiration time from HTTP Cache-Control header,
 	// or return default value, in seconds from epoch.
     F64 nameExpirationFromHeaders(const LLSD& headers);

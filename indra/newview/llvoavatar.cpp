@@ -114,6 +114,8 @@
 #include "llcallstack.h"
 #include "llrendersphere.h"
 #include "fscommon.h"
+#include "lggcontactsets.h"
+#include "llnetmap.h"
 #include <boost/lexical_cast.hpp>
 
 extern F32 SPEED_ADJUST_MAX;
@@ -3450,6 +3452,64 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 			debugAvatarRezTime("AvatarRezLeftAppearanceNotification","left appearance mode");
 		}
 	}
+	// <FS:CR> Colorize name tags
+	//LLColor4 name_tag_color = getNameTagColor(is_friend);
+	LLColor4 name_tag_color = getNameTagColor();
+	// </FS:CR>
+	LLColor4 distance_color = name_tag_color;
+	std::string distance_string;
+
+	// Wolfspirit: If we don't need to display a friend,
+	// if we aren't self, if we use colored Clienttags and if we have a color
+	// then use that color as name_tag_color
+	static LLUICachedControl<bool> show_friends("NameTagShowFriends");
+	bool special_color_override = (show_friends && (is_friend || LGGContactSets::getInstance()->hasFriendColorThatShouldShow(getID(), LGG_CS_TAG))) ||
+									LLNetMap::hasAvatarMarkColor(getID());
+	// <FS:Ansariel> Color name tags based on distance
+	static LLCachedControl<bool> show_distance_color_tag(gSavedSettings, "FSTagShowDistanceColors");
+	static LLCachedControl<bool> show_distance_in_tag(gSavedSettings, "FSTagShowDistance");
+	// <FS:CR> FIRE-6664: Add whisper range to color tags
+	static LLUIColor tag_whisper_color = LLUIColorTable::instance().getColor("NameTagWhisperDistanceColor", LLColor4::green);
+	// </FS:CR> FIRE-6664: Add whisper range to color tags
+	static LLUIColor tag_chat_color = LLUIColorTable::instance().getColor("NameTagChatDistanceColor", LLColor4::green);
+	static LLUIColor tag_shout_color = LLUIColorTable::instance().getColor("NameTagShoutDistanceColor", LLColor4::yellow);
+	static LLUIColor tag_beyond_shout_color = LLUIColorTable::instance().getColor("NameTagBeyondShoutDistanceColor", LLColor4::red);
+
+	if (!isSelf() && (show_distance_color_tag || show_distance_in_tag))
+	{
+		F64 distance_squared = dist_vec_squared(getPositionGlobal(), gAgent.getPositionGlobal());
+		// <FS:CR> FIRE-6664: Add whisper range color tag
+		if (distance_squared <= CHAT_WHISPER_RADIUS_SQUARED)
+		{
+			distance_color = tag_whisper_color;
+		}
+		else if (distance_squared <= CHAT_NORMAL_RADIUS_SQUARED)
+		// </FS:CR> FIRE-6664: Add whisper range color tag
+		{
+			distance_color = tag_chat_color;
+		}
+		else if (distance_squared <= CHAT_SHOUT_RADIUS_SQUARED)
+		{
+			distance_color = tag_shout_color;
+		}
+		else
+		{
+			distance_color = tag_beyond_shout_color;
+		}
+
+		if (show_distance_in_tag)
+		{
+			distance_string = llformat("%.02f m", sqrt(distance_squared));
+		}
+
+		// Override nametag color only if friend color is disabled
+		// or avatar is not a friend nor has a contact set color
+		if (show_distance_color_tag && !special_color_override)
+		{
+			name_tag_color = distance_color;
+		}
+	}
+	// </FS:Ansariel>
 
 	// <FS:Ansariel> Show ARW in nametag options (for Jelly Dolls)
 	static LLCachedControl<bool> show_arw_tag(gSavedSettings, "FSTagShowARW");
@@ -3490,12 +3550,14 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		|| is_muted != mNameMute
 		|| is_appearance != mNameAppearance 
 		|| is_friend != mNameFriend
+		|| is_cloud != mNameCloud
+		|| name_tag_color != mNameColor
+		|| distance_string != mDistanceString
 		// <FS:Ansariel> Show Arc in nametag (for Jelly Dolls)
 		|| complexity != mNameArc
-		|| complexity_color != mNameArcColor
-		|| is_cloud != mNameCloud)
+		|| complexity_color != mNameArcColor)
 	{
-		LLColor4 name_tag_color = getNameTagColor(is_friend);
+		LLColor4 name_tag_color = getNameTagColor();
 
 		clearNameTag();
 
@@ -3659,6 +3721,12 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				mAvatarBirthdateRequest = new FetchAvatarBirthdate(getID(), this);
 			}
 		}
+		// <FS:Ansariel> Show distance in tag
+		if (show_distance_in_tag)
+		{
+			addNameTagLine(distance_string, distance_color, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
+		}
+		// <FS:Ansariel> Show distance in tag
         		// <FS:Ansariel> Show ARW in nametag options (for Jelly Dolls)
         		static const std::string complexity_label = LLTrans::getString("Nametag_Complexity_Label");
         		if (show_arw_tag &&
@@ -3687,6 +3755,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				mNameAppearance = is_appearance;
 				mNameFriend = is_friend;
 				mNameCloud = is_cloud;
+		mDistanceString = distance_string;
 				mTitle = title ? title->getString() : "";
 				// <FS:Ansariel> Show Arc in nametag (for Jelly Dolls)
 				mNameArc = complexity;
@@ -3706,6 +3775,13 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		mNameText->clearString();
 
 		LLColor4 new_chat = LLUIColorTable::instance().getColor( isSelf() ? "UserChatColor" : "AgentChatColor" );
+		
+		// <FS:CR> Colorize tags
+		new_chat = LGGContactSets::getInstance()->colorize(getID(), new_chat, LGG_CS_CHAT);
+		
+		//color based on contact sets prefs
+		LGGContactSets::getInstance()->hasFriendColorThatShouldShow(getID(), LGG_CS_CHAT, new_chat);
+		// </FS:CR>
 		LLColor4 normal_chat = lerp(new_chat, LLColor4(0.8f, 0.8f, 0.8f, 1.f), 0.7f);
 		LLColor4 old_chat = lerp(normal_chat, LLColor4(0.6f, 0.6f, 0.6f, 1.f), 0.7f);
 		if (mTyping && mChats.size() >= MAX_BUBBLE_CHAT_UTTERANCES) 
@@ -3877,33 +3953,36 @@ void LLVOAvatar::idleUpdateNameTagAlpha(BOOL new_name, F32 alpha)
 	}
 }
 
-LLColor4 LLVOAvatar::getNameTagColor(bool is_friend)
+// <FS:CR> Colorize tags
+//LLColor4 LLVOAvatar::getNameTagColor(bool is_friend)
+LLColor4 LLVOAvatar::getNameTagColor()
+// </FS:CR>
 {
-	static LLUICachedControl<bool> show_friends("NameTagShowFriends", false);
-	const char* color_name;
-	if (show_friends && is_friend)
-	{
-		color_name = "NameTagFriend";
-	}
-	else if (LLAvatarName::useDisplayNames())
+	// ...not using display names
+	LLColor4 color = LLUIColorTable::getInstance()->getColor("NameTagLegacy");
+	if (LLAvatarName::useDisplayNames())
 	{
 		// ...color based on whether username "matches" a computed display name
 		LLAvatarName av_name;
 		if (LLAvatarNameCache::get(getID(), &av_name) && av_name.isDisplayNameDefault())
 		{
-			color_name = "NameTagMatch";
+			color = LLUIColorTable::getInstance()->getColor("NameTagMatch");
 		}
 		else
 		{
-			color_name = "NameTagMismatch";
+			color = LLUIColorTable::getInstance()->getColor("NameTagMismatch");
 		}
 	}
-	else
-	{
-		// ...not using display names
-		color_name = "NameTagLegacy";
-	}
-	return LLUIColorTable::getInstance()->getColor( color_name );
+	
+	// <FS:CR> FIRE-1061 - Color friends, lindens, muted, etc
+	color = LGGContactSets::getInstance()->colorize(getID(), color, LGG_CS_TAG);
+	// </FS:CR>
+	
+	LGGContactSets::getInstance()->hasFriendColorThatShouldShow(getID(), LGG_CS_TAG, color);
+
+	LLNetMap::getAvatarMarkColor(getID(), color);
+
+	return color;
 }
 
 void LLVOAvatar::idleUpdateBelowWater()

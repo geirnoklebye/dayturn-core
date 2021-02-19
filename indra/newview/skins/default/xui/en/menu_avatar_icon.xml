@@ -73,6 +73,14 @@
          function="AvatarIcon.Action"
          parameter="invite_to_group" />
     </menu_item_call>
+    <menu_item_call
+     label="Add to Set"
+     layout="topleft"
+     name="Add Contact Set">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="add_set" />
+    </menu_item_call>
     <menu_item_check
      label="Block Voice"
      layout="topleft"

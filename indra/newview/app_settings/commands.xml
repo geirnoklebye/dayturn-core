@@ -343,6 +343,14 @@
            is_running_function="Floater.IsOpen"
            is_running_parameters="sound_explorer"
            />
+  <command name="contact_sets"
+           available_in_toybox="true"
+           icon="contact_sets"
+           label_ref="Command_Contact_Sets_Label"
+           tooltip_ref="Command_Contact_Sets_Tooltip"
+           execute_function="SideTray.PanelPeopleTab"
+           execute_parameters="contact_sets_panel"
+           />
   <command name="legacy_search"
            available_in_toybox="true"
            icon="Command_Search_Icon"

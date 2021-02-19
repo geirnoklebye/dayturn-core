@@ -202,13 +202,11 @@ Settings groups to be restored (backup will always save all):
             <column name="restore_per_account_files_label">Asset Blacklist</column>
             <column name="value">asset_blacklist.xml</column>
         </row>
-<!-- contactsets not implemented
         <row name="restore_per_account_row_contactsets">
             <column type="checkbox" name="restore_per_account_files_check" value="true" />
             <column name="restore_per_account_files_label">Contact Sets</column>
             <column name="value">settings_friends_groups.xml</column>
         </row>
--->
 <!-- custom inv filters not implemented
         <row name="restore_per_account_row_invfilters">
             <column type="checkbox" name="restore_per_account_files_check" value="true" />

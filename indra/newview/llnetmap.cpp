@@ -46,6 +46,7 @@
 #include "llagent.h"
 #include "llagentcamera.h"
 #include "llappviewer.h" // for gDisconnected
+#include "llavataractions.h"
 #include "llcallingcard.h" // LLAvatarTracker
 #include "llfloaterworldmap.h"
 #include "llparcel.h"
@@ -63,6 +64,7 @@
 #include "llviewerwindow.h"
 #include "llworld.h"
 #include "llworldmapview.h"		// shared draw code
+#include "lggcontactsets.h"
 
 static LLDefaultChildRegistry::Register<LLNetMap> r1("net_map");
 
@@ -77,6 +79,8 @@ const F32 MIN_PICK_SCALE = 2.f;
 const S32 MOUSE_DRAG_SLOP = 2;		// How far the mouse needs to move before we think it's a drag
 const F32 WIDTH_PIXELS = 2.f;
 const S32 CIRCLE_STEPS = 100;
+
+LLNetMap::avatar_marks_map_t LLNetMap::sAvatarMarksMap; // <FS:Ansariel>
 
 const F64 COARSEUPDATE_MAX_Z = 1020.0f;
 //static
@@ -121,8 +125,14 @@ BOOL LLNetMap::postBuild()
 	
 	registrar.add("Minimap.Zoom", boost::bind(&LLNetMap::handleZoom, this, _2));
 	registrar.add("Minimap.Tracker", boost::bind(&LLNetMap::handleStopTracking, this, _2));
+	// <FS:Ansariel>
+	registrar.add("Minimap.Mark", boost::bind(&LLNetMap::handleMark, this, _2));
+	registrar.add("Minimap.ClearMark", boost::bind(&LLNetMap::handleClearMark, this));
+	registrar.add("Minimap.ClearMarks", boost::bind(&LLNetMap::handleClearMarks, this));
+	// </FS:Ansariel>
 	registrar.add("Minimap.ToggleOverlay", boost::bind(&LLNetMap::handleOverlayToggle, this, _2));
 
+	registrar.add("Minimap.AddToContactSet", boost::bind(&LLNetMap::handleAddToContactSet, this));
 	LLUICtrl::EnableCallbackRegistry::ScopedRegistrar enable_registrar;
 	LLViewerParcelMgr::instance().setCollisionUpdateCallback(boost::bind(&LLNetMap::refreshParcelOverlay, this));
 	LLViewerParcelOverlay::setUpdateCallback(boost::bind(&LLNetMap::refreshParcelOverlay, this));
@@ -170,8 +180,9 @@ void LLNetMap::draw()
 	//static LLUIColor map_track_disabled_color = LLUIColorTable::instance().getColor("MapTrackDisabledColor", LLColor4::white);
 	static LLUIColor map_frustum_color = LLUIColorTable::instance().getColor("MapFrustumColor", LLColor4::white);
 	static LLUIColor map_frustum_rotating_color = LLUIColorTable::instance().getColor("MapFrustumRotatingColor", LLColor4::white);
-	static LLUIColor map_chat_ring_colour = LLUIColorTable::instance().getColor("MapChatRingColor", LLColor4::yellow);
-        static LLUIColor map_shout_ring_colour = LLUIColorTable::instance().getColor("MapShoutRingColor", LLColor4::red);
+	static LLUIColor map_whisper_ring_color = LLUIColorTable::instance().getColor("MapWhisperRingColor", LLColor4::blue); // <FS:LO> FIRE-17460 Add Whisper Chat Ring to Minimap
+	static LLUIColor map_chat_ring_color = LLUIColorTable::instance().getColor("MapChatRingColor", LLColor4::yellow);
+	static LLUIColor map_shout_ring_color = LLUIColorTable::instance().getColor("MapShoutRingColor", LLColor4::red);
 	
 	if (mObjectImagep.isNull())
 	{
@@ -506,6 +517,9 @@ void LLNetMap::draw()
 		LLUI::getInstance()->getMousePositionLocal(this, &local_mouse_x, &local_mouse_y);
 		bool local_mouse = this->pointInView(local_mouse_x, local_mouse_y);
 		mClosestAgentToCursor.setNull();
+// [SL:KB] - Patch: World-MiniMap | Checked: 2012-07-08 (Catznip-3.3)
+		mClosestAgentsToCursor.clear();
+// [/SL:KB]
 		F32 closest_dist_squared = F32_MAX; // value will be overridden in the loop
 		F32 min_pick_dist_squared = (mDotRadius * MIN_PICK_SCALE) * (mDotRadius * MIN_PICK_SCALE);
 
@@ -536,19 +550,15 @@ void LLNetMap::draw()
 					continue;
 				}
 
-				pos_map = globalPosToView(positions[i]);
-				bool show_as_friend = (LLAvatarTracker::instance().getBuddyInfo(uuid) != NULL);
-
+// no longer needed - contact sets will decline to colour if restricted
 	//MK
 					// Don't show as friend under @shownames, since it can give away an
 					// information about the avatars who are around
-					if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
-					{
-						show_as_friend = false;
-					}
+//					if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
+//					{
+//						show_as_friend = false;
+//					}
 	//mk
-				LLColor4 color = show_as_friend ? map_avatar_friend_color : map_avatar_color;
-
 				unknown_relative_z = false;
 
 				if (positions[i].mdV[VZ] == -1.f) {
@@ -572,7 +582,17 @@ void LLNetMap::draw()
 						pos_map.mV[VZ] = F32_MAX;
 					}
 				}
+			// </FS:Ansariel>	
+			
+			LLColor4 color = getAvatarColor(uuid);	// <FS:CR>
 
+// [RLVa:KB] - Checked: 2010-04-19 (RLVa-1.2.0f) | Modified: RLVa-1.2.0f | FS-Specific
+//			LLWorldMapView::drawAvatar(
+//				pos_map.mV[VX], pos_map.mV[VY],
+//				(RlvActions::canShowName(RlvActions::SNC_DEFAULT, uuid)) ? color : map_avatar_color.get(),
+//				pos_map.mV[VZ], mDotRadius,
+//				unknown_relative_z);
+// [/RLVa:KB]
 				LLWorldMapView::drawAvatar(
 					pos_map.mV[VX], pos_map.mV[VY], 
 					color, 
@@ -621,6 +641,7 @@ void LLNetMap::draw()
 							mClosestAgentPosition = positions[i];
 						}
 					}
+					mClosestAgentsToCursor.push_back(uuid);
 				}
 			}
 		}
@@ -645,6 +666,7 @@ void LLNetMap::draw()
 		}
 
 		// Draw dot for self avatar position
+		static LLUIColor self_tag_color = LLUIColorTable::instance().getColor("MapAvatarSelfColor", LLColor4::yellow); // <FS:CR> FIRE-1061
 		LLVector3d pos_global = gAgent.getPositionGlobal();
 		pos_map = globalPosToView(pos_global);
 		S32 dot_width = ll_round(mDotRadius * 2.f);
@@ -653,9 +675,9 @@ void LLNetMap::draw()
 		{
 			you->draw(ll_round(pos_map.mV[VX] - mDotRadius),
 					  ll_round(pos_map.mV[VY] - mDotRadius),
-				dot_width,
-				dot_width
-			);
+					  dot_width,
+					  dot_width,
+					  self_tag_color);	// <FS:CR> FIRE-1061
 
 			F32 dist_to_cursor_squared = dist_vec_squared(
 				LLVector2(pos_map.mV[VX], pos_map.mV[VY]),
@@ -670,9 +692,15 @@ void LLNetMap::draw()
 			//	draw chat range rings if enabled
 			//
 			static LLUICachedControl<bool> chat_ring("MiniMapChatRing", true);
+			// <FS:LO> FIRE-22954 Make each chat range ring in the minimap optional
+			static LLUICachedControl<bool> fs_whisper_ring("FSMiniMapWhisperRing", true);
+			static LLUICachedControl<bool> fs_chat_ring("FSMiniMapChatRing", true);
+			static LLUICachedControl<bool> fs_shout_ring("FSMiniMapShoutRing", true);
+			// </FS:LO>
 			if (chat_ring) {
-				drawRing(CHAT_NORMAL_RADIUS, pos_map, map_chat_ring_colour);
-				drawRing(CHAT_SHOUT_RADIUS, pos_map, map_shout_ring_colour);
+				if (fs_whisper_ring) drawRing(CHAT_WHISPER_RADIUS, pos_map, map_whisper_ring_color);
+				if (fs_chat_ring) drawRing(CHAT_NORMAL_RADIUS, pos_map, map_chat_ring_color);
+				if (fs_shout_ring) drawRing(CHAT_SHOUT_RADIUS, pos_map, map_shout_ring_color);
 			}
 		}
 
@@ -1124,6 +1152,15 @@ BOOL LLNetMap::handleRightMouseDown(S32 x, S32 y, MASK mask)
 {
 	if (mPopupMenu)
 	{
+		mClosestAgentRightClick = mClosestAgentToCursor;
+		mClosestAgentsRightClick = mClosestAgentsToCursor;
+		mPosGlobalRightClick = viewPosToGlobal(x, y);
+
+		mPopupMenu->setItemVisible("Add to Set Multiple", mClosestAgentsToCursor.size() > 0); // 1 in FS because it has an avatar menu under More...
+//		bool can_show_names = !RlvActions::hasBehaviour(RLV_BHVR_SHOWNAMES);
+		bool can_show_names = true;
+		mPopupMenu->setItemEnabled("Add to Set Multiple", can_show_names);
+		mPopupMenu->setItemVisible("MarkAvatar", mClosestAgentToCursor.notNull());
 		mPopupMenu->buildDrawLabels();
 		mPopupMenu->updateParent(LLMenuGL::sMenuContainer);
 		mPopupMenu->setItemVisible("Stop Tracking", LLTracker::isTracking(0));
@@ -1398,11 +1435,122 @@ void LLNetMap::handleZoom(const LLSD& userdata)
 	}
 }
 
+// <FS:Ansariel> Mark avatar feature
+void LLNetMap::handleMark(const LLSD& userdata)
+{
+	setAvatarMarkColors(mClosestAgentsRightClick, userdata);
+}
+
+void LLNetMap::handleClearMark()
+{
+	clearAvatarMarkColors(mClosestAgentsRightClick);
+}
+
+void LLNetMap::handleClearMarks()
+{
+	clearAvatarMarkColors();
+}
+
+// static
+bool LLNetMap::getAvatarMarkColor(const LLUUID& avatar_id, LLColor4& color)
+{
+	avatar_marks_map_t::iterator found = sAvatarMarksMap.find(avatar_id);
+	if (found != sAvatarMarksMap.end())
+	{
+		color = found->second;
+		return true;
+	}
+	return false;
+}
+
+// static
+void LLNetMap::setAvatarMarkColor(const LLUUID& avatar_id, const LLSD& color)
+{
+	uuid_vec_t ids;
+	ids.push_back(avatar_id);
+	setAvatarMarkColors(ids, color);
+}
+
+// static
+void LLNetMap::setAvatarMarkColors(const uuid_vec_t& avatar_ids, const LLSD& color)
+{
+	// Use the name as color definition name from colors.xml
+	LLColor4 mark_color = LLUIColorTable::instance().getColor(color.asString(), LLColor4::green);
+
+	for (uuid_vec_t::const_iterator it = avatar_ids.begin(); it != avatar_ids.end(); ++it)
+	{
+		sAvatarMarksMap[*it] = mark_color;
+	}
+}
+
+// static
+void LLNetMap::clearAvatarMarkColor(const LLUUID& avatar_id)
+{
+	uuid_vec_t ids;
+	ids.push_back(avatar_id);
+	clearAvatarMarkColors(ids);
+}
+
+// static
+void LLNetMap::clearAvatarMarkColors(const uuid_vec_t& avatar_ids)
+{
+	for (uuid_vec_t::const_iterator it = avatar_ids.begin(); it != avatar_ids.end(); ++it)
+	{
+		avatar_marks_map_t::iterator found = sAvatarMarksMap.find(*it);
+		if (found != sAvatarMarksMap.end())
+		{
+			sAvatarMarksMap.erase(found);
+		}
+	}
+}
+
+// static
+void LLNetMap::clearAvatarMarkColors()
+{
+	sAvatarMarksMap.clear();
+}
+
+// static
+LLColor4 LLNetMap::getAvatarColor(const LLUUID& avatar_id)
+{
+	static LLUIColor map_avatar_color = LLUIColorTable::instance().getColor("MapAvatarColor", LLColor4::white);
+	LLColor4 color = map_avatar_color;
+
+	LGGContactSets& cs_instance = LGGContactSets::instance();
+
+	// Color "special" avatars with special colors (Friends, muted, Lindens, etc)
+	color = cs_instance.colorize(avatar_id, color, LGG_CS_MINIMAP);
+
+	// Color based on contact sets prefs
+	if (cs_instance.hasFriendColorThatShouldShow(avatar_id, LGG_CS_MINIMAP))
+	{
+		color = cs_instance.getFriendColor(avatar_id);
+	}
+
+	// Mark Avatars with special colors
+	avatar_marks_map_t::iterator found = sAvatarMarksMap.find(avatar_id);
+	if (found != sAvatarMarksMap.end())
+	{
+		color = found->second;
+	}
+
+	return color;
+}
+//</FS:Ansariel>
+
+
 void LLNetMap::handleStopTracking (const LLSD& userdata)
 {
 	if (mPopupMenu)
 	{
-		mPopupMenu->setItemVisible("Stop Tracking", false);
+		// <FS:Ansariel> Hide tracking option instead of disabling
+		//mPopupMenu->setItemEnabled ("Stop Tracking", false);
+		mPopupMenu->setItemVisible ("Stop Tracking", false);
+		// </FS:Ansariel>
 		LLTracker::stopTracking (LLTracker::isTracking(NULL));
 	}
+}
+void LLNetMap::handleAddToContactSet()
+{
+	LLAvatarActions::addToContactSet(mClosestAgentsRightClick);
 }

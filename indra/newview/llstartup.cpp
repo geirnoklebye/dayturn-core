@@ -219,6 +219,7 @@
 #include "streamtitledisplay.h"
 #include "fscorehttputil.h"
 #include <boost/algorithm/string/replace.hpp>
+#include "lggcontactsets.h"
 #include <boost/algorithm/string/regex.hpp>
 //MK
 #include "lldrawpoolbump.h"
@@ -2064,6 +2065,8 @@ bool idle_startup()
 			LLAvatarTracker::instance().addBuddyList(list);
 			display_startup();
  		}
+		
+		LGGContactSets::getInstance()->loadFromDisk();	// [FS:CR] Load contact sets
 
 		bool show_hud = false;
 		LLSD tutorial_setting = response["tutorial_setting"];

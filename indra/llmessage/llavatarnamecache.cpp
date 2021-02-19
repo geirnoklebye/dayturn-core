@@ -48,8 +48,8 @@
 
 #include <map>
 #include <set>
-
-
+#include "../newview/lggcontactsets.h"
+#include "../llxml/llcontrol.h"
 // Time-to-live for a temp cache entry.
 const F64 TEMP_CACHE_ENTRY_LIFETIME = 60.0;
 // Maximum time an unrefreshed cache entry is allowed.
@@ -212,6 +212,18 @@ void LLAvatarNameCache::handleAvNameCacheSuccess(const LLSD &data, const LLSD &h
         LLUUID agent_id = row["id"].asUUID();
 
         LLAvatarName av_name;
+        // <FS> Contact sets alias
+        if (LGGContactSets::getInstance()->hasPseudonym(agent_id))
+        {
+            LLSD info(row);
+            info["is_display_name_default"] = LGGContactSets::getInstance()->hasDisplayNameRemoved(agent_id);
+            info["display_name"] = LGGContactSets::getInstance()->hasDisplayNameRemoved(agent_id)
+                ? (info["legacy_first_name"].asString() + " " + info["legacy_last_name"].asString())
+                : LGGContactSets::getInstance()->getPseudonym(agent_id);
+            av_name.fromLLSD(info);
+        }
+        else
+        // </FS> Contact sets alias
         av_name.fromLLSD(row);
 
         // Use expiration time from header
@@ -255,6 +267,15 @@ void LLAvatarNameCache::handleAgentError(const LLUUID& agent_id)
 	std::map<LLUUID,LLAvatarName>::iterator existing = mCache.find(agent_id);
 	if (existing == mCache.end())
     {
+		// <FS:Ansariel> Don't re-request names for agents with null uuid.
+		if (agent_id.isNull())
+		{
+			LL_WARNS("AvNameCache") << "LLAvatarNameCache handling error for agent with null uuid" << LL_ENDL;
+			mPendingQueue.erase(agent_id);
+			return;
+		}
+		// </FS:Ansariel>
+
         // there is no existing cache entry, so make a temporary name from legacy
         LL_WARNS("AvNameCache") << "LLAvatarNameCache get legacy for agent "
 								<< agent_id << LL_ENDL;
@@ -604,6 +625,13 @@ bool LLAvatarNameCache::get(const LLUUID& agent_id, LLAvatarName *av_name)
 // returns bool specifying  if av_name was filled, false otherwise
 bool LLAvatarNameCache::getName(const LLUUID& agent_id, LLAvatarName *av_name)
 {
+	// <FS:Beq> Avoid null entries entering NameCache
+	// This is a catch-all, better to avoid at call site
+	if( agent_id.isNull() )
+	{
+		return false;
+	}
+	// </FS:Beq>
 	if (mRunning)
 	{
 		// ...only do immediate lookups when cache is running
@@ -611,6 +639,17 @@ bool LLAvatarNameCache::getName(const LLUUID& agent_id, LLAvatarName *av_name)
 		if (it != mCache.end())
 		{
 			*av_name = it->second;
+			// <FS> Contact sets alias
+			if (LGGContactSets::getInstance()->hasPseudonym(agent_id))
+			{
+				LLSD info = av_name->asLLSD();
+				info["is_display_name_default"] = LGGContactSets::getInstance()->hasDisplayNameRemoved(agent_id);
+				info["display_name"] = LGGContactSets::getInstance()->hasDisplayNameRemoved(agent_id)
+					? (info["legacy_first_name"].asString() + " " + info["legacy_last_name"].asString())
+					: LGGContactSets::getInstance()->getPseudonym(agent_id);
+				av_name->fromLLSD(info);
+			}
+			// <FS/> Contact sets alias
 
 			// re-request name if entry is expired
 			if (av_name->mExpires < LLFrameTimer::getTotalSeconds())
@@ -661,8 +700,22 @@ LLAvatarNameCache::callback_connection_t LLAvatarNameCache::getNameCallback(cons
 		std::map<LLUUID,LLAvatarName>::iterator it = mCache.find(agent_id);
 		if (it != mCache.end())
 		{
-			const LLAvatarName& av_name = it->second;
-			
+			LLAvatarName& av_name = it->second;
+			LLSD test = av_name.asLLSD();
+
+			// <FS> Contact sets alias
+			if (LGGContactSets::getInstance()->hasPseudonym(agent_id))
+			{
+				LL_DEBUGS("AvNameCache") << "DN cache hit via alias " << agent_id << LL_ENDL;
+				LLSD info = av_name.asLLSD();
+				info["is_display_name_default"] = LGGContactSets::getInstance()->hasDisplayNameRemoved(agent_id);
+				info["display_name"] = LGGContactSets::getInstance()->hasDisplayNameRemoved(agent_id)
+					? (info["legacy_first_name"].asString() + " " + info["legacy_last_name"].asString())
+					: LGGContactSets::getInstance()->getPseudonym(agent_id);
+				av_name.fromLLSD(info);
+			}
+			// </FS> Contact sets alias
+
 			if (av_name.mExpires > LLFrameTimer::getTotalSeconds())
 			{
 				// ...name already exists in cache, fire callback now
@@ -719,6 +772,12 @@ void LLAvatarNameCache::setUseUsernames(bool use)
 void LLAvatarNameCache::erase(const LLUUID& agent_id)
 {
 	mCache.erase(agent_id);
+}
+
+void LLAvatarNameCache::fetch(const LLUUID& agent_id) // FS:TM used in LGGContactSets
+{
+	// re-request, even if request is already pending
+	mAskQueue.insert(agent_id);
 }
 
 void LLAvatarNameCache::insert(const LLUUID& agent_id, const LLAvatarName& av_name)

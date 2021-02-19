@@ -37,6 +37,7 @@
 #include "llworld.h"
 #include "llinstantmessage.h" //SYSTEM_FROM
 #include "fskeywords.h"
+#include "lggcontactsets.h"
 
 // LLViewerChat
 LLViewerChat::font_change_signal_t LLViewerChat::sChatFontChangedSignal;
@@ -74,6 +75,19 @@ void LLViewerChat::getChatColor(const LLChat& chat, LLColor4& r_color)
 					{
 						r_color = LLUIColorTable::instance().getColor("AgentChatColor");
 					}
+
+					if (chat.mChatType == CHAT_TYPE_IM || chat.mChatType == CHAT_TYPE_IM_GROUP)
+					{
+						r_color = LGGContactSets::getInstance()->colorize(chat.mFromID, r_color, LGG_CS_IM);
+					}
+					else
+					{
+						r_color = LGGContactSets::getInstance()->colorize(chat.mFromID, r_color, LGG_CS_CHAT);
+					}
+					// </FS:CR>
+
+					//color based on contact sets prefs
+					LGGContactSets::getInstance()->hasFriendColorThatShouldShow(chat.mFromID, LGG_CS_CHAT, r_color);
 				}
 				break;
 			case CHAT_SOURCE_OBJECT:

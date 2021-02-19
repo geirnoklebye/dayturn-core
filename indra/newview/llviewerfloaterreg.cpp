@@ -189,6 +189,8 @@
 
 // *NOTE: Please add files in alphabetical order to keep merges easy.
 #include "fspanelclassified.h"
+#include "fsfloateraddtocontactset.h"
+#include "fsfloatercontactsetconfiguration.h"
 #include "fsfloaterimport.h"
 #include "kokuachatbar.h"
 #include "kokuarlvfloaters.h"
@@ -445,6 +447,8 @@ void LLViewerFloaterReg::registerFloaters()
 	// *NOTE: Please keep these alphabetized for easier merges
 	LLFloaterReg::add("animation_explorer", "floater_animation_explorer.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<AnimationExplorer>);	
 	LLFloaterReg::add("animation_overrider", "floater_ao.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FloaterAO>);	// ## Zi: Animation Overrider	
+	LLFloaterReg::add("fs_add_contact", "floater_fs_contact_add.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterAddToContactSet>);
+	LLFloaterReg::add("fs_contact_set_config", "floater_fs_contact_set_configuration.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterContactSetConfiguration>);
     LLFloaterReg::add("fs_export", "floater_fs_export.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterObjectExport>);
 	LLFloaterReg::add("fs_import", "floater_fs_import.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterImport>);
 	LLFloaterReg::add("rlv_debug", "floater_rlv_debug.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<KokuaFloaterRLVDebug>);

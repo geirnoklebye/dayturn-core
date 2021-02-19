@@ -42,6 +42,7 @@
 #include "llagentdata.h"
 
 #include "llslurl.h"
+#include "lggcontactsets.h"
 
 //MK
 #include "llagent.h"
@@ -134,11 +135,23 @@ BOOL LLFloaterIMNearbyChatToastPanel::postBuild()
 void LLFloaterIMNearbyChatToastPanel::addMessage(LLSD& notification)
 {
 	std::string		messageText = notification["message"].asString();		// UTF-8 line of text
-
+	int chat_type = notification["chat_type"].asInteger();
 
 	std::string color_name = notification["text_color"].asString();
 	
 	LLColor4 textColor = LLUIColorTable::instance().getColor(color_name);
+
+	//color based on contact sets prefs
+	if (chat_type == CHAT_TYPE_IM || chat_type == CHAT_TYPE_IM_GROUP)
+	{
+		textColor = LGGContactSets::getInstance()->colorize(mFromID, textColor, LGG_CS_IM);
+	}
+	else
+	{
+		textColor = LGGContactSets::getInstance()->colorize(mFromID, textColor, LGG_CS_CHAT);
+	}
+	LGGContactSets::getInstance()->hasFriendColorThatShouldShow(mFromID, LGG_CS_CHAT, textColor);
+
 	textColor.mV[VALPHA] =notification["color_alpha"].asReal();
 	
 	S32 font_size = notification["font_size"].asInteger();
@@ -186,6 +199,7 @@ void LLFloaterIMNearbyChatToastPanel::init(LLSD& notification)
 {
 	std::string		messageText = notification["message"].asString();		// UTF-8 line of text
 	std::string		fromName = notification["from"].asString();	// agent or object name
+	int chat_type = notification["chat_type"].asInteger();
 	mFromID = notification["from_id"].asUUID();		// agent id or object id
 	mFromName = fromName;
 	
@@ -195,6 +209,18 @@ void LLFloaterIMNearbyChatToastPanel::init(LLSD& notification)
 	std::string color_name = notification["text_color"].asString();
 	
 	LLColor4 textColor = LLUIColorTable::instance().getColor(color_name);
+
+	//color based on contact sets prefs
+	if (chat_type == CHAT_TYPE_IM || chat_type == CHAT_TYPE_IM_GROUP)
+	{
+		textColor = LGGContactSets::getInstance()->colorize(mFromID, textColor, LGG_CS_IM);
+	}
+	else
+	{
+		textColor = LGGContactSets::getInstance()->colorize(mFromID, textColor, LGG_CS_CHAT);
+	}
+	LGGContactSets::getInstance()->hasFriendColorThatShouldShow(mFromID, LGG_CS_CHAT, textColor);
+
 	textColor.mV[VALPHA] =notification["color_alpha"].asReal();
 	
 	S32 font_size = notification["font_size"].asInteger();
