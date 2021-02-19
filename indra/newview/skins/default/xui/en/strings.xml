@@ -4208,6 +4208,7 @@ Try enclosing path to the editor with double quotes.
 
 <string name="Command_Web_Browser_Label">Web browser</string>
   <string name="Command_Sound_Explorer_Label">Sound explorer</string>
+  <string name="Command_Contact_Sets_Label">Contact sets</string>
   <string name="Command_RFO_Label">Show Friends Only</string>
 
   <string name="Command_AboutLand_Tooltip">Information about the land you're visiting</string>
@@ -4249,6 +4250,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_AO_Tooltip">Animation overrider</string>
   <string name="Command_Legacy_Search_Label">Search</string>
   <string name="Command_Sound_Explorer_Tooltip">Opens the sound explorer</string>
+  <string name="Command_Contact_Sets_Tooltip">Opens contact sets (CTRL+ALT+SHIFT+C)</string>
   <string name="Command_Legacy_Search_Tooltip">Find places, groups and people</string>
 <!-- /Firestorm commands -->
   <string name="Command_RFO_Tooltip">Show only your friends in the viewer, all other avatars will be removed. Once enabled a TP is required to restore visibility of others.</string>

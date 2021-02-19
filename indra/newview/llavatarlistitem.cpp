@@ -44,6 +44,8 @@
 #include "lltooldraganddrop.h"
 #include "llworld.h"
 
+#include "lggcontactsets.h"
+
 bool LLAvatarListItem::sStaticInitialized = false;
 S32 LLAvatarListItem::sLeftPadding = 0;
 S32 LLAvatarListItem::sNameRightPadding = 0;
@@ -99,6 +101,8 @@ LLAvatarListItem::LLAvatarListItem(bool not_from_ui_factory/* = true*/)
 	// [Ansariel: Colorful radar]
 	mUseRangeColors(false),
 	// [Ansariel: Colorful radar]
+ 	//colouring based on contact sets
+	mUseContactColors(false),
 	mDistance(99999.9f) // arbitary large number to insure new avatars are considered outside close range until we know for sure.
 {
 	if (not_from_ui_factory)
@@ -619,7 +623,25 @@ void LLAvatarListItem::processProperties(void* data, EAvatarProcessorType type)
 
 void LLAvatarListItem::setNameInternal(const std::string& name, const std::string& highlight)
 {
-    if(mShowCompleteName && highlight.empty())
+		//colouring based on contact sets
+		if (mUseContactColors)
+		{
+				// this is currently only intended to be used for the nearby list, so it doesn't matter
+				// that we're losing the ability to show a name in grey for offline because everyone in
+				// the nearby list must be online
+				LGGContactSets* contactsets = LGGContactSets::getInstance();
+				LLUIColorTable& colortable = LLUIColorTable::instance();
+
+				LLStyle::Params contactHighlight = LLStyle::Params();
+
+				LLColor4 name_color = colortable.getColor("AvatarListItemIconDefaultColor", LLColor4::white).get();
+				name_color = contactsets->colorize(mAvatarId, name_color, LGG_CS_NEARBY);
+				contactsets->hasFriendColorThatShouldShow(mAvatarId, LGG_CS_NEARBY, name_color);
+
+				contactHighlight.color = name_color;
+				mAvatarName->setText(name, contactHighlight);
+		}
+    else if(mShowCompleteName && highlight.empty())
     {
         LLTextUtil::textboxSetGreyedVal(mAvatarName, mAvatarNameStyle, name, mGreyOutUsername);
     }

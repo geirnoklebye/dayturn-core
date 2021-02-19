@@ -292,7 +292,10 @@ public:
 	void			idleUpdateNameTagText(BOOL new_name);
 	void			idleUpdateNameTagPosition(const LLVector3& root_pos_last);
 	void			idleUpdateNameTagAlpha(BOOL new_name, F32 alpha);
-	LLColor4		getNameTagColor(bool is_friend);
+	// <FS:CR> Colorize tags
+	//LLColor4		getNameTagColor(bool is_friend);
+	LLColor4		getNameTagColor();
+	// </FS:CR>
 	void			clearNameTag();
 	static void		invalidateNameTag(const LLUUID& agent_id);
 	// force all name tags to rebuild, useful when display names turned on/off
@@ -1019,8 +1022,9 @@ private:
 	bool			mNameFriend;
 	bool			mNameCloud;
 	F32				mNameAlpha;
+	LLColor4		mNameColor;
 	BOOL      		mRenderGroupTitles;
-
+	std::string		mDistanceString;
 	FetchAvatarBirthdate	*mAvatarBirthdateRequest;
 	LLDate			mAvatarBirthdate;
 	// <FS:Ansariel> Show Arc in nametag (for Jelly Dolls)

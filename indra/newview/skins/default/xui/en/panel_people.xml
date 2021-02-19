@@ -56,13 +56,38 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
 	<string
 	 name="GroupCountWithInfo"
 	 value="You belong to [COUNT] groups, and can join [REMAINING] more.  [secondlife:/// Raise your limit]"/>
+    <panel.string
+     name="empty_list">
+    This contact set is empty.
+    </panel.string>
+    <panel.string
+     name="no_sets">
+    No sets
+    </panel.string>
+    <panel.string
+     name="all_sets">
+    All sets
+    </panel.string>
+    <panel.string
+     name="pseudonyms">
+    Aliases
+    </panel.string>
+    <panel.string
+     name="AllFriendsTitle">
+    All ([ALL])
+    </panel.string>
+    <panel.string
+     name="OnlineFriendsTitle">
+    Online ([ONLINE])
+    </panel.string>
+
     <tab_container
      bottom="-10"
      follows="all"
      layout="topleft"
      left="3"
      name="tabs"
-     tab_min_width="77"
+     tab_min_width="70"
      tab_height="30"
      tab_position="top"
      top="0"
@@ -755,5 +780,31 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
            right="-1" />
         </panel>
 -->
+<!-- ============================== CONTACT SETS tab ======================= -->
+
+        <panel
+         background_opaque="false"
+         background_visible="false"
+         follows="all"
+         height="383"
+         label="CONTACT SETS"
+         layout="topleft"
+         left="0"
+         help_topic="people_contact_sets_tab"
+         name="contact_sets_panel"
+         right="-1"
+         top="0">
+            <panel
+             height="383"
+             name="panel_people_contacts_sidetray"
+             filename="panel_people_contact_sets.xml"
+             follows="all"
+             label="Contact Sets"
+             layout="topleft"
+             left="0"
+             font="SansSerifBold"
+             top="0"
+             right="-1" />
+        </panel>
     </tab_container>
 </panel>

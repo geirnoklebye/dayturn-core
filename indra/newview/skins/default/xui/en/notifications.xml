@@ -12189,6 +12189,115 @@ Export failed unexpectedly. Please see the log for details.
       <tag>Export</tag>
 		Export of [OBJECT] to [FILENAME] failed.
     </notification>
+  <notification
+   icon="alertmodal.tga"
+   name="AddNewContactSet"
+   type="alertmodal">
+    <tag>contact set</tag>
+Create new contact set with the name:
+    <tag>confirm</tag>
+    <form name="form">
+      <input name="message" type="text" default="true">
+      New Contact Set
+      </input>
+      <button
+       default="true"
+       index="0"
+       name="Create"
+       text="Create"/>
+      <button
+       index="1"
+       name="Cancel"
+       text="Cancel"/>
+    </form>
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="RemoveContactSet"
+   type="alertmodal">
+Are you sure you want to remove [SET_NAME]? You won&apos;t be able to restore it.
+    <tag>contact set</tag>
+    <tag>confirm</tag>
+    <usetemplate
+     ignoretext="Confirm before removing a contact set"
+     name="okcancelignore"
+     notext="Cancel"
+     yestext="OK"/>
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="RemoveContactFromSet"
+   type="alertmodal">
+Are you sure you want to remove [TARGET] from [SET_NAME]?
+    <tag>contact set</tag>
+    <tag>confirm</tag>
+    <usetemplate
+     ignoretext="Confirm before removing someone from a contact set"
+     name="okcancelignore"
+     notext="Cancel"
+     yestext="OK"/>
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="RemoveContactsFromSet"
+   type="alertmodal">
+Are you sure you want to remove these [TARGET] avatars from [SET_NAME]?
+    <tag>contact set</tag>
+    <tag>confirm</tag>
+    <usetemplate
+     ignoretext="Confirm before removing multiple avatars from a contact set"
+     name="okcancelignore"
+     notext="Cancel"
+     yestext="OK"/>
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="AddToContactSetSingleSuccess"
+   type="notify">
+    <tag>contact set</tag>
+[NAME] was added to [SET].
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="AddToContactSetMultipleSuccess"
+   type="notify">
+    <tag>contact set</tag>
+[COUNT] avatars were added to [SET].
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="SetAvatarPseudonym"
+   type="alertmodal">
+    <tag>contact set</tag>
+Enter an alias for [AVATAR]:
+    <tag>confirm</tag>
+    <form name="form">
+      <input name="message" type="text" default="true" />
+      <button
+       default="true"
+       index="0"
+       name="Create"
+       text="Create"/>
+      <button
+       index="1"
+       name="Cancel"
+       text="Cancel"/>
+    </form>
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="RenameContactSetFailure"
+   type="alertmodal">
+    <tag>contact set</tag>
+Could not rename set &apos;[SET]&apos; to &apos;[NEW_NAME]&apos; because a set with the same name already exists or the new name is invalid.
+  </notification>
 
   <notification
    icon="notifytip.tga"

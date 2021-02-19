@@ -171,6 +171,13 @@ void LLAvatarList::showUsername(bool visible)
 	mNeedUpdateNames = true;
 }
 
+// [FS:CR] Refresh names
+void LLAvatarList::refreshNames()
+{
+	mNeedUpdateNames = true;
+}
+// [FS:CR]
+
 void LLAvatarList::showAvatarAge(bool visible)
 {
 	mShowAge = visible;
@@ -213,6 +220,7 @@ LLAvatarList::Params::Params()
 , show_profile_btn("show_profile_btn", true)
 , show_speaking_indicator("show_speaking_indicator", true)
 , show_permissions_granted("show_permissions_granted", false)
+, show_icons("show_icons",true)
 {
 }
 
@@ -224,7 +232,7 @@ LLAvatarList::LLAvatarList(const Params& p)
 , mDirty(true) // to force initial update
 , mNeedUpdateNames(false)
 , mLITUpdateTimer(NULL)
-, mShowIcons(true)
+, mShowIcons(p.show_icons)
 , mShowInfoBtn(p.show_info_btn)
 , mShowProfileBtn(p.show_profile_btn)
 , mShowSpeakingIndicator(p.show_speaking_indicator)
@@ -241,6 +249,8 @@ LLAvatarList::LLAvatarList(const Params& p)
 // [Ansariel: Colorful radar]
 , mUseRangeColors(false)
 // [Ansariel: Colorful radar]
+//colouring based on contact sets
+, mUseContactColors(false)
 {
 	setCommitOnSelectionChange(true);
 
@@ -287,6 +297,19 @@ void LLAvatarList::setUseRangeColors(bool UseRangeColors)
 	}
 }
 // [Ansariel: Colorful radar]
+
+//colouring based on contact sets
+void LLAvatarList::setUseContactColors(bool UseContactColors)
+{
+	mUseContactColors = UseContactColors;
+
+	std::vector<LLPanel*> items;
+	getItems(items);
+	for( std::vector<LLPanel*>::const_iterator it = items.begin(); it != items.end(); it++)
+	{
+		static_cast<LLAvatarListItem*>(*it)->setUseContactColors(mUseContactColors);
+	}
+}
 
 std::string LLAvatarList::getAvatarName(LLAvatarName av_name)
 {
@@ -587,7 +610,8 @@ void LLAvatarList::addNewItem(const LLUUID& id, const std::string& name, BOOL is
 	item->setShoutRangeColor(colorTable->getColor("AvatarListItemShoutRange", LLColor4::yellow));
 	item->setBeyondShoutRangeColor(colorTable->getColor("AvatarListItemBeyondShoutRange", LLColor4::red));
 	// [/Ansariel: Colorful radar]
-
+	//colouring based on contact sets
+	item->setUseContactColors(mUseContactColors);
 	item->setDoubleClickCallback(boost::bind(&LLAvatarList::onItemDoubleClicked, this, _1, _2, _3, _4));
 
 	addItem(item, id, pos);

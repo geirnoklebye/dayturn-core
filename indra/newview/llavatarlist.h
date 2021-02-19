@@ -54,7 +54,8 @@ public:
 						show_info_btn,
 						show_profile_btn,
 						show_speaking_indicator,
-						show_permissions_granted;
+						show_permissions_granted,
+						show_icons;
 		Params();
 	};
 
@@ -99,10 +100,15 @@ public:
 	// [Ansariel: Colorful radar]
 	void setUseRangeColors(bool UseRangeColors);
 	// [/Ansariel: Colorful radar]
+	//colouring based on contact sets
+	void setUseContactColors(bool UseContactColors);
 
 	// Return true if filter has at least one match.
 	bool filterHasMatches();
 
+	// [FS:CR] Refresh names
+	void refreshNames();
+	// [/FS:CR]
 	boost::signals2::connection setRefreshCompleteCallback(const commit_signal_t::slot_type& cb);
 
 	boost::signals2::connection setItemDoubleClickCallback(const mouse_signal_t::slot_type& cb);
@@ -154,7 +160,8 @@ private:
 	// [Ansariel: Colorful radar]
 	bool mUseRangeColors;
 	// [/Ansariel: Colorful radar]
-
+	//colouring based on contact sets
+	bool mUseContactColors;
 	LLTimer*				mLITUpdateTimer; // last interaction time update timer
 	std::string				mIconParamName;
 	std::string				mNameFilter;

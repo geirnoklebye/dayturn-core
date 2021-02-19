@@ -1109,6 +1109,50 @@
     <key>Value</key>
     <integer>362394</integer>
   </map>
+    <key>FSContactSetsColorizeMiniMap</key>
+    <map>
+      <key>Comment</key>
+      <string>Whether to color a friends mini map icon based on their friends groups</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>FSContactSetsColorizeNameTag</key>
+    <map>
+      <key>Comment</key>
+      <string>Whether to color a friends name tag based on their friends groups</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>FSContactSetsColorizeNearby</key>
+    <map>
+      <key>Comment</key>
+      <string>Whether to color a friends name in the nearby list based on their friends groups</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>FSContactSetsColorizeChat</key>
+    <map>
+      <key>Comment</key>
+      <string>Whether to color a friends chat based on their friends groups</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
     <key>SkinCurrentTheme</key>
     <map>
       <key>Comment</key>
@@ -19235,6 +19279,28 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
+  <key>FSContactSetsNotificationToast</key>
+  <map>
+    <key>Comment</key>
+    <string>Show the On/Offline notifications caused by Contactsets as Toast message</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>
+  <key>FSContactSetsNotificationNearbyChat</key>
+  <map>
+    <key>Comment</key>
+    <string>Show the On/Offline notifications caused by Contactsets in Nearby Chat</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>1</integer>
+  </map>
     <key>FSEnableObjectExports</key>
     <map>
       <key>Comment</key>
@@ -19444,6 +19510,17 @@
 			<key>Value</key>
 			<string>mapto</string>
 		</map>
+  <key>FSShowDisplayNameUpdateNotification</key>
+  <map>
+    <key>Comment</key>
+    <string>Show system notifications if somebody changes their display name.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>1</integer>
+  </map>
 		<key>FSCmdLineDrawDistance</key>
 		<map>
 			<key>Comment</key>
@@ -19510,6 +19587,28 @@
 			<key>Value</key>
 			<string>tp2</string>
 		</map>
+  <key>FSTagShowDistanceColors</key>
+  <map>
+    <key>Comment</key>
+    <string>If enabled, color other avatars' nametags based on their distance</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>
+  <key>FSTagShowDistance</key>
+  <map>
+    <key>Comment</key>
+    <string>If enabled, show distance to other avatars in their nametag.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>
 <!--<FS:HG> FIRE-6340, FIRE-6567 - Setting Bandwidth issues-->  
     <key>FSCmdLineBandWidth</key>
     <map>
@@ -20314,6 +20413,17 @@
       <key>Backup</key>
       <integer>0</integer>
     </map>
+    <key>FSColorIMsDistinctly</key>
+    <map>
+      <key>Comment</key>
+      <string>Color IM/Group messages distinctly in the console.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
     <key>FSPoseStandLock</key>
     <map>
       <key>Comment</key>
@@ -20562,6 +20672,39 @@
     <map>
       <key>Comment</key>
       <string>If enabled, use a smaller font for buttons on dialogs from scripts (default is true)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <key>FSMiniMapWhisperRing</key>
+    <map>
+      <key>Comment</key>
+      <string>Show whisper range ring on minimap</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <key>FSMiniMapChatRing</key>
+    <map>
+      <key>Comment</key>
+      <string>Show chat range ring on minimap</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <key>FSMiniMapShoutRing</key>
+    <map>
+      <key>Comment</key>
+      <string>Show shout range ring on minimap</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>

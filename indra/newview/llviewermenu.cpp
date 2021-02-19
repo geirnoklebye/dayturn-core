@@ -3998,7 +3998,8 @@ class LLTogglePanelPeopleTab : public view_listener_t
 		if (   panel_name == "friends_panel"
 			|| panel_name == "groups_panel"
 			|| panel_name == "nearby_panel"
-			|| panel_name == "blocked_panel")
+			|| panel_name == "blocked_panel"
+			|| panel_name == "contact_sets_panel")
 		{
 			return togglePeoplePanel(panel_name, param);
 		}
@@ -8577,6 +8578,23 @@ class FSToolsUndeform : public view_listener_t
 	}
 };
 // </FS:CR> FIRE-4345: Undeform
+// <FS:CR> Add to contact set
+class FSAddToContactSet : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+//		if (!rlv_handler_t::isEnabled() || !gRlvHandler.hasBehaviour(RLV_BHVR_SHOWNAMES))
+		{
+			LLVOAvatar* avatarp = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+			if (avatarp)
+			{
+				LLFloaterReg::showInstance("fs_add_contact", LLSD(avatarp->getID()), TRUE);
+			}
+		}
+		return true;
+	}
+};
+// </FS:CR> Add to contact set
 
 class LLToolsSelectOnlyMyObjects : public view_listener_t
 {
@@ -10311,6 +10329,8 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLEditableSelectedMono(), "EditableSelectedMono");
 	view_listener_t::addMenu(new LLToggleUIHints(), "ToggleUIHints");
 
+	// <FS:CR> Add to contact set
+	view_listener_t::addMenu(new FSAddToContactSet(), "Avatar.AddToContactSet");
     // <FS:Techwolf Lupindo> export
     view_listener_t::addMenu(new FSObjectExport(), "Object.Export");
     view_listener_t::addMenu(new FSObjectExportCollada(), "Object.ExportCollada");

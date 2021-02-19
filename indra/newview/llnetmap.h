@@ -89,6 +89,16 @@ public:
 	void			setToolTipMsg(const std::string& msg) { mToolTipMsg = msg; }
 	void			renderScaledPointGlobal( const LLVector3d& pos, const LLColor4U &color, F32 radius );
 
+	// <FS:Ansariel> Mark avatar feature
+	static bool		hasAvatarMarkColor(const LLUUID& avatar_id) { return sAvatarMarksMap.find(avatar_id) != sAvatarMarksMap.end(); }
+	static bool		getAvatarMarkColor(const LLUUID& avatar_id, LLColor4& color);
+	static void		setAvatarMarkColor(const LLUUID& avatar_id, const LLSD& color);
+	static void		setAvatarMarkColors(const uuid_vec_t& avatar_ids, const LLSD& color);
+	static void		clearAvatarMarkColor(const LLUUID& avatar_id);
+	static void		clearAvatarMarkColors(const uuid_vec_t& avatar_ids);
+	static void		clearAvatarMarkColors();
+	static LLColor4	getAvatarColor(const LLUUID& avatar_id);
+	// </FS:Ansariel>
 private:
 	const LLVector3d& getObjectImageCenterGlobal()	{ return mObjectImageCenterGlobal; }
 	void 			renderPoint(const LLVector3 &pos, const LLColor4U &color, 
@@ -139,13 +149,26 @@ private:
 
 	std::string	mToolTipMsg;
 
+	// <FS:Ansariel> Mark avatar feature
+	typedef std::map<LLUUID, LLColor4> avatar_marks_map_t;
+	static avatar_marks_map_t sAvatarMarksMap;
 public:
 	void			setSelected(uuid_vec_t uuids) { sSelected=uuids; };
+// <FS:CR> Minimap improvements
+	uuid_vec_t		mClosestAgentsToCursor;
+	LLVector3d		mPosGlobalRightClick;
+	LLUUID			mClosestAgentRightClick;
+	uuid_vec_t		mClosestAgentsRightClick;
+// </FS:CR>
 private:
 	void handleZoom(const LLSD& userdata);
 	void handleStopTracking (const LLSD& userdata);
+	void handleMark(const LLSD& userdata);
+	void handleClearMark();
+	void handleClearMarks();
 	void handleOverlayToggle(const LLSD& sdParam);
 
+	void handleAddToContactSet();
 	LLMenuGL*		mPopupMenu;
 	static uuid_vec_t	sSelected;
 };

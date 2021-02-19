@@ -51,6 +51,8 @@ private:
 	void eject();
 	void startConference();
 	void requestTeleport();
+	// <FS:Ansariel> Add to contact set
+	void addToContactSet();
 	void toggleRights(const LLSD& userdata);
 
 	void handle_avatar_grant_online_status(const LLUUID& avatar_id);

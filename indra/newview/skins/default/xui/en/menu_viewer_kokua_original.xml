@@ -363,8 +363,6 @@
        function="World.SetDoNotDisturb"/>
     </menu_item_check>
 	</menu>
-
-
         <menu_item_separator/>
         <menu_item_call
          label="Friends"
@@ -374,6 +372,14 @@
              function="SideTray.PanelPeopleTab"
              parameter="friends_panel" />
             </menu_item_call>
+        <menu_item_call
+         label="Contact Sets"
+         name="Contact Sets"
+         shortcut="control|alt|shift|C">
+            <menu_item_call.on_click
+             function="SideTray.PanelPeopleTab"
+             parameter="contact_sets_panel" />
+        </menu_item_call>
         <menu_item_call
          label="Groups"
          name="My Groups"
