@@ -519,11 +519,11 @@ void refreshCachedVariable (std::string var)
 			}
 		}
 	}
-
+// KKA-813/RLV-147 RLV 2.9.20 added shownames:uuid so this test needs to change, the new test catches shownames_sec too
 #ifndef DISABLE_SHOWNEARBY
-	else if (var == "shownames" || var == "shownames_sec" || var == "shownametags" || var == "shownearby") {
+	else if (var.find ("shownames") == 0 || var == "shownametags" || var == "shownearby") {
 #else
-	else if (var == "shownames" || var == "shownames_sec" || var == "shownametags") {
+	else if (var.find ("shownames") == 0 || var == "shownametags") {
 #endif
 		if (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby) {
 //			LLSideTray::getInstance()->childSetVisible("nearby_panel", false);
