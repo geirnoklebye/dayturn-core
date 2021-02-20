@@ -644,7 +644,7 @@ void LLNetMap::draw()
 					mClosestAgentsToCursor.push_back(uuid);
 				}
 			}
-
+		}
 		}
 
 		// Draw dot for autopilot target
