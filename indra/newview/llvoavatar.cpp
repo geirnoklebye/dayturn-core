@@ -3505,7 +3505,6 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		|| complexity != mNameArc
 		|| complexity_color != mNameArcColor)
 	{
-		LLColor4 name_tag_color = getNameTagColor();
 
 		clearNameTag();
 
@@ -3668,6 +3667,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		mNameAppearance = is_appearance;
 		mNameFriend = is_friend;
 		mNameCloud = is_cloud;
+		mNameColor=name_tag_color;
 		mDistanceString = distance_string;
 		mTitle = title ? title->getString() : "";
 				// <FS:Ansariel> Show Arc in nametag (for Jelly Dolls)
