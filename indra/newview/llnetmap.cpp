@@ -1158,8 +1158,8 @@ BOOL LLNetMap::handleRightMouseDown(S32 x, S32 y, MASK mask)
 
 		mPopupMenu->setItemVisible("Add to Set Multiple", mClosestAgentsToCursor.size() > 0); // 1 in FS because it has an avatar menu under More...
 //		bool can_show_names = !RlvActions::hasBehaviour(RLV_BHVR_SHOWNAMES);
-		bool can_show_names = true;
-		mPopupMenu->setItemEnabled("Add to Set Multiple", can_show_names);
+		bool cannot_show_names = gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby);
+		mPopupMenu->setItemEnabled("Add to Set Multiple", !cannot_show_names);
 		mPopupMenu->setItemVisible("MarkAvatar", mClosestAgentToCursor.notNull());
 		mPopupMenu->buildDrawLabels();
 		mPopupMenu->updateParent(LLMenuGL::sMenuContainer);

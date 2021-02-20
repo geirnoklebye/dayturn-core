@@ -53,6 +53,7 @@
 //MK from KB
 #include "llattachmentsmgr.h"
 #include "kokuarlvmode.h" // for RLV_ALWAYS_ON
+#include "kokuarlvextras.h" // for menu item enabling
 //mk from kb
 #include "llcompilequeue.h"
 #include "llconsole.h"
@@ -9378,7 +9379,7 @@ class FSAddToContactSet : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-//		if (!rlv_handler_t::isEnabled() || !gRlvHandler.hasBehaviour(RLV_BHVR_SHOWNAMES))
+		if (!(gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby)))
 		{
 			LLVOAvatar* avatarp = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
 			if (avatarp)
@@ -11389,4 +11390,7 @@ void initialize_menus()
     view_listener_t::addMenu(new FSObjectExportCollada(), "Object.ExportCollada");
     enable.add("Object.EnableExport", boost::bind(&enable_export_object));
     // </FS:Techwolf Lupindo>;
+
+	enable.add("RLV.CanShowName", boost::bind(&KokuaRLVExtrasMenuCanShowName));
+	enable.add("RLV.EnableIfNot", boost::bind(&KokuaRLVExtrasMenuEnableIfNot, _2));
 }

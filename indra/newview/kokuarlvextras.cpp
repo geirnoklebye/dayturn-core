@@ -38,7 +38,12 @@
 #include "llworld.h"
 #include "RRInterface.h"
 
+// ============================================================================
+// Forward declarations
+//
 
+// llviewermenu.cpp
+LLVOAvatar* find_avatar_from_object(LLViewerObject* object);
 
 // This file is intended for Kokua RLV features where including them in RRInterface would make it
 // difficult to merge as well as making an already large source file even larger. Its initial
@@ -419,4 +424,31 @@ bool KokuaRLVExtras::cannotRecvIM(const LLUUID& im_session_id, const std::string
 		}
 	}
 	return false;
+}
+
+// These two are adapted from RLVa's equivalents to make porting easier
+
+bool KokuaRLVExtrasMenuCanShowName()
+{
+	bool fEnable = true;
+	if (gRRenabled)
+	{
+	  const LLVOAvatar* pAvatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+	  if (pAvatar)
+	  {
+		  //return (pAvatar) && (RlvActions::canShowName(RlvActions::SNC_DEFAULT, pAvatar->getID()));
+		  fEnable = !gAgent.mRRInterface.containsWithoutException("shownames",pAvatar->getID().asString());
+		}
+	}
+	return fEnable;
+}
+
+bool KokuaRLVExtrasMenuEnableIfNot(const LLSD& sdParam)
+{
+	bool fEnable = true;
+	if (gRRenabled)
+	{
+		fEnable = !gAgent.mRRInterface.containsWithoutException(sdParam.asString());
+	}
+	return fEnable;
 }

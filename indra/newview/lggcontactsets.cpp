@@ -38,6 +38,7 @@
 //#include "fsdata.h"
 //#include "rlvactions.h"
 //#include "rlvhandler.h"
+#include "RRInterface.h"
 
 const F32 COLOR_DAMPENING = 0.8f;
 const std::string CONTACT_SETS_FILE = "settings_friends_groups.xml";
@@ -316,7 +317,8 @@ LLColor4 LGGContactSets::colorize(const LLUUID& uuid, const LLColor4& cur_color,
 //	static LLCachedControl<bool> legacy_radar_friend(gSavedSettings, "FSLegacyRadarFriendColoring");
 //	static LLCachedControl<bool> legacy_radar_linden(gSavedSettings, "FSLegacyRadarLindenColoring");
 //	bool rlv_shownames = !RlvActions::canShowName(RlvActions::SNC_DEFAULT, uuid);
-	bool rlv_shownames = false; // keep this definition for NORLV to make getting back to RLV easier
+//	bool rlv_shownames = false; // keep this definition for NORLV to make getting back to RLV easier
+	bool rlv_shownames = gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby);
 
 	LLColor4 color = cur_color;
 	
@@ -484,10 +486,10 @@ bool LGGContactSets::hasFriendColorThatShouldShow(const LLUUID& friend_id, ELGGC
 // handle all settings and rlv that would prevent us from showing the cs color
 bool LGGContactSets::hasFriendColorThatShouldShow(const LLUUID& friend_id, ELGGCSType type, LLColor4& color)
 {
-//	if (!RlvActions::canShowName(RlvActions::SNC_DEFAULT, friend_id))
-//	{
-//		return false; // don't show colors if we cant show names
-//	}
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
+	{
+		return false; // don't show colors if we cant show names
+	}
 
 	static LLCachedControl<bool> fsContactSetsColorizeChat(gSavedSettings, "FSContactSetsColorizeChat", false);
 	static LLCachedControl<bool> fsContactSetsColorizeTag(gSavedSettings,"FSContactSetsColorizeNameTag", false);

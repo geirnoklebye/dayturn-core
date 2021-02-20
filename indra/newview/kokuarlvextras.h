@@ -70,4 +70,7 @@ inline KokuaRLVExtras* KokuaRLVExtras::getInstance()
 	return &gKokuaRLVExtrasHandler;
 }
 
+bool KokuaRLVExtrasMenuCanShowName();
+bool KokuaRLVExtrasMenuEnableIfNot(const LLSD& sdParam);
+
 #endif // KOKUARLVEXTRAS_H
