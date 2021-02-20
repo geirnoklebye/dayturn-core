@@ -10,8 +10,7 @@
             function="ShowAgentProfile"
             parameter="hit object" />
         <pie_slice.on_enable
-            function="RLV.EnableIfNot"
-            parameter="shownames" />
+            function="RLV.CanShowName" />
     </pie_slice>
     <pie_slice
         enabled="false"
@@ -56,15 +55,8 @@
             name="Add to Set">
             <pie_slice.on_click
                 function="Avatar.AddToContactSet" />
-<!--
-        <pie_slice.on_enable
-            function="RLV.EnableIfNot"
-            parameter="shownames" />
--->
-<!--
             <pie_slice.on_enable
                 function="RLV.CanShowName" />
--->
         </pie_slice>
     </pie_menu>
     <pie_slice
