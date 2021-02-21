@@ -26,6 +26,57 @@
 	<menu_item_call.on_click
 	 function="Avatar.AddToContactSet" />
 	</menu_item_call>
+	<menu name="MarkAvatar" label="Mark...">
+		<menu_item_call
+			label="Red"
+			name="MarkRed">
+			<menu_item_call.on_click
+				function="Avatar.Mark"
+				parameter="LtRed"/>
+		</menu_item_call>
+		<menu_item_call
+		label="Green"
+		name="MarkGreen">
+			<menu_item_call.on_click
+				function="Avatar.Mark"
+				parameter="Lime"/>
+		</menu_item_call>
+		<menu_item_call
+		label="Blue"
+		name="MarkBlue">
+			<menu_item_call.on_click
+				function="Avatar.Mark"
+				parameter="LtBlue"/>
+		</menu_item_call>
+		<menu_item_call
+			label="Purple"
+			name="MarkPurple">
+			<menu_item_call.on_click
+				function="Avatar.Mark"
+				parameter="Purple"/>
+		</menu_item_call>
+		<menu_item_call
+			label="Light Yellow"
+			name="MarkLightYellow">
+			<menu_item_call.on_click
+				function="Avatar.Mark"
+				parameter="Orange"/>
+		</menu_item_call>
+		<menu_item_separator/>
+		<menu_item_call
+			label="Clear Mark(s)"
+			name="Clear Mark">
+			<menu_item_call.on_click
+				function="Avatar.ClearMark"/>
+		</menu_item_call>
+		<menu_item_separator/>
+		<menu_item_call
+			label="Clear all Marks"
+			name="Clear Marks">
+			<menu_item_call.on_click
+				function="Avatar.ClearMarks"/>
+		</menu_item_call>
+	</menu>
     <menu_item_call
      label="Remove Friend"
      layout="topleft"

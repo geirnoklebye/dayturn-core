@@ -55,21 +55,21 @@
 			name="MarkRed">
 			<menu_item_call.on_click
 				function="Minimap.Mark"
-				parameter="Red"/>
+				parameter="LtRed"/>
 		</menu_item_call>
 		<menu_item_call
 		label="Green"
 		name="MarkGreen">
 			<menu_item_call.on_click
 				function="Minimap.Mark"
-				parameter="Green"/>
+				parameter="Lime"/>
 		</menu_item_call>
 		<menu_item_call
 		label="Blue"
 		name="MarkBlue">
 			<menu_item_call.on_click
 				function="Minimap.Mark"
-				parameter="Blue"/>
+				parameter="LtBlue"/>
 		</menu_item_call>
 		<menu_item_call
 			label="Purple"
@@ -79,11 +79,11 @@
 				parameter="Purple"/>
 		</menu_item_call>
 		<menu_item_call
-			label="Yellow"
-			name="MarkYellow">
+			label="Light Yellow"
+			name="MarkLightYellow">
 			<menu_item_call.on_click
 				function="Minimap.Mark"
-				parameter="LtYellow"/>
+				parameter="Orange"/>
 		</menu_item_call>
 		<menu_item_separator/>
 		<menu_item_call

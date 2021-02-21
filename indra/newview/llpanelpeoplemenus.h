@@ -62,6 +62,9 @@ private:
 	void toggle_rights(const LLUUID& avatar_id, S32 rights);
 	void confirm_modify_rights(const LLUUID& avatar_id, const bool grant, const S32 rights);
 	void rights_confirmation_callback(const LLSD& notification, const LLSD& response, const LLUUID& avatar_id, const S32 rights);
+	void handleMark(const LLSD& userdata);
+	void handleClearMark();
+	void handleClearMarks();
 };
 
 /**
