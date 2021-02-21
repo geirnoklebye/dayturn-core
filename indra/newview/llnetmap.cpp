@@ -1455,6 +1455,12 @@ void LLNetMap::handleClearMarks()
 // static
 bool LLNetMap::getAvatarMarkColor(const LLUUID& avatar_id, LLColor4& color)
 {
+	// this needs to be RLV-aware
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
+	{
+		return false;
+	}
+
 	avatar_marks_map_t::iterator found = sAvatarMarksMap.find(avatar_id);
 	if (found != sAvatarMarksMap.end())
 	{
@@ -1526,6 +1532,12 @@ LLColor4 LLNetMap::getAvatarColor(const LLUUID& avatar_id)
 	if (cs_instance.hasFriendColorThatShouldShow(avatar_id, LGG_CS_MINIMAP))
 	{
 		color = cs_instance.getFriendColor(avatar_id);
+	}
+	
+	// the contact set code is RLV aware, marking isn't though
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
+	{
+		return color;
 	}
 
 	// Mark Avatars with special colors
