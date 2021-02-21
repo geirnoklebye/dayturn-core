@@ -520,7 +520,7 @@
        name="nametag_colors"
        top_pad="15"
        width="400">
-       Name tag Colors:
+       Name Tag Colors (may be overriden by Contact Sets or Minimap marks):
      </text>
      <color_swatch
        color="NameTagSelf"
@@ -531,7 +531,7 @@
        layout="topleft"
        left="40"
        name="self_tag"
-       top_pad="4"
+       top_pad="10"
        width="44" >
        <color_swatch.init_callback
        function="Pref.getUIColor"
@@ -927,7 +927,7 @@
        height="15"
        name="netmap_dots_textbox"
        width="400">
-       Minimap dots:
+       Minimap dots (may be overriden by Contact Sets or marks):
      </text>
      <color_swatch
        color="MapAvatarSelfColor"
@@ -1086,6 +1086,18 @@
        top_delta="5"
        width="95">
        Muted
+     </text>
+     <text
+       type="string"
+       length="1"
+       follows="left|top"
+       layout="topleft"
+       left_pad="26"
+       top_pad="-20"
+       height="10"
+       name="netmap_friends_note"
+       width="130">
+       Also used in Nearby list
      </text>
      <check_box
        control_name="MiniMapChatRing"
