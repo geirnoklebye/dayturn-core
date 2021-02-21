@@ -28,6 +28,7 @@
 #include "llcallingcard.h"
 #include "lldir.h"
 #include "llmutelist.h"
+#include "llnetmap.h"
 #include "llnotifications.h"
 #include "llnotificationsutil.h"
 #include "llsdserialize.h"
@@ -342,6 +343,27 @@ LLColor4 LGGContactSets::colorize(const LLUUID& uuid, const LLColor4& cur_color,
 				break;
 		}
 	}
+	// extension - while contact sets govern multiple aspects, it's odd that netmap marks don't affect the nearby list under the embedded netmap, so...
+	// note: do not call LLNetMap::getAvatarColor since it will start recursion, getAvatarMarkColor is safe
+	// note: high priority - netmap marks override contact set colours and friend colours
+	else if (LLNetMap::hasAvatarMarkColor(uuid))
+	{
+		switch (type)
+		{
+			case LGG_CS_CHAT:
+			case LGG_CS_IM:
+			case LGG_CS_TAG:
+			case LGG_CS_NEARBY:
+				LLNetMap::getAvatarMarkColor(uuid, color);
+				break;
+			case LGG_CS_MINIMAP:
+				// do nothing, netmap will take care of the mark colouring itself right after this
+				break;
+			default:
+				LL_DEBUGS("ContactSets") << "Unhandled colorize case!" << LL_ENDL;
+				break;
+		}
+	}
 	else if (LLAvatarTracker::instance().getBuddyInfo(uuid) != NULL)
 	{
 		switch (type)
@@ -442,6 +464,13 @@ LLColor4 LGGContactSets::getFriendColor(const LLUUID& friend_id, const std::stri
 		return color;
 	}
 
+	// allow netmap marks to override normal friend colouring
+	if (LLNetMap::hasAvatarMarkColor(friend_id))
+	{
+		LLNetMap::getAvatarMarkColor(friend_id, color);
+		return color;
+	}
+
 	U32 lowest = U32_MAX;
 	string_vec_t contact_sets = getFriendSets(friend_id);
 	for (string_vec_t::iterator it = contact_sets.begin(); it != contact_sets.end(); ++it)
@@ -514,6 +543,9 @@ bool LGGContactSets::hasFriendColorThatShouldShow(const LLUUID& friend_id, ELGGC
 		case LGG_CS_MINIMAP:
 			if (!fsContactSetsColorizeMiniMap)
 				return false;
+			// allow map marks to apply colouring
+			if (LLNetMap::hasAvatarMarkColor(friend_id))
+				return true;
 			break;
 	};
 
