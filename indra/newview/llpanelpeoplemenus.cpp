@@ -91,6 +91,9 @@ LLContextMenu* PeopleContextMenu::createMenu()
 		registrar.add("Avatar.CopyProfileSLURL",boost::bind(&LLAvatarActions::copyProfileSLURL,			id));
 		registrar.add("Avatar.ToggleRights",	boost::bind(&PeopleContextMenu::toggleRights,			this, _2));
 		registrar.add("Avatar.AddToContactSet",	boost::bind(&PeopleContextMenu::addToContactSet,		this));	// [FS:CR]
+		registrar.add("Avatar.Mark", boost::bind(&PeopleContextMenu::handleMark, this, _2));
+		registrar.add("Avatar.ClearMark", boost::bind(&PeopleContextMenu::handleClearMark, this));
+		registrar.add("Avatar.ClearMarks", boost::bind(&PeopleContextMenu::handleClearMarks, this));
 
 		enable_registrar.add("Avatar.EnableItem", boost::bind(&PeopleContextMenu::enableContextMenuItem, this, _2));
 		enable_registrar.add("Avatar.CheckItem",  boost::bind(&PeopleContextMenu::checkContextMenuItem,	this, _2));
@@ -112,6 +115,9 @@ LLContextMenu* PeopleContextMenu::createMenu()
 		// registrar.add("Avatar.Share",		boost::bind(&LLAvatarActions::startIM,					mUUIDs)); // *TODO: unimplemented
 		// registrar.add("Avatar.Pay",			boost::bind(&LLAvatarActions::pay,						mUUIDs)); // *TODO: unimplemented
 		registrar.add("Avatar.AddToContactSet",	boost::bind(&PeopleContextMenu::addToContactSet,		this));   // <FS:Ansariel>
+		registrar.add("Avatar.Mark", boost::bind(&PeopleContextMenu::handleMark, this, _2));
+		registrar.add("Avatar.ClearMark", boost::bind(&PeopleContextMenu::handleClearMark, this));
+		registrar.add("Avatar.ClearMarks", boost::bind(&PeopleContextMenu::handleClearMarks, this));
 
 		enable_registrar.add("Avatar.EnableItem",	boost::bind(&PeopleContextMenu::enableContextMenuItem, this, _2));
 
@@ -440,6 +446,21 @@ void PeopleContextMenu::addToContactSet()
 }
 // </FS:Ansariel>
 
+void PeopleContextMenu::handleMark(const LLSD& userdata)
+{
+	LLNetMap::setAvatarMarkColors(mUUIDs, userdata);
+}
+
+void PeopleContextMenu::handleClearMark()
+{
+	LLNetMap::clearAvatarMarkColors(mUUIDs);
+}
+
+void PeopleContextMenu::handleClearMarks()
+{
+	LLNetMap::clearAvatarMarkColors();
+}
+
 //== NearbyPeopleContextMenu ===============================================================
 
 void NearbyPeopleContextMenu::buildContextMenu(class LLMenuGL& menu, U32 flags)
@@ -451,6 +472,7 @@ void NearbyPeopleContextMenu::buildContextMenu(class LLMenuGL& menu, U32 flags)
 	{
 		items.push_back(std::string("add_friends"));
 		items.push_back(std::string("Add to Set"));
+		items.push_back(std::string("MarkAvatar"));
 		items.push_back(std::string("remove_friends"));
 		items.push_back(std::string("im"));
 		items.push_back(std::string("call"));
@@ -469,6 +491,7 @@ void NearbyPeopleContextMenu::buildContextMenu(class LLMenuGL& menu, U32 flags)
 		items.push_back(std::string("separator_chat_history"));
 		items.push_back(std::string("add_friend"));
 		items.push_back(std::string("Add to Set"));
+		items.push_back(std::string("MarkAvatar"));
 		items.push_back(std::string("remove_friend"));
 		items.push_back(std::string("copy_to_clipboard"));
 		items.push_back(std::string("copy_name"));
