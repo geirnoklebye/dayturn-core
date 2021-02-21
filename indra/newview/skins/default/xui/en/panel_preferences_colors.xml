@@ -915,7 +915,7 @@
      left="1"
      right="-1"
      follows="all"
-     label="Minimap"
+     label="Minimap/Nearby"
      name="tab-minimap">
      <text
        type="string"
@@ -1087,24 +1087,24 @@
        width="95">
        Muted
      </text>
-     <text
-       type="string"
-       length="1"
-       follows="left|top"
-       layout="topleft"
-       left_pad="26"
-       top_pad="-20"
-       height="10"
-       name="netmap_friends_note"
-       width="130">
-       Also used in Nearby list
-     </text>
+    <check_box
+        name="show_friends_nearby"
+        label="Also in Nearby list"
+        control_name="KokuaNearbyShowFriends"
+        enabled_control="AvatarNameTagMode"
+        layout="topleft"
+        follows="top|left"
+        height="16"
+        width="100"
+        top_pad="-20"
+				left_pad="22"
+        tool_tip="Highlight the names of your friends in the Nearby panel" />    
      <check_box
        control_name="MiniMapChatRing"
        name="MiniMapChatRing"
        label="Display rings on the mini map indicating the whisper, say and shout chat ranges:"
        layout="topleft"
-       top_pad="20"
+       top_pad="24"
        left="25"
        height="20"
        width="350" />
