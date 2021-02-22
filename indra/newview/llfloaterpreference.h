@@ -189,6 +189,8 @@ public:
 	void refresh();	// Refresh enable/disable
 	// if the quality radio buttons are changed
 	void onChangeQuality(const LLSD& data);
+	void onClickClearSettings();
+	void onClickClearColorSettings();
 	
 	void refreshUI();
 

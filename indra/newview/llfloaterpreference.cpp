@@ -481,6 +481,8 @@ LLFloaterPreference::LLFloaterPreference(const LLSD& key)
 	mCommitCallbackRegistrar.add("Pref.ClearLog",				boost::bind(&LLConversationLog::onClearLog, &LLConversationLog::instance()));
 	mCommitCallbackRegistrar.add("Pref.DeleteTranscripts",      boost::bind(&LLFloaterPreference::onDeleteTranscripts, this));
 	mCommitCallbackRegistrar.add("UpdateFilter", boost::bind(&LLFloaterPreference::onUpdateFilterTerm, this, false)); // <FS:ND/> Hook up for filtering
+	mCommitCallbackRegistrar.add("Pref.ClearSettings",			boost::bind(&LLFloaterPreference::onClickClearSettings, this));
+	mCommitCallbackRegistrar.add("Pref.ClearColorSettings",		boost::bind(&LLFloaterPreference::onClickClearColorSettings, this));
 	mCommitCallbackRegistrar.add("PreviewUISound",				boost::bind(&LLFloaterPreference::onClickPreviewUISound, this, _2));
 	mCommitCallbackRegistrar.add("Pref.BrowseCrashLogs",		boost::bind(&LLFloaterPreference::onClickBrowseCrashLogs, this));
 	mCommitCallbackRegistrar.add("Pref.BrowseSettingsDir",		boost::bind(&LLFloaterPreference::onClickBrowseSettingsDir, this));
@@ -1397,6 +1399,76 @@ void LLFloaterPreference::onClickSkin(LLUICtrl* ctrl, const LLSD& userdata)
 {
 	gSavedSettings.setString("SkinCurrent", userdata.asString());
 	ctrl->setValue(userdata.asString());
+}
+
+// Performs a wipe of the local settings dir on next restart 
+bool callback_clear_settings(const LLSD& notification, const LLSD& response)
+{
+	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+	if ( option == 0 ) // YES
+	{
+  
+		// Create a filesystem marker instructing a full settings wipe
+		std::string clear_file_name;
+		clear_file_name = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"CLEAR");
+		LL_INFOS() << "Creating clear settings marker file " << clear_file_name << LL_ENDL;
+		
+		LLAPRFile clear_file ;
+		clear_file.open(clear_file_name, LL_APR_W);
+		if (clear_file.getFileHandle())
+		{
+			LL_INFOS("MarkerFile") << "Created clear settings marker file " << clear_file_name << LL_ENDL;
+			clear_file.close();
+			LLNotificationsUtil::add("SettingsWillClear");
+		}
+		else
+		{
+			LL_WARNS("MarkerFile") << "Cannot clear settings marker file " << clear_file_name << LL_ENDL;
+		}
+		
+		return true;
+	}
+	return false;
+}
+
+// Just zap the colors
+bool callback_clear_color_settings(const LLSD& notification, const LLSD& response)
+{
+	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+	if ( option == 0 ) // YES
+	{
+  
+		// Create a filesystem marker instructing a color reset
+		std::string clear_file_name;
+		clear_file_name = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"CLEAR_COLOR");
+		LL_INFOS() << "Creating clear color settings marker file " << clear_file_name << LL_ENDL;
+		
+		LLAPRFile clear_file ;
+		clear_file.open(clear_file_name, LL_APR_W);
+		if (clear_file.getFileHandle())
+		{
+			LL_INFOS("MarkerFile") << "Created clear color settings marker file " << clear_file_name << LL_ENDL;
+			clear_file.close();
+			LLNotificationsUtil::add("ColorSettingsWillClear");
+		}
+		else
+		{
+			LL_WARNS("MarkerFile") << "Cannot clear color settings marker file " << clear_file_name << LL_ENDL;
+		}
+		
+		return true;
+	}
+	return false;
+}
+//[ADD - Clear Usersettings : SJ] - When button Reset Defaults is clicked show a warning 
+void LLFloaterPreference::onClickClearSettings()
+{
+	LLNotificationsUtil::add("FirestormClearSettingsPrompt",LLSD(), LLSD(), callback_clear_settings);
+}
+// Kokua extension to just zap colours
+void LLFloaterPreference::onClickClearColorSettings()
+{
+	LLNotificationsUtil::add("KokuaClearColorSettingsPrompt",LLSD(), LLSD(), callback_clear_color_settings);
 }
 
 void LLFloaterPreference::onSelectSkin()

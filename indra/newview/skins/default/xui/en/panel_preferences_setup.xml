@@ -188,6 +188,7 @@
      width="300">
     Software updates:
   </text>
+<!--
   <combo_box
      control_name="UpdaterServiceSetting"
      follows="left|top"
@@ -222,6 +223,7 @@
     name="update_willing_to_test"
     width="400"           
     top_pad="5"/>
+-->
   <check_box
     top_delta="4"
     enabled="true"
@@ -229,11 +231,11 @@
     height="14"
     control_name="UpdaterShowReleaseNotes"
     label="Show Release Notes after update"
-    left_delta="0"
+    left_delta="50"
     mouse_opaque="true"
     name="update_show_release_notes"
     width="400"
-    top_pad="5"/>
+    top_pad="10"/>
   <text
      type="string"
      length="1"
@@ -271,7 +273,7 @@
 		 left="20"
 		 name="browse_crashlogs"
 		 top_delta="50"
-		 width="120">
+		 width="130">
 			<button.commit_callback
 			 function="Pref.BrowseCrashLogs" />
 		</button>
@@ -285,8 +287,22 @@
 		 left_pad="10"
 		 name="browse_settingsdir"
 		 top_delta="0"
-		 width="140">
+		 width="130">
 			<button.commit_callback
 			 function="Pref.BrowseSettingsDir" />
 		</button>
+    <button
+     enabled="true"
+     follows="left|top"
+     font.style="BOLD"
+     height="23"
+     label="Reset All Settings"
+     label_selected="Reset All Settings"
+     left_pad="10"
+		 layout="topleft"
+     name="clear_settings"
+     width="130" >
+        <button.commit_callback
+         function="Pref.ClearSettings" />
+    </button>
 </panel>
