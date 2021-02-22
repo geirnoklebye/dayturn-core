@@ -293,7 +293,14 @@ BOOL NACLFloaterExploreSounds::tick()
 			LLAvatarName av_name;
 			if (LLAvatarNameCache::get(item.mOwnerID, &av_name))
 			{
-				owner_column["value"] = av_name.getCompleteName();
+				if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
+				{
+					owner_column["value"] = gAgent.mRRInterface.getDummyName(av_name.getCompleteName());
+				}
+				else
+				{
+					owner_column["value"] = av_name.getCompleteName();
+				}
 			}
 			else
 			{

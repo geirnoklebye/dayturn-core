@@ -1019,7 +1019,14 @@ void FSAreaSearch::matchObject(FSObjectProperties& details, LLViewerObject* obje
 	row_params.columns.add(cell_params);
 
 	cell_params.column = "owner";
-	cell_params.value = owner_name;
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowNearby))
+	{
+		cell_params.value = gAgent.mRRInterface.getDummyName(owner_name);
+	}
+	else
+	{
+		cell_params.value = owner_name;
+	}
 	row_params.columns.add(cell_params);
 
 	cell_params.column = "group";

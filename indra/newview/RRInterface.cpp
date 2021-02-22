@@ -108,6 +108,7 @@
 #include "llpanelwearing.h"				// @showinv - "Appearance / Current Outfit" panel
 #include "kokuarlvextras.h"
 #include "llteleporthistory.h"		// KKA-682 to allow another try at storing login location in TP history
+#include "fsareasearch.h"         // to refresh it on changes in shownames state
 //ca
 
 //#define DISABLE_SHOWNEARBY
@@ -532,6 +533,11 @@ void refreshCachedVariable (std::string var)
 			if (panel) {
 				panel->childSetVisible("avatar_list", false);
 			}
+			FSAreaSearch* area_search_floater = LLFloaterReg::findTypedInstance<FSAreaSearch>("area_search");
+			if (area_search_floater)
+			{
+				area_search_floater->refreshList(false);
+			}
 		}
 		else {
 //			LLSideTray::getInstance()->childSetVisible("nearby_panel", true);
@@ -539,6 +545,11 @@ void refreshCachedVariable (std::string var)
 			LLPanel* panel = LLFloaterSidePanelContainer::getPanel("people", "panel_people");
 			if (panel) {
 				panel->childSetVisible("avatar_list", true);
+			}
+			FSAreaSearch* area_search_floater = LLFloaterReg::findTypedInstance<FSAreaSearch>("area_search");
+			if (area_search_floater)
+			{
+				area_search_floater->refreshList(false);
 			}
 		}
 		LLLocalSpeakerMgr::getInstance()->updateSpeakerList();
