@@ -271,6 +271,8 @@
 #pragma warning (disable:4702)
 #endif
 
+const char* const CRASH_SETTINGS_FILE = "settings_crash_behavior.xml"; // <FS:ND/> We need this filename defined here.
+
 static LLAppViewerListener sAppViewerListener(LLAppViewer::instance);
 
 ////// Windows-specific includes to the bottom - nasty defines in these pollute the preprocessor
@@ -822,6 +824,105 @@ bool LLAppViewer::init()
 	//
 	// OK to write stuff to logs now, we've now crash reported if necessary
 	//
+	
+// <FS>
+	// SJ/AO:  Reset Configuration here, if our marker file exists. Configuration needs to be reset before settings files 
+	// are read in to avoid file locks.
+	// Extended for Kokua to have a colours-only option too
+
+	std::string clear_settings_filename = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"CLEAR");
+	std::string clear_color_settings_filename = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"CLEAR_COLOR");
+	LLAPRFile clear_file ;
+	mPurgeSettings = (clear_file.isExist(clear_settings_filename));
+	LLAPRFile clear_color_file;
+	bool clear_colors = (clear_color_file.isExist(clear_color_settings_filename));
+	if (mPurgeSettings || clear_colors)
+	{
+		if (mPurgeSettings)
+		{
+			LL_INFOS() << "Purging configuration..." << LL_ENDL;
+			LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"CLEAR"));
+			LLSplashScreen::update(LLTrans::getString("StartupClearingAllConfiguration"));
+		}
+		// someone might set up both kinds of purge, so allow for both being set
+		if (clear_colors)
+		{
+			LL_INFOS() << "Purging colour configuration..." << LL_ENDL;
+			LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"CLEAR_COLOR"));
+			LLSplashScreen::update(LLTrans::getString("StartupClearingColorConfiguration"));
+		}
+		std::string delem = gDirUtilp->getDirDelimiter();
+
+		if (mPurgeSettings)
+		{
+			// things to only do on a full purge, followed by those we do always
+		
+			//[ADD - Clear Usersettings : SJ] - Delete directories beams, beamsColors, windlight in usersettings
+			LLFile::rmdir(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "beams") );
+			LLFile::rmdir(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "windlight" + delem + "water") );
+			LLFile::rmdir(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "windlight" + delem + "days") );
+			LLFile::rmdir(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "windlight" + delem + "skies") );
+			LLFile::rmdir(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "windlight") );		
+
+			// We don't delete the entire folder to avoid data loss of config files unrelated to the current binary. -AO
+			//gDirUtilp->deleteFilesInDir(user_dir, "*.*");
+		
+			// Alphabetised
+			//LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "account_settings_phoenix.xml"));
+			//LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "autoreplace.xml"));
+			//LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "agents.xml"));
+			LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "bin_conf.dat"));
+			//LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "client_list_v2.xml"));
+			LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "ignorable_dialogs.xml"));
+			//LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "grids.remote.xml"));
+			//LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "grids.user.xml"));
+			LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "password.dat"));
+			//LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "quick_preferences.xml"));
+			//LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "releases.xml"));
+			LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, CRASH_SETTINGS_FILE));
+		
+			std::string user_dir = gDirUtilp->getExpandedFilename( LL_PATH_USER_SETTINGS , "", "");
+			gDirUtilp->deleteFilesInDir(user_dir, "feature*.txt");
+			gDirUtilp->deleteFilesInDir(user_dir, "gpu*.txt");
+			gDirUtilp->deleteFilesInDir(user_dir, "settings_*.xml");
+
+			// Remove misc OS user app dirs
+			std::string base_dir = gDirUtilp->getOSUserAppDir() + delem;
+		
+			LLFile::rmdir(base_dir + "browser_profile");
+			LLFile::rmdir(base_dir + "data");
+		
+			// Delete per-user files below
+			LLDirIterator dir_it(base_dir, "*");
+			std::string dir_name;
+			while (dir_it.next(dir_name))
+			{
+				if (LLFile::isdir(base_dir + delem + dir_name))
+				{
+					std::string per_user_dir_glob = base_dir + delem + dir_name + delem;
+
+					LLFile::remove(per_user_dir_glob + "filters.xml");
+					LLFile::remove(per_user_dir_glob + "medialist.xml");
+					LLFile::remove(per_user_dir_glob + "plugin_cookies.txt");
+					LLFile::remove(per_user_dir_glob + "screen_last*.*");
+					LLFile::remove(per_user_dir_glob + "search_history.txt");
+					LLFile::remove(per_user_dir_glob + "settings_friends_groups.xml");
+					LLFile::remove(per_user_dir_glob + "settings_per_account.xml");
+					LLFile::remove(per_user_dir_glob + "teleport_history.xml");
+					//LLFile::remove(per_user_dir_glob + "texture_list_last.xml");
+					LLFile::remove(per_user_dir_glob + "toolbars.xml");
+					LLFile::remove(per_user_dir_glob + "typed_locations.txt");
+					LLFile::remove(per_user_dir_glob + "url_history.xml");
+					LLFile::remove(per_user_dir_glob + "volume_settings.xml");
+					LLFile::rmdir(per_user_dir_glob + "browser_profile");
+				}
+			}
+		}
+		// now the things we always clear, ie colours
+		LLFile::rmdir(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "beamsColors") );
+		LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "colors.xml"));
+	}
+// </FS>
 	init_default_trans_args();
 	
 	if (!initConfiguration())
@@ -2653,11 +2754,27 @@ bool LLAppViewer::initConfiguration()
 			gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, 
 										   clp.getOption("settings")[0]);		
 		gSavedSettings.setString("ClientSettingsFile", user_settings_filename);
-		LL_INFOS("Settings")	<< "Using command line specified settings filename: " 
+		// SJ: if asked to purge configuration, remove custom user-settings file before it will be read
+		if (mPurgeSettings)
+		{
+			LLFile::remove(user_settings_filename);
+		}
+
+		LL_INFOS("Settings")	<< "Using command line specified settings filename: "
 			<< user_settings_filename << LL_ENDL;
 	}
+	else
+	{
+		// SJ: if asked to purge configuration, remove default user-settings file before it will be read
+		if (mPurgeSettings)
+		{
+			LLFile::remove(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, getSettingsFilename("User", "Global")));
+		}
 
-	// - load overrides from user_settings 
+	}
+	
+
+	// - load overrides from user_settings
 	loadSettingsFromDirectory("User");
 
 	if (gSavedSettings.getBOOL("FirstRunThisInstall"))

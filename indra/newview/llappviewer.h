@@ -303,6 +303,7 @@ private:
 	bool mPurgeCache;
 	bool mPurgeCacheOnExit;
 	bool mPurgeUserDataOnExit;
+	bool mPurgeSettings;	// <FS>
 	bool mPurgeTextures;	// <FS:Ansariel> FIRE-13066
 	LLViewerJoystick* joystick;
 

@@ -1661,6 +1661,20 @@
        width="330" />
      </panel>
      <!-- ## Zi: Pie menu -->
+    <button
+     enabled="true"
+     follows="left|top"
+     font.style="BOLD"
+     height="23"
+     label="Reset All Color Settings"
+     label_selected="Reset All Color Settings..."
+     left="24"
+		 layout="topleft"
+     name="clear_color_settings"
+     width="160" >
+        <button.commit_callback
+         function="Pref.ClearColorSettings" />
+    </button>
    </panel>
 </tab_container>
 </panel>
