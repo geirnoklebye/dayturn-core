@@ -138,6 +138,8 @@ public:
 	void setUseRangeColors(bool UseRangeColors);
 	void setShoutRangeColor(const LLUIColor& shoutRangeColor);
 	void setBeyondShoutRangeColor(const LLUIColor& beyondShoutRangeColor);
+	void setChatRangeColor(const LLUIColor& chatRangeColor);
+	void setWhisperRangeColor(const LLUIColor& whisperRangeColor);
 	// [/Ansariel: Colorful radar]
 	
 	//colouring based on contact sets
@@ -175,6 +177,8 @@ protected:
 	bool mUseRangeColors;
 	LLUIColor mShoutRangeColor;
 	LLUIColor mBeyondShoutRangeColor;
+	LLUIColor mChatRangeColor;
+	LLUIColor mWhisperRangeColor;
 	// [/Ansariel: Colorful radar]
 
 private:

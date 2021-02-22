@@ -24,6 +24,28 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
+    <key>KokuaRadarColorDistance</key>
+    <map>
+      <key>Comment</key>
+      <string>Color the distances in the Nearby list</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <key>KokuaTagColorDistance</key>
+    <map>
+      <key>Comment</key>
+      <string>Color the distance in the name tag</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
     <key>KokuaClassicMainMenu</key>
     <map>
       <key>Comment</key>

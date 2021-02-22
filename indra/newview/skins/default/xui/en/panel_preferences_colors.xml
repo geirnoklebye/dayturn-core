@@ -458,7 +458,7 @@
        follows="left|top"
        layout="topleft"
        left="20"
-       top_pad="18"
+       top_pad="22"
        height="12"
        name="FSColorIMsDistinctly"
        width="450"
@@ -766,6 +766,16 @@
       label="Show distance in name tag"
       tool_tip="Show distance from an avatar in their name tag" />
      <check_box
+      control_name="KokuaTagColorDistance"
+      follows="left|top"
+      layout="topleft"
+      left="30"
+      height="12"
+      name="KokuaTagColorDistance"
+      width="450"
+      label="Color distance (only) in name tag"
+      tool_tip="Color the distance from an avatar in their name tag" />
+     <check_box
       control_name="FSTagShowDistanceColors"
       follows="left|top"
       layout="topleft"
@@ -773,14 +783,13 @@
       height="12"
       name="FSTagShowDistanceColors"
       width="450"
-      label="Color name tags based on distance:" />
+      label="Color name tags based on distance" />
      <panel
        top_pad="2"
        height="75"
        width="505"
        follows="left|top"
        label=""
-       visibility_control="FSTagShowDistanceColors"
        name="distance_panel" >
      <color_swatch
        color="NameTagChatDistanceColor"
@@ -811,7 +820,7 @@
        name="chat_distance_tag_label"
        top_delta="5"
        width="200">
-       Chat range
+       Chat Range
      </text>
      <color_swatch
        color="NameTagWhisperDistanceColor"
@@ -874,7 +883,7 @@
        name="shout_tag_label"
        top_delta="5"
        width="200">
-       Shout
+       Shout Range
      </text>
        <color_swatch
          color="NameTagBeyondShoutDistanceColor"
@@ -1194,7 +1203,7 @@
        name="netmap_chatring_color_label"
        top_delta="5"
        width="95">
-       Chat range
+       Chat Range
      </text>
      <check_box
        visibility_control="MiniMapChatRing"
@@ -1238,9 +1247,152 @@
        name="netmap_shoutring_color_label"
        top_delta="5"
        width="95">
-       Shout range
+       Shout Range
      </text>
-
+     <check_box
+      control_name="KokuaRadarColorDistance"
+      follows="left|top"
+      layout="topleft"
+      left="25"
+      height="12"
+      top_pad="30"
+      name="KokuaRadarColorDistance"
+      width="450"
+      label="Color distances in Nearby list:" />
+     <panel
+       top_pad="2"
+       height="75"
+       width="505"
+       follows="left|top"
+       label=""
+       visibility_control="KokuaRadarColorDistance"
+       name="radar_distance_panel" >
+     <color_swatch
+       color="AvatarListItemChatRange"
+       can_apply_immediately="true"
+       follows="left|top"
+       height="24"
+       label_height="0"
+       layout="topleft"
+       left="10"
+       name="chat_distance_radar"
+       top_pad="10"
+       width="44" >
+       <color_swatch.init_callback
+       function="Pref.getUIColor"
+       parameter="AvatarListItemChatRange" />
+       <color_swatch.commit_callback
+       function="Pref.applyUIColor"
+       parameter="AvatarListItemChatRange" />
+     </color_swatch>
+     <text
+       type="string"
+       length="1"
+       follows="left|top"
+       height="10"
+       layout="topleft"
+       left_pad="5"
+       mouse_opaque="false"
+       name="chat_distance_radar_label"
+       top_delta="5"
+       width="200">
+       Chat Range
+     </text>
+     <color_swatch
+       color="AvatarListItemWhisperRange"
+       can_apply_immediately="true"
+       follows="left|top"
+       height="24"
+       label_height="0"
+       layout="topleft"
+       left_pad="5"
+       name="whisper_distance_radar"
+       top_pad="-15"
+       width="44" >
+       <color_swatch.init_callback
+       function="Pref.getUIColor"
+       parameter="AvatarListItemWhisperRange" />
+       <color_swatch.commit_callback
+       function="Pref.applyUIColor"
+       parameter="AvatarListItemWhisperRange" />
+     </color_swatch>
+     <text
+       type="string"
+       length="1"
+       follows="left|top"
+       height="10"
+       layout="topleft"
+       left_pad="5"
+       mouse_opaque="false"
+       name="whisper_distance_radar_label"
+       top_delta="5"
+       width="200">
+       Whisper Range
+     </text>
+     
+     <color_swatch
+       color="AvatarListItemShoutRange"
+       can_apply_immediately="true"
+       follows="left|top"
+       height="24"
+       label_height="0"
+       layout="topleft"
+       left="10"
+       name="shout_range_radar"
+       top_pad="18"
+       width="44" >
+       <color_swatch.init_callback
+       function="Pref.getUIColor"
+       parameter="AvatarListItemShoutRange" />
+       <color_swatch.commit_callback
+       function="Pref.applyUIColor"
+       parameter="AvatarListItemShoutRange" />
+     </color_swatch>
+     <text
+       type="string"
+       length="1"
+       follows="left|top"
+       height="10"
+       layout="topleft"
+       left_pad="5"
+       mouse_opaque="false"
+       name="shout_radar_label"
+       top_delta="5"
+       width="200">
+       Shout Range
+     </text>
+       <color_swatch
+         color="AvatarListItemBeyondShoutRange"
+         can_apply_immediately="true"
+         follows="left|top"
+         height="24"
+         label_height="0"
+         layout="topleft"
+         left_pad="5"
+         name="beyond_shout_distance_radar"
+         top_pad="-15"
+         width="44" >
+         <color_swatch.init_callback
+         function="Pref.getUIColor"
+         parameter="AvatarListItemBeyondShoutRange" />
+         <color_swatch.commit_callback
+         function="Pref.applyUIColor"
+         parameter="AvatarListItemBeyondShoutRange" />
+       </color_swatch>
+       <text
+         type="string"
+         length="1"
+         follows="left|top"
+         height="10"
+         layout="topleft"
+         left_pad="5"
+         mouse_opaque="false"
+         name="beyond_shout_distance_radar_label"
+         top_delta="5"
+         width="200">
+         Beyond Shout Range
+       </text>
+       </panel>
 	 </panel>
    <!-- Misc Panel -->
    <panel

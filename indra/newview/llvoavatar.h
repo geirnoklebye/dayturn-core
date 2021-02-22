@@ -1025,6 +1025,7 @@ private:
 	LLColor4		mNameColor;
 	BOOL      		mRenderGroupTitles;
 	std::string		mDistanceString;
+	bool					mColorDistanceInTag;
 	FetchAvatarBirthdate	*mAvatarBirthdateRequest;
 	LLDate			mAvatarBirthdate;
 	// <FS:Ansariel> Show Arc in nametag (for Jelly Dolls)
