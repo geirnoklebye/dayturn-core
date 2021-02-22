@@ -42,6 +42,7 @@
 #include "llavatariconctrl.h"
 #include "lloutputmonitorctrl.h"
 #include "lltooldraganddrop.h"
+#include "llviewercontrol.h"
 #include "llworld.h"
 
 #include "lggcontactsets.h"
@@ -424,26 +425,30 @@ void LLAvatarListItem::setRange(F32 distance)
 	
 	// [Ansariel: Colorful radar]
 	// Get default style params
+	static LLCachedControl<bool> color_distance(gSavedSettings, "KokuaRadarColorDistance");	
 	LLStyle::Params rangeHighlight = LLStyle::Params();
-	
-	if (mUseRangeColors && mDistance > CHAT_NORMAL_RADIUS)
+
+	if (color_distance && mUseRangeColors)
 	{
-		if (mDistance < CHAT_SHOUT_RADIUS)
+		if (mDistance > CHAT_NORMAL_RADIUS)
 		{
-			rangeHighlight.color = mShoutRangeColor;
+			if (mDistance < CHAT_SHOUT_RADIUS)
+			{
+				rangeHighlight.color = mShoutRangeColor;
+			}
+			else
+			{
+				rangeHighlight.color = mBeyondShoutRangeColor;
+			}
+		}
+		else if (mDistance > CHAT_WHISPER_RADIUS)
+		{
+			rangeHighlight.color = mChatRangeColor;
 		}
 		else
 		{
-			rangeHighlight.color = mBeyondShoutRangeColor;
+			rangeHighlight.color = mWhisperRangeColor;
 		}
-	}
-	else if (mUseRangeColors && mDistance > CHAT_WHISPER_RADIUS)
-	{
-		rangeHighlight.color = LLColor4::green5;
-	}
-	else
-	{
-		rangeHighlight.color = LLColor4::green1;
 	}
 	mNearbyRange->setText(llformat("%3.2f", mDistance), rangeHighlight);
 	// [Ansariel: Colorful radar]
@@ -518,6 +523,16 @@ void LLAvatarListItem::setShoutRangeColor(const LLUIColor& shoutRangeColor)
 void LLAvatarListItem::setBeyondShoutRangeColor(const LLUIColor& beyondShoutRangeColor)
 {
 	mBeyondShoutRangeColor = beyondShoutRangeColor;
+}
+
+void LLAvatarListItem::setChatRangeColor(const LLUIColor& chatRangeColor)
+{
+	mChatRangeColor = chatRangeColor;
+}
+
+void LLAvatarListItem::setWhisperRangeColor(const LLUIColor& whisperRangeColor)
+{
+	mWhisperRangeColor =whisperRangeColor;
 }
 
 void LLAvatarListItem::setUseRangeColors(bool UseRangeColors)

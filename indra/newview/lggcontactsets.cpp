@@ -378,8 +378,8 @@ LLColor4 LGGContactSets::colorize(const LLUUID& uuid, const LLColor4& cur_color,
 			case LGG_CS_TAG:
 			{
 				// This is optional per prefs.
-				static LLCachedControl<bool> color_friends(gSavedSettings, "NameTagShowFriends");
-				if (color_friends && !rlv_shownames)
+				static LLCachedControl<bool> tag_color_friends(gSavedSettings, "NameTagShowFriends");
+				if (tag_color_friends && !rlv_shownames)
 				{
 					color = LLUIColorTable::instance().getColor("NameTagFriend", LLColor4::white).get();
 				}
@@ -390,8 +390,14 @@ LLColor4 LGGContactSets::colorize(const LLUUID& uuid, const LLColor4& cur_color,
 					color = LLUIColorTable::instance().getColor("MapAvatarFriendColor", LLColor4::white).get();
 				break;
 			case LGG_CS_NEARBY:
-				if (!rlv_shownames)
+			{
+				// This is now also optional per prefs.
+				static LLCachedControl<bool> nearby_color_friends(gSavedSettings, "KokuaNearbyShowFriends");
+				if (nearby_color_friends && !rlv_shownames)
+				{
 					color = LLUIColorTable::instance().getColor("MapAvatarFriendColor", LLColor4::white).get();
+				}
+			}
 				break;
 			default:
 				LL_DEBUGS("ContactSets") << "Unhandled colorize case!" << LL_ENDL;

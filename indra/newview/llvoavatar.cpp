@@ -3468,6 +3468,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 	// <FS:Ansariel> Color name tags based on distance
 	static LLCachedControl<bool> show_distance_color_tag(gSavedSettings, "FSTagShowDistanceColors");
 	static LLCachedControl<bool> show_distance_in_tag(gSavedSettings, "FSTagShowDistance");
+	static LLCachedControl<bool> color_distance_in_tag(gSavedSettings, "KokuaTagColorDistance");
 	// <FS:CR> FIRE-6664: Add whisper range to color tags
 	static LLUIColor tag_whisper_color = LLUIColorTable::instance().getColor("NameTagWhisperDistanceColor", LLColor4::green);
 	// </FS:CR> FIRE-6664: Add whisper range to color tags
@@ -3553,6 +3554,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		|| is_cloud != mNameCloud
 		|| name_tag_color != mNameColor
 		|| distance_string != mDistanceString
+		|| color_distance_in_tag != mColorDistanceInTag
 		// <FS:Ansariel> Show Arc in nametag (for Jelly Dolls)
 		|| complexity != mNameArc
 		|| complexity_color != mNameArcColor)
@@ -3723,7 +3725,9 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		// <FS:Ansariel> Show distance in tag
 		if (show_distance_in_tag)
 		{
-			addNameTagLine(distance_string, distance_color, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
+			// apply the option to not colour the distance text with the distance; instead it takes the name tag colour
+			// (which could still be the distance colour if colouring of the whole tag is turned on)
+			addNameTagLine(distance_string, (color_distance_in_tag ? distance_color : name_tag_color), LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
 		}
 		// <FS:Ansariel> Show distance in tag
         		// <FS:Ansariel> Show ARW in nametag options (for Jelly Dolls)
@@ -3756,6 +3760,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				mNameCloud = is_cloud;
 		mNameColor=name_tag_color;
 		mDistanceString = distance_string;
+		mColorDistanceInTag = color_distance_in_tag;
 				mTitle = title ? title->getString() : "";
 				// <FS:Ansariel> Show Arc in nametag (for Jelly Dolls)
 				mNameArc = complexity;

@@ -609,6 +609,8 @@ void LLAvatarList::addNewItem(const LLUUID& id, const std::string& name, BOOL is
 	LLUIColorTable* colorTable = &LLUIColorTable::instance();
 	item->setShoutRangeColor(colorTable->getColor("AvatarListItemShoutRange", LLColor4::yellow));
 	item->setBeyondShoutRangeColor(colorTable->getColor("AvatarListItemBeyondShoutRange", LLColor4::red));
+	item->setChatRangeColor(colorTable->getColor("AvatarListItemChatRange", LLColor4::green5));
+	item->setWhisperRangeColor(colorTable->getColor("AvatarListItemWhisperRange", LLColor4::green1));
 	// [/Ansariel: Colorful radar]
 	//colouring based on contact sets
 	item->setUseContactColors(mUseContactColors);

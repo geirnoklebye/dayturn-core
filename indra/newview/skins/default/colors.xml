@@ -150,7 +150,13 @@
   <color
       name="Orange"
       value="1 .82 .46 1" />
-
+  <color
+      name="Green1"
+      value="0 1 0 1" />
+  <color
+      name="Green5"
+      value="0.2 0.6 0.4 1" />
+     
   <!-- This color name makes potentially unused colors show up bright purple.
   Leave this here until all Unused? are removed below, otherwise
   the viewer generates many warnings on startup. -->
@@ -188,6 +194,12 @@
      name="AudioStreamTitle"
      reference="Kokua" />
     <color
+     name="AvatarListItemBeyondShoutRange"
+     reference="Red" />
+    <color
+     name="AvatarListItemChatRange"
+     reference="Green5" />
+    <color
      name="AvatarListItemIconDefaultColor"
      reference="White" />
     <color
@@ -205,6 +217,12 @@
     <color
      name="AvatarListItemIconVoiceLeftColor"
      reference="AvatarListItemIconOfflineColor" />
+    <color
+     name="AvatarListItemShoutRange"
+     reference="Yellow" />
+    <color
+     name="AvatarListItemWhisperRange"
+     reference="Green1" />
     <color
      name="BadgeImageColor"
      value="1.0 0.40 0.0 1.0" />
@@ -571,7 +589,7 @@
      reference="Blue" />
     <color
      name="MapAvatarSelfColor"
-     value="0.53125 0 0.498047 1" />
+     reference="LtGray" />
   <color
      name="MapAvatarMutedColor"
      value="0.4 0.4 0.4 1" />
@@ -666,16 +684,16 @@
      reference="White" />
   <color
      name="NameTagChatDistanceColor"
-     reference="Green" />
+     reference="Green5" />
   <color
      name="NameTagShoutDistanceColor"
      reference="Yellow" />
   <color
      name="NameTagBeyondShoutDistanceColor"
-     reference="BrightRed" />
+     reference="Red" />
   <color
      name="NameTagWhisperDistanceColor"
-     reference="Green" />
+     reference="Green1" />
     <color
      name="NameTagFriend"
      value="0.447 0.784 0.663 1" />
