@@ -1671,7 +1671,7 @@
      left="24"
 		 layout="topleft"
      name="clear_color_settings"
-     width="160" >
+     width="200" >
         <button.commit_callback
          function="Pref.ClearColorSettings" />
     </button>
