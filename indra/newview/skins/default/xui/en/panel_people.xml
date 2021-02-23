@@ -9,7 +9,7 @@
  min_height="350"
  name="people_panel"
  top="0"
- width="333">
+ width="392">
     <string
      name="no_recent_people"
      value="No recent people. Looking for people to hang out with? Try [secondlife:///app/search/people Search] or the [secondlife:///app/worldmap World Map]." />
