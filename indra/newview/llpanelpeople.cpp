@@ -1473,7 +1473,17 @@ void LLPanelPeople::onTabSelected(const LLSD& param)
 {
 	std::string tab_name = getChild<LLPanel>(param.asString())->getName();
 	updateButtons();
-
+	
+	//sometimes the friends list doesn't show, possibly due to late inventory - it's more likely that
+	//we do have friends and they haven't loaded than it is that we're in a brand new no friends environment
+	//so give it another chance to populate
+	if (tab_name == FRIENDS_TAB_NAME)
+	{
+		if (!mAllFriendList->filterHasMatches())
+		{
+			updateFriendList();
+		}	
+	}
 	showFriendsAccordionsIfNeeded();
 }
 
