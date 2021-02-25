@@ -4205,6 +4205,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_MiniMap_Label">Mini-map</string>
   <string name="Command_Move_Label">Walk / run / fly</string>
   <string name="Command_People_Label">People</string>
+  <string name="Command_PersonalLighting_Label">Personal Lighting</string>
   <string name="Command_Picks_Label">Picks</string>
   <string name="Command_Places_Label">Places</string>
   <string name="Command_Preferences_Label">Preferences</string>
@@ -4242,6 +4243,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_MiniMap_Tooltip">Show nearby people</string>
   <string name="Command_Move_Tooltip">Moving your avatar</string>
   <string name="Command_People_Tooltip">Friends, groups, and nearby people</string>
+  <string name="Command_PersonalLighting_Tooltip">Adjust personal lighting settings</string>
   <string name="Command_Picks_Tooltip">Places to show as favorites in your profile</string>
   <string name="Command_Places_Tooltip">Places you've saved</string>
   <string name="Command_Preferences_Tooltip">Preferences</string>
