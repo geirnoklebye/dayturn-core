@@ -235,7 +235,7 @@
     mouse_opaque="true"
     name="update_show_release_notes"
     width="400"
-    top_pad="10"/>
+    top_pad="14"/>
   <text
      type="string"
      length="1"
