@@ -173,6 +173,9 @@ LLInventoryPanel::LLInventoryPanel(const LLInventoryPanel::Params& p) :
 	
 	// context menu callbacks
 	mCommitCallbackRegistrar.add("Inventory.DoToSelected", boost::bind(&LLInventoryPanel::doToSelected, this, _2));
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+	mEnableCallbackRegistrar.add("Inventory.IsUserProtected", boost::bind(&LLInventoryPanel::isUserProtectedFolder, this));
+// [/SL:KB]
 	mCommitCallbackRegistrar.add("Inventory.EmptyTrash", boost::bind(&LLInventoryModel::emptyFolderType, &gInventory, "ConfirmEmptyTrash", LLFolderType::FT_TRASH));
 	mCommitCallbackRegistrar.add("Inventory.EmptyLostAndFound", boost::bind(&LLInventoryModel::emptyFolderType, &gInventory, "ConfirmEmptyLostAndFound", LLFolderType::FT_LOST_AND_FOUND));
 	mCommitCallbackRegistrar.add("Inventory.DoCreate", boost::bind(&LLInventoryPanel::doCreate, this, _2));
@@ -252,6 +255,9 @@ void LLInventoryPanel::initFromParams(const LLInventoryPanel::Params& params)
 	}
 
 	mCommitCallbackRegistrar.pushScope(); // registered as a widget; need to push callback scope ourselves
+// [SL:KB] - Patch: Inventory-Filter | Checked: Catznip-5.2
+	mEnableCallbackRegistrar.pushScope(); // registered as a widget; need to push callback scope ourselves
+// [/SL:KB]
 	{
 		// Determine the root folder in case specified, and
 		// build the views starting with that folder.
@@ -262,6 +268,10 @@ void LLInventoryPanel::initFromParams(const LLInventoryPanel::Params& params)
 	}
 	mCommitCallbackRegistrar.popScope();
 	mFolderRoot.get()->setCallbackRegistrar(&mCommitCallbackRegistrar);
+// [SL:KB] - Patch: MultiWearables-WearOn | Checked: 2010-05-13 (Catznip-2.0)
+	mEnableCallbackRegistrar.popScope();
+	mFolderRoot.get()->setEnableCallbackRegistrar(&mEnableCallbackRegistrar);
+// [/SL:KB]
 	
 	// Scroller
 		LLRect scroller_view_rect = getRect();
@@ -1836,6 +1846,16 @@ void LLInventoryPanel::doToSelected(const LLSD& userdata)
 	return;
 }
 
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+bool LLInventoryPanel::isUserProtectedFolder() const
+{
+	const LLFolderViewItem* pFVItem = (!mFolderRoot.isDead()) ? mFolderRoot.get()->getCurSelectedItem() : nullptr;
+	const LLInvFVBridge* pItemBridge = (pFVItem) ? dynamic_cast<const LLInvFVBridge*>(pFVItem->getViewModelItem()) : nullptr;
+	if (pFVItem)
+		return LLUserProtectedFolders::instance().contains(pItemBridge->getUUID());
+	return false;
+}
+// [/SL:KB]
 BOOL LLInventoryPanel::handleKeyHere( KEY key, MASK mask )
 {
 	BOOL handled = FALSE;
@@ -2040,6 +2060,5 @@ namespace LLInitParam
 		declare(LLFolderType::lookup(LLFolderType::FT_MARKETPLACE_LISTINGS)   , LLFolderType::FT_MARKETPLACE_LISTINGS);
 		declare(LLFolderType::lookup(LLFolderType::FT_MARKETPLACE_STOCK), LLFolderType::FT_MARKETPLACE_STOCK);
 		declare(LLFolderType::lookup(LLFolderType::FT_MARKETPLACE_VERSION), LLFolderType::FT_MARKETPLACE_VERSION);
-		declare(LLFolderType::lookup(LLFolderType::FT_SUITCASE), LLFolderType::FT_SUITCASE);
 	}
 }

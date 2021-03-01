@@ -232,6 +232,9 @@ public:
 	void updateHideEmptySystemFolders(const LLSD &data);
 	// <FS:Ansariel> Optional hiding of Inbox folder
 	void updateShowInboxFolder(const LLSD &data);
+// [SL:KB] - Patch: Inventory-UserProtectedFolder | Checked: Catznip-5.2
+	bool isUserProtectedFolder() const;
+// [/SL:KB]
 	static void idle(void* user_data);
 
 	void updateFolderLabel(const LLUUID& folder_id);

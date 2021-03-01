@@ -760,7 +760,10 @@ BOOL get_is_category_removable(const LLInventoryModel* model, const LLUUID& id)
 
 	const LLFolderType::EType folder_type = category->getPreferredType();
 	
-	if (LLFolderType::lookupIsProtectedType(folder_type))
+//	if (LLFolderType::lookupIsProtectedType(folder_type))
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+	if (LLFolderType::lookupIsProtectedType(folder_type, id))
+// [/SL:KB]
 	{
 		return FALSE;
 	}
@@ -807,8 +810,11 @@ BOOL get_is_category_renameable(const LLInventoryModel* model, const LLUUID& id)
 	}
 //mk
 
-	if (cat && !LLFolderType::lookupIsProtectedType(cat->getPreferredType()) &&
-		cat->getOwnerID() == gAgent.getID())
+//	if (cat && !LLFolderType::lookupIsProtectedType(cat->getPreferredType()) &&
+//		cat->getOwnerID() == gAgent.getID())
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+	if (cat && !LLFolderType::lookupIsProtectedType(cat->getPreferredType(), LLUUID::null) && cat->getOwnerID() == gAgent.getID())
+// [/SL:KB]
 	{
 		return TRUE;
 	}

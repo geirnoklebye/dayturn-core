@@ -651,7 +651,10 @@ BOOL LLInvFVBridge::isClipboardPasteableAsLink() const
 			}
 		}
 		const LLViewerInventoryCategory *cat = model->getCategory(objects.at(i));
-		if (cat && LLFolderType::lookupIsProtectedType(cat->getPreferredType()))
+//		if (cat && LLFolderType::lookupIsProtectedType(cat->getPreferredType()))
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+		if (cat && LLFolderType::lookupIsProtectedType(cat->getPreferredType(), cat->getUUID()))
+// [/SL:KB]
 		{
 			return FALSE;
 		}
@@ -1504,7 +1507,10 @@ bool LLInvFVBridge::canListOnMarketplace() const
 	LLInventoryModel * model = getInventoryModel();
 
 	LLViewerInventoryCategory * cat = model->getCategory(mUUID);
-	if (cat && LLFolderType::lookupIsProtectedType(cat->getPreferredType()))
+//	if (cat && LLFolderType::lookupIsProtectedType(cat->getPreferredType()))
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+	if (cat && LLFolderType::lookupIsProtectedType(cat->getPreferredType(), cat->getUUID()))
+// [/SL:KB]
 	{
 		return false;
 	}
@@ -2234,7 +2240,7 @@ BOOL LLFolderBridge::isItemMovable() const
 	if(obj)
 	{
 		// If it's a protected type folder, we can't move it
-		if (LLFolderType::lookupIsProtectedType(((LLInventoryCategory*)obj)->getPreferredType()))
+		if (LLFolderType::lookupIsProtectedType(((LLInventoryCategory*)obj)->getPreferredType(),mUUID))
 			return FALSE;
 		return TRUE;
 	}
@@ -2274,7 +2280,10 @@ void LLFolderBridge::buildDisplayName() const
 	//"Accessories" inventory category has folder type FT_NONE. So, this folder
 	//can not be detected as protected with LLFolderType::lookupIsProtectedType
 	mDisplayName.assign(getName());
-	if (accessories || LLFolderType::lookupIsProtectedType(preferred_type))
+//	if (accessories || LLFolderType::lookupIsProtectedType(preferred_type))
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+	if (accessories || LLFolderType::lookupIsProtectedType(preferred_type, mUUID))
+// [/SL:KB]
 	{
 		LLTrans::findString(mDisplayName, std::string("InvFolder ") + getName(), LLSD());
 	}
@@ -2653,7 +2662,10 @@ BOOL LLFolderBridge::dragCategoryIntoFolder(LLInventoryCategory* inv_cat,
 			is_movable = FALSE;
 			tooltip_msg = LLTrans::getString("TooltipDragOntoOwnChild");
 		}
-		if (is_movable && LLFolderType::lookupIsProtectedType(inv_cat->getPreferredType()))
+//		if (is_movable && LLFolderType::lookupIsProtectedType(inv_cat->getPreferredType()))
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+		if (is_movable && LLFolderType::lookupIsProtectedType(inv_cat->getPreferredType(), inv_cat->getUUID()))
+// [/SL:KB]
 		{
 			is_movable = FALSE;
 			// tooltip?
@@ -2716,7 +2728,10 @@ BOOL LLFolderBridge::dragCategoryIntoFolder(LLInventoryCategory* inv_cat,
 			for (S32 i=0; i < descendent_categories.size(); ++i)
 			{
 				LLInventoryCategory* category = descendent_categories[i];
-				if(LLFolderType::lookupIsProtectedType(category->getPreferredType()))
+//				if(LLFolderType::lookupIsProtectedType(category->getPreferredType()))
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+				if(LLFolderType::lookupIsProtectedType(category->getPreferredType(), category->getUUID()))
+// [/SL:KB]
 				{
 					// Can't move "special folders" (e.g. Textures Folder).
 					is_movable = FALSE;
@@ -3337,6 +3352,17 @@ void LLFolderBridge::performAction(LLInventoryModel* model, std::string action)
 		
 		return;
 	}
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+	else if ("toggle_protected" == action)
+	{
+		if (!LLUserProtectedFolders::instance().contains(mUUID))
+			LLUserProtectedFolders::instance().add(mUUID);
+		else
+			LLUserProtectedFolders::instance().remove(mUUID);
+
+		gSavedPerAccountSettings.setLLSD("UserProtectedFolders", LLUserProtectedFolders::instance().toLLSD());
+	}
+// [/SL:KB]
 	else if ("paste" == action)
 	{
 		pasteFromClipboard();
@@ -3724,7 +3750,10 @@ BOOL LLFolderBridge::removeItem()
 BOOL LLFolderBridge::removeSystemFolder()
 {
 	const LLViewerInventoryCategory *cat = getCategory();
-	if (!LLFolderType::lookupIsProtectedType(cat->getPreferredType()))
+//	if (!LLFolderType::lookupIsProtectedType(cat->getPreferredType()))
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+	if (!LLFolderType::lookupIsProtectedType(cat->getPreferredType(), mUUID))
+// [/SL:KB]
 	{
 		return FALSE;
 	}
@@ -4341,6 +4370,12 @@ void LLFolderBridge::buildContextMenuOptions(U32 flags, menuentry_vec_t&   items
 		{
 			mWearables=TRUE;
 		}
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+		if (LLFolderType::FT_NONE == cat->getPreferredType())
+		{
+			items.push_back("Show as System Folder");
+		}
+// [/SL:KB]
 	}
 	else
 	{
@@ -4350,7 +4385,10 @@ void LLFolderBridge::buildContextMenuOptions(U32 flags, menuentry_vec_t&   items
 		const LLInventoryCategory* category = model->getCategory(mUUID);
 		if (!category) return;
 		LLFolderType::EType type = category->getPreferredType();
-		const bool is_system_folder = LLFolderType::lookupIsProtectedType(type);
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+		const bool is_system_folder = LLFolderType::lookupIsProtectedType(type, mUUID);
+// [/SL:KB]
+//		const bool is_system_folder = LLFolderType::lookupIsProtectedType(type);
 
 		LLFindWearables is_wearable;
 		LLIsType is_object(LLAssetType::AT_OBJECT);
@@ -4460,7 +4498,10 @@ void LLFolderBridge::buildContextMenuFolderOptions(U32 flags,   menuentry_vec_t&
     if (isMarketplaceListingsFolder()) return;
 
 	LLFolderType::EType type = category->getPreferredType();
-	const bool is_system_folder = LLFolderType::lookupIsProtectedType(type);
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+	const bool is_system_folder = LLFolderType::lookupIsProtectedType(type, mUUID);
+// [/SL:KB]
+//	const bool is_system_folder = LLFolderType::lookupIsProtectedType(type);
 	// BAP change once we're no longer treating regular categories as ensembles.
 	const bool is_agent_inventory = isAgentInventory();
 // [SL:KB] - Patch: Appearance-Misc | Checked: 2010-11-24 (Catznip-2.4)
@@ -4480,7 +4521,10 @@ void LLFolderBridge::buildContextMenuFolderOptions(U32 flags,   menuentry_vec_t&
 	}
 
 #ifndef LL_RELEASE_FOR_DOWNLOAD
-	if (LLFolderType::lookupIsProtectedType(type) && is_agent_inventory)
+//	if (LLFolderType::lookupIsProtectedType(type) && is_agent_inventory)
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+	if (LLFolderType::lookupIsProtectedType(type, mUUID) && is_agent_inventory)
+// [/SL:KB]
 	{
 		items.push_back(std::string("Delete System Folder"));
 	}
@@ -4737,7 +4781,10 @@ EInventorySortGroup LLFolderBridge::getSortGroup() const
 		return SG_TRASH_FOLDER;
 	}
 
-	if (preferred_type == LLFolderType::FT_INBOX || LLFolderType::lookupIsProtectedType(preferred_type))
+//	if(LLFolderType::lookupIsProtectedType(preferred_type))
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+	if(LLFolderType::lookupIsProtectedType(preferred_type, mUUID))
+// [/SL:KB]
 	{
 		return SG_SYSTEM_FOLDER;
 	}
@@ -5253,7 +5300,10 @@ BOOL LLFolderBridge::dragItemIntoFolder(LLInventoryItem* inv_item,
 		switch (inv_item->getActualType())
 		{
 			case LLAssetType::AT_CATEGORY:
-				is_movable = !LLFolderType::lookupIsProtectedType(((LLInventoryCategory*)inv_item)->getPreferredType());
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+				is_movable = !LLFolderType::lookupIsProtectedType(((LLInventoryCategory*)inv_item)->getPreferredType(), inv_item->getUUID());
+// [/SL:KB]
+//				is_movable = !LLFolderType::lookupIsProtectedType(((LLInventoryCategory*)inv_item)->getPreferredType());
 				break;
 			default:
 				break;

@@ -88,6 +88,9 @@ public:
 	void setSelectCallback(const LLFolderView::signal_t::slot_type& cb);
 
 	void onFilterEdit(const std::string& search_string );
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+	void onChangeUserProtectedFolders();
+// [/SL:KB]
 
 	void setFocusFilterEditor();
 
@@ -188,6 +191,9 @@ private:
 	LLToggleableMenu*			mMenuGearDefault;
 	LLMenuButton*				mGearMenuButton;
 	LLHandle<LLView>			mMenuAddHandle;
+// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
+	boost::signals2::scoped_connection m_UserProtectedFoldersConn;
+// [/SL:KB]
 
 	bool						mNeedUploadCost;
 	// List Commands                                                              //
