@@ -232,9 +232,9 @@ private:
 	// Login
 	//--------------------------------------------------------------------
 public:
-	static BOOL getIsFirstTimeInViewer2();
+	static bool getIsFirstTimeInViewer2();
 private:
-	static BOOL sFirstTimeInViewer2;
+	static bool sFirstTimeInViewer2;
 	const static S32 sCurrentInvCacheVersion; // expected inventory cache version
 
 /**                    Initialization/Setup
@@ -273,8 +273,8 @@ public:
 	//    Do not store a copy of the pointers collected - use them, and 
 	//    collect them again later if you need to reference the same objects.
 	enum { 
-		EXCLUDE_TRASH = FALSE, 
-		INCLUDE_TRASH = TRUE 
+		EXCLUDE_TRASH = false,
+		INCLUDE_TRASH = true
 	};
 	// Simpler existence test if matches don't actually need to be collected.
 	bool hasMatchingDirectDescendent(const LLUUID& cat_id,
@@ -282,11 +282,11 @@ public:
 	void collectDescendents(const LLUUID& id,
 							cat_array_t& categories,
 							item_array_t& items,
-							BOOL include_trash);
+							bool include_trash);
 	void collectDescendentsIf(const LLUUID& id,
 							  cat_array_t& categories,
 							  item_array_t& items,
-							  BOOL include_trash,
+							  bool include_trash,
 							  LLInventoryCollectFunctor& add);
 
 	// Collect all items in inventory that are linked to item_id.
@@ -294,7 +294,7 @@ public:
 	item_array_t collectLinksTo(const LLUUID& item_id);
 
 	// Check if one object has a parent chain up to the category specified by UUID.
-	BOOL isObjectDescendentOf(const LLUUID& obj_id, const LLUUID& cat_id) const;
+	bool isObjectDescendentOf(const LLUUID& obj_id, const LLUUID& cat_id) const;
     
     enum EAnscestorResult{
         ANSCESTOR_OK = 0,
@@ -593,7 +593,7 @@ protected:
 private:
 	// Flag set when notifyObservers is being called, to look for bugs
 	// where it's called recursively.
-	BOOL mIsNotifyObservers;
+	bool mIsNotifyObservers;
 	// Variables used to track what has changed since the last notify.
 	U32 mModifyMask;
 	changed_items_t mChangedItemIDs;
@@ -611,7 +611,7 @@ public:
 	// If the observer is destroyed, be sure to remove it.
 	void addObserver(LLInventoryObserver* observer);
 	void removeObserver(LLInventoryObserver* observer);
-	BOOL containsObserver(LLInventoryObserver* observer) const;
+	bool containsObserver(LLInventoryObserver* observer) const;
 private:
 	typedef std::set<LLInventoryObserver*> observer_list_t;
 	observer_list_t mObservers;

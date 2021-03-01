@@ -430,7 +430,7 @@ void LLInvFVBridge::removeBatch(std::vector<LLFolderViewModelItem*>& batch)
 		cat = (LLViewerInventoryCategory*)model->getCategory(bridge->getUUID());
 		if (cat)
 		{
-			gInventory.collectDescendents( cat->getUUID(), descendent_categories, descendent_items, FALSE );
+			gInventory.collectDescendents( cat->getUUID(), descendent_categories, descendent_items, false );
 			for (j=0; j<descendent_items.size(); j++)
 			{
 				if(LLAssetType::AT_GESTURE == descendent_items[j]->getType())
@@ -1120,7 +1120,7 @@ void LLInvFVBridge::addMarketplaceContextMenuOptions(U32 flags,
         LLUUID local_version_folder_id = nested_parent_id(mUUID,depth-1);
         LLInventoryModel::cat_array_t categories;
         LLInventoryModel::item_array_t items;
-        gInventory.collectDescendents(local_version_folder_id, categories, items, FALSE);
+        gInventory.collectDescendents(local_version_folder_id, categories, items, false);
         LLCachedControl<U32> max_depth(gSavedSettings, "InventoryOutboxMaxFolderDepth", 4);
         LLCachedControl<U32> max_count(gSavedSettings, "InventoryOutboxMaxFolderCount", 20);
         if (categories.size() >= max_count
@@ -2316,7 +2316,7 @@ std::string LLFolderBridge::getLabelSuffix() const
     {
         LLInventoryModel::cat_array_t cat_array;
         LLInventoryModel::item_array_t item_array;
-        gInventory.collectDescendents(getUUID(), cat_array, item_array, TRUE);
+        gInventory.collectDescendents(getUUID(), cat_array, item_array, true);
         S32 count = item_array.size();
         if(count > 0)
         {
@@ -2682,7 +2682,7 @@ bool LLFolderBridge::dragCategoryIntoFolder(LLInventoryCategory* inv_cat,
 		LLInventoryModel::item_array_t descendent_items;
 		if (is_movable)
 		{
-			model->collectDescendents(cat_id, descendent_categories, descendent_items, FALSE);
+			model->collectDescendents(cat_id, descendent_categories, descendent_items, false);
 			for (S32 i=0; i < descendent_categories.size(); ++i)
 			{
 				LLInventoryCategory* category = descendent_categories[i];
@@ -5613,7 +5613,7 @@ bool check_category(LLInventoryModel* model,
 
 	LLInventoryModel::cat_array_t descendent_categories;
 	LLInventoryModel::item_array_t descendent_items;
-	model->collectDescendents(cat_id, descendent_categories, descendent_items, TRUE);
+	model->collectDescendents(cat_id, descendent_categories, descendent_items, true);
 
 	S32 num_descendent_categories = descendent_categories.size();
 	S32 num_descendent_items = descendent_items.size();
@@ -7538,7 +7538,7 @@ void LLLinkFolderBridge::gotoItem()
         LLFolderViewItem *base_folder = LLInventoryPanel::getActiveInventoryPanel()->getItemByID(cat_uuid);
         if (base_folder)
         {
-            base_folder->setOpen(TRUE);
+            base_folder->setOpen(true);
         }
     }
 }

@@ -469,7 +469,7 @@ public:
 
 struct LLInventoryAction
 {
-	static void doToSelected(LLInventoryModel* model, LLFolderView* root, const std::string& action, BOOL user_confirm = TRUE);
+	static void doToSelected(LLInventoryModel* model, LLFolderView* root, const std::string& action, bool user_confirm = true);
 	static void callback_doToSelected(const LLSD& notification, const LLSD& response, class LLInventoryModel* model, class LLFolderView* root, const std::string& action);
 	static void callback_copySelected(const LLSD& notification, const LLSD& response, class LLInventoryModel* model, class LLFolderView* root, const std::string& action);
 	static void onItemsRemovalConfirmation(const LLSD& notification, const LLSD& response, LLHandle<LLFolderView> root);

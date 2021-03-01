@@ -353,7 +353,7 @@ void LLSidepanelItemInfo::refreshFromItem(LLViewerInventoryItem* item)
 	// item in it.
 	LLViewerObject* object = NULL;
 	if(!mObjectID.isNull()) object = gObjectList.findObject(mObjectID);
-	BOOL is_obj_modify = TRUE;
+	bool is_obj_modify = true;
 	if(object)
 	{
 		is_obj_modify = object->permOwnerModify();
@@ -549,9 +549,9 @@ void LLSidepanelItemInfo::refreshFromItem(LLViewerInventoryItem* item)
 
 	if( gSavedSettings.getBOOL("DebugPermissions") )
 	{
-		BOOL slam_perm 			= FALSE;
-		BOOL overwrite_group	= FALSE;
-		BOOL overwrite_everyone	= FALSE;
+		bool slam_perm 			= false;
+		bool overwrite_group	= false;
+		bool overwrite_everyone	= false;
 
 		if (item->getType() == LLAssetType::AT_OBJECT)
 		{
@@ -622,9 +622,9 @@ void LLSidepanelItemInfo::refreshFromItem(LLViewerInventoryItem* item)
 	}
 
 	// Set values.
-	BOOL is_group_copy = (group_mask & PERM_COPY) ? TRUE : FALSE;
-	BOOL is_group_modify = (group_mask & PERM_MODIFY) ? TRUE : FALSE;
-	BOOL is_group_move = (group_mask & PERM_MOVE) ? TRUE : FALSE;
+	bool is_group_copy = (group_mask & PERM_COPY) ? true : false;
+	bool is_group_modify = (group_mask & PERM_MODIFY) ? true : false;
+	bool is_group_move = (group_mask & PERM_MOVE) ? true : false;
 
 	if (is_group_copy && is_group_modify && is_group_move)
 	{
@@ -662,7 +662,7 @@ void LLSidepanelItemInfo::refreshFromItem(LLViewerInventoryItem* item)
 	///////////////
 
 	const LLSaleInfo& sale_info = item->getSaleInfo();
-	BOOL is_for_sale = sale_info.isForSale();
+	bool is_for_sale = sale_info.isForSale();
 	LLComboBox* combo_sale_type = getChild<LLComboBox>("ComboBoxSaleType");
 	LLUICtrl* edit_cost = getChild<LLUICtrl>("Edit Cost");
 
