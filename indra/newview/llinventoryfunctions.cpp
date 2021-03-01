@@ -92,7 +92,7 @@
 
 #include "aoengine.h"			// ## Zi: Animation Overrider
 
-BOOL LLInventoryState::sWearNewClothing = FALSE;
+bool LLInventoryState::sWearNewClothing = false;
 LLUUID LLInventoryState::sWearNewClothingTransactionID;
 std::list<LLUUID> LLInventoryAction::sMarketplaceFolders;
 
@@ -483,12 +483,12 @@ public:
 	}
 };
 
-BOOL get_is_parent_to_worn_item(const LLUUID& id)
+bool get_is_parent_to_worn_item(const LLUUID& id)
 {
 	const LLViewerInventoryCategory* cat = gInventory.getCategory(id);
 	if (!cat)
 	{
-		return FALSE;
+		return false;
 	}
 
 	LLInventoryModel::cat_array_t cats;
@@ -515,7 +515,7 @@ BOOL get_is_parent_to_worn_item(const LLUUID& id)
 
 				if (cat == parent_cat)
 				{
-					return TRUE;
+					return true;
 				}
 
 				parent_id = parent_cat->getParentUUID();
@@ -523,7 +523,7 @@ BOOL get_is_parent_to_worn_item(const LLUUID& id)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 bool get_is_item_worn(const LLUUID& id)
@@ -562,22 +562,22 @@ bool get_is_item_worn(const LLUUID& id)
 	return false;
 }
 
-BOOL get_can_item_be_worn(const LLUUID& id)
+bool get_can_item_be_worn(const LLUUID& id)
 {
 	const LLViewerInventoryItem* item = gInventory.getItem(id);
 	if (!item)
-		return FALSE;
+		return false;
 
 	if (LLAppearanceMgr::instance().isLinkedInCOF(item->getLinkedUUID()))
 	{
 		// an item having links in COF (i.e. a worn item)
-		return FALSE;
+		return false;
 	}
 
 	if (gInventory.isObjectDescendentOf(id, LLAppearanceMgr::instance().getCOF()))
 	{
 		// a non-link object in COF (should not normally happen)
-		return FALSE;
+		return false;
 	}
 	
 	const LLUUID trash_id = gInventory.findCategoryUUIDForType(
@@ -597,12 +597,12 @@ BOOL get_can_item_be_worn(const LLUUID& id)
 			if (isAgentAvatarValid() && gAgentAvatarp->isWearingAttachment(item->getLinkedUUID()))
 			{
 				// Already being worn
-				return FALSE;
+				return false;
 			}
 			else
 			{
 				// Not being worn yet.
-				return TRUE;
+				return true;
 			}
 			break;
 		}
@@ -611,38 +611,38 @@ BOOL get_can_item_be_worn(const LLUUID& id)
 			if(gAgentWearables.isWearingItem(item->getLinkedUUID()))
 			{
 				// Already being worn
-				return FALSE;
+				return false;
 			}
 			else
 			{
 				// Not being worn yet.
-				return TRUE;
+				return true;
 			}
 			break;
 		default:
 			break;
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL get_is_item_removable(const LLInventoryModel* model, const LLUUID& id)
+bool get_is_item_removable(const LLInventoryModel* model, const LLUUID& id)
 {
 	if (!model)
 	{
-		return FALSE;
+		return false;
 	}
 
 	// Can't delete an item that's in the library.
 	if (!model->isObjectDescendentOf(id, gInventory.getRootFolderID()))
 	{
-		return FALSE;
+		return false;
 	}
 
 	// ## Zi: Animation Overrider
 	if(model->isObjectDescendentOf(id,AOEngine::instance().getAOFolder())
 		&& gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
     {
-		return FALSE;
+		return false;
 	}
 	// ## Zi: Animation Overrider
 
@@ -652,20 +652,20 @@ BOOL get_is_item_removable(const LLInventoryModel* model, const LLUUID& id)
 	{
 		if (get_is_item_worn(id))
 		{
-			return FALSE;
+			return false;
 		}
 	}
 
 	const LLInventoryObject *obj = model->getItem(id);
 	if (obj && obj->getIsLinkType())
 	{
-		return TRUE;
+		return true;
 	}
 	if (get_is_item_worn(id))
 	{
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }
 
 bool get_is_item_editable(const LLUUID& inv_item_id)
@@ -712,7 +712,7 @@ void handle_item_edit(const LLUUID& inv_item_id)
 	}
 }
 
-BOOL get_is_category_removable(const LLInventoryModel* model, const LLUUID& id)
+bool get_is_category_removable(const LLInventoryModel* model, const LLUUID& id)
 {
 	// NOTE: This function doesn't check the folder's children.
 	// See LLFolderBridge::isItemRemovable for a function that does
@@ -720,19 +720,19 @@ BOOL get_is_category_removable(const LLInventoryModel* model, const LLUUID& id)
 
 	if (!model)
 	{
-		return FALSE;
+		return false;
 	}
 
 	if (!model->isObjectDescendentOf(id, gInventory.getRootFolderID()))
 	{
-		return FALSE;
+		return false;
 	}
 
 	// ## Zi: Animation Overrider
 	if((id==AOEngine::instance().getAOFolder() || model->isObjectDescendentOf(id,AOEngine::instance().getAOFolder()))
 		&& gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
 	{
-		return FALSE;
+		return false;
 	}
 	// ## Zi: Animation Overrider
 
@@ -741,7 +741,7 @@ BOOL get_is_category_removable(const LLInventoryModel* model, const LLUUID& id)
 	const LLInventoryCategory* category = model->getCategory(id);
 	if (!category)
 	{
-		return FALSE;
+		return false;
 	}
 
 	const LLFolderType::EType folder_type = category->getPreferredType();
@@ -751,7 +751,7 @@ BOOL get_is_category_removable(const LLInventoryModel* model, const LLUUID& id)
 	if (LLFolderType::lookupIsProtectedType(folder_type, id))
 // [/SL:KB]
 	{
-		return FALSE;
+		return false;
 	}
 
 	// Can't delete the outfit that is currently being worn.
@@ -760,24 +760,24 @@ BOOL get_is_category_removable(const LLInventoryModel* model, const LLUUID& id)
 		const LLViewerInventoryItem *base_outfit_link = LLAppearanceMgr::instance().getBaseOutfitLink();
 		if (base_outfit_link && (category == base_outfit_link->getLinkedCategory()))
 		{
-			return FALSE;
+			return false;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL get_is_category_renameable(const LLInventoryModel* model, const LLUUID& id)
+bool get_is_category_renameable(const LLInventoryModel* model, const LLUUID& id)
 {
 	if (!model)
 	{
-		return FALSE;
+		return false;
 	}
 	// ## Zi: Animation Overrider
 	if((id==AOEngine::instance().getAOFolder() || model->isObjectDescendentOf(id,AOEngine::instance().getAOFolder()))
 		&& gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
 	{
-		return FALSE;
+		return false;
 	}
 	// ## Zi: Animation Overrider
 
@@ -789,10 +789,10 @@ BOOL get_is_category_renameable(const LLInventoryModel* model, const LLUUID& id)
 	if (cat && !LLFolderType::lookupIsProtectedType(cat->getPreferredType(), LLUUID::null) && cat->getOwnerID() == gAgent.getID())
 // [/SL:KB]
 	{
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 void show_task_item_profile(const LLUUID& item_uuid, const LLUUID& object_id)

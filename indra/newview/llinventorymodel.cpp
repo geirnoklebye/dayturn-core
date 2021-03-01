@@ -538,7 +538,7 @@ void LLInventoryModel::consolidateForType(const LLUUID& main_id, LLFolderType::E
         for (std::vector<LLUUID>::const_iterator it = list_uuids.begin(); it != list_uuids.end(); ++it)
         {
             LLViewerInventoryItem* item = getItem(*it);
-            changeItemParent(item, main_id, TRUE);
+            changeItemParent(item, main_id, true);
         }
 
         // Move all folders to the main folder
@@ -550,7 +550,7 @@ void LLInventoryModel::consolidateForType(const LLUUID& main_id, LLFolderType::E
         for (std::vector<LLUUID>::const_iterator it = list_uuids.begin(); it != list_uuids.end(); ++it)
         {
             LLViewerInventoryCategory* cat = getCategory(*it);
-            changeCategoryParent(cat, main_id, TRUE);
+            changeCategoryParent(cat, main_id, true);
         }
 
         // Purge the emptied folder
@@ -1408,7 +1408,7 @@ void LLInventoryModel::moveObject(const LLUUID& object_id, const LLUUID& cat_id)
 // Migrated from llinventoryfunctions
 void LLInventoryModel::changeItemParent(LLViewerInventoryItem* item,
 										const LLUUID& new_parent_id,
-										BOOL restamp)
+										bool restamp)
 {
 	if (item->getParentUUID() == new_parent_id)
 	{
@@ -1445,7 +1445,7 @@ void LLInventoryModel::changeItemParent(LLViewerInventoryItem* item,
 // Migrated from llinventoryfunctions
 void LLInventoryModel::changeCategoryParent(LLViewerInventoryCategory* cat,
 											const LLUUID& new_parent_id,
-											BOOL restamp)
+											bool restamp)
 {
 	if (!cat)
 	{
@@ -3571,7 +3571,7 @@ void LLInventoryModel::processBulkUpdateInventory(LLMessageSystem* msg, void**)
 	if (LLInventoryState::sWearNewClothing)
 	{
 		LLInventoryState::sWearNewClothingTransactionID = tid;
-		LLInventoryState::sWearNewClothing = FALSE;
+		LLInventoryState::sWearNewClothing = false;
 	}
 
 	if (tid.notNull() && tid == LLInventoryState::sWearNewClothingTransactionID)
@@ -3703,7 +3703,7 @@ void LLInventoryModel::removeItem(const LLUUID& item_id)
 		if (new_parent.notNull())
 		{
 			LL_INFOS("Inventory") << "Moving to Trash (" << new_parent << "):" << LL_ENDL;
-			changeItemParent(item, new_parent, TRUE);
+			changeItemParent(item, new_parent, true);
 		}
 	}
 }
@@ -3739,7 +3739,7 @@ void LLInventoryModel::removeCategory(const LLUUID& category_id)
 		const LLUUID trash_id = findCategoryUUIDForType(LLFolderType::FT_TRASH);
 		if (trash_id.notNull())
 		{
-			changeCategoryParent(cat, trash_id, TRUE);
+			changeCategoryParent(cat, trash_id, true);
 		}
 	}
 

@@ -276,7 +276,7 @@ void LLFloaterBuyContents::onClickBuy()
 	// We may want to wear this item
 	if (getChild<LLUICtrl>("wear_check")->getValue())
 	{
-		LLInventoryState::sWearNewClothing = TRUE;
+		LLInventoryState::sWearNewClothing = true;
 	}
 
 	// Put the items where we put new folders.

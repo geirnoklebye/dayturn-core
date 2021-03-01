@@ -481,7 +481,7 @@ void LLFolderViewItem::selectItem(void)
 	}
 }
 
-BOOL LLFolderViewItem::isMovable()
+bool LLFolderViewItem::isMovable()
 {
 	return getViewModelItem()->isItemMovable();
 }
@@ -1664,11 +1664,11 @@ void LLFolderViewFolder::extractItem( LLFolderViewItem* item, bool deparent_mode
 	removeChild(item);
 }
 
-BOOL LLFolderViewFolder::isMovable()
+bool LLFolderViewFolder::isMovable()
 {
 	if( !(getViewModelItem()->isItemMovable()) )
 	{
-			return FALSE;
+			return false;
 		}
 
 		for (items_t::iterator iter = mItems.begin();
@@ -1677,7 +1677,7 @@ BOOL LLFolderViewFolder::isMovable()
 			items_t::iterator iit = iter++;
 			if(!(*iit)->isMovable())
 			{
-				return FALSE;
+				return false;
 			}
 		}
 
@@ -1687,10 +1687,10 @@ BOOL LLFolderViewFolder::isMovable()
 			folders_t::iterator fit = iter++;
 			if(!(*fit)->isMovable())
 			{
-				return FALSE;
+				return false;
 			}
 		}
-	return TRUE;
+	return true;
 }
 
 

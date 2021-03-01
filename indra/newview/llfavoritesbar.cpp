@@ -1345,11 +1345,11 @@ bool LLFavoritesBarCtrl::onRenameCommit(const LLSD& notification, const LLSD& re
     return false;
 }
 
-BOOL LLFavoritesBarCtrl::isClipboardPasteable() const
+bool LLFavoritesBarCtrl::isClipboardPasteable() const
 {
 	if (!LLClipboard::instance().hasContents())
 	{
-		return FALSE;
+		return false;
 	}
 
 	std::vector<LLUUID> objects;
@@ -1363,16 +1363,16 @@ BOOL LLFavoritesBarCtrl::isClipboardPasteable() const
 		const LLInventoryCategory *cat = gInventory.getCategory(item_id);
 		if (cat)
 		{
-			return FALSE;
+			return false;
 		}
 
 		const LLInventoryItem *item = gInventory.getItem(item_id);
 		if (item && LLAssetType::AT_LANDMARK != item->getType())
 		{
-			return FALSE;
+			return false;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 void LLFavoritesBarCtrl::pasteFromClipboard() const
@@ -1416,7 +1416,7 @@ void LLFavoritesBarCtrl::onButtonMouseDown(LLUUID id, LLUICtrl* ctrl, S32 x, S32
 	}
 
 	mDragItemId = id;
-	mStartDrag = TRUE;
+	mStartDrag = true;
 
 	S32 screenX, screenY;
 	localPointToScreen(x, y, &screenX, &screenY);
@@ -1426,7 +1426,7 @@ void LLFavoritesBarCtrl::onButtonMouseDown(LLUUID id, LLUICtrl* ctrl, S32 x, S32
 
 void LLFavoritesBarCtrl::onButtonMouseUp(LLUUID id, LLUICtrl* ctrl, S32 x, S32 y, MASK mask)
 {
-	mStartDrag = FALSE;
+	mStartDrag = false;
 	mDragItemId = LLUUID::null;
 }
 
@@ -1452,7 +1452,7 @@ bool LLFavoritesBarCtrl::handleHover(S32 x, S32 y, MASK mask)
 				DAD_LANDMARK, mDragItemId,
 				LLToolDragAndDrop::SOURCE_LIBRARY);
 
-			mStartDrag = FALSE;
+			mStartDrag = false;
 
 			return LLToolDragAndDrop::getInstance()->handleHover(x, y, mask);
 		}

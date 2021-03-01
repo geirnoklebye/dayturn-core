@@ -92,7 +92,7 @@ protected:
 	bool enableSelected(const LLSD& userdata);
 	void doToSelected(const LLSD& userdata);
 	static bool onRenameCommit(const LLSD& notification, const LLSD& response);
-	BOOL isClipboardPasteable() const;
+	bool isClipboardPasteable() const;
 	void pasteFromClipboard() const;
 	
 	void showDropDownMenu();
@@ -161,7 +161,7 @@ private:
 	LLTextBox* mBarLabel;
 
 	LLUUID mDragItemId;
-	BOOL mStartDrag;
+	bool mStartDrag;
 	LLInventoryModel::item_array_t mItems;
 
 	BOOL mTabsHighlightEnabled;
