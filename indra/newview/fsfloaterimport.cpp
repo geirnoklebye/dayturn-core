@@ -37,6 +37,7 @@
 #include "llcheckboxctrl.h"
 #include "lldatapacker.h"
 #include "lldir.h"
+#include "llfilesystem.h"
 #include "llfloaterperms.h"
 #include "llinventorydefines.h"
 #include "llinventoryfunctions.h"
@@ -58,8 +59,6 @@
 #include "llviewerparcelmgr.h"
 #include "llviewerstats.h"
 #include "llviewerregion.h"
-#include "llvfile.h"
-#include "llvfs.h"
 #include "llvolumemessage.h"
 #include "lltrace.h"
 #include "fsexportperms.h"
@@ -1466,7 +1465,8 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 	tid.generate();
 	LLAssetID new_asset_id = tid.makeAssetID(gAgent.getSecureSessionID());
 
-	LLVFile::writeFile((U8*)&asset_data[0], (S32)asset_data.size(), gVFS, new_asset_id, asset_type);
+	LLFileSystem asset_file(new_asset_id, asset_type, LLFileSystem::WRITE);
+	asset_file.write((U8*)&asset_data[0], (S32)asset_data.size());
 
 	LLResourceData* data( new LLResourceData );
 	data->mAssetInfo.mTransactionID = tid;
@@ -1900,9 +1900,9 @@ void uploadCoroutine( LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t &a_httpAdapter
 		return;
 	}
 
-	if (!gVFS->getExists(aAssetId, aAssetType))
+	if (!LLFileSystem::getExists(aAssetId, aAssetType))
 	{
-		LL_WARNS() << "Asset doesn't exist in VFS anymore. Nothing uploaded." << LL_ENDL;
+		LL_WARNS() << "Asset doesn't exist in FS anymore. Nothing uploaded." << LL_ENDL;
 		self->pushNextAsset( LLUUID::null, fs_data->uuid, aResourceData->mAssetInfo.mType );
 		return;
 	}
@@ -1933,7 +1933,7 @@ void uploadCoroutine( LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t &a_httpAdapter
 	LL_DEBUGS( "import" ) << "result: " << responseResult << " new_id: " << new_id << LL_ENDL;
 
 	// rename the file in the VFS to the actual asset id
-	gVFS->renameFile(aAssetId, aAssetType, new_id, aAssetType);
+	LLFileSystem::renameFile(aAssetId, aAssetType, new_id, aAssetType);
 
 	if( item_id.isNull() )
 	{
