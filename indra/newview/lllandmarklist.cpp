@@ -222,23 +222,42 @@ BOOL LLLandmarkList::assetExists(const LLUUID& asset_uuid)
 void LLLandmarkList::onRegionHandle(const LLUUID& landmark_id)
 {
 	LLLandmark* landmark = getAsset(landmark_id);
+	bool failed = false;
 
 	if (!landmark)
 	{
 		LL_WARNS() << "Got region handle but the landmark not found." << LL_ENDL;
-		return;
+		//CA: Don't take an early exit, we need to clean up
+		//return;
+		failed = true;
 	}
 
 	// Calculate landmark global position.
 	// This should succeed since the region handle is available.
 	LLVector3d pos;
-	if (!landmark->getGlobalPos(pos))
+	if (!failed && !landmark->getGlobalPos(pos))
 	{
-		LL_WARNS() << "Got region handle but the landmark global position is still unknown." << LL_ENDL;
-		return;
+	  //CA: The main time this gets triggered is when there's a landmark for a region that no longer exists, which returns with
+	  //a global position of 0,0. Demote this from LL_WARNS to LL_DEBUGS to cut down log spam. Also, we don't want to leak memory
+	  //so instead of returning here we'll clean up
+		LL_DEBUGS() << "Got region handle but the landmark global position is still unknown." << LL_ENDL;
+		//return;
+		failed = true;
 	}
-
-	makeCallbacks(landmark_id);
+  if (!failed)
+  {
+	  makeCallbacks(landmark_id);
+	}
+	else if (mLoadedCallbackMap.size() > 0)
+  {
+	  //CA: taking an early exit here is quite common for an avatar with lots of dead landmarks in their inventory - let's not leak memory...
+    // This seems to be empty most times the warning would be raised, but keep it here for tidiness
+  	loaded_callback_map_t::iterator it;
+  	while((it = mLoadedCallbackMap.find(landmark_id)) != mLoadedCallbackMap.end())
+  	{
+  		mLoadedCallbackMap.erase(it);
+  	}
+  }
 }
 
 void LLLandmarkList::makeCallbacks(const LLUUID& landmark_id)
