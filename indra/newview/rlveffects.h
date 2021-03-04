@@ -17,7 +17,7 @@
 #pragma once
 
 #include "llvisualeffect.h"
-#include "rrinterfacehelper.h"
+#include "RRInterfaceHelper.h"
 
 #include <boost/variant.hpp>
 
