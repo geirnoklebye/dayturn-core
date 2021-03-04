@@ -2469,11 +2469,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>4209ee5060697805fc28d716af884d1d</string>
+              <string>c235250fbe63dddf3a98cbacd11f6281</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.5.201670936-darwin64-201670936.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.210631836-darwin64-210631836.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -2495,11 +2495,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>16b51f82e085a9fe70eb2dc28cfac98f</string>
+              <string>3221077b092549cf0274ad3292ce3fb8</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.5.201670952-linux64-201670952.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.210631353-linux64-210631353.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2521,18 +2521,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c5b6eddc0e933a8d337332f7e48f8d6d</string>
+              <string>cddf280a0e71ce4f3d66938cc089eb38</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.0.5.201670923-windows64-201670923-VS2017.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.210631653-windows64-210631653.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>8.0.5.201670952</string>
+        <string>8.1.210631353</string>
       </map>
       <key>libhunspell</key>
       <map>
