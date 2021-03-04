@@ -746,6 +746,7 @@ set(viewer_SOURCE_FILES
     llviewerwearable.cpp
     llviewerwindow.cpp
     llviewerwindowlistener.cpp
+	llvisualeffect.cpp
     llvlcomposition.cpp
     llvlmanager.cpp
     llvoavatar.cpp
@@ -790,11 +791,12 @@ set(viewer_SOURCE_FILES
     viewerinfo.cpp
     sanitycheck.cpp
     streamtitledisplay.cpp
-	NACLfloaterexploresounds.cpp
-	  kokuarlvfloaters.cpp
-	  kokuarlvextras.cpp
-	  kokuachatbar.cpp
-	  kokuafloaterbulkrename.cpp
+    NACLfloaterexploresounds.cpp
+    kokuarlvfloaters.cpp
+    kokuarlvextras.cpp
+    kokuachatbar.cpp
+    kokuafloaterbulkrename.cpp
+    rlveffects.cpp
     )
 
 set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING
@@ -1422,6 +1424,7 @@ set(viewer_HEADER_FILES
     llviewerwearable.h
     llviewerwindow.h
     llviewerwindowlistener.h
+	llvisualeffect.h
     llvlcomposition.h
     llvlmanager.h
     llvoavatar.h
@@ -1468,11 +1471,12 @@ set(viewer_HEADER_FILES
     VertexCache.h
     viewerinfo.h
     VorbisFramework.h
-	NACLfloaterexploresounds.h
-	  kokuarlvfloaters.h
-	  kokuarlvextras.h
-	  kokuachatbar.h
-	  kokuafloaterbulkrename.h
+    NACLfloaterexploresounds.h
+    kokuarlvfloaters.h
+    kokuarlvextras.h
+    kokuachatbar.h
+    kokuafloaterbulkrename.h
+    rlveffects.h
     )
     
 # Generate the build version here to avoid rebuilding all of newview each time

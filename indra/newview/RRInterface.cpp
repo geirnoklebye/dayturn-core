@@ -88,6 +88,7 @@
 #include "llviewershadermgr.h" // new include for EEP
 #include "llviewermessage.h"
 #include "llviewerparcelmgr.h"
+#include "llvisualeffect.h" // from Catznip
 #include "llworldmapmessage.h"
 #include "pipeline.h"
 
@@ -452,6 +453,7 @@ void refreshCachedVariable (std::string var)
 	else if (var == "alwaysrun")				gAgent.mRRInterface.mContainsAlwaysRun = contained;
 	//CA add viewscript since the console needs to check for it
 	else if (var == "viewscript")				gAgent.mRRInterface.mContainsViewScript = contained;
+	else if (var == "setsphere")				gAgent.mRRInterface.mContainsSetsphere = contained;
 		
 	//else if (var == "moveup")					gAgent.mRRInterface.mContainsMoveUp = contained;
 	//else if (var == "movedown")				gAgent.mRRInterface.mContainsMoveDown = contained;
@@ -781,6 +783,7 @@ RRInterface::RRInterface():
 	, mContainsRun(FALSE)
 	, mContainsAlwaysRun(FALSE)
 	, mContainsTp(FALSE)
+	, mContainsSetsphere(FALSE)
 	, mHandleNoStrip(TRUE)
 	, mContainsCamTextures(FALSE)
 	, mUserUpdateAttachmentsFirstCall(TRUE)
@@ -932,6 +935,32 @@ BOOL RRInterface::containsSubstr (std::string action)
 	return FALSE;
 }
 
+std::string RRInterface::get(LLUUID object_uuid, std::string action, std::string dflt /*= ""*/)
+{
+	// action is a single action
+	LLStringUtil::toLower(action);
+	std::string res = dflt;
+	std::string command;
+	std::string behav;
+	std::string option;
+	std::string param;
+	LLUUID uuid;
+	for (RRMAP::iterator it = mSpecialObjectBehaviours.begin(); it != mSpecialObjectBehaviours.end(); ++it) {
+		uuid.set(it->first);
+		if (uuid == object_uuid) {
+			command = it->second;
+			LLStringUtil::toLower(command);
+			if (parseCommand(command + "=n", behav, option, param)) {
+				if (action == behav) {
+					res = option;
+					break;
+				}
+			}
+		}
+	}
+	return res;
+}
+
 F32 RRInterface::getMax (std::string action, F32 dflt /*= EXTREMUM*/)
 {
 	// action can be a list of behavs separated by commas
@@ -1020,7 +1049,7 @@ LLColor3 RRInterface::getMixedColors (std::string action, LLColor3 dflt /*= LLCo
 		LLStringUtil::toLower(command);
 		if (parseCommand (command+"=n", behav, option, param)) {
 			if (action.find("," + behav + ",") != -1) {
-				tokens = parse(option, ";");
+				tokens = parse(option, ";", 3);
 				tmp.mV[0] = atof (tokens[0].c_str());
 				tmp.mV[1] = atof (tokens[1].c_str());
 				tmp.mV[2] = atof (tokens[2].c_str());
@@ -1311,6 +1340,9 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 				gSavedSettings.setF32("CameraAngle", LLViewerCamera::getInstance()->getView()); // setView may have clamped it.
 			}
 		}
+		else if (canon_action.find("setsphere") == 0) {
+			updateSetsphere();
+		}
 		else if (canon_action == "fartouch"
 			|| canon_action == "touchfar"
 			|| canon_action == "sittp"
@@ -1403,6 +1435,9 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 			else if (canon_action.find("cam") == 0 || canon_action.find("setcam") == 0) {
 				updateCameraLimits ();
 			}
+			else if (canon_action.find ("setsphere") == 0) {
+				updateSetsphere();
+			}
 			else if (canon_action == "fartouch"
 				|| canon_action == "touchfar"
 				|| canon_action == "sittp"
@@ -1457,6 +1492,7 @@ BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 	}
 	updateAllHudTexts();
 	updateCameraLimits();
+	updateSetsphere();
 	updateLimits();
 	if (gAgentAvatarp && !gAgentAvatarp->isSitting()) { // If we are not sitting, then we can remove the @standtp restriction normally
 		gAgent.mRRInterface.mLastStandingLocation.clear();
@@ -1536,7 +1572,7 @@ BOOL RRInterface::garbageCollector (BOOL all) {
     return res;
 }
 
-std::deque<std::string> RRInterface::parse (std::string str, std::string sep)
+std::deque<std::string> RRInterface::parse (std::string str, std::string sep, int size_min /*= 0*/)
 {
 	int ind;
 	int length = sep.length();
@@ -1559,6 +1595,10 @@ std::deque<std::string> RRInterface::parse (std::string str, std::string sep)
 		}
 	} while (ind!=-1);
 	
+	while (res.size() < size_min) {
+		res.push_back("");
+	}
+
 	return res;
 }
 
@@ -3709,7 +3749,7 @@ BOOL RRInterface::forceTeleport(std::string location, const LLVector3& vecLookAt
 	S64 x = 128;
 	S64 y = 128;
 	S64 z = 0;
-	std::deque<std::string> tokens=parse (location, "/");
+	std::deque<std::string> tokens=parse (location, "/", 3);
 	if (tokens.size()==3) {
 		x=atoi (tokens.at(0).c_str());
 		y=atoi (tokens.at(1).c_str());
@@ -4124,7 +4164,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 	else if (command == "bluehorizon") {
 		LLColor3 bluehorizon = psky->getBlueHorizon();
-		std::deque<std::string> tokens = parse(option, ";");
+		std::deque<std::string> tokens = parse(option, ";", 3);
 		bluehorizon.mV[0] = atof(tokens.at(0).c_str()) * 2;
 		bluehorizon.mV[1] = atof(tokens.at(1).c_str()) * 2;
 		bluehorizon.mV[2] = atof(tokens.at(2).c_str()) * 2;
@@ -4189,7 +4229,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 	else if (command == "bluedensity") {
 		LLColor3 bluedensity = psky->getBlueDensity();
-		std::deque<std::string> tokens = parse(option, ";");
+		std::deque<std::string> tokens = parse(option, ";", 3);
 		bluedensity.mV[0] = atof(tokens.at(0).c_str()) * 2;
 		bluedensity.mV[1] = atof(tokens.at(1).c_str()) * 2;
 		bluedensity.mV[2] = atof(tokens.at(2).c_str()) * 2;
@@ -4299,7 +4339,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 	else if (command == "sunmooncolor" || command == "sunlightcolor") {
 		LLColor3 suncolour = psky->getSunlightColor();
-		std::deque<std::string> tokens = parse(option, ";");
+		std::deque<std::string> tokens = parse(option, ";", 3);
 		suncolour.mV[0] = atof(tokens.at(0).c_str()) * 3;
 		suncolour.mV[1] = atof(tokens.at(1).c_str()) * 3;
 		suncolour.mV[2] = atof(tokens.at(2).c_str()) * 3;
@@ -4355,7 +4395,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 	else if (command == "ambient") { // vector3 (we don't care about intensity)
 		LLColor3 ambientcolor = psky->getAmbientColor();
-		std::deque<std::string> tokens = parse(option, ";");
+		std::deque<std::string> tokens = parse(option, ";", 3);
 		ambientcolor.mV[0] = atof(tokens.at(0).c_str()) * 3;
 		ambientcolor.mV[1] = atof(tokens.at(1).c_str()) * 3;
 		ambientcolor.mV[2] = atof(tokens.at(2).c_str()) * 3;
@@ -4566,7 +4606,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 	else if (command == "cloudcolor") {
 		LLColor3 cloudcolor = psky->getCloudColor();
-		std::deque<std::string> tokens = parse(option, ";");
+		std::deque<std::string> tokens = parse(option, ";", 3);
 		cloudcolor.mV[0] = atof(tokens.at(0).c_str());
 		cloudcolor.mV[1] = atof(tokens.at(1).c_str());
 		cloudcolor.mV[2] = atof(tokens.at(2).c_str());
@@ -4606,7 +4646,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 	else if (command == "cloud" || command == "clouddensity") {
 		LLColor3 clouddetail = psky->getCloudPosDensity1();
-		std::deque<std::string> tokens = parse(option, ";");
+		std::deque<std::string> tokens = parse(option, ";", 3);
 		clouddetail.mV[0] = atof(tokens.at(0).c_str());
 		clouddetail.mV[1] = atof(tokens.at(1).c_str());
 		clouddetail.mV[2] = atof(tokens.at(2).c_str());
@@ -4646,7 +4686,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 	else if (command == "clouddetail") {
 		LLColor3 clouddetail = psky->getCloudPosDensity2();
-		std::deque<std::string> tokens = parse(option, ";");
+		std::deque<std::string> tokens = parse(option, ";", 3);
 		clouddetail.mV[0] = atof(tokens.at(0).c_str());
 		clouddetail.mV[1] = atof(tokens.at(1).c_str());
 		clouddetail.mV[2] = atof(tokens.at(2).c_str());
@@ -4692,7 +4732,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		//params->mCurParams.setCloudScrollY (val+10);
 	}
 	else if (command == "cloudscroll") {
-		std::deque<std::string> tokens = parse(option, ";");
+		std::deque<std::string> tokens = parse(option, ";", 2);
 		psky->setCloudScrollRateX(atof(tokens.at(0).c_str()) + 10);
 		psky->setCloudScrollRateY(atof(tokens.at(1).c_str()) + 10);
 		psky->update();
@@ -6364,6 +6404,8 @@ void RRInterface::drawRenderLimit (BOOL force_opaque /*= FALSE*/)
 
 void RRInterface::drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 alpha)
 {
+	// Note : This method has nothing to do with @setsphere, which came much later, it is used for drawing the original vision spheres.
+
 	// Don't bother if the sphere is invisible
 	if (alpha < 0.0001f)
 	{
@@ -6406,6 +6448,211 @@ LLJoint* RRInterface::getCamDistDrawFromJoint ()
 	}
 	return mCamDistDrawFromJoint;
 }
+
+
+BOOL RRInterface::updateSetsphere()
+{
+	/*
+	This method exists to emulate the @setsphere feature of RLVa by reusing most of its code. Problem is, RLVa uses "setsphere_...=force" to set parameters instead of "setsphere_...=n",
+	which means RLVa does not retain the parameters as restrictions unlike RLV. This difference completely changes the high level management algorithm of the "setsphere" restrictions.
+	To emulate while reusing as much code as possible, the algorithm is as follows :
+
+		Part 1 : create the preliminary lists
+		Have a list "E" of exactly ESphereMode::Count (*) "RlvSphereEffect" objects with default values, each mode set to be equal to its place in the list (0 to count-1), and set them all to "inactive" for now because not all possible modes are used at any given time
+		Have a map "UM" UUID->mode to retain each UUID that issued a "setsphere=n" restriction and its chosen mode (if not specified, default is 0), also set the corresponding effects to "active"
+		(*) that's 5 at the time of this writing
+
+		Part 2 : calculate the final values for each mode
+		For each command in the main RLV map
+		  if the command is a setsphere_* one (not "setsphere" or "setsphere_mode" but any other kind)
+		    if the object that issued the command is part of UM
+			  get the corresponding mode from UM
+			  according to the type of command, check its value against the one stored in the corresponding effect mode in E
+				=> change the stored value only if necessary (ex : if distmin is less than the stored one then store the new one) or if it hasn't been changed before (so we can choose whatever default value we want without breaking the mixing)
+			end if
+		  end if
+		end for
+
+		Part 3 : add the active effects in LLVfxManager
+		clear the list of effects in LLVfxManager
+		for each effect in E
+		  if it is active, add it to LLVfxManager (with the final values we calculated in Part 2)
+		end for
+	*/
+
+	// If we're not using deferred but are using Windlight shaders we need to force use of FBO and depthmap texture
+	if ((!LLPipeline::RenderDeferred) && (LLPipeline::WindLightUseAtmosShaders) && (!LLPipeline::sUseDepthTexture))
+	{
+		LLRenderTarget::sUseFBO = true;
+		LLPipeline::sUseDepthTexture = true;
+
+		gPipeline.releaseGLBuffers();
+		gPipeline.createGLBuffers();
+		gPipeline.resetVertexBuffers();
+		LLViewerShaderMgr::instance()->setShaders();
+	}
+
+	// Part 1 : create a list of ESphereMode::Count inactive effects, some of these effects will be copied to LLVfxManager later and this list and its contents will be erased
+	std::deque<RlvSphereEffect*> effects;
+	int i;
+	for (i = 0; i < (int)RlvSphereEffect::ESphereMode::Count; i++) {
+		RlvSphereEffect* effect = new RlvSphereEffect(LLUUID::null); // LLUUID::null to indicate that this effect is not active at the moment
+		effect->setMode((RlvSphereEffect::ESphereMode)i);
+		effects.push_back(effect);
+	}
+
+	// For each "setsphere", look for a "setsphere_mode" issued by the same object (or 0 if none).
+	std::map<LLUUID, RlvSphereEffect::ESphereMode> map_uuid_to_mode;
+	LLUUID uuid;
+	std::string command;
+	std::string behav;
+	std::string option;
+	std::string param;
+	RlvSphereEffect::ESphereMode mode;
+	RRMAP::iterator it;
+	for (it = mSpecialObjectBehaviours.begin(); it != mSpecialObjectBehaviours.end(); ++it) {
+		command = it->second;
+		if (parseCommand(command + "=n", behav, option, param)) {
+			if (behav == "setsphere") {
+				uuid.set (it->first); // UUID of the object that issued this "setsphere" command
+				mode = (RlvSphereEffect::ESphereMode)atoi (get(uuid, "setsphere_mode", "0").c_str()); // find the mode set by this object in the RRMap, or 0 if no mode was specified
+				if ((int)mode >= 0 && (int)mode < effects.size()) { // make sure the mode is inside the list of known modes
+					map_uuid_to_mode[uuid] = mode; // add this UUID to the map with the mode we found
+					effects.at((int)mode)->setActive(TRUE); // activate this effect so it will be used by LLVfxManager 
+				}
+			}
+		}
+	}
+
+	// Part 2 : calculate the final values for each effect, mixing them to stay as restrictive as possible (for some we retain the minimum, for others we multiply etc)
+	// If a value hasn't been changed since the creation of this effect, simply replace it with the new value without mixing in any way, this allows us to set some default values to the effect without impeding the mixing afterwards.
+	std::string str_setsphere_ = "setsphere_";
+	int len_str_setsphere_ = str_setsphere_.length();
+	RlvSphereEffect* effect; // one of the effects we've created and stored above
+	for (it = mSpecialObjectBehaviours.begin(); it != mSpecialObjectBehaviours.end(); ++it) {
+		command = it->second;
+		if (parseCommand(command + "=n", behav, option, param)) {
+			if (behav.find (str_setsphere_) == 0) { // is the command a "setsphere_*" one ?
+				uuid.set (it->first); // UUID of the object that issued this "setsphere_" command
+				mode = map_uuid_to_mode[uuid];
+				if ((int)mode >= 0 && (int)mode < effects.size()) { // make sure the mode is inside the list of known modes
+					effect = effects.at((int)mode);
+					std::string last_part = behav.substr(len_str_setsphere_);
+					if (effect) {
+						float f_option = atof(option.c_str()); // most options are floats or ints, only "param" is a vector and has to be parsed specifically
+						int i_option = atoi(option.c_str()); // most options are floats or ints, only "param" is a vector and has to be parsed specifically
+						if (f_option < 0.f) {
+							f_option = 0.f; // also a float option cannot be negative
+						}
+						if (i_option < 0) {
+							i_option = 0; // also an int option cannot be negative
+						}
+						if (last_part == "distmin") { // mixing here means retaining the lowest value
+							if (!effect->m_nChangedDistanceMin || f_option < effect->getDistanceMin()) {
+								effect->setDistanceMin(f_option);
+							}
+						}
+						else if (last_part == "distmax") { // mixing here means retaining the lowest value
+							if (!effect->m_nChangedDistanceMax || f_option < effect->getDistanceMax()) {
+								effect->setDistanceMax(f_option);
+							}
+						}
+						else if (last_part == "distextend") { // mixing here means retaining the highest value
+							if (!effect->m_nChangedDistExtend || i_option < (int)(effect->getDistExtend())) {
+								effect->setDistExtend((RlvSphereEffect::ESphereDistExtend)i_option);
+							}
+						}
+						else if (last_part == "valuemin") { // mixing here means retaining the highest value
+							if (!effect->m_nChangedValueMin || f_option > effect->getValueMin()) {
+								effect->setValueMin(f_option);
+							}
+						}
+						else if (last_part == "valuemax") { // mixing here means retaining the highest value
+							if (!effect->m_nChangedValueMax || f_option > effect->getValueMax()) {
+								effect->setValueMax(f_option);
+							}
+						}
+						else if (last_part == "tween") { // mixing here means retaining the lowest value
+							if (!effect->m_nChangedTweenDuration || f_option < effect->getTweenDuration()) {
+								effect->setTweenDuration(f_option);
+							}
+						}
+						else if (last_part == "origin") { // mixing here means retaining the lowest value (i.e. if any object centers on the avatar, we center on the avatar)
+							if (!effect->m_nChangedOrigin || i_option < (int)(effect->getOrigin())) {
+								effect->setOrigin((RlvSphereEffect::ESphereOrigin)i_option);
+							}
+						}
+						else if (last_part == "param") { // mixing here actually depends on the mode
+							LLStringUtil::replaceString(option, "/", ";"); // Catznip uses "/" for some reason, but ";" should be used for consistency ("/" is used for folders and some folder commands have multiple options separated by ";")
+							std::deque<std::string> tokens = parse(option, ";", 4); // tokens has a size of 4 or more to avoid crashing during the comparisons below
+							LLVector4 v_option (atof (tokens.at(0).c_str()), atof (tokens.at(1).c_str()), atof (tokens.at(2).c_str()), atof (tokens.at(3).c_str()));
+							LLVector4 param_final = effect->getParams();
+							switch (mode) {
+								case RlvSphereEffect::ESphereMode::Blend: { // in blend mode we mix by multiplying (each field individually) the RGB vectors
+									if (!effect->m_nChangedParams) {
+										param_final = v_option;
+									}
+									else {
+										param_final.mV[0] *= v_option.mV[0];
+										param_final.mV[1] *= v_option.mV[1];
+										param_final.mV[2] *= v_option.mV[2];
+									}
+									break;
+								}
+								case RlvSphereEffect::ESphereMode::Blur: { // in fixed blur mode we don't mix because we don't use the params at all
+									break;
+								}
+								case RlvSphereEffect::ESphereMode::BlurVariable: { // in kernel blur mode we mix by choosing the highest value of <kernel_size> between the params
+									if (!effect->m_nChangedParams || v_option.mV[0] > param_final.mV[0]) param_final.mV[0] = v_option.mV[0];
+									break;
+								}
+								case RlvSphereEffect::ESphereMode::ChromaticAberration: // in chromatic aberration and pixelate modes we mix by taking the highest values of each field
+								case RlvSphereEffect::ESphereMode::Pixelate: {
+									if (!effect->m_nChangedParams) {
+										param_final = v_option;
+									}
+									else {
+										if (v_option.mV[0] > param_final.mV[0]) param_final.mV[0] = v_option.mV[0];
+										if (v_option.mV[1] > param_final.mV[1]) param_final.mV[1] = v_option.mV[1];
+										if (v_option.mV[2] > param_final.mV[2]) param_final.mV[2] = v_option.mV[2];
+										if (v_option.mV[3] > param_final.mV[3]) param_final.mV[3] = v_option.mV[3];
+									}
+									break;
+								}
+								default:
+									break;
+							}
+							// Update the parameters of the effect after mixing.
+							effect->setParams(param_final);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Part 3 : add the active effects to LLVfxManager
+	// First, clear the manager to destroy the old effects.
+	LLVfxManager::instance().clearEffects();
+
+	// Add only the active effects.
+	for (i = 0; i < (int)RlvSphereEffect::ESphereMode::Count; i++) {
+		RlvSphereEffect* effect = effects.at(i);
+		// If the effect is active then add it to LLVfxManager, otherwise destroy it.
+		if (effect->getActive()) {
+			LLVfxManager::instance().addEffect(effect); // it will be destroyed later
+		}
+		else {
+			delete effect;
+		}
+	}
+	// All the effects that have indeed been added to LLVfxManager will be destroyed next time we call LLVfxManager::instance().clearEffects(), which means next time we call RRInterface::updateSetsphere().
+
+	return TRUE;
+}
+
+
+
 
 BOOL RRInterface::isBlacklisted (std::string action, bool force)
 {

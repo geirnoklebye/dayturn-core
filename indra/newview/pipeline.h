@@ -606,6 +606,9 @@ public:
 	static bool				sRenderingHUDs;
     static F32              sDistortionWaterClipPlaneMargin;
 	static F32        		sVolumeSAFrame;
+// [RLVa:KB] - @setsphere
+	static bool				sUseDepthTexture;
+// [/RLVa:KB]
 
 	static LLTrace::EventStatHandle<S64> sStatBatchSize;
 

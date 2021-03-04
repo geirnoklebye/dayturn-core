@@ -30,7 +30,7 @@
 
 // Relocated to this file to avoid recompiling most of newview through a change to llagent.h (which includes RRinterface.h)
 
-#define RR_VERSION_NUM "2092901"
-#define RR_VERSION "2.09.29.01"
+#define RR_VERSION_NUM "2093000"
+#define RR_VERSION "2.09.30.00"
 
 #endif // LL_RRINTERFACEVERSION_H

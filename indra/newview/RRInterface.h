@@ -83,6 +83,7 @@
 #include "llviewertexture.h"
 #include "llwearable.h"
 #include "llwearabletype.h"
+#include "rlveffects.h"
 
 #include "v3dmath.h"
 
@@ -133,6 +134,7 @@ public:
 	BOOL isAllowed (LLUUID object_uuid, std::string action, BOOL log_it = TRUE);
 	BOOL contains (std::string action); // return TRUE if the action is contained
 	BOOL containsSubstr (std::string action); // return TRUE if the action, or an action which name contains the specified name, is contained
+	std::string get (LLUUID object_uuid, std::string action, std::string dflt = ""); // returns the value of the @action:...=n restriction, if any (otherwise return the specified default)
 	F32 getMax (std::string action, F32 dflt = EXTREMUM); // returns the max value of all the @action:...=n restrictions
 	F32 getMin (std::string action, F32 dflt = -EXTREMUM); // returns the min value of all the @action:...=n restrictions
 	LLColor3 getMixedColors (std::string action, LLColor3 dflt = LLColor3::black); // return the product of all the colors specified by actions "action"
@@ -148,7 +150,7 @@ public:
 	BOOL clear (LLUUID object_uuid, std::string command=""); // clear restrictions
 	void replace (LLUUID what, LLUUID by); // replace a list of restrictions by restrictions linked to another UUID
 	BOOL garbageCollector (BOOL all=TRUE); // if false, don't clear rules attached to NULL_KEY as they are issued from external objects (only cleared when changing parcel)
-	std::deque<std::string> parse (std::string str, std::string sep); // utility function
+	std::deque<std::string> parse (std::string str, std::string sep, int size_min = 0); // utility function (size_min can be specified to make sure the returned list is at least this size)
 	void notify (LLUUID object_uuid, std::string action, std::string suffix); // scan the list of restrictions, when finding "notify" say the action on the specified channel
 
 	BOOL parseCommand (std::string command, std::string& behaviour, std::string& option, std::string& param);
@@ -262,6 +264,8 @@ public:
 	void drawRenderLimit (BOOL force_opaque = FALSE);
 	void drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 alpha);
 
+	BOOL updateSetsphere(); // call when receiving any @setsphere-related command (this is a feature from RLVa)
+
 	void updateLimits();
 
 	LLJoint* getCamDistDrawFromJoint ();
@@ -296,6 +300,7 @@ public:
 	BOOL mContainsTp;
 	BOOL mContainsCamTextures;
 	BOOL mContainsShownametags;
+	BOOL mContainsSetsphere;
 	// CA
 	BOOL mContainsViewScript;
 	BOOL mContainsShowNearby;
