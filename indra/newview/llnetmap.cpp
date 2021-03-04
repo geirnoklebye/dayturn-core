@@ -47,6 +47,7 @@
 #include "llagentcamera.h"
 #include "llappviewer.h" // for gDisconnected
 #include "llavataractions.h"
+#include "llfloatersidepanelcontainer.h"
 #include "llcallingcard.h" // LLAvatarTracker
 #include "llfloaterworldmap.h"
 #include "llparcel.h"
@@ -130,6 +131,7 @@ BOOL LLNetMap::postBuild()
 	registrar.add("Minimap.ClearMark", boost::bind(&LLNetMap::handleClearMark, this));
 	registrar.add("Minimap.ClearMarks", boost::bind(&LLNetMap::handleClearMarks, this));
 	// </FS:Ansariel>
+	registrar.add("Minimap.ShowProfile", boost::bind(&LLNetMap::handleShowProfile, this, _2));
 	registrar.add("Minimap.ToggleOverlay", boost::bind(&LLNetMap::handleOverlayToggle, this, _2));
 
 	registrar.add("Minimap.AddToContactSet", boost::bind(&LLNetMap::handleAddToContactSet, this));
@@ -1117,6 +1119,24 @@ BOOL LLNetMap::handleMouseUp( S32 x, S32 y, MASK mask )
 	return FALSE;
 }
 
+void LLNetMap::handleShowProfile(const LLSD& sdParam) const
+{
+	const std::string strParam = sdParam.asString();
+	if ("closest" == strParam)
+	{
+		LLAvatarActions::showProfile(mClosestAgentRightClick);
+	}
+	else if ("place" == strParam)
+	{
+		LLSD sdParams;
+		sdParams["type"] = "remote_place";
+		sdParams["x"] = mPosGlobalRightClick.mdV[VX];
+		sdParams["y"] = mPosGlobalRightClick.mdV[VY];
+		sdParams["z"] = mPosGlobalRightClick.mdV[VZ];
+
+		LLFloaterSidePanelContainer::showPanel("places", sdParams);
+	}
+}
 BOOL LLNetMap::handleRightMouseDown(S32 x, S32 y, MASK mask)
 {
 	if (mPopupMenu)
@@ -1126,10 +1146,13 @@ BOOL LLNetMap::handleRightMouseDown(S32 x, S32 y, MASK mask)
 		mPosGlobalRightClick = viewPosToGlobal(x, y);
 
 		mPopupMenu->setItemVisible("Add to Set Multiple", mClosestAgentsToCursor.size() > 0); // 1 in FS because it has an avatar menu under More...
+		mPopupMenu->setItemVisible("View Profile", mClosestAgentsToCursor.size() == 1);
 //		bool can_show_names = !RlvActions::hasBehaviour(RLV_BHVR_SHOWNAMES);
 		bool can_show_names = true;
 		mPopupMenu->setItemEnabled("Add to Set Multiple", can_show_names);
+		mPopupMenu->setItemEnabled("View Profile", can_show_names);
 		mPopupMenu->setItemVisible("MarkAvatar", mClosestAgentToCursor.notNull());
+		mPopupMenu->setItemEnabled("Place Profile", true); //RlvActions::canShowLocation());
 		mPopupMenu->buildDrawLabels();
 		mPopupMenu->updateParent(LLMenuGL::sMenuContainer);
 		mPopupMenu->setItemVisible("Stop Tracking", LLTracker::isTracking(0));
