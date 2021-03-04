@@ -8,6 +8,13 @@
  top="724"
  visible="false"
  width="128">
+  <menu_item_call
+   label="View Profile"
+   name="View Profile">
+    <menu_item_call.on_click
+     function="Minimap.ShowProfile"
+     parameter="closest" />
+  </menu_item_call>
     <menu
      label="Chat Distance Rings"
      name="Chat Distance Rings Menu">
@@ -250,6 +257,13 @@
         <menu_item_call.on_click
           function="Minimap.Tracker"
           parameter="task_properties" />
+    </menu_item_call>
+    <menu_item_call
+     label="Place Profile"
+     name="Place Profile">
+        <menu_item_call.on_click
+         function="Minimap.ShowProfile"
+         parameter="place" />
     </menu_item_call>
     <menu_item_call
       label="Open World Map"

@@ -155,6 +155,7 @@ private:
 public:
 	void			setSelected(uuid_vec_t uuids) { sSelected=uuids; };
 // <FS:CR> Minimap improvements
+	void			handleShowProfile(const LLSD& sdParam) const;
 	uuid_vec_t		mClosestAgentsToCursor;
 	LLVector3d		mPosGlobalRightClick;
 	LLUUID			mClosestAgentRightClick;
