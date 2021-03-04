@@ -75,7 +75,6 @@ set(cmake_SOURCE_FILES
     LLSharedLibs.cmake
     LLTestCommand.cmake
     LLUI.cmake
-    LLVFS.cmake
     LLWindow.cmake
     LLXML.cmake
     Linking.cmake
