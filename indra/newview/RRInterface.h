@@ -84,6 +84,8 @@
 #include "llwearable.h"
 #include "llwearabletype.h"
 
+#include "v3dmath.h"
+
 extern BOOL gRRenabled;
 
 // RLV retains its restrictions in a multimap (i.e. several entries per key), linking the restrictions to the UUIDs of the objects
