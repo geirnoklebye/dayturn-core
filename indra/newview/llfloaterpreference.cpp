@@ -1673,7 +1673,7 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
 //MK
 	// If unable to change windlight or debug settings, make sure the Basic & Advanced
 	// Shaders checkboxes are ticked and disabled
-	if (gRRenabled && (gAgent.mRRInterface.mContainsSetenv || gAgent.mRRInterface.mContainsSetdebug))
+	if (gRRenabled && (gAgent.mRRInterface.mContainsSetenv || gAgent.mRRInterface.mContainsSetdebug || gAgent.mRRInterface.mContainsSetsphere))
 	{
 		//gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
 		gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE);
