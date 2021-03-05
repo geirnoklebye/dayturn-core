@@ -41,6 +41,7 @@
 #include "llfloaterimnearbychat.h"
 #include "llfloatermap.h"
 #include "llfloaterpostprocess.h"
+#include "llfloaterpreference.h"
 #include "llfloaterreg.h"
 #include "llfloatersettingsdebug.h"
 #include "llfloatersidepanelcontainer.h"
@@ -1341,6 +1342,19 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 			}
 		}
 		else if (canon_action.find("setsphere") == 0) {
+			gSavedSettings.setBOOL("RenderObjectBump", TRUE); // make sure to render "Bump Mapping and Shiny"
+			gSavedSettings.setBOOL("RenderTransparentWater", TRUE); // make sure to render "Transparent Water"
+			gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE); // make sure the atmospheric shaders are turned on
+			gSavedSettings.setBOOL("RenderDeferred", TRUE); // make sure Advanced Lighting Model is on
+			gSavedSettings.setBOOL("RenderDepthOfField", FALSE); // make sure DoF is off otherwise we can see through the sphere by looking through alpha-blended rigged surfaces
+			LLFloaterPreference* preferences = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
+			if (preferences) {
+				preferences->refreshEnabledState();
+			}
+			LLFloaterPreferenceGraphicsAdvanced* floater_graphics_advanced = LLFloaterReg::findTypedInstance<LLFloaterPreferenceGraphicsAdvanced>("prefs_graphics_advanced");
+			if (floater_graphics_advanced) {
+				floater_graphics_advanced->refreshEnabledState();
+			}
 			updateSetsphere();
 		}
 		else if (canon_action == "fartouch"
@@ -1437,6 +1451,14 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 			}
 			else if (canon_action.find ("setsphere") == 0) {
 				updateSetsphere();
+				LLFloaterPreference* preferences = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
+				if (preferences) {
+					preferences->refreshEnabledState();
+				}
+				LLFloaterPreferenceGraphicsAdvanced* floater_graphics_advanced = LLFloaterReg::findTypedInstance<LLFloaterPreferenceGraphicsAdvanced>("prefs_graphics_advanced");
+				if (floater_graphics_advanced) {
+					floater_graphics_advanced->refreshEnabledState();
+				}
 			}
 			else if (canon_action == "fartouch"
 				|| canon_action == "touchfar"
@@ -1492,7 +1514,17 @@ BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 	}
 	updateAllHudTexts();
 	updateCameraLimits();
+
 	updateSetsphere();
+	LLFloaterPreference* preferences = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
+	if (preferences) {
+		preferences->refreshEnabledState();
+	}
+	LLFloaterPreferenceGraphicsAdvanced* floater_graphics_advanced = LLFloaterReg::findTypedInstance<LLFloaterPreferenceGraphicsAdvanced>("prefs_graphics_advanced");
+	if (floater_graphics_advanced) {
+		floater_graphics_advanced->refreshEnabledState();
+	}
+
 	updateLimits();
 	if (gAgentAvatarp && !gAgentAvatarp->isSitting()) { // If we are not sitting, then we can remove the @standtp restriction normally
 		gAgent.mRRInterface.mLastStandingLocation.clear();

@@ -1576,6 +1576,13 @@ void LLFloaterPreference::refreshEnabledState()
 						gSavedSettings.getBOOL("RenderAvatarVP") &&
 						(ctrl_wind_light->get()) ? TRUE : FALSE;
 
+//MK
+	// Deferred rendering is mandatory and cannot be deactivated when @setsphere is active
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetsphere)
+	{
+		enabled = FALSE;
+	}
+//mk
 	ctrl_deferred->setEnabled(enabled);
 
 	// Cannot have floater active until caps have been received
@@ -1684,6 +1691,15 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
 		ctrl_wind_light->setEnabled(FALSE);
 		ctrl_wind_light->setValue(TRUE);
     }
+
+	// Some advanced graphics settings are required when @setsphere is active.
+	transparent_water_ctrl->setEnabled(TRUE); // because it is never explicitly enabled anywhere in the code, except maybe on creation so without this line if we disabled it once it would stay disabled until log out
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetsphere)
+	{
+		bumpshiny_ctrl->setEnabled(FALSE);
+		transparent_water_ctrl->setEnabled(FALSE);
+		ctrl_deferred->setEnabled(FALSE);
+	}
 //mk
 
 	LLCheckBoxCtrl* ctrl_ssao = getChild<LLCheckBoxCtrl>("UseSSAO");
@@ -1698,6 +1714,12 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
 
 	ctrl_ssao->setEnabled(enabled);
 	ctrl_dof->setEnabled(enabled);
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetsphere)
+	{
+		ctrl_dof->setEnabled(FALSE);
+	}
+//mk
 
 	enabled = enabled && LLFeatureManager::getInstance()->isFeatureAvailable("RenderShadowDetail");
 
