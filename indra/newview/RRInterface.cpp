@@ -6470,12 +6470,12 @@ void RRInterface::drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 a
 	//gGL.popMatrix();
 }
 
-LLJoint* RRInterface::getCamDistDrawFromJoint ()
+LLJoint* RRInterface::getCamDistDrawFromJoint (BOOL force_head_in_mouselook /*= TRUE*/)
 {
 	if (!gAgentAvatarp) {
 		return NULL;
 	}
-	if (!mCamDistDrawFromJoint || CAMERA_MODE_MOUSELOOK == gAgentCamera.getCameraMode()) {
+	if (!mCamDistDrawFromJoint || (force_head_in_mouselook && CAMERA_MODE_MOUSELOOK == gAgentCamera.getCameraMode())) { // if we are in mouselook, force the joint to be the head (unless specified otherwise)
 		return gAgentAvatarp->mHeadp;
 	}
 	return mCamDistDrawFromJoint;

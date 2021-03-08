@@ -268,7 +268,7 @@ public:
 
 	void updateLimits();
 
-	LLJoint* getCamDistDrawFromJoint ();
+	LLJoint* getCamDistDrawFromJoint (BOOL force_head_in_mouselook = TRUE); // if force_head_in_mouselook is TRUE, then the returned joint will be the head when the user is in mouselook, no matter what joint is actually chosen
 
 	bool isInventoryItemNew(LLInventoryItem* item); // Return true if the item or its parent category has been received during this session
 	bool IsInventoryFolderNew(LLInventoryCategory* folder); // Return true if the folder has been received during this session

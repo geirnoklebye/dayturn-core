@@ -216,7 +216,12 @@ void RlvSphereEffect::setShaderUniforms(LLGLSLShader* pShader)
 			break;
 		case ESphereOrigin::Avatar:
 		default:
-			posSphereOrigin.setVec((isAgentAvatarValid()) ? gAgentAvatarp->getRenderPosition() : gAgent.getPositionAgent(), 1.0f);
+//MK
+			// If the origin is the avatar, center the sphere around the joint that is currently chosen by the user (head, pelvis, hand etc).
+			// Unlike with @camdraw commands, here we do not need to restrict the joint to the head when in mouselook.
+////			posSphereOrigin.setVec((isAgentAvatarValid()) ? gAgentAvatarp->getRenderPosition() : gAgent.getPositionAgent(), 1.0f);
+			posSphereOrigin.setVec((isAgentAvatarValid()) ? gAgent.mRRInterface.getCamDistDrawFromJoint(FALSE)->getWorldPosition() : gAgent.getPositionAgent(), 1.0f);
+//mk
 			break;
 	}
 	glh::vec4f posSphereOriginGl(posSphereOrigin.mV);
