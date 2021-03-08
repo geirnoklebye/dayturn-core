@@ -194,24 +194,73 @@ namespace {
         {
             return LLError::getEnabledLogTypesMask() & 0x04;
         }
-        
+
+        LL_FORCE_INLINE std::string createBoldANSI()
+        {
+            std::string ansi_code;
+            ansi_code += '\033';
+            ansi_code += "[";
+            ansi_code += "1";
+            ansi_code += "m";
+
+            return ansi_code;
+        }
+
+        LL_FORCE_INLINE std::string createResetANSI()
+        {
+            std::string ansi_code;
+            ansi_code += '\033';
+            ansi_code += "[";
+            ansi_code += "0";
+            ansi_code += "m";
+
+            return ansi_code;
+        }
+
         LL_FORCE_INLINE std::string createANSI(const std::string& color)
         {
             std::string ansi_code;
-            ansi_code  += '\033';
-            ansi_code  += "[";
-            ansi_code  += color;
+            ansi_code += '\033';
+            ansi_code += "[";
+            ansi_code += "38;5;";
+            ansi_code += color;
             ansi_code += "m";
+
             return ansi_code;
         }
 
 		virtual void recordMessage(LLError::ELevel level,
 					   const std::string& message) override
 		{
-            static std::string s_ansi_error = createANSI("31"); // was 31 red
-            static std::string s_ansi_warn  = createANSI("93"); // bright yellow was 34 blue
-            static std::string s_ansi_info  = createANSI("96"); // bright cyan
-            static std::string s_ansi_debug = createANSI("37"); // white was 35 magenta
+            // The default colors for error, warn and debug are now a bit more pastel
+            // and easier to read on the default (black) terminal background but you 
+            // now have the option to set the color of each via an environment variables:
+            // LL_ANSI_ERROR_COLOR_CODE (default is red)
+            // LL_ANSI_WARN_COLOR_CODE  (default is blue)
+            // LL_ANSI_DEBUG_COLOR_CODE (default is magenta)
+            // The list of color codes can be found in many places but I used this page:
+            // https://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html#256-colors
+            // (Note: you may need to restart Visual Studio to pick environment changes)
+			// Original colours 30-37 (standard) and 90-97 (bright) used with 'ESC [ col m' map to 'ESC [ 38/48 5 0-16' (38 is foreground, 48 is background)
+			// 0-7 standard black->white (b0 red, b1 green, b2 blue)
+			// 8-15 high intensity black->white (as above)
+			// 16-231 6x6x6 colour cube 16 + (36r) + (6g) + b, each ranges 0-5
+			// 232-255 black to white greyscale
+			
+            char* val = nullptr;
+            std::string s_ansi_error_code = "160"; // LL 160 - keep for Kokua
+            if ((val = getenv("LL_ANSI_ERROR_COLOR_CODE")) != nullptr) s_ansi_error_code = std::string(val);
+            std::string s_ansi_warn_code = "11"; // LL 33 - bright yellow 11 for Kokua
+            if ((val = getenv("LL_ANSI_WARN_COLOR_CODE")) != nullptr) s_ansi_warn_code = std::string(val);
+            std::string s_ansi_warn_code = "14"; // Not in LL - bright cyan 14 for Kokua
+            if ((val = getenv("LL_ANSI_INFO_COLOR_CODE")) != nullptr) s_ansi_info_code = std::string(val);
+            std::string s_ansi_debug_code = "7"; // LL 177 - standard white 7 for Kokua
+            if ((val = getenv("LL_ANSI_DEBUG_COLOR_CODE")) != nullptr) s_ansi_debug_code = std::string(val);
+
+            static std::string s_ansi_error = createANSI(s_ansi_error_code); // LL default is red 160
+            static std::string s_ansi_warn  = createANSI(s_ansi_warn_code); // LL default is blue 33
+            static std::string s_ansi_info  = createANSI(s_ansi_warn_code); // not coloured by LL
+            static std::string s_ansi_debug = createANSI(s_ansi_debug_code); // LL default is magenta 177
 
 			if (mUseANSI)
 			{
@@ -231,11 +280,11 @@ namespace {
 
         LL_FORCE_INLINE void writeANSI(const std::string& ansi_code, const std::string& message)
 		{
-            static std::string s_ansi_bold  = createANSI("1");  // bold
-            static std::string s_ansi_reset = createANSI("0");  // reset
+            static std::string s_ansi_bold = createBoldANSI();  // bold text
+            static std::string s_ansi_reset = createResetANSI();  // reset
 			// ANSI color code escape sequence, message, and reset in one fprintf call
             // Default all message levels to bold so we can distinguish our own messages from those dumped by subprocesses and libraries.
-			fprintf(stderr, "%s%s%s\n%s", s_ansi_bold.c_str(), ansi_code.c_str(), message.c_str(), s_ansi_reset.c_str() );
+			fprintf(stderr, "%s%s\n%s", ansi_code.c_str(), message.c_str(), s_ansi_reset.c_str() );
 		}
 
 		static bool checkANSI(void)
@@ -245,7 +294,7 @@ namespace {
 			// the LL_NO_ANSI_COLOR env var.
 			return (0 != isatty(2)) &&
 				(NULL == getenv("LL_NO_ANSI_COLOR"));
-		};
+		}
 	};
 
 	class RecordToFixedBuffer : public LLError::Recorder
