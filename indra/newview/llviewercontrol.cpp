@@ -251,8 +251,9 @@ bool handleRenderTransparentWaterChanged(const LLSD& newvalue)
 	LLRenderTarget::sUseFBO = newvalue.asBoolean();
 //MK
 	// When under @setsphere, transparent water must be rendered.
-	if (gRRenabled && gAgent.mRRInterface.mContainsSetsphere)
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetsphere && !gSavedSettings.getBOOL("RenderTransparentWater"))
 	{
+		gSavedSettings.setBOOL("RenderTransparentWater", TRUE);
 		LLRenderTarget::sUseFBO = true;
 	}
 //mk
@@ -286,7 +287,7 @@ static bool handleReleaseGLBufferChanged(const LLSD& newvalue)
 {
 //MK
 	// When under @setsphere, don't allow DoF because it makes the alpha blended rigged surfaces win against the sphere, which lets the user see through it.
-	if (gRRenabled && gAgent.mRRInterface.mContainsSetsphere)
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetsphere && gSavedSettings.getBOOL("RenderDepthOfField"))
 	{
 		gSavedSettings.setBOOL("RenderDepthOfField", FALSE);
 	}
@@ -495,6 +496,14 @@ static bool handleRenderLocalLightsChanged(const LLSD& newvalue)
 static bool handleWindLightAtmosShadersChanged(const LLSD& newvalue)
 {
 	LLRenderTarget::sUseFBO = newvalue.asBoolean() && LLPipeline::sUseDepthTexture;
+//MK
+	// When under @setsphere, WindLightUseAtmosShaders must be kept TRUE.
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetsphere && !gSavedSettings.getBOOL("WindLightUseAtmosShaders"))
+	{
+		gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE);
+		LLRenderTarget::sUseFBO = true;
+	}
+//mk
 	handleSetShaderChanged(LLSD());
 	return true;
 }
@@ -506,6 +515,14 @@ static bool handleRenderDeferredChanged(const LLSD& newvalue)
 // [RLVa:KB] - @setsphere
 	LLRenderTarget::sUseFBO	= newvalue.asBoolean() || (gSavedSettings.getBOOL("WindLightUseAtmosShaders") && LLPipeline::sUseDepthTexture);
 // [/RLVa:KB]
+//MK
+	// When under @setsphere, WindLightUseAtmosShaders must be kept TRUE.
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetsphere && !gSavedSettings.getBOOL("WindLightUseAtmosShaders"))
+	{
+		gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE);
+		LLRenderTarget::sUseFBO = true;
+	}
+//mk
 	if (gPipeline.isInit())
 	{
 		LLPipeline::refreshCachedSettings();
@@ -533,9 +550,10 @@ static bool handleRenderBumpChanged(const LLSD& newval)
 // [/RLVa:KB]
 
 //MK
-// When under @setsphere, bump mapping and shiny must be rendered.
-	if (gRRenabled && gAgent.mRRInterface.mContainsSetsphere)
+	// When under @setsphere, WindLightUseAtmosShaders must be kept TRUE.
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetsphere && !gSavedSettings.getBOOL("WindLightUseAtmosShaders"))
 	{
+		gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE);
 		LLRenderTarget::sUseFBO = true;
 	}
 //mk
