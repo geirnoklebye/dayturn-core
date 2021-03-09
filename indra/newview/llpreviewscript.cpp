@@ -52,7 +52,7 @@
 #include "llsdserialize.h"
 #include "llslider.h"
 #include "lltooldraganddrop.h"
-#include "llfilesystem.h"
+#include "llvfile.h"
 
 #include "llagent.h"
 #include "llmenugl.h"
@@ -1891,8 +1891,8 @@ void LLPreviewLSL::onSaveBytecodeComplete(const LLUUID& asset_uuid, void* user_d
 }
 
 // static
-void LLPreviewLSL::onLoadComplete(const LLUUID& asset_uuid, LLAssetType::EType type,
-								  void* user_data, S32 status, LLExtStat ext_status)
+void LLPreviewLSL::onLoadComplete( LLVFS *vfs, const LLUUID& asset_uuid, LLAssetType::EType type,
+								   void* user_data, S32 status, LLExtStat ext_status)
 {
 	LL_DEBUGS() << "LLPreviewLSL::onLoadComplete: got uuid " << asset_uuid
 		 << LL_ENDL;
@@ -1902,7 +1902,7 @@ void LLPreviewLSL::onLoadComplete(const LLUUID& asset_uuid, LLAssetType::EType t
 	{
 		if(0 == status)
 		{
-			LLFileSystem file(asset_uuid, type);
+			LLVFile file(vfs, asset_uuid, type);
 			S32 file_length = file.getSize();
 
 			std::vector<char> buffer(file_length+1);
@@ -1929,7 +1929,6 @@ void LLPreviewLSL::onLoadComplete(const LLUUID& asset_uuid, LLAssetType::EType t
 			}
 			preview->mScriptEd->setScriptName(script_name);
 			preview->mScriptEd->setEnableEditing(is_modifiable);
-            preview->mScriptEd->setAssetID(asset_uuid);
 			preview->mAssetStatus = PREVIEW_ASSET_LOADED;
 		}
 		else
@@ -2166,7 +2165,7 @@ void LLLiveLSLEditor::loadAsset()
 }
 
 // static
-void LLLiveLSLEditor::onLoadComplete(const LLUUID& asset_id,
+void LLLiveLSLEditor::onLoadComplete(LLVFS *vfs, const LLUUID& asset_id,
 									 LLAssetType::EType type,
 									 void* user_data, S32 status, LLExtStat ext_status)
 {
@@ -2180,10 +2179,9 @@ void LLLiveLSLEditor::onLoadComplete(const LLUUID& asset_id,
 	{
 		if( LL_ERR_NOERR == status )
 		{
-			instance->loadScriptText(asset_id, type);
+			instance->loadScriptText(vfs, asset_id, type);
 			instance->mScriptEd->setEnableEditing(TRUE);
 			instance->mAssetStatus = PREVIEW_ASSET_LOADED;
-            instance->mScriptEd->setAssetID(asset_id);
 		}
 		else
 		{
@@ -2207,9 +2205,9 @@ void LLLiveLSLEditor::onLoadComplete(const LLUUID& asset_id,
 	delete floater_key;
 }
 
-void LLLiveLSLEditor::loadScriptText(const LLUUID &uuid, LLAssetType::EType type)
+void LLLiveLSLEditor::loadScriptText(LLVFS *vfs, const LLUUID &uuid, LLAssetType::EType type)
 {
-	LLFileSystem file(uuid, type);
+	LLVFile file(vfs, uuid, type);
 	S32 file_length = file.getSize();
 	std::vector<char> buffer(file_length + 1);
 	file.read((U8*)&buffer[0], file_length);
@@ -2384,7 +2382,6 @@ void LLLiveLSLEditor::finishLSLUpload(LLUUID itemId, LLUUID taskId, LLUUID newAs
     if (preview)
     {
         preview->mItem->setAssetUUID(newAssetId);
-        preview->mScriptEd->setAssetID(newAssetId);
 
         // Bytecode save completed
         if (response["compiled"])
