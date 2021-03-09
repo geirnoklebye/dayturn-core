@@ -222,8 +222,7 @@ namespace {
             std::string ansi_code;
             ansi_code += '\033';
             ansi_code += "[";
-// CA: This was added in 6.4.14 and basically doesn't work...
-//            ansi_code += "38;5;";
+            ansi_code += "38;5;";
             ansi_code += color;
             ansi_code += "m";
 
