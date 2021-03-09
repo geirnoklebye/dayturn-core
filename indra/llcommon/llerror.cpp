@@ -252,14 +252,14 @@ namespace {
             if ((val = getenv("LL_ANSI_ERROR_COLOR_CODE")) != nullptr) s_ansi_error_code = std::string(val);
             std::string s_ansi_warn_code = "11"; // LL 33 - bright yellow 11 for Kokua
             if ((val = getenv("LL_ANSI_WARN_COLOR_CODE")) != nullptr) s_ansi_warn_code = std::string(val);
-            std::string s_ansi_warn_code = "14"; // Not in LL - bright cyan 14 for Kokua
+            std::string s_ansi_info_code = "14"; // Not in LL - bright cyan 14 for Kokua
             if ((val = getenv("LL_ANSI_INFO_COLOR_CODE")) != nullptr) s_ansi_info_code = std::string(val);
             std::string s_ansi_debug_code = "7"; // LL 177 - standard white 7 for Kokua
             if ((val = getenv("LL_ANSI_DEBUG_COLOR_CODE")) != nullptr) s_ansi_debug_code = std::string(val);
 
             static std::string s_ansi_error = createANSI(s_ansi_error_code); // LL default is red 160
             static std::string s_ansi_warn  = createANSI(s_ansi_warn_code); // LL default is blue 33
-            static std::string s_ansi_info  = createANSI(s_ansi_warn_code); // not coloured by LL
+            static std::string s_ansi_info  = createANSI(s_ansi_info_code); // not coloured by LL
             static std::string s_ansi_debug = createANSI(s_ansi_debug_code); // LL default is magenta 177
 
 			if (mUseANSI)
