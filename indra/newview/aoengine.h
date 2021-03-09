@@ -82,6 +82,7 @@ class AOSitCancelTimer
 
 class AOState;
 class LLInventoryItem;
+class LLVFS;
 
 class AOEngine
 :	public LLSingleton<AOEngine>
@@ -185,7 +186,7 @@ class AOEngine
 
 		void onToggleAOControl();
 		void onToggleAOStandsControl();
-		static void onNotecardLoadComplete(const LLUUID& assetUUID, LLAssetType::EType type,
+		static void onNotecardLoadComplete(LLVFS* vfs, const LLUUID& assetUUID, LLAssetType::EType type,
 												void* userdata, S32 status, LLExtStat extStatus);
 		void parseNotecard(const char* buffer);
 

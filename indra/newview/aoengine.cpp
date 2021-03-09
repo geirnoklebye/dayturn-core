@@ -34,11 +34,11 @@
 #include "llagentcamera.h"
 #include "llanimationstates.h"
 #include "llassetstorage.h"
-#include "llfilesystem.h"
 #include "llinventoryfunctions.h"		// for ROOT_FIRESTORM_FOLDER
 #include "llinventorymodel.h"
 #include "llnotificationsutil.h"
 #include "llstring.h"
+#include "llvfs.h"
 #include "llviewercontrol.h"
 #include "llviewerinventory.h"
 
@@ -1955,7 +1955,7 @@ BOOL AOEngine::importNotecard(const LLInventoryItem* item)
 }
 
 // static
-void AOEngine::onNotecardLoadComplete(const LLUUID& assetUUID, LLAssetType::EType type,
+void AOEngine::onNotecardLoadComplete(LLVFS* vfs, const LLUUID& assetUUID, LLAssetType::EType type,
 											void* userdata, S32 status, LLExtStat extStatus)
 {
 	if (status != LL_ERR_NOERR)
@@ -1967,14 +1967,11 @@ void AOEngine::onNotecardLoadComplete(const LLUUID& assetUUID, LLAssetType::ETyp
 		return;
 	}
 	LL_DEBUGS("AOEngine") << "Downloading import notecard complete." << LL_ENDL;
-	LLFileSystem ncfile(assetUUID, type, LLFileSystem::READ);
-		
-	S32 ncfile_length = ncfile.getSize();
 
-	char* buffer = new char[ncfile_length + 1];
-	S32 ret = ncfile.read((U8*)&buffer[0], ncfile_length);
-	buffer[ncfile_length] = 0;
+	S32 notecardSize = vfs->getSize(assetUUID, type);
+	char* buffer = new char[notecardSize];
 
+	S32 ret = vfs->getData(assetUUID, type, reinterpret_cast<U8*>(buffer), 0, notecardSize);
 	if (ret > 0)
 	{
 		AOEngine::instance().parseNotecard(buffer);

@@ -41,7 +41,6 @@
 #include "lldatapacker.h"
 #include "lldir.h"
 #include "llfilepicker.h"
-#include "llfilesystem.h"
 #include "llimagej2c.h"
 #include "llinventoryfunctions.h"
 #include "llmultigesture.h"
@@ -54,6 +53,7 @@
 #include "lltexturectrl.h"
 #include "lltrans.h"
 #include "llversioninfo.h"
+#include "llvfile.h"
 #include "llviewercontrol.h"
 #include "llviewerinventory.h"
 #include "llviewerpartsource.h"
@@ -611,7 +611,7 @@ bool FSFloaterObjectExport::exportTexture(const LLUUID& texture_id)
 		return mTextureChecked[texture_id];
 	}
 	
-	if (LLFileSystem::getExists(texture_id, LLAssetType::AT_TEXTURE))
+	if (gAssetStorage->mStaticVFS->getExists(texture_id, LLAssetType::AT_TEXTURE))
 	{
 		LL_DEBUGS("export") << "Texture " << texture_id.asString() << " is local static." << LL_ENDL;
 		// no need to save the texture data as the viewer already has it in a local file.
@@ -808,7 +808,7 @@ void FSFloaterObjectExport::inventoryChanged(LLViewerObject* object, LLInventory
 }
 
 // static
-void FSFloaterObjectExport::onLoadComplete(const LLUUID& asset_uuid, LLAssetType::EType type, void* user_data, S32 status, LLExtStat ext_status)
+void FSFloaterObjectExport::onLoadComplete(LLVFS* vfs, const LLUUID& asset_uuid, LLAssetType::EType type, void* user_data, S32 status, LLExtStat ext_status)
 {
 	FSAssetResourceData* data = (FSAssetResourceData*)user_data;
 	FSFloaterObjectExport* self = (FSFloaterObjectExport*)data->user_data;
@@ -823,7 +823,7 @@ void FSFloaterObjectExport::onLoadComplete(const LLUUID& asset_uuid, LLAssetType
 	}
 
 	LL_DEBUGS("export") << "Saving asset " << asset_uuid.asString() << " of item " << item_uuid.asString() << LL_ENDL;
-	LLFileSystem file(asset_uuid, type);
+	LLVFile file(vfs, asset_uuid, type);
 	S32 file_length = file.getSize();
 	std::vector<U8> buffer(file_length);
 	file.read(&buffer[0], file_length);
