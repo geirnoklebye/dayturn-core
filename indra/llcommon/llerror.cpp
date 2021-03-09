@@ -222,8 +222,7 @@ namespace {
             std::string ansi_code;
             ansi_code += '\033';
             ansi_code += "[";
-// CA: This was added in 6.4.14 and basically doesn't work...
-//            ansi_code += "38;5;";
+            ansi_code += "38;5;";
             ansi_code += color;
             ansi_code += "m";
 
@@ -236,26 +235,32 @@ namespace {
             // The default colors for error, warn and debug are now a bit more pastel
             // and easier to read on the default (black) terminal background but you 
             // now have the option to set the color of each via an environment variables:
-            // LL_ANSI_ERROR_COLOR_CODE (default is red) 160
-            // LL_ANSI_WARN_COLOR_CODE  (default is blue) 33
-            // LL_ANSI_DEBUG_COLOR_CODE (default is magenta) 177
+            // LL_ANSI_ERROR_COLOR_CODE (default is red)
+            // LL_ANSI_WARN_COLOR_CODE  (default is blue)
+            // LL_ANSI_DEBUG_COLOR_CODE (default is magenta)
             // The list of color codes can be found in many places but I used this page:
             // https://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html#256-colors
             // (Note: you may need to restart Visual Studio to pick environment changes)
+			// Original colours 30-37 (standard) and 90-97 (bright) used with 'ESC [ col m' map to 'ESC [ 38/48 5 0-16' (38 is foreground, 48 is background)
+			// 0-7 standard black->white (b0 red, b1 green, b2 blue)
+			// 8-15 high intensity black->white (as above)
+			// 16-231 6x6x6 colour cube 16 + (36r) + (6g) + b, each ranges 0-5
+			// 232-255 black to white greyscale
+			
             char* val = nullptr;
-            std::string s_ansi_error_code = "31"; // was 160
+            std::string s_ansi_error_code = "160"; // LL 160 - keep for Kokua
             if ((val = getenv("LL_ANSI_ERROR_COLOR_CODE")) != nullptr) s_ansi_error_code = std::string(val);
-            std::string s_ansi_warn_code = "93"; // was 33
+            std::string s_ansi_warn_code = "11"; // LL 33 - bright yellow 11 for Kokua
             if ((val = getenv("LL_ANSI_WARN_COLOR_CODE")) != nullptr) s_ansi_warn_code = std::string(val);
-            std::string s_ansi_info_code = "96"; // not coloured in original code
+            std::string s_ansi_info_code = "14"; // Not in LL - bright cyan 14 for Kokua
             if ((val = getenv("LL_ANSI_INFO_COLOR_CODE")) != nullptr) s_ansi_info_code = std::string(val);
-            std::string s_ansi_debug_code = "37"; // was 177
+            std::string s_ansi_debug_code = "7"; // LL 177 - standard white 7 for Kokua
             if ((val = getenv("LL_ANSI_DEBUG_COLOR_CODE")) != nullptr) s_ansi_debug_code = std::string(val);
 
-            static std::string s_ansi_error = createANSI(s_ansi_error_code); // default is red (LL), unchanged for Kokua
-            static std::string s_ansi_warn  = createANSI(s_ansi_warn_code); // default is blue (LL), bright yellow for Kokua
-            static std::string s_ansi_info  = createANSI(s_ansi_info_code); // not coloured in LL source, bright cyan for Kokua
-            static std::string s_ansi_debug = createANSI(s_ansi_debug_code); // default is magenta (LL), white for Kokua
+            static std::string s_ansi_error = createANSI(s_ansi_error_code); // LL default is red 160
+            static std::string s_ansi_warn  = createANSI(s_ansi_warn_code); // LL default is blue 33
+            static std::string s_ansi_info  = createANSI(s_ansi_info_code); // not coloured by LL
+            static std::string s_ansi_debug = createANSI(s_ansi_debug_code); // LL default is magenta 177
 
 			if (mUseANSI)
 			{
@@ -289,7 +294,7 @@ namespace {
 			// the LL_NO_ANSI_COLOR env var.
 			return (0 != isatty(2)) &&
 				(NULL == getenv("LL_NO_ANSI_COLOR"));
-		};
+		}
 	};
 
 	class RecordToFixedBuffer : public LLError::Recorder
