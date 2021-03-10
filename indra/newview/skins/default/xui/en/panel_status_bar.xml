@@ -28,8 +28,8 @@
         follows="top|right"
         layout="topleft"
         top="0"
-        left="-720"
-        width="715"
+        left="-750"
+        width="745"
         height="19"
         orientation="horizontal">
 			  <layout_panel
@@ -274,7 +274,7 @@
             follows="top|left"
             layout="topleft"
             height="19"
-            width="26"
+            width="50"
             auto_resize="false"
             user_resize="false"
             visible="true">
@@ -309,6 +309,62 @@
                     <threshold value="0.0" color="Green" />
                     <threshold value="0.25" color="Yellow" />
                     <threshold value="0.6" color="Red" />
+                </thresholds>
+            </statistics_graph>
+            <statistics_graph
+                name="script_pct_run_graph"
+                follows="top|left"
+                top="1"
+                left_pad="0"
+                width="8"
+                height="17"
+                last_value="true"
+                invert_bar="true"
+                units="% script run\n(Click for details)"
+                max="100"
+                precision="1"
+                mouse_opaque="true">
+                <thresholds>
+                    <threshold value="0.0" color="Red" />
+                    <threshold value="25.0" color="Yellow" />
+                    <threshold value="50.0" color="Green" />
+                </thresholds>
+            </statistics_graph>
+            <statistics_graph
+                name="script_time_graph"
+                follows="top|left"
+                top="1"
+                left_pad="0"
+                width="8"
+                height="17"
+                last_value="true"
+                units=" ms script time\n(Click for details)"
+                max="20"
+                precision="1"
+                mouse_opaque="true">
+                <thresholds>
+                    <threshold value="0.0" color="Green" />
+                    <threshold value="10.0" color="Yellow" />
+                    <threshold value="15.0" color="Red" />
+                </thresholds>
+            </statistics_graph>
+            <statistics_graph
+                name="spare_time_graph"
+                follows="top|left"
+                top="1"
+                left_pad="0"
+                width="8"
+                height="17"
+                last_value="true"
+                invert_bar="true"
+                units=" ms spare time\n(Click for details)"
+                max="20"
+                precision="1"
+                mouse_opaque="true">
+                <thresholds>
+                    <threshold value="0.0" color="Red" />
+                    <threshold value="4.0" color="Yellow" />
+                    <threshold value="8.0" color="Green" />
                 </thresholds>
             </statistics_graph>
         </layout_panel>

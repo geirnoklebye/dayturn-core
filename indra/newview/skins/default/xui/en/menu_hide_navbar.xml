@@ -45,7 +45,7 @@
              parameter="ShowDDSlider" />
     </menu_item_check>
     <menu_item_check
-         label="Show Network Graphs"
+         label="Show Network/Script Graphs"
          layout="topleft"
          name="ShowNetStats">
            <on_click
