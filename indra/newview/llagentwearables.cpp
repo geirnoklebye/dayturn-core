@@ -52,10 +52,11 @@
 #include "llwearablelist.h"
 #include "llfloaterperms.h"
 
-//CA we need MAX_CLOTHING_PER_TYPE here for MK
-#include "RRInterfaceHelper.h"
-//ca
 #include <boost/scoped_ptr.hpp>
+
+//MK
+#include "RRInterfaceHelper.h"
+//mk
 
 LLAgentWearables gAgentWearables;
 
