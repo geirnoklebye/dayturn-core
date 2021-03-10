@@ -307,6 +307,25 @@ BOOL LLStatusBar::postBuild()
 		mSGPacketLoss->setStat(&LLStatViewer::PACKETS_LOST_PERCENT);
 		mSGPacketLoss->setClickedCallback(boost::bind(&LLStatusBar::onClickStatistics, this));
 	}
+	// KKA-821 Add script percent run, script time and spare time. The cast is necessary to get from derived class SimMeasurement to its parent which llui understands
+	mSGScriptPctRun = getChild<LLStatGraph>("script_pct_run_graph");
+	if (mSGScriptPctRun) {
+	  //inverse, so the more bar is visible the worse (lower) the script percent run figure is
+		mSGScriptPctRun->setStat((LLTrace::SampleStatHandle<LLUnit<F64, LLUnits::Percent> > *)&LLStatViewer::SIM_PERCENTAGE_SCRIPTS_RUN);
+		mSGScriptPctRun->setClickedCallback(boost::bind(&LLStatusBar::onClickStatistics, this));
+	}
+	mSGScriptTime = getChild<LLStatGraph>("script_time_graph");
+	if (mSGScriptTime ) {
+	  // not inverse, so the more bar, the more time scripts are using
+		mSGScriptTime->setStat((LLTrace::SampleStatHandle<F64Milliseconds >	*)&LLStatViewer::SIM_SCRIPTS_TIME);
+		mSGScriptTime->setClickedCallback(boost::bind(&LLStatusBar::onClickStatistics, this));
+	}
+	mSGSpareTime = getChild<LLStatGraph>("spare_time_graph");
+	if (mSGSpareTime ) {
+	  // inverse, so no free frame time results in a full bar
+		mSGSpareTime->setStat((LLTrace::SampleStatHandle<F64Milliseconds >	*)&LLStatViewer::SIM_SPARE_TIME);
+		mSGSpareTime->setClickedCallback(boost::bind(&LLStatusBar::onClickStatistics, this));
+	}
 
 	mFPSText = getChild<LLTextBox>("fps_text");
 	if (mFPSText) {
