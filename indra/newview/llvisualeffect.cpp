@@ -108,6 +108,11 @@ bool LLVfxManager::removeEffect(const LLUUID& idEffect)
 }
 
 //MK
+std::set<LLVisualEffect*> LLVfxManager::getEffects()
+{
+	return m_Effects;
+}
+
 void LLVfxManager::clearEffects()
 {
 	while (m_Effects.size() > 0)

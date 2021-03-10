@@ -61,6 +61,8 @@
 #include "RRInterface.h"
 #include "RRInterfaceHelper.h" //for MAX_CLOTHING_PER_TYPE
 
+#include <boost/foreach.hpp>
+
 // Marine doesn't export it so we need it here too
 #define EXTREMUM 1000000.f
 
@@ -875,6 +877,84 @@ void KokuaFloaterRLVStatus::refreshRLVStatus()
 	sdModifierColumns[1]["value"] = "";
 	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mTplocalMax,EXTREMUM);
 	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	
+	// Setsphere effects : We check all the stored effects and display all their aggregated values on a per-mode basis.
+	// Each effect in the set has a unique mode so we can take each one of them individually and print its values directly (but we can't guarantee the order of the modes)
+	std::set<LLVisualEffect*> effects = LLVfxManager::instance().getEffects();
+	std::string label_mode = "";
+	std::stringstream str; // for constructing the labels
+	std::string str_modes[(int)RlvSphereEffect::ESphereMode::Count] { "blend", "blur", "kblur", "chroma", "pix" };
+	BOOST_FOREACH(LLVisualEffect* visual_effect, effects)
+	{
+		if (visual_effect)
+		{
+			RlvSphereEffect* sphere_effect = dynamic_cast<RlvSphereEffect*> (visual_effect);
+			if (sphere_effect)
+			{
+				RlvSphereEffect::ESphereMode mode = sphere_effect->getMode();
+				if ((int)mode >= 0 && (int)mode < (int)RlvSphereEffect::ESphereMode::Count)
+				{
+					str << "ss-" << str_modes[(int)mode] << "-";
+					label_mode = str.str();
+					str.str(std::string());
+				}
+				else
+				{
+					label_mode = "ss-unknown-";
+				}
+
+				// Distances
+				str << label_mode << "distmin/max";
+				sdModifierColumns[0]["value"] = str.str();
+				sdModifierColumns[1]["value"] = KokuaRLVFloaterSupport::getModifierText(sphere_effect->getDistanceMin(), EXTREMUM);
+				sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(sphere_effect->getDistanceMax(), EXTREMUM);
+				pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+				str.str(std::string());
+
+				// Values
+				str << label_mode << "valuemin/max";
+				sdModifierColumns[0]["value"] = str.str();
+				sdModifierColumns[1]["value"] = KokuaRLVFloaterSupport::getModifierText(sphere_effect->getValueMin(), EXTREMUM);
+				sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(sphere_effect->getValueMax(), EXTREMUM);
+				pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+				str.str(std::string());
+
+				// Distextend
+				str << label_mode << "distextend";
+				sdModifierColumns[0]["value"] = str.str();
+				sdModifierColumns[1]["value"] = "";
+				sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText((int)sphere_effect->getDistExtend(), EXTREMUM);
+				pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+				str.str(std::string());
+
+				// Origin
+				str << label_mode << "origin";
+				sdModifierColumns[0]["value"] = str.str();
+				sdModifierColumns[1]["value"] = "";
+				sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText((int)sphere_effect->getOrigin(), EXTREMUM);
+				pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+				str.str(std::string());
+
+				// Tween
+				str << label_mode << "tween";
+				sdModifierColumns[0]["value"] = str.str();
+				sdModifierColumns[1]["value"] = "";
+				sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(sphere_effect->getTweenDuration(), EXTREMUM);
+				pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+				str.str(std::string());
+
+				// Params
+				str << label_mode << "params";
+				LLVector4 params = sphere_effect->getParams();
+				sdModifierColumns[0]["value"] = str.str();
+				sdModifierColumns[1]["value"] = "";
+				sdModifierColumns[2]["value"] = llformat("%.1f, %.1f, %.1f, %.1f", params.mV[0], params.mV[1], params.mV[2], params.mV[3]);
+				pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+				str.str(std::string());
+			}
+		}
+
+	}
 }
 
 

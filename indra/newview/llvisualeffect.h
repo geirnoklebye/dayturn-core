@@ -174,6 +174,7 @@ public:
 	template<typename T> T* getEffect(EVisualEffect eCode) const { return dynamic_cast<T*>(getEffect(eCode)); }
 	bool            removeEffect(const LLUUID& idEffect);
 //MK
+	std::set<LLVisualEffect*>			getEffects();
 	void			clearEffects();
 //mk
 	void            runEffect(EVisualEffect eCode, LLVisualEffectParams* pParams = nullptr);
