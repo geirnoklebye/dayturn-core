@@ -144,6 +144,9 @@ private:
 
 	LLStatGraph	*mSGBandwidth;
 	LLStatGraph	*mSGPacketLoss;
+	LLStatGraph	*mSGScriptPctRun; // KKA-821
+	LLStatGraph	*mSGSpareTime; // KKA-821
+	LLStatGraph	*mSGScriptTime; // KKA-821
 	LLIconCtrl	*mIconPresetsCamera;
 	LLIconCtrl	*mIconPresetsGraphic;
 	LLButton	*mBtnVolume;
