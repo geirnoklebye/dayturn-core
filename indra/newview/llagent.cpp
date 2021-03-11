@@ -850,6 +850,9 @@ void LLAgent::moveUp(S32 direction)
 		//else
 //mk
 		setControlFlags(AGENT_CONTROL_UP_POS | AGENT_CONTROL_FAST_UP);
+		// <FS:Ansariel> Chalice Yao's crouch toggle
+		gAgentCamera.resetView(TRUE, FALSE, TRUE);
+		// </FS:Ansariel>
 	}
 	else if (direction < 0)
 	{
@@ -858,10 +861,17 @@ void LLAgent::moveUp(S32 direction)
 		//else
 //mk
 		setControlFlags(AGENT_CONTROL_UP_NEG | AGENT_CONTROL_FAST_UP);
+		// <FS:Ansariel> Chalice Yao's crouch toggle
+		if (!gSavedPerAccountSettings.getBOOL("FSCrouchToggleStatus") || !gSavedPerAccountSettings.getBOOL("FSCrouchToggle"))
+		{
+			gAgentCamera.resetView(TRUE, FALSE, TRUE);
+		}
+		// </FS:Ansariel>
 	}
 
-    gAgentCamera.resetView(TRUE, FALSE, TRUE);
-
+	// <FS:Ansariel> Chalice Yao's crouch toggle
+	//gAgentCamera.resetView();
+	// </FS:Ansariel>
 }
 
 //-----------------------------------------------------------------------------
@@ -1031,6 +1041,13 @@ void LLAgent::toggleFlying()
 	{
 		LLToolPie::instance().stopClickToWalk();
 	}
+
+	// <FS:Ansariel> Chalice Yao's crouch toggle
+	if (gSavedPerAccountSettings.getBOOL("FSCrouchToggleStatus"))
+	{
+		gSavedPerAccountSettings.setBOOL("FSCrouchToggleStatus", FALSE);
+	}
+	// </FS:Ansariel>
 
 	BOOL fly = !gAgent.getFlying();
 

@@ -75,6 +75,13 @@ void agent_jump( EKeystate s )
 	F32 time = gKeyboard->getCurKeyElapsedTime();
 	S32 frame_count = ll_round(gKeyboard->getCurKeyElapsedFrameCount());
 
+	// <FS:Ansariel> Chalice Yao's crouch toggle
+	if (gSavedPerAccountSettings.getBOOL("FSCrouchToggleStatus"))
+	{
+		gSavedPerAccountSettings.setBOOL("FSCrouchToggleStatus", FALSE);
+	}
+	// </FS:Ansariel>
+
 	if( time < FLY_TIME 
 		|| frame_count <= FLY_FRAMES 
 		|| gAgent.upGrabbed()
@@ -93,7 +100,25 @@ void agent_jump( EKeystate s )
 void agent_push_down( EKeystate s )
 {
 	if( KEYSTATE_UP == s  ) return;
+	// <FS:Ansariel> Chalice Yao's crouch toggle
+	//gAgent.moveUp(-1);
+	else if (KEYSTATE_DOWN == s && !gAgent.getFlying() && !gAgentAvatarp->isSitting() && gSavedPerAccountSettings.getBOOL("FSCrouchToggle"))
+	{
+		if (gSavedPerAccountSettings.getBOOL("FSCrouchToggleStatus"))
+		{
+			gSavedPerAccountSettings.setBOOL("FSCrouchToggleStatus", FALSE);
+		}
+		else
+		{
+			gSavedPerAccountSettings.setBOOL("FSCrouchToggleStatus", TRUE);
 	gAgent.moveUp(-1);
+}
+	}
+	else
+	{
+		gAgent.moveUp(-1);
+	}
+	// </FS:Ansariel>
 }
 
 static void agent_check_temporary_run(LLAgent::EDoubleTapRunMode mode)
