@@ -2,6 +2,72 @@
 <llsd xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="llsd.xsd">
 <map>
+    <key>KokuaStatGraphPctRunThreshold1</key>
+    <map>
+      <key>Comment</key>
+      <string>Transition point between low/mid script run graph colors (1-100)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>33</real>
+    </map>
+    <key>KokuaStatGraphPctRunThreshold2</key>
+    <map>
+      <key>Comment</key>
+      <string>Transition point between mid/high script run graph colors (1-100)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>66</real>
+    </map>
+    <key>KokuaStatGraphScriptTimeThreshold1</key>
+    <map>
+      <key>Comment</key>
+      <string>Transition point between low/mid script time graph colors (0-20)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>12</real>
+    </map>
+    <key>KokuaStatGraphScriptTimeThreshold2</key>
+    <map>
+      <key>Comment</key>
+      <string>Transition point between mid/high script time graph colors (0-20)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>18</real>
+    </map>
+    <key>KokuaStatGraphSpareTimeThreshold1</key>
+    <map>
+      <key>Comment</key>
+      <string>Transition point between low/mid spare time graph colors (0-20)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>3</real>
+    </map>
+    <key>KokuaStatGraphSpareTimeThreshold2</key>
+    <map>
+      <key>Comment</key>
+      <string>Transition point between mid/high spare time graph colors (0-20)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>6</real>
+    </map>
     <key>CameraOffsetLeftView</key>
     <map>
       <key>Comment</key>
