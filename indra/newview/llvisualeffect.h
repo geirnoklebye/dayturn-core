@@ -101,12 +101,6 @@ protected:
 //
 //
 
-enum class LLTweenType
-{
-	None,
-	Lerp,
-};
-
 template<typename T>
 class LLTweenableValue
 {
