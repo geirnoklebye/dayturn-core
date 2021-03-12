@@ -1611,6 +1611,12 @@ if (LINUX)
     # To do NP Move to windows and drawin. 
     include_directories(${CMAKE_COMMON_INC})
 
+    # <FS:ND> Get rid of memory limit exceeded for -fvar-tracking-assignments.
+    if (NOT CMAKE_CXX_COMPILER MATCHES ".*clang")
+      SET_SOURCE_FILES_PROPERTIES(llviewermenu.cpp PROPERTIES COMPILE_FLAGS -fno-var-tracking-assignments)
+    endif()
+    # </FS:ND>
+
 #    include(FindOpenMP)
 #    if(OPENMP_FOUND)
 # 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
