@@ -335,6 +335,13 @@ void LLStatusBar::refresh()
 	static LLCachedControl<bool> fps_stats_visible(gSavedSettings, "ShowFPSStats", true);
 	static LLCachedControl<bool> show_draw_distance(gSavedSettings, "ShowDDSlider", false);
 	static LLCachedControl<bool> show_media_popups(gSavedSettings, "ShowMediaPopupsOnRollover", true);
+	//KKA-821 allow for easy changing of the crossover points
+	static LLCachedControl<F32> pctrun_threshold1(gSavedSettings, "KokuaStatGraphPctRunThreshold1", 33.f);
+	static LLCachedControl<F32> pctrun_threshold2(gSavedSettings, "KokuaStatGraphPctRunThreshold2", 66.f);
+	static LLCachedControl<F32> scripttime_threshold1(gSavedSettings, "KokuaStatGraphScriptTimeThreshold1", 12.f);
+	static LLCachedControl<F32> scripttime_threshold2(gSavedSettings, "KokuaStatGraphScriptTimeThreshold2", 18.f);
+	static LLCachedControl<F32> sparetime_threshold1(gSavedSettings, "KokuaStatGraphSpareTimeThreshold1", 2.f);
+	static LLCachedControl<F32> sparetime_threshold2(gSavedSettings, "KokuaStatGraphSpareTimeThreshold2", 4.f);
 	//
 	//	update the netstat graph and FPS counter text
 	//
@@ -344,6 +351,13 @@ void LLStatusBar::refresh()
 		mSGBandwidth->setMax(bwtotal * 1.25f);
 		mSGBandwidth->setThreshold(1, bwtotal * 0.60f);
 		mSGBandwidth->setThreshold(2, bwtotal);
+		//KKA-821 update the crossover points
+		mSGScriptPctRun->setThreshold(1, pctrun_threshold1);
+		mSGScriptPctRun->setThreshold(2, pctrun_threshold2);
+		mSGScriptTime->setThreshold(1, scripttime_threshold1);
+		mSGScriptTime->setThreshold(2, scripttime_threshold2);
+		mSGSpareTime->setThreshold(1, sparetime_threshold1);
+		mSGSpareTime->setThreshold(2, sparetime_threshold2);
 	}
 	
 	if (fps_stats_visible) {

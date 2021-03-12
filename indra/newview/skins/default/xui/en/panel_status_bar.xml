@@ -324,10 +324,11 @@
                 max="100"
                 precision="1"
                 mouse_opaque="true">
+                <!-- these threshold values will get overriden from gSavedSettings) -->
                 <thresholds>
                     <threshold value="0.0" color="Red" />
-                    <threshold value="25.0" color="Yellow" />
-                    <threshold value="50.0" color="Green" />
+                    <threshold value="33.0" color="Yellow" />
+                    <threshold value="66.0" color="Green" />
                 </thresholds>
             </statistics_graph>
             <statistics_graph
@@ -342,10 +343,11 @@
                 max="20"
                 precision="1"
                 mouse_opaque="true">
+                <!-- these threshold values will get overriden from gSavedSettings) -->
                 <thresholds>
                     <threshold value="0.0" color="Green" />
-                    <threshold value="10.0" color="Yellow" />
-                    <threshold value="15.0" color="Red" />
+                    <threshold value="12.0" color="Yellow" />
+                    <threshold value="18.0" color="Red" />
                 </thresholds>
             </statistics_graph>
             <statistics_graph
@@ -361,10 +363,11 @@
                 max="20"
                 precision="1"
                 mouse_opaque="true">
+                <!-- these threshold values will get overriden from gSavedSettings) -->
                 <thresholds>
                     <threshold value="0.0" color="Red" />
-                    <threshold value="4.0" color="Yellow" />
-                    <threshold value="8.0" color="Green" />
+                    <threshold value="3.0" color="Yellow" />
+                    <threshold value="6.0" color="Green" />
                 </thresholds>
             </statistics_graph>
         </layout_panel>
