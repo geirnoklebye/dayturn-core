@@ -331,7 +331,7 @@ public:
 	F32 mSittpMax;
 	F32 mFartouchMax;
 
-	LLPointer<LLViewerFetchedTexture> mCamTexturesCustom;
+	LLViewerFetchedTexture* mCamTexturesCustom;
 
 	std::string mParcelName; // for convenience (gAgent does not retain the name of the current parcel)
 	LLParcel::ELandingType mParcelLandingType; // for convenience
