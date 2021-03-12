@@ -1411,6 +1411,10 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 
 	std::string canon_action = action;
 	if (option!="") action+=":"+option;
+
+	BOOL must_remove_setsphere_params = FALSE; // if true, run the loop a second time afterwards to remove all the @setsphere_xxx:yyy commands associated with the same UUID
+	BOOL must_update_setsphere = FALSE; // if true, call updateSetSphere() and update the preferences windows afterwards
+	BOOL removed_behav = FALSE;
 	
 	// Notify if needed
 	notify (object_uuid, action, "=y");
@@ -1419,9 +1423,7 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 
 	// Remove the behav
 	RRMAP::iterator it = mSpecialObjectBehaviours.find (object_uuid.asString());
-	while (it != mSpecialObjectBehaviours.end() &&
-			it != mSpecialObjectBehaviours.upper_bound(object_uuid.asString()))
-	{
+	while (it != mSpecialObjectBehaviours.end() && it != mSpecialObjectBehaviours.upper_bound(object_uuid.asString())) {
 		if (sRestrainedLoveLogging) {
 			LL_INFOS() << "  checking " << it->second << LL_ENDL;
 		}
@@ -1450,14 +1452,13 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 				updateCameraLimits ();
 			}
 			else if (canon_action.find ("setsphere") == 0) {
-				updateSetsphere();
-				LLFloaterPreference* preferences = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
-				if (preferences) {
-					preferences->refreshEnabledState();
+				must_update_setsphere = true; // to make sure we call this only once after we've taken care of setsphere
+				// If we are removing @setsphere proper (not a param), then we must remove all the @setsphere_xxx parameters associated with this UUID.
+				if (sRestrainedLoveLogging) {
+					LL_INFOS() << "canon_action: " << canon_action << LL_ENDL;
 				}
-				LLFloaterPreferenceGraphicsAdvanced* floater_graphics_advanced = LLFloaterReg::findTypedInstance<LLFloaterPreferenceGraphicsAdvanced>("prefs_graphics_advanced");
-				if (floater_graphics_advanced) {
-					floater_graphics_advanced->refreshEnabledState();
+				if (canon_action == "setsphere") {
+					must_remove_setsphere_params = true;
 				}
 			}
 			else if (canon_action == "fartouch"
@@ -1475,12 +1476,57 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 			std::string notify = action + "=y";
 			KokuaRLVFloaterSupport::commandNotify(object_uuid, notify);
 
-			return TRUE;
+			removed_behav = TRUE;
+			break;
 		}
 		it++;
 	}
 
-	return FALSE;
+	if (sRestrainedLoveLogging) {
+		LL_INFOS() << "must_update_setsphere=" << must_update_setsphere << ", must_remove_setsphere_params=" << must_remove_setsphere_params << LL_ENDL;
+	}
+
+	// If we removed @setsphere, remove all the parameters associated with the same UUID as well.
+	if (must_remove_setsphere_params) {
+		BOOL found_one = TRUE;
+		std::string str_object_uuid = object_uuid.asString();
+		while (found_one) {
+			found_one = FALSE;
+			it = mSpecialObjectBehaviours.begin();
+			while (it != mSpecialObjectBehaviours.end()) {
+				// If we have found a @setsphere_xxx command associated with this UUID, remove it.
+				if (it->first == str_object_uuid && it->second.find("setsphere_") == 0) {
+					// Notify if needed
+					notify(object_uuid, it->second, "=y");
+
+					// Remove this setsphere_xxx command.
+					std::string tmp = it->second;
+					mSpecialObjectBehaviours.erase(it);
+					if (sRestrainedLoveLogging) {
+						LL_INFOS() << "removing outstanding setsphere param: " << tmp << LL_ENDL;
+					}
+					refreshCachedVariable(tmp);
+					found_one = TRUE;
+					break; // there may be more to remove => return to the beginning of the map and keep searching
+				}
+				it++;
+			}
+		}
+	}
+
+	if (must_update_setsphere) {
+		updateSetsphere();
+		LLFloaterPreference* preferences = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
+		if (preferences) {
+			preferences->refreshEnabledState();
+		}
+		LLFloaterPreferenceGraphicsAdvanced* floater_graphics_advanced = LLFloaterReg::findTypedInstance<LLFloaterPreferenceGraphicsAdvanced>("prefs_graphics_advanced");
+		if (floater_graphics_advanced) {
+			floater_graphics_advanced->refreshEnabledState();
+		}
+	}
+
+	return removed_behav;
 }
 
 BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
@@ -2330,6 +2376,9 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 		F32 new_fov_rad = atof(option.c_str());
 		LLViewerCamera::getInstance()->setDefaultFOV(new_fov_rad);
 		gSavedSettings.setF32("CameraAngle", LLViewerCamera::getInstance()->getView()); // setView may have clamped it.
+	}
+	else if (command.find("setsphere_") == 0) { // HACK : since RLVa expects "@setsphere_xxx:yyy=force", while the API expects "@setsphere_xxx:yyy=n", make it so the former is interpreted as the latter here (but this also means we have to remove all the parameters when @setsphere=y is received)
+		add(object_uuid, command, option);
 	}
 	return TRUE;
 }
