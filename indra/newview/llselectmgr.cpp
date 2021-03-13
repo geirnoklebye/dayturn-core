@@ -6052,7 +6052,7 @@ void LLSelectMgr::renderSilhouettes(BOOL for_hud)
 ////mk
 
 //CA: Two options for selection outlines under camera restrictions. If selection outlines are set to off we bail out here
-	static LLCachedControl<bool> selectionOutlines(gSavedSettings, "RestrainedLoveSelectionOutlines", TRUE);
+	static LLCachedControl<bool> selectionOutlines(gSavedSettings, "RestrainedLoveSelectionOutlines", FALSE);
 	if (gRRenabled && !selectionOutlines && !for_hud && gAgent.mRRInterface.mVisionRestricted)
 	{
 		return;

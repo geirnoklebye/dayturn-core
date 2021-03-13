@@ -6409,7 +6409,7 @@ F32 calculateDesiredAlphaPerStep (F32 desired_alpha, int nb_layers)
 // - If force_opaque is TRUE, then the inner sphere will be opaque and no other sphere will be rendered.
 void RRInterface::drawRenderLimit (BOOL force_opaque /*= FALSE*/)
 {
-	static LLCachedControl<bool> selectionOutlines(gSavedSettings, "RestrainedLoveSelectionOutlines", TRUE);
+	static LLCachedControl<bool> selectionOutlines(gSavedSettings, "RestrainedLoveSelectionOutlines", FALSE);
 	//if (true) return;
 
 	//if (sRenderLimitRenderedThisFrame) { // already rendered the vision spheres during this rendering frame ? => bail
