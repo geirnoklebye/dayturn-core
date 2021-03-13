@@ -6051,6 +6051,13 @@ void LLSelectMgr::renderSilhouettes(BOOL for_hud)
 //	}
 ////mk
 
+//CA: Two options for selection outlines under camera restrictions. If selection outlines are set to off we bail out here
+	static LLCachedControl<bool> selectionOutlines(gSavedSettings, "RestrainedLoveSelectionOutlines", TRUE);
+	if (gRRenabled && !selectionOutlines && !for_hud && gAgent.mRRInterface.mVisionRestricted)
+	{
+		return;
+	}
+
 	gGL.getTexUnit(0)->bind(mSilhouetteImagep);
 	LLGLSPipelineSelection gls_select;
 	LLGLEnable blend(GL_BLEND);

@@ -1291,6 +1291,17 @@
       <key>Value</key>
       <boolean>0</boolean>
     </map>
+    <key>RestrainedLoveSelectionOutlines</key>
+    <map>
+      <key>Comment</key>
+      <string>Selecting under vision restrictions can reveal information through selection outlines. False: No selection outlines while restricted. True: Outlines drawn but vision limited to minimum distance</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <boolean>0</boolean>
+    </map>
     <key>ShowProfileFloaters</key>
     <map>
       <key>Comment</key>

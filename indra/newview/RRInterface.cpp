@@ -6409,6 +6409,7 @@ F32 calculateDesiredAlphaPerStep (F32 desired_alpha, int nb_layers)
 // - If force_opaque is TRUE, then the inner sphere will be opaque and no other sphere will be rendered.
 void RRInterface::drawRenderLimit (BOOL force_opaque /*= FALSE*/)
 {
+	static LLCachedControl<bool> selectionOutlines(gSavedSettings, "RestrainedLoveSelectionOutlines", TRUE);
 	//if (true) return;
 
 	//if (sRenderLimitRenderedThisFrame) { // already rendered the vision spheres during this rendering frame ? => bail
@@ -6437,7 +6438,8 @@ void RRInterface::drawRenderLimit (BOOL force_opaque /*= FALSE*/)
 	// Also make the inner sphere opaque if we're highlighting invisible surfaces or if anything is highlighted by a selection (edit, select or drag and drop).
 	if (force_opaque
 	|| LLDrawPoolAlpha::sShowDebugAlpha
-	|| (LLSelectMgr::getInstance()->mRenderHighlightSelections && (!LLSelectMgr::getInstance()->getSelection()->isEmpty() || LLToolDragAndDrop::getInstance()->getCargoCount() > 0))
+//CA: Two options for selection outlines under camera restrictions. If selection outlines are set to on we force opaque here
+	|| (selectionOutlines && LLSelectMgr::getInstance()->mRenderHighlightSelections && (!LLSelectMgr::getInstance()->getSelection()->isEmpty() || LLToolDragAndDrop::getInstance()->getCargoCount() > 0))
 	|| mCamDistDrawAlphaMin >= UPPER_ALPHA_LIMIT)
 	{
 		drawSphere(center, mCamDistDrawMin, mCamDistDrawColor, 1.f);
