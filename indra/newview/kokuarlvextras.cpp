@@ -359,32 +359,30 @@ bool KokuaRLVExtras::cannotSendIM(const LLUUID& im_session_id, const std::string
 		
 	if (gRRenabled)
 	{
-		if (session)
+		// bugfix: we only have a session if it's a group chat
+		if (session && session->isGroupChat())
 		{
-			if (session->isGroupChat())
+			std::string all_groups = "allgroups"; // by default, "allgroups" means "allow to send IMs to all groups", but this name may be replaced by a specific group name
+			std::string group_name = session->mName;
+			group_name = gAgent.mRRInterface.stringReplace(session->mName, ",", ""); // remove the "," from the group name to check against the RLV restrictions as "," is supposed to be a high-level separator
+			group_name = gAgent.mRRInterface.stringReplace(session->mName, ";", ""); // ";" could also be a separator in the future so let's preemptively remove it here
+			if ((gAgent.mRRInterface.containsWithoutException("sendim", group_name) && gAgent.mRRInterface.containsWithoutException("sendim", all_groups))
+			|| gAgent.mRRInterface.contains("sendimto:" + group_name)
+			|| gAgent.mRRInterface.contains("sendimto:" + all_groups)
+			)
 			{
-				std::string all_groups = "allgroups"; // by default, "allgroups" means "allow to send IMs to all groups", but this name may be replaced by a specific group name
-				std::string group_name = session->mName;
-				group_name = gAgent.mRRInterface.stringReplace(session->mName, ",", ""); // remove the "," from the group name to check against the RLV restrictions as "," is supposed to be a high-level separator
-				group_name = gAgent.mRRInterface.stringReplace(session->mName, ";", ""); // ";" could also be a separator in the future so let's preemptively remove it here
-				if ((gAgent.mRRInterface.containsWithoutException("sendim", group_name) && gAgent.mRRInterface.containsWithoutException("sendim", all_groups))
-				|| gAgent.mRRInterface.contains("sendimto:" + group_name)
-				|| gAgent.mRRInterface.contains("sendimto:" + all_groups)
-				)
-				{
-					// user is forbidden to send IMs and the receiver group is no exception
-					return true;
-				}
+				// user is forbidden to send IMs and the receiver group is no exception
+				return true;
 			}
-			else
+		}
+		else
+		{
+			if (gAgent.mRRInterface.containsWithoutException("sendim", other_party)
+			|| gAgent.mRRInterface.contains("sendimto:" + other_party)
+			)
 			{
-				if (gAgent.mRRInterface.containsWithoutException("sendim", other_party)
-				|| gAgent.mRRInterface.contains("sendimto:" + other_party)
-				)
-				{
-					// user is forbidden to send IMs and the receiver avatar is no exception
-					return true;
-				}
+				// user is forbidden to send IMs and the receiver avatar is no exception
+				return true;
 			}
 		}
 	}
@@ -396,31 +394,29 @@ bool KokuaRLVExtras::cannotRecvIM(const LLUUID& im_session_id, const std::string
 	LLIMModel::LLIMSession* session = LLIMModel::getInstance()->findIMSession(im_session_id);
 	if (gRRenabled)
 	{
-		if (session)
+		// bugfix: we only have a session if it's a group chat
+		if (session && session->isGroupChat())
 		{
-			if (session->isGroupChat())
+			std::string all_groups = "allgroups"; // by default, "allgroups" means "allow to send IMs to all groups", but this name may be replaced by a specific group name
+			std::string group_name = session->mName;
+			group_name = gAgent.mRRInterface.stringReplace(session->mName, ",", ""); // remove the "," from the group name to check against the RLV restrictions as "," is supposed to be a high-level separator
+			group_name = gAgent.mRRInterface.stringReplace(session->mName, ";", ""); // ";" could also be a separator in the future so let's preemptively remove it here
+			if (((gAgent.mRRInterface.containsWithoutException("recvim", other_party) || gAgent.mRRInterface.contains("recvimfrom:" + other_party))
+				&& gAgent.mRRInterface.containsWithoutException("recvim", group_name) && gAgent.mRRInterface.containsWithoutException("recvim", all_groups))
+				|| gAgent.mRRInterface.contains("recvimfrom:" + group_name)
+				|| gAgent.mRRInterface.contains("recvimfrom:" + all_groups)
+				)
 			{
-				std::string all_groups = "allgroups"; // by default, "allgroups" means "allow to send IMs to all groups", but this name may be replaced by a specific group name
-				std::string group_name = session->mName;
-				group_name = gAgent.mRRInterface.stringReplace(session->mName, ",", ""); // remove the "," from the group name to check against the RLV restrictions as "," is supposed to be a high-level separator
-				group_name = gAgent.mRRInterface.stringReplace(session->mName, ";", ""); // ";" could also be a separator in the future so let's preemptively remove it here
-				if (((gAgent.mRRInterface.containsWithoutException("recvim", other_party) || gAgent.mRRInterface.contains("recvimfrom:" + other_party))
-					&& gAgent.mRRInterface.containsWithoutException("recvim", group_name) && gAgent.mRRInterface.containsWithoutException("recvim", all_groups))
-					|| gAgent.mRRInterface.contains("recvimfrom:" + group_name)
-					|| gAgent.mRRInterface.contains("recvimfrom:" + all_groups)
-					)
-				{
-					return true;
-				}
+				return true;
 			}
-			else
+		}
+		else
+		{
+			if (gAgent.mRRInterface.containsWithoutException("recvim", other_party)
+				|| gAgent.mRRInterface.contains("recvimfrom:" + other_party))
 			{
-				if (gAgent.mRRInterface.containsWithoutException("recvim", other_party)
-					|| gAgent.mRRInterface.contains("recvimfrom:" + other_party))
-				{
-					return true;
-				}			
-			}
+				return true;
+			}			
 		}
 	}
 	return false;
