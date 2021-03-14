@@ -760,20 +760,25 @@ void KokuaFloaterRLVStatus::refreshRLVStatus()
 		if (option != "" && (idOption.set(option, FALSE)) && (idOption.notNull()))
 		{
 			LLAvatarName avName;
-			if (gObjectList.findObject(idOption))
+			//KKA-823 add exception for camtextures/setcam_textures - a texture uuid isn't going to resolve to a name
+			//It's ok that we don't test for the colon - we wouldn't be here unless we'd already found it there and set up 'option'
+			if (behav.find("camtextures") != 0 && behav.find("setcam_textures") != 0)
 			{
-				option = KokuaRLVFloaterSupport::getNameFromUUID(idOption, false);
-			}
-			else if (LLAvatarNameCache::get(idOption, &avName))
-			{
-				option = (!avName.getAccountName().empty()) ? avName.getAccountName() : avName.getDisplayName();
-			}
-			else if (!gCacheName->getGroupName(idOption, option))
-			{
-				if (m_PendingLookup.end() == std::find(m_PendingLookup.begin(), m_PendingLookup.end(), idOption))
+				if (gObjectList.findObject(idOption))
 				{
-					LLAvatarNameCache::get(idOption, boost::bind(&KokuaFloaterRLVStatus::onAvatarNameLookup, this, _1, _2));
-					m_PendingLookup.push_back(idOption);
+					option = KokuaRLVFloaterSupport::getNameFromUUID(idOption, false);
+				}
+				else if (LLAvatarNameCache::get(idOption, &avName))
+				{
+					option = (!avName.getAccountName().empty()) ? avName.getAccountName() : avName.getDisplayName();
+				}
+				else if (!gCacheName->getGroupName(idOption, option))
+				{
+					if (m_PendingLookup.end() == std::find(m_PendingLookup.begin(), m_PendingLookup.end(), idOption))
+					{
+						LLAvatarNameCache::get(idOption, boost::bind(&KokuaFloaterRLVStatus::onAvatarNameLookup, this, _1, _2));
+						m_PendingLookup.push_back(idOption);
+					}
 				}
 			}
 		}
