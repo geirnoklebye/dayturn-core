@@ -29,7 +29,7 @@
 #define LL_RRINTERFACEVERSION_H
 
 // we need a switch to determine whether setsphere is activated (2.9.30 else 2.9.29) and since this header has no includes, it needs to be here
-#define DISABLE_SETSPHERE
+//#define DISABLE_SETSPHERE
 
 // Relocated to this file to avoid recompiling most of newview through a change to llagent.h (which includes RRinterface.h)
 
