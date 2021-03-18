@@ -95,6 +95,7 @@ public:
 	void setFocusFilterEditor();
 
 	static void newWindow();
+	static void newLiteWindow(); // KKA-827 Just inventory, no recent/worn
 
 	void toggleFindOptions();
 

@@ -990,6 +990,8 @@ LLFolderViewItem* LLInventoryPanel::buildViewsTree(const LLUUID& id,
     // Force the creation of an extra root level folder item if required by the inventory panel (default is "false")
     bool allow_drop = true;
     bool create_root = false;
+	//KKA-827 Only do this once and promise the compiler it's not going to change
+	const LLAssetType::EType object_type = objectp->getType();
     if (mParams.show_root_folder)
     {
         LLUUID root_id = getRootFolderID();
@@ -1005,19 +1007,19 @@ LLFolderViewItem* LLInventoryPanel::buildViewsTree(const LLUUID& id,
 
  	if (!folder_view_item && parent_folder)
   		{
-			if (objectp->getType() <= LLAssetType::AT_NONE)
+			if (object_type <= LLAssetType::AT_NONE)
 			{
 				LL_WARNS() << "LLInventoryPanel::buildViewsTree called with invalid objectp->mType : "
-					<< ((S32)objectp->getType()) << " name " << objectp->getName() << " UUID " << objectp->getUUID()
+					<< ((S32)object_type) << " name " << objectp->getName() << " UUID " << objectp->getUUID()
 					<< LL_ENDL;
 				return NULL;
 			}
 			
-			if (objectp->getType() >= LLAssetType::AT_COUNT)
+			if (object_type >= LLAssetType::AT_COUNT)
   			{
 				// Example: Happens when we add assets of new, not yet supported type to library
 				LL_DEBUGS() << "LLInventoryPanel::buildViewsTree called with unknown objectp->mType : "
-				<< ((S32) objectp->getType()) << " name " << objectp->getName() << " UUID " << objectp->getUUID()
+				<< ((S32)object_type) << " name " << objectp->getName() << " UUID " << objectp->getUUID()
 				<< LL_ENDL;
 
 				LLInventoryItem* item = (LLInventoryItem*)objectp;
@@ -1039,7 +1041,7 @@ LLFolderViewItem* LLInventoryPanel::buildViewsTree(const LLUUID& id,
 				}
   			}
   		
-  			if ((objectp->getType() == LLAssetType::AT_CATEGORY) &&
+  			if ((object_type == LLAssetType::AT_CATEGORY) &&
   				(objectp->getActualType() != LLAssetType::AT_LINK_FOLDER))
   			{
   				LLInvFVBridge* new_listener = mInvFVBridgeBuilder->createBridge(LLAssetType::AT_CATEGORY,
@@ -1092,6 +1094,13 @@ LLFolderViewItem* LLInventoryPanel::buildViewsTree(const LLUUID& id,
 	{
 		LLViewerInventoryCategory::cat_array_t* categories;
 		LLViewerInventoryItem::item_array_t* items;
+		//KKA-827 Optimise by defining and reusing these. The routine recurses so the scope has to stay internal though
+		LLViewerInventoryCategory* cat;
+		LLUUID cat_uuid;
+		LLViewerInventoryItem* item;
+		LLUUID item_uuid;
+		LLFolderViewItem* view_itemp = NULL;
+		std::map<LLUUID, LLFolderViewItem*>::iterator map_it;
 		mInventory->lockDirectDescendentArrays(id, categories, items);
 
         LLFolderViewFolder *parentp = dynamic_cast<LLFolderViewFolder*>(folder_view_item);
@@ -1103,20 +1112,34 @@ LLFolderViewItem* LLInventoryPanel::buildViewsTree(const LLUUID& id,
 				 cat_iter != categories->end();
 				 ++cat_iter)
 			{
-				const LLViewerInventoryCategory* cat = (*cat_iter);
-                if (typedViewsFilter(cat->getUUID(), cat))
+				//KKA_827 Don't keep defining and throwing away these variables
+				//const LLViewerInventoryCategory* cat = (*cat_iter);
+				//const LLUUID cat_uuid = cat->getUUID();
+				cat = (*cat_iter);
+				cat_uuid = cat->getUUID();
+				if (typedViewsFilter(cat_uuid, cat))
                 {
                     if (has_folders)
                     {
                         // This can be optimized: we don't need to call getItemByID()
                         // each time, especially since content is growing, we can just
                         // iter over copy of mItemMap in some way
-                        LLFolderViewItem* view_itemp = getItemByID(cat->getUUID());
-                        buildViewsTree(cat->getUUID(), id, cat, view_itemp, parentp);
+                        //LLFolderViewItem* view_itemp = getItemByID(cat_uuid);
+						//buildViewsTree(cat_uuid, id, cat, view_itemp, parentp);
+
+						//KKA-827 Optimise as suggested above to not call getItemByID()
+						//KKA-827 In addition, only call cat->getUUID() once
+						view_itemp = NULL;
+						map_it = mItemMap.find(cat_uuid);
+						if (map_it != mItemMap.end())
+						{
+							view_itemp = map_it->second;
+						}
+						buildViewsTree(cat_uuid, id, cat, view_itemp, parentp);
                     }
                     else
                     {
-                        buildViewsTree(cat->getUUID(), id, cat, NULL, parentp);
+                        buildViewsTree(cat_uuid, id, cat, NULL, parentp);
                     }
                 }
 			}
@@ -1128,22 +1151,38 @@ LLFolderViewItem* LLInventoryPanel::buildViewsTree(const LLUUID& id,
 				 item_iter != items->end();
 				 ++item_iter)
 			{
-				const LLViewerInventoryItem* item = (*item_iter);
-                if (typedViewsFilter(item->getUUID(), item))
+				//KKA_827 Don't keep defining and throwing away these variables
+				//const LLViewerInventoryItem* item = (*item_iter);
+				//const LLUUID item_uuid = item->getUUID();
+				item = (*item_iter);
+				item_uuid = item->getUUID();
+				if (typedViewsFilter(item_uuid, item))
                 {
 
                     // This can be optimized: we don't need to call getItemByID()
                     // each time, especially since content is growing, we can just
                     // iter over copy of mItemMap in some way
-                    LLFolderViewItem* view_itemp = getItemByID(item->getUUID());
-                    buildViewsTree(item->getUUID(), id, item, view_itemp, parentp);
+                    //LLFolderViewItem* view_itemp = getItemByID(item_uuid);
+					//buildViewsTree(item_uuid, id, item, view_itemp, parentp);
+
+					//KKA-827 Optimise as suggested above to not call getItemByID()
+					//KKA-827 In addition, only call item->getUUID() once
+					map_it = mItemMap.find(item_uuid);
+					view_itemp = NULL;
+					if (map_it != mItemMap.end())
+					{
+						view_itemp = (map_it->second);
+					}
+					buildViewsTree(item_uuid, id, item, view_itemp, parentp);
                 }
 
 			}
 		}
+//KKA-827 This function does nothing unless LL_DEBUG is defined so only call it then
+#if LL_DEBUG
 		mInventory->unlockDirectDescendentArrays(id);
+#endif
 	}
-	
 	return folder_view_item;
 }
 

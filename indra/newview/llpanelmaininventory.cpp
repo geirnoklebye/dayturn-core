@@ -167,7 +167,8 @@ BOOL LLPanelMainInventory::postBuild()
 		mActivePanel->setSelectCallback(boost::bind(&LLPanelMainInventory::onSelectionChange, this, mActivePanel, _1, _2));
 		mResortActivePanel = true;
 	}
-	LLInventoryPanel* recent_items_panel = getChild<LLInventoryPanel>("Recent Items");
+	//KKA-827 change to find here because we do not want a dummy class made if absent
+	LLInventoryPanel* recent_items_panel = findChild<LLInventoryPanel>("Recent Items");
 	if (recent_items_panel)
 	{
 		// assign default values until we will be sure that we have setting to restore
@@ -182,7 +183,8 @@ BOOL LLPanelMainInventory::postBuild()
 		recent_items_panel->setSelectCallback(boost::bind(&LLPanelMainInventory::onSelectionChange, this, recent_items_panel, _1, _2));
 	}
 
-	mWornItemsPanel = getChild<LLInventoryPanel>("Worn Items");
+	//KKA-827 change to find here because we do not want a dummy class made if absent
+	mWornItemsPanel = findChild<LLInventoryPanel>("Worn Items");
 	if (mWornItemsPanel)
 	{
 		U32 filter_types = 0x0;
@@ -379,6 +381,17 @@ void LLPanelMainInventory::newWindow()
 	if (!gAgentCamera.cameraMouselook())
 	{
 		LLFloaterReg::showTypedInstance<LLFloaterSidePanelContainer>("inventory", LLSD(instance_num));
+	}
+}
+
+void LLPanelMainInventory::newLiteWindow() // KKA-827 Just inventory, no recent/worn
+{
+	static S32 instance_num = 0;
+	instance_num = (instance_num + 1) % S32_MAX;
+
+	if (!gAgentCamera.cameraMouselook())
+	{
+		LLFloaterReg::showTypedInstance<LLFloaterSidePanelContainer>("inventory_lite", LLSD(instance_num));
 	}
 }
 
@@ -858,7 +871,11 @@ void LLPanelMainInventory::toggleFindOptions()
 void LLPanelMainInventory::setSelectCallback(const LLFolderView::signal_t::slot_type& cb)
 {
 	getChild<LLInventoryPanel>("All Items")->setSelectCallback(cb);
-	getChild<LLInventoryPanel>("Recent Items")->setSelectCallback(cb);
+	//KKA-827 Avoid creating a dummy if this is a lite window without recent/worn
+	if (findChild<LLInventoryPanel>("Recent Items"))
+	{
+		getChild<LLInventoryPanel>("Recent Items")->setSelectCallback(cb);
+	}
 }
 
 void LLPanelMainInventory::onSelectionChange(LLInventoryPanel *panel, const std::deque<LLFolderViewItem*>& items, BOOL user_action)
@@ -1339,6 +1356,10 @@ void LLPanelMainInventory::onCustomAction(const LLSD& userdata)
 	if (command_name == "new_window")
 	{
 		newWindow();
+	}
+	if (command_name == "new_lite_window") // KKA-827 Just inventory, no recent/worn
+	{
+		newLiteWindow();
 	}
 	if (command_name == "sort_by_name")
 	{

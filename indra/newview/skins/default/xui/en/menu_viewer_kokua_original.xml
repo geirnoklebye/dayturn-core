@@ -599,6 +599,15 @@
          parameter="" />
       </menu_item_call>
       <menu_item_call
+       label="Quick Inventory Window"
+       name="QuickInventoryWindow"
+       shortcut="control|shift|J"
+       visible="false">
+        <menu_item_call.on_click
+         function="Inventory.NewLiteWindow"
+         parameter="" />
+      </menu_item_call>
+      <menu_item_call
        label="Places..."
        name="Places">
         <menu_item_call.on_click
@@ -2043,16 +2052,6 @@
             <menu_item_call.on_enable
               function="View.EnableMouselook" />
         </menu_item_call>
-        <menu_item_check
-         label="Inventory DeCloud"
-         name="Inventory DeCloud">
-          <menu_item_check.on_check
-           function="CheckControl"
-           parameter="InventoryFetchDeCloudDebug" />
-          <menu_item_check.on_click
-           function="ToggleControl"
-           parameter="InventoryFetchDeCloudDebug" />
-        </menu_item_check>        
         <menu_item_check
          label="Do Not Let Me Fly"
          name="Disable Fly">
