@@ -582,17 +582,6 @@
              top_pad="5"
              layout="topleft"
              height="16"
-             label="Use LindenLab de-cloud modification. Unset to by-pass (Recommended setting is ON) "
-             left="15"
-             name="InventoryFetchDeCloudDebug"
-             width="270"
-             control_name="InventoryFetchDeCloudDebug"
-             tool_tip="If enabled, the inventory processing will wait until wearable items are present to fetech inventory, the LindenLab default, If disabled, the wait in ignored.">
-            </check_box>
-            <check_box
-             top_pad="5"
-             layout="topleft"
-             height="16"
              label="Ignore attachment detach requests from other regions (Recommended setting is ON) "
              left="15"
              name="IgnoreOuterRegionAttachKill"

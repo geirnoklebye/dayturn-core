@@ -97,7 +97,6 @@ LLInventoryFilter::LLInventoryFilter(const Params& p)
 	mUsername = gAgentUsername;
 	LLStringUtil::toUpper(mUsername);
 }
-static bool InventoryFetchDeCloudDebug;
 // ## Zi: Extended Inventory Search
 void LLInventoryFilter::setFilterSubStringTarget(const std::string& targetName)
 {
@@ -251,36 +250,17 @@ bool LLInventoryFilter::checkFolder(const LLUUID& folder_id) const
 
 	// when applying a filter, matching folders get their contents downloaded first
 	// but make sure we are not interfering with pre-download
-    static LLCachedControl<bool> InventoryFetchDeCloudDebug(gSavedSettings, "InventoryFetchDeCloudDebug");
-
-    if ( InventoryFetchDeCloudDebug )
+	if (isNotDefault()
+		&& LLStartUp::getStartupState() > STATE_WEARABLES_WAIT)
     {
-        LL_DEBUGS_ONCE("Inventory") << "Waiting on Wearables " << InventoryFetchDeCloudDebug << LL_ENDL;
-        if (isNotDefault()
-            && LLStartUp::getStartupState() > STATE_WEARABLES_WAIT)
-        {
-            // At the moment background fetch only cares about VERSION_UNKNOWN,
-            // so do not check isCategoryComplete that compares descendant count
-           LLInventoryModelBackgroundFetch::instance().start(folder_id);
-        }
-    }
-    else
-    {
-        LL_DEBUGS_ONCE("Inventory") << "Not Waiting on Wearables " << InventoryFetchDeCloudDebug << LL_ENDL;
-        if (isNotDefault())
+        LLViewerInventoryCategory* cat = gInventory.getCategory(folder_id);
+        if (!cat || (cat->getVersion() == LLViewerInventoryCategory::VERSION_UNKNOWN))
         {
             // At the moment background fetch only cares about VERSION_UNKNOWN,
             // so do not check isCategoryComplete that compares descendant count
             LLInventoryModelBackgroundFetch::instance().start(folder_id);
         }
-    }
-	// when applying a filter, matching folders get their contents downloaded first
-	if (mFilterSubString.size()
-		&& !gInventory.isCategoryComplete(folder_id))
-	{
-		LLInventoryModelBackgroundFetch::instance().start(folder_id);
 	}
-
 
 	// Marketplace folder filtering
     const U32 filterTypes = mFilterOps.mFilterTypes;
@@ -500,17 +480,10 @@ bool LLInventoryFilter::checkAgainstFilterType(const LLFolderViewModelItemInvent
 			{
 				// Force the fetching of those folders so they are hidden if they really are empty...
 				// But don't interfere with startup download
-                if ( InventoryFetchDeCloudDebug )
-                {
-                    if (LLStartUp::getStartupState() > STATE_WEARABLES_WAIT )
-                    {
-                        gInventory.fetchDescendentsOf(object_id);
-                    }
-                }
-                else
-                {
-                    gInventory.fetchDescendentsOf(object_id);
-                }
+				if (LLStartUp::getStartupState() > STATE_WEARABLES_WAIT)
+				{
+					gInventory.fetchDescendentsOf(object_id);
+				}
 
 				LLInventoryModel::cat_array_t* cat_array = NULL;
 				LLInventoryModel::item_array_t* item_array = NULL;

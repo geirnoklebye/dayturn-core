@@ -1700,16 +1700,6 @@
               function="View.EnableMouselook" />
         </menu_item_call>
         <menu_item_check
-         label="Inventory DeCloud"
-         name="Inventory DeCloud">
-          <menu_item_check.on_check
-           function="CheckControl"
-           parameter="InventoryFetchDeCloudDebug" />
-          <menu_item_check.on_click
-           function="ToggleControl"
-           parameter="InventoryFetchDeCloudDebug" />
-        </menu_item_check>        
-        <menu_item_check
          label="Do Not Let Me Fly"
          name="Disable Fly">
           <menu_item_check.on_check
