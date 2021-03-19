@@ -143,6 +143,7 @@ class ViewerManifest(LLManifest):
             with self.prefix(src_dst="fonts"):
                 self.path("*.ttf")
                 self.path("*.txt")
+                self.path("*.xml")
 
             # skins
             with self.prefix(src_dst="skins"):

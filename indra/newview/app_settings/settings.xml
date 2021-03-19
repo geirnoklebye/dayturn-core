@@ -20920,6 +20920,28 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
+    <key>FSFontSettingsFile</key>
+    <map>
+      <key>Comment</key>
+      <string>The font settings file with the font currently being used.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string>fonts.xml</string>
+    </map>
+    <key>FSFontSizeAdjustment</key>
+    <map>
+      <key>Comment</key>
+      <string>Number of points to add to the defualt font sizes</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>0.0</real>
+    </map>
   </map>
 </llsd>
 

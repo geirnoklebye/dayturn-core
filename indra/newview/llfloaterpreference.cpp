@@ -124,6 +124,8 @@
 
 #include "llsearchableui.h"
 
+// Firestorm Includes
+#include "lldiriterator.h"	// <Kadah> for populating the fonts combo
 #include "llpanelblockedlist.h"
 
 #include "lltoolbarview.h"
@@ -646,6 +648,9 @@ BOOL LLFloaterPreference::postBuild()
 		getChild<LLComboBox>("language_combobox")->add("System default", LLSD("default"), ADD_TOP, true);
 	}
 
+	// <FS:Kadah> Load the list of font settings
+	populateFontSelectionCombo();
+	// </FS:Kadah>
 	return TRUE;
 }
 
@@ -4173,6 +4178,51 @@ void FSPanelPreferenceBackup::applySelection(LLScrollListCtrl* control, BOOL all
 }
 // </FS:Zi>
 
+// <FS:Kadah>
+void LLFloaterPreference::loadFontPresetsFromDir(const std::string& dir, LLComboBox* font_selection_combo)
+{
+	LLDirIterator dir_iter(dir, "*.xml");
+	std::string file;
+	while (dir_iter.next(file))
+	{
+		//hack to deal with "fonts.xml" 
+		if (file == "fonts.xml")
+		{
+			font_selection_combo->add("Deja Vu", file);
+		}
+		//hack to get "fonts_[name].xml" to "Name"
+		else
+		{
+			std::string fontpresetname = file.substr(6, file.length() - 10);
+			LLStringUtil::replaceChar(fontpresetname, '_', ' ');
+			fontpresetname[0] = LLStringOps::toUpper(fontpresetname[0]);
+			// see if we have a pretty name we can use
+			std::string font_name;
+			if (LLTrans::findString(font_name, file))
+			{
+				fontpresetname = font_name;
+			}
+			font_selection_combo->add(fontpresetname, file);
+		}
+	}
+}
+
+void LLFloaterPreference::populateFontSelectionCombo()
+{
+	LLComboBox* font_selection_combo = getChild<LLComboBox>("Fontsettingsfile");
+	if (font_selection_combo)
+	{
+		const std::string fontDir(gDirUtilp->getExpandedFilename(LL_PATH_FONTS, "", ""));
+		const std::string userfontDir(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS , "fonts", ""));
+
+		// Load fonts.xmls from the install dir first then user_settings
+		loadFontPresetsFromDir(fontDir, font_selection_combo);
+		loadFontPresetsFromDir(userfontDir, font_selection_combo);
+
+		font_selection_combo->setValue(gSavedSettings.getString("FSFontSettingsFile"));
+	}
+}
+// </FS:Kadah>
 // <FS:Ansariel> Output device selection
 static LLPanelInjector<FSPanelPreferenceSounds> t_pref_sounds("panel_preference_sounds");
 
