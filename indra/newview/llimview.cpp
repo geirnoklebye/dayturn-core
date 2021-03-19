@@ -2750,6 +2750,11 @@ void LLIMMgr::addMessage(
 	}
 
 	bool new_session = !hasSession(new_session_id);
+	bool is_group_chat = false;
+	if (dialog != IM_NOTHING_SPECIAL)
+	{
+		is_group_chat = gAgent.isInGroup(new_session_id);
+	}
 	if (new_session)
 	{
 		// Group chat session was initiated by muted resident, do not start this session viewerside
@@ -2765,9 +2770,17 @@ void LLIMMgr::addMessage(
 		{
 			fixed_session_name = av_name.getDisplayName();
 		}
+
 		// <FS:Ansariel> Clear muted group chat early to prevent contacts floater
 		//               (re-)gaining focus; the server already knows the correct
 		//               session id, so we can leave it!
+		if (is_group_chat && !exoGroupMuteList::instance().isLoaded())
+		{
+			LL_INFOS() << "Received group chat from " << fixed_session_name << " (" << new_session_id.asString() << ") before mute list has been loaded - skipping message" << LL_ENDL;
+			exoGroupMuteList::instance().addDeferredGroupChat(new_session_id);
+			return;
+		}
+
 		if (exoGroupMuteList::instance().isMuted(new_session_id))
 		{
 			LL_INFOS() << "Muting group chat from " << new_session_id.asString() << ": " << fixed_session_name << LL_ENDL;
@@ -2784,6 +2797,18 @@ void LLIMMgr::addMessage(
 			return;
 		}
 		// </FS:Ansariel>
+
+		// <FS:Ansariel> FIRE-13613: First group IM received that was initiated by a muted
+		//                           resident leads to leaving the group chat session
+		if (IM_NOTHING_SPECIAL != dialog && IM_SESSION_P2P_INVITE != dialog &&
+			gAgent.isInGroup(new_session_id) && LLMuteList::getInstance()->isMuted(other_participant_id) && !from_linden)
+		{
+			LL_INFOS() << "Ignoring group chat from " << fixed_session_name << " (" << new_session_id.asString() << ") initiated by muted resident." << LL_ENDL;
+			exoGroupMuteList::instance().addDeferredGroupChat(new_session_id);
+			return;
+		}
+		// </FS:Ansariel>
+
 		LLIMModel::getInstance()->newSession(new_session_id, fixed_session_name, dialog, other_participant_id, false, is_offline_msg);
 
 		LLIMModel::LLIMSession* session = LLIMModel::instance().findIMSession(new_session_id);

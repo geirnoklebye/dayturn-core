@@ -16,6 +16,7 @@
 
 #include "llviewerprecompiledheaders.h"
 
+#include "llagent.h" // for GroupData
 #include "llavatarname.h"
 #include "llavatarnamecache.h"
 #include "llcallbacklist.h"
@@ -36,6 +37,8 @@
 #include "llviewermenu.h"
 #include "llviewerobjectlist.h"
 #include "llvoavatar.h"
+
+#include "exogroupmutelist.h"
 
 #include <boost/algorithm/string.hpp>
 
@@ -141,7 +144,18 @@ void LLPanelBlockList::refresh()
 			default:
 				{
 					sdGenericRow["value"] = LLSD().with("id", muteEntry.mID).with("name", muteEntry.mName);
-					sdGenericColumns[0]["value"] = muteEntry.mName;
+					// If it's a group, show the name
+					std::string showname = muteEntry.mName;
+					if (showname.find(EXOGROUPMUTE_TAG) == 0)
+					{
+						LLGroupData data;
+						if (gAgent.getGroupData((LLUUID)showname.substr(strlen(EXOGROUPMUTE_TAG)), data))
+						{
+							showname = EXOGROUPMUTE_TAG + data.mName;
+						}
+					}
+					sdGenericColumns[0]["value"] = showname;
+//					sdGenericColumns[0]["value"] = muteEntry.mName;
 					sdGenericColumns[1]["value"] = muteEntry.getDisplayType();
 					m_pBlockList->addElement(sdGenericRow, ADD_BOTTOM);
 				}
