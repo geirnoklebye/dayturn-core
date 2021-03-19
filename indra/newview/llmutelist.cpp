@@ -63,8 +63,6 @@
 #include "llviewerobjectlist.h"
 #include "lltrans.h"
 
-#include "exogroupmutelist.h"
-
 namespace 
 {
 	// This method is used to return an object to mute given an object id.
@@ -674,6 +672,11 @@ BOOL LLMuteList::saveToFile(const std::string& filename)
 
 BOOL LLMuteList::isMuted(const LLUUID& id, const std::string& name, U32 flags) const
 {
+	// <FS:ND> In case of an empty mutelist, we can exit right away.
+	if( 0 == mMutes.size() && mLegacyMutes.size() == 0)
+		return FALSE;
+	// </FS:ND>
+
 	// for objects, check for muting on their parent prim
 	LLViewerObject* mute_object = get_object_to_mute_from_id(id);
 	LLUUID id_to_check  = (mute_object) ? mute_object->getID() : id;
@@ -754,9 +757,6 @@ void LLMuteList::requestFromServer(const LLUUID& agent_id)
 	msg->nextBlockFast(_PREHASH_MuteData);
 	msg->addU32Fast(_PREHASH_MuteCRC, crc.getCRC());
 	gAgent.sendReliableMessage();
-
-	//KKA-743 we need to instantiate exogroupmutelist so that it can register its observer
-	exoGroupMuteList::instance().getFilePath();
 }
 
 //-----------------------------------------------------------------------------
