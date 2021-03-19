@@ -768,6 +768,78 @@
              control_name="FSExperimentalLostAttachmentsFix"
              tool_tip="If enabled, attachments are protected from detaching for approx 30 seconds after arriving in new region">
             </check_box>
+	        <text
+	         type="string"
+	         length="1"
+	         follows="left|top"
+	         height="16"
+	         layout="topleft"
+	         left="20"
+	         name="tooltip_textbox1"
+	         top_pad="10"
+	         width="120">
+	           Font Scheme:
+	        </text>
+	        <combo_box
+	         height="23"
+	         layout="topleft"
+	         follows="left|top"
+	         control_name="FSFontSettingsFile"
+	         left_pad="5"
+	         name="Fontsettingsfile"
+	         width="160">
+	            <!-- KC: Dynamicly loaded now -->
+	        </combo_box>
+	        <text
+	         name="tooltip_textbox2"
+	         top_pad="-16"
+	         left_pad="5"
+	         height="16"
+	         width="120"
+	         layout="topleft"
+	         follows="left|top"
+	         type="string"
+	         length="1">
+	           (Requires restart)
+	        </text>
+
+	        <text
+	         name="tooltip_textbox5"
+	         top_pad="15"
+	         left="20"
+	         height="16"
+	         width="120"
+	         layout="topleft"
+	         follows="left|top"
+	         type="string"
+	         length="1">
+	           Font Size Adjustment:
+	        </text>
+	        <spinner
+	         name="font_size_adj_slider"
+	         top_pad="-20"
+	         left_pad="5"
+	         height="18"
+	         width="50"
+	         layout="topleft"
+	         follows="left|top"
+	         control_name="FSFontSizeAdjustment"
+	         increment=".1"
+	         decimal_digits="1"
+	         initial_value="0"
+	         min_val="-1"
+	         max_val="2" />
+	        <text
+	         name="tooltip_textbox6"
+	         top_pad="-13"
+	         left_pad="3"
+	         height="36"
+	         width="345"
+	         layout="topleft"
+	         follows="left|top"
+	         type="string" >
+	         pt (Requires restart, default=0, use low values)
+	        </text>
         </panel>
         <!--Scpipting-->
         <panel
@@ -892,6 +964,7 @@
          tool_tip="Name of the font used in the LSL script editor">
              <combo_item name="Monospace" value="Monospace" label="Monospace"/>
              <combo_item name="Scripting" value="Scripting" label="Scripting"/>
+             <combo_item name="Scripting2" value="Scripting2" label="Scripting2"/>
         </combo_box>
         <combo_box
          allow_text_entry="false"

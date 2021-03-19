@@ -1979,7 +1979,9 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	LLFontGL::initClass( gSavedSettings.getF32("FontScreenDPI"),
 								mDisplayScale.mV[VX],
 								mDisplayScale.mV[VY],
-								gDirUtilp->getAppRODataDir());
+								gDirUtilp->getAppRODataDir(),
+								gSavedSettings.getString("FSFontSettingsFile"),
+								gSavedSettings.getF32("FSFontSizeAdjustment"));
 	
 	// Create container for all sub-views
 	LLView::Params rvp;
@@ -5502,7 +5504,9 @@ void LLViewerWindow::initFonts(F32 zoom_factor)
 	LLFontGL::initClass( gSavedSettings.getF32("FontScreenDPI"),
 								mDisplayScale.mV[VX] * zoom_factor,
 								mDisplayScale.mV[VY] * zoom_factor,
-								gDirUtilp->getAppRODataDir());
+								gDirUtilp->getAppRODataDir(),
+								gSavedSettings.getString("FSFontSettingsFile"),
+								gSavedSettings.getF32("FSFontSizeAdjustment"));
 	// Force font reloads, which can be very slow
 	LLFontGL::loadDefaultFonts();
 }

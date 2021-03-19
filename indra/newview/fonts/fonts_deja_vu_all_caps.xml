@@ -2,23 +2,23 @@
 <fonts>
 
   <font name="default" comment="default font files (global fallbacks)">
-    <file>DejaVuSans.ttf</file>
+    <file>DejaVuSansAllCaps.ttf</file>
     <os name="Windows">
       <file>meiryo.TTC</file>
+      <file>YuGothR.ttc</file>
       <file>MSGOTHIC.TTC</file>
       <file>gulim.ttc</file>
       <file>simhei.ttf</file>
       <file>ArialUni.ttf</file>
       <file>msyh.ttc</file>
+      <file>seguisym.ttf</file>
+      <file>nirmala.ttf</file>
+      <file>tahoma.ttf</file>
       <file load_collection="true">Cambria.ttc</file>
       <file>malgun.ttf</file>
-      <file>micross.ttf</file>
-      <file>segoeui.ttf</file>
-      <file>seguisym.ttf</file>>
-      <file>seguiemj.ttf</file>
     </os>
     <os name="Mac">
-      <file>ヒラギノ角ゴシック W3.ttc</file>  
+      <file>ヒラギノ角ゴシック W3.ttc</file>
       <file>ヒラギノ角ゴ Pro W3.otf</file>
       <file>ヒラギノ角ゴ ProN W3.otf</file>
       <file>ヒラギノ明朝 ProN W3.ttc</file>
@@ -29,15 +29,12 @@
       <file>华文细黑.ttf</file>
       <file>PingFang.ttc</file>
       <file>STIXGeneral.otf</file>
-      <file>Thonburi.ttc</file>
-      <file>AppleSDGothicNeo.ttc</file>
-      <file>Menlo.ttc</file>
     </os>
   </font>
 
   <font name="SansSerifBold"
 	comment="Name of bold sans-serif font">
-    <file>DejaVuSans-Bold.ttf</file>
+    <file>DejaVuSansAllCaps-Bold.ttf</file>
     <os name="Windows">
       <file>arialbd.ttf</file>
       </os>
@@ -47,7 +44,7 @@
   </font>
 
   <font name="SansSerif" comment="Name of san-serif font (Truetype file name)">
-    <file>DejaVuSans.ttf</file>
+    <file>DejaVuSansAllCaps.ttf</file>
     <os name="Windows">
       <file>arial.ttf</file>
       </os>
@@ -59,84 +56,91 @@
   <font name="SansSerif"
 	comment="Name of bold sans-serif font"
 	font_style="BOLD">
-    <file>DejaVuSans-Bold.ttf</file>
+    <file>DejaVuSansAllCaps-Bold.ttf</file>
   </font>
 
   <font name="SansSerif"
 	comment="Name of italic sans-serif font"
 	font_style="ITALIC">
-    <file>DejaVuSans-Oblique.ttf</file>
+    <file>DejaVuSansAllCaps-Oblique.ttf</file>
   </font>
 
   <font name="SansSerif"
 	comment="Name of bold italic sans-serif font"
 	font_style="BOLD|ITALIC">
-    <file>DejaVuSans-BoldOblique.ttf</file>
+    <file>DejaVuSansAllCaps-BoldOblique.ttf</file>
   </font>
 
   <font name="Monospace"
 	comment="Name of monospace font">
-    <file>DejaVuSansMono.ttf</file>
-        <os name="Mac">
-      <file>Menlo.ttc</file>
-      </os>
+    <file>DejaVuSansAllCapsMono.ttf</file>
   </font>
+
+  <font name="Scripting"
+	comment="Name of an optional font used for the script editor">
+    <file>SourceCodePro-Regular.ttf</file>
+  </font>
+
+  <font name="Scripting2"
+	comment="Name of an alternative optional font used for the script editor">
+    <file>CascadiaMono.ttf</file>
+  </font>  
 
   <font name="DejaVu"
 	comment="Name of DejaVu font">
-    <file>DejaVuSans.ttf</file>
+    <file>DejaVuSansAllCaps.ttf</file>
   </font>
 
   <font name="DejaVu"
 	comment="Name of DejaVu font (bold)"
 	font_style="BOLD">
-    <file>DejaVuSans-Bold.ttf</file>
+    <file>DejaVuSansAllCaps-Bold.ttf</file>
   </font>
 
   <font name="DejaVu"
 	comment="Name of DejaVu font (italic)"
 	font_style="ITALIC">
-    <file>DejaVuSans-Oblique.ttf</file>
+    <file>DejaVuSansAllCaps-Oblique.ttf</file>
   </font>
 
   <font name="DejaVu"
 	comment="Name of DejaVu font (bold italic)"
 	font_style="BOLD|ITALIC">
-    <file>DejaVuSans-BoldOblique.ttf</file>
+    <file>DejaVuSansAllCaps-BoldOblique.ttf</file>
   </font>
 
   <font name="Helvetica"
 	comment="Name of Helvetica font">
-    <file>DejaVuSans.ttf</file>
+    <file>DejaVuSansAllCaps.ttf</file>
     <os name="Windows">
       <file>arial.ttf</file>
       </os>
     <os name="Mac">
-      <file>Helvetica.dfont</file>
+      <file>arial.ttf</file>
       </os>
   </font>
 
   <font name="Helvetica"
 	comment="Name of Helvetica font (bold)"
 	font_style="BOLD">
-    <file>DejaVuSans-Bold.ttf</file>
+    <file>DejaVuSansAllCaps-Bold.ttf</file>
     <os name="Windows">
       <file>arialbd.ttf</file>
       </os>
     <os name="Mac">
-      <file>Helvetica.dfont</file>
+      <file>arialbd.ttf</file>
       </os>
   </font>
 
   <font name="Helvetica"
 	comment="Name of Helvetica font (italic)"
 	font_style="ITALIC">
-    <file>DejaVuSans-Oblique.ttf</file>
+    <file>DejaVuSansAllCaps-Oblique.ttf</file>
     <os name="Windows">
       <file>ariali.ttf</file>
       </os>
     <os name="Mac">
-      <file>Helvetica.dfont</file>
+      <file>ariali.ttf</file>
       </os>
   </font>
 
@@ -148,18 +152,14 @@
       <file>arialbi.ttf</file>
       </os>
     <os name="Mac">
-      <file>Helvetica.dfont</file>
+      <file>arialbi.ttf</file>
       </os>
   </font>
-  <font name="Scripting"
-	comment="Name of an optional font used for the script editor">
-    <file>SourceCodePro-Regular.ttf</file>
-  </font>
-  
+
   <font name="OverrideTest"
 	comment="Name of font to test overriding">
     <file>times.ttf</file>
-    <file>DejaVuSans.ttf</file>
+    <file>DejaVuSansAllCaps.ttf</file>
   </font>
 
   <font_size name="Scripting"
@@ -188,6 +188,6 @@
 	     />
   <font_size name="Pie"
 	     comment="Size of pie menu font (points, or 1/72 of an inch)"
-	     size="6.5"
+	     size="7.3"
 	     />
 </fonts>
