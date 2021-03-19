@@ -454,10 +454,8 @@ void refreshCachedVariable (std::string var)
 	else if (var == "alwaysrun")				gAgent.mRRInterface.mContainsAlwaysRun = contained;
 	//CA add viewscript since the console needs to check for it
 	else if (var == "viewscript")				gAgent.mRRInterface.mContainsViewScript = contained;
-#ifndef DISABLE_SETSPHERE // from RRInterfaceVersion.h
 	else if (var == "setsphere")				gAgent.mRRInterface.mContainsSetsphere = contained;
-#endif
-
+		
 	//else if (var == "moveup")					gAgent.mRRInterface.mContainsMoveUp = contained;
 	//else if (var == "movedown")				gAgent.mRRInterface.mContainsMoveDown = contained;
 	//else if (var == "moveleft")			gAgent.mRRInterface.mContainsMoveStrafeLeft = contained;
@@ -1345,7 +1343,6 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 				gSavedSettings.setF32("CameraAngle", LLViewerCamera::getInstance()->getView()); // setView may have clamped it.
 			}
 		}
-#ifndef DISABLE_SETSPHERE // from RRinterfaceVersion.h
 		else if (canon_action.find("setsphere") == 0) {
 			gSavedSettings.setBOOL("RenderObjectBump", TRUE); // make sure to render "Bump Mapping and Shiny"
 			gSavedSettings.setBOOL("RenderTransparentWater", TRUE); // make sure to render "Transparent Water"
@@ -1362,7 +1359,6 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 			}
 			updateSetsphere();
 		}
-#endif
 		else if (canon_action == "fartouch"
 			|| canon_action == "touchfar"
 			|| canon_action == "sittp"
@@ -1457,7 +1453,6 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 			else if (canon_action.find("cam") == 0 || canon_action.find("setcam") == 0) {
 				updateCameraLimits ();
 			}
-#ifndef DISABLE_SETSPHERE // from RRInterfaceVersion.h
 			else if (canon_action.find ("setsphere") == 0) {
 				must_update_setsphere = true; // to make sure we call this only once after we've taken care of setsphere
 				// If we are removing @setsphere proper (not a param), then we must remove all the @setsphere_xxx parameters associated with this UUID.
@@ -1468,7 +1463,6 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 					must_remove_setsphere_params = true;
 				}
 			}
-#endif
 			else if (canon_action == "fartouch"
 				|| canon_action == "touchfar"
 				|| canon_action == "sittp"
@@ -2385,11 +2379,9 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 		LLViewerCamera::getInstance()->setDefaultFOV(new_fov_rad);
 		gSavedSettings.setF32("CameraAngle", LLViewerCamera::getInstance()->getView()); // setView may have clamped it.
 	}
-#ifndef DISABLE_SETSPHERE // from RRInterfaceVersion.h
 	else if (command.find("setsphere_") == 0) { // HACK : since RLVa expects "@setsphere_xxx:yyy=force", while the API expects "@setsphere_xxx:yyy=n", make it so the former is interpreted as the latter here (but this also means we have to remove all the parameters when @setsphere=y is received)
 		add(object_uuid, command, option);
 	}
-#endif
 	return TRUE;
 }
 

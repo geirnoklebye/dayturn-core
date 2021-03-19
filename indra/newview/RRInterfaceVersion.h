@@ -31,7 +31,4 @@
 #define RR_VERSION_NUM "2093000"
 #define RR_VERSION "2.09.30.00"
 
-// we need a switch to determine whether setsphere is activated (2.9.30 else 2.9.29) and since this header has no includes, it needs to be here
-//#define DISABLE_SETSPHERE
-
 #endif // LL_RRINTERFACEVERSION_H
