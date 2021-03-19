@@ -873,6 +873,7 @@ bool LLFontGL::loadDefaultFonts()
 	succ &= (NULL != getFontMonospace());
 	succ &= (NULL != getFontExtChar());
 	succ &= (NULL != getFontScripting());
+	succ &= (NULL != getFontScripting2());
 	return succ;
 }
 
@@ -1061,6 +1062,13 @@ LLFontGL* LLFontGL::getFontScripting()
 }
 
 //static
+LLFontGL* LLFontGL::getFontScripting2()
+{
+	static LLFontGL* fontp = getFont(LLFontDescriptor("Scripting2","Scripting2",0));
+	return fontp;
+}
+
+//static
 LLFontGL* LLFontGL::getFontExtChar()
 {
 	return getFontSansSerif();
@@ -1097,6 +1105,10 @@ LLFontGL* LLFontGL::getFontByName(const std::string& name)
 	else if (name == "Scripting")
 	{
 		return getFontScripting();
+	}
+	else if (name == "Scripting2")
+	{
+		return getFontScripting2();
 	}
 	else if (name == "Monospace")
 	{

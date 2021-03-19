@@ -155,7 +155,10 @@
 	comment="Name of an optional font used for the script editor">
     <file>SourceCodePro-Regular.ttf</file>
   </font>
-  
+  <font name="Scripting2"
+	comment="Name of an alternative optional font used for the script editor">
+    <file>CascadiaMono.ttf</file>
+  </font>  
   <font name="OverrideTest"
 	comment="Name of font to test overriding">
     <file>times.ttf</file>

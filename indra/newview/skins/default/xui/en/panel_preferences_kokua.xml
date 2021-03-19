@@ -724,6 +724,7 @@
          tool_tip="Name of the font used in the LSL script editor">
              <combo_item name="Monospace" value="Monospace" label="Monospace"/>
              <combo_item name="Scripting" value="Scripting" label="Scripting"/>
+             <combo_item name="Scripting2" value="Scripting2" label="Scripting2"/>
         </combo_box>
         <combo_box
          allow_text_entry="false"
