@@ -66,6 +66,8 @@
 // Marine doesn't export it so we need it here too
 #define EXTREMUM 1000000.f
 
+#define UNLIMITED "unlimited"
+
 static bool awaiting_idle_for_worn = false;
 static bool awaiting_idle_for_status = false;
 
@@ -83,7 +85,7 @@ void KokuaRLVInventoryObserver::changed(U32 mask)
 
 std::string KokuaRLVFloaterSupport::getModifierText(F32 value, F32 ceiling)
 {
-	if (fabs(value) == ceiling) return "unlimited";
+	if (fabs(value) == ceiling) return UNLIMITED;
 	return llformat("%.1f",value);
 }
 
@@ -831,57 +833,84 @@ void KokuaFloaterRLVStatus::refreshRLVStatus()
 	sdModifierColumns[0]["value"] = "camavdist";
 	sdModifierColumns[1]["value"] = "";
 	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mShowavsDistMax,EXTREMUM);
-	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	if (sdModifierColumns[2]["value"] != UNLIMITED)
+	{
+		pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	}
 
 	//camdist
 	sdModifierColumns[0]["value"] = "camdistmin/max";
 	sdModifierColumns[1]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamDistMin,EXTREMUM);
 	// this gets limited by 'make sure we can't move the camera outside the minimum render limit' at ~line 5105 in RRInterface.cpp
 	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamDistMax,750000.0); 
-	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	if (sdModifierColumns[1]["value"] != UNLIMITED || sdModifierColumns[2]["value"] != UNLIMITED)
+	{
+		pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	}
 
 	//camdrawalpha
 	sdModifierColumns[0]["value"] = "camdrawalpha";
 	sdModifierColumns[1]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamDistDrawAlphaMin,0.0);
 	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamDistDrawAlphaMax,1.0);
-	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	if (sdModifierColumns[1]["value"] != UNLIMITED || sdModifierColumns[2]["value"] != UNLIMITED)
+	{
+		pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	}
 
 	//camdrawcolor
 	LLSD getcolor = gAgent.mRRInterface.mCamDistDrawColor.getValue();
 	sdModifierColumns[0]["value"] = "camdrawcolor";
 	sdModifierColumns[1]["value"] = "";
 	sdModifierColumns[2]["value"] = llformat("<%.1f, %.1f, %.1f>",getcolor[0].asReal(),getcolor[1].asReal(),getcolor[2].asReal());
-	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	if (getcolor[0].asReal() != 0.0 || getcolor[1].asReal() != 0.0 || getcolor[2].asReal() != 0.0)
+	{
+		pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	}
 	
 	//camdraw
 	sdModifierColumns[0]["value"] = "camdrawmin/max";
 	sdModifierColumns[1]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamDistDrawMin,EXTREMUM);
 	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamDistDrawMax,EXTREMUM);
-	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	if (sdModifierColumns[1]["value"] != UNLIMITED || sdModifierColumns[2]["value"] != UNLIMITED)
+	{
+		pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	}
 	
 	// camzoom
 	sdModifierColumns[0]["value"] = "camzoommin/max";
 	sdModifierColumns[1]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamZoomMin,EXTREMUM);
 	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamZoomMax,EXTREMUM);
-	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	if (sdModifierColumns[1]["value"] != UNLIMITED || sdModifierColumns[2]["value"] != UNLIMITED)
+	{
+		pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	}
 
 	//fartouch
 	sdModifierColumns[0]["value"] = "fartouch/touchfar";
 	sdModifierColumns[1]["value"] = "";
 	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mFartouchMax,EXTREMUM);
-	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	if (sdModifierColumns[2]["value"] != UNLIMITED)
+	{
+		pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	}
 
 	//sittp
 	sdModifierColumns[0]["value"] = "sittp";
 	sdModifierColumns[1]["value"] = "";
 	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mSittpMax,EXTREMUM);
-	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	if (sdModifierColumns[2]["value"] != UNLIMITED)
+	{
+		pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	}
 	
 	//tplocal
 	sdModifierColumns[0]["value"] = "tplocal";
 	sdModifierColumns[1]["value"] = "";
 	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mTplocalMax,EXTREMUM);
-	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	if (sdModifierColumns[2]["value"] != UNLIMITED)
+	{
+		pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	}
 	
 	// Setsphere effects : We check all the stored effects and display all their aggregated values on a per-mode basis.
 	// Each effect in the set has a unique mode so we can take each one of them individually and print its values directly (but we can't guarantee the order of the modes)
