@@ -471,7 +471,6 @@ void refreshCachedVariable (std::string var)
 //			LLSideTray::getInstance()->childSetVisible("panel_main_inventory", false);
 			LLFloaterReg::hideInstance("panel_main_inventory", LLSD());
 			setVisibleAll("inventory", FALSE);
-			setVisibleAll("inventory_lite", FALSE); //KKA-872 lite inventory panels (no recent/worn)
 			LLPanelOutfitEdit* panel_outfit_edit = dynamic_cast<LLPanelOutfitEdit*>(LLFloaterSidePanelContainer::getPanel("appearance", "panel_outfit_edit"));
 			if (NULL != panel_outfit_edit) {
 				panel_outfit_edit->showAddWearablesPanel(false);
