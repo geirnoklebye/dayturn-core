@@ -72,6 +72,8 @@ void on_file_loaded_for_save(BOOL success,
 							 BOOL final,
 							 void* userdata);
 
+static bool making_lite = false; // KKA-827 This is a short cut for passing state down from the running instance to the one it's launching
+
 ///----------------------------------------------------------------------------
 /// LLFloaterInventoryFinder
 ///----------------------------------------------------------------------------
@@ -119,6 +121,7 @@ LLPanelMainInventory::LLPanelMainInventory(const LLPanel::Params& p)
 	  mMenuAddHandle(),
 	  mNeedUploadCost(true)
 {
+	mIsLite = making_lite; //KKA-827 take our own copy of the creation type flag
 	// Menu Callbacks (non contex menus)
 	mCommitCallbackRegistrar.add("Inventory.DoToSelected", boost::bind(&LLPanelMainInventory::doToSelected, this, _2));
 	mCommitCallbackRegistrar.add("Inventory.CloseAllFolders", boost::bind(&LLPanelMainInventory::closeAllFolders, this));
@@ -150,7 +153,7 @@ BOOL LLPanelMainInventory::postBuild()
 	gInventory.addObserver(this);
 	
 	mFilterTabs = getChild<LLTabContainer>("inventory filter tabs");
-	mFilterTabs->setCommitCallback(boost::bind(&LLPanelMainInventory::onFilterSelected, this));
+	//mFilterTabs->setCommitCallback(boost::bind(&LLPanelMainInventory::onFilterSelected, this)); // KKA-872 do this after the tab deletions
 	
     mCounterCtrl = getChild<LLUICtrl>("ItemcountText");
     
@@ -167,71 +170,87 @@ BOOL LLPanelMainInventory::postBuild()
 		mActivePanel->setSelectCallback(boost::bind(&LLPanelMainInventory::onSelectionChange, this, mActivePanel, _1, _2));
 		mResortActivePanel = true;
 	}
-	//KKA-827 change to find here because we do not want a dummy class made if absent
-	LLInventoryPanel* recent_items_panel = findChild<LLInventoryPanel>("Recent Items");
+	LLInventoryPanel* recent_items_panel = getChild<LLInventoryPanel>("Recent Items");
 	if (recent_items_panel)
 	{
-		// assign default values until we will be sure that we have setting to restore
-		recent_items_panel->setSinceLogoff(TRUE);
-		recent_items_panel->setSortOrder(LLInventoryFilter::SO_DATE);
-		recent_items_panel->setShowFolderState(LLInventoryFilter::SHOW_NON_EMPTY_FOLDERS);
-		recent_items_panel->setFilterLinks(LLInventoryFilter::FILTERLINK_EXCLUDE_LINKS);
-		LLInventoryFilter& recent_filter = recent_items_panel->getFilter();
-		recent_filter.setFilterObjectTypes(recent_filter.getFilterObjectTypes() & ~(0x1 << LLInventoryType::IT_CATEGORY));
-		recent_filter.setEmptyLookupMessage("InventoryNoMatchingRecentItems");
-		recent_filter.markDefault();
-		recent_items_panel->setSelectCallback(boost::bind(&LLPanelMainInventory::onSelectionChange, this, recent_items_panel, _1, _2));
+		if (mIsLite)
+		{
+			mFilterTabs->removeTabPanel(recent_items_panel); //KKA-827 delete it rather than populating it
+		}
+		else
+		{
+			// assign default values until we will be sure that we have setting to restore
+			recent_items_panel->setSinceLogoff(TRUE);
+			recent_items_panel->setSortOrder(LLInventoryFilter::SO_DATE);
+			recent_items_panel->setShowFolderState(LLInventoryFilter::SHOW_NON_EMPTY_FOLDERS);
+			recent_items_panel->setFilterLinks(LLInventoryFilter::FILTERLINK_EXCLUDE_LINKS);
+			LLInventoryFilter& recent_filter = recent_items_panel->getFilter();
+			recent_filter.setFilterObjectTypes(recent_filter.getFilterObjectTypes() & ~(0x1 << LLInventoryType::IT_CATEGORY));
+			recent_filter.setEmptyLookupMessage("InventoryNoMatchingRecentItems");
+			recent_filter.markDefault();
+			recent_items_panel->setSelectCallback(boost::bind(&LLPanelMainInventory::onSelectionChange, this, recent_items_panel, _1, _2));
+		}
 	}
 
-	//KKA-827 change to find here because we do not want a dummy class made if absent
-	mWornItemsPanel = findChild<LLInventoryPanel>("Worn Items");
+	mWornItemsPanel = getChild<LLInventoryPanel>("Worn Items");
 	if (mWornItemsPanel)
 	{
-		U32 filter_types = 0x0;
-		filter_types |= 0x1 << LLInventoryType::IT_WEARABLE;
-		filter_types |= 0x1 << LLInventoryType::IT_ATTACHMENT;
-		filter_types |= 0x1 << LLInventoryType::IT_OBJECT;
-		mWornItemsPanel->setFilterTypes(filter_types);
-		mWornItemsPanel->setFilterWorn();
-		mWornItemsPanel->setShowFolderState(LLInventoryFilter::SHOW_NON_EMPTY_FOLDERS);
-		mWornItemsPanel->setFilterLinks(LLInventoryFilter::FILTERLINK_EXCLUDE_LINKS);
-		LLInventoryFilter& worn_filter = mWornItemsPanel->getFilter();
-		worn_filter.setFilterCategoryTypes(worn_filter.getFilterCategoryTypes() | (1ULL << LLFolderType::FT_INBOX));
-		worn_filter.markDefault();
-		mWornItemsPanel->setSelectCallback(boost::bind(&LLPanelMainInventory::onSelectionChange, this, mWornItemsPanel, _1, _2));
+		if (mIsLite)
+		{
+			mFilterTabs->removeTabPanel(mWornItemsPanel);
+			mWornItemsPanel = NULL;
+		}
+		else
+		{
+			U32 filter_types = 0x0;
+			filter_types |= 0x1 << LLInventoryType::IT_WEARABLE;
+			filter_types |= 0x1 << LLInventoryType::IT_ATTACHMENT;
+			filter_types |= 0x1 << LLInventoryType::IT_OBJECT;
+			mWornItemsPanel->setFilterTypes(filter_types);
+			mWornItemsPanel->setFilterWorn();
+			mWornItemsPanel->setShowFolderState(LLInventoryFilter::SHOW_NON_EMPTY_FOLDERS);
+			mWornItemsPanel->setFilterLinks(LLInventoryFilter::FILTERLINK_EXCLUDE_LINKS);
+			LLInventoryFilter& worn_filter = mWornItemsPanel->getFilter();
+			worn_filter.setFilterCategoryTypes(worn_filter.getFilterCategoryTypes() | (1ULL << LLFolderType::FT_INBOX));
+			worn_filter.markDefault();
+			mWornItemsPanel->setSelectCallback(boost::bind(&LLPanelMainInventory::onSelectionChange, this, mWornItemsPanel, _1, _2));
+		}
 	}
-	mSearchTypeCombo  = getChild<LLComboBox>("search_type");
-	if(mSearchTypeCombo)
+	mSearchTypeCombo = getChild<LLComboBox>("search_type");
+	if (mSearchTypeCombo)
 	{
 		mSearchTypeCombo->setCommitCallback(boost::bind(&LLPanelMainInventory::onSelectSearchType, this));
 	}
-	// Now load the stored settings from disk, if available.
-	std::string filterSaveName(gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, FILTERS_FILENAME));
-	LL_INFOS() << "LLPanelMainInventory::init: reading from " << filterSaveName << LL_ENDL;
-	llifstream file(filterSaveName.c_str());
-	LLSD savedFilterState;
-	if (file.is_open())
+	if (! mIsLite) // KKA-827 Skip this since it doesn't apply to All Items
 	{
-		LLSDSerialize::fromXML(savedFilterState, file);
-		file.close();
-
-		// Load the persistent "Recent Items" settings.
-		// Note that the "All Items" settings do not persist.
-		if(recent_items_panel)
+		// Now load the stored settings from disk, if available.
+		std::string filterSaveName(gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, FILTERS_FILENAME));
+		LL_INFOS() << "LLPanelMainInventory::init: reading from " << filterSaveName << LL_ENDL;
+		llifstream file(filterSaveName.c_str());
+		LLSD savedFilterState;
+		if (file.is_open())
 		{
-			if(savedFilterState.has(recent_items_panel->getFilter().getName()))
+			LLSDSerialize::fromXML(savedFilterState, file);
+			file.close();
+
+			// Load the persistent "Recent Items" settings.
+			// Note that the "All Items" settings do not persist.
+			if (recent_items_panel)
 			{
-				LLSD recent_items = savedFilterState.get(
-					recent_items_panel->getFilter().getName());
-				LLInventoryFilter::Params p;
-				LLParamSDParser parser;
-				parser.readSD(recent_items, p);
-				recent_items_panel->getFilter().fromParams(p);
-				recent_items_panel->setSortOrder(gSavedSettings.getU32(LLInventoryPanel::RECENTITEMS_SORT_ORDER));
+				if (savedFilterState.has(recent_items_panel->getFilter().getName()))
+				{
+					LLSD recent_items = savedFilterState.get(
+						recent_items_panel->getFilter().getName());
+					LLInventoryFilter::Params p;
+					LLParamSDParser parser;
+					parser.readSD(recent_items, p);
+					recent_items_panel->getFilter().fromParams(p);
+					recent_items_panel->setSortOrder(gSavedSettings.getU32(LLInventoryPanel::RECENTITEMS_SORT_ORDER));
+				}
 			}
 		}
-
 	}
+	mFilterTabs->setCommitCallback(boost::bind(&LLPanelMainInventory::onFilterSelected, this)); // KKA-872 now we're done deleting, register the handler
 
 	mFilterEditor = getChild<LLFilterEditor>("inventory search editor");
 	if (mFilterEditor)
@@ -285,7 +304,7 @@ LLPanelMainInventory::~LLPanelMainInventory( void )
 	}
 
 	LLInventoryPanel* panel = findChild<LLInventoryPanel>("Recent Items");
-	if (panel)
+	if (panel && !mIsLite)
 	{
 		LLSD filterState;
 		LLInventoryPanel::InventoryState p;
@@ -375,23 +394,23 @@ void LLPanelMainInventory::closeAllFolders()
 
 void LLPanelMainInventory::newWindow()
 {
+	LLPanelMainInventory::launchNewWindow(false);
+}
+
+void LLPanelMainInventory::newLiteWindow()
+{
+	LLPanelMainInventory::launchNewWindow(true);
+}
+
+void LLPanelMainInventory::launchNewWindow(bool lite)
+{
 	static S32 instance_num = 0;
 	instance_num = (instance_num + 1) % S32_MAX;
+	making_lite = lite;
 
 	if (!gAgentCamera.cameraMouselook())
 	{
 		LLFloaterReg::showTypedInstance<LLFloaterSidePanelContainer>("inventory", LLSD(instance_num));
-	}
-}
-
-void LLPanelMainInventory::newLiteWindow() // KKA-827 Just inventory, no recent/worn
-{
-	static S32 instance_num = 0;
-	instance_num = (instance_num + 1) % S32_MAX;
-
-	if (!gAgentCamera.cameraMouselook())
-	{
-		LLFloaterReg::showTypedInstance<LLFloaterSidePanelContainer>("inventory_lite", LLSD(instance_num));
 	}
 }
 
@@ -491,9 +510,11 @@ void LLPanelMainInventory::onSelectSearchType()
 
 void LLPanelMainInventory::updateSearchTypeCombo()
 {
-	LLInventoryFilter::ESearchType search_type = getActivePanel()->getSearchType();
-	switch(search_type)
+	if (mActivePanel)
 	{
+		LLInventoryFilter::ESearchType search_type = getActivePanel()->getSearchType();
+		switch (search_type)
+		{
 		case LLInventoryFilter::SEARCHTYPE_CREATOR:
 			mSearchTypeCombo->setValue("search_by_creator");
 			break;
@@ -507,6 +528,7 @@ void LLPanelMainInventory::updateSearchTypeCombo()
 		default:
 			mSearchTypeCombo->setValue("search_by_name");
 			break;
+		}
 	}
 }
 
@@ -670,12 +692,12 @@ void LLPanelMainInventory::onFilterSelected()
 	// Find my index
 	mActivePanel = (LLInventoryPanel*)getChild<LLTabContainer>("inventory filter tabs")->getCurrentPanel();
 
-	if (!mActivePanel)
+	if (!mActivePanel || (mIsLite && mActivePanel != getChild<LLInventoryPanel>("All Items")))
 	{
 		return;
 	}
 
-	if (getActivePanel() == mWornItemsPanel)
+	if (mActivePanel == mWornItemsPanel)
 	{
 		mActivePanel->openAllFolders();
 	}
