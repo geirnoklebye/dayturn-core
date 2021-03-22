@@ -2,9 +2,6 @@ AMARANTH
 
 Copyright (c) 2011, Gesine Todt (hallo@gesine-todt.de),
 with Reserved Font Name Amaranth.
-This Font Software is licensed under the SIL Open Font License, Version 1.1.
-This license is copied below, and is also available with a FAQ at:
-http://scripts.sil.org/OFL
 
 TOMORROW
 
@@ -21,6 +18,46 @@ Copyright (c) 2015, Sora Sagano (sagano@dotcolon.net)
 MEROM-SANS
 
 Copyright by Thomas Phinney, Vassil Kateliev, Brandon Buerkle (original font) / Cristiano Sobral (main changes and conversion to static) 
+
+OFFICE CODE PRO
+
+Reserved font name: "Office Code Pro"
+
+Copyright © 2015 Nathan Rutzky ( www.nath.co )
+Copyright © 2015 Adobe Systems ( www.adobe.com ) 
+
+EXO/EXARION
+
+Copyright (c) 2013 by Natanael Gama (www.ndiscovered.com . info(at)ndiscovered.com),
+with Reserved Font Name Exo,
+and Copyright (c) 2018-2020 by Cristiano Sobral (cssobral2013 at gmail dot com).
+
+OXANIUM
+
+Copyright 2019 Severin Meyer, with Reserved Font Name Oxanium
+
+RAILWAY-SANS
+
+By Greg Fleming
+
+SAIRA
+
+Copyright 2016 The Saira Project Authors (omnibus.type@gmail.com), with reserved font name "Saira".
+
+TAILOR-SANS
+
+Copyright (c) 2013, Natanael Gama (www.ndiscovered.com . info(at)ndiscovered.com), (c) 2015 Cristiano Sobral (cssobral2013 at gmail.com), with Reserved Font Name "Exo", "Taylor Sans". 
+
+XOLONIUM
+
+Copyright 2011-2016 Severin Meyer <sev.ch@web.de>,
+with Reserved Font Name Xolonium.
+
+LEKTONCODE
+
+Paolo Mazzetti, Luciano Perondi, Raffaele Flato, Elena Papassissa, Emilio Macchia, Michela Povoleri, Tobias Seemiller, Riccardo Lorusso, Sabrina Campagna, Elisa Ansuini, Mariangela Di Pinto, Antonio Cavedoni, Marco Comastri, Luna Castroni, Stefano Faoro,  
+
+########################################################### 
 
 All these obtained from fontlibrary.org
 

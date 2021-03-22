@@ -4464,15 +4464,24 @@ and report the problem.
   <string name="sky">Sky</string>
   <string name="water">Water</string>
   <string name="font_unknown">Unknown Font</string>
-  <string name="font_fonts.xml">Deja Vu</string>
+  <string name="fonts.xml">Deja Vu</string>
   <string name="fonts_amaranth.xml">Amaranth</string>
+  <string name="fonts_cascadia.xml">Cascadia</string>
   <string name="fonts_deja_vu_all_caps.xml">Deja Vu All Caps</string>
   <string name="fonts_elainesans.xml">Elaine Sans</string>
+  <string name="fonts_ezarion.xml">Ezarion</string>
+  <string name="fonts_lektoncode.xml">Lekton Code</string>
   <string name="fonts_meromsans.xml">Merom Sans</string>
+  <string name="fonts_officecodepro.xml">Office Code Pro</string>
   <string name="fonts_dyslexia.xml">OpenDyslexic</string>
+  <string name="fonts_oxanimum.xml">Oxanium</string>
+  <string name="fonts_railway.xml">Railway Sans</string>
   <string name="fonts_roboto.xml">Roboto</string>
   <string name="fonts_route159.xml">Route 159</string>
+  <string name="fonts_saira.xml">Saira</string>
+  <string name="fonts_taylorsans.xml">Taylor Sans</string>
   <string name="fonts_tomorrow.xml">Tomorrow</string>
   <string name="fonts_ubuntu.xml">Ubuntu Font Family</string>
+  <string name="fonts_xolonium.xml">Xolonium</string>
   <string name="day">Day</string>  
 </strings>

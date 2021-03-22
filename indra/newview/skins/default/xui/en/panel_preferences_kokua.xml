@@ -791,12 +791,13 @@
          max_chars="20"
          mouse_opaque="true"
          name="FSScriptingFontName"
-         width="90"
+         width="120"
          control_name="FSScriptingFontName"
          tool_tip="Name of the font used in the LSL script editor">
              <combo_item name="Monospace" value="Monospace" label="Monospace"/>
              <combo_item name="Scripting" value="Scripting" label="Scripting"/>
-             <combo_item name="Scripting2" value="Scripting2" label="Scripting2"/>
+             <combo_item name="Cascadia" value="Cascadia" label="Cascadia"/>
+             <combo_item name="LektonCode" value="LektonCode" label="LektonCode"/>
         </combo_box>
         <combo_box
          allow_text_entry="false"
@@ -808,11 +809,13 @@
          max_chars="20"
          mouse_opaque="true"
          name="FSScriptingFontSize"
-         width="90"
+         width="120"
          control_name="FSScriptingFontSize"
          tool_tip="Size of the font used in the LSL script editor">
              <combo_item name="Monospace" value="Monospace" label="Monospace"/>
              <combo_item name="Scripting" value="Scripting" label="Scripting"/>
+             <combo_item name="Cascadia" value="Cascadia" label="Cascadia"/>
+             <combo_item name="LektonCode" value="LektonCode" label="LektonCode"/>
              <combo_item name="Small" value="Small" label="Small"/>
              <combo_item name="Medium" value="Medium" label="Medium"/>
              <combo_item name="Large" value="Large" label="Large"/>

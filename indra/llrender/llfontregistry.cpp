@@ -169,6 +169,10 @@ LLFontDescriptor LLFontDescriptor::normalize() const
 	// <FS:Ansariel> Advanced script editor
 	if (new_size != s_template_string && new_size.empty() && findSubString(new_name,"Scripting"))
 		new_size = "Scripting";
+	if (new_size != s_template_string && new_size.empty() && findSubString(new_name, "Cascadia"))
+		new_size = "Cascadia";
+	if (new_size != s_template_string && new_size.empty() && findSubString(new_name, "LektonCode"))
+		new_size = "LektonCode";
 	// </FS:Ansariel>
 	if (new_size.empty())
 		new_size = "Medium";

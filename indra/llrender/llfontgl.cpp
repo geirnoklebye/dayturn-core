@@ -906,7 +906,8 @@ bool LLFontGL::loadDefaultFonts()
 	succ &= (NULL != getFontMonospace());
 	succ &= (NULL != getFontExtChar());
 	succ &= (NULL != getFontScripting());
-	succ &= (NULL != getFontScripting2());
+	succ &= (NULL != getFontCascadia());
+	succ &= (NULL != getFontLektonCode());
 	return succ;
 }
 
@@ -1095,9 +1096,15 @@ LLFontGL* LLFontGL::getFontScripting()
 }
 
 //static
-LLFontGL* LLFontGL::getFontScripting2()
+LLFontGL* LLFontGL::getFontCascadia()
 {
-	static LLFontGL* fontp = getFont(LLFontDescriptor("Scripting2","Scripting2",0));
+	static LLFontGL* fontp = getFont(LLFontDescriptor("Cascadia", "Cascadia", 0));
+	return fontp;
+}
+
+LLFontGL* LLFontGL::getFontLektonCode()
+{
+	static LLFontGL* fontp = getFont(LLFontDescriptor("LektonCode", "LektonCode", 0));
 	return fontp;
 }
 
@@ -1139,13 +1146,17 @@ LLFontGL* LLFontGL::getFontByName(const std::string& name)
 	{
 		return getFontScripting();
 	}
-	else if (name == "Scripting2")
+	else if (name == "LektonCode")
 	{
-		return getFontScripting2();
+		return getFontLektonCode();
 	}
 	else if (name == "Monospace")
 	{
 		return getFontMonospace();
+	}
+	else if (name == "Cascadia")
+	{
+		return getFontCascadia();
 	}
 	else
 	{

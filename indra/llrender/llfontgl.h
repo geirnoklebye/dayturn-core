@@ -191,7 +191,8 @@ public:
 	static LLFontGL* getFontSansSerifHuge();
 	static LLFontGL* getFontSansSerifBold();
 	static LLFontGL* getFontScripting();
-	static LLFontGL* getFontScripting2();
+	static LLFontGL* getFontLektonCode();
+	static LLFontGL* getFontCascadia();
 	static LLFontGL* getFontExtChar();
 	static LLFontGL* getFont(const LLFontDescriptor& desc);
 	// Use with legacy names like "SANSSERIF_SMALL" or "OCRA"
