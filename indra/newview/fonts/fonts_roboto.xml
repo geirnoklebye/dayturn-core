@@ -82,10 +82,13 @@
 	comment="Name of an optional font used for the script editor">
     <file>SourceCodePro-Regular.ttf</file>
   </font>
-
-  <font name="Scripting2"
+  <font name="Cascadia"
 	comment="Name of an alternative optional font used for the script editor">
-    <file>CascadiaMono.ttf</file>
+    <file>CascadiaCodePL-Light.ttf</file>
+  </font>
+  <font name="LektonCode"
+	comment="Name of an alternative optional font used for the script editor">
+    <file>LektonCode-Regular.ttf</file>
   </font>  
 
   <font name="DejaVu"
@@ -165,6 +168,14 @@
   </font>
 
   <font_size name="Scripting"
+	     comment="Size of script editor font (points, or 1/72 of an inch)"
+	     size="10.0"
+	     />
+  <font_size name="Cascadia"
+	     comment="Size of script editor font (points, or 1/72 of an inch)"
+	     size="10.0"
+	     />
+  <font_size name="LektonCode"
 	     comment="Size of script editor font (points, or 1/72 of an inch)"
 	     size="10.0"
 	     />

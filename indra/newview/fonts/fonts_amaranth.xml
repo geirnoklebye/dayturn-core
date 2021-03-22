@@ -155,10 +155,14 @@
 	comment="Name of an optional font used for the script editor">
     <file>SourceCodePro-Regular.ttf</file>
   </font>
-  <font name="Scripting2"
+  <font name="Cascadia"
 	comment="Name of an alternative optional font used for the script editor">
-    <file>CascadiaMono.ttf</file>
-  </font>  
+    <file>CascadiaCodePL-Light.ttf</file>
+  </font>
+  <font name="LektonCode"
+	comment="Name of an alternative optional font used for the script editor">
+    <file>LektonCode-Regular.ttf</file>
+  </font> 
   <font name="OverrideTest"
 	comment="Name of font to test overriding">
     <file>times.ttf</file>
@@ -166,6 +170,14 @@
   </font>
 
   <font_size name="Scripting"
+	     comment="Size of script editor font (points, or 1/72 of an inch)"
+	     size="8.6"
+	     />
+  <font_size name="Cascadia"
+	     comment="Size of script editor font (points, or 1/72 of an inch)"
+	     size="8.6"
+	     />
+  <font_size name="LektonCode"
 	     comment="Size of script editor font (points, or 1/72 of an inch)"
 	     size="8.6"
 	     />
