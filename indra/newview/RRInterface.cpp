@@ -920,7 +920,10 @@ BOOL RRInterface::containsSubstr (std::string action)
 	LLStringUtil::toLower(action);
 //	LL_INFOS() << "looking for " << action << LL_ENDL;
 	while (it != mSpecialObjectBehaviours.end()) {
-		if (it->second.find (action) != -1) {
+	  // KKA-829 by matching anywhere in the string this would return a false positive for 'shownames' in 'notify:100;shownames'
+	  // The function is now redefined to require the match to begin at index 0 which matches its usage
+		//if (it->second.find (action) != -1) {
+		if ( ! it->second.find (action)) {
 //			LL_INFOS() << "found " << it->second << LL_ENDL;
 			return TRUE;
 		}

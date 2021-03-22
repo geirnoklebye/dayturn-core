@@ -133,7 +133,8 @@ public:
 	std::string getLastName (std::string fullName);
 	BOOL isAllowed (LLUUID object_uuid, std::string action, BOOL log_it = TRUE);
 	BOOL contains (std::string action); // return TRUE if the action is contained
-	BOOL containsSubstr (std::string action); // return TRUE if the action, or an action which name contains the specified name, is contained
+	//KKA-829 This used to match at any position, giving a false positive for 'action' in 'notify:100;action' - this fix redefines it to match from index 0
+	BOOL containsSubstr (std::string action); // return TRUE if the action, or an action which name contains the specified name, is contained, matching from index 0
 	std::string get (LLUUID object_uuid, std::string action, std::string dflt = ""); // returns the value of the @action:...=n restriction, if any (otherwise return the specified default)
 	F32 getMax (std::string action, F32 dflt = EXTREMUM); // returns the max value of all the @action:...=n restrictions
 	F32 getMin (std::string action, F32 dflt = -EXTREMUM); // returns the min value of all the @action:...=n restrictions
