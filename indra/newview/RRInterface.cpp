@@ -1334,6 +1334,11 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 			}
 		}
 		else if (canon_action.find("setsphere") == 0) {
+			//KKA-831 RenderFSAASamples (Anti-aliasing) needs to be non-zero
+			if (!gSavedSettings.getU32("RenderFSAASamples"))
+			{
+				gSavedSettings.setU32("RenderFSAASamples", 2);
+			}
 			gSavedSettings.setBOOL("RenderObjectBump", TRUE); // make sure to render "Bump Mapping and Shiny"
 			gSavedSettings.setBOOL("RenderTransparentWater", TRUE); // make sure to render "Transparent Water"
 			gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE); // make sure the atmospheric shaders are turned on
@@ -1358,7 +1363,8 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 		}
 
 		// Check if we can see wireframe or not, deactivate if our vision is restricted (we have locked HUDs or mCamDistDrawMax is not infinite)
-		if (gAgent.mRRInterface.hasLockedHuds() || gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+		// KKA-831 setsphere should inhibit wireframe too
+		if (gAgent.mRRInterface.hasLockedHuds() || gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM || gAgent.mRRInterface.mContainsSetsphere)
 		{
 			if (gUseWireframe)
 			{

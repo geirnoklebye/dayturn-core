@@ -285,11 +285,19 @@ static bool handleWindowResized(const LLSD& newvalue)
 
 static bool handleReleaseGLBufferChanged(const LLSD& newvalue)
 {
-//MK
-	// When under @setsphere, don't allow DoF because it makes the alpha blended rigged surfaces win against the sphere, which lets the user see through it.
-	if (gRRenabled && gAgent.mRRInterface.mContainsSetsphere && gSavedSettings.getBOOL("RenderDepthOfField"))
+	//MK
+		// When under @setsphere, don't allow DoF because it makes the alpha blended rigged surfaces win against the sphere, which lets the user see through it.
+		// KKA-831 we also need to enforce RenderFSAASamples (anti-aliasing) non-zero
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetsphere)
 	{
-		gSavedSettings.setBOOL("RenderDepthOfField", FALSE);
+		if (gSavedSettings.getBOOL("RenderDepthOfField"))
+		{
+			gSavedSettings.setBOOL("RenderDepthOfField", FALSE);
+		}
+		if (!gSavedSettings.getU32("RenderFSAASamples"))
+		{
+			gSavedSettings.setU32("RenderFSAASamples", 2);
+		}
 	}
 //mk
 	if (gPipeline.isInit())
