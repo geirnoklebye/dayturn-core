@@ -1307,7 +1307,7 @@ class LLAdvancedToggleWireframe : public view_listener_t
 		// KKA-831 Same applies to setsphere
 		if (gRRenabled)
 		{
-			if (gAgent.mRRInterface.hasLockedHuds() || gAgent.mRRInterface.mVisionRestricted || gAgent.mRRInterface.mContainsSetsphere)
+			if (gAgent.mRRInterface.hasLockedHuds() || gAgent.mRRInterface.mVisionRestricted) // KKA-835 mVisionRestricted now includes setsphere
 			{
 				gUseWireframe = FALSE;
 			}

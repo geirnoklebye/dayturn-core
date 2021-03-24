@@ -331,6 +331,10 @@ public:
 	F32 mTplocalMax;
 	F32 mSittpMax;
 	F32 mFartouchMax;
+	F32 mSetsphereDistMin; // KKA-835 added
+	F32 mSetsphereDistMax; // KKA-835 added
+	F32 mSetsphereValueMax; // KKA-835 added
+	F32 mLeastDistMaxSquared; // KKA-835 let's do the work here rather than every time in rendering
 
 	LLPointer<LLViewerFetchedTexture> mCamTexturesCustom;
 
@@ -378,7 +382,7 @@ public:
 
 	BOOL mGarbageCollectorCalledOnce; // TRUE when the garbageCollector() method has been called at least once since the beginning of the session
 
-	BOOL mVisionRestricted; // this boolean is just a way to accelerate the chack "is our vision restricted ?"
+	BOOL mVisionRestricted; // this boolean is just a way to accelerate the chack "is our vision restricted ?" KKA-835 - now includes setsphere
 	static F32 previousEastAngle; // remember it since we can't reliably read it back
 	static F32 previousSunMoonPosition ; // remember it since we can't reliably read it back
 

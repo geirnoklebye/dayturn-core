@@ -3321,7 +3321,8 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 			LLVector3 camera_offset = mHeadp->getWorldPosition() - head_pos;
 			F32 camera_distance = (F32)camera_offset.magVec();
 
-			if(camera_distance > gAgent.mRRInterface.mCamDistDrawMin)
+			// KKA-835 include setsphere
+			if(camera_distance > gAgent.mRRInterface.mCamDistDrawMin || camera_distance > gAgent.mRRInterface.mSetsphereDistMin)
 			{
 				render_name = FALSE;
 			}
@@ -4457,13 +4458,13 @@ void LLVOAvatar::computeUpdatePeriod()
 		LLVector3d offset (their_head_pos - my_head_pos);
 		F32 distance_squared = (F32)offset.magVecSquared();
 		F32 show_avs_dist_max_squared = gAgent.mRRInterface.mShowavsDistMax * gAgent.mRRInterface.mShowavsDistMax;
-		F32 cam_dist_draw_max_squared = gAgent.mRRInterface.mCamDistDrawMax * gAgent.mRRInterface.mCamDistDrawMax;
 
 		// If the avatar is farther than the "camavdist" distance, render as silhouette.
 		// But if the outer sphere is opaque, no need to render a silhouette or even the avatar at all.
+		// KKA-835 extended for setsphere
 		mRenderAsSilhouette = (
 			distance_squared > show_avs_dist_max_squared
-			&& !(distance_squared > cam_dist_draw_max_squared && gAgent.mRRInterface.mCamDistDrawAlphaMax >= 1.f)
+			&& !(distance_squared > gAgent.mRRInterface.mLeastDistMaxSquared && (gAgent.mRRInterface.mCamDistDrawAlphaMax >= 1.f || gAgent.mRRInterface.mSetsphereValueMax >= 1.f))
 			);
 	}
 //mk
@@ -8890,15 +8891,15 @@ bool LLVOAvatar::isTooComplex() const
 	{
 		if (!isSelf())
 		{
-			if (gAgent.mRRInterface.mCamDistDrawAlphaMax >= ALPHA_ALMOST_OPAQUE)
+		  // KKA_835 extended for setsphere
+			if (gAgent.mRRInterface.mCamDistDrawAlphaMax >= ALPHA_ALMOST_OPAQUE || gAgent.mRRInterface.mSetsphereValueMax >= ALPHA_ALMOST_OPAQUE)
 			{
 				LLVector3 avatar_pos = getPositionAgent();
 				LLVector3 joint_pos = gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition();
 				LLVector3 avatar_pos_relative = avatar_pos - joint_pos;
 
-				F32 cam_dist_draw_max_squared = gAgent.mRRInterface.mCamDistDrawMax * gAgent.mRRInterface.mCamDistDrawMax;;
 				F32 distance_to_self_squared = (F32)avatar_pos_relative.magVecSquared();
-				if (distance_to_self_squared > cam_dist_draw_max_squared + 2.0f)
+				if (distance_to_self_squared > gAgent.mRRInterface.mLeastDistMaxSquared + 2.0f)
 				{
 					return true;
 				}
@@ -11201,7 +11202,8 @@ void LLVOAvatar::updateImpostorRendering(U32 newMaxNonImpostorsValue)
 	sLimitNonImpostors = (0 != sMaxNonImpostors);
 //MK
 	// Without this test, when setting the max number of non-impostors to "no limit", we wouldn't get silhouettes under @camavdist.
-	if (gRRenabled && (gAgent.mRRInterface.mShowavsDistMax < EXTREMUM || gAgent.mRRInterface.mCamDistDrawAlphaMax >= ALPHA_ALMOST_OPAQUE))
+	// KKA-835 extended for setsphere
+	if (gRRenabled && (gAgent.mRRInterface.mShowavsDistMax < EXTREMUM || gAgent.mRRInterface.mCamDistDrawAlphaMax >= ALPHA_ALMOST_OPAQUE || gAgent.mRRInterface.mSetsphereValueMax >= ALPHA_ALMOST_OPAQUE))
 	{
 		if (newMaxNonImpostorsValue == 0)
 		{

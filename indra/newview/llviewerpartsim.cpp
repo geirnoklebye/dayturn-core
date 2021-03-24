@@ -749,7 +749,8 @@ void LLViewerPartSim::updateSimulation()
 						LLVector3 offset = vvo->getPositionRegion() - joint_pos;
 						F32 distance = (F32)offset.magVec();
 
-						if(distance > gAgent.mRRInterface.mCamDistDrawMax)
+						// KKA-835 include setsphere
+						if(distance > gAgent.mRRInterface.mCamDistDrawMax || distance > gAgent.mRRInterface.mSetsphereDistMax)
 						{
 							upd = FALSE;
 						}

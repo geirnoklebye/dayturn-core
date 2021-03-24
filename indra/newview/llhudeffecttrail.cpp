@@ -166,7 +166,8 @@ void LLHUDEffectSpiral::unpackData(LLMessageSystem *mesgsys, S32 blocknum)
 void LLHUDEffectSpiral::triggerLocal()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mVisionRestricted && gAgent.mRRInterface.mCamDistDrawAlphaMax >= 0.25)
+  // KKA_835 add setsphere
+	if (gRRenabled && gAgent.mRRInterface.mVisionRestricted && (gAgent.mRRInterface.mCamDistDrawAlphaMax >= 0.25 || gAgent.mRRInterface.mSetsphereValueMax >= 0.25))
 	{
 		return;
 	}

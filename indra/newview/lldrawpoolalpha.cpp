@@ -624,13 +624,12 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, S32 pass)
 	// Calculate the position of the avatar here so we don't have to do it for each face
 	bool vision_restricted = (gRRenabled && gAgent.mRRInterface.mVisionRestricted);
 	// Optimization : Rather than compare the distances for every face (which involves square roots, which are costly), we compare squared distances.
+	// KKA-835 Further optimisation - the least square is precomputed
 	LLVector3 joint_pos = LLVector3::zero;
-	F32 cam_dist_draw_max_squared = EXTREMUM;
 	// We don't need to calculate all that stuff if the vision is not restricted.
 	if (vision_restricted)
 	{
 		joint_pos = gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition();
-		cam_dist_draw_max_squared = gAgent.mRRInterface.mCamDistDrawMax * gAgent.mRRInterface.mCamDistDrawMax;
 	}
 //mk
 
@@ -724,7 +723,7 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, S32 pass)
 									face_pos = facep->getPositionAgent();
 									face_avatar_offset = face_pos - joint_pos;
 									face_distance_to_avatar_squared = (F32)face_avatar_offset.magVecSquared();
-									if (face_distance_to_avatar_squared > cam_dist_draw_max_squared)
+									if (face_distance_to_avatar_squared > gAgent.mRRInterface.mLeastDistMaxSquared)
 									{
 										continue;
 									}

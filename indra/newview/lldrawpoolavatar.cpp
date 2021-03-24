@@ -2120,13 +2120,12 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 	bool is_self = (avatar == gAgentAvatarp);
 
 	// Optimization : Rather than compare the distances for every face (which involves square roots, which are costly), we compare squared distances.
+	// KKA-835 Further optimisation - the least square is precomputed
 	LLVector3 joint_pos = LLVector3::zero;
-	F32 cam_dist_draw_max_squared = EXTREMUM;
 	// We don't need to calculate all that stuff if the vision is not restricted.
 	if (gAgent.mRRInterface.mVisionRestricted)
 	{
 		joint_pos = gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition();
-		cam_dist_draw_max_squared = gAgent.mRRInterface.mCamDistDrawMax * gAgent.mRRInterface.mCamDistDrawMax;
 	}
 //mk
 
@@ -2182,7 +2181,7 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 			// If the vision is restricted, rendering alpha rigged attachments may allow to cheat through the vision spheres.
 			if (!is_self) // Other avatars only
 			{
-				if (face_distance_to_avatar_squared > cam_dist_draw_max_squared)
+				if (face_distance_to_avatar_squared > gAgent.mRRInterface.mLeastDistMaxSquared)
 				{
 					U32 type = gPipeline.getPoolTypeFromTE(face->getTextureEntry(), face->getTexture());
 					if (type == LLDrawPool::POOL_ALPHA)

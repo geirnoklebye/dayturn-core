@@ -143,6 +143,12 @@ void LLHUDText::renderText()
 		fade_distance = gAgent.mRRInterface.mCamDistDrawMin;
 		fade_range = 1.0f;
 	}
+	// KKA-835 Also for setsphere
+	if (gRRenabled && gAgent.mRRInterface.mSetsphereDistMin < fade_distance)
+	{
+		fade_distance = gAgent.mRRInterface.mSetsphereDistMin;
+		fade_range = 1.0f;
+	}
 
 	if (mDoFade)
 	{
