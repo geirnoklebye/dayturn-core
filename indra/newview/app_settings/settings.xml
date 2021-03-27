@@ -961,6 +961,19 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
+    <!-- KokuaPlay* is reserved for future additional UI sound controls -->
+    <key>KokuaPlayUISndTeleportOut</key>
+    <map>
+      <key>Comment</key>
+      <string>Enables the UI sound effect for teleporting out</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <!-- Put all future KokuaPlay* controls alphabetically above here and below above comment -->
     <key>KokuaRLVNoBlindStartup</key>
     <map>
       <key>Comment</key>

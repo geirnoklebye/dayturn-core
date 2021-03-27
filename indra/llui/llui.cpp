@@ -131,6 +131,12 @@ LLUUID find_ui_sound(const char * namep, bool force_sound)
 		}
 		else if (ui_inst->mAudioCallback != NULL)
 		{
+			// KKA-837 Add option to disable the teleport out sound (with thanks to FS:PP et al for locating this intercept point)
+			// Lookup control name as KokuaPlay* in case this gets expanded in the future to a more comprehensive FS-style implementation
+			if (name == "UISndTeleportOut" && !ui_inst->mSettingGroups[group_name]->getBOOL("KokuaPlay" + name))
+			{
+				return (LLUUID)NULL;
+			}
 			if (ui_inst->mSettingGroups["config"]->getBOOL("UISndDebugSpamToggle"))
 			{
 				LL_INFOS() << "UI sound name: " << name << LL_ENDL;	
