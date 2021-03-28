@@ -4896,7 +4896,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 			LLUUID env_root_folder_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_SETTINGS);
 			if (env_root_folder_id != LLUUID::null) {
 				LLViewerInventoryCategory* env_root_folder = gInventory.getCategory(env_root_folder_id);
-				LL_INFOS() << "env_root_folder : " << env_root_folder->getName() << LL_ENDL;
+				//LL_INFOS() << "env_root_folder : " << env_root_folder->getName() << LL_ENDL;
 				LLFindSettings collector;
 				LLInventoryModel::cat_array_t cats;
 				LLInventoryModel::item_array_t items;
@@ -4916,6 +4916,10 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 							break;
 						}
 					}
+				}
+				if (it == it_end)
+				{
+					LL_INFOS() << option << " not found in " << env_root_folder->getName() << LL_ENDL;
 				}
 			}
 		}
