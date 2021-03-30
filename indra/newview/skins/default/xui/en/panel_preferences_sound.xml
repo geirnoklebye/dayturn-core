@@ -584,6 +584,18 @@
  <check_box
   follows="top|left"
   enabled_control="EnableVoiceChat"
+  control_name="KokuaDisableVoiceCallStart"
+  height="15"
+  label="Disable Voice Call menu entries/butons"
+  layout="topleft"
+  left="44"
+  name="disable_voice_call_start"
+  width="237"
+  tool_tip="Disable Voice Call menu entries/buttons to avoid accidental invocation of Voice Calls"
+  top_pad="3"/>
+ <check_box
+  follows="top|left"
+  enabled_control="EnableVoiceChat"
   control_name="PushToTalkToggle"
   height="15"
   label="Toggle speak on/off when I press:"

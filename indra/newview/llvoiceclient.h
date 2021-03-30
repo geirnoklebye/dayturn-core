@@ -340,6 +340,7 @@ public:
 	void updateSettings(); // call after loading settings and whenever they change
 
 	bool isVoiceWorking() const; // connected to a voice server and voice channel
+	bool canCall(); // KKA-839 moved here from llAvatarActions since it's needed for groups too
 
 	// tuning
 	void tuningStart();
