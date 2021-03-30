@@ -761,6 +761,12 @@ bool LLVoiceClient::isVoiceWorking() const
 	return false;
 }
 
+// KKA-839 moved here from LLAvatarActions since it's needed for groups too
+bool LLVoiceClient::canCall()
+{
+  return voiceEnabled() && isVoiceWorking() && !gSavedSettings.getBOOL("KokuaDisableVoiceCallStart");
+}
+
 BOOL LLVoiceClient::isParticipantAvatar(const LLUUID& id)
 {
 	if (mVoiceModule) 
