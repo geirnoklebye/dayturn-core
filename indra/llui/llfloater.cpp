@@ -1670,7 +1670,7 @@ void LLFloater::setVisibleAndFrontmost(bool take_focus,const LLSD& key)
 	}
 }
 
-void LLFloater::setFrontmost(BOOL take_focus, BOOL restore)
+void LLFloater::setFrontmost(bool take_focus, bool restore)
 {
 	LLMultiFloater* hostp = getHost();
 	if (hostp)

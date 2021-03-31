@@ -313,7 +313,7 @@ public:
 	/*virtual*/ void setVisible(BOOL visible); // do not override
 	/*virtual*/ void onVisibilityChange ( BOOL new_visibility ); // do not override
 	
-	void			setFrontmost(BOOL take_focus = TRUE, BOOL restore = TRUE);
+	void			setFrontmost(bool take_focus = true, bool restore = true);
     virtual void	setVisibleAndFrontmost(bool take_focus=true, const LLSD& key = LLSD());
 	
 	// Defaults to false.
