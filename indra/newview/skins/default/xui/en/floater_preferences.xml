@@ -171,6 +171,13 @@ https://accounts.secondlife.com/change_email/
          help_topic="preferences_uploads_tab"
          name="uploads" />
         <panel
+         class="panel_preference_controls"
+         filename="panel_preferences_controls.xml"
+         label="Controls"
+         layout="topleft"
+         help_topic="preferences_controls_tab"
+         name="controls" />
+        <panel
          class="panel_preference"
          filename="panel_preferences_kokua.xml"
          label="[APP_NAME]"
