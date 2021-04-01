@@ -40,7 +40,7 @@
 #include "llcombobox.h"
 #include "llfloaterurlentry.h"
 #include "llfocusmgr.h"
-#include "lllineeditor.h"
+//#include "lllineeditor.h"	// <FS:CR> FIRE-593 - Unused since we use a combobox instead
 #include "llparcel.h"
 #include "lltextbox.h"
 #include "llradiogroup.h"
@@ -49,7 +49,10 @@
 #include "lltexturectrl.h"
 #include "roles_constants.h"
 #include "llscrolllistctrl.h"
-#include "llwindow.h"
+
+// Firestorm includes
+#include "llviewercontrol.h"	// <FS:CR> FIRE-593 - Needed for gSavedSettings where we store our media list
+#include "llclipboard.h"
 
 // Values for the parcel voice settings radio group
 enum
@@ -89,11 +92,20 @@ BOOL LLPanelLandAudio::postBuild()
 	mCheckParcelVoiceLocal = getChild<LLCheckBoxCtrl>("parcel_enable_voice_channel_local");
 	childSetCommitCallback("parcel_enable_voice_channel_local", onCommitAny, this);
 
-	mMusicURLEdit = getChild<LLLineEditor>("music_url");
+// <FS:CR> FIRE-593 - We use a combobox now, not a line editor, also set callbacks for new add/remove stream buttons
+	//mMusicURLEdit = getChild<LLLineEditor>("music_url");
+	mMusicURLEdit = getChild<LLComboBox>("music_url");
 	childSetCommitCallback("music_url", onCommitAny, this);
-
-	mMusicURLCopy = getChild<LLButton>("music_url_copy");
-	mMusicURLCopy->setClickedCallback(onCopyMusicURL, this);
+	
+	mBtnStreamAdd = getChild<LLButton>("stream_add_btn");
+	mBtnStreamAdd->setCommitCallback(boost::bind(&LLPanelLandAudio::onBtnStreamAdd, this));
+	
+	mBtnStreamDelete = getChild<LLButton>("stream_delete_btn");
+	mBtnStreamDelete->setCommitCallback(boost::bind(&LLPanelLandAudio::onBtnStreamDelete, this));
+	
+	mBtnStreamCopyToClipboard = getChild<LLButton>("stream_copy_btn");
+	mBtnStreamCopyToClipboard->setCommitCallback(boost::bind(&LLPanelLandAudio::onBtnCopyToClipboard, this));
+// </FS:CR>
 
 	mCheckAVSoundAny = getChild<LLCheckBoxCtrl>("all av sound check");
 	childSetCommitCallback("all av sound check", onCommitAny, this);
@@ -152,12 +164,47 @@ void LLPanelLandAudio::refresh()
 		mCheckParcelEnableVoice->set(allow_voice);
 		mCheckParcelVoiceLocal->set(!parcel->getParcelFlagUseEstateVoiceChannel());
 
-		std::string music_url = parcel->getMusicURL();
+// <FS:CR> FIRE-593 - Populate the audio combobox with our saved urls, then add the parcel's current url up top.
+		//mMusicURLEdit->setText(parcel->getMusicURL());
+		std::string current_url = parcel->getMusicURL();
+		mMusicURLEdit->clearRows();
+		LLSD streamlist = gSavedSettings.getLLSD("FSStreamList");
+		// <FS:Testy> FIRE-29157 - Remove invalid URLs that were rejected by the server
+		//LLSD streams = streamlist["audio"];
+		LLSD& streams = streamlist["audio"];
+		// </FS:Testy>
 
-		mMusicURLEdit->setText(music_url);
+		for(LLSD::array_iterator s_itr = streams.beginArray(); s_itr != streams.endArray(); ++s_itr)
+		{
+			mMusicURLEdit->add(LLSD(*s_itr));
+			LL_DEBUGS() << "adding: " << *s_itr << " to the audio stream combo." << LL_ENDL;
+		}
+		mMusicURLEdit->addSeparator(ADD_TOP);
+		mMusicURLEdit->add(LLSD(current_url), ADD_TOP);
+		mMusicURLEdit->selectByValue(current_url);
+		
+		mBtnStreamAdd->setEnabled( can_change_media );
+		mBtnStreamDelete->setEnabled( can_change_media );
+		mBtnStreamCopyToClipboard->setEnabled(TRUE);
+// </FS:CR>
 		mMusicURLEdit->setEnabled( can_change_media );
 
-		mMusicURLCopy->setEnabled(!music_url.empty());
+		// <FS:Testy> FIRE-29157 - Remove invalid URLs that were rejected by the server
+		if (current_url != mLastSetURL)
+		{
+			mMusicURLEdit->remove(mLastSetURL);
+			LLSD::Integer index = 0;
+			for (LLSD::array_iterator iter = streams.beginArray(), end = streams.endArray(); iter != end; ++iter, ++index)
+			{
+				if ((*iter).asString() == mLastSetURL)
+				{
+					streams.erase(index);
+					break;
+				}
+			}
+			gSavedSettings.setLLSD("FSStreamList", streamlist);
+		}
+		// </FS:Testy>
 
 		BOOL can_change_av_sounds = LLViewerParcelMgr::isParcelModifiableByAgent(parcel, GP_LAND_OPTIONS) && parcel->getHaveNewParcelLimitData();
 		mCheckAVSoundAny->set(parcel->getAllowAnyAVSounds());
@@ -180,9 +227,10 @@ void LLPanelLandAudio::onCommitAny(LLUICtrl*, void *userdata)
 
 	// Extract data from UI
 	BOOL sound_local		= self->mCheckSoundLocal->get();
-	std::string music_url	= self->mMusicURLEdit->getText();
-
-	self->mMusicURLCopy->setEnabled(!music_url.empty());
+// <FS:CR> FIRE-593 - It's a combobox now
+	//std::string music_url = self->mMusicURLEdit->getText();
+	std::string music_url = self->mMusicURLEdit->getSimple();
+// </FS:CR>
 
 	BOOL voice_enabled = self->mCheckParcelEnableVoice->get();
 	BOOL voice_estate_chan = !self->mCheckParcelVoiceLocal->get();
@@ -196,6 +244,17 @@ void LLPanelLandAudio::onCommitAny(LLUICtrl*, void *userdata)
 
 	// Remove leading/trailing whitespace (common when copying/pasting)
 	LLStringUtil::trim(music_url);
+
+	// <FS> Add leading http:// if not already present
+	if (!music_url.empty() && music_url.find("://") == std::string::npos)
+	{
+		music_url.insert(0, "http://");
+	}
+	// </FS>
+
+	// <FS:Testy> FIRE-29157 - Remove invalid URLs that were rejected by the server
+	self->mLastSetURL = music_url;
+	// </FS:Testy>
 
 	// Push data into current parcel
 	parcel->setParcelFlag(PF_ALLOW_VOICE_CHAT, voice_enabled);
@@ -212,10 +271,76 @@ void LLPanelLandAudio::onCommitAny(LLUICtrl*, void *userdata)
 	self->refresh();
 }
 
-// static
-void LLPanelLandAudio::onCopyMusicURL(void *userdata)
+// <FS:CR> FIRE-593 - Add/remove streams from the list with these. They're fantastic!
+void LLPanelLandAudio::onBtnStreamAdd()
 {
-	LLPanelLandAudio *self = (LLPanelLandAudio *)userdata;
+	std::string music_url = mMusicURLEdit->getSimple();
+	LLStringUtil::trim(music_url);
+	
+	if (!music_url.empty())
+	{
+		LLSD streamlist = gSavedSettings.getLLSD("FSStreamList");
 
-	LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(self->mMusicURLEdit->getText()));
+		bool has_url = false;
+		for (LLSD::array_const_iterator it = streamlist["audio"].beginArray(); it != streamlist["audio"].endArray(); ++it)
+		{
+			if ((*it).asString() == music_url)
+			{
+				has_url = true;
+				break;
+			}
+		}
+
+		if (!has_url)
+		{
+			streamlist["version"] = 1;
+			streamlist["audio"].append(music_url);
+			gSavedSettings.setLLSD("FSStreamList", streamlist);
+			refresh();
+		}
+	}
 }
+
+void LLPanelLandAudio::onBtnStreamDelete()
+{
+	std::string music_url = mMusicURLEdit->getSimple();
+	LLStringUtil::trim(music_url);
+	// <FS:Testy> FIRE-29157 - Stream can't be deleted if onCommitAny() prepended "http://" to the URL since it doesn't match in the list.
+	std::string music_url_no_http;
+	if (music_url.find("http://") == 0)
+	{
+		music_url_no_http = music_url.substr(7, music_url.size() - 7);
+	}
+	// </FS:Testy>
+	
+	LLSD streamlist = gSavedSettings.getLLSD("FSStreamList");
+	LLSD streamlist_new;
+	streamlist_new["version"] = 1;
+
+	for (LLSD::array_const_iterator it = streamlist["audio"].beginArray(); it != streamlist["audio"].endArray(); ++it)
+	{
+		std::string current_url = (*it).asString();
+		// <FS:Testy> FIRE-29157 - Stream can't be deleted if onCommitAny() prepended "http://" to the URL since it doesn't match in the list.
+		//if (current_url != music_url)
+		if (current_url != music_url && !(current_url.find("://") == std::string::npos && current_url == music_url_no_http))
+		{
+			streamlist_new["audio"].append(current_url);
+		}
+		// </FS:Testy>
+	}
+
+	gSavedSettings.setLLSD("FSStreamList", streamlist_new);
+	refresh();
+}
+
+void LLPanelLandAudio::onBtnCopyToClipboard()
+{
+	std::string music_url = mMusicURLEdit->getSimple();
+	LLStringUtil::trim(music_url);
+	
+	if (!music_url.empty())
+	{
+		LLClipboard::instance().copyToClipboard(utf8str_to_wstring(music_url), 0, music_url.size() );
+	}
+}
+// </FS:CR>
