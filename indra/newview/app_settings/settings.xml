@@ -2,6 +2,17 @@
 <llsd xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="llsd.xsd">
 <map>
+    <key>KokuaDisableVoiceCallStart</key>
+    <map>
+      <key>Comment</key>
+      <string>Disable Voice Call menu entries/buttons to avoid accidental invocation of Voice Calls</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
     <key>KokuaStatGraphPctRunThreshold1</key>
     <map>
       <key>Comment</key>
@@ -805,6 +816,19 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
+    <!-- KokuaPlay* is reserved for future additional UI sound controls -->
+    <key>KokuaPlayUISndTeleportOut</key>
+    <map>
+      <key>Comment</key>
+      <string>Enables the UI sound effect for teleporting out</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <!-- Put all future KokuaPlay* controls alphabetically above here and below above comment -->
     <key>RadarReportChatRange</key>
     <map>
         <key>Comment</key>
@@ -20238,17 +20262,6 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
-    </map>    
-    <key>InventoryFetchDeCloudDebug</key>
-    <map>
-      <key>Comment</key>
-      <string>Toggles inventory fetch to wait on wearables fetch completion before continuing inventory processing. Select True for LL viewer behavior. May need a restart of the viewer.</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>1</integer>
     </map>
     <key>ResetCameraOnMovement</key>
     <map>
@@ -20920,6 +20933,28 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+    </map>
+    <key>FSFontSettingsFile</key>
+    <map>
+      <key>Comment</key>
+      <string>The font settings file with the font currently being used.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string>fonts.xml</string>
+    </map>
+    <key>FSFontSizeAdjustment</key>
+    <map>
+      <key>Comment</key>
+      <string>Number of points to add to the defualt font sizes</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>0.0</real>
     </map>
   </map>
 </llsd>

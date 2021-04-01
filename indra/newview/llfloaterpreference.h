@@ -155,6 +155,10 @@ protected:
 	void onClickActionChange();
 	// updates click/double-click action keybindngs depending on view values
 	void updateClickActionControls();
+	//<FS:Kadah> Font Selection
+	void populateFontSelectionCombo();
+	void loadFontPresetsFromDir(const std::string& dir, LLComboBox* font_selection_combo);
+	//</FS:Kadah>
 	// <FS:Ansariel> Properly disable avatar tag setting
 	void onAvatarTagSettingsChanged();
 

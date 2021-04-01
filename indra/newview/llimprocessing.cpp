@@ -57,8 +57,11 @@
 
 #include <boost/regex.hpp>
 #include "boost/lexical_cast.hpp"
+// Firestorm includes
+#include "exogroupmutelist.h"
 #include "fscommon.h"
 #include "fskeywords.h"
+#include "llavataractions.h"
 #if LL_MSVC
 // disable boost::lexical_cast warning
 #pragma warning (disable:4702)
@@ -1162,7 +1165,10 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 
             // Only show messages if we have a session open (which
             // should happen after you get an "invitation"
-            if (!gIMMgr->hasSession(session_id))
+// Reawaken muted group chats if they were deferred at login
+            //if ( !gIMMgr->hasSession(session_id) )
+            if (!gIMMgr->hasSession(session_id) &&
+                 (!gAgent.isInGroup(session_id) || LLAvatarActions::isBlocked(from_id) || !exoGroupMuteList::instance().restoreDeferredGroupChat(session_id) ))
             {
                 return;
             }

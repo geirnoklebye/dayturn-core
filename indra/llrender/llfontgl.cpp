@@ -837,19 +837,52 @@ const LLFontDescriptor& LLFontGL::getFontDesc() const
 }
 
 // static
-void LLFontGL::initClass(F32 screen_dpi, F32 x_scale, F32 y_scale, const std::string& app_dir, bool create_gl_textures)
+void LLFontGL::initClass(F32 screen_dpi, F32 x_scale, F32 y_scale, const std::string& app_dir, const std::string& fonts_file, F32 size_mod, bool create_gl_textures)
 {
 	sVertDPI = (F32)llfloor(screen_dpi * y_scale);
 	sHorizDPI = (F32)llfloor(screen_dpi * x_scale);
 	sScaleX = x_scale;
 	sScaleY = y_scale;
 	sAppDir = app_dir;
+	LL_INFOS() << "Loading " << fonts_file << LL_ENDL;
 
 	// Font registry init
 	if (!sFontRegistry)
 	{
-		sFontRegistry = new LLFontRegistry(create_gl_textures);
-		sFontRegistry->parseFontInfo("fonts.xml");
+		sFontRegistry = new LLFontRegistry(create_gl_textures, size_mod);
+        
+		// <FS:Kadah> User selectable fonts
+		// load from install_dir/fonts
+		const std::string xml_pathfont(gDirUtilp->getExpandedFilename(LL_PATH_FONTS, "", fonts_file));
+		if (!sFontRegistry->parseFontInfo(xml_pathfont))
+		{
+			LL_INFOS() << "Not found in " << gDirUtilp->getExpandedFilename(LL_PATH_FONTS, "", fonts_file) << LL_ENDL;
+			// attempt to load from user_settings/fonts
+			const std::string xml_pathusr(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS , "fonts", fonts_file));
+			if (!sFontRegistry->parseFontInfo(xml_pathusr))
+			{
+				LL_INFOS() << "Not found in " << gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS , "fonts", fonts_file) << LL_ENDL;
+				// fall back to default if specifed font settings file is not found -KC
+				const string_vec_t xml_paths = gDirUtilp->findSkinnedFilenames(LLDir::XUI, "fonts.xml");
+ 
+				if (xml_paths.empty())
+				{
+					// We didn't even find one single XUI file
+					LL_ERRS() << "No fonts.xml found: " << LL_ENDL;
+				}
+
+				for (string_vec_t::const_iterator path_it = xml_paths.begin();
+						path_it != xml_paths.end();
+						++path_it)
+				{
+					if (!sFontRegistry->parseFontInfo(*path_it))
+					{
+						LL_WARNS() << "Bad font info file: " << *path_it << LL_ENDL;
+					}
+				}
+			}
+		}
+		// </FS:Kadah> 
 	}
 	else
 	{
@@ -873,6 +906,8 @@ bool LLFontGL::loadDefaultFonts()
 	succ &= (NULL != getFontMonospace());
 	succ &= (NULL != getFontExtChar());
 	succ &= (NULL != getFontScripting());
+	succ &= (NULL != getFontCascadia());
+	succ &= (NULL != getFontLektonCode());
 	return succ;
 }
 
@@ -1042,7 +1077,7 @@ LLFontGL* LLFontGL::getFontSansSerifBig()
 //static 
 LLFontGL* LLFontGL::getFontSansSerifHuge()
 {
-	static LLFontGL* fontp = getFont(LLFontDescriptor("SansSerif","Large",0));
+	static LLFontGL* fontp = getFont(LLFontDescriptor("SansSerif","Huge",0));
 	return fontp;
 }
 
@@ -1057,6 +1092,19 @@ LLFontGL* LLFontGL::getFontSansSerifBold()
 LLFontGL* LLFontGL::getFontScripting()
 {
 	static LLFontGL* fontp = getFont(LLFontDescriptor("Scripting","Scripting",0));
+	return fontp;
+}
+
+//static
+LLFontGL* LLFontGL::getFontCascadia()
+{
+	static LLFontGL* fontp = getFont(LLFontDescriptor("Cascadia", "Cascadia", 0));
+	return fontp;
+}
+
+LLFontGL* LLFontGL::getFontLektonCode()
+{
+	static LLFontGL* fontp = getFont(LLFontDescriptor("LektonCode", "LektonCode", 0));
 	return fontp;
 }
 
@@ -1098,9 +1146,17 @@ LLFontGL* LLFontGL::getFontByName(const std::string& name)
 	{
 		return getFontScripting();
 	}
+	else if (name == "LektonCode")
+	{
+		return getFontLektonCode();
+	}
 	else if (name == "Monospace")
 	{
 		return getFontMonospace();
+	}
+	else if (name == "Cascadia")
+	{
+		return getFontCascadia();
 	}
 	else
 	{

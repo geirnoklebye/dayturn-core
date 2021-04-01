@@ -213,6 +213,8 @@ BOOL LLPanelGroup::postBuild()
 	}
 
 	LLVoiceClient::getInstance()->addObserver(this);
+  //KKA-839 Get the call button set right
+  childSetEnabled("btn_call", LLVoiceClient::getInstance()->canCall());
 	
 	return TRUE;
 }
@@ -310,7 +312,9 @@ void LLPanelGroup::onChange(EStatusType status, const std::string &channelURI, b
 		return;
 	}
 
-	childSetEnabled("btn_call", LLVoiceClient::getInstance()->voiceEnabled() && LLVoiceClient::getInstance()->isVoiceWorking());
+  //KKA-839 use canCall() instead of doing it manually here
+	//childSetEnabled("btn_call", LLVoiceClient::getInstance()->voiceEnabled() && LLVoiceClient::getInstance()->isVoiceWorking());
+	childSetEnabled("btn_call", LLVoiceClient::getInstance()->canCall());
 }
 
 void LLPanelGroup::notifyObservers()
@@ -578,6 +582,8 @@ void LLPanelGroup::refreshData()
 
 	mRefreshTimer.start();
 	mRefreshTimer.setTimerExpirySec(5);
+	//KKA-839 also update the voice call button state
+	childSetEnabled("btn_call", LLVoiceClient::getInstance()->canCall());
 }
 
 void LLPanelGroup::callGroup()

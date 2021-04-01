@@ -354,7 +354,9 @@ bool LLGroupList::onContextMenuItemEnable(const LLSD& userdata)
 		return ((real_group_selected) && (gAgent.getGroupID() != selected_group_id) );
 
 	if (userdata.asString() == "call")
-	  return real_group_selected && LLVoiceClient::getInstance()->voiceEnabled() && LLVoiceClient::getInstance()->isVoiceWorking();
+	  //KKA-839 use canCall() instead of doing it manually here
+	  //return real_group_selected && LLVoiceClient::getInstance()->voiceEnabled() && LLVoiceClient::getInstance()->isVoiceWorking();
+	  return real_group_selected && LLVoiceClient::getInstance()->canCall();
 
 // [SL:KB] - Patch: Notification-GroupCreateNotice | Checked: 2012-02-16 (Catznip-3.2)
 	if (userdata.asStringRef() == "create_notice")

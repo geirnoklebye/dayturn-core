@@ -169,6 +169,10 @@ LLFontDescriptor LLFontDescriptor::normalize() const
 	// <FS:Ansariel> Advanced script editor
 	if (new_size != s_template_string && new_size.empty() && findSubString(new_name,"Scripting"))
 		new_size = "Scripting";
+	if (new_size != s_template_string && new_size.empty() && findSubString(new_name, "Cascadia"))
+		new_size = "Cascadia";
+	if (new_size != s_template_string && new_size.empty() && findSubString(new_name, "LektonCode"))
+		new_size = "LektonCode";
 	// </FS:Ansariel>
 	if (new_size.empty())
 		new_size = "Medium";
@@ -182,8 +186,8 @@ LLFontDescriptor LLFontDescriptor::normalize() const
 	return LLFontDescriptor(new_name,new_size,new_style,getFileNames(),getFontCollectionsList());
 }
 
-LLFontRegistry::LLFontRegistry(bool create_gl_textures)
-:	mCreateGLTextures(create_gl_textures)
+LLFontRegistry::LLFontRegistry(bool create_gl_textures, F32 size_mod)
+:	mCreateGLTextures(create_gl_textures), mFontSizeMod(size_mod)
 {
 	// This is potentially a slow directory traversal, so we want to
 	// cache the result.
@@ -198,7 +202,35 @@ LLFontRegistry::~LLFontRegistry()
 bool LLFontRegistry::parseFontInfo(const std::string& xml_filename)
 {
 	bool success = false;  // Succeed if we find and read at least one XUI file
+	// <FS:Kadah> User selectable fonts
+	// <FS:Kadah> xml_filename is now passed as a full path to a single XUI
+	LLXMLNodePtr root;
+	bool parsed_file = LLXMLNode::parseFile(xml_filename, root, NULL);
+
+	if (!parsed_file)
+	{
+		return false;
+	}
+
+	if ( root.isNull() || ! root->hasName( "fonts" ) )
+	{
+		LL_WARNS() << "Bad font info file: " << xml_filename << LL_ENDL;
+		return false;
+	}
+
+	std::string root_name;
+	root->getAttributeString("name",root_name);
+	if (root->hasName("fonts"))
+	{
+		// Expect a collection of children consisting of "font" or "font_size" entries
+		bool init_succ = init_from_xml(this, root);
+		success = success || init_succ;
+	}
+    
+	// <FS:Kadah> Dont load from skins now
+#if 0
 	const string_vec_t xml_paths = gDirUtilp->findSkinnedFilenames(LLDir::XUI, xml_filename);
+ 
 	if (xml_paths.empty())
 	{
 		// We didn't even find one single XUI file
@@ -230,7 +262,8 @@ bool LLFontRegistry::parseFontInfo(const std::string& xml_filename)
 			success = success || init_succ;
 		}
 	}
-
+#endif
+	// </FS:Kadah>
 	//if (success)
 	//	dump();
 
@@ -355,7 +388,9 @@ bool init_from_xml(LLFontRegistry* registry, LLXMLNodePtr node)
 			if (child->getAttributeString("name",size_name) &&
 				child->getAttributeF32("size",size_value))
 			{
-				registry->mFontSizes[size_name] = size_value;
+				//registry->mFontSizes[size_name] = size_value;
+				// +/- defualt font sizes -KC
+				registry->mFontSizes[size_name] = size_value + registry->mFontSizeMod;
 			}
 
 		}
@@ -465,6 +500,8 @@ LLFontGL *LLFontRegistry::createFont(const LLFontDescriptor& desc)
 	
 	std::string local_path = LLFontGL::getFontPathLocal();
 	std::string sys_path = LLFontGL::getFontPathSystem();
+	// <FS:Kadah> User fonts: Also load from user_settings/fonts
+	std::string usr_path = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS , "fonts", "");
 	
 	// The fontname string may contain multiple font file names separated by semicolons.
 	// Break it apart and try loading each one, in order.
@@ -476,6 +513,8 @@ LLFontGL *LLFontRegistry::createFont(const LLFontDescriptor& desc)
 		string_vec_t font_paths;
 		font_paths.push_back(local_path + *file_name_it);
 		font_paths.push_back(sys_path + *file_name_it);
+		// <FS:Kadah> User fonts: Also load from user_settings/fonts
+		font_paths.push_back(usr_path + *file_name_it);
 #if LL_DARWIN
 		font_paths.push_back(MACOSX_FONT_PATH_LIBRARY + *file_name_it);
 		font_paths.push_back(MACOSX_FONT_PATH_LIBRARY + MACOSX_FONT_SUPPLEMENTAL + *file_name_it);

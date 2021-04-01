@@ -95,6 +95,7 @@ public:
 	void setFocusFilterEditor();
 
 	static void newWindow();
+	static void newLiteWindow(); // KKA-827 Just inventory, no recent/worn
 
 	void toggleFindOptions();
 
@@ -102,6 +103,7 @@ protected:
 	//
 	// Misc functions
 	//
+	static void launchNewWindow(bool lite); // KKA-827
 	void setFilterTextFromFilter();
 	void startSearch();
 	
@@ -153,6 +155,7 @@ private:
 	std::string					mCategoryCountString;
 	LLComboBox*					mSearchTypeCombo;
 	LLFrameTimer				mUpdateWornTimer;
+	bool						mIsLite;
 
 
 

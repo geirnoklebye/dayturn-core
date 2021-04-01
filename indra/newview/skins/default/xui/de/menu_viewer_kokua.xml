@@ -662,7 +662,7 @@
             <menu_item_check label="Alpha"  name="Alpha"/>
             <menu_item_check label="Baum"  name="Tree"/>
             <menu_item_check label="Avatare"  name="Character"/>
-            <menu_item_check label="Flächenpatch"  name="SurfacePath"/>
+            <menu_item_check label="Flächenpatch"  name="SurfacePatch"/>
             <menu_item_check label="Himmel"  name="Sky"/>
             <menu_item_check label="Wasser"   name="Water"/>
             <menu_item_check label="Boden"   name="Ground"/>
