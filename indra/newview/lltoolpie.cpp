@@ -709,7 +709,13 @@ bool LLToolPie::walkToClickedLocation()
     if ((mPick.mPickType == LLPickInfo::PICK_LAND && !mPick.mPosGlobal.isExactlyZero()) ||
         (mPick.mObjectID.notNull() && !mPick.mPosGlobal.isExactlyZero()))
     {
-        gAgentCamera.setFocusOnAvatar(TRUE, TRUE);
+//MK
+////		gAgentCamera.setFocusOnAvatar(TRUE, TRUE);
+		//look at the target
+		LLVector3 look_at = (LLVector3)mPick.mPosGlobal - (LLVector3)gAgent.getPositionGlobal();
+		look_at.normVec();
+		gAgentCamera.slamLookAt(look_at);
+//mk
 
         if (mAutoPilotDestination) { mAutoPilotDestination->markDead(); }
         mAutoPilotDestination = (LLHUDEffectBlob *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_BLOB, FALSE);
