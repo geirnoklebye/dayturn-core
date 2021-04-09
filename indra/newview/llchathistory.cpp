@@ -1722,13 +1722,23 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 			}
 			else if (chat.mFromName != SYSTEM_FROM && chat.mFromID.notNull() && chat.mFromID != AUDIO_STREAM_FROM && !message_from_log)
 			{
-				LLStyle::Params link_params(body_message_params);
-				link_params.overwriteFrom(LLStyleMap::instance().lookupAgent(chat.mFromID));
+				// KKA-844 option to use a personal pronoun
+				if (gSavedSettings.getBOOL("KokuaCompactChatPersonalPronoun") && chat.mFromID == gAgent.getID())
+				{
+					mEditor->appendText("<nolink>" + LLTrans::getString("KokuaCompactChatPersonalPronoun") + "</nolink>" + delimiter,
+						prependNewLineState, body_message_params);
+					prependNewLineState = false;					
+				}
+				else
+				{
+					LLStyle::Params link_params(body_message_params);
+					link_params.overwriteFrom(LLStyleMap::instance().lookupAgent(chat.mFromID));
 
-				// Add link to avatar's inspector and delimiter to message.
-				mEditor->appendText(std::string(link_params.link_href) + delimiter,
-					prependNewLineState, link_params);
-				prependNewLineState = false;
+					// Add link to avatar's inspector and delimiter to message.
+					mEditor->appendText(std::string(link_params.link_href) + delimiter,
+						prependNewLineState, link_params);
+					prependNewLineState = false;
+				}
 			}
 			else
 			{
