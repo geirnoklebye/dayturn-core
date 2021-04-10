@@ -54,7 +54,7 @@ width="95" enabled="false"/>
 
 	<button bottom_delta="0" follows="left|bottom" height="20" label="Stop" name="stop_btn" right="-10" width="95" enabled="false"/>
 	<button bottom_delta="0" follows="left|bottom" height="20" label="Block" name="bl_btn" right="-110" width="95" enabled="false"/>
-	<text follows="top|left" left="14" width="510" top_pad="8" name="mute_advice">
+	<text follows="bottom|left" left="14" width="510" top_pad="8" name="mute_advice">
 		Blocking (muting) may not succeed unless in the same region and within draw distance of the object
 	</text>
 </floater>
