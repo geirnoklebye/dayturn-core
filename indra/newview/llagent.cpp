@@ -370,7 +370,7 @@ LLAgent::LLAgent() :
 	mHideGroupTitle(FALSE),
 	mGroupID(),
 
-	mInitialized(FALSE),
+	mInitialized(false),
 	// from HB
 	mRebakeNeeded(false),
 	mListener(),
@@ -508,7 +508,7 @@ void LLAgent::init()
 
 	mHttpPolicy = app_core_http.getPolicy(LLAppCoreHttp::AP_AGENT);
 
-	mInitialized = TRUE;
+	mInitialized = true;
 }
 
 //-----------------------------------------------------------------------------

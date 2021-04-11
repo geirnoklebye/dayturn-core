@@ -127,7 +127,7 @@ public:
 //from HB
   bool      mRebakeNeeded;
 private:
-	BOOL			mInitialized;
+	bool			mInitialized;
 	BOOL			mFirstLogin;
 	std::shared_ptr<LLAgentListener> mListener;
 

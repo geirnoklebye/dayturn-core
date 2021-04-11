@@ -60,8 +60,8 @@ LLVolumeImplFlexible::LLVolumeImplFlexible(LLViewerObject* vo, LLFlexibleObjectD
 {
 	static U32 seed = 0;
 	mID = seed++;
-	mInitialized = FALSE;
-	mUpdated = FALSE;
+	mInitialized = false;
+	mUpdated = false;
 	mInitializedRes = -1;
 	mSimulateRes = 0;
 	mCollisionSphereRadius = 0.f;
@@ -324,7 +324,7 @@ void LLVolumeImplFlexible::updateRenderRes()
 	{
 		mSimulateRes = new_res;
 		setAttributesOfAllSections();
-		mInitialized = TRUE;
+		mInitialized = true;
 	}
 }
 //---------------------------------------------------------------------------------
@@ -707,7 +707,7 @@ void LLVolumeImplFlexible::doFlexibleUpdate()
 		if (!mUpdated || (np-pos).magVec()/mVO->mDrawable->mDistanceWRTCamera > 0.001f)
 		{
 			new_point->mPos.load3((newSection[i].mPosition * rel_xform).mV);
-			mUpdated = FALSE;
+			mUpdated = false;
 		}
 
 		new_point->mRot.loadu(LLMatrix3(rot));
@@ -740,7 +740,7 @@ void LLVolumeImplFlexible::doFlexibleRebuild(bool rebuild_volume)
         volume->regen();
     }
 	
-	mUpdated = TRUE;
+	mUpdated = true;
 }
 
 //------------------------------------------------------------------
@@ -783,7 +783,7 @@ BOOL LLVolumeImplFlexible::doUpdateGeometry(LLDrawable *drawable)
 	{
 		LLVolumeParams volume_params = volume->getVolume()->getParams();
 		volume->setVolume(volume_params, 0);
-		mUpdated = FALSE;
+		mUpdated = false;
 	}
 
 	volume->updateRelativeXform();

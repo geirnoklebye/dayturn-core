@@ -410,7 +410,7 @@ LLVOSky::LLVOSky(const LLUUID &id, const LLPCode pcode, LLViewerRegion *regionp)
 {
 	/// WL PARAMS
 
-	mInitialized = FALSE;
+	mInitialized = false;
 	mbCanSelect = false;
 	mUpdateTimer.reset();
 
