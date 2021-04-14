@@ -962,7 +962,7 @@ BOOL LLFloaterModelPreview::handleScrollWheel(S32 x, S32 y, S32 clicks)
     {
         LLFloaterModelUploadBase::handleScrollWheel(x, y, clicks);
     }
-    return TRUE;
+	return TRUE;
 }
 
 /*virtual*/
