@@ -336,7 +336,7 @@ public:
 	F32 mSetsphereValueMax; // KKA-835 added
 	F32 mLeastDistMaxSquared; // KKA-835 let's do the work here rather than every time in rendering
 
-	LLPointer<LLViewerFetchedTexture> mCamTexturesCustom;
+	LLViewerFetchedTexture* mCamTexturesCustom;
 
 	std::string mParcelName; // for convenience (gAgent does not retain the name of the current parcel)
 	LLParcel::ELandingType mParcelLandingType; // for convenience
