@@ -3398,56 +3398,65 @@ void LLInventoryModel::processBulkUpdateInventory(LLMessageSystem* msg, void**)
 				if (folder_name.find(RR_RLV_REDIR_FOLDER_PREFIX) == 0)
 				{
 					folder_name.erase(0, RR_HRLVS_LENGTH); // folder_name becomes "~A/B/C"
+					tfolder->rename(folder_name);
+					tfolder->updateServer(FALSE);
 					// We are receiving a "#RLV/~A/B/C" folder so we want to put it under #RLV. To avoid cluttering the #RLV folder with many sub-folders of the same name, we try to unify the hierarchy like this :
 					// - The last folder in the string must be created even if it already exists so we don't pollute an existing folder with new items.
 					// - All its parents must be unified with existing folders if possible, created if not possible.
-					LLInventoryObject::correctInventoryName(folder_name); // sanitize just in case there are some unholy characters like "|" in the name (but maybe it was already done before, I don't know)
-					std::deque<std::string> hierarchy = gAgent.mRRInterface.parse (folder_name, "/");
-					if (hierarchy.size() == 1) // if there is only one token, just create the folder
+					// Make sure the parent folder of this folder is not the trash, which would mean it has been declined so no need to rename and reparent here.
+					LLUUID trash_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_TRASH);
+					if (tfolder->getParentUUID() != trash_id)
 					{
-						tfolder->rename(folder_name);
-						tfolder->setParent(rlv_root->getUUID());
-					}
-					else // if there's more than one token, unify all the folders except the last one (create those we don't find), then create the last one
-					{
-						LLInventoryCategory* target_folder = rlv_root; // by default, we will put this folder under #RLV directly
-						for (int toki = 0; toki < hierarchy.size()-1; toki++) // for each parent folder in the name from left to right (if any, meaning if there is at least one "/" in the name of the folder we've received), unify or create that folder and make it the parent of the folder on its right
+						LLInventoryObject::correctInventoryName(folder_name); // sanitize just in case there are some unholy characters like "|" in the name (but maybe it was already done before, I don't know)
+						std::deque<std::string> hierarchy = gAgent.mRRInterface.parse (folder_name, "/");
+						if (hierarchy.size() == 1) // if there is only one token, just create the folder
 						{
-							std::string this_folder_name = hierarchy.at(toki);
-							LLInventoryModel::cat_array_t* cats;
-							LLInventoryModel::item_array_t* items;
-							gInventory.getDirectDescendentsOf(target_folder->getUUID(), cats, items);
-							// Try to find the first folder among the descendents which name matches the one we're examining.
-							LLInventoryCategory* found = NULL;
-							for (int tokj = 0; tokj < cats->size (); tokj++)
-							{
-								LLInventoryCategory* category = cats->at(tokj);
-								S32 compare = LLStringUtil::compareInsensitive(category->getName(), this_folder_name);
-								if (category && compare == 0) // we found it so we won't need to create it
-								{
-									found = category;
-									break;
-								}
-							}
-							if (found != NULL) // we found a folder of the same name under the parent => use this one as the parent for the next folder to examine in the path
-							{
-								target_folder = found;
-							}
-							else // we didn't find a folder of the same name => create it
-							{
-								LLUUID folder_uuid = gInventory.createNewCategory(target_folder->getUUID(), LLFolderType::FT_NONE, this_folder_name);
-								if (!folder_uuid.isNull())
-								{
-									target_folder = gInventory.getCategory(folder_uuid); // the new parent for the next folder is the one we've just created
-								}
-							}
+							tfolder->setParent(rlv_root->getUUID());
+							tfolder->updateParentOnServer(FALSE);
 						}
-						// Finally, rename the folder we've created first (the one with all the items in it)
-						tfolder->rename(hierarchy.at(hierarchy.size()-1));
-						tfolder->setParent(target_folder->getUUID()); // and hook it to the folder before it in the path (we've either reused an existing one or created a new one)
+						else // if there's more than one token, unify all the folders except the last one (create those we don't find), then create the last one
+						{
+							LLInventoryCategory* target_folder = rlv_root; // by default, we will put this folder under #RLV directly
+							for (int toki = 0; toki < hierarchy.size()-1; toki++) // for each parent folder in the name from left to right (if any, meaning if there is at least one "/" in the name of the folder we've received), unify or create that folder and make it the parent of the folder on its right
+							{
+								std::string this_folder_name = hierarchy.at(toki);
+								LLInventoryModel::cat_array_t* cats;
+								LLInventoryModel::item_array_t* items;
+								gInventory.getDirectDescendentsOf(target_folder->getUUID(), cats, items);
+								// Try to find the first folder among the descendents which name matches the one we're examining.
+								LLInventoryCategory* found = NULL;
+								for (int tokj = 0; tokj < cats->size (); tokj++)
+								{
+									LLInventoryCategory* category = cats->at(tokj);
+									S32 compare = LLStringUtil::compareInsensitive(category->getName(), this_folder_name);
+									if (category && compare == 0) // we found it so we won't need to create it
+									{
+										found = category;
+										break;
+									}
+								}
+								if (found != NULL) // we found a folder of the same name under the parent => use this one as the parent for the next folder to examine in the path
+								{
+									target_folder = found;
+								}
+								else // we didn't find a folder of the same name => create it
+								{
+									LLUUID folder_uuid = gInventory.createNewCategory(target_folder->getUUID(), LLFolderType::FT_NONE, this_folder_name);
+									if (!folder_uuid.isNull())
+									{
+										target_folder = gInventory.getCategory(folder_uuid); // the new parent for the next folder is the one we've just created
+									}
+								}
+							}
+							// Finally, rename the folder we've created first (the one with all the items in it)
+							tfolder->rename(hierarchy.at(hierarchy.size()-1));
+							tfolder->updateServer(FALSE);
+							tfolder->setParent(target_folder->getUUID()); // and hook it to the folder before it in the path (we've either reused an existing one or created a new one)
+							tfolder->updateParentOnServer(FALSE);
+						}
 					}
 
-					tfolder->updateServer(FALSE);
+					tfolder->updateServer(FALSE); // do this here too because in some cases there seems to be a race condition that prevents the renaming from actually reaching the server
 				}
 			}
 //mk

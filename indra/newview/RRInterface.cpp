@@ -347,7 +347,6 @@ int match (std::deque<std::string> list, std::string str, bool& exact_match)
 	// yes => return the size of the list
 	// no  => try again after removing the last element
 	// return 0 if never found
-	// Exception : if str starts with a "~" character, the match must be exact
 	// exact_match is an output, set to true when strict matching is found, false otherwise.
 	unsigned int size = list.size();
 	std::string dump;
@@ -357,9 +356,6 @@ int match (std::deque<std::string> list, std::string str, bool& exact_match)
 		if (str == dump) {
 			exact_match = true;
 			return (int)size;
-		}
-		else if (str != "" && str[0] == '~') {
-			return 0;
 		}
 		else if (str.find (dump) != -1) {
 			return (int)size;
