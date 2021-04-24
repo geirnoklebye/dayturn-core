@@ -689,9 +689,9 @@ LLRect LLScrollListCtrl::getRequiredRect()
 }
 
 
-BOOL LLScrollListCtrl::addItem( LLScrollListItem* item, EAddPosition pos, BOOL requires_column )
+bool LLScrollListCtrl::addItem( LLScrollListItem* item, EAddPosition pos, bool requires_column )
 {
-	BOOL not_too_big = getItemCount() < mMaxItemCount;
+	bool not_too_big = getItemCount() < mMaxItemCount;
 	if (not_too_big)
 	{
 		switch( pos )
@@ -1047,7 +1047,7 @@ BOOL LLScrollListCtrl::selectItemRange( S32 first_index, S32 last_index )
 			if( itemp->getEnabled() )
 			{
 				// TODO: support range selection for cells
-				selectItem(itemp, -1, FALSE);
+				selectItem(itemp, -1, false);
 				success = TRUE;				
 			}
 		}
@@ -1241,7 +1241,7 @@ S32	LLScrollListCtrl::selectMultiple( uuid_vec_t ids )
 			if (item->getEnabled() && (item->getUUID() == (*iditr)))
 			{
 				// TODO: support multiple selection for cells
-				selectItem(item, -1, FALSE);
+				selectItem(item, -1, false);
 				++count;
 				break;
 			}
@@ -1298,7 +1298,7 @@ S32 LLScrollListCtrl::getItemIndex( const LLUUID& target_id ) const
 	return -1;
 }
 
-void LLScrollListCtrl::selectPrevItem( BOOL extend_selection)
+void LLScrollListCtrl::selectPrevItem( bool extend_selection)
 {
 	LLScrollListItem* prev_item = NULL;
 
@@ -1343,7 +1343,7 @@ void LLScrollListCtrl::selectPrevItem( BOOL extend_selection)
 }
 
 
-void LLScrollListCtrl::selectNextItem( BOOL extend_selection)
+void LLScrollListCtrl::selectNextItem( bool extend_selection)
 {
 	LLScrollListItem* next_item = NULL;
 
@@ -1637,7 +1637,7 @@ U32 LLScrollListCtrl::searchItems(const LLWString& substring, bool case_sensitiv
             {
                 // find offset of matching text
                 cellp->highlightText(found_iter, substring_trimmed.size());
-                selectItem(item, -1, FALSE);
+                selectItem(item, -1, false);
 
                 found++;
 
@@ -2117,7 +2117,7 @@ BOOL LLScrollListCtrl::selectItemAt(S32 x, S32 y, MASK mask)
 						// </FS:Ansariel> Fix for FS-specific people list (radar)
                         if (item == hit_item || item == lastSelected)
 						{
-							selectItem(item, getColumnIndexFromOffset(x), FALSE);
+							selectItem(item, getColumnIndexFromOffset(x), false);
 							selecting = !selecting;
 							if (hit_item == lastSelected)
 							{
@@ -2127,7 +2127,7 @@ BOOL LLScrollListCtrl::selectItemAt(S32 x, S32 y, MASK mask)
 						}
 						if (selecting)
 						{
-							selectItem(item, getColumnIndexFromOffset(x), FALSE);
+							selectItem(item, getColumnIndexFromOffset(x), false);
 						}
 					}
 				}
@@ -2142,7 +2142,7 @@ BOOL LLScrollListCtrl::selectItemAt(S32 x, S32 y, MASK mask)
 				{
 					if(!(mMaxSelectable > 0 && getAllSelected().size() >= mMaxSelectable))
 					{
-						selectItem(hit_item, getColumnIndexFromOffset(x), FALSE);
+						selectItem(hit_item, getColumnIndexFromOffset(x), false);
 					}
 					else
 					{
@@ -2884,7 +2884,7 @@ bool LLScrollListCtrl::isRepeatedChars(const LLWString& string) const
 	return true;
 }
 
-void LLScrollListCtrl::selectItem(LLScrollListItem* itemp, S32 cell, BOOL select_single_item)
+void LLScrollListCtrl::selectItem(LLScrollListItem* itemp, S32 cell, bool select_single_item)
 {
 	if (!itemp) return;
 
@@ -2959,10 +2959,10 @@ struct SameSortColumn
 	bool operator()(std::pair<S32, BOOL> sort_column) { return sort_column.first == mColumn; }
 };
 
-BOOL LLScrollListCtrl::setSort(S32 column_idx, BOOL ascending)
+bool LLScrollListCtrl::setSort(S32 column_idx, bool ascending)
 {
 	LLScrollListColumn* sort_column = getColumn(column_idx);
-	if (!sort_column) return FALSE;
+	if (!sort_column) return false;
 
 	sort_column->mSortDirection = ascending ? LLScrollListColumn::ASCENDING : LLScrollListColumn::DESCENDING;
 
@@ -2980,7 +2980,7 @@ BOOL LLScrollListCtrl::setSort(S32 column_idx, BOOL ascending)
 	if (mSortColumns.empty())
 	{
 		mSortColumns.push_back(new_sort_column);
-		return TRUE;
+		return true;
 	}
 	else
 	{	
@@ -3049,7 +3049,7 @@ void LLScrollListCtrl::updateSort() const
 }
 
 // for one-shot sorts, does not save sort column/order
-void LLScrollListCtrl::sortOnce(S32 column, BOOL ascending)
+void LLScrollListCtrl::sortOnce(S32 column, bool ascending)
 {
 	std::vector<std::pair<S32, BOOL> > sort_column;
 	sort_column.push_back(std::make_pair(column, ascending));
@@ -3182,7 +3182,7 @@ void	LLScrollListCtrl::selectAll()
 		LLScrollListItem *itemp = *iter;
 		if( itemp->getEnabled() )
 		{
-			selectItem(itemp, -1, FALSE);
+			selectItem(itemp, -1, false);
 		}
 	}
 
@@ -3404,7 +3404,7 @@ S32 LLScrollListCtrl::getSortColumnIndex() const
 }
 // [/SL:KB]
 
-BOOL LLScrollListCtrl::hasSortOrder() const
+bool LLScrollListCtrl::hasSortOrder() const
 {
 	return !mSortColumns.empty();
 }
@@ -3558,7 +3558,7 @@ LLScrollListItem* LLScrollListCtrl::addRow(LLScrollListItem *new_item, const LLS
 				&& cell->isText() 
 				&& !cell->getValue().asString().empty())
 			{
-				columnp->mHeader->setHasResizableElement(TRUE);
+				columnp->mHeader->setHasResizableElement(true);
 			}
 		}
 
@@ -3586,7 +3586,7 @@ LLScrollListItem* LLScrollListCtrl::addRow(LLScrollListItem *new_item, const LLS
 				&& cell->isText() 
 				&& !cell->getValue().asString().empty())
 			{
-				columnp->mHeader->setHasResizableElement(TRUE);
+				columnp->mHeader->setHasResizableElement(true);
 			}
 		}
 	}

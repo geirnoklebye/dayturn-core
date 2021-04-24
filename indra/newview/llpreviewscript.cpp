@@ -1434,7 +1434,7 @@ void LLLiveLSLEditor::buildExperienceList()
 	else
 	{
 		mExperiences->setEnabled(true);
-		mExperiences->sortByName(TRUE);
+		mExperiences->sortByName(true);
 		mExperiences->setCurrentByIndex(mExperiences->getCurrentIndex());
 		getChild<LLButton>("view_profile")->setVisible(true);
 	}

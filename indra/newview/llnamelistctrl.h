@@ -181,7 +181,7 @@ public:
 
 	void setAllowCallingCardDrop(BOOL b) { mAllowCallingCardDrop = b; }
 
-	void sortByName(BOOL ascending);
+	void sortByName(bool ascending);
 
 	/*virtual*/ void updateColumns(bool force_update) override;
 

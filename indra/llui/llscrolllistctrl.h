@@ -332,12 +332,12 @@ public:
 	S32  getColumnPadding() const				{ return mColumnPadding; }
 	void setRowPadding(const S32 c)				{ mColumnPadding = c; }
 	S32  getRowPadding() const					{ return mColumnPadding; }
-	void setCommitOnKeyboardMovement(BOOL b)	{ mCommitOnKeyboardMovement = b; }
-	void setCommitOnSelectionChange(BOOL b)		{ mCommitOnSelectionChange = b; }
+	void setCommitOnKeyboardMovement(bool b)	{ mCommitOnKeyboardMovement = b; }
+	void setCommitOnSelectionChange(bool b)		{ mCommitOnSelectionChange = b; }
 // [SL:KB] - Patch: Control-ScrollList | Checked: Catznip-3.3
-	void setCommitOnDelete(BOOL b)				{ mCommitOnDelete = b; }
+	void setCommitOnDelete(bool b)				{ mCommitOnDelete = b; }
 // [/SL:KB]
-	void setAllowKeyboardMovement(BOOL b)		{ mAllowKeyboardMovement = b; }
+	void setAllowKeyboardMovement(bool b)		{ mAllowKeyboardMovement = b; }
 
 	void			setMaxSelectable(U32 max_selected) { mMaxSelectable = max_selected; }
 	S32				getMaxSelectable() { return mMaxSelectable; }
@@ -391,7 +391,7 @@ public:
 	virtual void	fitContents(S32 max_width, S32 max_height);
 
 	virtual LLRect	getRequiredRect();
-	static  BOOL    rowPreceeds(LLScrollListItem *new_row, LLScrollListItem *test_row);
+	static  bool    rowPreceeds(LLScrollListItem *new_row, LLScrollListItem *test_row);
 
 	LLRect			getItemListRect() { return mItemListRect; }
 
@@ -413,7 +413,7 @@ public:
 	 * then display all items.
 	 */
 	void setPageLines(S32 page_lines );
-	void setCollapseEmptyColumns(BOOL collapse);
+	void setCollapseEmptyColumns(bool collapse);
 
 	LLScrollListItem*	hitItem(S32 x,S32 y);
 	virtual void		scrollToShowSelected();
@@ -436,8 +436,8 @@ public:
 // [SL:KB] - Patch: Control-ScrollList | Checked: Catznip-3.5
 	S32				getSortColumnIndex() const;
 // [/SL:KB]
-	BOOL			getSortAscending() { return mSortColumns.empty() ? TRUE : mSortColumns.back().second; }
-	BOOL			hasSortOrder() const;
+	bool			getSortAscending() { return mSortColumns.empty() ? true : mSortColumns.back().second; }
+	bool			hasSortOrder() const;
 	void			clearSortOrder();
 
 	void			setAlternateSort() { mAlternateSort = true; }
@@ -446,7 +446,7 @@ public:
 	// conceptually const, but mutates mItemList
 	void			updateSort() const;
 	// sorts a list without affecting the permanent sort order (so further list insertions can be unsorted, for example)
-	void			sortOnce(S32 column, BOOL ascending);
+	void			sortOnce(S32 column, bool ascending);
 
 	// manually call this whenever editing list items in place to flag need for resorting
 	void			setNeedsSort(bool val = true) { mSorted = !val; }
@@ -482,7 +482,7 @@ protected:
 	// to the caller to delete the item)
 	//
 	// returns FALSE if item faile to be added to list, does NOT delete 'item'
-	BOOL			addItem( LLScrollListItem* item, EAddPosition pos = ADD_BOTTOM, BOOL requires_column = TRUE );
+	bool			addItem( LLScrollListItem* item, EAddPosition pos = ADD_BOTTOM, bool requires_column = true );
 
 	typedef std::deque<LLScrollListItem *> item_list;
 	item_list&		getItemList() { return mItemList; }
@@ -491,17 +491,17 @@ public:
 	void			updateLineHeight();
 
 private:
-	void			selectPrevItem(BOOL extend_selection);
-	void			selectNextItem(BOOL extend_selection);
+	void			selectPrevItem(bool extend_selection);
+	void			selectNextItem(bool extend_selection);
 	void			drawItems();
 	
 	void            updateLineHeightInsert(LLScrollListItem* item);
 	void			reportInvalidInput();
 	bool			isRepeatedChars(const LLWString& string) const;
-	void			selectItem(LLScrollListItem* itemp, S32 cell, BOOL single_select = TRUE);
+	void			selectItem(LLScrollListItem* itemp, S32 cell, bool single_select = true);
 	void			deselectItem(LLScrollListItem* itemp);
 	void			commitIfChanged();
-	BOOL			setSort(S32 column, BOOL ascending);
+	bool			setSort(S32 column, bool ascending);
 	S32				getLinesPerPage();
 
 	// <FS:Ansariel> Persists sort order of scroll lists

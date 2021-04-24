@@ -144,7 +144,7 @@ public:
 	void			removeall() { clearRows(); }
 	bool			itemExists(const std::string& name);
 
-	void			sortByName(BOOL ascending = TRUE); // Sort the entries in the combobox by name
+	void			sortByName(bool ascending = true); // Sort the entries in the combobox by name
 
 	// Select current item by name using selectItemByLabel.  Returns FALSE if not found.
 	bool			setSimple(const LLStringExplicit& name);

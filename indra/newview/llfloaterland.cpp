@@ -2555,7 +2555,7 @@ void LLPanelLandAccess::refresh()
 				}
 				mListAccess->addNameItem(entry.mID, ADD_DEFAULT, TRUE, "", prefix);
 			}
-			mListAccess->sortByName(TRUE);
+			mListAccess->sortByName(true);
 		}
 		
 		// Ban List
@@ -2621,7 +2621,7 @@ void LLPanelLandAccess::refresh()
 				columns[1]["alt_value"] = entry.mTime != 0 ? std::to_string(seconds) : "Always";
 				mListBanned->addElement(item);
 			}
-			mListBanned->sortByName(TRUE);
+			mListBanned->sortByName(true);
 		}
 
 		if(parcel->getRegionDenyAnonymousOverride())
@@ -2766,7 +2766,7 @@ void LLPanelLandAccess::refresh_ui()
 		getChildView("AccessList")->setEnabled(can_manage_allowed);
 		S32 allowed_list_count = parcel->mAccessList.size();
 		getChildView("add_allowed")->setEnabled(can_manage_allowed && allowed_list_count < PARCEL_MAX_ACCESS_LIST);
-		BOOL has_selected = (mListAccess && mListAccess->getSelectionInterface()->getFirstSelectedIndex() >= 0);
+		bool has_selected = (mListAccess && mListAccess->getSelectionInterface()->getFirstSelectedIndex() >= 0);
 		getChildView("remove_allowed")->setEnabled(can_manage_allowed && has_selected);
 		
 		getChildView("BannedList")->setEnabled(can_manage_banned);
