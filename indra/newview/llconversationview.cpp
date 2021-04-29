@@ -42,6 +42,10 @@
 #include "lluictrlfactory.h"
 #include "lltoolbarview.h"
 
+//Kokua additions
+#include "lggcontactsets.h"
+#include "llnetmap.h"
+
 //
 // Implementation of conversations list session widgets
 //
@@ -551,13 +555,28 @@ void LLConversationViewSession::onCurrentVoiceSessionChanged(const LLUUID& sessi
 
 bool LLConversationViewSession::highlightFriendTitle(LLConversationItem* vmi)
 {
+	//KKA-847 make the use of ConversationFriendColor optional and add an option for full coloring based on Name Tag colour using Contact Set/Minimap logic
+	static LLCachedControl<bool> colorFriends(gSavedSettings, "KokuaColorFriendNamesInConversationsFloater");
+	static LLCachedControl<bool> colorFriendsAsNameTag(gSavedSettings, "KokuaColorFriendNamesInConversationsFloaterAsNameTags");
+
 	if(vmi->getType() == LLConversationItem::CONV_PARTICIPANT || vmi->getType() == LLConversationItem::CONV_SESSION_1_ON_1)
 	{
 		LLIMModel::LLIMSession* session=  LLIMModel::instance().findIMSession(vmi->getUUID());
-		if (session && LLAvatarActions::isFriend(session->mOtherParticipantID))
+		if ((colorFriends || colorFriendsAsNameTag) && session && LLAvatarActions::isFriend(session->mOtherParticipantID))
 		{
 			LLStyle::Params title_style;
-			title_style.color = LLUIColorTable::instance().getColor("ConversationFriendColor");
+			if (colorFriendsAsNameTag)
+			{
+				LLColor4 color;
+				color = LGGContactSets::getInstance()->colorize(session->mOtherParticipantID, color, LGG_CS_TAG);
+				LGGContactSets::getInstance()->hasFriendColorThatShouldShow(session->mOtherParticipantID, LGG_CS_TAG, color);
+				LLNetMap::getAvatarMarkColor(session->mOtherParticipantID, color);
+				title_style.color = color;
+			}
+			else
+			{
+				title_style.color = LLUIColorTable::instance().getColor("ConversationFriendColor");
+			}
 			mSessionTitle->setText(vmi->getDisplayName(), title_style);
 			return true;
 		}
@@ -646,6 +665,8 @@ void LLConversationViewParticipant::draw()
     static LLUIColor sFlashBgColor = LLUIColorTable::instance().getColor("MenuItemFlashBgColor", DEFAULT_WHITE);
     static LLUIColor sFocusOutlineColor = LLUIColorTable::instance().getColor("InventoryFocusOutlineColor", DEFAULT_WHITE);
     static LLUIColor sMouseOverColor = LLUIColorTable::instance().getColor("InventoryMouseOverColor", DEFAULT_WHITE);
+		static LLCachedControl<bool> colorFriends(gSavedSettings, "KokuaColorFriendNamesInConversationsFloater");
+		static LLCachedControl<bool> colorFriendsAsNameTag(gSavedSettings, "KokuaColorFriendNamesInConversationsFloaterAsNameTags");
 
     const BOOL show_context = (getRoot() ? getRoot()->getShowSelectionContext() : FALSE);
 
@@ -665,9 +686,19 @@ void LLConversationViewParticipant::draw()
 	}
 	else
 	{
-		if (LLAvatarActions::isFriend(mUUID))
+		// KKA-847 make the use of ConversationFriendColor optional and add an option for full coloring based on Name Tag colour using Contact Set/Minimap logic
+		if ((colorFriends || colorFriendsAsNameTag) && LLAvatarActions::isFriend(mUUID))
 		{
-			color = LLUIColorTable::instance().getColor("ConversationFriendColor");
+			if (colorFriendsAsNameTag)
+			{
+				color = LGGContactSets::getInstance()->colorize(mUUID, color, LGG_CS_TAG);
+				LGGContactSets::getInstance()->hasFriendColorThatShouldShow(mUUID, LGG_CS_TAG, color);
+				LLNetMap::getAvatarMarkColor(mUUID, color);				
+			}
+			else
+			{
+				color = LLUIColorTable::instance().getColor("ConversationFriendColor");
+			}
 		}
 		else
 		{
