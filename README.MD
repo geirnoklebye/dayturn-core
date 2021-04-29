@@ -1,9 +1,9 @@
-﻿Updated 1 December 2020
+﻿Updated 17 April 2021
 
 ================
-Please note: We do not provide support for self-building outside of the active Kokua team. This is due in part to the use of licenced components which we cannot share
+Please note: We do not provide support for self-building outside of the active Kokua team. This is due in part to the use of licenced components which we cannot share in buildable form and also the limited resources of the current team. Before trying to build Kokua make sure that you can successfully build the standard LL Viewer. At this writing several repositories no longerp rovide Python2 updates. To update to the last supplied version 2.7.18 folllow the procdure at:
 
-in buildable form and also the limited resources of the current team. Before trying to build Kokua make sure that you can successfully build the standard LL Viewer.
+https://tecadmin.net/install-python-2-7-on-ubuntu-and-linuxmint/
 
 --------------------------
 
@@ -92,10 +92,10 @@ gcc --version
 gcc (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
 
 Install autobuild into python
+@
+-   If building lindenlab viewer64 code base use autobuild-1.1.7 */confirmed to work with linux but, versions are up to 1.1.9 at this writing/*
 
--   If building lindenlab viewer64 code base use autobuild-1.1
-
--       sudo pip install git+http://bitbucket.org/lindenlab/autobuild-1.1#egg=autobuild
+-       sudo pip install git+http://bitbucket.org/lindenlab/autobuild.git@v1.1.7
 
 Install optional tools
 
