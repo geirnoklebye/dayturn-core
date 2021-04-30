@@ -520,7 +520,7 @@
        follows="left|top"
        label=""
        visibility_control="KokuaColorFriendNamesInConversationsFloater"
-       name="im_color_panel" >
+       name="friends_color_panel" >
        <color_swatch
          can_apply_immediately="true"
          color="ConversationFriendColor"
@@ -529,7 +529,7 @@
          label_height="0"
          layout="topleft"
          left="20"
-         name="console_im"
+         name="friends_color"
          top="0"
          width="44" >
          <color_swatch.init_callback
