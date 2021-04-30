@@ -523,7 +523,7 @@
        name="im_color_panel" >
        <color_swatch
          can_apply_immediately="true"
-         color="AgentIMColor"
+         color="ConversationFriendColor"
          follows="left|top"
          height="24"
          label_height="0"
