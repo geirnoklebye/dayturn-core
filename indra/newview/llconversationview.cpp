@@ -555,6 +555,7 @@ void LLConversationViewSession::onCurrentVoiceSessionChanged(const LLUUID& sessi
 
 bool LLConversationViewSession::highlightFriendTitle(LLConversationItem* vmi)
 {
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames) return false;
 	//KKA-847 make the use of ConversationFriendColor optional and add an option for full coloring based on Name Tag colour using Contact Set/Minimap logic
 	static LLCachedControl<bool> colorFriends(gSavedSettings, "KokuaColorFriendNamesInConversationsFloater");
 	static LLCachedControl<bool> colorFriendsAsNameTag(gSavedSettings, "KokuaColorFriendNamesInConversationsFloaterAsNameTags");
@@ -687,7 +688,7 @@ void LLConversationViewParticipant::draw()
 	else
 	{
 		// KKA-847 make the use of ConversationFriendColor optional and add an option for full coloring based on Name Tag colour using Contact Set/Minimap logic
-		if ((colorFriends || colorFriendsAsNameTag) && LLAvatarActions::isFriend(mUUID))
+		if ((colorFriends || colorFriendsAsNameTag) && LLAvatarActions::isFriend(mUUID) && !(gRRenabled && gAgent.mRRInterface.mContainsShownames))
 		{
 			if (colorFriendsAsNameTag)
 			{
