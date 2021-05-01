@@ -503,6 +503,66 @@
          IMs/Group
        </text>
      </panel>
+     <check_box
+       control_name="KokuaColorFriendNamesInConversationsFloater"
+       follows="left|top"
+       layout="topleft"
+       left="20"
+       top_pad="22"
+       height="12"
+       name="KokuaColorFriendNamesInConversationsFloater"
+       width="450"
+       label="Color Friend names in left column of Conversations Floater:" />
+     <panel
+       top_pad="2"
+       height="25"
+       width="505"
+       follows="left|top"
+       label=""
+       visibility_control="KokuaColorFriendNamesInConversationsFloater"
+       name="friends_color_panel" >
+       <color_swatch
+         can_apply_immediately="true"
+         color="ConversationFriendColor"
+         follows="left|top"
+         height="24"
+         label_height="0"
+         layout="topleft"
+         left="20"
+         name="friends_color"
+         top="0"
+         width="44" >
+         <color_swatch.init_callback
+          function="Pref.getUIColor"
+          parameter="ConversationFriendColor" />
+         <color_swatch.commit_callback
+          function="Pref.applyUIColor"
+          parameter="ConversationFriendColor" />
+       </color_swatch>
+       <text
+         type="string"
+         length="1"
+         follows="left|top"
+         height="10"
+         layout="topleft"
+         left_pad="5"
+         mouse_opaque="false"
+         name="friends_color_label"
+         top_delta="5"
+         width="95">
+         Friends
+       </text>
+     </panel>
+     <check_box
+       control_name="KokuaColorFriendNamesInConversationsFloaterAsNameTags"
+       follows="left|top"
+       layout="topleft"
+       left="20"
+       top_pad="22"
+       height="12"
+       name="KokuaColorFriendNamesInConversationsFloaterAsNameTags"
+       width="450"
+       label="Use name tag colors (inc. Contact Sets and Minimap markers) instead of single color above" />
    </panel>
 	 <panel
 	  top_pad="5"

@@ -74,6 +74,7 @@ if(WINDOWS)
         nghttp2.dll
         glod.dll
         libhunspell.dll
+        uriparser.dll
         )
 
     if (OPENAL)
@@ -205,6 +206,9 @@ elseif(DARWIN)
         libnghttp2.dylib
         libnghttp2.14.dylib
         libnghttp2.14.19.0.dylib
+        liburiparser.dylib
+        liburiparser.1.dylib
+        liburiparser.1.0.27.dylib
        )
     if (FMODSTUDIO)
       set(debug_files ${debug_files} libfmodstudioL.dylib)

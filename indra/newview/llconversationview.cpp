@@ -31,6 +31,7 @@
 
 #include <boost/bind.hpp>
 #include "llagentdata.h"
+#include "llavataractions.h"
 #include "llconversationmodel.h"
 #include "llfloaterimsession.h"
 #include "llfloaterimnearbychat.h"
@@ -40,6 +41,10 @@
 #include "llgroupiconctrl.h"
 #include "lluictrlfactory.h"
 #include "lltoolbarview.h"
+
+//Kokua additions
+#include "lggcontactsets.h"
+#include "llnetmap.h"
 
 //
 // Implementation of conversations list session widgets
@@ -100,6 +105,56 @@ LLConversationViewSession::~LLConversationViewSession()
 	}
 
 	mFlashTimer->unset();
+}
+
+void LLConversationViewSession::destroyView()
+{
+    // Chat can create and parent models(listeners) to session's model before creating
+    // coresponding views, such participant's models normally will wait for idle cycles
+    // but since we are deleting session and won't be processing any more events, make
+    // sure unowned LLConversationItemParticipant models are removed as well.
+
+    LLConversationItemSession* vmi = dynamic_cast<LLConversationItemSession*>(getViewModelItem());
+
+    // CONV_SESSION_1_ON_1 stores participants as two models that belong to views independent
+    // from session (nasty! These views are widgets in LLFloaterIMSessionTab, see buildConversationViewParticipant)
+    if (vmi && vmi->getType() != LLConversationItem::CONV_SESSION_1_ON_1)
+    {
+        // Destroy existing views
+        while (!mItems.empty())
+        {
+            LLFolderViewItem *itemp = mItems.back();
+            mItems.pop_back();
+
+            LLFolderViewModelItem* item_vmi = itemp->getViewModelItem();
+            if (item_vmi) // supposed to exist
+            {
+                // unparent to remove from child list
+                vmi->removeChild(item_vmi);
+            }
+            itemp->destroyView();
+        }
+
+        // Not needed in scope of sessions, but just in case
+        while (!mFolders.empty())
+        {
+            LLFolderViewFolder *folderp = mFolders.back();
+            mFolders.pop_back();
+
+            LLFolderViewModelItem* folder_vmi = folderp->getViewModelItem();
+            if (folder_vmi)
+            {
+                vmi->removeChild(folder_vmi);
+            }
+            folderp->destroyView();
+        }
+
+        // Now everything that is left in model(listener) is not owned by views,
+        // only by sessions, deparent so it won't point to soon to be dead model
+        vmi->clearAndDeparentModels();
+    }
+
+    LLFolderViewFolder::destroyView();
 }
 
 void LLConversationViewSession::setFlashState(bool flash_state)
@@ -447,8 +502,13 @@ void LLConversationViewSession::refresh()
 	vmi->resetRefresh();
 
 	if (mSessionTitle)
-	{
-		mSessionTitle->setText(vmi->getDisplayName());
+	{		
+		if (!highlightFriendTitle(vmi))
+		{
+			LLStyle::Params title_style;
+			title_style.color = LLUIColorTable::instance().getColor("LabelTextColor");
+			mSessionTitle->setText(vmi->getDisplayName(), title_style);
+		}
 	}
 
 	// Update all speaking indicators
@@ -491,6 +551,37 @@ void LLConversationViewSession::onCurrentVoiceSessionChanged(const LLUUID& sessi
 			refresh();
 		}
 	}
+}
+
+bool LLConversationViewSession::highlightFriendTitle(LLConversationItem* vmi)
+{
+	//KKA-847 make the use of ConversationFriendColor optional and add an option for full coloring based on Name Tag colour using Contact Set/Minimap logic
+	static LLCachedControl<bool> colorFriends(gSavedSettings, "KokuaColorFriendNamesInConversationsFloater");
+	static LLCachedControl<bool> colorFriendsAsNameTag(gSavedSettings, "KokuaColorFriendNamesInConversationsFloaterAsNameTags");
+
+	if(vmi->getType() == LLConversationItem::CONV_PARTICIPANT || vmi->getType() == LLConversationItem::CONV_SESSION_1_ON_1)
+	{
+		LLIMModel::LLIMSession* session=  LLIMModel::instance().findIMSession(vmi->getUUID());
+		if ((colorFriends || colorFriendsAsNameTag) && session && LLAvatarActions::isFriend(session->mOtherParticipantID))
+		{
+			LLStyle::Params title_style;
+			if (colorFriendsAsNameTag)
+			{
+				LLColor4 color;
+				color = LGGContactSets::getInstance()->colorize(session->mOtherParticipantID, color, LGG_CS_TAG);
+				LGGContactSets::getInstance()->hasFriendColorThatShouldShow(session->mOtherParticipantID, LGG_CS_TAG, color);
+				LLNetMap::getAvatarMarkColor(session->mOtherParticipantID, color);
+				title_style.color = color;
+			}
+			else
+			{
+				title_style.color = LLUIColorTable::instance().getColor("ConversationFriendColor");
+			}
+			mSessionTitle->setText(vmi->getDisplayName(), title_style);
+			return true;
+		}
+	}
+	return false;
 }
 
 //
@@ -574,6 +665,8 @@ void LLConversationViewParticipant::draw()
     static LLUIColor sFlashBgColor = LLUIColorTable::instance().getColor("MenuItemFlashBgColor", DEFAULT_WHITE);
     static LLUIColor sFocusOutlineColor = LLUIColorTable::instance().getColor("InventoryFocusOutlineColor", DEFAULT_WHITE);
     static LLUIColor sMouseOverColor = LLUIColorTable::instance().getColor("InventoryMouseOverColor", DEFAULT_WHITE);
+		static LLCachedControl<bool> colorFriends(gSavedSettings, "KokuaColorFriendNamesInConversationsFloater");
+		static LLCachedControl<bool> colorFriendsAsNameTag(gSavedSettings, "KokuaColorFriendNamesInConversationsFloaterAsNameTags");
 
     const BOOL show_context = (getRoot() ? getRoot()->getShowSelectionContext() : FALSE);
 
@@ -593,7 +686,24 @@ void LLConversationViewParticipant::draw()
 	}
 	else
 	{
-		color = mIsSelected ? sHighlightFgColor : sFgColor;
+		// KKA-847 make the use of ConversationFriendColor optional and add an option for full coloring based on Name Tag colour using Contact Set/Minimap logic
+		if ((colorFriends || colorFriendsAsNameTag) && LLAvatarActions::isFriend(mUUID))
+		{
+			if (colorFriendsAsNameTag)
+			{
+				color = LGGContactSets::getInstance()->colorize(mUUID, color, LGG_CS_TAG);
+				LGGContactSets::getInstance()->hasFriendColorThatShouldShow(mUUID, LGG_CS_TAG, color);
+				LLNetMap::getAvatarMarkColor(mUUID, color);				
+			}
+			else
+			{
+				color = LLUIColorTable::instance().getColor("ConversationFriendColor");
+			}
+		}
+		else
+		{
+			color = mIsSelected ? sHighlightFgColor : sFgColor;
+		}
 	}
 
 	LLConversationItemParticipant* participant_model = dynamic_cast<LLConversationItemParticipant*>(getViewModelItem());

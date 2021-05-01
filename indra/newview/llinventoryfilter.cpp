@@ -76,6 +76,7 @@ LLInventoryFilter::LLInventoryFilter(const Params& p)
 :	mName(p.name),
 	mFilterModified(FILTER_NONE),
 	mEmptyLookupMessage("InventoryNoMatchingItems"),
+	mDefaultEmptyLookupMessage(""),
 	mFilterSubStringTarget(SUBST_TARGET_NAME),	// ## Zi: Extended Inventory Search
 	mFilterOps(p.filter_ops),
 	mBackupFilterOps(mFilterOps),
@@ -1644,12 +1645,24 @@ void LLInventoryFilter::setEmptyLookupMessage(const std::string& message)
 	mEmptyLookupMessage = message;
 }
 
+void LLInventoryFilter::setDefaultEmptyLookupMessage(const std::string& message)
+{
+	mDefaultEmptyLookupMessage = message;
+}
+
 std::string LLInventoryFilter::getEmptyLookupMessage() const
 {
-	LLStringUtil::format_map_t args;
-	args["[SEARCH_TERM]"] = LLURI::escape(getFilterSubStringOrig());
+	if (isDefault() && !mDefaultEmptyLookupMessage.empty())
+	{
+		return LLTrans::getString(mDefaultEmptyLookupMessage);
+	}
+	else
+	{
+		LLStringUtil::format_map_t args;
+		args["[SEARCH_TERM]"] = LLURI::escape(getFilterSubStringOrig());
 
-	return LLTrans::getString(mEmptyLookupMessage, args);
+		return LLTrans::getString(mEmptyLookupMessage, args);
+	}
 
 }
 
