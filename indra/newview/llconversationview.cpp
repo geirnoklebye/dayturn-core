@@ -43,6 +43,7 @@
 #include "lltoolbarview.h"
 
 //Kokua additions
+#include "llagent.h"
 #include "lggcontactsets.h"
 #include "llnetmap.h"
 
