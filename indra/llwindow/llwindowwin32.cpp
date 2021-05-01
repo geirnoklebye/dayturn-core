@@ -483,7 +483,7 @@ LLWindowWin32::LLWindowWin32(LLWindowCallbacks* callbacks,
 	memset(mPrevGammaRamp, 0, sizeof(mPrevGammaRamp));
 	mCustomGammaSet = FALSE;
 	mWindowHandle = NULL;
-
+	
 	if (!SystemParametersInfo(SPI_GETMOUSEVANISH, 0, &mMouseVanish, 0))
 	{
 		mMouseVanish = TRUE;
@@ -1302,22 +1302,22 @@ BOOL LLWindowWin32::switchContext(BOOL fullscreen, const LLCoordScreen &size, BO
     {
         // Looks like ChoosePixelFormat can crash in case of faulty driver
         if (!(pixel_format = SafeChoosePixelFormat(mhDC, &pfd)))
-        {
+	{
             LL_WARNS("Window") << "ChoosePixelFormat failed, code: " << GetLastError() << LL_ENDL;
             OSMessageBox(mCallbacks->translateString("MBPixelFmtErr"),
                 mCallbacks->translateString("MBError"), OSMB_OK);
-            close();
+		close();
             return FALSE;
         }
     }
     catch (...)
     {
         LOG_UNHANDLED_EXCEPTION("ChoosePixelFormat");
-        OSMessageBox(mCallbacks->translateString("MBPixelFmtErr"),
-            mCallbacks->translateString("MBError"), OSMB_OK);
+		OSMessageBox(mCallbacks->translateString("MBPixelFmtErr"),
+			mCallbacks->translateString("MBError"), OSMB_OK);
         close();
-        return FALSE;
-    }
+		return FALSE;
+	}
 
 	LL_INFOS("Window") << "Pixel format chosen." << LL_ENDL ;
 
@@ -1543,10 +1543,10 @@ BOOL LLWindowWin32::switchContext(BOOL fullscreen, const LLCoordScreen &size, BO
 
 		LL_INFOS("Window") << "pixel formats done." << LL_ENDL ;
 
-		S32   swap_method = 0;
+		S32 swap_method = 0;
 		S32   cur_format  = 0;
 const	S32   max_format  = (S32)num_formats - 1;
-		GLint swap_query  = WGL_SWAP_METHOD_ARB;
+		GLint swap_query = WGL_SWAP_METHOD_ARB;
 
 		// SL-14705 Fix name tags showing in front of objects with AMD GPUs.
 		// On AMD hardware we need to iterate from the first pixel format to the end.
@@ -1566,7 +1566,7 @@ const	S32   max_format  = (S32)num_formats - 1;
 
 			++cur_format;
 		}
-
+		
 		pixel_format = pixel_formats[cur_format];
 		
 		if (mhDC != 0)											// Does The Window Have A Device Context?

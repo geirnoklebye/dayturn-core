@@ -267,6 +267,7 @@ Benjamin Bigdipper
 Beq Janus
 	BUG-227094
 	SL-10288
+    SL-11300
 	SL-13583
 	SL-14766
 Beth Walcher
@@ -1367,6 +1368,7 @@ Sovereign Engineer
 	SL-14707
 	SL-14731
 	SL-14732
+	SL-15096
 SpacedOut Frye
 	VWR-34
 	VWR-45
