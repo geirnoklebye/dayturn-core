@@ -567,7 +567,7 @@ bool LLConversationViewSession::highlightFriendTitle(LLConversationItem* vmi)
 			LLStyle::Params title_style;
 			if (colorFriendsAsNameTag)
 			{
-				LLColor4 color;
+				LLColor4 color = LLUIColorTable::instance().getColor("ConversationFriendColor"); //KKA-848 start with LL default
 				color = LGGContactSets::getInstance()->colorize(session->mOtherParticipantID, color, LGG_CS_TAG);
 				LGGContactSets::getInstance()->hasFriendColorThatShouldShow(session->mOtherParticipantID, LGG_CS_TAG, color);
 				LLNetMap::getAvatarMarkColor(session->mOtherParticipantID, color);
@@ -691,6 +691,7 @@ void LLConversationViewParticipant::draw()
 		{
 			if (colorFriendsAsNameTag)
 			{
+				color = LLUIColorTable::instance().getColor("ConversationFriendColor"); //KKA-848 start with LL default
 				color = LGGContactSets::getInstance()->colorize(mUUID, color, LGG_CS_TAG);
 				LGGContactSets::getInstance()->hasFriendColorThatShouldShow(mUUID, LGG_CS_TAG, color);
 				LLNetMap::getAvatarMarkColor(mUUID, color);				
