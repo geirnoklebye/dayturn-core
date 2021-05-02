@@ -183,7 +183,13 @@ void LLConversationViewSession::setIsTyping(bool is_typing)
 	if (mSessionTitle && gSavedSettings.getBOOL("KokuaIsTypingNotificationInConversationsTabs"))
 	{
 		std::string title = is_typing ? mTypingStart.getString() : vmi->getDisplayName();
-		mSessionTitle->setText(title);
+		// KKA-849 use the new friend colouring code
+		if (!highlightFriendTitle(vmi, title))
+		{
+			LLStyle::Params title_style;
+			title_style.color = LLUIColorTable::instance().getColor("LabelTextColor");
+			mSessionTitle->setText(title, title_style);
+		}
 	}
 }
 
@@ -553,7 +559,8 @@ void LLConversationViewSession::onCurrentVoiceSessionChanged(const LLUUID& sessi
 	}
 }
 
-bool LLConversationViewSession::highlightFriendTitle(LLConversationItem* vmi)
+// KKA-849 extend this to allow passing in overrideTitle for '<name> is typing'
+bool LLConversationViewSession::highlightFriendTitle(LLConversationItem* vmi, std::string overrideTitle)
 {
 	//KKA-847 make the use of ConversationFriendColor optional and add an option for full coloring based on Name Tag colour using Contact Set/Minimap logic
 	static LLCachedControl<bool> colorFriends(gSavedSettings, "KokuaColorFriendNamesInConversationsFloater");
@@ -577,7 +584,7 @@ bool LLConversationViewSession::highlightFriendTitle(LLConversationItem* vmi)
 			{
 				title_style.color = LLUIColorTable::instance().getColor("ConversationFriendColor");
 			}
-			mSessionTitle->setText(vmi->getDisplayName(), title_style);
+			mSessionTitle->setText(overrideTitle != "" ? overrideTitle : vmi->getDisplayName(), title_style); //KKA-849 overrideTitle added
 			return true;
 		}
 	}

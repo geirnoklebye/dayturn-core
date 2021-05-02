@@ -97,7 +97,7 @@ public:
 	LLFloater* getSessionFloater();
 	bool isInActiveVoiceChannel() { return mIsInActiveVoiceChannel; }
 
-	bool highlightFriendTitle(LLConversationItem* vmi);
+	bool highlightFriendTitle(LLConversationItem* vmi, std::string overrideTitle=""); //KKA-849 extended to pass in an alternative title to use (eg <name> is typing)
 
 private:
 
