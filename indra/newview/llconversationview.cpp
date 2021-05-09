@@ -566,7 +566,7 @@ bool LLConversationViewSession::highlightFriendTitle(LLConversationItem* vmi, st
 	static LLCachedControl<bool> colorFriends(gSavedSettings, "KokuaColorFriendNamesInConversationsFloater");
 	static LLCachedControl<bool> colorFriendsAsNameTag(gSavedSettings, "KokuaColorFriendNamesInConversationsFloaterAsNameTags");
 
-	if(vmi->getType() == LLConversationItem::CONV_PARTICIPANT || vmi->getType() == LLConversationItem::CONV_SESSION_1_ON_1)
+	if(vmi && (vmi->getType() == LLConversationItem::CONV_PARTICIPANT || vmi->getType() == LLConversationItem::CONV_SESSION_1_ON_1))
 	{
 		LLIMModel::LLIMSession* session=  LLIMModel::instance().findIMSession(vmi->getUUID());
 		if ((colorFriends || colorFriendsAsNameTag) && session && LLAvatarActions::isFriend(session->mOtherParticipantID))
