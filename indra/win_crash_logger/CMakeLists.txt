@@ -34,12 +34,14 @@ include_directories(SYSTEM
 set(win_crash_logger_SOURCE_FILES
     win_crash_logger.cpp
     llcrashloggerwindows.cpp
+    llcrashlookupwindows.cpp
     )
 
 set(win_crash_logger_HEADER_FILES
     CMakeLists.txt
 
     llcrashloggerwindows.h
+    llcrashlookupwindows.h
     resource.h
     StdAfx.h
     win_crash_logger.h

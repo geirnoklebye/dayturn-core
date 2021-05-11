@@ -185,6 +185,13 @@ https://accounts.secondlife.com/change_email/
          help_topic="preferences_kokua_tab"
          name="kokua" />
         <panel
+         class="panel_preference_crashreports"
+         filename="panel_preferences_crashreports.xml"
+         label="Crash Reports"
+         layout="topleft"
+         help_topic="preferences_crashreports_tab"
+         name="crashreports" />
+        <panel
          class="panel_preference_backup"
          filename="panel_preferences_backup.xml"
          label="Backup"

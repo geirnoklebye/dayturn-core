@@ -130,6 +130,7 @@
 #include "llpanelblockedlist.h"
 
 #include "lltoolbarview.h"
+#include "../llcrashlogger/llcrashlogger.h"
 const F32 BANDWIDTH_UPDATER_TIMEOUT = 0.5f;
 char const* const VISIBILITY_DEFAULT = "default";
 char const* const VISIBILITY_HIDDEN = "hidden";
@@ -534,6 +535,18 @@ BOOL LLFloaterPreference::postBuild()
 		getChild<LLComboBox>("language_combobox")->add("System default", LLSD("default"), ADD_TOP, true);
 	}
 
+// [SL:KB] - Patch: Viewer-CrashReporting | Checked: 2011-06-11 (Catznip-2.6.c) | Added: Catznip-2.6.0c
+#ifndef LL_SEND_CRASH_REPORTS
+	// Hide the crash report tab if crash reporting isn't enabled
+	LLTabContainer* pTabContainer = getChild<LLTabContainer>("pref core");
+	if (pTabContainer)
+	{
+		LLPanel* pCrashReportPanel = pTabContainer->getPanelByName("crashreports");
+		if (pCrashReportPanel)
+			pTabContainer->removeTabPanel(pCrashReportPanel);
+	}
+#endif // LL_SEND_CRASH_REPORTS
+// [/SL:KB]
 	// <FS:Kadah> Load the list of font settings
 	populateFontSelectionCombo();
 	// </FS:Kadah>
@@ -1077,6 +1090,10 @@ void LLFloaterPreference::onBtnOK(const LLSD& userdata)
 
 		LLUIColorTable::instance().saveUserSettings();
 		gSavedSettings.saveToFile(gSavedSettings.getString("ClientSettingsFile"), TRUE);
+// [SL:KB] - Patch: Viewer-CrashReporting | Checked: 2011-10-02 (Catznip-2.8.0e) | Added: Catznip-2.8.0e
+		// We need to save all crash settings, even if they're defaults [see LLCrashLogger::loadCrashBehaviorSetting()]
+		gCrashSettings.saveToFile(gSavedSettings.getString("CrashSettingsFile"), FALSE);
+// [/SL:KB]
 		
 		//Only save once logged in and loaded per account settings
 		if(mGotPersonalInfo)
@@ -3941,6 +3958,80 @@ void LLFloaterPreference::collectSearchableItems()
 	}
 }
 
+// [SL:KB] - Patch: Viewer-CrashReporting | Checked: 2010-11-16 (Catznip-2.6.0a) | Added: Catznip-2.4.0b
+static LLPanelInjector<LLPanelPreferenceCrashReports> t_pref_crashreports("panel_preference_crashreports");
+
+LLPanelPreferenceCrashReports::LLPanelPreferenceCrashReports()
+	: LLPanelPreference()
+{
+}
+
+BOOL LLPanelPreferenceCrashReports::postBuild()
+{
+	S32 nCrashSubmitBehavior = gCrashSettings.getS32("CrashSubmitBehavior");
+
+	LLCheckBoxCtrl* pSendCrashReports = getChild<LLCheckBoxCtrl>("checkSendCrashReports");
+	pSendCrashReports->set(CRASH_BEHAVIOR_NEVER_SEND != nCrashSubmitBehavior);
+	pSendCrashReports->setCommitCallback(boost::bind(&LLPanelPreferenceCrashReports::refresh, this));
+
+	LLCheckBoxCtrl* pSendAlwaysAsk = getChild<LLCheckBoxCtrl>("checkSendCrashReportsAlwaysAsk");
+	pSendAlwaysAsk->set(CRASH_BEHAVIOR_ASK == nCrashSubmitBehavior);
+
+	LLCheckBoxCtrl* pSendSettings = getChild<LLCheckBoxCtrl>("checkSendSettings");
+	pSendSettings->set(gCrashSettings.getBOOL("CrashSubmitSettings"));
+
+	LLCheckBoxCtrl* pSendLog = getChild<LLCheckBoxCtrl>("checkSendLog");
+	pSendLog->set(gCrashSettings.getBOOL("CrashSubmitLog"));
+
+	LLCheckBoxCtrl* pSendName = getChild<LLCheckBoxCtrl>("checkSendName");
+	pSendName->set(gCrashSettings.getBOOL("CrashSubmitName"));
+
+	getChild<LLTextBox>("textInformation4")->setTextArg("[URL]", getString("PrivacyPolicyUrl"));
+
+#if LL_SEND_CRASH_REPORTS && defined(LL_BUGSPLAT)
+	childSetVisible("textRestartRequired", true);
+#endif
+
+	refresh();
+
+	return LLPanelPreference::postBuild();
+}
+
+void LLPanelPreferenceCrashReports::refresh()
+{
+	LLCheckBoxCtrl* pSendCrashReports = getChild<LLCheckBoxCtrl>("checkSendCrashReports");
+	pSendCrashReports->setEnabled(TRUE);
+
+	bool fEnable = pSendCrashReports->get();
+	getChild<LLUICtrl>("checkSendCrashReportsAlwaysAsk")->setEnabled(fEnable);
+	getChild<LLUICtrl>("checkSendSettings")->setEnabled(fEnable);
+	getChild<LLUICtrl>("checkSendLog")->setEnabled(fEnable);
+	getChild<LLUICtrl>("checkSendName")->setEnabled(fEnable);
+}
+
+void LLPanelPreferenceCrashReports::apply()
+{
+	LLCheckBoxCtrl* pSendCrashReports = getChild<LLCheckBoxCtrl>("checkSendCrashReports");
+	LLCheckBoxCtrl* pSendAlwaysAsk = getChild<LLCheckBoxCtrl>("checkSendCrashReportsAlwaysAsk");
+	if (pSendCrashReports->get())
+		gCrashSettings.setS32("CrashSubmitBehavior", (pSendAlwaysAsk->get()) ? CRASH_BEHAVIOR_ASK : CRASH_BEHAVIOR_ALWAYS_SEND);
+	else
+		gCrashSettings.setS32("CrashSubmitBehavior", CRASH_BEHAVIOR_NEVER_SEND);
+
+	LLCheckBoxCtrl* pSendSettings = getChild<LLCheckBoxCtrl>("checkSendSettings");
+	gCrashSettings.setBOOL("CrashSubmitSettings", pSendSettings->get());
+
+	LLCheckBoxCtrl* pSendLog = getChild<LLCheckBoxCtrl>("checkSendLog");
+	gCrashSettings.setBOOL("CrashSubmitLog", pSendLog->get());
+
+	LLCheckBoxCtrl* pSendName = getChild<LLCheckBoxCtrl>("checkSendName");
+	gCrashSettings.setBOOL("CrashSubmitName", pSendName->get());
+}
+
+void LLPanelPreferenceCrashReports::cancel()
+{
+}
+// [/SL:KB]
 // <FS:Zi> Backup Settings
 // copied from llxfer_file.cpp - Hopefully this will be part of LLFile some day -Zi
 // added a safeguard so the destination file is only created when the source file exists -Zi

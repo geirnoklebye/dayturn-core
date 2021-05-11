@@ -50,6 +50,14 @@
 #include <curl/curl.h>
 #include <openssl/crypto.h>
 
+
+// [SL:KB] - Patch: Viewer-CrashLookup | Checked: 2011-03-24 (Catznip-2.6.0a) | Added: Catznip-2.6.0a
+#ifdef LL_WINDOWS
+	#include <shellapi.h>
+#endif // LL_WINDOWS
+// [/SL:KB]
+
+
 BOOL gBreak = false;
 BOOL gSent = false;
 
@@ -86,7 +94,10 @@ void LLCrashLoggerHandler::onFailure(LLCore::HttpResponse * response, LLCore::Ht
 }
 
 LLCrashLogger::LLCrashLogger() :
-	mCrashBehavior(CRASH_BEHAVIOR_ALWAYS_SEND),
+// [SL:KB] - Patch: Viewer-CrashLookup | Checked: 2011-03-24 (Catznip-2.6.0a) | Added: Catznip-2.6.0a
+	mCrashLookup(NULL),
+// [/SL:KB]
+	mCrashBehavior(CRASH_BEHAVIOR_ASK),
 	mCrashInPreviousExec(false),
 	mCrashSettings("CrashSettings"),
 	mSentCrashLogs(false),
@@ -273,8 +284,11 @@ void LLCrashLogger::gatherFiles()
         mCrashHost = mFileMap["CrashHostUrl"];
     }
 
+	// <FS:ND> Do not send out crash reports to Linden Labs. They won't have much use for them without symbols.
 	//default to agni, per product
-	mAltCrashHost = "http://viewercrashreport.agni.lindenlab.com/cgi-bin/viewercrashreceiver.py";
+	//mAltCrashHost = "http://viewercrashreport.agni.lindenlab.com/cgi-bin/viewercrashreceiver.py";
+
+	// </FS:ND>
 
 	mCrashInfo["DebugLog"] = mDebugLog;
 	mFileMap["StatsLog"] = gDirUtilp->getExpandedFilename(LL_PATH_DUMP,"stats.log");
@@ -374,6 +388,29 @@ void LLCrashLogger::gatherFiles()
     {
         LL_WARNS("CRASHREPORT") << "readMinidump returned no minidump" << LL_ENDL;
     }
+
+	// <FS:ND> Put minidump file into mFileMap. Otherwise it does not get uploaded to the crashlog server.
+	if( has_minidump )
+	{
+		std::string fullName = mDebugLog["MinidumpPath"];
+		std::string dmpName( fullName );
+		if( dmpName.size() )
+		{
+			size_t nStart( dmpName.size()-1 );
+			for( std::string::reverse_iterator itr = dmpName.rbegin(); itr != dmpName.rend(); ++itr )
+			{
+				if( *itr == '/' || *itr == '\\' )
+					break;
+
+				--nStart;
+			}
+
+			dmpName = dmpName.substr( nStart+1 );
+		}
+
+		mFileMap[ dmpName ] = fullName;
+	}
+	// </FS:ND>
 }
 
 LLSD LLCrashLogger::constructPostData()
@@ -382,6 +419,53 @@ LLSD LLCrashLogger::constructPostData()
 }
 
 const char* const CRASH_SETTINGS_FILE = "settings_crash_behavior.xml";
+
+// <FS:Ansariel> Restore crash report user settings
+S32 LLCrashLogger::loadCrashBehaviorSetting()
+{
+	// First check user_settings (in the user's home dir)
+	std::string filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, CRASH_SETTINGS_FILE);
+	if (! mCrashSettings.loadFromFile(filename))
+	{
+		// Next check app_settings (in the SL program dir)
+		std::string filename = gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS, CRASH_SETTINGS_FILE);
+		mCrashSettings.loadFromFile(filename);
+	}
+
+	// If we didn't load any files above, this will return the default
+	S32 value = mCrashSettings.getS32("CrashSubmitBehavior");
+
+	// Whatever value we got, make sure it's valid
+	switch (value)
+	{
+	case CRASH_BEHAVIOR_NEVER_SEND:
+		return CRASH_BEHAVIOR_NEVER_SEND;
+	case CRASH_BEHAVIOR_ALWAYS_SEND:
+		return CRASH_BEHAVIOR_ALWAYS_SEND;
+	}
+
+	return CRASH_BEHAVIOR_ASK;
+}
+
+bool LLCrashLogger::saveCrashBehaviorSetting(S32 crash_behavior)
+{
+	switch (crash_behavior)
+	{
+	case CRASH_BEHAVIOR_ASK:
+	case CRASH_BEHAVIOR_NEVER_SEND:
+	case CRASH_BEHAVIOR_ALWAYS_SEND:
+		break;
+	default:
+		return false;
+	}
+
+	mCrashSettings.setS32("CrashSubmitBehavior", crash_behavior);
+	std::string filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, CRASH_SETTINGS_FILE);
+	mCrashSettings.saveToFile(filename, FALSE);
+
+	return true;
+}
+// </FS:Ansariel>
 
 std::string LLCrashLogger::loadCrashURLSetting()
 {
@@ -404,6 +488,19 @@ std::string LLCrashLogger::loadCrashURLSetting()
         return mCrashSettings.getString("CrashHostUrl");
     }
 }
+
+// [SL:KB] - Patch: Viewer-CrashReporting | Checked: 2011-03-24 (Catznip-2.6.0a) | Added: Catznip-2.6.0a
+std::string getFormDataField(const std::string& strFieldName, const std::string& strFieldValue, const std::string& strBoundary)
+{
+	std::ostringstream streamFormPart;
+
+	streamFormPart << "--" << strBoundary << "\r\n"
+		<< "Content-Disposition: form-data; name=\"" << strFieldName << "\"\r\n\r\n"
+		<< strFieldValue << "\r\n";
+
+	return streamFormPart.str();
+}
+// [/SL:KB]
 
 bool LLCrashLogger::runCrashLogPost(std::string host, LLSD data, std::string msg, int retries, int timeout)
 {
@@ -509,6 +606,12 @@ bool LLCrashLogger::sendCrashLogs()
         rec["dumpdir"]=opts["dumpdir"];
         rec["procname"]=opts["procname"];
     }
+
+	// <FS:ND> Try to send the current crash right away, if that fails queue it for next time.
+	if( rec && rec.has("dumpdir") )
+		if( !sendCrashLog( rec["dumpdir"].asString() ) )
+			newlocks.append(rec);
+	// </FS:ND>
 	
     if (locks.isArray())
     {
@@ -547,10 +650,12 @@ bool LLCrashLogger::sendCrashLogs()
         }
     }
 
-    if (rec)
-    {
-        newlocks.append(rec);
-    }
+	// <FS:ND> We want this appended right away, or this crash only gets send the next time the crashreporter runs.
+    //if (rec)
+    //{
+    //    newlocks.append(rec);
+    //}
+	// </FS:ND>
     
     mKeyMaster.putProcessList(newlocks);
     return true;
@@ -614,6 +719,18 @@ bool LLCrashLogger::init()
 							  "(0 = ask before sending crash report, "
 							  "1 = always send crash report, "
 							  "2 = never send crash report)");
+    
+	// <FS:Ansariel> Restore crash report user settings
+	LL_INFOS("CRASHREPORT") << "Loading crash behavior setting" << LL_ENDL;
+	mCrashBehavior = loadCrashBehaviorSetting();
+
+	// If user doesn't want to send, bail out
+	if (mCrashBehavior == CRASH_BEHAVIOR_NEVER_SEND)
+	{
+		LL_INFOS("CRASHREPORT") << "Crash behavior is never_send, quitting" << LL_ENDL;
+		return false;
+	}
+	// </FS:Ansariel>
     
     init_curl();
     LLCore::HttpRequest::createService();
