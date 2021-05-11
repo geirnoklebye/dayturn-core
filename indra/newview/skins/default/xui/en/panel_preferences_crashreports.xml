@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel
+ border="true"
+ follows="all"
+ height="440"
+ layout="topleft"
+ left="1"
+ top="1"
+ width="540"
+ label="Crash Reports"
+ name="crash_reports">
+    <panel.string name="PrivacyPolicyUrl">
+        https://kokua.atlassian.net/wiki/spaces/KKA/pages/15237184/Privacy+Policy
+    </panel.string>
+    <check_box
+     layout="topleft"
+     follows="top|left"
+     left="30"
+     top="30"
+     width="250"
+     height="16"
+     label="Send crash reports to bugsplat.com for review by the Kokua Development Team"
+     name="checkSendCrashReports"
+     enabled="false" />
+
+    <check_box
+     layout="topleft"
+     follows="top|left"
+     left="60"
+     top_pad="7"
+     height="16"
+     label="Always ask before sending"
+     name="checkSendCrashReportsAlwaysAsk"
+     width="250"
+     enabled="false" />
+
+    <check_box
+     layout="topleft"
+     follows="top|left"
+     top_pad="5"
+     height="16"
+     label="Include settings files"
+     name="checkSendSettings"
+     width="130"
+     enabled="false" />
+    <text
+     name="textSendSettings"
+     follows="left|top"
+     layout="topleft"
+     top_pad="5"
+     left_delta="20"
+     height="20"
+     width="230"
+     text_color="White_25">
+        (contains username)
+    </text>
+
+    <check_box
+     layout="topleft"
+     follows="top|left"
+     left="60"
+     top_pad="0"
+     height="16"
+     label="Include log file"
+     name="checkSendLog"
+     width="130"
+     enabled="false" />
+    <text
+     name="textSendLog"
+     follows="left|top"
+     layout="topleft"
+     top_pad="5"
+     left_delta="20"
+     height="20"
+     width="275"
+     text_color="White_25">
+        (contains username, paths, system information)
+    </text>
+ 
+    <check_box
+     layout="topleft"
+     follows="top|left"
+     left="60"
+     top_pad="0"
+     height="16"
+     label="Include username"
+     name="checkSendName"
+     width="160"
+     enabled="false" />
+    <text
+     name="textSendName"
+     follows="left|top"
+     layout="topleft"
+     top_pad="5"
+     left_delta="20"
+     height="20"
+     width="275"
+     text_color="White_25">
+        (used to ask for additional information if needed)
+    </text>
+
+    <text
+     layout="topleft"
+     follows="top|left"
+     left="30"
+     type="string"
+     length="1"
+     height="10"
+     mouse_opaque="false"
+     name="textRestartRequired"
+     top_pad="10"
+     visible="false"
+     width="475">
+        Changes made to any setting require a restart to become effective.
+    </text>
+
+    <text
+     layout="topleft"
+     follows="top|left"
+     left="30"
+     type="string"
+     length="1"
+     height="10"
+     mouse_opaque="false"
+     name="textInformation1"
+     top_pad="20"
+     width="475">
+        Unless checked above crash reports only contain information relevant to the crash.
+    </text>
+    <text
+     layout="topleft"
+     follows="top|left"
+     left="30"
+     type="string"
+     length="1"
+     height="10"
+     mouse_opaque="false"
+     name="textInformation4"
+     top_pad="20"
+     width="500"
+     font.style="BOLD" >
+        Privacy policy: [URL]
+    </text>
+</panel>

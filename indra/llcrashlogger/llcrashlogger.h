@@ -35,6 +35,9 @@
 #include "llcontrol.h"
 #include "llcrashlock.h"
 #include "_mutex.h"
+// [SL:KB] - Patch: Viewer-CrashLookup | Checked: 2011-03-24 (Catznip-2.6.0a) | Added: Catznip-2.6.0a
+#include "llcrashlookup.h"
+// [/SL:KB]
 
 // We shouldn't have to know the exact declaration of CRYPTO_THREADID, but VS
 // 2017 complains if we forward-declare it as simply 'struct CRYPTO_THREADID'.
@@ -70,6 +73,11 @@ public:
 	bool runCrashLogPost(std::string host, LLSD data, std::string msg, int retries, int timeout);
 	bool readMinidump(std::string minidump_path);
 
+	// <FS:Ansariel> Restore crash report user settings
+	S32 loadCrashBehaviorSetting();
+	bool saveCrashBehaviorSetting(S32 crash_behavior);
+	// </FS:Ansariel>
+
 protected:
     static void init_curl();
     static void term_curl();
@@ -83,6 +91,9 @@ protected:
 	LLControlGroup mCrashSettings;
 	std::string mProductName;
 	LLSD mCrashInfo;
+// [SL:KB] - Patch: Viewer-CrashLookup | Checked: 2011-03-24 (Catznip-2.6.0a) | Added: Catznip-2.6.0a
+	LLCrashLookup*	mCrashLookup;
+// [/SL:KB]
 	std::string mCrashHost;
 	std::string mAltCrashHost;
 	LLSD mDebugLog;

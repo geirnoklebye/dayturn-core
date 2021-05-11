@@ -1157,7 +1157,19 @@ bool idle_startup()
 		gSavedSettings.setBOOL("RememberPassword", gRememberPassword);
 		gSavedSettings.setBOOL("RememberUser", gRememberUser);
 		LL_INFOS("AppInit") << "Attempting login as: " << userid << LL_ENDL;                                           
-		gDebugInfo["LoginName"] = userid;                                                                              
+//		gDebugInfo["LoginName"] = userid;                                                                              
+// [SL:KB] - Patch: Viewer-CrashReporting | Checked: 2010-11-16 (Catznip-2.6.0a) | Added: Catznip-2.4.0b
+		if (gCrashSettings.getBOOL("CrashSubmitName"))
+		{
+			// Only include the agent name if the user consented
+			gDebugInfo["LoginName"] = userid;                                                                              
+		}
+		else
+		{
+			// and make sure it's initialised if not
+			gDebugInfo["LoginName"] = "anon";
+		}
+// [/SL:KB]                                                                             
          
 		// create necessary directories
 		// *FIX: these mkdir's should error check
@@ -3699,7 +3711,19 @@ bool process_login_success_response()
 	// unpack login data needed by the application
 	text = response["agent_id"].asString();
 	if(!text.empty()) gAgentID.set(text);
-	gDebugInfo["AgentID"] = text;
+//	gDebugInfo["AgentID"] = text;
+// [SL:KB] - Patch: Viewer-CrashReporting | Checked: 2010-11-16 (Catznip-2.6.0a) | Added: Catznip-2.4.0b
+	if (gCrashSettings.getBOOL("CrashSubmitName"))
+	{
+		// Only include the agent UUID if the user consented
+		gDebugInfo["AgentID"] = text;
+	}
+	else
+	{
+		// and make sure it's initialised if not
+		gDebugInfo["AgentID"] = "anon";
+	}
+// [/SL:KB]
 	
 	// Agent id needed for parcel info request in LLUrlEntryParcel
 	// to resolve parcel name.

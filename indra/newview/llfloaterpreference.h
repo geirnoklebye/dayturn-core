@@ -413,6 +413,22 @@ class LLAvatarComplexityControls
 	LOG_CLASS(LLAvatarComplexityControls);
 };
 
+// [SL:KB] - Patch: Viewer-CrashReporting | Checked: 2010-10-21 (Catznip-2.6.0a) | Added: Catznip-2.2.0c
+class LLPanelPreferenceCrashReports : public LLPanelPreference
+{
+public:
+	LLPanelPreferenceCrashReports();
+
+	/*virtual*/ BOOL postBuild();
+	/*virtual*/ void apply();
+	/*virtual*/ void cancel();
+
+	void refresh();
+
+private:
+	LOG_CLASS(LLPanelPreferenceCrashReports);
+};
+// [/SL:KB]
 // <FS:CR> Settings Backup
 class FSPanelPreferenceBackup : public LLPanelPreference
 {

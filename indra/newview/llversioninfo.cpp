@@ -175,6 +175,35 @@ LLVersionInfo::ViewerMaturity LLVersionInfo::getViewerMaturity()
     return maturity;
 }
 
+// [SL:KB] - Patch: Viewer-CrashReporting | Checked: 2011-05-08 (Catznip-2.6.0a) | Added: Catznip-2.6.0a
+const char* getBuildPlatformString()
+{
+#if LL_WINDOWS
+	#ifndef _WIN64
+			return "Win32";
+	#else
+			return "Win64";
+	#endif // _WIN64
+#elif LL_SDL
+			return "Linux64";
+#elif LL_DARWIN
+		#if ( defined(__amd64__) || defined(__x86_64__) )
+			return "Darwin64";
+		#else
+			return "Darwin";
+		#endif
+#else
+			return "Unknown";
+#endif
+}
+
+std::string LLVersionInfo::getBuildPlatform()
+{
+	std::string strPlatform = getBuildPlatformString();
+	return strPlatform;
+}
+// [/SL:KB]
+
     
 std::string LLVersionInfo::getBuildConfig()
 {
