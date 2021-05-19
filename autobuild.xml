@@ -4349,11 +4349,11 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a37675fc162afb4719dc4aa9d75ba183</string>
+              <string>907c72ae4fce5b2344f27ede66df6fd1</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-uriparser-ab1.1.9/downloads/uriparser-0.9.4-linux64-211210158.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-uriparser-ab1.1.9/downloads/uriparser-0.9.4-linux64-211391612.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
