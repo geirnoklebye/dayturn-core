@@ -29,6 +29,9 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "llcrashloggerwindows.h"
+// [SL:KB] - Patch: Viewer-CrashLookup | Checked: 2011-03-24 (Catznip-2.6.0a) | Added: Catznip-2.6.0a
+#include "llcrashlookupwindows.h"
+// [/SL:KB]
 
 #include <sstream>
 
@@ -171,6 +174,24 @@ bool handle_button_click(WORD button_id)
 		return false;
 	}
 
+	// <FS:Ansariel> Restore crash report user settings
+	// See if "do this next time" is checked and save state
+	S32 crash_behavior = CRASH_BEHAVIOR_ASK;
+	LRESULT result = SendDlgItemMessage(gHwndReport, IDC_CHECK_AUTO, BM_GETCHECK, 0, 0);
+	if (result == BST_CHECKED)
+	{
+		if (button_id == IDOK)
+		{
+			crash_behavior = CRASH_BEHAVIOR_ALWAYS_SEND;
+		}
+		else if (button_id == IDCANCEL)
+		{
+			crash_behavior = CRASH_BEHAVIOR_NEVER_SEND;
+		}
+		((LLCrashLoggerWindows*)LLCrashLogger::instance())->saveCrashBehaviorSetting(crash_behavior);
+	}
+	// </FS:Ansariel>
+
 	// We're done with this dialog.
 	gFirstDialog = FALSE;
 
@@ -234,11 +255,20 @@ LLCrashLoggerWindows::LLCrashLoggerWindows(void)
 	{
 		sInstance = this; 
 	}
+// [SL:KB] - Patch: Viewer-CrashLookup | Checked: 2011-03-24 (Catznip-2.6.0a) | Added: Catznip-2.6.0a
+#ifdef LL_SEND_CRASH_REPORTS
+	mCrashLookup = new LLCrashLookupWindows();
+#endif // LL_SEND_CRASH_REPORTS
+// [/SL:KB]
+
+	mMinidumpWritten = false; // <FS:ND/> Flag if we crashed (wrote a minidump) or not.
 }
 
 LLCrashLoggerWindows::~LLCrashLoggerWindows(void)
 {
 	sInstance = NULL;
+	delete mCrashLookup;
+// [/SL:KB]
 }
 
 bool LLCrashLoggerWindows::getMessageWithTimeout(MSG *msg, UINT to)
@@ -305,8 +335,8 @@ int LLCrashLoggerWindows::processingLoop() {
     LL_INFOS() << "session ending.." << LL_ENDL;
     
     std::string per_run_dir = options["dumpdir"].asString();
-	std::string per_run_file = per_run_dir + "\\SecondLife.log";
-    std::string log_file = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"SecondLife.log");
+	std::string per_run_file = per_run_dir + "\\Kokua.log";
+    std::string log_file = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"Kokua.log");
 
 	if (gDirUtilp->fileExists(per_run_dir))  
 	{
@@ -353,6 +383,9 @@ void LLCrashLoggerWindows::OnClientDumpRequest(void* context,
 		LL_WARNS() << "dump with no context" << LL_ENDL;
 		return;
 	}
+
+
+	self->mMinidumpWritten = true; // <FS:ND/> We crashed, need to send those crashlogs.
 
 	//DWORD pid = client_info->pid();
 }
@@ -456,8 +489,12 @@ void LLCrashLoggerWindows::gatherPlatformSpecificFiles()
 
 bool LLCrashLoggerWindows::frame()
 {	
-	LL_INFOS() << "CrashSubmitBehavior is " << mCrashBehavior << LL_ENDL;
+	// <FS:ND> Only show crashlogger if we really crashed.
+	if( !mMinidumpWritten )
+		return true;
+	// </FS:ND>
 
+	LL_INFOS() << "CrashSubmitBehavior is " << mCrashBehavior << LL_ENDL;
 	// Note: parent hwnd is 0 (the desktop).  No dlg proc.  See Petzold (5th ed) HexCalc example, Chapter 11, p529
 	// win_crash_logger.rc has been edited by hand.
 	// Dialogs defined with CLASS "WIN_CRASH_LOGGER" (must be same as szWindowClass)

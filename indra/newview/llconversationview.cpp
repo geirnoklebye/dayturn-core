@@ -183,7 +183,13 @@ void LLConversationViewSession::setIsTyping(bool is_typing)
 	if (mSessionTitle && gSavedSettings.getBOOL("KokuaIsTypingNotificationInConversationsTabs"))
 	{
 		std::string title = is_typing ? mTypingStart.getString() : vmi->getDisplayName();
-		mSessionTitle->setText(title);
+		// KKA-849 use the new friend colouring code
+		if (!highlightFriendTitle(vmi, title))
+		{
+			LLStyle::Params title_style;
+			title_style.color = LLUIColorTable::instance().getColor("LabelTextColor");
+			mSessionTitle->setText(title, title_style);
+		}
 	}
 }
 
@@ -553,13 +559,14 @@ void LLConversationViewSession::onCurrentVoiceSessionChanged(const LLUUID& sessi
 	}
 }
 
-bool LLConversationViewSession::highlightFriendTitle(LLConversationItem* vmi)
+// KKA-849 extend this to allow passing in overrideTitle for '<name> is typing'
+bool LLConversationViewSession::highlightFriendTitle(LLConversationItem* vmi, std::string overrideTitle)
 {
 	//KKA-847 make the use of ConversationFriendColor optional and add an option for full coloring based on Name Tag colour using Contact Set/Minimap logic
 	static LLCachedControl<bool> colorFriends(gSavedSettings, "KokuaColorFriendNamesInConversationsFloater");
 	static LLCachedControl<bool> colorFriendsAsNameTag(gSavedSettings, "KokuaColorFriendNamesInConversationsFloaterAsNameTags");
 
-	if(vmi->getType() == LLConversationItem::CONV_PARTICIPANT || vmi->getType() == LLConversationItem::CONV_SESSION_1_ON_1)
+	if(vmi && (vmi->getType() == LLConversationItem::CONV_PARTICIPANT || vmi->getType() == LLConversationItem::CONV_SESSION_1_ON_1))
 	{
 		LLIMModel::LLIMSession* session=  LLIMModel::instance().findIMSession(vmi->getUUID());
 		if ((colorFriends || colorFriendsAsNameTag) && session && LLAvatarActions::isFriend(session->mOtherParticipantID))
@@ -567,7 +574,7 @@ bool LLConversationViewSession::highlightFriendTitle(LLConversationItem* vmi)
 			LLStyle::Params title_style;
 			if (colorFriendsAsNameTag)
 			{
-				LLColor4 color;
+				LLColor4 color = LLUIColorTable::instance().getColor("ConversationFriendColor"); //KKA-848 start with LL default
 				color = LGGContactSets::getInstance()->colorize(session->mOtherParticipantID, color, LGG_CS_TAG);
 				LGGContactSets::getInstance()->hasFriendColorThatShouldShow(session->mOtherParticipantID, LGG_CS_TAG, color);
 				LLNetMap::getAvatarMarkColor(session->mOtherParticipantID, color);
@@ -577,7 +584,7 @@ bool LLConversationViewSession::highlightFriendTitle(LLConversationItem* vmi)
 			{
 				title_style.color = LLUIColorTable::instance().getColor("ConversationFriendColor");
 			}
-			mSessionTitle->setText(vmi->getDisplayName(), title_style);
+			mSessionTitle->setText(overrideTitle != "" ? overrideTitle : vmi->getDisplayName(), title_style); //KKA-849 overrideTitle added
 			return true;
 		}
 	}
@@ -691,6 +698,7 @@ void LLConversationViewParticipant::draw()
 		{
 			if (colorFriendsAsNameTag)
 			{
+				color = LLUIColorTable::instance().getColor("ConversationFriendColor"); //KKA-848 start with LL default
 				color = LGGContactSets::getInstance()->colorize(mUUID, color, LGG_CS_TAG);
 				LGGContactSets::getInstance()->hasFriendColorThatShouldShow(mUUID, LGG_CS_TAG, color);
 				LLNetMap::getAvatarMarkColor(mUUID, color);				

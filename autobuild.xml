@@ -369,6 +369,60 @@
         <key>version</key>
         <string>1.72</string>
       </map>
+      <key>bugsplat</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright 2003-2017, BugSplat</string>
+        <key>description</key>
+        <string>Bugsplat crash reporting package</string>
+        <key>license</key>
+        <string>Proprietary</string>
+        <key>license_file</key>
+        <string>LICENSES/BUGSPLAT_LICENSE.txt</string>
+        <key>name</key>
+        <string>bugsplat</string>
+        <key>platforms</key>
+        <map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>ae90d19cdcddf539f6d0b41cab12f918</string>
+              <key>url</key>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/72773/702861/bugsplat-1.0.7.552580-darwin64-552580.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>f5936eceb6a33ff0f1cc31996a40f29c</string>
+              <key>url</key>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/72774/702905/bugsplat-3.6.0.8.552580-windows-552580.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+          <key>windows64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>9cd940754e53e0670030b3da5ba8f373</string>
+              <key>url</key>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/72775/702906/bugsplat-3.6.0.8.552580-windows64-552580.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>3.6.0.8.552580</string>
+      </map>
       <key>cairo</key>
       <map>
         <key>copyright</key>
@@ -1092,11 +1146,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c6890526ee4ea042989f839e0ff2fb7c</string>
+              <string>d9cf352b86a3a73d9d30eec236c17dfd</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.06-darwin64-203441741.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.02.01-darwin64-211501753.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -1106,11 +1160,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f2a7f3149e241a71799171ccb49e8d43</string>
+              <string>1e07af1bb10f462e19faf02859cc6542</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.06-linux64-203442043.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.02.01-linux64-211491834.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1134,18 +1188,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>3ac2e08b484f2306d9f3b710f25d9738</string>
+              <string>267026d7fe87180c4d95e019909b7561</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.01.06-windows64-203441921.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.02.01-windows64-211501446.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>2.01.06</string>
+        <string>2.02.01</string>
       </map>
       <key>fontconfig</key>
       <map>
@@ -4295,11 +4349,11 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>baa5a4f37d4e222ee1e46a900015e623</string>
+              <string>907c72ae4fce5b2344f27ede66df6fd1</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-uriparser/downloads/uriparser-0.8.0.1-linux64-201506060849.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-uriparser-ab1.1.9/downloads/uriparser-0.9.4-linux64-211391612.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
