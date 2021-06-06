@@ -126,8 +126,8 @@ public:
 
 
 // <FS:ND> Linux/Mac should honour LL_FASTTIMER_USE_RDTSC too
-// #if (LL_LINUX || LL_SOLARIS) && !(defined(__i386__) || defined(__amd64__)
-#if (LL_LINUX || LL_SOLARIS) && ( !(defined(__i386__) || defined(__amd64__)) || !LL_FASTTIMER_USE_RDTSC )
+// #if (LL_LINUX) && !(defined(__i386__) || defined(__amd64__)
+#if (LL_LINUX) && ( !(defined(__i386__) || defined(__amd64__)) || !LL_FASTTIMER_USE_RDTSC )
 // </FS:ND>
 	//
 	// Linux and Solaris implementation of CPU clock - non-x86.
@@ -156,12 +156,12 @@ public:
 		return (U32)(getCPUClockCount64() >> 8);
 	}
 
-#endif // (LL_LINUX || LL_SOLARIS) && !(defined(__i386__) || defined(__amd64__))
+#endif // (LL_LINUX) && !(defined(__i386__) || defined(__amd64__))
 
 
 // <FS:ND> Linux/Mac should honour LL_FASTTIMER_USE_RDTSC too
-//#if (LL_LINUX || LL_SOLARIS || LL_DARWIN) && (defined(__i386__) || defined(__amd64__))
-#if (LL_LINUX || LL_SOLARIS || LL_DARWIN) && (defined(__i386__) || defined(__amd64__)) && LL_FASTTIMER_USE_RDTSC
+//#if (LL_LINUX || LL_DARWIN) && (defined(__i386__) || defined(__amd64__))
+#if (LL_LINUX || LL_DARWIN) && (defined(__i386__) || defined(__amd64__)) && LL_FASTTIMER_USE_RDTSC
 // </FS:ND>
 	//
 	// Mac+Linux+Solaris FAST x86 implementation of CPU clock

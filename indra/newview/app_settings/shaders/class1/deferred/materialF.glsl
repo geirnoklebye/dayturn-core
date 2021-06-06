@@ -406,7 +406,7 @@ void main()
     
 //MK
   // This line seems to break the shine on alpha-blended surfaces in the case the spec map is not fully white, which in turns would break content.
-////    final_specular.rgb = srgb_to_linear(final_specular.rgb);
+////    final_specular.rgb = srgb_to_linear(final_specular.rgb); // SL-14035
 //mk
 #define LIGHT_LOOP(i) light.rgb += calcPointLightOrSpotLight(light_diffuse[i].rgb, npos, diffuse.rgb, final_specular, pos.xyz, norm.xyz, light_position[i], light_direction[i].xyz, light_attenuation[i].x, light_attenuation[i].y, light_attenuation[i].z, glare, light_attenuation[i].w );
 
