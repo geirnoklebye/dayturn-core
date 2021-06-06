@@ -4484,7 +4484,7 @@ and report the problem.
   <string name="fonts_meromsans.xml">Merom Sans</string>
   <string name="fonts_officecodepro.xml">Office Code Pro</string>
   <string name="fonts_dyslexia.xml">OpenDyslexic</string>
-  <string name="fonts_oxanimum.xml">Oxanium</string>
+  <string name="fonts_oxanium.xml">Oxanium</string>
   <string name="fonts_railway.xml">Railway Sans</string>
   <string name="fonts_roboto.xml">Roboto</string>
   <string name="fonts_route159.xml">Route 159</string>
