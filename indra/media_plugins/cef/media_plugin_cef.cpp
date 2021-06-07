@@ -484,9 +484,6 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			}
 			else if (message_name == "cleanup")
 			{
-#ifdef LL_LINUX
-				mVolumeCatcher.setVolume(0); 
-#endif
 				mCEFLib->requestExit();
 			}
 			else if (message_name == "force_exit")
@@ -635,13 +632,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 #else
                     delim = "/";
 #endif
-
-#ifdef LL_LINUX
-				  mCachePath = user_data_path_cache + "cef_cache";
-#else  
-                  mCachePath = mRootCachePath + delim + subfolder;
-#endif
-
+                    mCachePath = mRootCachePath + delim + subfolder;
                 }
                 else
                 {
