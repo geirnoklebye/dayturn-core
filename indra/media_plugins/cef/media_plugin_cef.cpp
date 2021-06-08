@@ -104,11 +104,13 @@ private:
 	bool mCanCut;
 	bool mCanCopy;
 	bool mCanPaste;
+#ifndef LL_LINUX
     std::string mRootCachePath;
+#endif
 	std::string mCachePath;
+#ifndef LL_LINUX
 	std::string mContextCachePath;
-
-#ifdef LL_LINUX
+#else
 	std::string mCookiePath;
 #endif
 	std::string mCefLogFile;
@@ -484,6 +486,9 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			}
 			else if (message_name == "cleanup")
 			{
+#ifdef LL_LINUX
+				mVolumeCatcher.setVolume(0); 
+#endif
 				mCEFLib->requestExit();
 			}
 			else if (message_name == "force_exit")
@@ -617,12 +622,14 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			else if (message_name == "set_user_data_path")
 			{
 				std::string user_data_path_cache = message_in.getValue("cache_path");
+#ifdef LL_LINUX
+				std::string user_data_path_cookies = message_in.getValue("cookies_path");
+
+				mCachePath = user_data_path_cache + "cef_cache";
+#else
 				std::string subfolder = message_in.getValue("username");
 
 				mRootCachePath = user_data_path_cache + "cef_cache";
-#ifdef LL_LINUX
-				std::string user_data_path_cookies = message_in.getValue("cookies_path");
-#endif
                 if (!subfolder.empty())
                 {
                     std::string delim;
@@ -632,15 +639,19 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 #else
                     delim = "/";
 #endif
-                    mCachePath = mRootCachePath + delim + subfolder;
+
+#ifdef LL_LINUX
+				  mCachePath = user_data_path_cache + "cef_cache";
+#else  
+                  mCachePath = mRootCachePath + delim + subfolder;
+#endif
+
                 }
                 else
                 {
                     mCachePath = mRootCachePath;
                 }
                 mContextCachePath = ""; // disabled by ""
-#ifdef LL_LINUX
-				mCookiePath = user_data_path_cookies + "cef_cookies";
 #endif
 				mCefLogFile = message_in.getValue("cef_log_file");
 				mCefLogVerbose = message_in.getValueBoolean("cef_verbose_log");
