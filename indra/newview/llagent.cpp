@@ -4485,6 +4485,12 @@ void LLAgent::addTPNearbyChatSeparator()
       return;
     }
 
+    //CA: If under @showloc, don't put teleport notations in local chat
+    if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+    {
+      return;
+    }
+
     LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::getTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
     if (nearby_chat)
     {
