@@ -4229,6 +4229,11 @@ void LLAgent::addTPNearbyChatSeparator()
     {
         return;
     }
+    
+    if (gSavedSettings.getBOOL("KokuaSuppressTeleportChat"))
+    {
+      return;
+    }
 
     LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::getTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
     if (nearby_chat)
