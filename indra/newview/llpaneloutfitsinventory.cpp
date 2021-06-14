@@ -40,7 +40,6 @@
 #include "lloutfitgallery.h"
 #include "lloutfitslist.h"
 #include "llpanelwearing.h"
-#include "llsaveoutfitcombobtn.h"
 #include "llsidepanelappearance.h"
 #include "llviewercontrol.h"
 #include "llviewerfoldertype.h"
@@ -48,6 +47,9 @@
 static const std::string OUTFITS_TAB_NAME = "outfitslist_tab";
 static const std::string OUTFIT_GALLERY_TAB_NAME = "outfit_gallery_tab";
 static const std::string COF_TAB_NAME = "cof_tab";
+
+static const std::string SAVE_AS_BTN("save_as_btn");
+static const std::string SAVE_BTN("save_btn");
 
 static LLPanelInjector<LLPanelOutfitsInventory> t_inventory("panel_outfits_inventory");
 
@@ -90,6 +92,9 @@ BOOL LLPanelOutfitsInventory::postBuild()
 	{
 		LLInventoryModelBackgroundFetch::instance().start(outfits_cat);
 	}
+
+	getChild<LLButton>(SAVE_BTN)->setCommitCallback(boost::bind(&LLPanelOutfitsInventory::saveOutfit, this, false));
+	getChild<LLButton>(SAVE_AS_BTN)->setCommitCallback(boost::bind(&LLPanelOutfitsInventory::saveOutfit, this, true));
 
 	return TRUE;
 }
@@ -223,16 +228,6 @@ bool LLPanelOutfitsInventory::onSaveCommit(const LLSD& notification, const LLSD&
 
 void LLPanelOutfitsInventory::onSave()
 {
-	if (!LLAppearanceMgr::getInstance()->updateBaseOutfit()) {
-		//
-		//	if updateBaseOutfit fails then ask for an outfit name
-		//
-		onSaveAs();
-	}
-}
-
-void LLPanelOutfitsInventory::onSaveAs()
-{
 	std::string outfit_name;
 
 	if (!LLAppearanceMgr::getInstance()->getBaseOutfitName(outfit_name))
@@ -255,14 +250,18 @@ LLPanelOutfitsInventory* LLPanelOutfitsInventory::findInstance()
 	return dynamic_cast<LLPanelOutfitsInventory*>(LLFloaterSidePanelContainer::getPanel("appearance", "panel_outfits_inventory"));
 }
 
+void LLPanelOutfitsInventory::openApearanceTab(const std::string& tab_name)
+{
+    if (!mAppearanceTabs) return;
+    mAppearanceTabs->selectTabByName(tab_name);
+}
+
 //////////////////////////////////////////////////////////////////////////////////
 // List Commands                                                                //
 
 void LLPanelOutfitsInventory::initListCommandsHandlers()
 {
 	mListCommands = getChild<LLPanel>("bottom_panel");
-	mListCommands->childSetAction("save_btn", boost::bind(&LLPanelOutfitsInventory::onSave, this));
-	mListCommands->childSetAction("save_as_btn", boost::bind(&LLPanelOutfitsInventory::onSaveAs, this));
 	mListCommands->childSetAction("wear_btn", boost::bind(&LLPanelOutfitsInventory::onWearButtonClick, this));
 	mMyOutfitsPanel->childSetAction("trash_btn", boost::bind(&LLPanelOutfitsInventory::onTrashButtonClick, this));
 	mOutfitGalleryPanel->childSetAction("trash_btn", boost::bind(&LLPanelOutfitsInventory::onTrashButtonClick, this));
@@ -280,7 +279,7 @@ void LLPanelOutfitsInventory::updateListCommands()
 	mOutfitGalleryPanel->childSetEnabled("trash_btn", trash_enabled);
 	wear_btn->setEnabled(wear_enabled);
 	wear_btn->setVisible(wear_visible);
-
+	getChild<LLButton>(SAVE_BTN)->setEnabled(make_outfit_enabled);
 	wear_btn->setToolTip(getString((!isOutfitsGalleryPanelActive() && mMyOutfitsPanel->hasItemSelected()) ? "wear_items_tooltip" : "wear_outfit_tooltip"));
 }
 
@@ -378,4 +377,16 @@ LLSidepanelAppearance* LLPanelOutfitsInventory::getAppearanceSP()
 	LLSidepanelAppearance* panel_appearance =
 		dynamic_cast<LLSidepanelAppearance*>(LLFloaterSidePanelContainer::getPanel("appearance"));
 	return panel_appearance;
+}
+
+void LLPanelOutfitsInventory::saveOutfit(bool as_new)
+{
+	if (!as_new && LLAppearanceMgr::getInstance()->updateBaseOutfit())
+	{
+		// we don't need to ask for an outfit name, and updateBaseOutfit() successfully saved.
+		// If updateBaseOutfit fails, ask for an outfit name anyways
+		return;
+	}
+
+	onSave();
 }

@@ -38,7 +38,6 @@ class LLPanelWearing;
 class LLMenuGL;
 class LLSidepanelAppearance;
 class LLTabContainer;
-class LLSaveOutfitComboBtn;
 
 class LLPanelOutfitsInventory : public LLPanel
 {
@@ -52,6 +51,7 @@ public:
 	
 	void onSearchEdit(const std::string& string);
 	void onSave();
+	void saveOutfit(bool as_new = false);
 	void onSaveAs();
 	
 	bool onSaveCommit(const LLSD& notification, const LLSD& response);
@@ -65,6 +65,8 @@ public:
 // [/RLVa:KB]
 
 	static LLPanelOutfitsInventory* findInstance();
+
+	void openApearanceTab(const std::string& tab_name);
 
 protected:
 	void updateVerbs();

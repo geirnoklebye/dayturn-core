@@ -67,6 +67,7 @@
 #include "llviewerchat.h"
 #include "lltranslate.h"
 #include "llautoreplace.h"
+#include "lluiusage.h"
 #include "chatbar_as_cmdline.h"
 #include "kokuarlvmode.h" // for RLV_ALWAYS_ON
 
@@ -811,6 +812,7 @@ void LLFloaterIMNearbyChat::sendChatFromViewer(const std::string &utf8text, ECha
 
 void LLFloaterIMNearbyChat::sendChatFromViewer(const LLWString &wtext, EChatType type, BOOL animate)
 {
+	LLUIUsage::instance().logCommand("Chat.Send"); // pseuo-command
 	// Look for "/20 foo" channel chats.
 	S32 channel = 0;
 	LLWString out_text = stripChannelNumber(wtext, &channel);

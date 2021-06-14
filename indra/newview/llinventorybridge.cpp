@@ -1890,31 +1890,26 @@ void LLItemBridge::restoreToWorld()
 
 void LLItemBridge::gotoItem()
 {
-	LLInventoryObject *obj = getInventoryObject();
-	if (obj && obj->getIsLinkType())
-	{
-		const LLUUID inbox_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_INBOX);
-		// <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
-		//if (gInventory.isObjectDescendentOf(obj->getLinkedUUID(), inbox_id))
-		if (gInventory.isObjectDescendentOf(obj->getLinkedUUID(), inbox_id) && !gSavedSettings.getBOOL("FSShowInboxFolder"))
-		// </FS:Ansariel>
-		{
-			LLSidepanelInventory *sidepanel_inventory = LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
-			if (sidepanel_inventory && sidepanel_inventory->getInboxPanel())
-			{
-				sidepanel_inventory->getInboxPanel()->setSelection(obj->getLinkedUUID(), TAKE_FOCUS_NO);
-			}
-		}
-		else
-		{
-		LLInventoryPanel *active_panel = LLInventoryPanel::getActiveInventoryPanel();
-		if (active_panel)
-		{
-			active_panel->setSelection(obj->getLinkedUUID(), TAKE_FOCUS_NO);
-		}
-	}
-
-	}
+    LLInventoryObject *obj = getInventoryObject();
+    if (obj && obj->getIsLinkType())
+    {
+  		const LLUUID inbox_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_INBOX);
+  		// <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
+  		//if (gInventory.isObjectDescendentOf(obj->getLinkedUUID(), inbox_id))
+  		if (gInventory.isObjectDescendentOf(obj->getLinkedUUID(), inbox_id) && !gSavedSettings.getBOOL("FSShowInboxFolder"))
+  		// </FS:Ansariel>
+  		{
+  			LLSidepanelInventory *sidepanel_inventory = LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
+  			if (sidepanel_inventory && sidepanel_inventory->getInboxPanel())
+  			{
+  				sidepanel_inventory->getInboxPanel()->setSelection(obj->getLinkedUUID(), TAKE_FOCUS_NO);
+  			}
+  		}
+  		else
+  		{
+          show_item_original(obj->getUUID());
+      }
+    }
 }
 
 LLUIImagePtr LLItemBridge::getIcon() const
@@ -4317,6 +4312,12 @@ void LLFolderBridge::buildContextMenuOptions(U32 flags, menuentry_vec_t&   items
                     items.push_back(std::string("New Body Parts"));
                     items.push_back(std::string("New Settings"));
                     items.push_back(std::string("upload_def"));
+
+                    if (!LLEnvironment::instance().isInventoryEnabled())
+                    {
+                        disabled_items.push_back("New Settings");
+                    }
+
                 }
 			}
 			getClipboardEntries(false, items, disabled_items, flags);
@@ -7571,8 +7572,8 @@ void LLSettingsBridge::performAction(LLInventoryModel* model, std::string action
 			if (!item) 
 				return;
 			LLUUID asset_id = item->getAssetUUID();
-			LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, asset_id);
-			LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
+        LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, asset_id, LLEnvironment::TRANSITION_INSTANT);
+        LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
 // MK by CA (nested if because we don't want this falling into the top level ELSE)
 		}
 // mk by CA
@@ -7756,21 +7757,17 @@ void LLLinkFolderBridge::performAction(LLInventoryModel* model, std::string acti
 }
 void LLLinkFolderBridge::gotoItem()
 {
-	const LLUUID &cat_uuid = getFolderID();
-	if (!cat_uuid.isNull())
-	{
-		LLFolderViewItem *base_folder = mInventoryPanel.get()->getItemByID(cat_uuid);
-		if (base_folder)
-		{
-			if (LLInventoryModel* model = getInventoryModel())
-			{
-				model->fetchDescendentsOf(cat_uuid);
-			}
-			base_folder->setOpen(TRUE);
-			mRoot->setSelection(base_folder,TRUE);
-			mRoot->scrollToShowSelection();
-		}
-	}
+    LLItemBridge::gotoItem();
+
+    const LLUUID &cat_uuid = getFolderID();
+    if (!cat_uuid.isNull())
+    {
+        LLFolderViewItem *base_folder = LLInventoryPanel::getActiveInventoryPanel()->getItemByID(cat_uuid);
+        if (base_folder)
+        {
+            base_folder->setOpen(TRUE);
+        }
+    }
 }
 const LLUUID &LLLinkFolderBridge::getFolderID() const
 {

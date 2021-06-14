@@ -504,6 +504,16 @@
             </radio_group>
 
             <check_box
+            control_name="KokuaSuppressTeleportChat"
+            name="KokuaSuppressTeleportChat"
+            label="Do not show teleport locations in nearby chat"
+            layout="topleft"
+            top_pad="5"
+            left="15"
+            height="20"
+            width="400"
+            tool_tip="Turns off the inclusion of teleport locations in nearby chat"/>
+            <check_box
             control_name="OnlineOfflinetoNearbyChat"
             name="OnlineOfflinetoNearbyChat"
             label="Friends going online/offline to nearby chat"

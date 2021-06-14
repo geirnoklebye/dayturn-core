@@ -46,6 +46,7 @@
 #include "llcompilequeue.h"
 #include "llfasttimerview.h"
 #include "llfloaterabout.h"
+#include "llfloateraddpaymentmethod.h"
 #include "llfloateradvancedbuildoptions.h"
 #include "llfloaterauction.h"
 #include "llfloaterautoreplacesettings.h"
@@ -73,6 +74,7 @@
 #include "llfloaterchatvoicevolume.h"
 #include "llfloaterconversationlog.h"
 #include "llfloaterconversationpreview.h"
+#include "llfloatercreatelandmark.h"
 #include "llfloaterdeleteprefpreset.h"
 #include "llfloaterdestinations.h"
 #include "llfloatereditextdaycycle.h"
@@ -93,6 +95,7 @@
 // [/SL:KB]
 #include "llfloaterhelpbrowser.h"
 #include "llfloaterhoverheight.h"
+#include "llfloaterhowto.h"
 #include "llfloaterhud.h"
 #include "llfloaterimagepreview.h"
 #include "llfloaterimsession.h"
@@ -232,6 +235,7 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterAboutUtil::registerFloater();
 	LLFloaterReg::add("block_timers", "floater_fast_timers.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFastTimerView>);
 	LLFloaterReg::add("about_land", "floater_about_land.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterLand>);
+	LLFloaterReg::add("add_payment_method", "floater_add_payment_method.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterAddPaymentMethod>);
 	LLFloaterReg::add("area_search", "floater_fs_area_search.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSAreaSearch>);
 	LLFloaterReg::add("export_collada", "floater_export_collada.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<ColladaExportFloater>);
 	LLFloaterReg::add("appearance", "floater_my_appearance.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterSidePanelContainer>);
@@ -265,6 +269,7 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("nearby_chat", "floater_im_session.xml", (LLFloaterBuildFunc)&LLFloaterIMNearbyChat::buildFloater);
 	LLFloaterReg::add("compile_queue", "floater_script_queue.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterCompileQueue>);
 	LLFloaterReg::add("conversation", "floater_conversation_log.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterConversationLog>);
+	LLFloaterReg::add("add_landmark", "floater_create_landmark.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterCreateLandmark>);
 
 	LLFloaterReg::add("delete_pref_preset", "floater_delete_pref_preset.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterDeletePrefPreset>);
 	LLFloaterReg::add("delete_queue", "floater_script_queue.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterDeleteQueue>);
@@ -425,7 +430,7 @@ void LLViewerFloaterReg::registerFloaters()
     LLFloaterReg::add("search", "floater_search.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterSearch>);
 	LLFloaterReg::add("my_profile", "floater_my_web_profile.xml", (LLFloaterBuildFunc)&LLFloaterWebProfile::create);
 	LLFloaterReg::add("profile", "floater_web_profile.xml", (LLFloaterBuildFunc)&LLFloaterWebProfile::create);
-	LLFloaterReg::add("how_to", "floater_how_to.xml", (LLFloaterBuildFunc)&LLFloaterWebContent::create);
+	LLFloaterReg::add("guidebook", "floater_how_to.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterHowTo>);
 
 	LLFloaterReg::add("big_preview", "floater_big_preview.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterBigPreview>);
 	
