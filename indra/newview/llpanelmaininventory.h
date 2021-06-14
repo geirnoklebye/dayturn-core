@@ -126,7 +126,6 @@ protected:
 	void doToSelected(const LLSD& userdata);
 	void closeAllFolders();
 	void doCreate(const LLSD& userdata);
-	//void resetFilters(); // Moved to public
 	void setSortBy(const LLSD& userdata);
 	void saveTexture(const LLSD& userdata);
 	bool isSaveTextureEnabled(const LLSD& userdata);
@@ -192,7 +191,9 @@ protected:
 private:
 	LLDragAndDropButton*		mTrashButton;
 	LLToggleableMenu*			mMenuGearDefault;
+	LLToggleableMenu*			mMenuVisibility;
 	LLMenuButton*				mGearMenuButton;
+	LLMenuButton*				mVisibilityMenuButton;
 	LLHandle<LLView>			mMenuAddHandle;
 // [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
 	boost::signals2::scoped_connection m_UserProtectedFoldersConn;

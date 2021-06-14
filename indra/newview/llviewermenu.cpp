@@ -70,6 +70,7 @@
 #include "llfloaterimcontainer.h"
 #include "llfloaterland.h"
 #include "llfloaterimnearbychat.h"
+#include "llfloaterlandholdings.h"
 #include "llfloaterpathfindingcharacters.h"
 #include "llfloaterpathfindinglinksets.h"
 #include "llfloaterpay.h"
@@ -222,11 +223,15 @@ const std::string SAVE_INTO_TASK_INVENTORY("Save Object Back to Object Contents"
 LLMenuGL* gAttachSubMenu = NULL;
 LLMenuGL* gDetachSubMenu = NULL;
 LLMenuGL* gTakeOffClothes = NULL;
+LLMenuGL* gDetachAvatarMenu = NULL;
+LLMenuGL* gDetachHUDAvatarMenu = NULL;
 LLContextMenu* gAttachScreenPieMenu = NULL;
 LLContextMenu* gAttachPieMenu = NULL;
 LLContextMenu* gAttachBodyPartPieMenus[9];
 LLContextMenu* gDetachPieMenu = NULL;
 LLContextMenu* gDetachScreenPieMenu = NULL;
+LLContextMenu* gDetachAttSelfMenu = NULL;
+LLContextMenu* gDetachHUDAttSelfMenu = NULL;
 LLContextMenu* gDetachBodyPartPieMenus[9];
 
 PieMenu* gPieAttachScreenMenu = NULL;
@@ -491,6 +496,9 @@ void init_menus()
 	gMenuAttachmentOther = LLUICtrlFactory::createFromFile<LLContextMenu>(
 		"menu_attachment_other.xml", gMenuHolder, registry);
 
+	gDetachHUDAttSelfMenu = gMenuHolder->getChild<LLContextMenu>("Detach Self HUD", true);
+	gDetachAttSelfMenu = gMenuHolder->getChild<LLContextMenu>("Detach Self", true);
+
 	gMenuLand = LLUICtrlFactory::createFromFile<LLContextMenu>(
 		"menu_land.xml", gMenuHolder, registry);
 
@@ -579,6 +587,9 @@ void init_menus()
 	
 	gAttachSubMenu = gMenuBarView->findChildMenuByName("Attach Object", TRUE);
 	gDetachSubMenu = gMenuBarView->findChildMenuByName("Detach Object", TRUE);
+
+	gDetachAvatarMenu = gMenuHolder->getChild<LLMenuGL>("Avatar Detach", true);
+	gDetachHUDAvatarMenu = gMenuHolder->getChild<LLMenuGL>("Avatar Detach HUD", true);
 
 	// Don't display the Memory console menu if the feature is turned off
 	LLMenuItemCheckGL *memoryMenu = gMenuBarView->getChild<LLMenuItemCheckGL>("Memory", TRUE);
@@ -754,19 +765,6 @@ class LLAdvancedCheckHUDInfo : public view_listener_t
 			new_value = gDisplayBadge;
 		}
 		return new_value;
-	}
-};
-
-
-//////////////
-// FLYING   //
-//////////////
-
-class LLAdvancedAgentFlyingInfo : public view_listener_t
-{
-	bool handleEvent(const LLSD&)
-	{
-		return gAgent.getFlying();
 	}
 };
 
@@ -3960,7 +3958,6 @@ bool enable_sitstand_self()
     return isAgentAvatarValid() && !gAgent.getFlying();
 }
 
-
 bool show_sitdown_self()
 {
 	return isAgentAvatarValid() && !gAgentAvatarp->isSitting();
@@ -3969,6 +3966,16 @@ bool show_sitdown_self()
 bool enable_sitdown_self()
 {
 	return show_sitdown_self() && !gAgentAvatarp->isEditingAppearance() && !gAgent.getFlying();
+}
+
+bool enable_sit_stand()
+{
+	return enable_sitdown_self() || enable_standup_self();
+}
+
+bool enable_fly_land()
+{
+	return gAgent.getFlying() || LLAgent::enableFlying();
 }
 
 class LLCheckPanelPeopleTab : public view_listener_t
@@ -5256,7 +5263,7 @@ void handle_buy_or_take()
 		{
 			LLStringUtil::format_map_t args;
 			args["AMOUNT"] = llformat("%d", total_price);
-			LLBuyCurrencyHTML::openCurrencyFloater( LLTrans::getString( "BuyingCosts", args ), total_price );
+			LLBuyCurrencyHTML::openCurrencyFloater( LLTrans::getString( "this_object_costs", args ), total_price );
 		}
 	}
 	else
@@ -5283,13 +5290,6 @@ bool tools_visible_buy_object()
 bool tools_visible_take_object()
 {
 	return !is_selection_buy_not_take();
-}
-
-bool enable_how_to_visible(const LLSD& param)
-{
-	LLFloaterWebContent::Params p;
-	p.target = "__help_how_to";
-	return LLFloaterReg::instanceVisible("how_to", p);
 }
 
 class LLToolsEnableBuyOrTake : public view_listener_t
@@ -6304,6 +6304,16 @@ class LLWorldSetHomeLocation : public view_listener_t
 	}
 };
 
+class LLWorldLindenHome : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		std::string url = LLFloaterLandHoldings::sHasLindenHome ? LLTrans::getString("lindenhomes_my_home_url") : LLTrans::getString("lindenhomes_get_home_url");
+		LLWeb::loadURL(url);
+		return true;
+	}
+};
+
 class LLWorldTeleportHome : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -6386,7 +6396,7 @@ class LLWorldCreateLandmark : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		LLFloaterSidePanelContainer::showPanel("places", LLSD().with("type", "create_landmark"));
+		LLFloaterReg::showInstance("add_landmark");
 
 		return true;
 	}
@@ -6848,6 +6858,11 @@ void handle_customize_avatar()
 void handle_edit_outfit()
 {
 	LLFloaterSidePanelContainer::showPanel("appearance", LLSD().with("type", "edit_outfit"));
+}
+
+void handle_now_wearing()
+{
+    LLFloaterSidePanelContainer::showPanel("appearance", LLSD().with("type", "now_wearing"));
 }
 
 void handle_reload_outfit()
@@ -8476,17 +8491,7 @@ class LLToggleHowTo : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		LLFloaterWebContent::Params p;
-		std::string url = gSavedSettings.getString("HowToHelpURL");
-		std::string url_expanded = LLWeb::expandURLSubstitutions(url, LLSD());
-		LL_DEBUGS("WebApi") << "HowToHelpURL \"" << url_expanded << "\"" << LL_ENDL;
-		p.url = url_expanded;
-		p.show_chrome = false;
-		p.target = "__help_how_to";
-		p.show_page_title = false;
-		p.preferred_media_size = LLRect(0, 460, 335, 0);
-
-		LLFloaterReg::toggleInstanceOrBringToFront("how_to", p);
+		LLFloaterReg::toggleInstanceOrBringToFront("guidebook");
 		return true;
 	}
 };
@@ -9431,37 +9436,32 @@ class LLWorldEnvSettings : public view_listener_t
 		
 		if (event_name == "sunrise")
 		{
-            LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_SUNRISE);
-            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
-            LLEnvironment::instance().updateEnvironment();
+            LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_SUNRISE, LLEnvironment::TRANSITION_INSTANT);
+            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
             defocusEnvFloaters();
 		}
 		else if (event_name == "noon")
 		{
-            LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_MIDDAY);
-            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
-            LLEnvironment::instance().updateEnvironment();
+            LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_MIDDAY, LLEnvironment::TRANSITION_INSTANT);
+            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
             defocusEnvFloaters();
 		}
 		else if (event_name == "sunset")
 		{
-            LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_SUNSET);
-            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
-            LLEnvironment::instance().updateEnvironment();
+            LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_SUNSET, LLEnvironment::TRANSITION_INSTANT);
+            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
             defocusEnvFloaters();
 		}
 		else if (event_name == "midnight")
 		{
-            LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_MIDNIGHT);
-            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
-            LLEnvironment::instance().updateEnvironment();
+            LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::KNOWN_SKY_MIDNIGHT, LLEnvironment::TRANSITION_INSTANT);
+            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
             defocusEnvFloaters();
 		}
         else if (event_name == "region")
 		{
             LLEnvironment::instance().clearEnvironment(LLEnvironment::ENV_LOCAL);
-            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
-            LLEnvironment::instance().updateEnvironment();
+            LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL, LLEnvironment::TRANSITION_INSTANT);
             defocusEnvFloaters();
 		}
         else if (event_name == "pause_clouds")
@@ -9629,6 +9629,17 @@ class LLUploadCostCalculator : public view_listener_t
 public:
 	LLUploadCostCalculator()
 	{
+	}
+};
+
+class LLUpdateMembershipLabel : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		const std::string label_str =  LLAgentBenefitsMgr::isCurrent("Base") ? LLTrans::getString("MembershipUpgradeText") : LLTrans::getString("MembershipPremiumText");
+		gMenuHolder->childSetLabelArg("Membership", "[Membership]", label_str);
+
+		return true;
 	}
 };
 
@@ -9839,11 +9850,13 @@ void initialize_menus()
 
 	view_listener_t::addEnable(new LLUploadCostCalculator(), "Upload.CalculateCosts");
 
+	view_listener_t::addEnable(new LLUpdateMembershipLabel(), "Membership.UpdateLabel");
+
 	enable.add("Conversation.IsConversationLoggingAllowed", boost::bind(&LLFloaterIMContainer::isConversationLoggingAllowed));
 
 	// Agent
 	commit.add("Agent.toggleFlying", boost::bind(&LLAgent::toggleFlying));
-	enable.add("Agent.enableFlying", boost::bind(&LLAgent::enableFlying));
+	enable.add("Agent.enableFlyLand", boost::bind(&enable_fly_land));
 	commit.add("Agent.PressMicrophone", boost::bind(&LLAgent::pressMicrophone, _2));
 	commit.add("Agent.ReleaseMicrophone", boost::bind(&LLAgent::releaseMicrophone, _2));
 	commit.add("Agent.ToggleMicrophone", boost::bind(&LLAgent::toggleMicrophone, _2));
@@ -9859,6 +9872,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLEnableHoverHeight(), "Edit.EnableHoverHeight");
 	view_listener_t::addMenu(new LLEnableEditPhysics(), "Edit.EnableEditPhysics");
 	commit.add("CustomizeAvatar", boost::bind(&handle_customize_avatar));
+    commit.add("NowWearing", boost::bind(&handle_now_wearing));
 	commit.add("EditOutfit", boost::bind(&handle_edit_outfit));
 	commit.add("ReloadOutfit", boost::bind(&handle_reload_outfit));
 	commit.add("RevertOutfit", boost::bind(&handle_revert_outfit));
@@ -9898,9 +9912,6 @@ void initialize_menus()
 // [SL:KB] - Patch: World-RenderExceptions | Checked: Catznip-5.2
 	commit.add("View.Blocked", boost::bind(&handle_view_blocked, _2));
 // [/SL:KB]
-	// Me > Movement
-	view_listener_t::addMenu(new LLAdvancedAgentFlyingInfo(), "Agent.getFlying");
-
 	//Communicate Nearby chat
 	view_listener_t::addMenu(new LLCommunicateNearbyChat(), "Communicate.NearbyChat");
 
@@ -9922,6 +9933,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLWorldTeleportHome(), "World.TeleportHome");
 	view_listener_t::addMenu(new LLWorldSetAway(), "World.SetAway");
 	view_listener_t::addMenu(new LLWorldSetDoNotDisturb(), "World.SetDoNotDisturb");
+	view_listener_t::addMenu(new LLWorldLindenHome(), "World.LindenHome");
 
 	view_listener_t::addMenu(new LLWorldEnableCreateLandmark(), "World.EnableCreateLandmark");
 	view_listener_t::addMenu(new LLWorldEnableSetHomeLocation(), "World.EnableSetHomeLocation");
@@ -9978,7 +9990,6 @@ void initialize_menus()
 	// Help menu
 	// most items use the ShowFloater method
 	view_listener_t::addMenu(new LLToggleHowTo(), "Help.ToggleHowTo");
-	enable.add("Help.HowToVisible", boost::bind(&enable_how_to_visible, _2));
 
 	// Advanced menu
 	view_listener_t::addMenu(new LLAdvancedToggleConsole(), "Advanced.ToggleConsole");
@@ -10169,13 +10180,8 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAdminOnSaveState(), "Admin.OnSaveState");
 
 	// Self context menu
-	view_listener_t::addMenu(new LLSelfStandUp(), "Self.StandUp");
-	enable.add("Self.EnableStandUp", boost::bind(&enable_standup_self));
-	view_listener_t::addMenu(new LLSelfSitDown(), "Self.SitDown");
 	view_listener_t::addMenu(new LLSelfToggleSitStand(), "Self.ToggleSitStand");
-	enable.add("Self.EnableSitDown", boost::bind(&enable_sitdown_self));
-	enable.add("Self.EnableSitStand", boost::bind(&enable_sitstand_self));
-	enable.add("Self.ShowSitDown", boost::bind(&show_sitdown_self));
+	enable.add("Self.EnableSitStand", boost::bind(&enable_sit_stand));
 	view_listener_t::addMenu(new LLSelfRemoveAllAttachments(), "Self.RemoveAllAttachments");
 
 	view_listener_t::addMenu(new LLSelfEnableRemoveAllAttachments(), "Self.EnableRemoveAllAttachments");

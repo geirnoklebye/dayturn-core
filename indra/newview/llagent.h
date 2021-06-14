@@ -667,6 +667,7 @@ public:
 	void            restartFailedTeleportRequest();
 	void            clearTeleportRequest();
 	void            setMaturityRatingChangeDuringTeleport(U8 pMaturityRatingChange);
+	void            sheduleTeleportIM();
 
 private:
 
@@ -683,6 +684,7 @@ private:
 	boost::signals2::connection mTeleportFailedSlot;
 
 	bool            mIsMaturityRatingChangingDuringTeleport;
+	bool            mTPNeedsNeabyChatSeparator;
 	U8              mMaturityRatingChange;
 
 	bool            hasPendingTeleportRequest();
@@ -699,6 +701,7 @@ private:
 	void            handleTeleportFinished();
 	void            handleTeleportFailed();
 
+    static void     addTPNearbyChatSeparator();
     static void     onCapabilitiesReceivedAfterTeleport();
 
 	//--------------------------------------------------------------------
