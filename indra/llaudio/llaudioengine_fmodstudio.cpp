@@ -851,10 +851,13 @@ FMOD_RESULT F_CALLBACK windDSPCallback(FMOD_DSP_STATE *dsp_state, float *inbuffe
 	LLWindGen<LLAudioEngine_FMODSTUDIO::MIXBUFFERFORMAT> *windgen;
 	FMOD::DSP *thisdsp = (FMOD::DSP *)dsp_state->instance;
 
-	thisdsp->getUserData((void **)&windgen);
-	
-	if (windgen)
-		windgen->windGenerate((LLAudioEngine_FMODSTUDIO::MIXBUFFERFORMAT *)outbuffer, length);
-
+  // CA: bugsplat #2 crash fix - invalid thisdsp, possibly arising from a failed tp
+  if (thisdsp)
+  {
+  	thisdsp->getUserData((void **)&windgen);
+  	
+  	if (windgen)
+  		windgen->windGenerate((LLAudioEngine_FMODSTUDIO::MIXBUFFERFORMAT *)outbuffer, length);
+  }
 	return FMOD_OK;
 }
