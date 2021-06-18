@@ -1843,14 +1843,18 @@ BOOL RRInterface::reallyHandleCommand (LLUUID uuid, std::string command)
 		else if (behav=="getpathnew") return answerOnChat (param, getFullPath (getItem(uuid), option)); // option can be empty (=> find path to object) or the name of an attach pt or the name of a clothing layer
 		else if (behav == "findfolder") return answerOnChat(param, getFullPath(findCategoryUnderRlvShare(option)));
 		else if (behav == "findfolders") {
-			std::deque<std::string> options = parse(option, ";");
-			std::string folder_to_find = options.at(0);
-			std::string separator = (options.size() > 1) ? options.at(1) : ",";
-			std::deque<LLInventoryCategory*> cats = findCategoriesUnderRlvShare(folder_to_find);
+			// KKA-865 crash fix - cope gracefully with zero options being provided
 			std::string response = "";
-			for (int i = 0; i < cats.size(); i++) {
-				if (i > 0) response += separator;
-				response += getFullPath(cats.at(i));
+			std::deque<std::string> options = parse(option, ";");
+			if (options.size())
+			{
+    			std::string folder_to_find = options.at(0);
+    			std::string separator = (options.size() > 1) ? options.at(1) : ",";
+    			std::deque<LLInventoryCategory*> cats = findCategoriesUnderRlvShare(folder_to_find);
+    			for (int i = 0; i < cats.size(); i++) {
+     				if (i > 0) response += separator;
+     				response += getFullPath(cats.at(i));
+    			}
 			}
 			return answerOnChat(param, response);
 		}
