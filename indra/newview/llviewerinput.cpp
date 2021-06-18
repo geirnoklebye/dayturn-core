@@ -1469,9 +1469,14 @@ BOOL LLViewerInput::handleMouse(LLWindow *window_impl, LLCoordGL pos, MASK mask,
 
 bool LLViewerInput::scanMouse(const std::vector<LLMouseBinding> &binding, S32 binding_count, EMouseClickType mouse, MASK mask, EMouseState state) const
 {
+	// KKA-866 As written by LL mouse clicks behave like key clicks in that a shift/ctrl/alt click that is not defined will be mapped
+	// down onto the unshifted action. However this has the new and undesirable behaviour that alt or ctrl-double click can now fire off
+	// a double click teleport which didn't happen before the key mappings overhaul. KokuaMouseBindingExactMask modifies the LL behaviour
+	// to require an exact match instead of permitting modified clicks to map onto an unmodified mapping
+	static LLCachedControl<bool> exactMask(gSavedSettings, "KokuaMouseBindingExactMask", true);
     for (S32 i = 0; i < binding_count; i++)
     {
-        if (binding[i].mMouse == mouse && (binding[i].mMask & mask) == binding[i].mMask)
+        if (binding[i].mMouse == mouse && (exactMask ? (binding[i].mMask == mask) : (binding[i].mMask & mask) == binding[i].mMask))
         {
             bool res = false;
             switch (state)
