@@ -272,7 +272,7 @@ clicking on their names.
       <scroll_list
        column_padding="0"
        draw_stripes="true"
-       height="280"
+       height="200"
        follows="left|top|right"
        layout="topleft"
        left="0"
@@ -318,7 +318,7 @@ clicking on their names.
       <name_list
            column_padding="0"
            draw_heading="true"
-           height="350"
+           height="310"
            follows="left|top|right"
            layout="topleft"
            left="0"
@@ -458,7 +458,39 @@ clicking on their names.
     </scroll_list>
   </panel>
   <panel
-   height="550"
+   height="90"
+   background_visible="false"
+   bg_alpha_color="FloaterUnfocusBorderColor"
+   layout="topleft"
+   follows="top|left|right"
+   left="0"
+   right="-1"
+   width="313"
+   mouse_opaque="false"
+   name="members_header"
+   top_pad="3"
+   visible="false">
+    <text_editor
+     bg_readonly_color="Transparent"
+     text_readonly_color="EmphasisColor"
+     font="SansSerifSmall"
+     type="string"
+     enabled="false"
+     halign="left"
+     layout="topleft"
+     top_pad="0"
+     follows="left|top|right"
+     left="0"
+     right="-1"
+     height="90"
+     max_length="512"
+     name="member_action_description"
+     word_wrap="true">
+      This Ability is &apos;Eject Members from this Group&apos;. Only an Owner can eject another Owner.
+   </text_editor>
+  </panel>
+  <panel
+   height="460"
    background_visible="false"
    bg_alpha_color="FloaterUnfocusBorderColor"
    layout="topleft"
