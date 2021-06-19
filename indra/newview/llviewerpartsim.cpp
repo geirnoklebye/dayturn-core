@@ -735,7 +735,7 @@ void LLViewerPartSim::updateSimulation()
 //MK
 			// If our vision is obscured enough, particles in world and worn by other avatars
 			// may give their position away (because of a rendering issue) => hide them if their source object is too far.
-			if (gRRenabled && gAgent.mRRInterface.mVisionRestricted)
+			if (gRRenabled && gAgent.mRRInterface.mVisionRestricted && isAgentAvatarValid()) // KKA-862 avoid similar crash to the one observed in llvoavatar (isTooComplex)
 			{
 				LLViewerObject* vobj = mViewerPartSources[i]->mSourceObjectp;
 				if (vobj && (vobj->getPCode() == LL_PCODE_VOLUME))

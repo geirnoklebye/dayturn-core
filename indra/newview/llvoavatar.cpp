@@ -8889,7 +8889,7 @@ bool LLVOAvatar::isTooComplex() const
 	// If the vision is restricted and the outer sphere is opaque (or almost), and if the avatar is far enough, optimize by pretending it is too complex
 	if (gRRenabled && gAgent.mRRInterface.mVisionRestricted)
 	{
-		if (!isSelf())
+		if (!isSelf() && isAgentAvatarValid()) // KKA-862 add the isAgentAvatarValid check to avoid a crash when getCamDistDrawFromJoint returns null
 		{
 		  // KKA_835 extended for setsphere
 			if (gAgent.mRRInterface.mCamDistDrawAlphaMax >= ALPHA_ALMOST_OPAQUE || gAgent.mRRInterface.mSetsphereValueMax >= ALPHA_ALMOST_OPAQUE)
