@@ -2123,7 +2123,7 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 	// KKA-835 Further optimisation - the least square is precomputed
 	LLVector3 joint_pos = LLVector3::zero;
 	// We don't need to calculate all that stuff if the vision is not restricted.
-	if (gAgent.mRRInterface.mVisionRestricted)
+	if (gAgent.mRRInterface.mVisionRestricted && isAgentAvatarValid()) // KKA-862 avoid similar crash to the one observed in llvoavatar (isTooComplex)
 	{
 		joint_pos = gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition();
 	}
