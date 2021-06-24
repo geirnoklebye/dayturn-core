@@ -783,7 +783,7 @@ void LLJoint::setDebugJointNames(const std::string& names_string)
 //--------------------------------------------------------------------
 LLVector3 LLJoint::getWorldPosition()
 {
-	if (mParent) updateWorldPRSParent(); // KKA-862 try to avoid a logout crash
+	updateWorldPRSParent();
 	return mXform.getWorldPosition();
 }
 
