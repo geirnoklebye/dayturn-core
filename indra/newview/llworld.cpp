@@ -1178,24 +1178,28 @@ void process_enable_simulator(LLMessageSystem *msg, void **user_data)
 	msg->getIPAddrFast(_PREHASH_SimulatorInfo, _PREHASH_IP, ip_u32);
 	msg->getIPPortFast(_PREHASH_SimulatorInfo, _PREHASH_Port, port);
 
-	// which simulator should we modify?
-	LLHost sim(ip_u32, port);
+  // KKA-872 if we get a null handle here we're already in trouble, but let's avoid making it worse (BugSplat crash report #17)
+  if (handle)
+  {
+  	// which simulator should we modify?
+  	LLHost sim(ip_u32, port);
 
-	// Viewer trusts the simulator.
-	msg->enableCircuit(sim, TRUE);
-	LLWorld::getInstance()->addRegion(handle, sim);
+  	// Viewer trusts the simulator.
+  	msg->enableCircuit(sim, TRUE);
+  	LLWorld::getInstance()->addRegion(handle, sim);
 
-	// give the simulator a message it can use to get ip and port
-	if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
-	{
-		LL_INFOS() << "simulator_enable() Enabling " << sim << " with code " << msg->getOurCircuitCode() << LL_ENDL;
-	}	
-	msg->newMessageFast(_PREHASH_UseCircuitCode);
-	msg->nextBlockFast(_PREHASH_CircuitCode);
-	msg->addU32Fast(_PREHASH_Code, msg->getOurCircuitCode());
-	msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
-	msg->addUUIDFast(_PREHASH_ID, gAgent.getID());
-	msg->sendReliable(sim);
+  	// give the simulator a message it can use to get ip and port
+  	if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
+  	{
+  		LL_INFOS() << "simulator_enable() Enabling " << sim << " with code " << msg->getOurCircuitCode() << LL_ENDL;
+  	}	
+  	msg->newMessageFast(_PREHASH_UseCircuitCode);
+  	msg->nextBlockFast(_PREHASH_CircuitCode);
+  	msg->addU32Fast(_PREHASH_Code, msg->getOurCircuitCode());
+  	msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+  	msg->addUUIDFast(_PREHASH_ID, gAgent.getID());
+  	msg->sendReliable(sim);
+  }
 }
 
 class LLEstablishAgentCommunication : public LLHTTPNode
