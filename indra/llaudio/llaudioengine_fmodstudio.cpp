@@ -847,17 +847,21 @@ FMOD_RESULT F_CALLBACK windDSPCallback(FMOD_DSP_STATE *dsp_state, float *inbuffe
 	// newbuffer = outgoing data. AKA this DSP's output.
 	// length = length in samples at this mix time. True buffer size, in bytes, would be (length * sizeof(float) * inchannels).
 	// userdata = user-provided data attached this DSP via FMOD::DSP::setUserData.
-	
-	LLWindGen<LLAudioEngine_FMODSTUDIO::MIXBUFFERFORMAT> *windgen;
-	FMOD::DSP *thisdsp = (FMOD::DSP *)dsp_state->instance;
 
-  // CA: bugsplat #2 crash fix - invalid thisdsp, possibly arising from a failed tp
-  if (thisdsp)
-  {
-  	thisdsp->getUserData((void **)&windgen);
-  	
-  	if (windgen)
-  		windgen->windGenerate((LLAudioEngine_FMODSTUDIO::MIXBUFFERFORMAT *)outbuffer, length);
-  }
+	// CA: KKA-873 the fix below wasn't sufficient, I now suspect dsp_state came in as null, but thisdp is invalid but not null, eg 0x3 in one crash
+	if (dsp_state)
+	{
+		LLWindGen<LLAudioEngine_FMODSTUDIO::MIXBUFFERFORMAT> *windgen = NULL;
+		FMOD::DSP *thisdsp = (FMOD::DSP *)dsp_state->instance;
+
+	  // CA: KKA-861 bugsplat #2 crash fix - invalid thisdsp, possibly arising from a failed tp
+	  if (thisdsp)
+	  {
+	  	thisdsp->getUserData((void **)&windgen);
+	  	
+	  	if (windgen)
+	  		windgen->windGenerate((LLAudioEngine_FMODSTUDIO::MIXBUFFERFORMAT *)outbuffer, length);
+	  }
+	}
 	return FMOD_OK;
 }
