@@ -652,11 +652,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d260709ee0c1f402efb0dba24c60df82</string>
+              <string>d7532c41ddd37741be88242c5588e478</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-curl/downloads/curl-7.47.0.201604111501-linux64-201604111501.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-curl-ll/downloads/curl-7.76.1.211861801-linux64-211861801.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -691,7 +691,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>7.54.1.545369</string>
+        <string>7.76.1.211861801</string>
       </map>
       <key>db</key>
       <map>
@@ -3441,11 +3441,11 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>514745e8a183b3fb6fa0831efc7a1154</string>
+              <string>f5bc9dee5119e020bde6697d2ebcab07</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-nghttp2/downloads/nghttp2-1.25.0.180511357-linux64-180511357.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-nghttp2-ab1.1.9/downloads/nghttp2-1.43.0.211840004-linux64-211840004.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3482,7 +3482,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
         <key>source_type</key>
         <string>hg</string>
         <key>version</key>
-        <string>1.40.0.545354</string>
+        <string>1.43.0.211840004</string>
       </map>
       <key>nvapi</key>
       <map>
@@ -3909,11 +3909,11 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>328c247a063e35657c224973e27eaa19</string>
+              <string>f48cdb92302fd77542f22741324b4121</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-openssl-ll/downloads/openssl-1.0.1h-linux64-20140815.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-openssl-git/downloads/openssl-1.0.2l.211801919-linux64-211801919.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3948,7 +3948,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.0.2l.539874</string>
+        <string>1.0.2l.211801919</string>
       </map>
       <key>pango</key>
       <map>
