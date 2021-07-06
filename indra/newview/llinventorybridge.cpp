@@ -2553,6 +2553,7 @@ BOOL LLFolderBridge::isClipboardPasteableAsLink() const
 	if (gRRenabled)
 	{
 		// Don't allow if the destination folder is unlocked and the source folder is locked
+		// KKA-876 validate model->getObject() before using it (can be invalid, eg for a broken link)
 		LLInventoryModel* model = getInventoryModel();
 		if (model)
 		{
@@ -2563,10 +2564,14 @@ BOOL LLFolderBridge::isClipboardPasteableAsLink() const
 			for(S32 i = objects.size() - 1; i >= 0; --i)
 			{
 				const LLUUID &obj_id = objects.at(i);
-				if (!gAgent.mRRInterface.isFolderLocked(current_cat)
-				&& gAgent.mRRInterface.isFolderLocked(gInventory.getCategory (model->getObject(obj_id)->getParentUUID())))
+				LLInventoryObject* object = model->getObject(obj_id);
+				if (object)
 				{
-					return FALSE;
+					if (!gAgent.mRRInterface.isFolderLocked(current_cat)
+					&& gAgent.mRRInterface.isFolderLocked(gInventory.getCategory (object->getParentUUID())))
+					{
+						return FALSE;
+					}
 				}
 			}
 		}
