@@ -334,7 +334,7 @@ public:
 
         // Here the transaction is complete. Check status.
         data["error"] = mTransaction->statusMessage();
-		data["transfer_rate"] = mTransaction->transferRate();
+		data["transfer_rate"] = mTransaction->transferRate();		
         LL_INFOS("LLXMLRPCListener") << mMethod << " result from " << mUri << ": status "
                                      << data["status"].asString() << ", errorcode "
                                      << data["errorcode"].asString()
@@ -343,11 +343,18 @@ public:
 		
 		switch (curlcode)
 		{
+		
 			case CURLE_SSL_PEER_CERTIFICATE:
+		 #if (LL_LINUX)
+                data["certificate"] = mTransaction->getErrorCertData();
+				break;
+		 #endif
+
+         #if (!LL_LINUX)
 			case CURLE_SSL_CACERT:
                 data["certificate"] = mTransaction->getErrorCertData();
 				break;
-
+		 #endif
 			default:
 				break;
 		}
