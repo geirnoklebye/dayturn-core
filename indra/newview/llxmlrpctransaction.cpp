@@ -501,8 +501,9 @@ void LLXMLRPCTransaction::Impl::setHttpStatus(const LLCore::HttpStatus &status)
 	case CURLE_SSL_PEER_CERTIFICATE:
 		message = LLTrans::getString("ssl_peer_certificate");
 		break;
-
+#if (!LL_LINUX)
 	case CURLE_SSL_CACERT:
+#endif
 	case CURLE_SSL_CONNECT_ERROR:		
 		message = LLTrans::getString("ssl_connect_error");
 		break;
