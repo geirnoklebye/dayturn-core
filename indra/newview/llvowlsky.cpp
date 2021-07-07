@@ -512,7 +512,7 @@ void LLVOWLSky::updateStarColors()
 	}
 }
 
-BOOL LLVOWLSky::updateStarGeometry(LLDrawable *drawable)
+bool LLVOWLSky::updateStarGeometry(LLDrawable *drawable)
 {
 	LLStrider<LLVector3> verticesp;
 	LLStrider<LLColor4U> colorsp;
@@ -527,7 +527,7 @@ BOOL LLVOWLSky::updateStarGeometry(LLDrawable *drawable)
 		}
 	}
  
-	BOOL success = mStarsVerts->getVertexStrider(verticesp)
+	bool success = mStarsVerts->getVertexStrider(verticesp)
 		&& mStarsVerts->getColorStrider(colorsp)
 		&& mStarsVerts->getTexCoord0Strider(texcoordsp);
 
@@ -579,5 +579,5 @@ BOOL LLVOWLSky::updateStarGeometry(LLDrawable *drawable)
 	}
 
 	mStarsVerts->flush();
-	return TRUE;
+	return true;
 }
