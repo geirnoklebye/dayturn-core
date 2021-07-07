@@ -1870,12 +1870,12 @@ bool LLVOAvatar::lineSegmentIntersect(const LLVector4a& start, const LLVector4a&
 {
 	if ((isSelf() && !gAgent.needsRenderAvatar()) || !LLPipeline::sPickAvatar)
 	{
-		return FALSE;
+		return false;
 	}
 
     if (isControlAvatar())
     {
-        return FALSE;
+        return false;
     }
     
 	if (lineSegmentBoundingBox(start, end))
@@ -1916,7 +1916,7 @@ bool LLVOAvatar::lineSegmentIntersect(const LLVector4a& start, const LLVector4a&
 					normal->load3(res_norm.v);
 				}
 
-				return TRUE;
+				return true;
 			}
 		}
 

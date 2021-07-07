@@ -495,7 +495,7 @@ bool LLVOPartGroup::lineSegmentIntersect(const LLVector4a& start, const LLVector
 	dir.setSub(end, start);
 
 	F32 closest_t = 2.f;
-	BOOL ret = FALSE;
+	bool ret = false;
 	
 	for (U32 idx = 0; idx < mViewerPartGroupp->mParticles.size(); ++idx)
 	{
@@ -515,7 +515,7 @@ bool LLVOPartGroup::lineSegmentIntersect(const LLVector4a& start, const LLVector
 				t <= 1.f &&
 				t < closest_t)
 			{
-				ret = TRUE;
+				ret = true;
 				closest_t = t;
 				if (face_hit)
 				{
