@@ -679,14 +679,24 @@ void LLFloaterIMNearbyChatHandler::processChat(const LLChat& chat_msg,
 				}
 			}
 		}
-		//Don't show nearby toast, if conversation is visible and selected
+		//KKA-878 For alwaystoast we're going to need to defeat the don't show nearby toast check coming up
+		std::string user_preferences;
+		if (CHAT_SOURCE_OBJECT == chat_msg.mSourceType)
+    {
+      user_preferences = gSavedSettings.getString("NotificationObjectIMOptions");
+    }
+    else
+    {
+      user_preferences = gSavedSettings.getString("NotificationNearbyChatOptions");
+    }
+		//Don't show nearby toast, if conversation is visible and selected (unless 'alwaystoast' is active)
 		if ((nearby_chat->hasFocus()) ||
 			(LLFloater::isVisible(nearby_chat) && nearby_chat->isTornOff() && !nearby_chat->isMinimized()) ||
 		    ((im_box->getSelectedSession().isNull() && !chat_overlaps &&
 				((LLFloater::isVisible(im_box) && !nearby_chat->isTornOff() && !im_box->isMinimized())
 						|| (LLFloater::isVisible(nearby_chat) && nearby_chat->isTornOff() && !nearby_chat->isMinimized())))))
 		{
-			if(nearby_chat->isMessagePaneExpanded())
+			if(nearby_chat->isMessagePaneExpanded() && user_preferences == "toast") // KKA-878 keep going for 'alwaystoast'
 			{
 				return;
 			}
@@ -695,7 +705,9 @@ void LLFloaterIMNearbyChatHandler::processChat(const LLChat& chat_msg,
         //Will show toast when chat preference is set
         //KKA-623 Change this so that instead of the option for nearby chat controlling everything, the object setting controls the objects and stop
         //the behaviour where no-popup for an object becomes a popup anyway as a chat item   
-        if((CHAT_SOURCE_OBJECT != chat_msg.mSourceType && gSavedSettings.getString("NotificationNearbyChatOptions") == "toast") || !nearby_chat->isMessagePaneExpanded() || (CHAT_SOURCE_OBJECT == chat_msg.mSourceType && gSavedSettings.getString("NotificationObjectIMOptions") == "toast"))
+        //KKA-878 Add an alwaystoast option to override the intelligent show logic (which differs a bit from the same in llimview)
+//        if((CHAT_SOURCE_OBJECT != chat_msg.mSourceType && gSavedSettings.getString("NotificationNearbyChatOptions") == "toast") || !nearby_chat->isMessagePaneExpanded() || (CHAT_SOURCE_OBJECT == chat_msg.mSourceType && gSavedSettings.getString("NotificationObjectIMOptions") == "toast"))
+        if (user_preferences == "toast" || user_preferences=="alwaystoast" || !nearby_chat->isMessagePaneExpanded())
         {
             // Add a nearby chat toast.
             LLUUID id;
