@@ -364,7 +364,7 @@
         layout="topleft"
         height="12"
         name="friend_ims"
-        width="145"
+        width="90"
         follows="left|top"
         left="20"
         top_pad="20">
@@ -377,15 +377,19 @@
         left_pad="5"
         top_delta="-6"
         name="FriendIMOptions"
-        width="223">
+        width="280">
       <item
           label="Open Conversations window"
           name="OpenConversationsWindow"
           value="openconversations"/>      
       <item
-          label="Pop up the message"
+          label="Pop up the message if window is obscured"
           name="PopUpMessage"
           value="toast"/>
+      <item
+          label="Always pop up the message"
+          name="AlwaysPopUpMessage"
+          value="alwaystoast"/>
       <item
           label="Flash toolbar button"
           name="FlashToolbarButton"
@@ -409,7 +413,7 @@
         layout="topleft"
         height="12"
         name="non_friend_ims"
-        width="145"
+        width="90"
         follows="left|top"
         left="20"
         top_pad="11">
@@ -422,15 +426,19 @@
         left_pad="5"
         top_delta="-6"
         name="NonFriendIMOptions"
-        width="223">
+        width="280">
       <item
           label="Open Conversations window"
           name="OpenConversationsWindow"
           value="openconversations"/>
       <item
-          label="Pop up the message"
+          label="Pop up the message if window is obscured"
           name="PopUpMessage"
           value="toast"/>
+      <item
+          label="Always pop up the message"
+          name="AlwaysPopUpMessage"
+          value="alwaystoast"/>
       <item
           label="Flash toolbar button"
           name="FlashToolbarButton"
@@ -456,7 +464,7 @@
         left="20"
         height="13"
         name="conference_ims"
-        width="145"
+        width="90"
         top_pad="11">
       Conference IMs:
     </text>
@@ -467,15 +475,19 @@
         left_pad="5"
         top_delta="-6"
         name="ConferenceIMOptions"
-        width="223">
+        width="280">
       <item
           label="Open Conversations window"
           name="OpenConversationsWindow"
           value="openconversations"/>
       <item
-          label="Pop up the message"
+          label="Pop up the message if window is obscured"
           name="PopUpMessage"
           value="toast"/>
+      <item
+          label="Always pop up the message"
+          name="AlwaysPopUpMessage"
+          value="alwaystoast"/>
       <item
           label="Flash toolbar button"
           name="FlashToolbarButton"
@@ -501,7 +513,7 @@
         left="20"
         height="13"
         name="group_chat"
-        width="145"
+        width="90"
         top_pad="11">
       Group chat:
     </text>
@@ -512,15 +524,19 @@
         left_pad="5"
         top_delta="-6"
         name="GroupChatOptions"
-        width="223">
+        width="280">
       <item
           label="Open Conversations window"
           name="OpenConversationsWindow"
           value="openconversations"/>
       <item
-          label="Pop up the message"
+          label="Pop up the message if window is obscured"
           name="PopUpMessage"
           value="toast"/>
+      <item
+          label="Always pop up the message"
+          name="AlwaysPopUpMessage"
+          value="alwaystoast"/>
       <item
           label="Flash toolbar button"
           name="FlashToolbarButton"
@@ -546,7 +562,7 @@
         left="20"
         height="12"
         name="nearby_chat"
-        width="145"
+        width="90"
         top_pad="11">
       Nearby avatars:
     </text>
@@ -557,15 +573,19 @@
         left_pad="5"
         top_delta="-6"
         name="NearbyChatOptions"
-        width="223">
+        width="280">
       <item
           label="Open Conversations window"
           name="OpenConversationsWindow"
           value="openconversations"/>
       <item
-          label="Pop up the message"
+          label="Pop up the message if window is obscured"
           name="PopUpMessage"
           value="toast"/>
+      <item
+          label="Always pop up the message"
+          name="AlwaysPopUpMessage"
+          value="alwaystoast"/>
       <item
           label="Flash toolbar button"
           name="FlashToolBarButton"
@@ -591,7 +611,7 @@
         left="20"
         height="12"
         name="object_ims"
-        width="145"
+        width="90"
         top_pad="11">
       Object chat/IMs:
     </text>
@@ -602,15 +622,19 @@
         left_pad="5"
         top_delta="-6"
         name="ObjectIMOptions"
-        width="223">
+        width="280">
       <item
           label="Open Conversations window"
           name="OpenConversationsWindow"
           value="openconversations"/>
       <item
-          label="Pop up the message"
+          label="Pop up the message if window is obscured"
           name="PopUpMessage"
           value="toast"/>
+      <item
+          label="Always pop up the message"
+          name="AlwaysPopUpMessage"
+          value="alwaystoast"/>
       <item
           label="Flash toolbar button"
           name="FlashToolBarButton"

@@ -9151,7 +9151,7 @@
       <key>Comment</key>
       <string>
         Specifies how the UI responds to Conference IM Notifications.
-        Allowed values: [openconversations,toast,flash,noaction]
+        Allowed values: [openconversations,toast,alwaystoast,flash,noaction]
       </string>
       <key>Persist</key>
       <integer>1</integer>
@@ -9165,7 +9165,7 @@
       <key>Comment</key>
       <string>
         Specifies how the UI responds to Friend IM Notifications.
-        Allowed values: [openconversations,toast,flash,noaction]
+        Allowed values: [openconversations,toast,alwaystoast,flash,noaction]
       </string>
       <key>Persist</key>
       <integer>1</integer>
@@ -9179,7 +9179,7 @@
       <key>Comment</key>
       <string>
         Specifies how the UI responds to Group Chat Notifications.
-        Allowed values: [openconversations,toast,flash,noaction]
+        Allowed values: [openconversations,toast,alwaystoast,flash,noaction]
       </string>
       <key>Persist</key>
       <integer>1</integer>
@@ -9193,7 +9193,7 @@
       <key>Comment</key>
       <string>
         Specifies how the UI responds to Nearby Chat Notifications.
-        Allowed values: [openconversations,toast,flash,noaction]
+        Allowed values: [openconversations,toast,alwaystoast,flash,noaction]
       </string>
       <key>Persist</key>
       <integer>1</integer>
@@ -9207,7 +9207,7 @@
       <key>Comment</key>
       <string>
         Specifies how the UI responds to Non Friend IM Notifications.
-        Allowed values: [openconversations,toast,flash,noaction]
+        Allowed values: [openconversations,toast,alwaystoast,flash,noaction]
       </string>
       <key>Persist</key>
       <integer>1</integer>
@@ -9221,7 +9221,7 @@
       <key>Comment</key>
       <string>
         Specifies how the UI responds to Object IM Notifications.
-        Allowed values: [openconversations,toast,flash,noaction]
+        Allowed values: [openconversations,toast,alwaystoast,flash,noaction]
       </string>
       <key>Persist</key>
       <integer>1</integer>
