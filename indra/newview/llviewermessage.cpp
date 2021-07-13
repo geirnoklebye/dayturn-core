@@ -1649,7 +1649,13 @@ void open_inventory_offer(const uuid_vec_t& objects, const std::string& from_nam
 				{
 				case LLAssetType::AT_NOTECARD:
 				{
-					LLFloaterReg::showInstance("preview_notecard", LLSD(obj_id), take_focus);
+//MK by CA - KKA-879/Bugsplat crashes 31 & 38 - don't try to use the floater we closed earlier (eg Open Attachment on group notice with notecard)
+					if (!gRRenabled || !gAgent.mRRInterface.contains("viewnote"))
+					{
+						LLFloaterReg::showInstance("preview_notecard", LLSD(obj_id), take_focus);
+					}
+//mk
+					//LLFloaterReg::showInstance("preview_notecard", LLSD(obj_id), take_focus);
 					break;
 				}
 				case LLAssetType::AT_LANDMARK:
