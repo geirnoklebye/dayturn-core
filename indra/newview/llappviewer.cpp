@@ -6279,13 +6279,14 @@ void LLAppViewer::handleLoginComplete()
 // static
 void LLAppViewer::setViewerWindowTitle()
 {
+	//KKA-880 Bugsplat #40 & #41 - protect against calling pre-login which can happen after restoring settings
 	std::string title = "";
 
-	if (gSavedSettings.getBOOL("WindowTitleAvatarName")) {
+	if (gSavedSettings.getBOOL("WindowTitleAvatarName") && gAgentAvatarp) {
 		title += gAgentAvatarp->getFullname() + " - ";
 	}
 
-	if (gSavedSettings.getBOOL("WindowTitleGridName")) {
+	if (gSavedSettings.getBOOL("WindowTitleGridName") && LLGridManager::getInstance()) {
 		title += LLGridManager::getInstance()->getGridLabel() + " - ";
 	}
 
