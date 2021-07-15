@@ -674,29 +674,15 @@
        label="Movement"
        name="Movement"
        tear_off="true">
-        <menu_item_call
-         label="Sit Down"
+      <menu_item_call
+         label="Sit / stand"
          layout="topleft"
          shortcut="alt|shift|S"
-         name="Sit Down Here">
+         name="Sit stand">
           <menu_item_call.on_click
-           function="Self.SitDown"/>
-          <menu_item_call.on_visible
-           function="Self.ShowSitDown"/>
+           function="Self.ToggleSitStand"/>
           <menu_item_call.on_enable
-           function="Self.EnableSitDown" />
-        </menu_item_call>
-        <menu_item_call
-         label="Stand Up"
-         layout="topleft"
-         shortcut="alt|shift|S"
-         name="Stand up">
-          <menu_item_call.on_click
-           function="Self.StandUp"/>
-          <menu_item_call.on_visible
-           function="Self.EnableStandUp"/>
-          <menu_item_call.on_enable
-           function="Self.EnableStandUp" />
+           function="Self.EnableSitStand" />
         </menu_item_call>
         <menu_item_check
          label="Fly"

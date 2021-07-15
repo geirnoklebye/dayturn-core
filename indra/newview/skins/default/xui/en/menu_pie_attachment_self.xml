@@ -23,19 +23,19 @@
         start_autohide="true"
         name="Sit Down Here">
         <pie_slice.on_click
-            function="Self.SitDown"
+            function="Self.ToggleSitStand"
             parameter="" />
         <pie_slice.on_enable
-            function="Self.EnableSitDown" />
+            function="Self.EnableSitStand" />
     </pie_slice>
     <pie_slice
         label="Stand Up"
         autohide="true"
         name="Stand Up">
         <pie_slice.on_click
-            function="Self.StandUp" />
+            function="Self.ToggleSitStand" />
         <pie_slice.on_enable
-            function="Self.EnableStandUp" />
+            function="Self.EnableSitStand" />
     </pie_slice>
     <pie_slice
         enabled="false"
