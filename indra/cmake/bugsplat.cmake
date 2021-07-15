@@ -1,13 +1,14 @@
-if (INSTALL_PROPRIETARY)
+# Kokua doesn't use INSTALL_PROPRIETARY, but we do use BugSplat, so...
+#if (INSTALL_PROPRIETARY)
     # Note that viewer_manifest.py makes decision based on BUGSPLAT_DB and not USE_BUGSPLAT
     if (BUGSPLAT_DB)
-        set(USE_BUGSPLAT ON  CACHE BOOL "Use the BugSplat crash reporting system")
+        set(USE_BUGSPLAT ON  CACHE BOOL "Use the BugSplat crash reporting system" FORCE)
     else (BUGSPLAT_DB)
-        set(USE_BUGSPLAT OFF CACHE BOOL "Use the BugSplat crash reporting system")
+        set(USE_BUGSPLAT OFF CACHE BOOL "Use the BugSplat crash reporting system" FORCE)
     endif (BUGSPLAT_DB)
-else (INSTALL_PROPRIETARY)
-    set(USE_BUGSPLAT OFF CACHE BOOL "Use the BugSplat crash reporting system")
-endif (INSTALL_PROPRIETARY)
+#else (INSTALL_PROPRIETARY)
+#    set(USE_BUGSPLAT OFF CACHE BOOL "Use the BugSplat crash reporting system")
+#endif (INSTALL_PROPRIETARY)
 
 if (USE_BUGSPLAT)
     if (NOT USESYSTEMLIBS)
