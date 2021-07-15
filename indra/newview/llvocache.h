@@ -106,7 +106,7 @@ public:
 	F32 getSceneContribution() const             { return mSceneContrib;}
 
 	void dump() const;
-	BOOL writeToFile(LLAPRFile* apr_file) const;
+	S32 writeToBuffer(U8 *data_buffer) const;
 	LLDataPackerBinaryBuffer *getDP();
 // [SL:KB] - Patch: World-Derender | Checked: 2014-08-10 (Catznip-3.7)
 	const U8* getDPBuffer() const;

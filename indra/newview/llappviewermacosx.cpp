@@ -70,22 +70,7 @@ namespace
 	int gArgC;
 	char** gArgV;
 	LLAppViewerMacOSX* gViewerAppPtr = NULL;
-
-    void (*gOldTerminateHandler)() = NULL;
     std::string gHandleSLURL;
-}
-
-static void exceptionTerminateHandler()
-{
-	// reinstall default terminate() handler in case we re-terminate.
-	if (gOldTerminateHandler) std::set_terminate(gOldTerminateHandler);
-	// treat this like a regular viewer crash, with nice stacktrace etc.
-    long *null_ptr;
-    null_ptr = 0;
-    *null_ptr = 0xDEADBEEF; //Force an exception that will trigger breakpad.
-	//LLAppViewer::handleViewerCrash();
-	// we've probably been killed-off before now, but...
-	gOldTerminateHandler(); // call old terminate() handler
 }
 
 void constructViewer()
@@ -93,15 +78,12 @@ void constructViewer()
 	// Set the working dir to <bundle>/Contents/Resources
 	if (chdir(gDirUtilp->getAppRODataDir().c_str()) == -1)
 	{
-		LL_WARNS() << "Could not change directory to "
+		LL_WARNS("InitOSX") << "Could not change directory to "
 				<< gDirUtilp->getAppRODataDir() << ": " << strerror(errno)
 				<< LL_ENDL;
 	}
 
 	gViewerAppPtr = new LLAppViewerMacOSX();
-
-    // install unexpected exception handler
-	gOldTerminateHandler = std::set_terminate(exceptionTerminateHandler);
 
 	gViewerAppPtr->setErrorHandler(LLAppViewer::handleViewerCrash);
 }
@@ -111,7 +93,7 @@ bool initViewer()
 	bool ok = gViewerAppPtr->init();
 	if(!ok)
 	{
-		LL_WARNS() << "Application init failed." << LL_ENDL;
+		LL_WARNS("InitOSX") << "Application init failed." << LL_ENDL;
 	}
 	else if (!gHandleSLURL.empty())
 	{
@@ -174,7 +156,7 @@ class CrashMetadataSingleton: public CrashMetadata, public LLSingleton<CrashMeta
     std::string get_metadata(const LLSD& info, const LLSD::String& key) const
     {
         std::string data(info[key].asString());
-        LL_INFOS() << "  " << key << "='" << data << "'" << LL_ENDL;
+        LL_INFOS("Bugsplat") << "  " << key << "='" << data << "'" << LL_ENDL;
         return data;
     }
 };
@@ -190,22 +172,22 @@ CrashMetadataSingleton::CrashMetadataSingleton()
     LLSD info;
     if (! static_file.is_open())
     {
-        LL_INFOS() << "Can't open '" << staticDebugPathname
+        LL_WARNS("Bugsplat") << "Can't open '" << staticDebugPathname
                    << "'; no metadata about previous run" << LL_ENDL;
     }
     else if (! LLSDSerialize::deserialize(info, static_file, LLSDSerialize::SIZE_UNLIMITED))
     {
-        LL_INFOS() << "Can't parse '" << staticDebugPathname
+        LL_WARNS("Bugsplat") << "Can't parse '" << staticDebugPathname
                    << "'; no metadata about previous run" << LL_ENDL;
     }
     else
     {
-        LL_INFOS() << "Metadata from '" << staticDebugPathname << "':" << LL_ENDL;
-        logFilePathname         = get_metadata(info, "SLLog");
-        userSettingsPathname    = get_metadata(info, "SettingsFilename");
+        LL_INFOS("Bugsplat") << "Previous run metadata from '" << staticDebugPathname << "':" << LL_ENDL;
+        logFilePathname      = get_metadata(info, "SLLog");
+        userSettingsPathname = get_metadata(info, "SettingsFilename");
         accountSettingsPathname = get_metadata(info, "PerAccountSettingsFilename");
-        OSInfo                  = get_metadata(info, "OSInfo");
-        agentFullname           = get_metadata(info, "LoginName");
+        OSInfo               = get_metadata(info, "OSInfo");
+        agentFullname        = get_metadata(info, "LoginName");
         // Translate underscores back to spaces
         LLStringUtil::replaceChar(agentFullname, '_', ' ');
         regionName           = get_metadata(info, "CurrentRegion");
@@ -221,7 +203,7 @@ CrashMetadata& CrashMetadata_instance()
 
 void infos(const std::string& message)
 {
-    LL_INFOS() << message << LL_ENDL;
+    LL_INFOS("InitOSX", "Bugsplat") << message << LL_ENDL;
 }
 
 int main( int argc, char **argv ) 
@@ -244,14 +226,11 @@ bool LLAppViewerMacOSX::init()
 {
 	bool success = LLAppViewer::init();
     
-#if LL_SEND_CRASH_REPORTS
     if (success)
     {
         LLAppViewer* pApp = LLAppViewer::instance();
         pApp->initCrashReporting();
     }
-#endif
-    
     return success;
 }
 
@@ -336,11 +315,12 @@ bool LLAppViewerMacOSX::restoreErrorTrap()
 	
 	unsigned int reset_count = 0;
 	
-#define SET_SIG(S) 	sigaction(SIGABRT, &act, &old_act); \
-					if(act.sa_sigaction != old_act.sa_sigaction) \
-						++reset_count;
+#define SET_SIG(SIGNAL) sigaction(SIGNAL, &act, &old_act); \
+                        if(act.sa_sigaction != old_act.sa_sigaction) ++reset_count;
 	// Synchronous signals
-	SET_SIG(SIGABRT)
+#   ifndef LL_BUGSPLAT
+	SET_SIG(SIGABRT) // let bugsplat catch this
+#   endif        
 	SET_SIG(SIGALRM)
 	SET_SIG(SIGBUS)
 	SET_SIG(SIGFPE)
@@ -371,6 +351,10 @@ bool LLAppViewerMacOSX::restoreErrorTrap()
 
 void LLAppViewerMacOSX::initCrashReporting(bool reportFreeze)
 {
+#if defined LL_BUGSPLAT
+    LL_DEBUGS("InitOSX", "Bugsplat") << "using BugSplat crash logger" << LL_ENDL;
+#elif LL_SEND_CRASH_REPORTS
+    LL_DEBUGS("InitOSX") << "Initializing legacy crash logger" << LL_ENDL;
 	std::string command_str = "mac-crash-logger.app";
     
     std::stringstream pid_str;
@@ -382,6 +366,9 @@ void LLAppViewerMacOSX::initCrashReporting(bool reportFreeze)
     LL_WARNS() << "about to launch mac-crash-logger" << pid_str.str()
                << " " << logdir << " " << appname << LL_ENDL;
     launchApplication(&command_str, &args);
+#else
+    LL_DEBUGS("InitOSX") << "No crash logger enabled" << LL_ENDL;    
+#endif // ! LL_BUGSPLAT
 }
 
 std::string LLAppViewerMacOSX::generateSerialNumber()
@@ -393,7 +380,8 @@ std::string LLAppViewerMacOSX::generateSerialNumber()
 	CFStringRef serialNumber = NULL;
 	io_service_t    platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault,
 																 IOServiceMatching("IOPlatformExpertDevice"));
-	if (platformExpert) {
+	if (platformExpert)
+    {
 		serialNumber = (CFStringRef) IORegistryEntryCreateCFProperty(platformExpert,
 																	 CFSTR(kIOPlatformSerialNumberKey),
 																	 kCFAllocatorDefault, 0);		

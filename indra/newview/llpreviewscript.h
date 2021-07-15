@@ -214,7 +214,7 @@ public:
 	// <FS:Ansariel> FIRE-16740: Color syntax highlighting changes don't immediately appear in script window
 	void updateStyle();
 protected:
-	std::string		getTmpFileName();
+	std::string		getTmpFileName(const std::string& script_name);
 	bool			onExternalChange(const std::string& filename);
 	virtual void	saveIfNeeded(bool sync = true) = 0;
 

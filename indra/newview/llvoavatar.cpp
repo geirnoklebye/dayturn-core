@@ -11069,7 +11069,8 @@ void LLVOAvatar::accountRenderComplexityForObject(
                             LL_DEBUGS("ARCdetail") << "Attachment costs " << attached_object->getAttachmentItemID()
                                                    << " total: " << attachment_total_cost
                                                    << ", volume: " << attachment_volume_cost
-                                                   << ", textures: " << attachment_texture_cost
+                                                   << ", " << textures.size()
+                                                   << " textures: " << attachment_texture_cost
                                                    << ", " << volume->numChildren()
                                                    << " children: " << attachment_children_cost
                                                    << LL_ENDL;
@@ -11169,10 +11170,23 @@ void LLVOAvatar::calculateUpdateRenderComplexity()
 			ETextureIndex tex_index = baked_dict->mTextureIndex;
 			if ((tex_index != TEX_SKIRT_BAKED) || (isWearingWearableType(LLWearableType::WT_SKIRT)))
 			{
-				if (isTextureVisible(tex_index))
-				{
-					cost +=COMPLEXITY_BODY_PART_COST;
-				}
+                // Same as isTextureVisible(), but doesn't account for isSelf to ensure identical numbers for all avatars
+                if (isIndexLocalTexture(tex_index))
+                {
+                    if (isTextureDefined(tex_index, 0))
+                    {
+                        cost += COMPLEXITY_BODY_PART_COST;
+                    }
+                }
+                else
+                {
+                    // baked textures can use TE images directly
+                    if (isTextureDefined(tex_index)
+                        && (getTEImage(tex_index)->getID() != IMG_INVISIBLE || LLDrawPoolAlpha::sShowDebugAlpha))
+                    {
+                        cost += COMPLEXITY_BODY_PART_COST;
+                    }
+                }
 			}
 		}
         LL_DEBUGS("ARCdetail") << "Avatar body parts complexity: " << cost << LL_ENDL;
@@ -11221,59 +11235,56 @@ void LLVOAvatar::calculateUpdateRenderComplexity()
 
 		// Diagnostic output to identify all avatar-related textures.
 		// Does not affect rendering cost calculation.
-		// Could be wrapped in a debug option if output becomes problematic.
-		// <FS:Ansariel> Disable useless diagnostics
-		//if (isSelf())
-		//{
-		//	// print any attachment textures we didn't already know about.
-		//	for (LLVOVolume::texture_cost_t::iterator it = textures.begin(); it != textures.end(); ++it)
-		//	{
-		//		LLUUID image_id = it->first;
-		//		if( ! (image_id.isNull() || image_id == IMG_DEFAULT || image_id == IMG_DEFAULT_AVATAR)
-		//		   && (all_textures.find(image_id) == all_textures.end()))
-		//		{
-		//			// attachment texture not previously seen.
-		//			LL_DEBUGS("ARCdetail") << "attachment_texture: " << image_id.asString() << LL_ENDL;
-		//			all_textures.insert(image_id);
-		//		}
-		//	}
+		if (isSelf() && debugLoggingEnabled("ARCdetail"))
+		{
+			// print any attachment textures we didn't already know about.
+			for (LLVOVolume::texture_cost_t::iterator it = textures.begin(); it != textures.end(); ++it)
+			{
+				LLUUID image_id = it->first;
+				if( ! (image_id.isNull() || image_id == IMG_DEFAULT || image_id == IMG_DEFAULT_AVATAR)
+				   && (all_textures.find(image_id) == all_textures.end()))
+				{
+					// attachment texture not previously seen.
+					LL_DEBUGS("ARCdetail") << "attachment_texture: " << image_id.asString() << LL_ENDL;
+					all_textures.insert(image_id);
+				}
+			}
 
-		//	// print any avatar textures we didn't already know about
-		//     for (LLAvatarAppearanceDictionary::Textures::const_iterator iter = LLAvatarAppearance::getDictionary()->getTextures().begin();
-		//	    iter != LLAvatarAppearance::getDictionary()->getTextures().end();
-		//		 ++iter)
-		//	{
-		//	    const LLAvatarAppearanceDictionary::TextureEntry *texture_dict = iter->second;
-		//		// TODO: MULTI-WEARABLE: handle multiple textures for self
-		//		const LLViewerTexture* te_image = getImage(iter->first,0);
-		//		if (!te_image)
-		//			continue;
-		//		LLUUID image_id = te_image->getID();
-		//		if( image_id.isNull() || image_id == IMG_DEFAULT || image_id == IMG_DEFAULT_AVATAR)
-		//			continue;
-		//		if (all_textures.find(image_id) == all_textures.end())
-		//		{
-		//			LL_DEBUGS("ARCdetail") << "local_texture: " << texture_dict->mName << ": " << image_id << LL_ENDL;
-		//			all_textures.insert(image_id);
-		//		}
-		//	}
-		//}
-		// </FS:Ansariel>
+			// print any avatar textures we didn't already know about
+		    for (LLAvatarAppearanceDictionary::Textures::const_iterator iter = LLAvatarAppearance::getDictionary()->getTextures().begin();
+			 iter != LLAvatarAppearance::getDictionary()->getTextures().end();
+				 ++iter)
+			{
+			    const LLAvatarAppearanceDictionary::TextureEntry *texture_dict = iter->second;
+				// TODO: MULTI-WEARABLE: handle multiple textures for self
+				const LLViewerTexture* te_image = getImage(iter->first,0);
+				if (!te_image)
+					continue;
+				LLUUID image_id = te_image->getID();
+				if( image_id.isNull() || image_id == IMG_DEFAULT || image_id == IMG_DEFAULT_AVATAR)
+					continue;
+				if (all_textures.find(image_id) == all_textures.end())
+				{
+					LL_DEBUGS("ARCdetail") << "local_texture: " << texture_dict->mName << ": " << image_id << LL_ENDL;
+					all_textures.insert(image_id);
+				}
+			}
+		}
 
-    if ( cost != mVisualComplexity )
-    {
-        LL_DEBUGS("AvatarRender") << "Avatar "<< getID()
-                                  << " complexity updated was " << mVisualComplexity << " now " << cost
-                                  << " reported " << mReportedVisualComplexity
-                                  << LL_ENDL;
-    }
-    else
-    {
-        LL_DEBUGS("AvatarRender") << "Avatar "<< getID()
-                                  << " complexity updated no change " << mVisualComplexity
-                                  << " reported " << mReportedVisualComplexity
-                                  << LL_ENDL;
-    }
+        if ( cost != mVisualComplexity )
+        {
+            LL_DEBUGS("AvatarRender") << "Avatar "<< getID()
+                                      << " complexity updated was " << mVisualComplexity << " now " << cost
+                                      << " reported " << mReportedVisualComplexity
+                                      << LL_ENDL;
+        }
+        else
+        {
+            LL_DEBUGS("AvatarRender") << "Avatar "<< getID()
+                                      << " complexity updated no change " << mVisualComplexity
+                                      << " reported " << mReportedVisualComplexity
+                                      << LL_ENDL;
+        }
 		mVisualComplexity = cost;
 		mVisualComplexityStale = false;
 
