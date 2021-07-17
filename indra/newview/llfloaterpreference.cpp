@@ -355,6 +355,9 @@ LLFloaterPreference::LLFloaterPreference(const LLSD& key)
 	mCommitCallbackRegistrar.add("Pref.SpellChecker",           boost::bind(&LLFloaterPreference::onClickSpellChecker, this));
 	mCommitCallbackRegistrar.add("Pref.Advanced",				boost::bind(&LLFloaterPreference::onClickAdvanced, this));
 
+  //from Advanced
+	mCommitCallbackRegistrar.add("Pref.UpdateIndirectMaxNonImpostors", boost::bind(&LLFloaterPreference::updateMaxNonImpostorsAdvanced,this));
+
 	sSkin = gSavedSettings.getString("SkinCurrent");
 
 	mCommitCallbackRegistrar.add("Pref.ClickActionChange",		boost::bind(&LLFloaterPreference::onClickActionChange, this));
@@ -375,6 +378,8 @@ LLFloaterPreference::LLFloaterPreference(const LLSD& key)
 	mCommitCallbackRegistrar.add("PreviewUISound",				boost::bind(&LLFloaterPreference::onClickPreviewUISound, this, _2));
 	mCommitCallbackRegistrar.add("Pref.BrowseCrashLogs",		boost::bind(&LLFloaterPreference::onClickBrowseCrashLogs, this));
 	mCommitCallbackRegistrar.add("Pref.BrowseSettingsDir",		boost::bind(&LLFloaterPreference::onClickBrowseSettingsDir, this));
+	// <FS:Ansariel> Dynamic texture memory calculation
+	gSavedSettings.getControl("FSDynamicTextureMemory")->getCommitSignal()->connect(boost::bind(&LLFloaterPreference::handleDynamicTextureMemoryChanged, this));
 }
 
 void LLFloaterPreference::processProperties( void* pData, EAvatarProcessorType type )
@@ -574,7 +579,7 @@ BOOL LLFloaterPreference::postBuild()
 	// <FS:Kadah> Load the list of font settings
 	populateFontSelectionCombo();
 	// </FS:Kadah>
-	return TRUE;
+	return postBuildAdvanced();
 }
 
 // ## Zi: Pie menu
@@ -640,9 +645,22 @@ void LLFloaterPreference::onNameTagShowAgeLimitChanged()
 
 void LLFloaterPreference::updateDeleteTranscriptsButton()
 {
-	std::vector<std::string> list_of_transcriptions_file_names;
-	LLLogChat::getListOfTranscriptFiles(list_of_transcriptions_file_names);
-	getChild<LLButton>("delete_transcripts")->setEnabled(list_of_transcriptions_file_names.size() > 0);
+	// <FS:ND> LLLogChat::getListOfTranscriptFiles will go through the whole chatlog dir, reach a bit of each file,
+	// then append this file to the return-list if it seems to be valid.
+	// All this only to see if there is at least one item.
+	// There's two ways to make this faster:
+	//   1. Make a new function which returns just true/false and exist with true as soon as one valid file is found.
+	//   2. Always enable this button.
+	// There seems to be little reason why this button should ever be disabled, so 2. it is, unless someone knows 
+	// a good reason why 1. is the better way to handle this.
+	
+	// std::vector<std::string> list_of_transcriptions_file_names;
+	// LLLogChat::getListOfTranscriptFiles(list_of_transcriptions_file_names);
+	// getChild<LLButton>("delete_transcripts")->setEnabled(list_of_transcriptions_file_names.size() > 0);
+
+	getChild<LLButton>("delete_transcripts")->setEnabled( true );
+
+	// </FS:ND>
 }
 
 void LLFloaterPreference::onDoNotDisturbResponseChanged()
@@ -775,8 +793,8 @@ void LLFloaterPreference::cancel()
 	// hide spellchecker settings folder
 	LLFloaterReg::hideInstance("prefs_spellchecker");
 
-	// hide advanced graphics floater
-	LLFloaterReg::hideInstance("prefs_graphics_advanced");
+//	// hide advanced graphics floater
+//	LLFloaterReg::hideInstance("prefs_graphics_advanced");
 	
 	// reverts any changes to current skin
 	gSavedSettings.setString("SkinCurrent", sSkin);
@@ -933,38 +951,35 @@ void LLFloaterPreference::onOpen(const LLSD& key)
 void LLFloaterPreference::onRenderOptionEnable()
 {
 	refreshEnabledGraphics();
+	onRenderOptionEnableAdvanced();
 }
 
-void LLFloaterPreferenceGraphicsAdvanced::onRenderOptionEnable()
+void LLFloaterPreference::onRenderOptionEnableAdvanced()
+{  
+	LLFloaterPreference* instance = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
+	if (instance)
+	{
+		instance->refresh();
+	}
+}
+
+void LLFloaterPreference::onAdvancedAtmosphericsEnableAdvanced()
 {
 	LLFloaterPreference* instance = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
 	if (instance)
 	{
 		instance->refresh();
 	}
-
-	refreshEnabledGraphics();
 }
 
-void LLFloaterPreferenceGraphicsAdvanced::onAdvancedAtmosphericsEnable()
+void LLFloaterPreference::refreshEnabledGraphicsAdvanced()
 {
-	LLFloaterPreference* instance = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
-	if (instance)
-	{
-		instance->refresh();
-	}
-
-	refreshEnabledGraphics();
-}
-
-void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledGraphics()
-{
-	refreshEnabledState();
+	refreshEnabledStateAdvanced();
 }
 
 void LLFloaterPreference::onAvatarImpostorsEnable()
 {
-	refreshEnabledGraphics();
+	refreshEnabledGraphicsAdvanced();
 }
 
 //static
@@ -1023,11 +1038,20 @@ void LLFloaterPreference::getControlNames(std::vector<std::string>& names)
 {
 	LLView* view = findChild<LLView>("display");
 	LLFloater* advanced = LLFloaterReg::findTypedInstance<LLFloater>("prefs_graphics_advanced");
-	if (view && advanced)
+	// <FS:Ansariel> Improved graphics preferences
+	//if (view && advanced)
+	if (view)
+	// </FS:Ansariel>
 	{
 		std::list<LLView*> stack;
 		stack.push_back(view);
-		stack.push_back(advanced);
+		// <FS:Ansariel> Improved graphics preferences
+		//stack.push_back(advanced);
+		if (advanced)
+		{
+			stack.push_back(advanced);
+		}
+		// </FS:Ansariel>
 		while(!stack.empty())
 		{
 			// Process view on top of the stack
@@ -1182,12 +1206,7 @@ void LLFloaterPreference::refreshEnabledGraphics()
 	if (instance)
 	{
 		instance->refresh();
-	}
-
-	LLFloater* advanced = LLFloaterReg::findTypedInstance<LLFloater>("prefs_graphics_advanced");
-	if (advanced)
-	{
-		advanced->refresh();
+		instance->refreshEnabledGraphicsAdvanced();
 	}
 }
 
@@ -1489,9 +1508,32 @@ void LLFloaterPreference::refreshEnabledState()
 	getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
 
 	getChildView("block_list")->setEnabled(LLLoginInstance::getInstance()->authSuccess());
+	refreshEnabledStateAdvanced();
 }
+// <FS:Ansariel> Dynamic texture memory calculation
+void LLFloaterPreference::handleDynamicTextureMemoryChanged()
+{
+	if (LLViewerTextureList::canUseDynamicTextureMemory())
+	{
+		bool dynamic_tex_mem_enabled = gSavedSettings.getBOOL("FSDynamicTextureMemory");
+		childSetEnabled("FSDynamicTextureMemory", true);
+		childSetEnabled("FSDynamicTextureMemoryMinTextureMemory", dynamic_tex_mem_enabled);
+		childSetEnabled("FSDynamicTextureMemoryCacheReserve", dynamic_tex_mem_enabled);
+		childSetEnabled("FSDynamicTextureMemoryGPUReserve", dynamic_tex_mem_enabled);
+		childSetEnabled("GraphicsCardTextureMemory", !dynamic_tex_mem_enabled);
+	}
+	else
+	{
+		childSetEnabled("FSDynamicTextureMemory", false);
+		childSetEnabled("FSDynamicTextureMemoryMinTextureMemory", false);
+		childSetEnabled("FSDynamicTextureMemoryCacheReserve", false);
+		childSetEnabled("FSDynamicTextureMemoryGPUReserve", false);
+		childSetEnabled("GraphicsCardTextureMemory", true);
+	}
+}
+// </FS:Ansariel>
 
-void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
+void LLFloaterPreference::refreshEnabledStateAdvanced()
 {
 	LLComboBox* ctrl_reflections = getChild<LLComboBox>("Reflections");
 	LLTextBox* reflections_text = getChild<LLTextBox>("ReflectionsText");
@@ -1631,6 +1673,9 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
 	getChild<LLSliderCtrl>("GraphicsCardTextureMemory")->setMinValue(min_tex_mem.value());
 	getChild<LLSliderCtrl>("GraphicsCardTextureMemory")->setMaxValue(max_tex_mem.value());
 
+	// <FS:Ansariel> Dynamic texture memory calculation
+	handleDynamicTextureMemoryChanged();
+
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderVBOEnable") ||
 		!gGLManager.mHasVertexBufferObject)
 	{
@@ -1651,7 +1696,7 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
 	getChildView("antialiasing restart")->setVisible(!LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred"));
 
 	// now turn off any features that are unavailable
-	disableUnavailableSettings();
+	disableUnavailableSettingsAdvanced();
 }
 
 // static
@@ -1696,7 +1741,7 @@ void LLAvatarComplexityControls::setIndirectMaxArc()
 	gSavedSettings.setU32("IndirectMaxComplexity", indirect_max_arc);
 }
 
-void LLFloaterPreferenceGraphicsAdvanced::disableUnavailableSettings()
+void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 {	
 	LLComboBox* ctrl_reflections   = getChild<LLComboBox>("Reflections");
 	LLTextBox* reflections_text = getChild<LLTextBox>("ReflectionsText");
@@ -1815,38 +1860,33 @@ void LLFloaterPreference::refresh()
         gSavedSettings.getU32("RenderAvatarMaxComplexity"),
         getChild<LLTextBox>("IndirectMaxComplexityText", true));
 	refreshEnabledState();
-	LLFloater* advanced = LLFloaterReg::findTypedInstance<LLFloater>("prefs_graphics_advanced");
-	if (advanced)
-	{
-		advanced->refresh();
-	}
+	refreshAdvanced();
     updateClickActionViews();
 }
 
-void LLFloaterPreferenceGraphicsAdvanced::refresh()
+void LLFloaterPreference::refreshAdvanced()
 {
 	getChild<LLUICtrl>("fsaa")->setValue((LLSD::Integer)  gSavedSettings.getU32("RenderFSAASamples"));
 
 	// sliders and their text boxes
 	//	mPostProcess = gSavedSettings.getS32("RenderGlowResolutionPow");
 	// slider text boxes
-	updateSliderText(getChild<LLSliderCtrl>("ObjectMeshDetail",		true), getChild<LLTextBox>("ObjectMeshDetailText",		true));
-	updateSliderText(getChild<LLSliderCtrl>("ObjectMeshDetail2",		true), getChild<LLTextBox>("ObjectMeshDetailText2",		true));
-	updateSliderText(getChild<LLSliderCtrl>("FlexibleMeshDetail",	true), getChild<LLTextBox>("FlexibleMeshDetailText",	true));
-	updateSliderText(getChild<LLSliderCtrl>("TreeMeshDetail",		true), getChild<LLTextBox>("TreeMeshDetailText",		true));
-	updateSliderText(getChild<LLSliderCtrl>("AvatarMeshDetail",		true), getChild<LLTextBox>("AvatarMeshDetailText",		true));
-	updateSliderText(getChild<LLSliderCtrl>("AvatarPhysicsDetail",	true), getChild<LLTextBox>("AvatarPhysicsDetailText",		true));
-	updateSliderText(getChild<LLSliderCtrl>("TerrainMeshDetail",	true), getChild<LLTextBox>("TerrainMeshDetailText",		true));
-	updateSliderText(getChild<LLSliderCtrl>("RenderPostProcess",	true), getChild<LLTextBox>("PostProcessText",			true));
-	updateSliderText(getChild<LLSliderCtrl>("SkyMeshDetail",		true), getChild<LLTextBox>("SkyMeshDetailText",			true));
-	updateSliderText(getChild<LLSliderCtrl>("TerrainDetail",		true), getChild<LLTextBox>("TerrainDetailText",			true));	
+	updateSliderTextAdvanced(getChild<LLSliderCtrl>("ObjectMeshDetail",		true), getChild<LLTextBox>("ObjectMeshDetailText",		true));
+	updateSliderTextAdvanced(getChild<LLSliderCtrl>("FlexibleMeshDetail",	true), getChild<LLTextBox>("FlexibleMeshDetailText",	true));
+	updateSliderTextAdvanced(getChild<LLSliderCtrl>("TreeMeshDetail",		true), getChild<LLTextBox>("TreeMeshDetailText",		true));
+	updateSliderTextAdvanced(getChild<LLSliderCtrl>("AvatarMeshDetail",		true), getChild<LLTextBox>("AvatarMeshDetailText",		true));
+	updateSliderTextAdvanced(getChild<LLSliderCtrl>("AvatarPhysicsDetail",	true), getChild<LLTextBox>("AvatarPhysicsDetailText",		true));
+	updateSliderTextAdvanced(getChild<LLSliderCtrl>("TerrainMeshDetail",	true), getChild<LLTextBox>("TerrainMeshDetailText",		true));
+	updateSliderTextAdvanced(getChild<LLSliderCtrl>("RenderPostProcess",	true), getChild<LLTextBox>("PostProcessText",			true));
+	updateSliderTextAdvanced(getChild<LLSliderCtrl>("SkyMeshDetail",		true), getChild<LLTextBox>("SkyMeshDetailText",			true));
+	updateSliderTextAdvanced(getChild<LLSliderCtrl>("TerrainDetail",		true), getChild<LLTextBox>("TerrainDetailText",			true));	
     LLAvatarComplexityControls::setIndirectControls();
-	setMaxNonImpostorsText(
+	setMaxNonImpostorsTextAdvanced(
         gSavedSettings.getU32("RenderAvatarMaxNonImpostors"),
         getChild<LLTextBox>("IndirectMaxNonImpostorsText", true));
     LLAvatarComplexityControls::setText(
-        gSavedSettings.getU32("RenderAvatarMaxComplexity"),
-        getChild<LLTextBox>("IndirectMaxComplexityText", true));
+        gSavedSettings.getU32("RenderAvatarMaxComplexityAdvanced"),
+        getChild<LLTextBox>("IndirectMaxComplexityTextAdvanced", true));
 	refreshEnabledState();
 }
 
@@ -2082,7 +2122,7 @@ void LLFloaterPreference::refreshUI()
 	refresh();
 }
 
-void LLFloaterPreferenceGraphicsAdvanced::updateSliderText(LLSliderCtrl* ctrl, LLTextBox* text_box)
+void LLFloaterPreference::updateSliderTextAdvanced(LLSliderCtrl* ctrl, LLTextBox* text_box)
 {
 	if (text_box == NULL || ctrl== NULL)
 		return;
@@ -2111,7 +2151,7 @@ void LLFloaterPreferenceGraphicsAdvanced::updateSliderText(LLSliderCtrl* ctrl, L
 	}
 }
 
-void LLFloaterPreferenceGraphicsAdvanced::updateMaxNonImpostors()
+void LLFloaterPreference::updateMaxNonImpostorsAdvanced()
 {
 	// Called when the IndirectMaxNonImpostors control changes
 	// Responsible for fixing the slider label (IndirectMaxNonImpostorsText) and setting RenderAvatarMaxNonImpostors
@@ -2124,10 +2164,10 @@ void LLFloaterPreferenceGraphicsAdvanced::updateMaxNonImpostors()
 	}
 	gSavedSettings.setU32("RenderAvatarMaxNonImpostors", value);
 	LLVOAvatar::updateImpostorRendering(value); // make it effective immediately
-	setMaxNonImpostorsText(value, getChild<LLTextBox>("IndirectMaxNonImpostorsText"));
+	setMaxNonImpostorsTextAdvanced(value, getChild<LLTextBox>("IndirectMaxNonImpostorsText"));
 }
 
-void LLFloaterPreferenceGraphicsAdvanced::setMaxNonImpostorsText(U32 value, LLTextBox* text_box)
+void LLFloaterPreference::setMaxNonImpostorsTextAdvanced(U32 value, LLTextBox* text_box)
 {
 	if (0 == value)
 	{
@@ -2182,14 +2222,9 @@ void LLFloaterPreference::updateMaxComplexity()
     LLAvatarComplexityControls::updateMax(
         getChild<LLSliderCtrl>("IndirectMaxComplexity"),
         getChild<LLTextBox>("IndirectMaxComplexityText"));
-
-    LLFloaterPreferenceGraphicsAdvanced* floater_graphics_advanced = LLFloaterReg::findTypedInstance<LLFloaterPreferenceGraphicsAdvanced>("prefs_graphics_advanced");
-    if (floater_graphics_advanced)
-    {
-        LLAvatarComplexityControls::updateMax(
-            floater_graphics_advanced->getChild<LLSliderCtrl>("IndirectMaxComplexity"),
-            floater_graphics_advanced->getChild<LLTextBox>("IndirectMaxComplexityText"));
-    }
+    LLAvatarComplexityControls::updateMax(
+        getChild<LLSliderCtrl>("IndirectMaxComplexityAdvanced"),
+        getChild<LLTextBox>("IndirectMaxComplexityTextAdvanced"));
 }
 
 bool LLFloaterPreference::loadFromFilename(const std::string& filename, std::map<std::string, std::string> &label_map)
@@ -2229,22 +2264,6 @@ bool LLFloaterPreference::loadFromFilename(const std::string& filename, std::map
     }
 
     return true;
-}
-
-void LLFloaterPreferenceGraphicsAdvanced::updateMaxComplexity()
-{
-	// Called when the IndirectMaxComplexity control changes
-    LLAvatarComplexityControls::updateMax(
-        getChild<LLSliderCtrl>("IndirectMaxComplexity"),
-        getChild<LLTextBox>("IndirectMaxComplexityText"));
-
-    LLFloaterPreference* floater_preferences = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
-    if (floater_preferences)
-    {
-        LLAvatarComplexityControls::updateMax(
-            floater_preferences->getChild<LLSliderCtrl>("IndirectMaxComplexity"),
-            floater_preferences->getChild<LLTextBox>("IndirectMaxComplexityText"));
-    }
 }
 
 void LLFloaterPreference::onChangeMaturity()
@@ -2939,8 +2958,21 @@ static LLPanelInjector<LLPanelPreferencePrivacy> t_pref_privacy("panel_preferenc
 
 BOOL LLPanelPreferenceGraphics::postBuild()
 {
-	LLFloaterReg::showInstance("prefs_graphics_advanced");
-	LLFloaterReg::hideInstance("prefs_graphics_advanced");
+
+//	LLFloaterReg::showInstance("prefs_graphics_advanced");
+//	LLFloaterReg::hideInstance("prefs_graphics_advanced");
+
+// Don't do this on Mac as their braindead GL versioning
+// sets this when 8x and 16x are indeed available
+//
+#if !LL_DARWIN
+	if (gGLManager.mIsIntel || gGLManager.mGLVersion < 3.f)
+	{ //remove FSAA settings above "4x"
+		LLComboBox* combo = getChild<LLComboBox>("fsaa");
+		combo->remove("8x");
+		combo->remove("16x");
+	}
+#endif
 
 	resetDirtyChilds();
 	setPresetText();
@@ -3684,17 +3716,17 @@ void LLPanelPreferenceControls::onCancelKeyBind()
     pControlsTable->deselectAllItems();
 }
 
-LLFloaterPreferenceGraphicsAdvanced::LLFloaterPreferenceGraphicsAdvanced(const LLSD& key)
-	: LLFloater(key)
-{
-    mCommitCallbackRegistrar.add("Pref.RenderOptionUpdate",            boost::bind(&LLFloaterPreferenceGraphicsAdvanced::onRenderOptionEnable, this));
-	mCommitCallbackRegistrar.add("Pref.UpdateIndirectMaxNonImpostors", boost::bind(&LLFloaterPreferenceGraphicsAdvanced::updateMaxNonImpostors,this));
-	mCommitCallbackRegistrar.add("Pref.UpdateIndirectMaxComplexity",   boost::bind(&LLFloaterPreferenceGraphicsAdvanced::updateMaxComplexity,this));
-}
+//LLFloaterPreferenceGraphicsAdvanced::LLFloaterPreferenceGraphicsAdvanced(const LLSD& key)
+//	: LLFloater(key)
+//{
+//    mCommitCallbackRegistrar.add("Pref.RenderOptionUpdate",            boost::bind(&LLFloaterPreferenceGraphicsAdvanced::onRenderOptionEnable, this));
+//	mCommitCallbackRegistrar.add("Pref.UpdateIndirectMaxNonImpostors", boost::bind(&LLFloaterPreferenceGraphicsAdvanced::updateMaxNonImpostors,this));
+//	mCommitCallbackRegistrar.add("Pref.UpdateIndirectMaxComplexity",   boost::bind(&LLFloaterPreferenceGraphicsAdvanced::updateMaxComplexity,this));
+//}
 
-LLFloaterPreferenceGraphicsAdvanced::~LLFloaterPreferenceGraphicsAdvanced()
-{
-}
+//LLFloaterPreferenceGraphicsAdvanced::~LLFloaterPreferenceGraphicsAdvanced()
+//{
+//}
 
 LLFloaterPreferenceProxy::LLFloaterPreferenceProxy(const LLSD& key)
 	: LLFloater(key),
@@ -3705,7 +3737,7 @@ LLFloaterPreferenceProxy::LLFloaterPreferenceProxy(const LLSD& key)
 	mCommitCallbackRegistrar.add("Proxy.Change",            boost::bind(&LLFloaterPreferenceProxy::onChangeSocksSettings, this));
 }
 
-BOOL LLFloaterPreferenceGraphicsAdvanced::postBuild()
+BOOL LLFloaterPreference::postBuildAdvanced()
 {
     // Don't do this on Mac as their braindead GL versioning
     // sets this when 8x and 16x are indeed available
@@ -3723,21 +3755,6 @@ BOOL LLFloaterPreferenceGraphicsAdvanced::postBuild()
 #endif
 
     return TRUE;
-}
-
-void LLFloaterPreferenceGraphicsAdvanced::onOpen(const LLSD& key)
-{
-    refresh();
-}
-
-void LLFloaterPreferenceGraphicsAdvanced::onClickCloseBtn(bool app_quitting)
-{
-	LLFloaterPreference* instance = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
-	if (instance)
-	{
-		instance->cancel();
-	}
-	updateMaxComplexity();
 }
 
 LLFloaterPreferenceProxy::~LLFloaterPreferenceProxy()

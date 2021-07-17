@@ -1343,14 +1343,16 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 			gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE); // make sure the atmospheric shaders are turned on
 			gSavedSettings.setBOOL("RenderDeferred", TRUE); // make sure Advanced Lighting Model is on
 			gSavedSettings.setBOOL("RenderDepthOfField", FALSE); // make sure DoF is off otherwise we can see through the sphere by looking through alpha-blended rigged surfaces
+		  //KKA-882 Advanced graphics floater forms additional tabs in Preferences/Graphics
 			LLFloaterPreference* preferences = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
 			if (preferences) {
 				preferences->refreshEnabledState();
+				preferences->refreshEnabledStateAdvanced();
 			}
-			LLFloaterPreferenceGraphicsAdvanced* floater_graphics_advanced = LLFloaterReg::findTypedInstance<LLFloaterPreferenceGraphicsAdvanced>("prefs_graphics_advanced");
-			if (floater_graphics_advanced) {
-				floater_graphics_advanced->refreshEnabledState();
-			}
+			//LLFloaterPreferenceGraphicsAdvanced* floater_graphics_advanced = LLFloaterReg::findTypedInstance<LLFloaterPreferenceGraphicsAdvanced>("prefs_graphics_advanced");
+			//if (floater_graphics_advanced) {
+			//	floater_graphics_advanced->refreshEnabledState();
+			//}
 			updateSetsphere();
 		}
 		else if (canon_action == "fartouch"
@@ -1510,13 +1512,15 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 	if (must_update_setsphere) {
 		updateSetsphere();
 		LLFloaterPreference* preferences = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
+		//KKA-882 Advanced graphics floater forms additional tabs in Preferences/Graphics
 		if (preferences) {
 			preferences->refreshEnabledState();
+			preferences->refreshEnabledStateAdvanced();
 		}
-		LLFloaterPreferenceGraphicsAdvanced* floater_graphics_advanced = LLFloaterReg::findTypedInstance<LLFloaterPreferenceGraphicsAdvanced>("prefs_graphics_advanced");
-		if (floater_graphics_advanced) {
-			floater_graphics_advanced->refreshEnabledState();
-		}
+		//LLFloaterPreferenceGraphicsAdvanced* floater_graphics_advanced = LLFloaterReg::findTypedInstance<LLFloaterPreferenceGraphicsAdvanced>("prefs_graphics_advanced");
+		//if (floater_graphics_advanced) {
+		//	floater_graphics_advanced->refreshEnabledState();
+		//}
 	}
 
 	return removed_behav;
@@ -1555,14 +1559,16 @@ BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 	updateCameraLimits();
 
 	updateSetsphere();
+	//KKA-882 Advanced graphics floater forms additional tabs in Preferences/Graphics
 	LLFloaterPreference* preferences = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
 	if (preferences) {
 		preferences->refreshEnabledState();
+		preferences->refreshEnabledStateAdvanced();
 	}
-	LLFloaterPreferenceGraphicsAdvanced* floater_graphics_advanced = LLFloaterReg::findTypedInstance<LLFloaterPreferenceGraphicsAdvanced>("prefs_graphics_advanced");
-	if (floater_graphics_advanced) {
-		floater_graphics_advanced->refreshEnabledState();
-	}
+	//LLFloaterPreferenceGraphicsAdvanced* floater_graphics_advanced = LLFloaterReg::findTypedInstance<LLFloaterPreferenceGraphicsAdvanced>("prefs_graphics_advanced");
+	//if (floater_graphics_advanced) {
+	//	floater_graphics_advanced->refreshEnabledState();
+	//}
 
 	updateLimits();
 	if (gAgentAvatarp && !gAgentAvatarp->isSitting()) { // If we are not sitting, then we can remove the @standtp restriction normally
