@@ -216,7 +216,9 @@ public:
 	std::set<LLViewerFetchedTexture*> mDirtyTextureList;
 	
 	BOOL mForceResetTextureStats;
-    
+
+	// <FS:Ansariel> Fast cache stats
+	static U32 sNumFastCacheReads;    
 private:
     typedef std::map< LLTextureKey, LLPointer<LLViewerFetchedTexture> > uuid_map_t;
     uuid_map_t mUUIDMap;
