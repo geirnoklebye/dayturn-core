@@ -129,6 +129,10 @@ public:
 	S32 getNumImages()					{ return mImageList.size(); }
 
 	void updateMaxResidentTexMem(S32Megabytes mem);
+	// <FS:Ansariel> Dynamic texture memory calculation
+	void updateTexMemDynamic();
+	static bool canUseDynamicTextureMemory();
+	// </FS:Ansariel>
 	
 	void doPreloadImages();
 	void doPrefetchImages();
@@ -212,7 +216,9 @@ public:
 	std::set<LLViewerFetchedTexture*> mDirtyTextureList;
 	
 	BOOL mForceResetTextureStats;
-    
+
+	// <FS:Ansariel> Fast cache stats
+	static U32 sNumFastCacheReads;    
 private:
     typedef std::map< LLTextureKey, LLPointer<LLViewerFetchedTexture> > uuid_map_t;
     uuid_map_t mUUIDMap;
