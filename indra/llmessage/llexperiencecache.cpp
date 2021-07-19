@@ -110,6 +110,8 @@ void LLExperienceCache::initSingleton()
         cache_stream >> (*this);
     }
 
+    LLCoprocedureManager::instance().initializePool("ExpCache");
+
     LLCoros::instance().launch("LLExperienceCache::idleCoro",
         boost::bind(&LLExperienceCache::idleCoro, this));
 

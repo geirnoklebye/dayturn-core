@@ -3809,7 +3809,7 @@ void LLAppearanceMgr::serverAppearanceUpdateCoro(LLCoreHttpUtil::HttpCoroutineAd
     }
 
     llcoro::suspend();
-    if (LLApp::isQuitting())
+    if (LLApp::isExiting())
     {
         return;
     }
@@ -3876,7 +3876,7 @@ void LLAppearanceMgr::serverAppearanceUpdateCoro(LLCoreHttpUtil::HttpCoroutineAd
 
         LLSD result = httpAdapter->postAndSuspend(httpRequest, url, postData);
 
-        if (LLApp::isQuitting())
+        if (LLApp::isExiting())
         {
             return;
         }
@@ -3950,7 +3950,7 @@ void LLAppearanceMgr::serverAppearanceUpdateCoro(LLCoreHttpUtil::HttpCoroutineAd
                 LL_WARNS("Avatar") << "Bake retry #" << retryCount << " in " << timeout << " seconds." << LL_ENDL;
 
                 llcoro::suspendUntilTimeout(timeout); 
-                if (LLApp::isQuitting())
+                if (LLApp::isExiting())
                 {
                     return;
                 }

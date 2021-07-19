@@ -340,6 +340,8 @@ void force_error_bad_memory_access(void *);
 void force_error_infinite_loop(void *);
 void force_error_software_exception(void *);
 void force_error_driver_crash(void *);
+void force_error_coroutine_crash(void *);
+void force_error_thread_crash(void *);
 
 void handle_force_delete(void*);
 void print_object_info(void*);
@@ -2442,6 +2444,24 @@ class LLAdvancedForceErrorDriverCrash : public view_listener_t
 		force_error_driver_crash(NULL);
 		return true;
 	}
+};
+
+class LLAdvancedForceErrorCoroutineCrash : public view_listener_t
+{
+    bool handleEvent(const LLSD& userdata)
+    {
+        force_error_coroutine_crash(NULL);
+        return true;
+    }
+};
+
+class LLAdvancedForceErrorThreadCrash : public view_listener_t
+{
+    bool handleEvent(const LLSD& userdata)
+    {
+        force_error_thread_crash(NULL);
+        return true;
+    }
 };
 
 class LLAdvancedForceErrorDisconnectViewer : public view_listener_t
@@ -4673,25 +4693,31 @@ void near_sit_down_point(BOOL success, void *)
 
 class LLLandSit : public view_listener_t
 {
-	bool handleEvent(const LLSD& userdata)
-	{
-		gAgent.standUp();
-		LLViewerParcelMgr::getInstance()->deselectLand();
+    bool handleEvent(const LLSD& userdata)
+    {
+        LLVector3d posGlobal = LLToolPie::getInstance()->getPick().mPosGlobal;
 
-		LLVector3d posGlobal = LLToolPie::getInstance()->getPick().mPosGlobal;
-		
-		LLQuaternion target_rot;
-		if (isAgentAvatarValid())
-		{
-			target_rot = gAgentAvatarp->getRotation();
-		}
-		else
-		{
-			target_rot = gAgent.getFrameAgent().getQuaternion();
-		}
-		gAgent.startAutoPilotGlobal(posGlobal, "Sit", &target_rot, near_sit_down_point, NULL, 0.7f);
-		return true;
-	}
+        LLQuaternion target_rot;
+        if (isAgentAvatarValid())
+        {
+            target_rot = gAgentAvatarp->getRotation();
+        }
+        else
+        {
+            target_rot = gAgent.getFrameAgent().getQuaternion();
+        }
+        gAgent.startAutoPilotGlobal(posGlobal, "Sit", &target_rot, near_sit_down_point, NULL, 0.7f);
+        return true;
+    }
+};
+
+class LLLandCanSit : public view_listener_t
+{
+    bool handleEvent(const LLSD& userdata)
+    {
+        LLVector3d posGlobal = LLToolPie::getInstance()->getPick().mPosGlobal;
+        return !posGlobal.isExactlyZero(); // valid position, not beyond draw distance
+    }
 };
 
 class LLLandTeleport : public view_listener_t
@@ -9651,6 +9677,16 @@ void force_error_driver_crash(void *)
     LLAppViewer::instance()->forceErrorDriverCrash();
 }
 
+void force_error_coroutine_crash(void *)
+{
+    LLAppViewer::instance()->forceErrorCoroutineCrash();
+}
+
+void force_error_thread_crash(void *)
+{
+    LLAppViewer::instance()->forceErrorThreadCrash();
+}
+
 //MK
 class LLGridModeWorld : public view_listener_t
 {
@@ -11189,6 +11225,8 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAdvancedForceErrorInfiniteLoop(), "Advanced.ForceErrorInfiniteLoop");
 	view_listener_t::addMenu(new LLAdvancedForceErrorSoftwareException(), "Advanced.ForceErrorSoftwareException");
 	view_listener_t::addMenu(new LLAdvancedForceErrorDriverCrash(), "Advanced.ForceErrorDriverCrash");
+    view_listener_t::addMenu(new LLAdvancedForceErrorCoroutineCrash(), "Advanced.ForceErrorCoroutineCrash");
+    view_listener_t::addMenu(new LLAdvancedForceErrorThreadCrash(), "Advanced.ForceErrorThreadCrash");
 	view_listener_t::addMenu(new LLAdvancedForceErrorDisconnectViewer(), "Advanced.ForceErrorDisconnectViewer");
 
 	// Advanced (toplevel)
@@ -11338,6 +11376,7 @@ void initialize_menus()
 	// Land pie menu
 	view_listener_t::addMenu(new LLLandBuild(), "Land.Build");
 	view_listener_t::addMenu(new LLLandSit(), "Land.Sit");
+    view_listener_t::addMenu(new LLLandCanSit(), "Land.CanSit");
 	view_listener_t::addMenu(new LLLandTeleport(), "Land.Teleport");
 	view_listener_t::addMenu(new LLLandBuyPass(), "Land.BuyPass");
 	view_listener_t::addMenu(new LLLandEdit(), "Land.Edit");
