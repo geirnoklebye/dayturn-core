@@ -20708,7 +20708,7 @@
   <key>FSAdvancedTooltips</key>
 	  <map>
 	    <key>Comment</key>
-	    <string>Show extended information in hovertips about objects (Firestorm/classic Phoenix style)</string>
+	    <string>Show extended information in hovertips about objects</string>
 	    <key>Persist</key>
 	    <integer>1</integer>
 	    <key>Type</key>
@@ -21082,7 +21082,7 @@
     <key>FSDynamicTextureMemory</key>
     <map>
       <key>Comment</key>
-      <string>If enabled, Firestorm dynamically uses available memory for textures</string>
+      <string>If enabled, the viewer dynamically uses available memory for textures</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
