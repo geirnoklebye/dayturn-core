@@ -68,7 +68,7 @@ if(TESTBUILD AND TESTBUILDPERIOD)
 endif(TESTBUILD AND TESTBUILDPERIOD)
 #</FS:Ansariel>
 
-add_definitions(-DLL_SEND_CRASH_REPORTS=1)
+
 add_subdirectory(cmake)
 
 add_subdirectory(${LIBS_OPEN_PREFIX}llaudio)
