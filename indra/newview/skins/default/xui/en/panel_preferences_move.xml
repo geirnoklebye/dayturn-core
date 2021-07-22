@@ -273,7 +273,7 @@
          layout="topleft"
          name="FSEnableRightclickMenuInMouselook"
          tool_tip="Opens pie/context menu in mouselook mode upon ALT + right mouse button"
-         top_pad="6"
+         top_pad="3"
          width="256" />
   <text
    type="string"
@@ -399,47 +399,13 @@
     <combo_box.commit_callback
      function="Pref.ClickActionChange"/>
   </combo_box>
-  <check_box
-   control_name="KokuaMouseBindingExactMask"
-   follows="left|top"
-   height="16"
-   label="Do not treat ALT/SHIFT/CTRL modified mouse clicks as unmodified"
-   layout="topleft"
-   left="82"
-   name="KokuaMouseBindingExactMask"
-   top_pad="7"
-   width="360" />
-  <text
-   follows="left|top"
-   type="string"
-   length="1"
-   height="10"
-   layout="topleft"
-   left="102"
-   name="KokuaMouseBindingExactMask2"
-   width="360"
-   top_pad="0">
-    mouse clicks when no specific ALT/SHIFT/CTRL modified binding exists
-  </text>
-  <text
-   follows="left|top"
-   type="string"
-   length="1"
-   height="10"
-   layout="topleft"
-   left="102"
-   name="KokuaMouseBindingExactMask3"
-   width="360"
-   top_pad="6">
-    For example: do not double click teleport on Alt-Double Click
-  </text>
   <button
    height="23"
    label="Other Devices"
    left="30"
    name="joystick_setup_button"
    follows="left|top"
-   top_pad="10"
+   top_pad="4"
    width="155">
     <button.commit_callback
      function="Floater.Show"
