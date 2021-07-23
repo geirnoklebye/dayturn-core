@@ -410,23 +410,23 @@ bool LLPreviewGesture::postBuild()
 	mOptionsText = getChild<LLTextBox>("options_text");
 
 	combo = getChild<LLComboBox>( "animation_list");
-	combo->setVisible(FALSE);
+	combo->setVisible(false);
 	combo->setCommitCallback(onCommitAnimation, this);
 	mAnimationCombo = combo;
 
 	LLRadioGroup* group;
 	group = getChild<LLRadioGroup>("animation_trigger_type");
-	group->setVisible(FALSE);
+	group->setVisible(false);
 	group->setCommitCallback(onCommitAnimationTrigger, this);
 	mAnimationRadio = group;
 
 	combo = getChild<LLComboBox>( "sound_list");
-	combo->setVisible(FALSE);
+	combo->setVisible(false);
 	combo->setCommitCallback(onCommitSound, this);
 	mSoundCombo = combo;
 
 	edit = getChild<LLLineEditor>("chat_editor");
-	edit->setVisible(FALSE);
+	edit->setVisible(false);
 	edit->setCommitCallback(onCommitChat, this);
 	//edit->setKeystrokeCallback(onKeystrokeCommit, this);
 	edit->setCommitOnFocusLost(TRUE);
@@ -434,18 +434,18 @@ bool LLPreviewGesture::postBuild()
 	mChatEditor = edit;
 
 	check = getChild<LLCheckBoxCtrl>( "wait_anim_check");
-	check->setVisible(FALSE);
+	check->setVisible(false);
 	check->setCommitCallback(onCommitWait, this);
 	mWaitAnimCheck = check;
 
 	check = getChild<LLCheckBoxCtrl>( "wait_time_check");
-	check->setVisible(FALSE);
+	check->setVisible(false);
 	check->setCommitCallback(onCommitWait, this);
 	mWaitTimeCheck = check;
 
 	edit = getChild<LLLineEditor>("wait_time_editor");
 	edit->setEnabled(FALSE);
-	edit->setVisible(FALSE);
+	edit->setVisible(false);
 	edit->setPrevalidate(LLTextValidate::validateFloat);
 //	edit->setKeystrokeCallback(onKeystrokeCommit, this);
 	edit->setCommitOnFocusLost(TRUE);
@@ -691,13 +691,13 @@ void LLPreviewGesture::refresh()
 	mDeleteBtn->setEnabled(modifiable && have_step);
 
 	// Assume all not visible
-	mAnimationCombo->setVisible(FALSE);
-	mAnimationRadio->setVisible(FALSE);
-	mSoundCombo->setVisible(FALSE);
-	mChatEditor->setVisible(FALSE);
-	mWaitAnimCheck->setVisible(FALSE);
-	mWaitTimeCheck->setVisible(FALSE);
-	mWaitTimeEditor->setVisible(FALSE);
+	mAnimationCombo->setVisible(false);
+	mAnimationRadio->setVisible(false);
+	mSoundCombo->setVisible(false);
+	mChatEditor->setVisible(false);
+	mWaitAnimCheck->setVisible(false);
+	mWaitTimeCheck->setVisible(false);
+	mWaitTimeEditor->setVisible(false);
 
 	std::string optionstext;
 	
@@ -713,8 +713,8 @@ void LLPreviewGesture::refresh()
 			{
 				LLGestureStepAnimation* anim_step = (LLGestureStepAnimation*)step;
 				optionstext = getString("step_anim");
-				mAnimationCombo->setVisible(TRUE);
-				mAnimationRadio->setVisible(TRUE);
+				mAnimationCombo->setVisible(true);
+				mAnimationRadio->setVisible(true);
 				mAnimationRadio->setSelectedIndex((anim_step->mFlags & ANIM_FLAG_STOP) ? 1 : 0);
 				mAnimationCombo->setCurrentByID(anim_step->mAnimAssetID);
 				break;
@@ -723,7 +723,7 @@ void LLPreviewGesture::refresh()
 			{
 				LLGestureStepSound* sound_step = (LLGestureStepSound*)step;
 				optionstext = getString("step_sound");
-				mSoundCombo->setVisible(TRUE);
+				mSoundCombo->setVisible(true);
 				mSoundCombo->setCurrentByID(sound_step->mSoundAssetID);
 				break;
 			}
@@ -731,7 +731,7 @@ void LLPreviewGesture::refresh()
 			{
 				LLGestureStepChat* chat_step = (LLGestureStepChat*)step;
 				optionstext = getString("step_chat");
-				mChatEditor->setVisible(TRUE);
+				mChatEditor->setVisible(true);
 				mChatEditor->setText(chat_step->mChatText);
 				break;
 			}
@@ -739,11 +739,11 @@ void LLPreviewGesture::refresh()
 			{
 				LLGestureStepWait* wait_step = (LLGestureStepWait*)step;
 				optionstext = getString("step_wait");
-				mWaitAnimCheck->setVisible(TRUE);
+				mWaitAnimCheck->setVisible(true);
 				mWaitAnimCheck->set(wait_step->mFlags & WAIT_FLAG_ALL_ANIM);
-				mWaitTimeCheck->setVisible(TRUE);
+				mWaitTimeCheck->setVisible(true);
 				mWaitTimeCheck->set(wait_step->mFlags & WAIT_FLAG_TIME);
-				mWaitTimeEditor->setVisible(TRUE);
+				mWaitTimeEditor->setVisible(true);
 				std::string buffer = llformat("%.1f", (double)wait_step->mWaitSeconds);
 				mWaitTimeEditor->setText(buffer);
 				break;

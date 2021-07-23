@@ -272,7 +272,7 @@ bool LLPanelGroupNotices::postBuild()
 //	mCreateInventoryName->setEnabled(FALSE);
 //
 //	mCreateInventoryIcon = getChild<LLIconCtrl>("create_inv_icon",recurse);
-//	mCreateInventoryIcon->setVisible(FALSE);
+//	mCreateInventoryIcon->setVisible(false);
 //
 //	mBtnSendMessage = getChild<LLButton>("send_notice",recurse);
 //	mBtnSendMessage->setClickedCallback(onClickSendMessage, this);
@@ -290,7 +290,7 @@ bool LLPanelGroupNotices::postBuild()
 	mViewInventoryName->setEnabled(FALSE);
 
 	mViewInventoryIcon = getChild<LLIconCtrl>("view_inv_icon",recurse);
-	mViewInventoryIcon->setVisible(FALSE);
+	mViewInventoryIcon->setVisible(false);
 
 	mBtnOpenAttachment = getChild<LLButton>("open_attachment",recurse);
 	mBtnOpenAttachment->setClickedCallback(onClickOpenAttachment, this);
@@ -305,7 +305,7 @@ bool LLPanelGroupNotices::postBuild()
 //	target->setGroup (mGroupID);
 
 // [SL:KB] - Patch: Notification-GroupCreateNotice | Checked: 2012-02-26 (Catznip-3.2)
-	mPanelViewNotice->setVisible(TRUE);
+	mPanelViewNotice->setVisible(true);
 	mBtnOpenAttachment->setEnabled(FALSE);
 // [/SL:KB]
 //	arrangeNoticeView(VIEW_PAST_NOTICE);
@@ -371,7 +371,7 @@ void LLPanelGroupNotices::activate()
 //// [/SL:KB]
 //
 //	mCreateInventoryIcon->setValue(icon_name);
-//	mCreateInventoryIcon->setVisible(TRUE);
+//	mCreateInventoryIcon->setVisible(true);
 //
 //	std::stringstream ss;
 //	ss << "        " << mInventoryItem->getName();
@@ -385,7 +385,7 @@ void LLPanelGroupNotices::activate()
 //	LLPanelGroupNotices* self = (LLPanelGroupNotices*)data;
 //	self->mInventoryItem = NULL;
 //	self->mCreateInventoryName->clear();
-//	self->mCreateInventoryIcon->setVisible(FALSE);
+//	self->mCreateInventoryIcon->setVisible(false);
 //	self->mBtnRemoveAttachment->setEnabled(FALSE);
 //}
 
@@ -644,7 +644,7 @@ void LLPanelGroupNotices::showNotice(const std::string& subject,
 {
 //	arrangeNoticeView(VIEW_PAST_NOTICE);
 // [SL:KB] - Patch: Notification-GroupCreateNotice | Checked: 2012-02-26 (Catznip-3.2)
-	mPanelViewNotice->setVisible(TRUE);
+	mPanelViewNotice->setVisible(true);
 	mBtnOpenAttachment->setEnabled(FALSE);
 // [/SL:KB]
 
@@ -666,7 +666,7 @@ void LLPanelGroupNotices::showNotice(const std::string& subject,
 												LLInventoryType::IT_TEXTURE);
 
 		mViewInventoryIcon->setValue(icon_name);
-		mViewInventoryIcon->setVisible(TRUE);
+		mViewInventoryIcon->setVisible(true);
 
 		std::stringstream ss;
 		ss << "        " << inventory_name;
@@ -677,7 +677,7 @@ void LLPanelGroupNotices::showNotice(const std::string& subject,
 	else
 	{
 		mViewInventoryName->clear();
-		mViewInventoryIcon->setVisible(FALSE);
+		mViewInventoryIcon->setVisible(false);
 		mBtnOpenAttachment->setEnabled(FALSE);
 	}
 }
@@ -686,13 +686,13 @@ void LLPanelGroupNotices::showNotice(const std::string& subject,
 //{
 //	if (CREATE_NEW_NOTICE == view_type)
 //	{
-//        mPanelCreateNotice->setVisible(TRUE);
-//		mPanelViewNotice->setVisible(FALSE);
+//        mPanelCreateNotice->setVisible(true);
+//		mPanelViewNotice->setVisible(false);
 //	}
 //	else
 //	{
-//		mPanelCreateNotice->setVisible(FALSE);
-//		mPanelViewNotice->setVisible(TRUE);
+//		mPanelCreateNotice->setVisible(false);
+//		mPanelViewNotice->setVisible(true);
 //		mBtnOpenAttachment->setEnabled(FALSE);
 //	}
 //}

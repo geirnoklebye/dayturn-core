@@ -568,10 +568,10 @@ void LLSidepanelInventory::onSelectionChange(const std::deque<LLFolderViewItem*>
 
 void LLSidepanelInventory::showItemInfoPanel()
 {
-	mItemPanel->setVisible(TRUE);
+	mItemPanel->setVisible(true);
 	if (mTaskPanel)
-		mTaskPanel->setVisible(FALSE);
-	mInventoryPanel->setVisible(FALSE);
+		mTaskPanel->setVisible(false);
+	mInventoryPanel->setVisible(false);
 
 	mItemPanel->dirty();
 	mItemPanel->setIsEditing(FALSE);
@@ -579,12 +579,12 @@ void LLSidepanelInventory::showItemInfoPanel()
 
 void LLSidepanelInventory::showTaskInfoPanel()
 {
-	mItemPanel->setVisible(FALSE);
-	mInventoryPanel->setVisible(FALSE);
+	mItemPanel->setVisible(false);
+	mInventoryPanel->setVisible(false);
 
 	if (mTaskPanel)
 	{
-		mTaskPanel->setVisible(TRUE);
+		mTaskPanel->setVisible(true);
 		mTaskPanel->dirty();
 		mTaskPanel->setIsEditing(FALSE);
 	}
@@ -592,10 +592,10 @@ void LLSidepanelInventory::showTaskInfoPanel()
 
 void LLSidepanelInventory::showInventoryPanel()
 {
-	mItemPanel->setVisible(FALSE);
+	mItemPanel->setVisible(false);
 	if (mTaskPanel)
-		mTaskPanel->setVisible(FALSE);
-	mInventoryPanel->setVisible(TRUE);
+		mTaskPanel->setVisible(false);
+	mInventoryPanel->setVisible(true);
 	updateVerbs();
 }
 
@@ -604,14 +604,14 @@ void LLSidepanelInventory::updateVerbs()
 	mInfoBtn->setEnabled(FALSE);
 	mShareBtn->setEnabled(FALSE);
 
-	mWearBtn->setVisible(FALSE);
+	mWearBtn->setVisible(false);
 	mWearBtn->setEnabled(FALSE);
-	mPlayBtn->setVisible(FALSE);
+	mPlayBtn->setVisible(false);
 	mPlayBtn->setEnabled(FALSE);
 	mPlayBtn->setToolTip(std::string(""));
- 	mTeleportBtn->setVisible(FALSE);
+ 	mTeleportBtn->setVisible(false);
  	mTeleportBtn->setEnabled(FALSE);
- 	mShopBtn->setVisible(TRUE);
+ 	mShopBtn->setVisible(true);
 
 	mShareBtn->setEnabled(canShare());
 
@@ -628,33 +628,33 @@ void LLSidepanelInventory::updateVerbs()
 		case LLInventoryType::IT_WEARABLE:
 		case LLInventoryType::IT_OBJECT:
 		case LLInventoryType::IT_ATTACHMENT:
-			mWearBtn->setVisible(TRUE);
+			mWearBtn->setVisible(true);
 			mWearBtn->setEnabled(canWearSelected());
-		 	mShopBtn->setVisible(FALSE);
+		 	mShopBtn->setVisible(false);
 			break;
 		case LLInventoryType::IT_SOUND:
-			mPlayBtn->setVisible(TRUE);
+			mPlayBtn->setVisible(true);
 			mPlayBtn->setEnabled(TRUE);
 			mPlayBtn->setToolTip(LLTrans::getString("InventoryPlaySoundTooltip"));
-			mShopBtn->setVisible(FALSE);
+			mShopBtn->setVisible(false);
 			break;
 		case LLInventoryType::IT_GESTURE:
-			mPlayBtn->setVisible(TRUE);
+			mPlayBtn->setVisible(true);
 			mPlayBtn->setEnabled(TRUE);
 			mPlayBtn->setToolTip(LLTrans::getString("InventoryPlayGestureTooltip"));
-			mShopBtn->setVisible(FALSE);
+			mShopBtn->setVisible(false);
 			break;
 		case LLInventoryType::IT_ANIMATION:
-			mPlayBtn->setVisible(TRUE);
+			mPlayBtn->setVisible(true);
 			mPlayBtn->setEnabled(TRUE);
 			mPlayBtn->setEnabled(TRUE);
 			mPlayBtn->setToolTip(LLTrans::getString("InventoryPlayAnimationTooltip"));
-			mShopBtn->setVisible(FALSE);
+			mShopBtn->setVisible(false);
 			break;
 		case LLInventoryType::IT_LANDMARK:
-			mTeleportBtn->setVisible(TRUE);
+			mTeleportBtn->setVisible(true);
 			mTeleportBtn->setEnabled(TRUE);
-		 	mShopBtn->setVisible(FALSE);
+		 	mShopBtn->setVisible(false);
 			break;
 		default:
 			break;

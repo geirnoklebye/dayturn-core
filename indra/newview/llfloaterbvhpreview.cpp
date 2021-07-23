@@ -220,7 +220,7 @@ bool LLFloaterBvhPreview::postBuild()
 	mStopButton = getChild<LLButton>( "stop_btn");
 	mStopButton->setClickedCallback(boost::bind(&LLFloaterBvhPreview::onBtnStop, this));
 
-	getChildView("bad_animation_text")->setVisible(FALSE);
+	getChildView("bad_animation_text")->setVisible(false);
 
     mAnimPreview = new LLPreviewAnimation(256, 256);
     
@@ -939,7 +939,7 @@ void LLFloaterBvhPreview::refresh()
 	bool show_play = true;
 	if (!mAnimPreview)
 	{
-		getChildView("bad_animation_text")->setVisible(TRUE);
+		getChildView("bad_animation_text")->setVisible(true);
 		// play button visible but disabled
 		mPlayButton->setEnabled(FALSE);
 		mStopButton->setEnabled(FALSE);
@@ -947,7 +947,7 @@ void LLFloaterBvhPreview::refresh()
 	}
 	else
 	{
-		getChildView("bad_animation_text")->setVisible(FALSE);
+		getChildView("bad_animation_text")->setVisible(false);
 		// re-enabled in case previous animation was bad
 		mPlayButton->setEnabled(TRUE);
 		mStopButton->setEnabled(TRUE);

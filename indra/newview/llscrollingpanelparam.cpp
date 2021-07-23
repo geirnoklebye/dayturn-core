@@ -92,7 +92,7 @@ LLScrollingPanelParam::LLScrollingPanelParam( const LLPanel::Params& panel_param
 		more->setHeldDownDelay( PARAM_STEP_TIME_THRESHOLD );
 	}
 
-	setVisible(FALSE);
+	setVisible(false);
 	setBorderVisible( FALSE );
 }
 
@@ -114,7 +114,7 @@ void LLScrollingPanelParam::updatePanel(BOOL allow_modify)
 	getChildView("more")->setEnabled(mAllowModify);
 }
 
-void LLScrollingPanelParam::setVisible( BOOL visible )
+void LLScrollingPanelParam::setVisible(bool visible)
 {
 	if( getVisible() != visible )
 	{

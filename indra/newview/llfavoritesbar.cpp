@@ -547,7 +547,7 @@ void LLFavoritesBarCtrl::handleExistingFavoriteDragAndDrop(S32 x, S32 y)
 
 	if (menu && menu->getVisible())
 	{
-		menu->setVisible(FALSE);
+		menu->setVisible(false);
 		showDropDownMenu();
 	}
 }
@@ -786,11 +786,11 @@ void LLFavoritesBarCtrl::updateButtons(bool force_update)
 
 	if(mItems.empty())
 	{
-		mBarLabel->setVisible(TRUE);
+		mBarLabel->setVisible(true);
 	}
 	else
 	{
-		mBarLabel->setVisible(FALSE);
+		mBarLabel->setVisible(false);
 	}
 	const child_list_t* childs = getChildList();
 	child_list_const_iter_t child_it = childs->begin();
@@ -887,13 +887,13 @@ void LLFavoritesBarCtrl::updateButtons(bool force_update)
 
 			addChild(mMoreTextBox);
 			mMoreTextBox->setRect(rect);
-			mMoreTextBox->setVisible(TRUE);
+			mMoreTextBox->setVisible(true);
 		}
 		// Update overflow menu
 		LLToggleableMenu* overflow_menu = static_cast <LLToggleableMenu*> (mOverflowMenuHandle.get());
 		if (overflow_menu && overflow_menu->getVisible() && (overflow_menu->getItemCount() != mDropDownItemsCount))
 		{
-			overflow_menu->setVisible(FALSE);
+			overflow_menu->setVisible(false);
 			if (mUpdateDropDownItems)
 			{
 				showDropDownMenu();
@@ -1412,7 +1412,7 @@ void LLFavoritesBarCtrl::onButtonMouseDown(LLUUID id, LLUICtrl* ctrl, S32 x, S32
 	LLMenuGL* menu = (LLMenuGL*)mContextMenuHandle.get();
 	if(menu && menu->getVisible())
 	{
-		menu->setVisible(FALSE);
+		menu->setVisible(false);
 	}
 
 	mDragItemId = id;

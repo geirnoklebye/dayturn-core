@@ -963,7 +963,7 @@ LLMenuItemBranchGL::LLMenuItemBranchGL(const LLMenuItemBranchGL::Params& p)
 	if (branch)
 	{
 		mBranchHandle = branch->getHandle();
-		branch->setVisible(FALSE);
+		branch->setVisible(false);
 		branch->setParentMenuItem(this);
 	}
 }
@@ -1183,7 +1183,7 @@ void LLMenuItemBranchGL::onVisibilityChange( BOOL new_visibility )
 {
 	if (new_visibility == FALSE && getBranch() && !getBranch()->getTornOff())
 	{
-		getBranch()->setVisible(FALSE);
+		getBranch()->setVisible(false);
 	}
 	LLMenuItemGL::onVisibilityChange(new_visibility);
 }
@@ -2320,11 +2320,11 @@ void LLMenuGL::arrange( void )
 
 				LLRect rect;
 				mArrowUpItem->setRect(rect.setLeftTopAndSize( 0, cur_height, width, mArrowUpItem->getNominalHeight()));
-				mArrowUpItem->setVisible(TRUE);
+				mArrowUpItem->setVisible(true);
 				mArrowUpItem->setEnabled(height_before_first_visible_item > MENU_ITEM_PADDING);
 				mArrowUpItem->reshape(width, mArrowUpItem->getNominalHeight());
 				mArrowDownItem->setRect(rect.setLeftTopAndSize( 0, mArrowDownItem->getNominalHeight(), width, mArrowDownItem->getNominalHeight()));
-				mArrowDownItem->setVisible(TRUE);
+				mArrowDownItem->setVisible(true);
 				mArrowDownItem->setEnabled(height_before_first_visible_item + visible_items_height < (S32)height);
 				mArrowDownItem->reshape(width, mArrowDownItem->getNominalHeight());
 
@@ -2336,11 +2336,11 @@ void LLMenuGL::arrange( void )
 			{
 				if (NULL != mArrowUpItem)
 				{
-					mArrowUpItem->setVisible(FALSE);
+					mArrowUpItem->setVisible(false);
 				}
 				if (NULL != mArrowDownItem)
 				{
-					mArrowDownItem->setVisible(FALSE);
+					mArrowDownItem->setVisible(false);
 				}
 			}
 
@@ -3887,7 +3887,7 @@ BOOL LLMenuHolderGL::hideMenus()
 			LLView* viewp = *child_it;
 			if (dynamic_cast<LLMenuGL*>(viewp) != NULL && viewp->getVisible())
 			{
-				viewp->setVisible(FALSE);
+				viewp->setVisible(false);
 			}
 		}
 	}
@@ -3933,7 +3933,7 @@ LLTearOffMenu::LLTearOffMenu(LLMenuGL* menup) :
 	menup->setFollows( FOLLOWS_LEFT | FOLLOWS_BOTTOM );
 	mOldParent = menup->getParent();
 	addChild(menup);
-	menup->setVisible(TRUE);
+	menup->setVisible(true);
 	LLRect menu_rect = menup->getRect();
 	menu_rect.setOriginAndSize( 1, 1,
 		menu_rect.getWidth(), menu_rect.getHeight());
@@ -4081,8 +4081,8 @@ void LLTearOffMenu::closeTearOff()
 	mOldParent->addChild(mMenu);
 	mMenu->clearHoverItem();
 	mMenu->setFollowsNone();
-	mMenu->setBackgroundVisible(TRUE);
-	mMenu->setVisible(FALSE);
+	mMenu->setBackgroundVisible(true);
+	mMenu->setVisible(false);
 	mMenu->setTornOff(FALSE);
 	mMenu->setDropShadowed(TRUE);
     mQuitRequested = true;
@@ -4177,7 +4177,7 @@ LLContextMenu::LLContextMenu(const Params& p)
 	//setBackgroundVisible(TRUE);
 }
 
-void LLContextMenu::setVisible(BOOL visible)
+void LLContextMenu::setVisible(bool visible)
 {
 	if (!visible)
 		hide();
@@ -4246,14 +4246,14 @@ void LLContextMenu::show(S32 x, S32 y, LLView* spawning_view)
 	{
 		mSpawningViewHandle.markDead();
 	}
-	LLView::setVisible(TRUE);
+	LLView::setVisible(true);
 }
 
 void LLContextMenu::hide()
 {
 	if (!getVisible()) return;
 
-	LLView::setVisible(FALSE);
+	LLView::setVisible(false);
 
 	if (mHoverItem)
 	{

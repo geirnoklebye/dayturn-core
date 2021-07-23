@@ -1929,7 +1929,7 @@ void LLLineEditor::draw()
 			&rendered_pixels_right);
 	}
 #if 1 // for when we're ready for image art.
-	mBorder->setVisible(FALSE); // no more programmatic art.
+	mBorder->setVisible(false); // no more programmatic art.
 #endif
 
 	if ( (getSpellCheck()) && (mText.length() > 2) )
@@ -2030,7 +2030,7 @@ void LLLineEditor::draw()
 	// If we're editing...
 	if( hasFocus())
 	{
-		//mBorder->setVisible(TRUE); // ok, programmer art just this once.
+		//mBorder->setVisible(true); // ok, programmer art just this once.
 		// (Flash the cursor every half second)
 		if (!mReadOnly && gFocusMgr.getAppHasFocus())
 		{
@@ -2091,11 +2091,11 @@ void LLLineEditor::draw()
 
 
 		// Draw children (border)
-		//mBorder->setVisible(TRUE);
+		//mBorder->setVisible(true);
 		mBorder->setKeyboardFocusHighlight( TRUE );
 		LLView::draw();
 		mBorder->setKeyboardFocusHighlight( FALSE );
-		//mBorder->setVisible(FALSE);
+		//mBorder->setVisible(false);
 	}
 	else // does not have keyboard input
 	{

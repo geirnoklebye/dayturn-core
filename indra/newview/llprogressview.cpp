@@ -100,7 +100,7 @@ bool LLProgressView::postBuild()
 	getChild<LLTextBox>("message_text")->setClickedCallback(onClickMessage, this);
 
 	// hidden initially, until we need it
-	setVisible(FALSE);
+	setVisible(false);
 
 	LLNotifications::instance().getChannel("AlertModal")->connectChanged(boost::bind(&LLProgressView::onAlertModal, this, _1));
 
@@ -177,7 +177,7 @@ void LLProgressView::setStartupComplete()
 	}
 }
 
-void LLProgressView::setVisible(BOOL visible)
+void LLProgressView::setVisible(bool visible)
 {
     if (!visible && mFadeFromLoginTimer.getStarted())
     {
@@ -186,14 +186,14 @@ void LLProgressView::setVisible(BOOL visible)
 	// hiding progress view
 	if (getVisible() && !visible)
 	{
-		LLPanel::setVisible(FALSE);
+		LLPanel::setVisible(false);
 	}
 	// showing progress view
 	else if (visible && (!getVisible() || mFadeToWorldTimer.getStarted()))
 	{
 		setFocus(TRUE);
 		mFadeToWorldTimer.stop();
-		LLPanel::setVisible(TRUE);
+		LLPanel::setVisible(true);
 	} 
 }
 
@@ -302,7 +302,7 @@ void LLProgressView::draw()
 			gFocusMgr.releaseFocusIfNeeded( this );
 
 			// turn off panel that hosts intro so we see the world
-			setVisible(FALSE);
+			setVisible(false);
 
 			// stop observing events since we no longer care
 			mMediaCtrl->remObserver( this );
@@ -550,7 +550,7 @@ void LLProgressView::onCancelButtonClicked(void*)
 	{
 		gAgent.teleportCancel();
 		sInstance->mCancelBtn->setEnabled(FALSE);
-		sInstance->setVisible(FALSE);
+		sInstance->setVisible(false);
 	}
 }
 

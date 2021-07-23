@@ -993,7 +993,7 @@ void LLPanelOutfitEdit::updatePlusButton()
 	mAddToLookBtn->setEnabled(TRUE);
 	if (!mAddToLookBtn->getVisible())
 	{
-		mAddToLookBtn->setVisible(TRUE);
+		mAddToLookBtn->setVisible(true);
 	}
 	
 	current_item->addChild(mAddToLookBtn); */
@@ -1214,7 +1214,7 @@ void LLPanelOutfitEdit::displayCurrentOutfit()
 {
 	if (!getVisible())
 	{
-		setVisible(TRUE);
+		setVisible(true);
 	}
 
 	updateCurrentOutfitName();
@@ -1257,8 +1257,8 @@ bool LLPanelOutfitEdit::switchPanels(LLPanel* switch_from_panel, LLPanel* switch
 {
 	if(switch_from_panel && switch_to_panel && !switch_to_panel->getVisible())
 	{
-		switch_from_panel->setVisible(FALSE);
-		switch_to_panel->setVisible(TRUE);
+		switch_from_panel->setVisible(false);
+		switch_to_panel->setVisible(true);
 		return true;
 	}
 	return false;

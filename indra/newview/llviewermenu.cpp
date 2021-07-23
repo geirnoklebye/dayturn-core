@@ -431,7 +431,7 @@ void initialize_menus();
 void set_merchant_SLM_menu()
 {
     // All other cases (new merchant, not merchant, migrated merchant): show the new Marketplace Listings menu and enable the tool
-    gMenuHolder->getChild<LLView>("MarketplaceListings")->setVisible(TRUE);
+    gMenuHolder->getChild<LLView>("MarketplaceListings")->setVisible(true);
     LLCommand* command = LLCommandManager::instance().getCommand("marketplacelistings");
     gToolBarView->enableCommand(command->id(), true);
 
@@ -456,7 +456,7 @@ void check_merchant_status(bool force)
         LLMarketplaceData::instance().setSLMStatus(MarketplaceStatusCodes::MARKET_PLACE_NOT_INITIALIZED);
     }
     // Hide SLM related menu item
-    gMenuHolder->getChild<LLView>("MarketplaceListings")->setVisible(FALSE);
+    gMenuHolder->getChild<LLView>("MarketplaceListings")->setVisible(false);
 
     // Also disable the toolbar button for Marketplace Listings
     LLCommand* command = LLCommandManager::instance().getCommand("marketplacelistings");
@@ -584,7 +584,7 @@ void init_menus()
 	LLMenuItemCheckGL *memoryMenu = gMenuBarView->getChild<LLMenuItemCheckGL>("Memory", TRUE);
 	if (memoryMenu)
 	{
-		memoryMenu->setVisible(FALSE);
+		memoryMenu->setVisible(false);
 	}
 
 	gMenuBarView->createJumpKeys();
@@ -681,7 +681,7 @@ class LLAdvancedDumpInfoToConsole : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		gDebugView->mDebugConsolep->setVisible(TRUE);
+		gDebugView->mDebugConsolep->setVisible(true);
 		std::string info_type = userdata.asString();
 		if ("region" == info_type)
 		{

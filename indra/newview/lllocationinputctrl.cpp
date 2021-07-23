@@ -1102,7 +1102,7 @@ void LLLocationInputCtrl::changeLocationPresentation()
 		mTextEntry->setText(LLURI::unescape(slurl.getSLURLString()));
 		mTextEntry->selectAll();
 
-		mMaturityButton->setVisible(FALSE);
+		mMaturityButton->setVisible(false);
 
 		isHumanReadableLocationVisible = false;
 	}

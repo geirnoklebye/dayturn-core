@@ -341,7 +341,7 @@ bool LLPanelPlaces::postBuild()
 	}
 
     mButtonsContainer = getChild<LLPanel>("button_layout_panel");
-    mButtonsContainer->setVisible(FALSE);
+    mButtonsContainer->setVisible(false);
     mFilterContainer = getChild<LLLayoutStack>("top_menu_panel");
 
 	mFilterEditor = getChild<LLFilterEditor>("Filter");
@@ -1054,7 +1054,7 @@ void LLPanelPlaces::togglePlaceInfoPanel(BOOL visible)
 			// to avoid text blinking.
 			mResetInfoTimer.setTimerExpirySec(PLACE_INFO_UPDATE_INTERVAL);
 
-			mLandmarkInfo->setVisible(FALSE);
+			mLandmarkInfo->setVisible(false);
 		}
 		else if (mPlaceInfoType == AGENT_INFO_TYPE)
 		{
@@ -1070,7 +1070,7 @@ void LLPanelPlaces::togglePlaceInfoPanel(BOOL visible)
 			 mPlaceInfoType == LANDMARK_TAB_INFO_TYPE)
 	{
 		mLandmarkInfo->setVisible(visible);
-		mPlaceProfile->setVisible(FALSE);
+		mPlaceProfile->setVisible(false);
 		if (visible)
 		{
 			mLandmarkInfo->resetLocation();

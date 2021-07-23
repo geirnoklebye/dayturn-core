@@ -127,7 +127,7 @@ void LLPanelPresetsCameraPulldown::onRowClick(const LLSD& user_data)
             LL_DEBUGS() << "selected '" << name << "'" << LL_ENDL;
 			LLFloaterCamera::switchToPreset(name);
 
-			setVisible(FALSE);
+			setVisible(false);
 		}
         else
         {
@@ -143,7 +143,7 @@ void LLPanelPresetsCameraPulldown::onRowClick(const LLSD& user_data)
 void LLPanelPresetsCameraPulldown::onViewButtonClick(const LLSD& user_data)
 {
 	// close the minicontrol, we're bringing up the big one
-	setVisible(FALSE);
+	setVisible(false);
 
 	LLFloaterReg::toggleInstanceOrBringToFront("camera");
 }

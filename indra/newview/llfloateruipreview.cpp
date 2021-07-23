@@ -1427,7 +1427,7 @@ BOOL LLPreviewedFloater::handleRightMouseDown(S32 x, S32 y, MASK mask)
 // what you've really selected is a list of elements: the one you clicked on and everything that overlaps it.
 // -The user then selects one of the elements from this list the overlap panel (click handling to the overlap panel would have to be added).
 //  This becomes the final selection (as opposed to the intermediate selection that was just made).
-// -Everything else that is currently displayed on the overlap panel should be hidden from view in the previewed floater itself (setVisible(FALSE)).
+// -Everything else that is currently displayed on the overlap panel should be hidden from view in the previewed floater itself (setVisible(false)).
 // -Subsequent clicks on other elements in the overlap panel (they should still be there) should make other elements the final selection.
 // -On close or on the click of a new button, everything should be shown again and all selection state should be cleared.
 //   ~Jacob, 8/08

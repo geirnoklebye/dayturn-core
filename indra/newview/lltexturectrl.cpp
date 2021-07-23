@@ -849,7 +849,7 @@ void LLFloaterTexturePicker::onModeSelect(LLUICtrl* ctrl, void *userdata)
 	self->getChild<LLScrollListCtrl>("l_name_list")->setVisible(index == 1 ? TRUE : FALSE);
 
 	self->getChild<LLComboBox>("l_bake_use_texture_combo_box")->setVisible(index == 2 ? TRUE : FALSE);
-	self->getChild<LLCheckBoxCtrl>("hide_base_mesh_region")->setVisible(FALSE);// index == 2 ? TRUE : FALSE);
+	self->getChild<LLCheckBoxCtrl>("hide_base_mesh_region")->setVisible(false);// index == 2 ? TRUE : FALSE);
 
 	if (index == 2)
 	{
@@ -1320,7 +1320,7 @@ void LLTextureCtrl::setCanApply(bool can_preview, bool can_apply)
 	}
 }
 
-void LLTextureCtrl::setVisible( BOOL visible ) 
+void LLTextureCtrl::setVisible( bool visible ) 
 {
 	if( !visible )
 	{
@@ -1457,7 +1457,7 @@ void LLTextureCtrl::closeDependentFloater()
 	if( floaterp && floaterp->isInVisibleChain())
 	{
 		floaterp->setOwner(NULL);
-		floaterp->setVisible(FALSE);
+		floaterp->setVisible(false);
 		floaterp->closeFloater();
 	}
 }

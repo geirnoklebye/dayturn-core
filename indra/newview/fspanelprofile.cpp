@@ -283,7 +283,7 @@ bool FSPanelProfileSecondLife::postBuild()
 	mIMButton = getChild<LLButton>("im");
 	mOverflowButton = getChild<LLMenuButton>("overflow_btn");
 
-	mStatusText->setVisible(FALSE);
+	mStatusText->setVisible(false);
 
 	LLUICtrl::CommitCallbackRegistry::ScopedRegistrar registrar;
 	registrar.add("Profile.Call",						[this](LLUICtrl*, const LLSD&) { LLAvatarActions::startCall(getAvatarId()); });
@@ -384,7 +384,7 @@ void FSPanelProfileSecondLife::onOpen(const LLSD& key)
 
 	if (own_profile && LLAvatarName::useDisplayNames() && !getEmbedded())
 	{
-		mDisplayNameButton->setVisible(TRUE);
+		mDisplayNameButton->setVisible(true);
 		mDisplayNameButton->setEnabled(TRUE);
 	}
 
@@ -475,7 +475,7 @@ void FSPanelProfileSecondLife::resetData()
 	getChild<LLUICtrl>("partner_text")->setValue(LLStringUtil::null);
 	mSecondLifePic->setValue(mSecondLifePic->getDefaultImageAssetID());
 	mDescriptionEdit->setValue(LLStringUtil::null);
-	mStatusText->setVisible(FALSE);
+	mStatusText->setVisible(false);
 	mGroups.clear();
 	mGroupList->setGroups(mGroups);
 }
@@ -760,7 +760,7 @@ void FSPanelProfileSecondLife::enableControls()
 
 	if (getSelfProfile() && !getEmbedded())
 	{
-		mShowInSearchCheckbox->setVisible(TRUE);
+		mShowInSearchCheckbox->setVisible(true);
 		mShowInSearchCheckbox->setEnabled(TRUE);
 		mDescriptionEdit->setEnabled(TRUE);
 		mSecondLifePic->setEnabled(TRUE);
@@ -879,7 +879,7 @@ bool FSPanelProfileWeb::postBuild()
 
 	mWebProfileButton->setCommitCallback(boost::bind(&FSPanelProfileWeb::onCommitWebProfile, this, _1));
 //	mWebProfileButton->setVisible(LLGridManager::getInstance()->isInSecondLife());
-	mWebProfileButton->setVisible(TRUE);
+	mWebProfileButton->setVisible(true);
 
 	mWebBrowser = getChild<LLMediaCtrl>("profile_html");
 	mWebBrowser->addObserver(this);
@@ -926,7 +926,7 @@ void FSPanelProfileWeb::updateData()
 
 		if (!mURLWebProfile.empty())
 		{
-			mWebBrowser->setVisible(TRUE);
+			mWebBrowser->setVisible(true);
 			mPerformanceTimer.start();
 			mWebBrowser->navigateTo(mURLWebProfile, HTTP_CONTENT_TEXT_HTML);
 		}
@@ -965,7 +965,7 @@ void FSPanelProfileWeb::onCommitLoad(LLUICtrl* ctrl)
 		LLSD::String valstr = ctrl->getValue().asString();
 		if (valstr.empty())
 		{
-			mWebBrowser->setVisible(TRUE);
+			mWebBrowser->setVisible(true);
 			mPerformanceTimer.start();
 			mWebBrowser->navigateTo( mURLHome, HTTP_CONTENT_TEXT_HTML );
 		}
@@ -989,7 +989,7 @@ void FSPanelProfileWeb::onCommitWebProfile(LLUICtrl* ctrl)
 		LLSD::String valstr = ctrl->getValue().asString();
 		if (valstr.empty())
 		{
-			mWebBrowser->setVisible(TRUE);
+			mWebBrowser->setVisible(true);
 			mPerformanceTimer.start();
 			mWebBrowser->navigateTo( mURLWebProfile, HTTP_CONTENT_TEXT_HTML );
 		}
@@ -1308,7 +1308,7 @@ void FSPanelPick::setAvatarId(const LLUUID& avatar_id)
 	{
 		mPickName->setEnabled(TRUE);
 		mPickDescription->setEnabled(TRUE);
-		mSetCurrentLocationButton->setVisible(TRUE);
+		mSetCurrentLocationButton->setVisible(true);
 	}
 }
 
@@ -1658,10 +1658,10 @@ void FSPanelProfilePicks::onOpen(const LLSD& key)
 
 	if (getSelfProfile() && !getEmbedded())
 	{
-		mNewButton->setVisible(TRUE);
+		mNewButton->setVisible(true);
 		mNewButton->setEnabled(FALSE);
 
-		mDeleteButton->setVisible(TRUE);
+		mDeleteButton->setVisible(true);
 		mDeleteButton->setEnabled(FALSE);
 	}
 }
@@ -1689,7 +1689,7 @@ bool FSPanelProfilePicks::postBuild()
 
 void FSPanelProfilePicks::onClickNewBtn()
 {
-	mNoItemsLabel->setVisible(FALSE);
+	mNoItemsLabel->setVisible(false);
 	FSPanelPick* pick_panel = FSPanelPick::create();
 	pick_panel->setAvatarId(getAvatarId());
 	mTabContainer->addTabPanel(
@@ -1834,8 +1834,7 @@ void FSPanelProfilePicks::updateData()
 	{
 		setIsLoading();
 		mNoItemsLabel->setValue(LLTrans::getString("PicksClassifiedsLoadingText"));
-		mNoItemsLabel->setVisible(TRUE);
-
+		mNoItemsLabel->setVisible(true);
 		LLAvatarPropertiesProcessor::getInstance()->sendAvatarPicksRequest(avatar_id);
 	}
 }
@@ -2248,8 +2247,8 @@ void FSPanelProfile::onOpen(const LLSD& key)
 	// Only show commit buttons on own profile on floater version
 	if (getSelfProfile() && !getEmbedded())
 	{
-		getChild<LLUICtrl>("ok_btn")->setVisible(TRUE);
-		getChild<LLUICtrl>("cancel_btn")->setVisible(TRUE);
+		getChild<LLUICtrl>("ok_btn")->setVisible(true);
+		getChild<LLUICtrl>("cancel_btn")->setVisible(true);
 	}
 
 	mAvatarNameCacheConnection = LLAvatarNameCache::get(getAvatarId(), boost::bind(&FSPanelProfile::onAvatarNameCache, this, _1, _2));

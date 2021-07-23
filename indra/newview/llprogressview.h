@@ -56,7 +56,7 @@ public:
 
 	/*virtual*/ bool handleHover(S32 x, S32 y, MASK mask);
 	/*virtual*/ BOOL handleKeyHere(KEY key, MASK mask);
-	/*virtual*/ void setVisible(BOOL visible);
+	/*virtual*/ void setVisible(bool visible);
 
 	// inherited from LLViewerMediaObserver
 	/*virtual*/ void handleMediaEvent(LLPluginClassMedia* self, EMediaEvent event);

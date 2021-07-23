@@ -312,8 +312,8 @@ void FSPanelClassifiedInfo::resetData()
 	getChild<LLUICtrl>("auto_renew")->setValue(LLStringUtil::null);
 	getChild<LLUICtrl>("creation_date")->setValue(LLStringUtil::null);
 	getChild<LLUICtrl>("click_through_text")->setValue(LLStringUtil::null);
-	getChild<LLIconCtrl>("content_type_moderate")->setVisible(FALSE);
-	getChild<LLIconCtrl>("content_type_general")->setVisible(FALSE);
+	getChild<LLIconCtrl>("content_type_moderate")->setVisible(false);
+	getChild<LLIconCtrl>("content_type_general")->setVisible(false);
 }
 
 void FSPanelClassifiedInfo::resetControls()
@@ -1127,12 +1127,12 @@ void FSPanelClassifiedEdit::notifyInvalidName()
 
 void FSPanelClassifiedEdit::onTexturePickerMouseEnter(LLUICtrl* ctrl)
 {
-	ctrl->setVisible(TRUE);
+	ctrl->setVisible(true);
 }
 
 void FSPanelClassifiedEdit::onTexturePickerMouseLeave(LLUICtrl* ctrl)
 {
-	ctrl->setVisible(FALSE);
+	ctrl->setVisible(false);
 }
 
 void FSPanelClassifiedEdit::onTextureSelected()

@@ -134,8 +134,8 @@ void LLPanelLandmarkInfo::setInfoType(EInfoType type, const LLUUID &folder_id)
 		{
 			mCurrentTitle = getString("title_create_landmark");
 
-			mLandmarkTitle->setVisible(FALSE);
-			mLandmarkTitleEditor->setVisible(TRUE);
+			mLandmarkTitle->setVisible(false);
+			mLandmarkTitleEditor->setVisible(true);
 			mNotesEditor->setEnabled(TRUE);
 
 			LLViewerParcelMgr* parcel_mgr = LLViewerParcelMgr::getInstance();
@@ -203,8 +203,8 @@ void LLPanelLandmarkInfo::setInfoType(EInfoType type, const LLUUID &folder_id)
 		default:
 			mCurrentTitle = getString("title_landmark");
 
-			mLandmarkTitle->setVisible(TRUE);
-			mLandmarkTitleEditor->setVisible(FALSE);
+			mLandmarkTitle->setVisible(true);
+			mLandmarkTitleEditor->setVisible(false);
 			mNotesEditor->setEnabled(FALSE);
 		break;
 	}

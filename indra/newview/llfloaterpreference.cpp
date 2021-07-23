@@ -797,7 +797,7 @@ void LLFloaterPreference::onOpen(const LLSD& key)
 		// do not disturb response message.
 		gSavedPerAccountSettings.getControl("DoNotDisturbModeResponse")->getSignal()->connect(boost::bind(&LLFloaterPreference::onDoNotDisturbResponseChanged, this));
 		// <FS:Ansariel> FIRE-17630: Properly disable per-account settings backup list
-		getChildView("restore_per_account_disable_cover")->setVisible(FALSE);
+		getChildView("restore_per_account_disable_cover")->setVisible(false);
 
 		// <FS:Ansariel> Keyword settings are per-account; enable after logging in
 		LLPanel* keyword_panel = getChild<LLPanel>("ChatKeywordAlerts");
@@ -3622,7 +3622,7 @@ bool LLFloaterPreference::postBuildAdvanced()
     }
 	
 	LLCheckBoxCtrl *use_Retina = getChild<LLCheckBoxCtrl>("use Retina");
-	use_Retina->setVisible(FALSE);
+	use_Retina->setVisible(false);
 #endif
 
     return true;
@@ -4740,7 +4740,7 @@ bool FSPanelPreferenceSounds::postBuild()
     
         if (mOutputDevicePanel)
         {
-            mOutputDevicePanel->setVisible(FALSE);
+            mOutputDevicePanel->setVisible(false);
         }
 #endif
     return LLPanelPreference::postBuild();

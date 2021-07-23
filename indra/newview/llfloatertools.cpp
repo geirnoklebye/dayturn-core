@@ -229,7 +229,7 @@ LLPCode toolData[]={
 bool	LLFloaterTools::postBuild()
 {	
 	// Hide until tool selected
-	setVisible(FALSE);
+	setVisible(false);
 
 	// Since we constantly show and hide this during drags, don't
 	// make sounds on visibility changes.
@@ -1063,7 +1063,7 @@ void LLFloaterTools::onOpen(const LLSD& key)
 // virtual
 void LLFloaterTools::onClose(bool app_quitting)
 {
-	mTab->setVisible(FALSE);
+	mTab->setVisible(false);
 
 	LLViewerJoystick::getInstance()->moveAvatar(false);
 

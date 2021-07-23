@@ -121,7 +121,7 @@ bool LLPanelGroupGeneral::postBuild()
 		if (gAgent.isTeen())
 		{
 			// Teens don't get to set mature flag. JC
-			mComboMature->setVisible(FALSE);
+			mComboMature->setVisible(false);
 			mComboMature->setCurrentByIndex(NON_MATURE_CONTENT);
 		}
 	}
@@ -630,7 +630,7 @@ void LLPanelGroupGeneral::update(LLGroupChange gc)
 	if (mInsignia) mInsignia->setEnabled(mAllowEdit && can_change_ident);
 	if (mEditCharter) mEditCharter->setEnabled(mAllowEdit && can_change_ident);
 	
-	if (mGroupNameEditor) mGroupNameEditor->setVisible(FALSE);
+	if (mGroupNameEditor) mGroupNameEditor->setVisible(false);
 	if (mFounderName) mFounderName->setText(LLSLURL("agent", gdatap->mFounderID, "inspect").getSLURLString());
 	if (mInsignia)
 	{

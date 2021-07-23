@@ -145,7 +145,7 @@ LLSnapshotModel::ESnapshotLayerType LLFloaterSnapshot::Impl::getLayerType(LLFloa
 void LLFloaterSnapshot::Impl::setResolution(LLFloaterSnapshotBase* floater, const std::string& comboname)
 {
 	LLComboBox* combo = floater->getChild<LLComboBox>(comboname);
-		combo->setVisible(TRUE);
+		combo->setVisible(true);
 	updateResolution(combo, floater, FALSE); // to sync spinners with combo
 }
 
@@ -202,7 +202,7 @@ void LLFloaterSnapshotBase::ImplBase::updateLayout(LLFloaterSnapshotBase* floate
 		// can see and interact with fullscreen preview now
 		if (previewp)
 		{
-			previewp->setVisible(TRUE);
+			previewp->setVisible(true);
 			previewp->setEnabled(TRUE);
 		}
 
@@ -231,7 +231,7 @@ void LLFloaterSnapshotBase::ImplBase::updateLayout(LLFloaterSnapshotBase* floate
 		floaterp->reshape(floaterp->getRect().getWidth(), floaterp->getRect().getHeight());
 		if (previewp)
 		{
-			previewp->setVisible(FALSE);
+			previewp->setVisible(false);
 			previewp->setEnabled(FALSE);
 		}
 
@@ -1109,8 +1109,8 @@ void LLFloaterSnapshot::onOpen(const LLSD& key)
 		preview->updateSnapshot(TRUE);
 	}
 	focusFirstItem(FALSE);
-	gSnapshotFloaterView->setEnabled(TRUE);
-	gSnapshotFloaterView->setVisible(TRUE);
+	gSnapshotFloaterView->setEnabled(true);
+	gSnapshotFloaterView->setVisible(true);
 	gSnapshotFloaterView->adjustToFitScreen(this, FALSE);
 
 	impl->updateControls(this);
@@ -1142,7 +1142,7 @@ void LLFloaterSnapshotBase::onClose(bool app_quitting)
 	if (previewp)
 	{
 		previewp->setAllowFullScreenPreview(FALSE);
-		previewp->setVisible(FALSE);
+		previewp->setVisible(false);
 		previewp->setEnabled(FALSE);
 	}
 

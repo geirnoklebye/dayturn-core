@@ -647,15 +647,15 @@ void LLOutfitGallery::updateMessageVisibility()
 {
     if(mItems.empty())
     {
-        mMessageTextBox->setVisible(TRUE);
-        mScrollPanel->setVisible(FALSE);
+        mMessageTextBox->setVisible(true);
+        mScrollPanel->setVisible(false);
         std::string message = sFilterSubString.empty()? getString("no_outfits_msg") : getString("no_matched_outfits_msg");
         mMessageTextBox->setValue(message);
     }
     else
     {
-        mScrollPanel->setVisible(TRUE);
-        mMessageTextBox->setVisible(FALSE);
+        mScrollPanel->setVisible(true);
+        mMessageTextBox->setVisible(false);
     }
 }
 
@@ -799,7 +799,7 @@ bool LLOutfitGalleryItem::setImageAssetId(LLUUID image_asset_id)
     {
         mImageAssetId = image_asset_id;
         mTexturep = texture;
-        getChildView("preview_outfit")->setVisible(FALSE);
+        getChildView("preview_outfit")->setVisible(false);
         mDefaultImage = false;
         mImageUpdatePending = (texture->getDiscardLevel() == -1);
         return true;
@@ -816,7 +816,7 @@ void LLOutfitGalleryItem::setDefaultImage()
 {
     mTexturep = NULL;
     mImageAssetId.setNull();
-    getChildView("preview_outfit")->setVisible(TRUE);
+    getChildView("preview_outfit")->setVisible(true);
     mDefaultImage = true;
     mImageUpdatePending = false;
 }

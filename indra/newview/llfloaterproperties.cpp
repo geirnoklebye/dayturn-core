@@ -386,38 +386,38 @@ void LLFloaterProperties::refreshFromItem(LLInventoryItem* item)
 		perm_string = "B: ";
 		perm_string += mask_to_string(base_mask);
 		getChild<LLUICtrl>("BaseMaskDebug")->setValue(perm_string);
-		getChildView("BaseMaskDebug")->setVisible(TRUE);
+		getChildView("BaseMaskDebug")->setVisible(true);
 		
 		perm_string = "O: ";
 		perm_string += mask_to_string(owner_mask);
 		getChild<LLUICtrl>("OwnerMaskDebug")->setValue(perm_string);
-		getChildView("OwnerMaskDebug")->setVisible(TRUE);
+		getChildView("OwnerMaskDebug")->setVisible(true);
 		
 		perm_string = "G";
 		perm_string += overwrite_group ? "*: " : ": ";
 		perm_string += mask_to_string(group_mask);
 		getChild<LLUICtrl>("GroupMaskDebug")->setValue(perm_string);
-		getChildView("GroupMaskDebug")->setVisible(TRUE);
+		getChildView("GroupMaskDebug")->setVisible(true);
 		
 		perm_string = "E";
 		perm_string += overwrite_everyone ? "*: " : ": ";
 		perm_string += mask_to_string(everyone_mask);
 		getChild<LLUICtrl>("EveryoneMaskDebug")->setValue(perm_string);
-		getChildView("EveryoneMaskDebug")->setVisible(TRUE);
+		getChildView("EveryoneMaskDebug")->setVisible(true);
 		
 		perm_string = "N";
 		perm_string += slam_perm ? "*: " : ": ";
 		perm_string += mask_to_string(next_owner_mask);
 		getChild<LLUICtrl>("NextMaskDebug")->setValue(perm_string);
-		getChildView("NextMaskDebug")->setVisible(TRUE);
+		getChildView("NextMaskDebug")->setVisible(true);
 	}
 	else
 	{
-		getChildView("BaseMaskDebug")->setVisible(FALSE);
-		getChildView("OwnerMaskDebug")->setVisible(FALSE);
-		getChildView("GroupMaskDebug")->setVisible(FALSE);
-		getChildView("EveryoneMaskDebug")->setVisible(FALSE);
-		getChildView("NextMaskDebug")->setVisible(FALSE);
+		getChildView("BaseMaskDebug")->setVisible(false);
+		getChildView("OwnerMaskDebug")->setVisible(false);
+		getChildView("GroupMaskDebug")->setVisible(false);
+		getChildView("EveryoneMaskDebug")->setVisible(false);
+		getChildView("NextMaskDebug")->setVisible(false);
 	}
 
 	/////////////

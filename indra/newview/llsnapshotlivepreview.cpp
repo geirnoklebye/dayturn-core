@@ -662,7 +662,7 @@ BOOL LLSnapshotLivePreview::onIdle( void* snapshot_preview )
 
 	if (LLToolCamera::getInstance()->hasMouseCapture()) // Hide full-screen preview while camming, either don't take snapshots while ALT-zoom active
 	{
-		previewp->setVisible(FALSE);
+		previewp->setVisible(false);
 		return FALSE;
 	}
 
@@ -702,7 +702,7 @@ BOOL LLSnapshotLivePreview::onIdle( void* snapshot_preview )
 
         previewp->mSnapshotActive = TRUE;
 
-        previewp->setVisible(FALSE);
+        previewp->setVisible(false);
         previewp->setEnabled(FALSE);
 
         previewp->getWindow()->incBusyCount();

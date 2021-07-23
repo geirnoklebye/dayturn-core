@@ -276,22 +276,22 @@ bool LLStatusBar::postBuild()
 	mPanelPresetsCameraPulldown = new LLPanelPresetsCameraPulldown();
 	addChild(mPanelPresetsCameraPulldown);
 	mPanelPresetsCameraPulldown->setFollows(FOLLOWS_TOP|FOLLOWS_RIGHT);
-	mPanelPresetsCameraPulldown->setVisible(FALSE);
+	mPanelPresetsCameraPulldown->setVisible(false);
 
 	mPanelPresetsPulldown = new LLPanelPresetsPulldown();
 	addChild(mPanelPresetsPulldown);
 	mPanelPresetsPulldown->setFollows(FOLLOWS_TOP|FOLLOWS_RIGHT);
-	mPanelPresetsPulldown->setVisible(FALSE);
+	mPanelPresetsPulldown->setVisible(false);
 
 	mPanelVolumePulldown = new LLPanelVolumePulldown();
 	addChild(mPanelVolumePulldown);
 	mPanelVolumePulldown->setFollows(FOLLOWS_TOP|FOLLOWS_RIGHT);
-	mPanelVolumePulldown->setVisible(FALSE);
+	mPanelVolumePulldown->setVisible(false);
 
 	mPanelNearByMedia = new LLPanelNearByMedia();
 	addChild(mPanelNearByMedia);
 	mPanelNearByMedia->setFollows(FOLLOWS_TOP|FOLLOWS_RIGHT);
-	mPanelNearByMedia->setVisible(FALSE);
+	mPanelNearByMedia->setVisible(false);
 
 	mScriptOut = getChildView("scriptout");
 	updateBalancePanelPosition();
@@ -628,10 +628,10 @@ void LLStatusBar::onMouseEnterPresetsCamera()
 	// show the master presets pull-down
 	LLUI::getInstance()->clearPopups();
 	LLUI::getInstance()->addPopup(mPanelPresetsCameraPulldown);
-	mPanelNearByMedia->setVisible(FALSE);
-	mPanelVolumePulldown->setVisible(FALSE);
-	mPanelPresetsPulldown->setVisible(FALSE);
-	mPanelPresetsCameraPulldown->setVisible(TRUE);
+	mPanelNearByMedia->setVisible(false);
+	mPanelVolumePulldown->setVisible(false);
+	mPanelPresetsPulldown->setVisible(false);
+	mPanelPresetsCameraPulldown->setVisible(true);
 }
 
 void LLStatusBar::onMouseEnterPresets()
@@ -652,9 +652,9 @@ void LLStatusBar::onMouseEnterPresets()
 	// show the master presets pull-down
 	LLUI::getInstance()->clearPopups();
 	LLUI::getInstance()->addPopup(mPanelPresetsPulldown);
-	mPanelNearByMedia->setVisible(FALSE);
-	mPanelVolumePulldown->setVisible(FALSE);
-	mPanelPresetsPulldown->setVisible(TRUE);
+	mPanelNearByMedia->setVisible(false);
+	mPanelVolumePulldown->setVisible(false);
+	mPanelPresetsPulldown->setVisible(true);
 }
 
 void LLStatusBar::onMouseEnterVolume()
@@ -679,10 +679,10 @@ void LLStatusBar::onMouseEnterVolume()
 	// show the master volume pull-down
 	LLUI::getInstance()->clearPopups();
 	LLUI::getInstance()->addPopup(mPanelVolumePulldown);
-	mPanelPresetsCameraPulldown->setVisible(FALSE);
-	mPanelPresetsPulldown->setVisible(FALSE);
-	mPanelNearByMedia->setVisible(FALSE);
-	mPanelVolumePulldown->setVisible(TRUE);
+	mPanelPresetsCameraPulldown->setVisible(false);
+	mPanelPresetsPulldown->setVisible(false);
+	mPanelNearByMedia->setVisible(false);
+	mPanelVolumePulldown->setVisible(true);
 }
 
 void LLStatusBar::onMouseEnterNearbyMedia()
@@ -707,10 +707,10 @@ void LLStatusBar::onMouseEnterNearbyMedia()
 	LLUI::getInstance()->clearPopups();
 	LLUI::getInstance()->addPopup(mPanelNearByMedia);
 
-	mPanelPresetsCameraPulldown->setVisible(FALSE);
-	mPanelPresetsPulldown->setVisible(FALSE);
-	mPanelVolumePulldown->setVisible(FALSE);
-	mPanelNearByMedia->setVisible(TRUE);
+	mPanelPresetsCameraPulldown->setVisible(false);
+	mPanelPresetsPulldown->setVisible(false);
+	mPanelVolumePulldown->setVisible(false);
+	mPanelNearByMedia->setVisible(true);
 }
 
 

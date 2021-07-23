@@ -327,7 +327,7 @@ void LLFloater::initFloater(const Params& p)
 	buildButtons(p);
 
 	// Floaters are created in the invisible state	
-	setVisible(FALSE);
+	setVisible(false);
 
 	if (!getParent())
 	{
@@ -597,7 +597,7 @@ LLControlGroup*	LLFloater::getControlGroup()
 	return LLUI::getInstance()->mSettingGroups["account"];
 }
 
-void LLFloater::setVisible( BOOL visible )
+void LLFloater::setVisible(bool visible)
 {
 	LLPanel::setVisible(visible); // calls onVisibilityChange()
 	if( visible && mFirstLook )
@@ -642,7 +642,7 @@ void LLFloater::setIsSingleInstance(BOOL is_single_instance)
 
 
 // virtual
-void LLFloater::onVisibilityChange ( BOOL new_visibility )
+void LLFloater::onVisibilityChange ( bool new_visibility )
 {
 	if (new_visibility)
 	{
@@ -789,11 +789,11 @@ void LLFloater::closeFloater(bool app_quitting)
 			// Hide the instance
 			if (getHost())
 			{
-				getHost()->setVisible(FALSE);
+				getHost()->setVisible(false);
 			}
 			else
 			{
-				setVisible(FALSE);
+				setVisible(false);
 				if (!mReuseInstance)
 				{
 					destroy();
@@ -802,7 +802,7 @@ void LLFloater::closeFloater(bool app_quitting)
 		}
 		else
 		{
-			setVisible(FALSE); // hide before destroying (so onVisibilityChange() gets called)
+			setVisible(false); // hide before destroying (so onVisibilityChange() gets called)
 			if (!mReuseInstance)
 			{
 				destroy();
@@ -1278,7 +1278,7 @@ void LLFloater::setMinimized(BOOL minimize)
 				}
 				else if (!floaterp->isMinimized())
 				{
-					floaterp->setVisible(FALSE);
+					floaterp->setVisible(false);
 				}
 			}
 		}
@@ -1327,8 +1327,8 @@ void LLFloater::setMinimized(BOOL minimize)
 			LLFloater* floaterp = dependent_it->get();
 			if (floaterp)
 			{
-				floaterp->setMinimized(FALSE);
-				floaterp->setVisible(TRUE);
+				floaterp->setMinimized(false);
+				floaterp->setVisible(true);
 			}
 		}
 
@@ -1660,12 +1660,12 @@ void LLFloater::setVisibleAndFrontmost(bool take_focus,const LLSD& key)
 	LLMultiFloater* hostp = getHost();
 	if (hostp)
 	{
-		hostp->setVisible(TRUE);
+		hostp->setVisible(true);
 		hostp->setFrontmost(take_focus);
 	}
 	else
 	{
-		setVisible(TRUE);
+		setVisible(true);
 		setFrontmost(take_focus);
 	}
 }
@@ -2128,13 +2128,13 @@ void LLFloater::updateTitleButtons()
 					buttons_rect.mLeft = btn_rect.mLeft;
 			}
 			mButtons[i]->setRect(btn_rect);
-			mButtons[i]->setVisible(TRUE);
+			mButtons[i]->setVisible(true);
 			// the restore button should have a tab stop so that it takes action when you Ctrl-Tab to a minimized floater
 			mButtons[i]->setTabStop(i == BUTTON_RESTORE);
 		}
 		else
 		{
-			mButtons[i]->setVisible(FALSE);
+			mButtons[i]->setVisible(false);
 		}
 	}
 	if (mDragHandle)

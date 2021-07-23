@@ -708,7 +708,7 @@ public:
 
 	// LLView Functionality
 	// can't set visibility directly, must call show or hide
-	virtual void	setVisible			(BOOL visible);
+	virtual void	setVisible			(bool visible);
 	
 	virtual void	show				(S32 x, S32 y, LLView* spawning_view = NULL);
 	virtual void	hide				();

@@ -1132,7 +1132,7 @@ bool LLVOSky::updateHeavenlyBodyGeometry(LLDrawable *drawable, F32 scale, const 
 	v_clipped[2] = draw_pos + scaled_right + scaled_up;
 	v_clipped[3] = draw_pos + scaled_right - scaled_up;
 
-	hb.setVisible(TRUE);
+	hb.setVisible(true);
 
 	facep = mFace[f];
 

@@ -210,13 +210,13 @@ void LLPanelPermissions::disableAll()
 	getChild<LLUICtrl>("pathfinding_attributes_value")->setValue(LLStringUtil::null);
 
 	getChildView("Creator:")->setEnabled(FALSE);
-	getChild<LLUICtrl>("Creator Icon")->setVisible(FALSE);
+	getChild<LLUICtrl>("Creator Icon")->setVisible(false);
 	mLabelCreatorName->setValue(LLStringUtil::null);
 	mLabelCreatorName->setEnabled(FALSE);
 
 	getChildView("Owner:")->setEnabled(FALSE);
-	getChild<LLUICtrl>("Owner Icon")->setVisible(FALSE);
-	getChild<LLUICtrl>("Owner Group Icon")->setVisible(FALSE);
+	getChild<LLUICtrl>("Owner Icon")->setVisible(false);
+	getChild<LLUICtrl>("Owner Group Icon")->setVisible(false);
 	mLabelOwnerName->setValue(LLStringUtil::null);
 	mLabelOwnerName->setEnabled(FALSE);
 
@@ -424,7 +424,7 @@ void LLPanelPermissions::refresh()
 		mCreatorCacheConnection = LLAvatarNameCache::get(mCreatorID, boost::bind(&LLPanelPermissions::updateCreatorName, this, _1, _2, style_params));
 	}
 	getChild<LLAvatarIconCtrl>("Creator Icon")->setValue(mCreatorID);
-	getChild<LLAvatarIconCtrl>("Creator Icon")->setVisible(TRUE);
+	getChild<LLAvatarIconCtrl>("Creator Icon")->setVisible(true);
 	mLabelCreatorName->setEnabled(TRUE);
 
 	// Update owner text field
@@ -443,8 +443,8 @@ void LLPanelPermissions::refresh()
 			style_params.link_href = owner_app_link;
 			mLabelOwnerName->setText(group_data->mName, style_params);
 			getChild<LLGroupIconCtrl>("Owner Group Icon")->setIconId(group_data->mInsigniaID);
-			getChild<LLGroupIconCtrl>("Owner Group Icon")->setVisible(TRUE);
-			getChild<LLUICtrl>("Owner Icon")->setVisible(FALSE);
+			getChild<LLGroupIconCtrl>("Owner Group Icon")->setVisible(true);
+			getChild<LLUICtrl>("Owner Icon")->setVisible(false);
 		}
 		else
 		{
@@ -487,8 +487,8 @@ void LLPanelPermissions::refresh()
 		}
 
 		getChild<LLAvatarIconCtrl>("Owner Icon")->setValue(owner_id);
-		getChild<LLAvatarIconCtrl>("Owner Icon")->setVisible(TRUE);
-		getChild<LLUICtrl>("Owner Group Icon")->setVisible(FALSE);
+		getChild<LLAvatarIconCtrl>("Owner Icon")->setVisible(true);
+		getChild<LLUICtrl>("Owner Group Icon")->setVisible(false);
 	}
 	mLabelOwnerName->setEnabled(TRUE);
 
@@ -705,15 +705,15 @@ void LLPanelPermissions::refresh()
 		if (valid_base_perms)
 		{
 			getChild<LLUICtrl>("B:")->setValue("B: " + mask_to_string(base_mask_on));
-			getChildView("B:")->setVisible(TRUE);
+			getChildView("B:")->setVisible(true);
 			getChild<LLUICtrl>("O:")->setValue("O: " + mask_to_string(owner_mask_on));
-			getChildView("O:")->setVisible(TRUE);
+			getChildView("O:")->setVisible(true);
 			getChild<LLUICtrl>("G:")->setValue("G: " + mask_to_string(group_mask_on));
-			getChildView("G:")->setVisible(TRUE);
+			getChildView("G:")->setVisible(true);
 			getChild<LLUICtrl>("E:")->setValue("E: " + mask_to_string(everyone_mask_on));
-			getChildView("E:")->setVisible(TRUE);
+			getChildView("E:")->setVisible(true);
 			getChild<LLUICtrl>("N:")->setValue("N: " + mask_to_string(next_owner_mask_on));
-			getChildView("N:")->setVisible(TRUE);
+			getChildView("N:")->setVisible(true);
 		}
 		else if(!root_selected)
 		{
@@ -723,25 +723,25 @@ void LLPanelPermissions::refresh()
 				if (node && node->mValid)
 				{
 					getChild<LLUICtrl>("B:")->setValue("B: " + mask_to_string( node->mPermissions->getMaskBase()));
-					getChildView("B:")->setVisible(TRUE);
+					getChildView("B:")->setVisible(true);
 					getChild<LLUICtrl>("O:")->setValue("O: " + mask_to_string(node->mPermissions->getMaskOwner()));
-					getChildView("O:")->setVisible(TRUE);
+					getChildView("O:")->setVisible(true);
 					getChild<LLUICtrl>("G:")->setValue("G: " + mask_to_string(node->mPermissions->getMaskGroup()));
-					getChildView("G:")->setVisible(TRUE);
+					getChildView("G:")->setVisible(true);
 					getChild<LLUICtrl>("E:")->setValue("E: " + mask_to_string(node->mPermissions->getMaskEveryone()));
-					getChildView("E:")->setVisible(TRUE);
+					getChildView("E:")->setVisible(true);
 					getChild<LLUICtrl>("N:")->setValue("N: " + mask_to_string(node->mPermissions->getMaskNextOwner()));
-					getChildView("N:")->setVisible(TRUE);
+					getChildView("N:")->setVisible(true);
 				}
 			}
 		}
 		else
 		{
-		    getChildView("B:")->setVisible(FALSE);
-		    getChildView("O:")->setVisible(FALSE);
-		    getChildView("G:")->setVisible(FALSE);
-		    getChildView("E:")->setVisible(FALSE);
-		    getChildView("N:")->setVisible(FALSE);
+		    getChildView("B:")->setVisible(false);
+		    getChildView("O:")->setVisible(false);
+		    getChildView("G:")->setVisible(false);
+		    getChildView("E:")->setVisible(false);
+		    getChildView("N:")->setVisible(false);
 		}
 
 		U32 flag_mask = 0x0;

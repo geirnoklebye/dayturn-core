@@ -170,12 +170,12 @@ void LLTeleportHistoryMenuItem::draw()
 
 void LLTeleportHistoryMenuItem::onMouseEnter(S32 x, S32 y, MASK mask)
 {
-	mArrowIcon->setVisible(TRUE);
+	mArrowIcon->setVisible(true);
 }
 
 void LLTeleportHistoryMenuItem::onMouseLeave(S32 x, S32 y, MASK mask)
 {
-	mArrowIcon->setVisible(FALSE);
+	mArrowIcon->setVisible(false);
 }
 
 static LLDefaultChildRegistry::Register<LLPullButton> menu_button("pull_button");
@@ -334,7 +334,7 @@ bool LLNavigationBar::postBuild()
 	return true;
 }
 
-void LLNavigationBar::setVisible(BOOL visible)
+void LLNavigationBar::setVisible(bool visible)
 {
 	// change visibility of grandparent layout_panel to animate in and out
 	if (getParent()) 

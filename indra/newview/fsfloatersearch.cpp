@@ -367,14 +367,14 @@ void FSFloaterSearch::onTabChange()
 
 	if (active_panel == mPanelPeople || active_panel == mPanelGroups)
 	{
-		mDetailSnapshotParcel->setVisible(FALSE);
-		mDetailSnapshot->setVisible(TRUE);
+		mDetailSnapshotParcel->setVisible(false);
+		mDetailSnapshot->setVisible(true);
 	}
 	else if (active_panel == mPanelPlaces || active_panel == mPanelLand ||
 		active_panel == mPanelEvents || active_panel == mPanelClassifieds)
 	{
-		mDetailSnapshot->setVisible(FALSE);
-		mDetailSnapshotParcel->setVisible(TRUE);
+		mDetailSnapshot->setVisible(false);
+		mDetailSnapshotParcel->setVisible(true);
 	}
 }
 

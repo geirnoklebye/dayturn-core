@@ -165,14 +165,14 @@ void LLSplitButton::showButtons()
 
 	//push arrow button down and show the item buttons
 	mArrowBtn->setToggleState(true);
-	mItemsPanel->setVisible(TRUE);
+	mItemsPanel->setVisible(true);
 
 	setUseBoundingRect(TRUE);
 }
 
 void LLSplitButton::hideButtons()
 {
-	mItemsPanel->setVisible(FALSE);
+	mItemsPanel->setVisible(false);
 	mArrowBtn->setToggleState(false);
 
 	setUseBoundingRect(FALSE);

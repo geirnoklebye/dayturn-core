@@ -283,7 +283,7 @@ bool LLGroupInviteNotificationListItem::postBuild()
     bool rv = LLGroupNotificationListItem::postBuild();
     setFee(mParams.fee);
     mInviteButtonPanel = getChild<LLPanel>("button_panel");
-    mInviteButtonPanel->setVisible(TRUE);
+    mInviteButtonPanel->setVisible(true);
     mJoinBtn = getChild<LLButton>("join_btn");
     mDeclineBtn = getChild<LLButton>("decline_btn");
     mInfoBtn = getChild<LLButton>("info_btn");
@@ -338,8 +338,8 @@ void LLGroupInviteNotificationListItem::setFee(S32 fee)
     std::string fee_text = getString("group_fee_text", string_args);
     mSenderOrFeeBox->setValue(fee_text);
     mSenderOrFeeBoxExp->setValue(fee_text);
-    mSenderOrFeeBox->setVisible(TRUE);
-    mSenderOrFeeBoxExp->setVisible(TRUE);
+    mSenderOrFeeBox->setVisible(true);
+    mSenderOrFeeBoxExp->setVisible(true);
 }
 
 LLGroupNoticeNotificationListItem::LLGroupNoticeNotificationListItem(const Params& p)
@@ -371,7 +371,7 @@ bool LLGroupNoticeNotificationListItem::postBuild()
     mAttachmentIcon = getChild<LLIconCtrl>("attachment_icon");
     mAttachmentIconExp = getChild<LLIconCtrl>("attachment_icon_exp");
     mAttachmentPanel = getChild<LLPanel>("attachment_panel");
-    mAttachmentPanel->setVisible(FALSE);
+    mAttachmentPanel->setVisible(false);
 
 
     mTitleBox->setValue(mParams.subject);
@@ -391,13 +391,13 @@ bool LLGroupNoticeNotificationListItem::postBuild()
     if (mInventoryOffer != NULL)
     {
         mAttachmentTextBox->setValue(mInventoryOffer->mDesc);
-        mAttachmentTextBox->setVisible(TRUE);
-        mAttachmentIcon->setVisible(TRUE);
+        mAttachmentTextBox->setVisible(true);
+        mAttachmentIcon->setVisible(true);
 
         std::string icon_name = LLInventoryIcon::getIconName(mInventoryOffer->mType,
           LLInventoryType::IT_TEXTURE);
         mAttachmentIconExp->setValue(icon_name);
-        mAttachmentIconExp->setVisible(TRUE);
+        mAttachmentIconExp->setVisible(true);
 
         mAttachmentTextBox->setClickedCallback(boost::bind(
             &LLGroupNoticeNotificationListItem::onClickAttachment, this));
@@ -405,7 +405,7 @@ bool LLGroupNoticeNotificationListItem::postBuild()
         std::string expanded_height_resize_str = getString("expanded_height_resize_for_attachment");
         mExpandedHeightResize = (S32)atoi(expanded_height_resize_str.c_str());
 
-        mAttachmentPanel->setVisible(TRUE);
+        mAttachmentPanel->setVisible(true);
     }
     return rv;
 }
@@ -421,8 +421,8 @@ bool LLGroupNotificationListItem::postBuild()
     mGroupIcon->setValue(mParams.group_id);
     mGroupIconExp->setValue(mParams.group_id);
 
-    mGroupIcon->setVisible(TRUE);
-    mGroupIconExp->setVisible(TRUE);
+    mGroupIcon->setVisible(true);
+    mGroupIconExp->setVisible(true);
 
     mGroupId = mParams.group_id;
 
@@ -479,12 +479,12 @@ void LLGroupNotificationListItem::setGroupName(std::string name)
         string_args["[GROUP_NAME]"] = llformat("%s", name.c_str());
         std::string group_box_str = getString("group_name_text", string_args);
         mGroupNameBoxExp->setValue(group_box_str);
-        mGroupNameBoxExp->setVisible(TRUE);
+        mGroupNameBoxExp->setVisible(true);
     }
     else
     {
         mGroupNameBoxExp->setValue(LLStringUtil::null);
-        mGroupNameBoxExp->setVisible(FALSE);
+        mGroupNameBoxExp->setVisible(false);
     }
 }
 
@@ -497,13 +497,13 @@ void LLGroupNoticeNotificationListItem::setSender(std::string sender)
         std::string sender_text = getString("sender_resident_text", string_args);
         mSenderOrFeeBox->setValue(sender_text);
         mSenderOrFeeBoxExp->setValue(sender_text);
-        mSenderOrFeeBox->setVisible(TRUE);
-        mSenderOrFeeBoxExp->setVisible(TRUE);
+        mSenderOrFeeBox->setVisible(true);
+        mSenderOrFeeBoxExp->setVisible(true);
     } else {
         mSenderOrFeeBox->setValue(LLStringUtil::null);
         mSenderOrFeeBoxExp->setValue(LLStringUtil::null);
-        mSenderOrFeeBox->setVisible(FALSE);
-        mSenderOrFeeBoxExp->setVisible(FALSE);
+        mSenderOrFeeBox->setVisible(false);
+        mSenderOrFeeBoxExp->setVisible(false);
     }
 }
 void LLGroupNoticeNotificationListItem::close()
@@ -569,8 +569,8 @@ bool LLTransactionNotificationListItem::postBuild()
     mAvatarIcon->setValue("System_Notification");
     mAvatarIconExp->setValue("System_Notification");
 
-    mAvatarIcon->setVisible(TRUE);
-    mAvatarIconExp->setVisible(TRUE);
+    mAvatarIcon->setVisible(true);
+    mAvatarIconExp->setVisible(true);
     if((GOVERNOR_LINDEN_ID == mParams.paid_to_id) ||
        (GOVERNOR_LINDEN_ID == mParams.paid_from_id))
     {
@@ -614,8 +614,8 @@ bool LLSystemNotificationListItem::postBuild()
     mSystemNotificationIcon = getChild<LLIconCtrl>("system_notification_icon");
     mSystemNotificationIconExp = getChild<LLIconCtrl>("system_notification_icon_exp");
     if (mSystemNotificationIcon)
-        mSystemNotificationIcon->setVisible(TRUE);
+        mSystemNotificationIcon->setVisible(true);
     if (mSystemNotificationIconExp)
-        mSystemNotificationIconExp->setVisible(TRUE);
+        mSystemNotificationIconExp->setVisible(true);
     return rv;
 }

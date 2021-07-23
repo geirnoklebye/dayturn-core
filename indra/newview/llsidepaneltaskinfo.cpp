@@ -201,12 +201,12 @@ void LLSidepanelTaskInfo::disableAll()
 
 	disablePermissions();
 
-	mDAB->setVisible(FALSE);
-	mDAO->setVisible(FALSE);
-	mDAG->setVisible(FALSE);
-	mDAE->setVisible(FALSE);
-	mDAN->setVisible(FALSE);
-	mDAF->setVisible(FALSE);
+	mDAB->setVisible(false);
+	mDAO->setVisible(false);
+	mDAG->setVisible(false);
+	mDAE->setVisible(false);
+	mDAN->setVisible(false);
+	mDAF->setVisible(false);
 
 	mOpenBtn->setEnabled(FALSE);
 	mPayBtn->setEnabled(FALSE);

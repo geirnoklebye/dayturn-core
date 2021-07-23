@@ -2534,7 +2534,7 @@ bool LLPanelRegionExperiences::postBuild()
 	mTrusted = setupList("panel_trusted", ESTATE_EXPERIENCE_TRUSTED_ADD, ESTATE_EXPERIENCE_TRUSTED_REMOVE);
 	mBlocked = setupList("panel_blocked", ESTATE_EXPERIENCE_BLOCKED_ADD, ESTATE_EXPERIENCE_BLOCKED_REMOVE);
 
-	getChild<LLLayoutPanel>("trusted_layout_panel")->setVisible(TRUE);
+	getChild<LLLayoutPanel>("trusted_layout_panel")->setVisible(true);
 	getChild<LLTextBox>("experiences_help_text")->setText(getString("estate_caption"));
 	getChild<LLTextBox>("trusted_text_help")->setText(getString("trusted_estate_text"));
 	getChild<LLTextBox>("allowed_text_help")->setText(getString("allowed_estate_text"));
@@ -3775,8 +3775,8 @@ bool LLPanelRegionEnvironment::postBuild()
         return FALSE;
 
     getChild<LLUICtrl>(BTN_USEDEFAULT)->setLabelArg("[USEDEFAULT]", getString(STR_LABEL_USEDEFAULT));
-    getChild<LLUICtrl>(CHK_ALLOWOVERRIDE)->setVisible(TRUE);
-    getChild<LLUICtrl>(PNL_ENVIRONMENT_ALTITUDES)->setVisible(TRUE);
+    getChild<LLUICtrl>(CHK_ALLOWOVERRIDE)->setVisible(true);
+    getChild<LLUICtrl>(PNL_ENVIRONMENT_ALTITUDES)->setVisible(true);
 
     getChild<LLUICtrl>(CHK_ALLOWOVERRIDE)->setCommitCallback([this](LLUICtrl *, const LLSD &value){ onChkAllowOverride(value.asBoolean()); });
 

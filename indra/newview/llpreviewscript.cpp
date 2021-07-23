@@ -1345,7 +1345,7 @@ void LLLiveLSLEditor::updateExperiencePanel()
 	if(mScriptEd->getAssociatedExperience().isNull())
 	{
 		mExperienceEnabled->set(FALSE);
-		mExperiences->setVisible(FALSE);
+		mExperiences->setVisible(false);
 		if(mExperienceIds.size()>0)
 		{
 			mExperienceEnabled->setEnabled(TRUE);
@@ -1356,13 +1356,13 @@ void LLLiveLSLEditor::updateExperiencePanel()
 			mExperienceEnabled->setEnabled(FALSE);
 			mExperienceEnabled->setToolTip(getString("no_experiences"));
 		}
-		getChild<LLButton>("view_profile")->setVisible(FALSE);
+		getChild<LLButton>("view_profile")->setVisible(false);
 	}
 	else
 	{
 		mExperienceEnabled->setToolTip(getString("experience_enabled"));
 		mExperienceEnabled->setEnabled(getIsModifiable());
-		mExperiences->setVisible(TRUE);
+		mExperiences->setVisible(true);
 		mExperienceEnabled->set(TRUE);
 		getChild<LLButton>("view_profile")->setToolTip(getString("show_experience_profile"));
 		buildExperienceList();
@@ -1433,7 +1433,7 @@ void LLLiveLSLEditor::buildExperienceList()
 		mExperiences->setEnabled(TRUE);
 		mExperiences->sortByName(TRUE);
 		mExperiences->setCurrentByIndex(mExperiences->getCurrentIndex());
-		getChild<LLButton>("view_profile")->setVisible(TRUE);
+		getChild<LLButton>("view_profile")->setVisible(true);
 	}
 }
 

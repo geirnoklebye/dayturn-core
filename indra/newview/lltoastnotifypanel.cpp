@@ -226,7 +226,7 @@ void LLToastNotifyPanel::adjustPanelForScriptNotice(S32 button_panel_width, S32 
 void LLToastNotifyPanel::adjustPanelForTipNotice()
 {
 	//we don't need display ControlPanel for tips because they doesn't contain any buttons. 
-	mControlPanel->setVisible(FALSE);
+	mControlPanel->setVisible(false);
 	reshape(getRect().getWidth(), mInfoPanel->getRect().getHeight());
 
 	if (mNotification->getPayload().has("respond_on_mousedown")
@@ -337,7 +337,7 @@ void LLToastNotifyPanel::init( LLRect rect, bool show_images )
     }
 
     mTextBox->setMaxTextLength(LLToastPanel::MAX_TEXT_LENGTH);
-    mTextBox->setVisible(TRUE);
+    mTextBox->setVisible(true);
     mTextBox->setPlainText(!show_images);
     mTextBox->setContentTrusted(is_content_trusted);
     mTextBox->setValue(mNotification->getMessage());

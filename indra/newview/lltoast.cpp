@@ -209,7 +209,7 @@ void LLToast::hide()
 {
 	if (!mIsHidden)
 	{
-		setVisible(FALSE);
+		setVisible(false);
 		setFading(false);
 		mTimer->stop();
 		mIsHidden = true;
@@ -488,7 +488,7 @@ void LLToast::updateHoveredState()
 			sendChildToFront(mHideBtn);
 			if(mHideBtn && mHideBtn->getEnabled())
 			{
-				mHideBtn->setVisible(TRUE);
+				mHideBtn->setVisible(true);
 			}
 			
 			mToastMouseEnterSignal(this, getValue());
@@ -511,7 +511,7 @@ void LLToast::updateHoveredState()
 					mHideBtnPressed = false;
 					return;
 				}
-				mHideBtn->setVisible(FALSE);
+				mHideBtn->setVisible(false);
 			}
 			
 			mToastMouseLeaveSignal(this, getValue());

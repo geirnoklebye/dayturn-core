@@ -122,7 +122,7 @@ void LLPanelPresetsPulldown::onRowClick(const LLSD& user_data)
             LL_DEBUGS() << "selected '" << name << "'" << LL_ENDL;
 			LLPresetsManager::getInstance()->loadPreset(PRESETS_GRAPHIC, name);
 
-			setVisible(FALSE);
+			setVisible(false);
 		}
         else
         {
@@ -138,7 +138,7 @@ void LLPanelPresetsPulldown::onRowClick(const LLSD& user_data)
 void LLPanelPresetsPulldown::onGraphicsButtonClick(const LLSD& user_data)
 {
 	// close the minicontrol, we're bringing up the big one
-	setVisible(FALSE);
+	setVisible(false);
 
 	// bring up the prefs floater
 	LLFloater* prefsfloater = LLFloaterReg::showInstance("preferences");

@@ -797,7 +797,7 @@ public:
         if (mInfoCtrl)
         {
             mInfoCtrl->setCommitCallback(boost::bind(&LLChatHistoryHeader::onClickInfoCtrl, mInfoCtrl));
-            mInfoCtrl->setVisible(FALSE);
+            mInfoCtrl->setVisible(false);
         }
         else
         {
@@ -916,7 +916,7 @@ public:
             updateMinUserNameWidth();
             LLColor4 sep_color = LLUIColorTable::instance().getColor("ChatTeleportSeparatorColor");
             setTransparentColor(sep_color);
-            mTimeBoxTextBox->setVisible(FALSE);
+            mTimeBoxTextBox->setVisible(false);
         }
         else if (chat.mFromName.empty()
 			//|| mSourceType == CHAT_SOURCE_SYSTEM
@@ -1098,7 +1098,7 @@ public:
 			user_name->reshape(user_name_rect.getWidth(), user_name_rect.getHeight());
 			user_name->setRect(user_name_rect);
 
-			time_box->setVisible(TRUE);
+			time_box->setVisible(true);
 		}
 
 		LLPanel::draw();
@@ -1324,7 +1324,7 @@ protected:
 
 	void hideInfoCtrl()
 	{
-		mInfoCtrl->setVisible(FALSE);
+		mInfoCtrl->setVisible(false);
 	}
 
 private:
@@ -1571,7 +1571,7 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 	if (mNotifyAboutUnreadMsg && !mEditor->scrolledToEnd() && !from_me && !chat.mFromName.empty())
 	{
 		mUnreadChatSources.insert(chat.mFromName);
-		mMoreChatPanel->setVisible(TRUE);
+		mMoreChatPanel->setVisible(true);
 		std::string chatters;
 		for (unread_chat_source_t::iterator it = mUnreadChatSources.begin();
 			it != mUnreadChatSources.end();)
@@ -1926,7 +1926,7 @@ void LLChatHistory::draw()
 	if (mEditor->scrolledToEnd())
 	{
 		mUnreadChatSources.clear();
-		mMoreChatPanel->setVisible(FALSE);
+		mMoreChatPanel->setVisible(false);
 	}
 
 	LLUICtrl::draw();

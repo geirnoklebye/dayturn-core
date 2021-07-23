@@ -106,7 +106,7 @@ bool LLFloaterImagePreview::postBuild()
 		PREVIEW_HPAD + PREF_BUTTON_HEIGHT + PREVIEW_HPAD);
 	mPreviewImageRect.set(0.f, 1.f, 1.f, 0.f);
 
-	getChildView("bad_image_text")->setVisible(FALSE);
+	getChildView("bad_image_text")->setVisible(false);
 
 	if (mRawImagep.notNull() && gAgent.getRegion() != NULL)
 	{
@@ -129,7 +129,7 @@ bool LLFloaterImagePreview::postBuild()
 	{
 		mAvatarPreview = NULL;
 		mSculptedPreview = NULL;
-		getChildView("bad_image_text")->setVisible(TRUE);
+		getChildView("bad_image_text")->setVisible(true);
 		getChildView("clothing_type_combo")->setEnabled(FALSE);
 		getChildView("ok_btn")->setEnabled(FALSE);
 

@@ -1479,7 +1479,7 @@ BOOL LLFolderView::handleRightMouseDown( S32 x, S32 y, MASK mask )
 	{
 		if (menu && menu->getVisible())
 		{
-			menu->setVisible(FALSE);
+			menu->setVisible(false);
 		}
 		setSelection(NULL, FALSE, TRUE);
 	}
@@ -1510,7 +1510,7 @@ BOOL LLFolderView::addNoOptions(LLMenuGL* menu) const
 	}
 	if (nooptions_item)
 	{
-		nooptions_item->setVisible(TRUE);
+		nooptions_item->setVisible(true);
 		nooptions_item->setEnabled(FALSE);
 		return TRUE;
 	}
@@ -1845,7 +1845,7 @@ void LLFolderView::updateMenuOptions(LLMenuGL* menu)
 	LLView::child_list_t::const_iterator menu_itor;
 	for (menu_itor = list->begin(); menu_itor != list->end(); ++menu_itor)
 	{
-		(*menu_itor)->setVisible(FALSE);
+		(*menu_itor)->setVisible(false);
 		(*menu_itor)->pushVisible(TRUE);
 		(*menu_itor)->setEnabled(TRUE);
 	}
@@ -1986,7 +1986,7 @@ void LLFolderView::onRenamerLost()
 {
 	if (mRenamer && mRenamer->getVisible())
 	{
-		mRenamer->setVisible(FALSE);
+		mRenamer->setVisible(false);
 
 		// will commit current name (which could be same as original name)
 		mRenamer->setFocus(FALSE);

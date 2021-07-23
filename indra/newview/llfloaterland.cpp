@@ -609,13 +609,13 @@ void LLPanelLandGeneral::refresh()
 	mTextGroup->setText(LLStringUtil::null);
 	mTextPrice->setText(LLStringUtil::null);
 
-	mSaleInfoForSale1->setVisible(FALSE);
-	mSaleInfoForSale2->setVisible(FALSE);
-	mSaleInfoForSaleObjects->setVisible(FALSE);
-	mSaleInfoForSaleNoObjects->setVisible(FALSE);
-	mSaleInfoNotForSale->setVisible(FALSE);
-	mBtnSellLand->setVisible(FALSE);
-	mBtnStopSellLand->setVisible(FALSE);
+	mSaleInfoForSale1->setVisible(false);
+	mSaleInfoForSale2->setVisible(false);
+	mSaleInfoForSaleObjects->setVisible(false);
+	mSaleInfoForSaleNoObjects->setVisible(false);
+	mSaleInfoNotForSale->setVisible(false);
+	mBtnSellLand->setVisible(false);
+	mBtnStopSellLand->setVisible(false);
 
 	mTextPriceLabel->setText(LLStringUtil::null);
 	mTextDwell->setText(LLStringUtil::null);
@@ -638,13 +638,13 @@ void LLPanelLandGeneral::refresh()
 	if(regionp && (regionp->getOwner() == gAgent.getID()))
 	{
 		region_owner = true;
-		mBtnReleaseLand->setVisible(FALSE);
-		mBtnReclaimLand->setVisible(TRUE);
+		mBtnReleaseLand->setVisible(false);
+		mBtnReclaimLand->setVisible(true);
 	}
 	else
 	{
-		mBtnReleaseLand->setVisible(TRUE);
-		mBtnReclaimLand->setVisible(FALSE);
+		mBtnReleaseLand->setVisible(true);
+		mBtnReclaimLand->setVisible(false);
 	}
 	LLParcel *parcel = mParcel->getParcel();
 	if (parcel)
@@ -785,8 +785,8 @@ void LLPanelLandGeneral::refresh()
 
 		BOOL for_sale = parcel->getForSale();
 				
-		mBtnSellLand->setVisible(FALSE);
-		mBtnStopSellLand->setVisible(FALSE);
+		mBtnSellLand->setVisible(false);
+		mBtnStopSellLand->setVisible(false);
 		
 		// show pricing information
 		S32 area;
@@ -815,19 +815,19 @@ void LLPanelLandGeneral::refresh()
 
 		if (for_sale)
 		{
-			mSaleInfoForSale1->setVisible(TRUE);
-			mSaleInfoForSale2->setVisible(TRUE);
+			mSaleInfoForSale1->setVisible(true);
+			mSaleInfoForSale2->setVisible(true);
 			if (parcel->getSellWithObjects())
 			{
-				mSaleInfoForSaleObjects->setVisible(TRUE);
-				mSaleInfoForSaleNoObjects->setVisible(FALSE);
+				mSaleInfoForSaleObjects->setVisible(true);
+				mSaleInfoForSaleNoObjects->setVisible(false);
 			}
 			else
 			{
-				mSaleInfoForSaleObjects->setVisible(FALSE);
-				mSaleInfoForSaleNoObjects->setVisible(TRUE);
+				mSaleInfoForSaleObjects->setVisible(false);
+				mSaleInfoForSaleNoObjects->setVisible(true);
 			}
-			mSaleInfoNotForSale->setVisible(FALSE);
+			mSaleInfoNotForSale->setVisible(false);
 
 			F32 cost_per_sqm = 0.0f;
 			if (area > 0)
@@ -840,19 +840,19 @@ void LLPanelLandGeneral::refresh()
 			mSaleInfoForSale1->setTextArg("[PRICE_PER_SQM]", llformat("%.1f", cost_per_sqm));
 			if (can_be_sold)
 			{
-				mBtnStopSellLand->setVisible(TRUE);
+				mBtnStopSellLand->setVisible(true);
 			}
 		}
 		else
 		{
-			mSaleInfoForSale1->setVisible(FALSE);
-			mSaleInfoForSale2->setVisible(FALSE);
-			mSaleInfoForSaleObjects->setVisible(FALSE);
-			mSaleInfoForSaleNoObjects->setVisible(FALSE);
-			mSaleInfoNotForSale->setVisible(TRUE);
+			mSaleInfoForSale1->setVisible(false);
+			mSaleInfoForSale2->setVisible(false);
+			mSaleInfoForSaleObjects->setVisible(false);
+			mSaleInfoForSaleNoObjects->setVisible(false);
+			mSaleInfoNotForSale->setVisible(true);
 			if (can_be_sold)
 			{
-				mBtnSellLand->setVisible(TRUE);
+				mBtnSellLand->setVisible(true);
 			}
 		}
 		
@@ -1343,12 +1343,12 @@ void LLPanelLandObjects::refresh()
 
 		if (parcel_object_bonus != 1.0f)
 		{
-			mParcelObjectBonus->setVisible(TRUE);
+			mParcelObjectBonus->setVisible(true);
 			mParcelObjectBonus->setTextArg("[BONUS]", llformat("%.2f", parcel_object_bonus));
 		}
 		else
 		{
-			mParcelObjectBonus->setVisible(FALSE);
+			mParcelObjectBonus->setVisible(false);
 		}
 
 		if (sw_total > sw_max)
@@ -1995,7 +1995,7 @@ bool LLPanelLandOptions::postBuild()
 	if (gAgent.wantsPGOnly())
 	{
 		// Disable these buttons if they are PG (Teen) users
-		mMatureCtrl->setVisible(FALSE);
+		mMatureCtrl->setVisible(false);
 		mMatureCtrl->setEnabled(FALSE);
 	}
 	
@@ -2170,13 +2170,13 @@ void LLPanelLandOptions::refresh()
 		if (gAgent.wantsPGOnly())
 		{
 			// Disable these buttons if they are PG (Teen) users
-			mMatureCtrl->setVisible(FALSE);
+			mMatureCtrl->setVisible(false);
 			mMatureCtrl->setEnabled(FALSE);
 		}
 		else
 		{
 			// not teen so fill in the data for the maturity control
-			mMatureCtrl->setVisible(TRUE);
+			mMatureCtrl->setVisible(true);
 			LLStyle::Params style;
 			style.image(LLUI::getUIImage(gFloaterView->getParentFloater(this)->getString("maturity_icon_moderate")));
 			LLCheckBoxWithTBAcess* fullaccess_mature_ctrl = (LLCheckBoxWithTBAcess*)mMatureCtrl;
@@ -3239,8 +3239,8 @@ bool LLPanelLandExperiences::postBuild()
 	// no privileged ones
 	mBlocked->addFilter(boost::bind(LLPanelExperiencePicker::FilterWithoutProperties, _1, LLExperienceCache::PROPERTY_PRIVILEGED|LLExperienceCache::PROPERTY_GRID));
 
-	getChild<LLLayoutPanel>("trusted_layout_panel")->setVisible(FALSE);
-	getChild<LLTextBox>("experiences_help_text")->setVisible(FALSE);
+	getChild<LLLayoutPanel>("trusted_layout_panel")->setVisible(false);
+	getChild<LLTextBox>("experiences_help_text")->setVisible(false);
 	getChild<LLTextBox>("allowed_text_help")->setText(getString("allowed_parcel_text"));
 	getChild<LLTextBox>("blocked_text_help")->setText(getString("blocked_parcel_text"));
 	
@@ -3336,9 +3336,9 @@ bool LLPanelLandEnvironment::postBuild()
         return FALSE;
 
     getChild<LLUICtrl>(BTN_USEDEFAULT)->setLabelArg("[USEDEFAULT]", getString(STR_LABEL_USEREGION));
-    getChild<LLUICtrl>(CHK_ALLOWOVERRIDE)->setVisible(FALSE);
-    getChild<LLUICtrl>(PNL_REGION_MSG)->setVisible(FALSE);
-    getChild<LLUICtrl>(PNL_ENVIRONMENT_ALTITUDES)->setVisible(TRUE);
+    getChild<LLUICtrl>(CHK_ALLOWOVERRIDE)->setVisible(false);
+    getChild<LLUICtrl>(PNL_REGION_MSG)->setVisible(false);
+    getChild<LLUICtrl>(PNL_ENVIRONMENT_ALTITUDES)->setVisible(true);
 
     return true;
 }

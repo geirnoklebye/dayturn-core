@@ -722,12 +722,12 @@ bool LLPanelGroupLandMoney::postBuild()
 
 	if ( mImplementationp->mGroupOverLimitTextp )
 	{
-		mImplementationp->mGroupOverLimitTextp->setVisible(FALSE);
+		mImplementationp->mGroupOverLimitTextp->setVisible(false);
 	}
 
 	if ( mImplementationp->mGroupOverLimitIconp )
 	{
-		mImplementationp->mGroupOverLimitIconp->setVisible(FALSE);
+		mImplementationp->mGroupOverLimitIconp->setVisible(false);
 	}
 
 	if ( !can_view )
@@ -1557,12 +1557,12 @@ void LLPanelGroupLandMoney::setGroupID(const LLUUID& id)
 
 	if ( mImplementationp->mGroupOverLimitTextp )
 	{
-		mImplementationp->mGroupOverLimitTextp->setVisible(FALSE);
+		mImplementationp->mGroupOverLimitTextp->setVisible(false);
 	}
 
 	if ( mImplementationp->mGroupOverLimitIconp )
 	{
-		mImplementationp->mGroupOverLimitIconp->setVisible(FALSE);
+		mImplementationp->mGroupOverLimitIconp->setVisible(false);
 	}
 
 	if ( mImplementationp->mGroupParcelsp )

@@ -1559,8 +1559,8 @@ void LLFloaterEditExtDayCycle::startPlay()
     gIdleCallbacks.addFunction(onIdlePlay, this);
     mPlayStartFrame = mTimeSlider->getCurSliderValue();
 
-    getChild<LLView>("play_layout", true)->setVisible(FALSE);
-    getChild<LLView>("pause_layout", true)->setVisible(TRUE);
+    getChild<LLView>("play_layout", true)->setVisible(false);
+    getChild<LLView>("pause_layout", true)->setVisible(true);
 }
 
 void LLFloaterEditExtDayCycle::stopPlay()
@@ -1574,8 +1574,8 @@ void LLFloaterEditExtDayCycle::stopPlay()
     F32 frame = mTimeSlider->getCurSliderValue();
     selectFrame(frame, LLSettingsDay::DEFAULT_FRAME_SLOP_FACTOR);
 
-    getChild<LLView>("play_layout", true)->setVisible(TRUE);
-    getChild<LLView>("pause_layout", true)->setVisible(FALSE);
+    getChild<LLView>("play_layout", true)->setVisible(true);
+    getChild<LLView>("pause_layout", true)->setVisible(false);
 }
 
 //static

@@ -922,14 +922,14 @@ void LLFloaterReporter::takeNewSnapshot()
 	const S32 IMAGE_HEIGHT = 768;
 
 	// Take a screenshot, but don't draw this floater.
-	setVisible(FALSE);
+	setVisible(false);
     if (!gViewerWindow->rawSnapshot(mImageRaw,IMAGE_WIDTH, IMAGE_HEIGHT, TRUE, FALSE, TRUE /*UI*/, TRUE, FALSE))
 	{
 		LL_WARNS() << "Unable to take screenshot" << LL_ENDL;
-		setVisible(TRUE);
+		setVisible(true);
 		return;
 	}
-	setVisible(TRUE);
+	setVisible(true);
 
 	if(gSavedPerAccountSettings.getBOOL("PreviousScreenshotForReport"))
 	{

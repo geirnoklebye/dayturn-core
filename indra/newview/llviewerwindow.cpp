@@ -2169,7 +2169,7 @@ void LLViewerWindow::initBase()
 	}
 	gToolBarView->setShape(panel_holder->getLocalRect());
 	// Hide the toolbars for the moment: we'll make them visible after logging in world (see LLViewerWindow::initWorldUI())
-	gToolBarView->setVisible(FALSE);
+	gToolBarView->setVisible(false);
 
 	// Constrain floaters to inside the menu and status bar regions.
 	gFloaterView = main_view->getChild<LLFloaterView>("Floater View");
@@ -2250,7 +2250,7 @@ void LLViewerWindow::initWorldUI()
 		chiclet_bar->setShape(chiclet_container->getLocalRect());
 		chiclet_bar->setFollowsAll();
 		chiclet_container->addChild(chiclet_bar);
-		chiclet_container->setVisible(TRUE);
+		chiclet_container->setVisible(true);
 	}
 
 	LLRect morph_view_rect = full_window;
@@ -2281,7 +2281,7 @@ void LLViewerWindow::initWorldUI()
 	gStatusBar->setBackgroundColor( gMenuBarView->getBackgroundColor().get() );
     // add InBack so that gStatusBar won't be drawn over menu
 	status_bar_container->addChildInBack(gStatusBar);
-	status_bar_container->setVisible(TRUE);
+	status_bar_container->setVisible(true);
 
 	// Navigation bar
 	LLPanel* nav_bar_container = getRootView()->getChild<LLPanel>("nav_bar_container");
@@ -2290,11 +2290,11 @@ void LLViewerWindow::initWorldUI()
 	navbar->setShape(nav_bar_container->getLocalRect());
 	navbar->setBackgroundColor(gMenuBarView->getBackgroundColor().get());
 	nav_bar_container->addChild(navbar);
-	nav_bar_container->setVisible(TRUE);
+	nav_bar_container->setVisible(true);
 	
 	if (!gSavedSettings.getBOOL("ShowNavbarNavigationPanel"))
 	{
-		navbar->setVisible(FALSE);
+		navbar->setVisible(false);
 	}
 
 	// Top Info bar
@@ -2304,11 +2304,11 @@ void LLViewerWindow::initWorldUI()
 	topinfo_bar->setShape(topinfo_bar_container->getLocalRect());
 
 	topinfo_bar_container->addChild(topinfo_bar);
-	topinfo_bar_container->setVisible(TRUE);
+	topinfo_bar_container->setVisible(true);
 
 	if (!gSavedSettings.getBOOL("ShowMiniLocationPanel"))
 	{
-		topinfo_bar->setVisible(FALSE);
+		topinfo_bar->setVisible(false);
 	}
 
 	if ( gHUDView == NULL )
@@ -2332,7 +2332,7 @@ void LLViewerWindow::initWorldUI()
 	LLPanelHideBeacon* panel_hide_beacon = LLPanelHideBeacon::getInstance();
 	panel_ssf_container->addChild(panel_hide_beacon);
 
-	panel_ssf_container->setVisible(TRUE);
+	panel_ssf_container->setVisible(true);
 
 	LLMenuOptionPathfindingRebakeNavmesh::getInstance()->initialize();
 
@@ -2341,7 +2341,7 @@ void LLViewerWindow::initWorldUI()
 	if (gToolBarView)
 	{
 		gToolBarView->loadToolbars();
-		gToolBarView->setVisible(TRUE);
+		gToolBarView->setVisible(true);
 	}
 
 	if (!gNonInteractive)
@@ -2389,7 +2389,7 @@ void LLViewerWindow::shutdownViews()
 	// Cleanup global views
 	if (gMorphView)
 	{
-		gMorphView->setVisible(FALSE);
+		gMorphView->setVisible(false);
 	}
 	LL_INFOS() << "Global views cleaned." << LL_ENDL ;
 	
@@ -3843,7 +3843,7 @@ void LLViewerWindow::updateLayout()
 		}
 		else
 		{
-			gFloaterTools->setVisible(FALSE);
+			gFloaterTools->setVisible(false);
 		}
 		//gMenuBarView->setItemVisible("BuildTools", gFloaterTools->getVisible());
 	}

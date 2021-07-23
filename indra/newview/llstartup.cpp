@@ -1844,7 +1844,7 @@ bool idle_startup()
 	if (STATE_LOGIN_CONFIRM_NOTIFICATON == LLStartUp::getStartupState())
 	{
 		display_startup();
-		gViewerWindow->getProgressView()->setVisible(FALSE);
+		gViewerWindow->getProgressView()->setVisible(false);
 		display_startup();
 		ms_sleep(1);
 		return FALSE;
@@ -2652,7 +2652,7 @@ void login_show()
 	// Hide the toolbars: may happen to come back here if login fails after login agent but before login in region
 	if (gToolBarView)
 	{
-		gToolBarView->setVisible(FALSE);
+		gToolBarView->setVisible(false);
 	}
 	
 	LLPanelLogin::show(	gViewerWindow->getWindowRectScaled(), login_callback, NULL );

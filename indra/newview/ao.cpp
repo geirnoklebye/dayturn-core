@@ -293,10 +293,9 @@ bool FloaterAO::postBuild()
 	AOEngine::instance().setAnimationChangedCallback(boost::bind(&FloaterAO::onAnimationChanged, this, _1, _2, _3));
 
 	onChangeAnimationSelection();
-	mMainInterfacePanel->setVisible(TRUE);
-	mSmallInterfacePanel->setVisible(FALSE);
+	mMainInterfacePanel->setVisible(true);
+	mSmallInterfacePanel->setVisible(false);
 	reloading(TRUE);
-
 	updateList();
 
 	if (gSavedPerAccountSettings.getBOOL("UseFullAOInterface"))
@@ -811,8 +810,8 @@ void FloaterAO::onClickMore()
 
 	mMore = TRUE;
 
-	mSmallInterfacePanel->setVisible(FALSE);
-	mMainInterfacePanel->setVisible(TRUE);
+	mSmallInterfacePanel->setVisible(false);
+	mMainInterfacePanel->setVisible(true);
 	setCanResize(TRUE);
 
 	gSavedPerAccountSettings.setBOOL("UseFullAOInterface", TRUE);
@@ -830,8 +829,8 @@ void FloaterAO::onClickLess()
 
 	mMore = FALSE;
 
-	mSmallInterfacePanel->setVisible(TRUE);
-	mMainInterfacePanel->setVisible(FALSE);
+	mSmallInterfacePanel->setVisible(true);
+	mMainInterfacePanel->setVisible(false);
 	setCanResize(FALSE);
 
 	gSavedPerAccountSettings.setBOOL("UseFullAOInterface", FALSE);
