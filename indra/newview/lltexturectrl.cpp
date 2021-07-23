@@ -598,7 +598,7 @@ void LLFloaterTexturePicker::draw()
 		// Draw Tentative Label over the image
 		if( mTentative && !mViewModel->isDirty() )
 		{
-			mTentativeLabel->setVisible( TRUE );
+			mTentativeLabel->setVisible(true);
 			drawChild(mTentativeLabel);
 		}
 

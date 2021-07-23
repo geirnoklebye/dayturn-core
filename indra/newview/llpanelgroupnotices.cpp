@@ -306,7 +306,7 @@ bool LLPanelGroupNotices::postBuild()
 
 // [SL:KB] - Patch: Notification-GroupCreateNotice | Checked: 2012-02-26 (Catznip-3.2)
 	mPanelViewNotice->setVisible(true);
-	mBtnOpenAttachment->setEnabled(FALSE);
+	mBtnOpenAttachment->setEnabled(false);
 // [/SL:KB]
 //	arrangeNoticeView(VIEW_PAST_NOTICE);
 
@@ -330,7 +330,7 @@ void LLPanelGroupNotices::activate()
 //	mPanelCreateNotice->setEnabled(can_send);
 
 	// Always disabled to stop direct editing of attachment names
-//	mCreateInventoryName->setEnabled(FALSE);
+//	mCreateInventoryName->setEnabled(false);
 	mViewInventoryName->setEnabled(false);
 
 	// If we can receive notices, grab them right away.
@@ -377,7 +377,7 @@ void LLPanelGroupNotices::activate()
 //	ss << "        " << mInventoryItem->getName();
 //
 //	mCreateInventoryName->setText(ss.str());
-//	mBtnRemoveAttachment->setEnabled(TRUE);
+//	mBtnRemoveAttachment->setEnabled(true);
 //}
 
 //void LLPanelGroupNotices::onClickRemoveAttachment(void* data)
@@ -386,7 +386,7 @@ void LLPanelGroupNotices::activate()
 //	self->mInventoryItem = NULL;
 //	self->mCreateInventoryName->clear();
 //	self->mCreateInventoryIcon->setVisible(false);
-//	self->mBtnRemoveAttachment->setEnabled(FALSE);
+//	self->mBtnRemoveAttachment->setEnabled(false);
 //}
 
 //static 
@@ -693,7 +693,7 @@ void LLPanelGroupNotices::showNotice(const std::string& subject,
 //	{
 //		mPanelCreateNotice->setVisible(false);
 //		mPanelViewNotice->setVisible(true);
-//		mBtnOpenAttachment->setEnabled(FALSE);
+//		mBtnOpenAttachment->setEnabled(false);
 //	}
 //}
 void LLPanelGroupNotices::setGroupID(const LLUUID& id)

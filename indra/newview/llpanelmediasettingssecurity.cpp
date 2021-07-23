@@ -278,13 +278,13 @@ void LLPanelMediaSettingsSecurity::updateWhitelistEnableStatus()
 	if ( urlPassesWhiteList( valid_url ) )
 	{
 		mEnableWhiteList->setEnabled( true );
-		mHomeUrlFailsWhiteListText->setVisible( false );
+		mHomeUrlFailsWhiteListText->setVisible(false);
 	}
 	else
 	{
 		mEnableWhiteList->set( false );
 		mEnableWhiteList->setEnabled( false );
-		mHomeUrlFailsWhiteListText->setVisible( true );
+		mHomeUrlFailsWhiteListText->setVisible(true);
 	};
 }
 

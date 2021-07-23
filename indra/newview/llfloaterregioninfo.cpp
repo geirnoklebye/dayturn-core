@@ -1851,7 +1851,7 @@ void LLPanelEstateInfo::updateControls(LLViewerRegion* region)
 	BOOL manager = (region && region->isEstateManager());
 	setCtrlsEnabled(god || owner || manager);
 	
-	getChildView("apply_btn")->setEnabled(FALSE);
+	getChildView("apply_btn")->setEnabled(false);
 
 	getChildView("message_estate_btn")->setEnabled(god || owner || manager);
 	getChildView("kick_user_from_estate_btn")->setEnabled(god || owner || manager);

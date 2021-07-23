@@ -367,12 +367,12 @@ void LLPanelMediaSettingsGeneral::checkHomeUrlPassesWhitelist()
 	if ( home_url.empty() || mParent->getPanelSecurity()->urlPassesWhiteList( home_url ) )
 	{
 		// Home URL is empty or passes the white list so hide the warning message
-		mFailWhiteListText->setVisible( false );
+		mFailWhiteListText->setVisible(false);
 	}
 	else
 	{
 		// Home URL does not pass the white list so show the warning message
-		mFailWhiteListText->setVisible( true );
+		mFailWhiteListText->setVisible(true);
 	};
 }
 

@@ -111,9 +111,9 @@ void LLFloaterAuction::initialize()
 		mParcelUpdateCapUrl = region->getCapability("ParcelPropertiesUpdate");
 
 		getChild<LLUICtrl>("parcel_text")->setValue(parcelp->getName());
-		getChildView("snapshot_btn")->setEnabled(TRUE);
-		getChildView("reset_parcel_btn")->setEnabled(TRUE);
-		getChildView("start_auction_btn")->setEnabled(TRUE);
+		getChildView("snapshot_btn")->setEnabled(true);
+		getChildView("reset_parcel_btn")->setEnabled(true);
+		getChildView("start_auction_btn")->setEnabled(true);
 
 		U32 estate_id = LLEstateInfoModel::instance().getID();
 		// Only enable "Sell to Anyone" on Teen grid or if we don't know the ID yet

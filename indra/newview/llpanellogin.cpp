@@ -1199,7 +1199,7 @@ void LLPanelLogin::updateLoginButtons()
 		{
 			remember_name->setValue(true);
 			LLCheckBoxCtrl* remember_pass = getChild<LLCheckBoxCtrl>("remember_password");
-			remember_pass->setEnabled(TRUE);
+			remember_pass->setEnabled(true);
 		} // Note: might be good idea to do "else remember_name->setValue(mRememberedState)" but it might behave 'weird' to user
 	}
 }

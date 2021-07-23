@@ -2018,7 +2018,7 @@ BOOL LLPanelGroupRolesSubTab::postBuildSubTab(LLView* root)
 	if ( mCopyRoleButton )
 	{
 		mCopyRoleButton->setClickedCallback(onCopyRole, this);
-		mCopyRoleButton->setEnabled(FALSE);
+		mCopyRoleButton->setEnabled(false);
 	}
 	
 	mDeleteRoleButton =  

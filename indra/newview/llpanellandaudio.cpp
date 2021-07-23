@@ -185,7 +185,7 @@ void LLPanelLandAudio::refresh()
 		
 		mBtnStreamAdd->setEnabled( can_change_media );
 		mBtnStreamDelete->setEnabled( can_change_media );
-		mBtnStreamCopyToClipboard->setEnabled(TRUE);
+		mBtnStreamCopyToClipboard->setEnabled(true);
 // </FS:CR>
 		mMusicURLEdit->setEnabled( can_change_media );
 

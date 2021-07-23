@@ -995,7 +995,7 @@ bool idle_startup()
 			LLStartUp::setStartupState( STATE_LOGIN_CLEANUP );
 		}
 
-		gViewerWindow->setNormalControlsVisible( FALSE );	
+		gViewerWindow->setNormalControlsVisible(false);	
 		gLoginMenuBarView->setVisible(true);
 		gLoginMenuBarView->setEnabled(true);
 		show_debug_menus();
@@ -1609,9 +1609,9 @@ bool idle_startup()
 
 		if ( gViewerWindow != NULL)
 		{	// This isn't the first logon attempt, so show the UI
-			gViewerWindow->setNormalControlsVisible( TRUE );
+			gViewerWindow->setNormalControlsVisible(true);
 		}	
-		gLoginMenuBarView->setVisible( FALSE );
+		gLoginMenuBarView->setVisible(false);
 		gLoginMenuBarView->setEnabled(false);
 		display_startup();
 
@@ -3155,8 +3155,8 @@ void reset_login()
 
 	if ( gViewerWindow )
 	{	// Hide menus and normal buttons
-		gViewerWindow->setNormalControlsVisible( FALSE );
-		gLoginMenuBarView->setVisible( TRUE );
+		gViewerWindow->setNormalControlsVisible(false);
+		gLoginMenuBarView->setVisible(true);
 		gLoginMenuBarView->setEnabled(true);
 	}
 

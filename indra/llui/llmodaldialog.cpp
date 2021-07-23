@@ -47,7 +47,7 @@ LLModalDialog::LLModalDialog( const LLSD& key, BOOL modal )
 		setCanMinimize(FALSE);
 		setCanClose(FALSE);
 	}
-	setVisible( false );
+	setVisible(false);
 	setBackgroundVisible(TRUE);
 	setBackgroundOpaque(TRUE);
 	centerOnScreen(); // default position

@@ -358,7 +358,6 @@ void FSPanelProfileSecondLife::onOpen(const LLSD& key)
 	FSPanelProfileTab::onOpen(key);
 	
 	resetData();
-
 	LLUUID avatar_id = getAvatarId();
 	LLAvatarPropertiesProcessor::getInstance()->addObserver(avatar_id, this);
 
@@ -1329,7 +1328,7 @@ bool FSPanelPick::postBuild()
 	mSetCurrentLocationButton->setCommitCallback(boost::bind(&FSPanelPick::onClickSetLocation, this));
 
 	mPickName->setKeystrokeCallback(boost::bind(&FSPanelPick::onPickChanged, this, _1), NULL);
-	mPickName->setEnabled(FALSE);
+	mPickName->setEnabled(false);
 
 	mPickDescription->setKeystrokeCallback(boost::bind(&FSPanelPick::onPickChanged, this, _1));
 	mPickDescription->setFocusReceivedCallback(boost::bind(&FSPanelPick::onDescriptionFocusReceived, this));
@@ -1660,7 +1659,6 @@ void FSPanelProfilePicks::onOpen(const LLSD& key)
 	{
 		mNewButton->setVisible(true);
 		mNewButton->setEnabled(false);
-
 		mDeleteButton->setVisible(true);
 		mDeleteButton->setEnabled(false);
 	}

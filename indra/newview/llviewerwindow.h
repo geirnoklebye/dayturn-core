@@ -336,7 +336,7 @@ public:
 	void			clearPopups();
 
 	// Hide normal UI when a logon fails, re-show everything when logon is attempted again
-	void			setNormalControlsVisible( BOOL visible );
+	void			setNormalControlsVisible(bool visible);
 	void			setMenuBackgroundColor(bool god_mode = false, bool dev_grid = false);
 
 	void			reshape(S32 width, S32 height);

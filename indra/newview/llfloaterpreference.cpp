@@ -1500,16 +1500,16 @@ void LLFloaterPreference::refreshEnabledStateAdvanced()
     LLSliderCtrl* terrain_detail = getChild<LLSliderCtrl>("TerrainDetail");   // can be linked with control var
     LLTextBox* terrain_text = getChild<LLTextBox>("TerrainDetailText");
 
-    terrain_detail->setEnabled(FALSE);
-    terrain_text->setEnabled(FALSE);
+    terrain_detail->setEnabled(false);
+    terrain_text->setEnabled(false);
 
     // WindLight
     LLCheckBoxCtrl* ctrl_wind_light = getChild<LLCheckBoxCtrl>("WindLightUseAtmosShaders");
     LLSliderCtrl* sky = getChild<LLSliderCtrl>("SkyMeshDetail");
     LLTextBox* sky_text = getChild<LLTextBox>("SkyMeshDetailText");
-    ctrl_wind_light->setEnabled(TRUE);
-    sky->setEnabled(TRUE);
-    sky_text->setEnabled(TRUE);
+    ctrl_wind_light->setEnabled(true);
+    sky->setEnabled(true);
+    sky_text->setEnabled(true);
 
     //Deferred/SSAO/Shadows
     LLCheckBoxCtrl* ctrl_deferred = getChild<LLCheckBoxCtrl>("UseLightShaders");
@@ -1552,7 +1552,7 @@ void LLFloaterPreference::refreshEnabledStateAdvanced()
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderVBOEnable") ||
 		!gGLManager.mHasVertexBufferObject)
 	{
-		getChildView("vbo")->setEnabled(FALSE);
+		getChildView("vbo")->setEnabled(false);
 	}
 
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderCompressTextures") ||
@@ -1633,13 +1633,13 @@ void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 		ctrl_wind_light->setEnabled(false);
 		ctrl_wind_light->setValue(FALSE);
 
-		sky->setEnabled(FALSE);
-		sky_text->setEnabled(FALSE);
+		sky->setEnabled(false);
+		sky_text->setEnabled(false);
 
 		//deferred needs windlight, disable deferred
 		ctrl_shadows->setEnabled(false);
 		ctrl_shadows->setValue(0);
-		shadows_text->setEnabled(FALSE);
+		shadows_text->setEnabled(false);
 		
 		ctrl_ssao->setEnabled(false);
 		ctrl_ssao->setValue(FALSE);
@@ -1657,7 +1657,7 @@ void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 	{
 		ctrl_shadows->setEnabled(false);
 		ctrl_shadows->setValue(0);
-		shadows_text->setEnabled(FALSE);
+		shadows_text->setEnabled(false);
 		
 		ctrl_ssao->setEnabled(false);
 		ctrl_ssao->setValue(FALSE);
@@ -1681,7 +1681,7 @@ void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 	{
 		ctrl_shadows->setEnabled(false);
 		ctrl_shadows->setValue(0);
-		shadows_text->setEnabled(FALSE);
+		shadows_text->setEnabled(false);
 	}
 
 	// disabled reflections
@@ -1689,7 +1689,7 @@ void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 	{
 		ctrl_reflections->setEnabled(false);
 		ctrl_reflections->setValue(FALSE);
-		reflections_text->setEnabled(FALSE);
+		reflections_text->setEnabled(false);
 	}
 	
 	// disabled cloth
@@ -3954,7 +3954,7 @@ bool LLPanelPreferenceCrashReports::postBuild()
 void LLPanelPreferenceCrashReports::refresh()
 {
 	LLCheckBoxCtrl* pSendCrashReports = getChild<LLCheckBoxCtrl>("checkSendCrashReports");
-	pSendCrashReports->setEnabled(TRUE);
+	pSendCrashReports->setEnabled(true);
 
 	bool fEnable = pSendCrashReports->get();
 	getChild<LLUICtrl>("checkSendCrashReportsAlwaysAsk")->setEnabled(fEnable);

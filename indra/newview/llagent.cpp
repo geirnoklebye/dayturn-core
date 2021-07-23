@@ -2320,7 +2320,7 @@ void LLAgent::endAnimationUpdateUI()
 		gAgentCamera.setLookAt(LOOKAT_TARGET_CLEAR);
 		if( gMorphView )
 		{
-			gMorphView->setVisible( FALSE );
+			gMorphView->setVisible(false);
 		}
 
 		// Disable mouselook-specific animations
@@ -2359,7 +2359,7 @@ void LLAgent::endAnimationUpdateUI()
 
 		if( gMorphView )
 		{
-			gMorphView->setVisible( FALSE );
+			gMorphView->setVisible(false);
 		}
 
 		if (isAgentAvatarValid())
@@ -2432,7 +2432,7 @@ void LLAgent::endAnimationUpdateUI()
 			gMorphView->setVisible(false);
 		}
 
-		gConsole->setVisible( TRUE );
+		gConsole->setVisible(true);
 
 		if (isAgentAvatarValid())
 		{
@@ -2481,7 +2481,7 @@ void LLAgent::endAnimationUpdateUI()
 
 		if( gMorphView )
 		{
-			gMorphView->setVisible( TRUE );
+			gMorphView->setVisible(true);
 		}
 
 		// freeze avatar

@@ -103,7 +103,7 @@ bool LLFloaterWebContent::postBuild()
 
 	// these buttons are always enabled
 	mBtnReload->setEnabled( true );
-	mBtnReload->setVisible( false );
+	mBtnReload->setVisible(false);
 	getChildView("popexternal")->setEnabled( true );
 
 	// cache image for secure browsing
@@ -324,11 +324,11 @@ void LLFloaterWebContent::handleMediaEvent(LLPluginClassMedia* self, EMediaEvent
 		mBtnForward->setEnabled( self->getHistoryForwardAvailable() );
 
 		// toggle visibility of these buttons based on browser state
-		mBtnReload->setVisible( false );
-		mBtnStop->setVisible( true );
+		mBtnReload->setVisible(false);
+		mBtnStop->setVisible(true);
 
 		// turn "on" progress bar now we're about to start loading
-		mStatusBarProgress->setVisible( true );
+		mStatusBarProgress->setVisible(true);
 	}
 	else if(event == MEDIA_EVENT_NAVIGATE_COMPLETE)
 	{
@@ -337,11 +337,11 @@ void LLFloaterWebContent::handleMediaEvent(LLPluginClassMedia* self, EMediaEvent
 		mBtnForward->setEnabled( self->getHistoryForwardAvailable() );
 
 		// toggle visibility of these buttons based on browser state
-		mBtnReload->setVisible( true );
-		mBtnStop->setVisible( false );
+		mBtnReload->setVisible(true);
+		mBtnStop->setVisible(false);
 
 		// turn "off" progress bar now we're loaded
-		mStatusBarProgress->setVisible( false );
+		mStatusBarProgress->setVisible(false);
 
 		// we populate the status bar with URLs as they change so clear it now we're done
 		const std::string end_str = "";
@@ -457,8 +457,8 @@ void LLFloaterWebContent::onClickStop()
 	// still should happen when we catch the navigate complete event
 	// but sometimes (don't know why) that event isn't sent from media plugin
 	// and we ghetto a point where the stop button stays active.
-	mBtnReload->setVisible( true );
-	mBtnStop->setVisible( false );
+	mBtnReload->setVisible(true);
+	mBtnStop->setVisible(false);
 }
 
 void LLFloaterWebContent::onEnterAddress()

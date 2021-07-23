@@ -199,8 +199,8 @@ void LLFloaterLinkReplace::onStartClickedResponse(const LLSD& notification, cons
 				args["NUM"] = llformat("%d", mRemainingItems);
 				mStatusText->setText(getString("ItemsRemaining", args));
 
-				mStartBtn->setEnabled(FALSE);
-				mRefreshBtn->setEnabled(FALSE);
+				mStartBtn->setEnabled(false);
+				mRefreshBtn->setEnabled(false);
 
 				mEventTimer.start();
 				tick();

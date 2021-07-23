@@ -1207,7 +1207,7 @@ void LLFloaterScriptQueue::objectScriptProcessingQueueCoro(std::string action, L
 		        floater->addStringMessage(buffer);
 		    }
             
-        floater->getChildView("close")->setEnabled(TRUE);
+        floater->getChildView("close")->setEnabled(true);
     }
     catch (LLCheckedHandleBase::Stale &)
     {

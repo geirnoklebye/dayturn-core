@@ -84,7 +84,7 @@ bool LLProgressView::postBuild()
 
 	// media control that is used to play intro video
 	mMediaCtrl = getChild<LLMediaCtrl>("login_media_panel");
-	mMediaCtrl->setVisible( false );		// hidden initially
+	mMediaCtrl->setVisible(false);		// hidden initially
 	mMediaCtrl->addObserver( this );		// watch events
 	
 	LLViewerMedia::getInstance()->setOnlyAudibleMediaTextureID(mMediaCtrl->getTextureID());
@@ -152,7 +152,7 @@ void LLProgressView::revealIntroPanel()
 		
 		// navigate to intro URL and reveal widget 
 		mMediaCtrl->navigateTo( intro_url );	
-		mMediaCtrl->setVisible( TRUE );
+		mMediaCtrl->setVisible(true);
 
 
 		// flag as having seen the new user post login intro
@@ -308,7 +308,7 @@ void LLProgressView::draw()
 			mMediaCtrl->remObserver( this );
 
 			// hide the intro
-			mMediaCtrl->setVisible( false );
+			mMediaCtrl->setVisible(false);
 
 			// navigate away from intro page to something innocuous since 'unload' is broken right now
 			//mMediaCtrl->navigateTo( "about:blank" );

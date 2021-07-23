@@ -1210,9 +1210,9 @@ void LLPanelVolume::onCommitLight( LLUICtrl* ctrl, void* userdata )
 		else if (volobjp->isLightSpotlight())
 		{ //no longer a spot light
 			setLightTextureID(id, item_id, volobjp);
-			//self->getChildView("Light FOV")->setEnabled(FALSE);
-			//self->getChildView("Light Focus")->setEnabled(FALSE);
-			//self->getChildView("Light Ambiance")->setEnabled(FALSE);
+			//self->getChildView("Light FOV")->setEnabled(false);
+			//self->getChildView("Light Focus")->setEnabled(false);
+			//self->getChildView("Light Ambiance")->setEnabled(false);
 		}
 	}
 

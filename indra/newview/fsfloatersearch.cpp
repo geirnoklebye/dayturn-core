@@ -805,7 +805,7 @@ bool FSPanelSearchPeople::postBuild()
 	if (mSearchResults)
 	{
 		mSearchResults->setCommitCallback(boost::bind(&FSPanelSearchPeople::onSelectItem, this));
-		mSearchResults->setEnabled(FALSE);
+		mSearchResults->setEnabled(false);
 		mSearchResults->setCommentText(LLTrans::getString("no_results"));
 		mSearchResults->setContextMenu(&gFSAvatarSearchMenu);
 	}
@@ -2206,7 +2206,7 @@ bool FSPanelSearchClassifieds::postBuild()
 	if (mSearchResults)
 	{
 		mSearchResults->setCommitCallback(boost::bind(&FSPanelSearchClassifieds::onSelectItem, this));
-		mSearchResults->setEnabled(FALSE);
+		mSearchResults->setEnabled(false);
 		mSearchResults->setCommentText(LLTrans::getString("no_results"));
 	}
 
@@ -2304,7 +2304,7 @@ void FSPanelSearchClassifieds::onBtnFind()
 void FSPanelSearchClassifieds::onBtnNext()
 {
 	mStartSearch += RESULT_PAGE_SIZE;
-	getChildView("classifieds_back")->setEnabled(TRUE);
+	getChildView("classifieds_back")->setEnabled(true);
 
 	find();
 }
@@ -2523,7 +2523,7 @@ bool FSPanelSearchEvents::postBuild()
 	if (mSearchResults)
 	{
 		mSearchResults->setCommitCallback(boost::bind(&FSPanelSearchEvents::onSelectItem, this));
-		mSearchResults->setEnabled(FALSE);
+		mSearchResults->setEnabled(false);
 		mSearchResults->setCommentText(LLTrans::getString("no_results"));
 	}
 	if (mEventsMode)

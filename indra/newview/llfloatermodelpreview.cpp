@@ -1726,7 +1726,7 @@ void LLFloaterModelPreview::toggleCalculateButton(bool visible)
 		//Disable the calculate button *if* the rig is invalid - which is determined during the critiquing process
 		if ( uploadingJointPositions && !mModelPreview->isRigValidForJointPositionUpload() )
 		{
-			mCalculateBtn->setVisible( false );
+			mCalculateBtn->setVisible(false);
 		}
 	}
 	

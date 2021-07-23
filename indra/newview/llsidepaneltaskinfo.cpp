@@ -216,7 +216,7 @@ void LLSidepanelTaskInfo::disableAll()
 void LLSidepanelTaskInfo::disablePermissions()
 {
 	mDACheckboxShareWithGroup->setValue(FALSE);
-	mDACheckboxShareWithGroup->setEnabled(FALSE);
+	mDACheckboxShareWithGroup->setEnabled(false);
 
 	mDACheckboxAllowEveryoneMove->setValue(FALSE);
 	mDACheckboxAllowEveryoneMove->setEnabled(false);
