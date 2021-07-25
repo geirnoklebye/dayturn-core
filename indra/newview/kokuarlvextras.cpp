@@ -210,6 +210,8 @@ std::string KokuaRLVExtras::kokuaGetCensoredMessage(std::string str, bool anon_n
 	//
 	// KKA-885 Instead of bailing out, extract the uuid, then the name, then anonymise it if necessary
 	// Also note there's a bug in the commented code - it would only match if the slurl was at the string start
+	// Improvement: this almost always gets a name cache hit, so also check if the avatar is nearby (in fact,
+	// only do a name substitution and let the later code handle the anonymising
 	size_t found;
 	std::string signature="secondlife:///app/agent/";
 	U32 uuid_length=36;
@@ -218,16 +220,17 @@ std::string KokuaRLVExtras::kokuaGetCensoredMessage(std::string str, bool anon_n
 	{
 			LLUUID uuid;
 			LLAvatarName av_name;
-			size_t space;
+			size_t term;
 			std::string user_name;
 			std::string suuid = str.substr(found+signature.length(),uuid_length);
 			uuid.set(suuid, FALSE);
 			if (LLAvatarNameCache::get(uuid, &av_name))
 			{
 				user_name = av_name.getUserName();
-				space=str.find(" ",found);
-				if (space == std::string::npos) space=str.length();
-				str = str.replace(found, space-found, kokuaGetDummyName(user_name));
+				//rather than use a dictionary of known operations (eg /about) we track to the first non-lower case to decide the length
+				term = str.find_first_not_of("abcdefghijklmnopqrstuvwxyz",found + signature.length() + uuid_length + 1);
+				if (term == std::string::npos) term = str.length();
+				str = str.replace(found, term-found, user_name); // not anonymised - let the later code do that
 			}
 			found = str.find(signature,++found);
 	}
