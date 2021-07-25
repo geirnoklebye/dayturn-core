@@ -4036,9 +4036,33 @@ std::string RRInterface::getCensoredMessage (std::string str)
 	// HACK: if the message is under the form secondlife:///app/agent/UUID/about, clear it
 	// (we could just as well clear just the first part, or return a bogus message, 
 	// the purpose here is to avoid showing the profile of an avatar and displaying their name on the chat)
-	if (str.find("secondlife:///app/agent/") == 0)
+	//if (str.find("secondlife:///app/agent/") == 0)
+	//{
+	//	return "";
+	//}
+	//
+	// KKA-885 Instead of bailing out, extract the uuid, then the name, then anonymise it if necessary
+	// Also note there's a bug in the commented code - it would only match if the slurl was at the string start
+	size_t found;
+	std::string signature="secondlife:///app/agent/";
+	U32 uuid_length=36;
+	found = str.find(signature);
+	while (found != std::string::npos)
 	{
-		return "";
+			LLUUID uuid;
+			LLAvatarName av_name;
+			size_t space;
+			std::string user_name;
+			std::string suuid = str.substr(found+signature.length(),uuid_length);
+			uuid.set(suuid, FALSE);
+			if (LLAvatarNameCache::get(uuid, &av_name))
+			{
+				user_name = av_name.getUserName();
+				space=str.find(" ",found);
+				if (space == std::string::npos) space=str.length();
+				str = str.replace(found, space-found, getDummyName(user_name));
+			}
+			found = str.find(signature,++found);
 	}
 
 	// First we need to build a list of all the exceptions to @shownames and @shownametags
