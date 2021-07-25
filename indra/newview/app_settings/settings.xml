@@ -13,17 +13,6 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
-    <key>KokuaMouseBindingExactMask</key>
-    <map>
-      <key>Comment</key>
-      <string>Require ALT/CTRL/SHIFT-modified mouse clicks to exactly match the defined binding instead of LL default behaviour where ALT/CTRL/SHIFT clicks can map onto an unmodified binding</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>1</integer>
-    </map>
     <key>KokuaSuppressTeleportChat</key>
     <map>
       <key>Comment</key>
