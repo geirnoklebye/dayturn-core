@@ -3206,8 +3206,9 @@ BOOL LLViewerWindow::handleKey(KEY key, MASK mask)
 				LLSD name("im_container");
 				LLFloaterReg::toggleInstanceOrBringToFront(name);
 			}
-			
-			if (!nearby_chat->getVisible() && prefer_kokua_chatbar)
+
+			// KKA-886 BugSplat #48 Make sure nearby_chat is valid			
+			if (nearby_chat && !nearby_chat->getVisible() && prefer_kokua_chatbar)
 			{
 				LLSD name("kokua_chatbar");
 				LLFloaterReg::toggleInstanceOrBringToFront(name);
