@@ -3158,7 +3158,7 @@ BOOL LLViewerWindow::handleKey(KEY key, MASK mask)
 			}
 
 			// KKA-886 BugSplat #48 Make sure nearby_chat is valid			
-			if (nearby_chat && !nearby_chat->getVisible() && prefer_kokua_chatbar)
+			if ((!nearby_chat || !nearby_chat->getVisible()) && prefer_kokua_chatbar)
 			{
 				LLSD name("kokua_chatbar");
 				LLFloaterReg::toggleInstanceOrBringToFront(name);
