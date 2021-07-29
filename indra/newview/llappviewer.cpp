@@ -5880,6 +5880,7 @@ void LLAppViewer::disconnectViewer()
 			gInventory.getLibraryOwnerID());
 	}
 
+	LLAvatarNameCache::instance().setCustomNameCheckCallback(LLAvatarNameCache::custom_name_check_callback_t()); // <FS:Ansariel> Contact sets
 	saveNameCache();
 	if (LLExperienceCache::instanceExists())
 	{
