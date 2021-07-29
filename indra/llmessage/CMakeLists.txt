@@ -15,7 +15,7 @@ include(Python)
 include(Tut)
 include(Python)
 include(JsonCpp)
-include(LLXML)
+include(LLXML) #<FS:Ansariel> For accessing settings
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -23,6 +23,7 @@ include_directories(
     ${LLCOMMON_INCLUDE_DIRS}
     ${LLCOREHTTP_INCLUDE_DIRS}
     ${LLMATH_INCLUDE_DIRS}
+    ${LLXML_INCLUDE_DIRS} #<FS:Ansariel> For accessing settings
     ${LLMESSAGE_INCLUDE_DIRS}
     ${LLVFS_INCLUDE_DIRS}
     ${JSONCPP_INCLUDE_DIR}
@@ -220,6 +221,7 @@ target_link_libraries(
   ${LLCOMMON_LIBRARIES}
   ${LLVFS_LIBRARIES}
   ${LLMATH_LIBRARIES}
+  ${LLXML_LIBRARIES} #<FS:Ansariel> For accessing settings
   ${JSONCPP_LIBRARIES}
   ${OPENSSL_LIBRARIES}
   ${CRYPTO_LIBRARIES}
@@ -238,6 +240,7 @@ target_link_libraries(
   ${LLCOMMON_LIBRARIES}
   ${LLVFS_LIBRARIES}
   ${LLMATH_LIBRARIES}
+  ${LLXML_LIBRARIES} #<FS:Ansariel> For accessing settings
   ${JSONCPP_LIBRARIES}
   ${OPENSSL_LIBRARIES}
   ${CRYPTO_LIBRARIES}
@@ -268,6 +271,7 @@ if (LINUX)
     ${WINDOWS_LIBRARIES}
     ${LLVFS_LIBRARIES}
     ${LLMATH_LIBRARIES}
+    ${LLXML_LIBRARIES} #<FS:Ansariel> For accessing settings
     ${CURL_LIBRARIES}
     ${NGHTTP2_LIBRARIES}
     ${LLCOMMON_LIBRARIES}
@@ -284,6 +288,7 @@ else (LINUX)
     ${WINDOWS_LIBRARIES}
     ${LLVFS_LIBRARIES}
     ${LLMATH_LIBRARIES}
+    ${LLXML_LIBRARIES} #<FS:Ansariel> For accessing settings
     ${CURL_LIBRARIES}
     ${NGHTTP2_LIBRARIES}
     ${LLCOMMON_LIBRARIES}
