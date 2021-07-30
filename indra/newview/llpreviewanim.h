@@ -51,7 +51,9 @@ protected:
 	
 	LLUUID	mItemID; // Not an item id, but a playing asset id
 	bool	mDidStart;
-	LLTextBox* pAdvancedStatsTextBox;
+	LLMotion* pMotion;
+	LLTextBox* pMoreInfoLeft;
+	LLTextBox* pMoreInfoRight;
 };
 
 #endif  // LL_LLPREVIEWANIM_H
