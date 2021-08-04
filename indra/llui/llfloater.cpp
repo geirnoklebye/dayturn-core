@@ -2794,7 +2794,7 @@ void LLFloaterView::showHiddenFloaters()
 	mHiddenFloaters.clear();
 }
 
-BOOL LLFloaterView::allChildrenClosed()
+bool LLFloaterView::allChildrenClosed()
 {
 	// see if there are any visible floaters (some floaters "close"
 	// by setting themselves invisible)

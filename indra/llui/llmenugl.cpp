@@ -2530,7 +2530,7 @@ void LLMenuGL::createJumpKeys()
 		tokenizer tokens(uppercase_label, sep);
 		tokenizer::iterator token_iter;
 
-		BOOL found_key = FALSE;
+		bool found_key = false;
 		for( token_iter = tokens.begin(); token_iter != tokens.end(); ++token_iter)
 		{
 			std::string uppercase_word = *token_iter;
@@ -2548,7 +2548,7 @@ void LLMenuGL::createJumpKeys()
 					{
 						mJumpKeys.insert(std::pair<KEY, LLMenuItemGL*>(jump_key, (*item_it)));
 						(*item_it)->setJumpKey(jump_key);
-						found_key = TRUE;
+						found_key = true;
 						break;
 					}
 				}
@@ -3871,14 +3871,14 @@ LLView* const LLMenuHolderGL::getVisibleMenu() const
 }
 
 
-BOOL LLMenuHolderGL::hideMenus()
+bool LLMenuHolderGL::hideMenus()
 {
 	if (!mCanHide)
 	{
-		return FALSE;
+		return false;
 	}
 	LLMenuGL::setKeyboardMode(false);
-	BOOL menu_visible = hasVisibleMenu();
+	bool menu_visible = hasVisibleMenu();
 	if (menu_visible)
 	{
 		// clicked off of menu, hide them all

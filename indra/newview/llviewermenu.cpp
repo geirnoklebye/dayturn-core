@@ -9160,9 +9160,9 @@ LLViewerMenuHolderGL::LLViewerMenuHolderGL(const LLViewerMenuHolderGL::Params& p
 : LLMenuHolderGL(p)
 {}
 
-BOOL LLViewerMenuHolderGL::hideMenus()
+bool LLViewerMenuHolderGL::hideMenus()
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 	
 	if (LLMenuHolderGL::hideMenus())
 	{

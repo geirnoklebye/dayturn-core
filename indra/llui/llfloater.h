@@ -576,7 +576,7 @@ public:
 	void			destroyAllChildren();
 	// attempt to close all floaters
 	void			closeAllChildren(bool app_quitting);
-	BOOL			allChildrenClosed();
+	bool			allChildrenClosed();
 	void			shiftFloaters(S32 x_offset, S32 y_offset);
 
 	void			hideAllFloaters();

@@ -824,7 +824,7 @@ public:
 	LLMenuHolderGL(const Params& p);
 	virtual ~LLMenuHolderGL() {}
 
-	virtual BOOL hideMenus();
+	virtual bool hideMenus();
 	void reshape(S32 width, S32 height, bool called_from_parent = true);
 	void setCanHide(bool can_hide) { mCanHide = can_hide; }
 
@@ -839,7 +839,7 @@ public:
 	virtual bool handleKey(KEY key, MASK mask, bool called_from_parent);
 	virtual const LLRect getMenuRect() const { return getLocalRect(); }
 	LLView*const getVisibleMenu() const;
-	virtual BOOL hasVisibleMenu() const {return getVisibleMenu() != NULL;}
+	virtual bool hasVisibleMenu() const {return getVisibleMenu() != NULL;}
 
 	static void setActivatedItem(LLMenuItemGL* item);
 
