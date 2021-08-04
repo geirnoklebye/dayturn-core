@@ -152,10 +152,10 @@ LLMenuItemGL::LLMenuItemGL(const LLMenuItemGL::Params& p)
 :	LLUICtrl(p),
 	mJumpKey(p.jump_key),
 	mAllowKeyRepeat(p.allow_key_repeat),
-	mHighlight( FALSE ),
-	mGotHover( FALSE ),
-	mBriefItem( FALSE ),
-	mDrawTextDisabled( FALSE ),
+	mHighlight(false),
+	mGotHover(false),
+	mBriefItem(false),
+	mDrawTextDisabled(false),
 	mFont(p.font),
 	mAcceleratorKey(KEY_NONE),
 	mAcceleratorMask(MASK_NONE),
@@ -334,13 +334,13 @@ U32 LLMenuItemGL::getNominalHeight( void ) const
 }
 
 //virtual
-void LLMenuItemGL::setBriefItem(BOOL brief)
+void LLMenuItemGL::setBriefItem(bool brief)
 {
 	mBriefItem = brief;
 }
 
 //virtual
-BOOL LLMenuItemGL::isBriefItem() const
+bool LLMenuItemGL::isBriefItem() const
 {
 	return mBriefItem;
 }
@@ -404,7 +404,7 @@ void LLMenuItemGL::onCommit( void )
 }
 
 // set the hover status (called by it's menu)
- void LLMenuItemGL::setHighlight( BOOL highlight )
+ void LLMenuItemGL::setHighlight( bool highlight )
 {
 	if (highlight)
 	{
@@ -469,7 +469,7 @@ BOOL LLMenuItemGL::handleMouseDown( S32 x, S32 y, MASK mask)
 	// switch to mouse navigation mode
 	LLMenuGL::setKeyboardMode(false);
 
-	setHighlight(TRUE);
+	setHighlight(true);
 	return LLView::handleMouseDown(x, y, mask);
 }
 
@@ -636,12 +636,12 @@ bool LLMenuItemSeparatorGL::handleHover(S32 x, S32 y, MASK mask)
 	LLMenuGL* parent_menu = getMenu();
 	if (y > getRect().getHeight() / 2)
 	{
-		parent_menu->highlightPrevItem(this, FALSE);
+		parent_menu->highlightPrevItem(this, false);
 		return false;
 	}
 	else
 	{
-		parent_menu->highlightNextItem(this, FALSE);
+		parent_menu->highlightNextItem(this, false);
 		return false;
 	}
 }
@@ -1114,7 +1114,7 @@ bool LLMenuItemBranchGL::handleUnicodeChar(llwchar uni_char, bool called_from_pa
 }
 
 
-void LLMenuItemBranchGL::setHighlight( BOOL highlight )
+void LLMenuItemBranchGL::setHighlight( bool highlight )
 {
 	if (highlight == getHighlight())
 		return;
@@ -1166,7 +1166,7 @@ void LLMenuItemBranchGL::draw()
 	LLMenuItemGL::draw();
 	if (getBranch() && getBranch()->getVisible() && !getBranch()->getTornOff())
 	{
-		setHighlight(TRUE);
+		setHighlight(true);
 	}
 }
 
@@ -1353,7 +1353,7 @@ public:
 
 	// set the hover status (called by it's menu) and if the object is
 	// active. This is used for behavior transfer.
-	virtual void setHighlight( BOOL highlight );
+	virtual void setHighlight( bool highlight );
 
 	virtual BOOL isActive( void ) const;
 
@@ -1439,7 +1439,7 @@ void LLMenuItemBranchDownGL::openMenu( void )
 			}
 			branch->translate( delta_x, 0 );
 
-			setHighlight(TRUE);
+			setHighlight(true);
 			branch->setVisible(true);
 			branch->getParent()->sendChildToFront(branch);
 		}
@@ -1447,7 +1447,7 @@ void LLMenuItemBranchDownGL::openMenu( void )
 }
 
 // set the hover status (called by it's menu)
-void LLMenuItemBranchDownGL::setHighlight( BOOL highlight )
+void LLMenuItemBranchDownGL::setHighlight( bool highlight )
 {
  	if (highlight == getHighlight())
 		return;
@@ -1605,7 +1605,7 @@ void LLMenuItemBranchDownGL::draw( void )
 	//FIXME: try removing this
 	if (getBranch()->getVisible() && !getBranch()->getTornOff())
 	{
-		setHighlight(TRUE);
+		setHighlight(true);
 	}
 
 	if( getHighlight() )
@@ -2465,7 +2465,7 @@ void LLMenuGL::cleanupSpilloverBranch()
 void LLMenuGL::createJumpKeys()
 {
 	if (!mCreateJumpKeys) return;
-	mCreateJumpKeys = FALSE;
+	mCreateJumpKeys = false;
 
 	mJumpKeys.clear();
 
@@ -2642,7 +2642,7 @@ bool LLMenuGL::handleJumpKey(KEY key)
 		LLMenuGL::setKeyboardMode(true);
 
 		// force highlight to close old menus and open and sub-menus
-		found_it->second->setHighlight(TRUE);
+		found_it->second->setHighlight(true);
 		found_it->second->onCommit();
 
 	}
@@ -2663,7 +2663,7 @@ bool LLMenuGL::append( LLMenuItemGL* item )
 }
 
 // add a separator to this menu
-BOOL LLMenuGL::addSeparator()
+bool LLMenuGL::addSeparator()
 {
 	LLMenuItemSeparatorGL::Params p;
 	LLMenuItemGL* separator = LLUICtrlFactory::create<LLMenuItemSeparatorGL>(p);
@@ -2724,7 +2724,7 @@ bool LLMenuGL::appendContextSubMenu(LLMenuGL *menu)
 	return append( item );
 }
 
-void LLMenuGL::setEnabledSubMenus(BOOL enable)
+void LLMenuGL::setEnabledSubMenus(bool enable)
 {
 	setEnabled(enable);
 	item_list_t::iterator item_iter;
@@ -2735,8 +2735,8 @@ void LLMenuGL::setEnabledSubMenus(BOOL enable)
 }
 
 // setItemEnabled() - pass the label and the enable flag for a menu
-// item. TRUE will make sure it's enabled, FALSE will disable it.
-void LLMenuGL::setItemEnabled( const std::string& name, BOOL enable )
+// item. true will make sure it's enabled, false will disable it.
+void LLMenuGL::setItemEnabled( const std::string& name, bool enable )
 {
 	item_list_t::iterator item_iter;
 	for (item_iter = mItems.begin(); item_iter != mItems.end(); ++item_iter)
@@ -2750,7 +2750,7 @@ void LLMenuGL::setItemEnabled( const std::string& name, BOOL enable )
 	}
 }
 
-void LLMenuGL::setItemVisible( const std::string& name, BOOL visible )
+void LLMenuGL::setItemVisible( const std::string& name, bool visible )
 {
 	item_list_t::iterator item_iter;
 	for (item_iter = mItems.begin(); item_iter != mItems.end(); ++item_iter)
@@ -2843,7 +2843,7 @@ LLMenuItemGL* LLMenuGL::getHighlightedItem()
 	return NULL;
 }
 
-LLMenuItemGL* LLMenuGL::highlightNextItem(LLMenuItemGL* cur_item, BOOL skip_disabled)
+LLMenuItemGL* LLMenuGL::highlightNextItem(LLMenuItemGL* cur_item, bool skip_disabled)
 {
 	if (mItems.empty()) return NULL;
 	// highlighting first item on a torn off menu is the
@@ -2922,9 +2922,9 @@ LLMenuItemGL* LLMenuGL::highlightNextItem(LLMenuItemGL* cur_item, BOOL skip_disa
 		{
 			if (cur_item)
 			{
-				cur_item->setHighlight(FALSE);
+				cur_item->setHighlight(false);
 			}
-			(*next_item_iter)->setHighlight(TRUE);
+			(*next_item_iter)->setHighlight(true);
 			return (*next_item_iter);
 		}
 
@@ -2948,7 +2948,7 @@ LLMenuItemGL* LLMenuGL::highlightNextItem(LLMenuItemGL* cur_item, BOOL skip_disa
 	return NULL;
 }
 
-LLMenuItemGL* LLMenuGL::highlightPrevItem(LLMenuItemGL* cur_item, BOOL skip_disabled)
+LLMenuItemGL* LLMenuGL::highlightPrevItem(LLMenuItemGL* cur_item, bool skip_disabled)
 {
 	if (mItems.empty()) return NULL;
 
@@ -3014,7 +3014,7 @@ LLMenuItemGL* LLMenuGL::highlightPrevItem(LLMenuItemGL* cur_item, BOOL skip_disa
 		// skip separators and disabled/invisible items
 		if ((*prev_item_iter)->getEnabled() && (*prev_item_iter)->getVisible() && (*prev_item_iter)->getName() != SEPARATOR_NAME)
 		{
-			(*prev_item_iter)->setHighlight(TRUE);
+			(*prev_item_iter)->setHighlight(true);
 			return (*prev_item_iter);
 		}
 
@@ -3150,7 +3150,7 @@ bool LLMenuGL::handleHover( S32 x, S32 y, MASK mask )
 				// moving mouse always highlights new item
 				if (mouse_delta_x != 0 || mouse_delta_y != 0)
 				{
-					((LLMenuItemGL*)viewp)->setHighlight(FALSE);
+					((LLMenuItemGL*)viewp)->setHighlight(false);
 				}
 			}
 		}
@@ -3172,7 +3172,7 @@ bool LLMenuGL::handleHover( S32 x, S32 y, MASK mask )
 				// moving mouse always highlights new item
 				if (mouse_delta_x != 0 || mouse_delta_y != 0)
 				{
-					((LLMenuItemGL*)viewp)->setHighlight(TRUE);
+					((LLMenuItemGL*)viewp)->setHighlight(true);
 					LLMenuGL::setKeyboardMode(false);
 				}
 				mHasSelection = true;
@@ -3290,8 +3290,8 @@ BOOL LLMenuGL::clearHoverItem()
 		LLMenuItemGL* itemp = (LLMenuItemGL*)*child_it;
 		if (itemp->getHighlight())
 		{
-			itemp->setHighlight(FALSE);
-			return TRUE;
+			itemp->setHighlight(false);
+			return true;
 		}
 	}		
 	return FALSE;
@@ -3397,7 +3397,7 @@ static LLDefaultChildRegistry::Register<LLMenuBarGL> r2("menu_bar");
 
 LLMenuBarGL::LLMenuBarGL( const Params& p )
 :	LLMenuGL(p),
-	mAltKeyTrigger(FALSE)
+	mAltKeyTrigger(false)
 {}
 
 // Default destructor
@@ -3419,7 +3419,7 @@ bool LLMenuBarGL::handleAcceleratorKey(KEY key, MASK mask)
 	if (result && mask & MASK_ALT)
 	{
 		// ALT key used to trigger hotkey, don't use as shortcut to open menu
-		mAltKeyTrigger = FALSE;
+		mAltKeyTrigger = false;
 	}
 
 	if(!result 
@@ -3456,11 +3456,11 @@ bool LLMenuBarGL::handleKeyHere(KEY key, MASK mask)
 	static LLUICachedControl<bool> use_altkey_for_menus ("UseAltKeyForMenus", 0);
 	if(key == KEY_ALT && !gKeyboard->getKeyRepeated(key) && use_altkey_for_menus)
 	{
-		mAltKeyTrigger = TRUE;
+		mAltKeyTrigger = true;
 	}
 	else // if any key other than ALT hit, clear out waiting for Alt key mode
 	{
-		mAltKeyTrigger = FALSE;
+		mAltKeyTrigger = false;
 	}
 	
 	if (key == KEY_ESCAPE && mask == MASK_NONE)
@@ -3486,7 +3486,7 @@ bool LLMenuBarGL::handleJumpKey(KEY key)
 		// switch to keyboard navigation mode
 		LLMenuGL::setKeyboardMode(true);
 
-		found_it->second->setHighlight(TRUE);
+		found_it->second->setHighlight(true);
 		found_it->second->onCommit();
 	}
 	return true;
@@ -3551,7 +3551,7 @@ void LLMenuBarGL::checkMenuTrigger()
 				LLMenuGL::setKeyboardMode(true);
 			}
 		}
-		mAltKeyTrigger = FALSE;
+		mAltKeyTrigger = false;
 	}
 }
 
@@ -3604,7 +3604,7 @@ S32 LLMenuBarGL::getRightmostMenuEdge()
 }
 
 // add a vertical separator to this menu
-BOOL LLMenuBarGL::addSeparator()
+bool LLMenuBarGL::addSeparator()
 {
 	LLMenuItemGL* separator = new LLMenuItemVerticalSeparatorGL();
 	return append( separator );
@@ -3679,7 +3679,7 @@ bool LLMenuBarGL::handleHover( S32 x, S32 y, MASK mask )
 				viewp->pointInView(local_x, local_y) && 
 				viewp->handleHover(local_x, local_y, mask))
 			{
-				((LLMenuItemGL*)viewp)->setHighlight(TRUE);
+				((LLMenuItemGL*)viewp)->setHighlight(true);
 				handled = true;
 				if (active_menu && active_menu != viewp)
 				{
@@ -3700,7 +3700,7 @@ bool LLMenuBarGL::handleHover( S32 x, S32 y, MASK mask )
 				S32 local_y = y - viewp->getRect().mBottom;
 				if (!viewp->pointInView(local_x, local_y) && ((LLMenuItemGL*)viewp)->getHighlight())
 				{
-					((LLMenuItemGL*)viewp)->setHighlight(FALSE);
+					((LLMenuItemGL*)viewp)->setHighlight(false);
 				}
 			}
 		}
@@ -3720,7 +3720,7 @@ LLMenuHolderGL::LLMenuHolderGL(const LLMenuHolderGL::Params& p)
 	: LLPanel(p)
 {
 	sItemActivationTimer.stop();
-	mCanHide = TRUE;
+	mCanHide = true;
 }
 
 void LLMenuHolderGL::draw()
@@ -3918,7 +3918,7 @@ LLTearOffMenu::LLTearOffMenu(LLMenuGL* menup) :
 	setTitle(menup->getLabel());
 	setCanMinimize(false);
 	// flag menu as being torn off
-	menup->setTornOff(TRUE);
+	menup->setTornOff(true);
 	// update menu layout as torn off menu (no spillover menus)
 	menup->needsArrange();
 
@@ -3986,7 +3986,7 @@ void LLTearOffMenu::onFocusReceived()
 	{
 		if (parent_menu_item->getMenu()->getVisible())
 		{
-			parent_menu_item->setHighlight(TRUE);
+			parent_menu_item->setHighlight(true);
 			parent_menu_item = parent_menu_item->getMenu()->getParentMenuItem();
 		}
 		else
@@ -4083,7 +4083,7 @@ void LLTearOffMenu::closeTearOff()
 	mMenu->setFollowsNone();
 	mMenu->setBackgroundVisible(true);
 	mMenu->setVisible(false);
-	mMenu->setTornOff(FALSE);
+	mMenu->setTornOff(false);
 	mMenu->setDropShadowed(true);
     mQuitRequested = true;
 }
@@ -4104,14 +4104,14 @@ void LLContextMenuBranch::buildDrawLabel( void )
 		// enabled, this item is enabled. JC
 		U32 sub_count = mBranch.get()->getItemCount();
 		U32 i;
-		BOOL any_enabled = FALSE;
+		bool any_enabled = false;
 		for (i = 0; i < sub_count; i++)
 		{
 			LLMenuItemGL* item = mBranch.get()->getItem(i);
 			item->buildDrawLabel();
 			if (item->getEnabled() && !item->getDrawTextDisabled() )
 			{
-				any_enabled = TRUE;
+				any_enabled = true;
 				break;
 			}
 		}
@@ -4145,7 +4145,7 @@ void LLContextMenuBranch::onCommit( void )
 	showSubMenu();
 
 }
-void LLContextMenuBranch::setHighlight( BOOL highlight )
+void LLContextMenuBranch::setHighlight( bool highlight )
 {
 	if (highlight == getHighlight()) return;
 	LLMenuItemGL::setHighlight(highlight);
@@ -4257,7 +4257,7 @@ void LLContextMenu::hide()
 
 	if (mHoverItem)
 	{
-		mHoverItem->setHighlight( FALSE );
+		mHoverItem->setHighlight( false );
 	}
 	mHoverItem = NULL;
 }
@@ -4280,10 +4280,10 @@ bool LLContextMenu::handleHover( S32 x, S32 y, MASK mask )
 		{
 			if (mHoverItem)
 			{
-				mHoverItem->setHighlight( FALSE );
+				mHoverItem->setHighlight( false );
 			}
 			mHoverItem = item;
-			mHoverItem->setHighlight( TRUE );
+			mHoverItem->setHighlight( true );
 		}
 		mHoveredAnyItem = true;
 	}
@@ -4292,7 +4292,7 @@ bool LLContextMenu::handleHover( S32 x, S32 y, MASK mask )
 		// clear out our selection
 		if (mHoverItem)
 		{
-			mHoverItem->setHighlight(FALSE);
+			mHoverItem->setHighlight(false);
 			mHoverItem = NULL;
 		}
 	}

@@ -114,12 +114,12 @@ public:
 	virtual U32 getNominalHeight( void ) const;
 	
 	// Marks item as not needing space for check marks or accelerator keys
-	virtual void setBriefItem(BOOL brief);
-	virtual BOOL isBriefItem() const;
+	virtual void setBriefItem(bool brief);
+	virtual bool isBriefItem() const;
 
 	virtual bool addToAcceleratorList(std::list<LLMenuKeyboardBinding*> *listp);
-	void setAllowKeyRepeat(BOOL allow) { mAllowKeyRepeat = allow; }
-	BOOL getAllowKeyRepeat() const { return mAllowKeyRepeat; }
+	void setAllowKeyRepeat(bool allow) { mAllowKeyRepeat = allow; }
+	bool getAllowKeyRepeat() const { return mAllowKeyRepeat; }
 
 	// change the label
 	void setLabel( const LLStringExplicit& label ) { mLabel = label; }	
@@ -150,8 +150,8 @@ public:
 	
 	virtual void onCommit( void );
 
-	virtual void setHighlight( BOOL highlight );
-	virtual BOOL getHighlight() const { return mHighlight; }
+	virtual void setHighlight( bool highlight );
+	virtual bool getHighlight() const { return mHighlight; }
 
 	// determine if this represents an active sub-menu
 	virtual BOOL isActive( void ) const { return FALSE; }
@@ -159,7 +159,7 @@ public:
 	// determine if this represents an open sub-menu
 	virtual BOOL isOpen( void ) const { return FALSE; }
 
-	virtual void setEnabledSubMenus(BOOL enable){};
+	virtual void setEnabledSubMenus(bool enable){};
 
 	// LLView Functionality
 	virtual bool handleKeyHere( KEY key, MASK mask );
@@ -174,8 +174,8 @@ public:
 
 	bool getHover() const { return mGotHover; }
 
-	void setDrawTextDisabled(BOOL disabled) { mDrawTextDisabled = disabled; }
-	BOOL getDrawTextDisabled() const { return mDrawTextDisabled; }
+	void setDrawTextDisabled(bool disabled) { mDrawTextDisabled = disabled; }
+	bool getDrawTextDisabled() const { return mDrawTextDisabled; }
 
 protected:
 	void setHover(bool hover) { mGotHover = hover; }
@@ -207,19 +207,19 @@ protected:
 	LLUIColor mHighlightBackground;
 	LLUIColor mHighlightForeground;
 
-	BOOL mHighlight;
+	bool mHighlight;
 private:
 	// Keyboard and mouse variables
-	BOOL mAllowKeyRepeat;
-	BOOL mGotHover;
+	bool mAllowKeyRepeat;
+	bool mGotHover;
 
 	// If true, suppress normal space for check marks on the left and accelerator
 	// keys on the right.
-	BOOL mBriefItem;
+	bool mBriefItem;
 
 	// Font for this item
 	const LLFontGL* mFont;
-	BOOL mDrawTextDisabled;
+	bool mDrawTextDisabled;
 
 	KEY mJumpKey;
 };
@@ -463,20 +463,20 @@ public:
 	void setCanTearOff(bool tear_off);
 
 	// add a separator to this menu
-	virtual BOOL addSeparator();
+	virtual bool addSeparator();
 
 	// for branching menu items, bring sub menus up to root level of menu hierarchy
 	virtual void updateParent( LLView* parentp );
 
 	// setItemEnabled() - pass the name and the enable flag for a
-	// menu item. TRUE will make sure it's enabled, FALSE will disable
+	// menu item. true will make sure it's enabled, false will disable
 	// it.
-	void setItemEnabled( const std::string& name, BOOL enable ); 
+	void setItemEnabled( const std::string& name, bool enable ); 
 	
 	// propagate message to submenus
-	void setEnabledSubMenus(BOOL enable);
+	void setEnabledSubMenus(bool enable);
 
-	void setItemVisible( const std::string& name, BOOL visible);
+	void setItemVisible( const std::string& name, bool visible);
 
     void setItemLabel(const std::string &name, const std::string &label);
 	
@@ -512,8 +512,8 @@ public:
     LLMenuItemGL*   getItem(std::string name);
 	LLMenuItemGL*	getHighlightedItem();				
 
-	LLMenuItemGL*	highlightNextItem(LLMenuItemGL* cur_item, BOOL skip_disabled = TRUE);
-	LLMenuItemGL*	highlightPrevItem(LLMenuItemGL* cur_item, BOOL skip_disabled = TRUE);
+	LLMenuItemGL*	highlightNextItem(LLMenuItemGL* cur_item, bool skip_disabled = true);
+	LLMenuItemGL*	highlightPrevItem(LLMenuItemGL* cur_item, bool skip_disabled = true);
 
 	void buildDrawLabels();
 	void createJumpKeys();
@@ -607,7 +607,7 @@ private:
 	class LLMenuItemBranchGL* mSpilloverBranch;
 	LLMenuGL*		mSpilloverMenu;
 	KEY				mJumpKey;
-	BOOL			mCreateJumpKeys;
+	bool			mCreateJumpKeys;
 	S32				mShortcutPad;
 	bool			mResetScrollPositionOnShow;
 }; // end class LLMenuGL
@@ -653,7 +653,7 @@ public:
 
 	// set the hover status (called by it's menu) and if the object is
 	// active. This is used for behavior transfer.
-	virtual void setHighlight( BOOL highlight );
+	virtual void setHighlight( bool highlight );
 
 	virtual bool handleKeyHere(KEY key, MASK mask);
 
@@ -670,7 +670,7 @@ public:
 
 	virtual void draw();
 
-	virtual void setEnabledSubMenus(BOOL enabled) { if (getBranch()) getBranch()->setEnabledSubMenus(enabled); }
+	virtual void setEnabledSubMenus(bool enabled) { if (getBranch()) getBranch()->setEnabledSubMenus(enabled); }
 
 	virtual void openMenu();
 
@@ -755,7 +755,7 @@ public:
 	virtual void	onCommit( void );
 
 	LLContextMenu*	getBranch() { return mBranch.get(); }
-	void			setHighlight( BOOL highlight );
+	void			setHighlight( bool highlight );
 
 protected:
 	void	showSubMenu();
@@ -788,7 +788,7 @@ public:
 	/*virtual*/ bool jumpKeysActive();
 
 	// add a vertical separator to this menu
-	virtual BOOL addSeparator();
+	virtual bool addSeparator();
 
 	// LLView Functionality
 	virtual bool handleHover( S32 x, S32 y, MASK mask );
@@ -796,7 +796,7 @@ public:
 	// Returns x position of rightmost child, usually Help menu
 	S32 getRightmostMenuEdge();
 
-	void resetMenuTrigger() { mAltKeyTrigger = FALSE; }
+	void resetMenuTrigger() { mAltKeyTrigger = false; }
 
 private:
 	// add a menu - this will create a drop down menu.
@@ -808,7 +808,7 @@ private:
 	void checkMenuTrigger();
 
 	std::list <LLMenuKeyboardBinding*>	mAccelerators;
-	BOOL						mAltKeyTrigger;
+	bool						mAltKeyTrigger;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -826,7 +826,7 @@ public:
 
 	virtual BOOL hideMenus();
 	void reshape(S32 width, S32 height, bool called_from_parent = true);
-	void setCanHide(BOOL can_hide) { mCanHide = can_hide; }
+	void setCanHide(bool can_hide) { mCanHide = can_hide; }
 
 	// LLView functionality
 	virtual void draw();
@@ -851,7 +851,7 @@ private:
 	static LLHandle<LLView> sItemLastSelectedHandle;
 	static LLFrameTimer sItemActivationTimer;
 
-	BOOL mCanHide;
+	bool mCanHide;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
