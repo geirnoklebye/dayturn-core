@@ -149,12 +149,12 @@ public:
     selected_items_t& getSelectedItems( void );
 
 	// Record the selected item and pass it down the hierarchy.
-	virtual BOOL setSelection(LLFolderViewItem* selection, BOOL openitem,
-		BOOL take_keyboard_focus = TRUE);
+	virtual bool setSelection(LLFolderViewItem* selection, bool openitem,
+		bool take_keyboard_focus = true);
 
 	// This method is used to toggle the selection of an item. Walks
 	// children, and keeps track of selected objects.
-	virtual BOOL changeSelection(LLFolderViewItem* selection, BOOL selected);
+	virtual bool changeSelection(LLFolderViewItem* selection, bool selected);
 
 	virtual std::set<LLFolderViewItem*> getSelectionList() const;
 

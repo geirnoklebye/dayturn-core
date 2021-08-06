@@ -437,7 +437,7 @@ S32 LLFolderViewItem::getTextPad()
 // means 'deselect' for a leaf item. Do this optimization after
 // multiple selection is implemented to make sure it all plays nice
 // together.
-BOOL LLFolderViewItem::setSelection(LLFolderViewItem* selection, BOOL openitem, BOOL take_keyboard_focus)
+bool LLFolderViewItem::setSelection(LLFolderViewItem* selection, bool openitem, bool take_keyboard_focus)
 {
 	if (selection == this && !mIsSelected)
 	{
@@ -450,7 +450,7 @@ BOOL LLFolderViewItem::setSelection(LLFolderViewItem* selection, BOOL openitem, 
 	return mIsSelected;
 }
 
-BOOL LLFolderViewItem::changeSelection(LLFolderViewItem* selection, BOOL selected)
+bool LLFolderViewItem::changeSelection(LLFolderViewItem* selection, bool selected)
 {
 	if (selection == this)
 	{
@@ -462,9 +462,9 @@ BOOL LLFolderViewItem::changeSelection(LLFolderViewItem* selection, BOOL selecte
 		{
 			selectItem();
 		}
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 void LLFolderViewItem::deselectItem(void)
@@ -548,7 +548,7 @@ BOOL LLFolderViewItem::handleRightMouseDown( S32 x, S32 y, MASK mask )
 {
 	if(!mIsSelected)
 	{
-		getRoot()->setSelection(this, FALSE);
+		getRoot()->setSelection(this, false);
 	}
 	make_ui_sound("UISndClick");
 	return TRUE;
@@ -577,7 +577,7 @@ BOOL LLFolderViewItem::handleMouseDown( S32 x, S32 y, MASK mask )
 		}
 		else
 		{
-			getRoot()->setSelection(this, FALSE);
+			getRoot()->setSelection(this, false);
 		}
 		make_ui_sound("UISndClick");
 	}
@@ -663,7 +663,7 @@ BOOL LLFolderViewItem::handleMouseUp( S32 x, S32 y, MASK mask )
 		}
 		else
 		{
-			getRoot()->setSelection(this, FALSE);
+			getRoot()->setSelection(this, false);
 		}
 	}
 
@@ -1256,17 +1256,17 @@ bool LLFolderViewFolder::descendantsPassedFilter(S32 filter_generation)
 
 // Passes selection information on to children and record selection
 // information if necessary.
-BOOL LLFolderViewFolder::setSelection(LLFolderViewItem* selection, BOOL openitem,
-                                      BOOL take_keyboard_focus)
+bool LLFolderViewFolder::setSelection(LLFolderViewItem* selection, bool openitem,
+                                      bool take_keyboard_focus)
 {
-	BOOL rv = FALSE;
+	bool rv = false;
 	if (selection == this)
 	{
 		if (!isSelected())
 		{
 			selectItem();
 		}
-		rv = TRUE;
+		rv = true;
 	}
 	else
 	{
@@ -1274,9 +1274,9 @@ BOOL LLFolderViewFolder::setSelection(LLFolderViewItem* selection, BOOL openitem
 		{
 			deselectItem();
 		}
-		rv = FALSE;
+		rv = false;
 	}
-	BOOL child_selected = FALSE;
+	bool child_selected = false;
 
 	for (folders_t::iterator iter = mFolders.begin();
 		iter != mFolders.end();)
@@ -1284,8 +1284,8 @@ BOOL LLFolderViewFolder::setSelection(LLFolderViewItem* selection, BOOL openitem
 		folders_t::iterator fit = iter++;
 		if((*fit)->setSelection(selection, openitem, take_keyboard_focus))
 		{
-			rv = TRUE;
-			child_selected = TRUE;
+			rv = true;
+			child_selected = true;
 		}
 	}
 	for (items_t::iterator iter = mItems.begin();
@@ -1294,8 +1294,8 @@ BOOL LLFolderViewFolder::setSelection(LLFolderViewItem* selection, BOOL openitem
 		items_t::iterator iit = iter++;
 		if((*iit)->setSelection(selection, openitem, take_keyboard_focus))
 		{
-			rv = TRUE;
-			child_selected = TRUE;
+			rv = true;
+			child_selected = true;
 		}
 	}
 	if(openitem && child_selected)
@@ -1309,14 +1309,14 @@ BOOL LLFolderViewFolder::setSelection(LLFolderViewItem* selection, BOOL openitem
 // Recursively traverse all children; if 'selection' is 'this' then change
 // the select status if necessary.
 // Returns TRUE if the selection state of this folder, or of a child, was changed.
-BOOL LLFolderViewFolder::changeSelection(LLFolderViewItem* selection, BOOL selected)
+bool LLFolderViewFolder::changeSelection(LLFolderViewItem* selection, bool selected)
 {
-	BOOL rv = FALSE;
+	bool rv = false;
 	if(selection == this)
 	{
 		if (isSelected() != selected)
 		{
-			rv = TRUE;
+			rv = true;
 			if (selected)
 			{
 				selectItem();
@@ -1334,7 +1334,7 @@ BOOL LLFolderViewFolder::changeSelection(LLFolderViewItem* selection, BOOL selec
 		folders_t::iterator fit = iter++;
 		if((*fit)->changeSelection(selection, selected))
 		{
-			rv = TRUE;
+			rv = true;
 		}
 	}
 	for (items_t::iterator iter = mItems.begin();
@@ -1343,7 +1343,7 @@ BOOL LLFolderViewFolder::changeSelection(LLFolderViewItem* selection, BOOL selec
 		items_t::iterator iit = iter++;
 		if((*iit)->changeSelection(selection, selected))
 		{
-			rv = TRUE;
+			rv = true;
 		}
 	}
 	return rv;
@@ -1602,11 +1602,11 @@ void LLFolderViewFolder::extendSelectionTo(LLFolderViewItem* new_selection)
 	if (selection_reverse)
 	{
 		// at some point we reversed selection, first element should be deselected
-		root->changeSelection(last_selected_item_from_cur, FALSE);
+		root->changeSelection(last_selected_item_from_cur, false);
 	}
 
 	// element we expand to should always be selected
-	root->changeSelection(new_selection, TRUE);
+	root->changeSelection(new_selection, true);
 }
 
 
@@ -2026,7 +2026,7 @@ bool LLFolderViewFolder::handleDoubleClick( S32 x, S32 y, MASK mask )
 		}
 		else
 		{
-			getRoot()->setSelection(this, FALSE);
+			getRoot()->setSelection(this, false);
 			toggleOpen();
 		}
 		handled = true;

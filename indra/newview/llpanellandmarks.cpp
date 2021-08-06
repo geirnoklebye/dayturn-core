@@ -334,7 +334,7 @@ void LLLandmarksPanel::setItemSelected(const LLUUID& obj_id, BOOL take_keyboard_
 	LLFolderViewItem* item = mCurrentSelectedList->getItemByID(obj_id);
 	if (!item)
 		return;
-	root->setSelection(item, FALSE, take_keyboard_focus);
+	root->setSelection(item, false, take_keyboard_focus);
 	root->scrollToShowSelection();
 }
 

@@ -2350,7 +2350,7 @@ void LLSelectFirstFilteredItem::doItem(LLFolderViewItem *item)
 {
 	if (item->passedFilter() && !mItemSelected)
 	{
-		item->getRoot()->setSelection(item, FALSE, FALSE);
+		item->getRoot()->setSelection(item, false, false);
 		if (item->getParentFolder())
 		{
 			item->getParentFolder()->setOpenArrangeRecursively(true, LLFolderViewFolder::RECURSE_UP);
@@ -2364,7 +2364,7 @@ void LLSelectFirstFilteredItem::doFolder(LLFolderViewFolder* folder)
 	// Skip if folder or item already found, if not filtered or if no parent (root folder is not selectable)
 	if (!mFolderSelected && !mItemSelected && folder->LLFolderViewItem::passedFilter() && folder->getParentFolder())
 	{
-		folder->getRoot()->setSelection(folder, FALSE, FALSE);
+		folder->getRoot()->setSelection(folder, false, false);
 		folder->getParentFolder()->setOpenArrangeRecursively(true, LLFolderViewFolder::RECURSE_UP);
 		mFolderSelected = TRUE;
 	}

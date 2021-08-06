@@ -637,7 +637,7 @@ void LLInventoryPanel::itemChanged(const LLUUID& item_id, U32 mask, const LLInve
 			// Select any newly created object that has the auto rename at top of folder root set.
 			if(mFolderRoot.get()->getRoot()->needsAutoRename())
 			{
-				setSelection(item_id, FALSE);
+				setSelection(item_id, false);
 			}
 			updateFolderLabel(model_item->getParentUUID());
 		}
@@ -666,7 +666,7 @@ void LLInventoryPanel::itemChanged(const LLUUID& item_id, U32 mask, const LLInve
 							const LLUUID trash_id = mInventory->findCategoryUUIDForType(LLFolderType::FT_TRASH);
 							if (trash_id != model_item->getParentUUID() && (mask & LLInventoryObserver::INTERNAL) && new_parent->isOpen())
 							{
-								setSelection(item_id, FALSE);
+								setSelection(item_id, false);
 							}
 						}
 						updateFolderLabel(model_item->getParentUUID());
@@ -1319,7 +1319,7 @@ void LLInventoryPanel::openSelected()
 
 void LLInventoryPanel::unSelectAll()	
 { 
-	mFolderRoot.get()->setSelection(NULL, FALSE, FALSE);
+	mFolderRoot.get()->setSelection(NULL, false, false);
 }
 
 

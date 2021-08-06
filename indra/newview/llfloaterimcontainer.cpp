@@ -1708,7 +1708,7 @@ bool LLFloaterIMContainer::selectConversationPair(const LLUUID& session_id, bool
 		LLFolderViewItem* widget = get_ptr_in_map(mConversationsWidgets,session_id);
     	if (widget && widget->getParentFolder())
     	{
-    		widget->getParentFolder()->setSelection(widget, FALSE, FALSE);
+    		widget->getParentFolder()->setSelection(widget, false, false);
     		mConversationsRoot->scrollToShowSelection();
     	}
     }
