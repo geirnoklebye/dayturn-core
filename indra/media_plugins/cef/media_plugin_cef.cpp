@@ -62,7 +62,7 @@ private:
 	void onConsoleMessageCallback(std::string message, std::string source, int line);
 	void onStatusMessageCallback(std::string value);
 	void onTitleChangeCallback(std::string title);
-#ifndef LL_LINUX
+#if LL_DARWIN || LL_WINDOWS
 	void onTooltipCallback(std::string text);
 #endif
 	void onLoadStartCallback();
@@ -75,7 +75,7 @@ private:
 	void onCursorChangedCallback(dullahan::ECursorType type);
 	const std::vector<std::string> onFileDialog(dullahan::EFileDialogType dialog_type, const std::string dialog_title, const std::string default_file, const std::string dialog_accept_filter, bool& use_default);
 
-#ifndef LL_LINUX
+#if LL_DARWIN || LL_WINDOWS
 	bool onJSDialogCallback(const std::string origin_url, const std::string message_text, const std::string default_prompt_text);
 	bool onJSBeforeUnloadCallback();
 #endif
@@ -94,7 +94,7 @@ private:
 	bool mPluginsEnabled;
 	bool mJavascriptEnabled;
 	bool mDisableGPU;
-#ifndef LL_LINUX
+#if LL_DARWIN || LL_WINDOWS
 	bool mDisableNetworkService;
 	bool mUseMockKeyChain;
 #endif
@@ -105,11 +105,11 @@ private:
 	bool mCanCut;
 	bool mCanCopy;
 	bool mCanPaste;
-#ifndef LL_LINUX
+#if LL_DARWIN || LL_WINDOWS
     std::string mRootCachePath;
 #endif
 	std::string mCachePath;
-#ifndef LL_LINUX
+#if LL_DARWIN || LL_WINDOWS
 	std::string mContextCachePath;
 #else
 	std::string mCookiePath;
@@ -137,11 +137,11 @@ MediaPluginBase(host_send_func, host_user_data)
 	mPluginsEnabled = false;
 	mJavascriptEnabled = true;
 	mDisableGPU = false;
-#ifndef LL_LINUX
+#if LL_DARWIN || LL_WINDOWS
 	mDisableNetworkService = true;
 	mUseMockKeyChain = true;
 #endif
-#ifdef LL_LINUX // <FS:ND> Do not use GPU on Linux, using GPU messes with some window managers (https://bitbucket.org/NickyD/phoenix-firestorm-lgpl-linux/commits/14c936db5a02cf0f3ff24eb7f1c92136#comment-6048984)
+#if LL_LINUX // <FS:ND> Do not use GPU on Linux, using GPU messes with some window managers (https://bitbucket.org/NickyD/phoenix-firestorm-lgpl-linux/commits/14c936db5a02cf0f3ff24eb7f1c92136#comment-6048984)
 	mDisableGPU = true;
 #endif
 	mUserAgentSubtring = "";
@@ -153,7 +153,7 @@ MediaPluginBase(host_send_func, host_user_data)
 	mCanPaste = false;
 	mCachePath = "";
 
-#ifdef LL_LINUX
+#if LL_LINUX
 	mCookiePath = "";
 #endif
 	mCefLogFile = "";
@@ -236,7 +236,7 @@ void MediaPluginCEF::onTitleChangeCallback(std::string title)
 	sendMessage(message);
 }
 
-#ifndef LL_LINUX
+#if LL_DARWIN || LL_WINDOWS
 void MediaPluginCEF::onTooltipCallback(std::string text)
 {
     LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA, "tooltip_text");
@@ -393,7 +393,7 @@ const std::vector<std::string> MediaPluginCEF::onFileDialog(dullahan::EFileDialo
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-#ifndef LL_LINUX
+#if LL_DARWIN || LL_WINDOWS
 
 bool MediaPluginCEF::onJSDialogCallback(const std::string origin_url, const std::string message_text, const std::string default_prompt_text)
 {
@@ -485,7 +485,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			else if (message_name == "idle")
 			{
 				mCEFLib->update();
-#ifndef LL_LINUX
+#if LL_DARWIN || LL_WINDOWS
 				mVolumeCatcher.pump();
 #endif
 				// this seems bad but unless the state changes (it won't until we figure out
@@ -495,7 +495,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			}
 			else if (message_name == "cleanup")
 			{
-#ifdef LL_LINUX
+#if LL_LINUX
 				mVolumeCatcher.setVolume(0); 
 #endif
 				mCEFLib->requestExit();
@@ -550,7 +550,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				mCEFLib->setOnConsoleMessageCallback(std::bind(&MediaPluginCEF::onConsoleMessageCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 				mCEFLib->setOnStatusMessageCallback(std::bind(&MediaPluginCEF::onStatusMessageCallback, this, std::placeholders::_1));
 				mCEFLib->setOnTitleChangeCallback(std::bind(&MediaPluginCEF::onTitleChangeCallback, this, std::placeholders::_1));
-#ifndef LL_LINUX
+#if LL_DARWIN || LL_WINDOWS
 				mCEFLib->setOnTooltipCallback(std::bind(&MediaPluginCEF::onTooltipCallback, this, std::placeholders::_1));
 #endif
 				mCEFLib->setOnLoadStartCallback(std::bind(&MediaPluginCEF::onLoadStartCallback, this));
@@ -562,7 +562,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				mCEFLib->setOnFileDialogCallback(std::bind(&MediaPluginCEF::onFileDialog, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
 				mCEFLib->setOnCursorChangedCallback(std::bind(&MediaPluginCEF::onCursorChangedCallback, this, std::placeholders::_1));
 				mCEFLib->setOnRequestExitCallback(std::bind(&MediaPluginCEF::onRequestExitCallback, this));
-#ifndef LL_LINUX
+#if LL_DARWIN || LL_WINDOWS
 				mCEFLib->setOnJSDialogCallback(std::bind(&MediaPluginCEF::onJSDialogCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 				mCEFLib->setOnJSBeforeUnloadCallback(std::bind(&MediaPluginCEF::onJSBeforeUnloadCallback, this));
 #endif				
@@ -586,7 +586,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 
 				settings.cache_enabled = true;
 				settings.cache_path = mCachePath;
-#ifdef LL_LINUX
+#if LL_LINUX
 				settings.cookie_store_path = mCookiePath;
 #else
 				settings.root_cache_path = mRootCachePath;
@@ -659,7 +659,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			else if (message_name == "set_user_data_path")
 			{
 				std::string user_data_path_cache = message_in.getValue("cache_path");
-#ifdef LL_LINUX
+#if LL_LINUX
 				std::string user_data_path_cookies = message_in.getValue("cookies_path");
 
 				mCachePath = user_data_path_cache + "cef_cache";
@@ -677,7 +677,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
                     delim = "/";
 #endif
 
-#ifdef LL_LINUX
+#if LL_LINUX
 				  mCachePath = user_data_path_cache + "cef_cache";
 #else  
                   mCachePath = mRootCachePath + delim + subfolder;
@@ -789,7 +789,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			else if (message_name == "scroll_event")
 			{
 				// Mouse coordinates for cef to be able to scroll 'containers'
-#ifndef LL_LINUX
+#if LL_DARWIN || LL_WINDOWS
 				S32 x = message_in.getValueS32("x");
 				S32 y = message_in.getValueS32("y");
 #endif
@@ -800,7 +800,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				delta_x *= -scaling_factor;
 				delta_y *= -scaling_factor;
 
-#ifndef LL_LINUX
+#if LL_DARWIN || LL_WINDOWS
 				mCEFLib->mouseWheel(x, y, delta_x, delta_y);
 #endif
 			}
