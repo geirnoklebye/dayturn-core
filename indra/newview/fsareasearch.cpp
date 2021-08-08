@@ -1916,11 +1916,13 @@ void FSPanelAreaSearchList::touchObject(LLViewerObject* objectp)
 	// *NOTE: Hope the packets arrive safely and in order or else
 	// there will be some problems.
 //	if ( (!RlvActions::isRlvEnabled()) || (RlvActions::canTouch(objectp)) )
-//	{
-		LLPickInfo pick; // default constructor will set sane values.
+	// KKA-887 reinstate a RLV check here
+	LLPickInfo pick; // default constructor will set sane values.
+	if (!gRRenabled || gAgent.mRRInterface.canTouch (objectp, pick.mIntersection))
+	{
 		send_ObjectGrab_message(objectp, pick, LLVector3::zero);
 		send_ObjectDeGrab_message(objectp, pick);
-//	}
+	}
 }
 
 void FSPanelAreaSearchList::buyObject(FSObjectProperties& details, LLViewerObject* objectp)
