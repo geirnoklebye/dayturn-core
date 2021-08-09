@@ -55,12 +55,12 @@ std::vector<std::string>* doLoadDialog(const std::vector<std::string>* allowed_t
     }
         
     //[panel setMessage:@"Import one or more files or directories."];
-    [panel setAllowsMultipleSelection: ( (flags & F_MULTIPLE)?true:false ) ];
-    [panel setCanChooseDirectories: ( (flags & F_DIRECTORY)?true:false ) ];
-    [panel setCanCreateDirectories: true];
-    [panel setResolvesAliases: true];
-    [panel setCanChooseFiles: ( (flags & F_FILE)?true:false )];
-    [panel setTreatsFilePackagesAsDirectories: ( flags & F_NAV_SUPPORT ) ];
+    [panel setAllowsMultipleSelection: ( (flags & F_MULTIPLE)? YES : NO ) ];
+    [panel setCanChooseDirectories: ( (flags & F_DIRECTORY)? YES : NO ) ];
+    [panel setCanCreateDirectories: YES];
+    [panel setResolvesAliases: YES];
+    [panel setCanChooseFiles: ( (flags & F_FILE)? YES : NO )];
+    [panel setTreatsFilePackagesAsDirectories: ( (flags & F_NAV_SUPPORT) ? YES : NO ) ];
     
     std::vector<std::string>* outfiles = NULL; 
     
@@ -110,8 +110,8 @@ std::string* doSaveDialog(const std::string* file,
     NSArray *fileType = [extensionns componentsSeparatedByString:@","];
     
     //[panel setMessage:@"Save Image File"]; 
-    [panel setTreatsFilePackagesAsDirectories: ( flags & F_NAV_SUPPORT ) ];
-    [panel setCanSelectHiddenExtension:true]; 
+    [panel setTreatsFilePackagesAsDirectories: ( (flags & F_NAV_SUPPORT) ? YES : NO ) ];
+    [panel setCanSelectHiddenExtension: YES];
     [panel setAllowedFileTypes:fileType];
     NSString *fileName = [NSString stringWithCString:file->c_str() encoding:[NSString defaultCStringEncoding]];
     
