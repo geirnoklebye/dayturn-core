@@ -73,20 +73,20 @@ extern BOOL gDebugClicks;
 LLToolGrabBase::LLToolGrabBase( LLToolComposite* composite )
 :	LLTool( std::string("Grab"), composite ),
 	mMode( GRAB_INACTIVE ),
-	mVerticalDragging( FALSE ),
-	mHitLand(FALSE),
+	mVerticalDragging(false),
+	mHitLand(false),
 	mLastMouseX(0),
 	mLastMouseY(0),
 	mAccumDeltaX(0),
 	mAccumDeltaY(0),	
-	mHasMoved( FALSE ),
-	mOutsideSlop(FALSE),
-	mDeselectedThisClick(FALSE),
+	mHasMoved(false),
+	mOutsideSlop(false),
+	mDeselectedThisClick(false),
 	mLastFace(0),
-	mSpinGrabbing( FALSE ),
+	mSpinGrabbing(false),
 	mSpinRotation(),
-	mClickedInMouselook( FALSE ),
-	mHideBuildHighlight(FALSE)
+	mClickedInMouselook(false),
+	mHideBuildHighlight(false)
 { }
 
 LLToolGrabBase::~LLToolGrabBase()
@@ -176,11 +176,11 @@ void LLToolGrabBase::pickCallback(const LLPickInfo& pick_info)
 	if (!extend_select && !LLSelectMgr::getInstance()->getSelection()->isEmpty())
 	{
 		LLSelectMgr::getInstance()->deselectAll();
-		LLToolGrab::getInstance()->mDeselectedThisClick = TRUE;
+		LLToolGrab::getInstance()->mDeselectedThisClick = true;
 	}
 	else
 	{
-		LLToolGrab::getInstance()->mDeselectedThisClick = FALSE;
+		LLToolGrab::getInstance()->mDeselectedThisClick = false;
 	}
 
 	// if not over object, do nothing
@@ -196,7 +196,7 @@ void LLToolGrabBase::pickCallback(const LLPickInfo& pick_info)
 	}
 }
 
-BOOL LLToolGrabBase::handleObjectHit(const LLPickInfo& info)
+bool LLToolGrabBase::handleObjectHit(const LLPickInfo& info)
 {
 	mGrabPick = info;
 	LLViewerObject* objectp = mGrabPick.getObject();
@@ -209,7 +209,7 @@ BOOL LLToolGrabBase::handleObjectHit(const LLPickInfo& info)
 	if (NULL == objectp) // unexpected
 	{
 		LL_WARNS() << "objectp was NULL; returning FALSE" << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 
 	if (objectp->isAvatar())
@@ -219,7 +219,7 @@ BOOL LLToolGrabBase::handleObjectHit(const LLPickInfo& info)
 			gBasicToolset->selectTool( gGrabTransientTool );
 			gGrabTransientTool = NULL;
 		}
-		return TRUE;
+		return false;
 	}
 
 	setMouseCapture( true );
@@ -291,8 +291,8 @@ BOOL LLToolGrabBase::handleObjectHit(const LLPickInfo& info)
 	mLastMouseY = gViewerWindow->getCurrentMouseY();
 	mAccumDeltaX = 0;
 	mAccumDeltaY = 0;
-	mHasMoved = FALSE;
-	mOutsideSlop = FALSE;
+	mHasMoved = false;
+	mOutsideSlop = false;
 
 	mVerticalDragging = (info.mKeyMask == MASK_VERTICAL) || gGrabBtnVertical;
 
@@ -325,7 +325,7 @@ BOOL LLToolGrabBase::handleObjectHit(const LLPickInfo& info)
 		gGrabTransientTool = NULL;
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -336,7 +336,7 @@ void LLToolGrabBase::startSpin()
 	{
 		return;
 	}
-	mSpinGrabbing = TRUE;
+	mSpinGrabbing = true;
 
 	// Was saveSelectedObjectTransform()
 	LLViewerObject *root = (LLViewerObject *)objectp->getRoot();
@@ -355,7 +355,7 @@ void LLToolGrabBase::startSpin()
 
 void LLToolGrabBase::stopSpin()
 {
-	mSpinGrabbing = FALSE;
+	mSpinGrabbing = false;
 
 	LLViewerObject* objectp = mGrabPick.getObject();
 	if (!objectp)
@@ -552,11 +552,11 @@ void LLToolGrabBase::handleHoverActive(S32 x, S32 y, MASK mask)
 		S32 dist_sq = mAccumDeltaX * mAccumDeltaX + mAccumDeltaY * mAccumDeltaY;
 		if (dist_sq > SLOP_DIST_SQ)
 		{
-			mOutsideSlop = TRUE;
+			mOutsideSlop = true;
 		}
 
 		// mouse has moved outside center
-		mHasMoved = TRUE;
+		mHasMoved = true;
 		
 		if (mSpinGrabbing)
 		{
@@ -790,13 +790,13 @@ void LLToolGrabBase::handleHoverNonPhysical(S32 x, S32 y, MASK mask)
 		//--------------------------------------------------
 		if (!(mask == MASK_VERTICAL) && !gGrabBtnVertical)
 		{
-			mVerticalDragging = FALSE;
+			mVerticalDragging = false;
 		}
 	
 		else if ((gGrabBtnVertical && (mask != MASK_SPIN)) 
 				|| (mask == MASK_VERTICAL))
 		{
-			mVerticalDragging = TRUE;
+			mVerticalDragging = true;
 		}
 	
 		S32 dx = x - mLastMouseX;
@@ -810,11 +810,11 @@ void LLToolGrabBase::handleHoverNonPhysical(S32 x, S32 y, MASK mask)
 			S32 dist_sq = mAccumDeltaX * mAccumDeltaX + mAccumDeltaY * mAccumDeltaY;
 			if (dist_sq > SLOP_DIST_SQ)
 			{
-				mOutsideSlop = TRUE;
+				mOutsideSlop = true;
 			}
 
 			// mouse has moved 
-			mHasMoved = TRUE;
+			mHasMoved = true;
 
 			//------------------------------------------------------
 			// Handle grabbing
@@ -935,7 +935,7 @@ void LLToolGrabBase::handleHoverFailed(S32 x, S32 y, MASK mask)
 		S32 dist_sq = (x-mGrabPick.mMousePt.mX) * (x-mGrabPick.mMousePt.mX) + (y-mGrabPick.mMousePt.mY) * (y-mGrabPick.mMousePt.mY);
 		if( mOutsideSlop || dist_sq > SLOP_DIST_SQ )
 		{
-			mOutsideSlop = TRUE;
+			mOutsideSlop = true;
 
 			switch( mMode )
 			{
@@ -987,7 +987,7 @@ BOOL LLToolGrabBase::handleMouseUp(S32 x, S32 y, MASK mask)
 
 	if(mClickedInMouselook && !gAgentCamera.cameraMouselook())
 	{
-		mClickedInMouselook = FALSE;
+		mClickedInMouselook = false;
 	}
 	else
 	{
@@ -1057,7 +1057,7 @@ void LLToolGrabBase::onMouseCaptureLost()
 	
 	mMode = GRAB_INACTIVE;
 
-	mHideBuildHighlight = FALSE;
+	mHideBuildHighlight = false;
 
 	mGrabPick.mObjectID.setNull();
 
@@ -1096,7 +1096,7 @@ void LLToolGrabBase::stopGrab()
 	case GRAB_NONPHYSICAL:
 	case GRAB_LOCKED:
 		send_ObjectDeGrab_message(objectp, pick);
-		mVerticalDragging = FALSE;
+		mVerticalDragging = false;
 		break;
 
 	case GRAB_NOOBJECT:
@@ -1106,7 +1106,7 @@ void LLToolGrabBase::stopGrab()
 		break;
 	}
 
-	mHideBuildHighlight = FALSE;
+	mHideBuildHighlight = false;
 }
 
 
@@ -1116,7 +1116,7 @@ void LLToolGrabBase::draw()
 void LLToolGrabBase::render()
 { }
 
-BOOL LLToolGrabBase::isEditing()
+bool LLToolGrabBase::isEditing()
 {
 	return (mGrabPick.getObject().notNull());
 }
