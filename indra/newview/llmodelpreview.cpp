@@ -171,7 +171,7 @@ LLModelPreview::LLModelPreview(S32 width, S32 height, LLFloater* fmp)
     , mHasDegenerate(false)
     , mImporterDebug(LLCachedControl<bool>(gSavedSettings, "ImporterDebug", false))
 {
-    mNeedsUpdate = TRUE;
+    mNeedsUpdate = true;
     mCameraDistance = 0.f;
     mCameraYaw = 0.f;
     mCameraPitch = 0.f;
@@ -3113,12 +3113,12 @@ void LLModelPreview::addEmptyFace(LLModel* pTarget)
 //-----------------------------------------------------------------------------
 // Todo: we shouldn't be setting all those UI elements on render.
 // Note: Render happens each frame with skinned avatars
-BOOL LLModelPreview::render()
+bool LLModelPreview::render()
 {
     assert_main_thread();
 
     LLMutexLock lock(this);
-    mNeedsUpdate = FALSE;
+    mNeedsUpdate = false;
 
     bool edges = mViewOption["show_edges"];
     bool joint_overrides = mViewOption["show_joint_overrides"];
@@ -3362,7 +3362,7 @@ BOOL LLModelPreview::render()
             else
             {
                 LL_INFOS() << "Vertex Buffer[" << mPreviewLOD << "]" << " is EMPTY!!!" << LL_ENDL;
-                regen = TRUE;
+                regen = true;
             }
         }
 
@@ -3828,7 +3828,7 @@ BOOL LLModelPreview::render()
 
     gGL.popMatrix();
 
-    return TRUE;
+    return true;
 }
 
 void LLModelPreview::renderGroundPlane(float z_offset)

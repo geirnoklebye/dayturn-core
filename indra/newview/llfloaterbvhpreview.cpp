@@ -1038,7 +1038,7 @@ void LLFloaterBvhPreview::onBtnOK(void* userdata)
 //-----------------------------------------------------------------------------
 LLPreviewAnimation::LLPreviewAnimation(S32 width, S32 height) : LLViewerDynamicTexture(width, height, 3, ORDER_MIDDLE, FALSE)
 {
-	mNeedsUpdate = TRUE;
+	mNeedsUpdate = true;
 	mCameraDistance = PREVIEW_CAMERA_DISTANCE;
 	mCameraYaw = 0.f;
 	mCameraPitch = 0.f;
@@ -1078,9 +1078,9 @@ S8 LLPreviewAnimation::getType() const
 //-----------------------------------------------------------------------------
 // update()
 //-----------------------------------------------------------------------------
-BOOL	LLPreviewAnimation::render()
+bool	LLPreviewAnimation::render()
 {
-	mNeedsUpdate = FALSE;
+	mNeedsUpdate = false;
 	LLVOAvatar* avatarp = mDummyAvatar;
 	
 	gGL.matrixMode(LLRender::MM_PROJECTION);
@@ -1146,7 +1146,7 @@ BOOL	LLPreviewAnimation::render()
 	}
 
 	gGL.color4f(1,1,1,1);
-	return TRUE;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -1154,7 +1154,7 @@ BOOL	LLPreviewAnimation::render()
 //-----------------------------------------------------------------------------
 void LLPreviewAnimation::requestUpdate()
 { 
-	mNeedsUpdate = TRUE; 
+	mNeedsUpdate = true; 
 }
 
 //-----------------------------------------------------------------------------

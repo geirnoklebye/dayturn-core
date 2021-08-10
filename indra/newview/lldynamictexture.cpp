@@ -108,15 +108,15 @@ void LLViewerDynamicTexture::generateGLTexture(LLGLint internal_format, LLGLenum
 //-----------------------------------------------------------------------------
 // render()
 //-----------------------------------------------------------------------------
-BOOL LLViewerDynamicTexture::render()
+bool LLViewerDynamicTexture::render()
 {
-	return FALSE;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // preRender()
 //-----------------------------------------------------------------------------
-void LLViewerDynamicTexture::preRender(BOOL clear_depth)
+void LLViewerDynamicTexture::preRender(bool clear_depth)
 {
 	gPipeline.allocatePhysicsBuffer();
 	if (!gNonInteractive)
@@ -165,7 +165,7 @@ void LLViewerDynamicTexture::preRender(BOOL clear_depth)
 //-----------------------------------------------------------------------------
 // postRender()
 //-----------------------------------------------------------------------------
-void LLViewerDynamicTexture::postRender(BOOL success)
+void LLViewerDynamicTexture::postRender(bool success)
 {
 	{
 		if (success)

@@ -53,7 +53,7 @@ LLViewerTexLayerSetBuffer::LLViewerTexLayerSetBuffer(LLTexLayerSet* const owner,
 	// ORDER_LAST => must render these after the hints are created.
 	LLTexLayerSetBuffer(owner),
     LLViewerDynamicTexture(width, height, 4, LLViewerDynamicTexture::ORDER_LAST, FALSE),
-	mNeedsUpdate(TRUE),
+	mNeedsUpdate(true),
 	mNumLowresUpdates(0)
 {
 	mGLTexturep->setNeedsAlphaAndPickMask(FALSE);
@@ -99,7 +99,7 @@ void LLViewerTexLayerSetBuffer::dumpTotalByteCount()
 void LLViewerTexLayerSetBuffer::requestUpdate()
 {
 	restartUpdateTimer();
-	mNeedsUpdate = TRUE;
+	mNeedsUpdate = true;
 	mNumLowresUpdates = 0;
 }
 
@@ -110,30 +110,30 @@ void LLViewerTexLayerSetBuffer::restartUpdateTimer()
 }
 
 // virtual
-BOOL LLViewerTexLayerSetBuffer::needsRender()
+bool LLViewerTexLayerSetBuffer::needsRender()
 {
 	llassert(mTexLayerSet->getAvatarAppearance() == gAgentAvatarp);
-	if (!isAgentAvatarValid()) return FALSE;
+	if (!isAgentAvatarValid()) return false;
 
-	const BOOL update_now = mNeedsUpdate && isReadyToUpdate();
+	const bool update_now = mNeedsUpdate && isReadyToUpdate();
 
 	// Don't render if we don't want to (or aren't ready to) update.
 	if (!update_now)
 	{
-		return FALSE;
+		return false;
 	}
 
 	// Don't render if we're animating our appearance.
 	if (gAgentAvatarp->getIsAppearanceAnimating())
 	{
-		return FALSE;
+		return false;
 	}
 
 	// Don't render if we are trying to create a skirt texture but aren't wearing a skirt.
 	if (gAgentAvatarp->getBakedTE(getViewerTexLayerSet()) == LLAvatarAppearanceDefines::TEX_SKIRT_BAKED && 
 		!gAgentAvatarp->isWearingWearableType(LLWearableType::WT_SKIRT))
 	{
-		return FALSE;
+		return false;
 	}
 
 	// Render if we have at least minimal level of detail for each local texture.
@@ -146,7 +146,7 @@ void LLViewerTexLayerSetBuffer::preRenderTexLayerSet()
 	LLTexLayerSetBuffer::preRenderTexLayerSet();
 	
 	// keep depth buffer, we don't need to clear it
-	LLViewerDynamicTexture::preRender(FALSE);
+	LLViewerDynamicTexture::preRender(false);
 }
 
 // virtual
@@ -160,7 +160,7 @@ void LLViewerTexLayerSetBuffer::postRenderTexLayerSet(BOOL success)
 // virtual
 void LLViewerTexLayerSetBuffer::midRenderTexLayerSet(BOOL success)
 {
-	const BOOL update_now = mNeedsUpdate && isReadyToUpdate();
+	const bool update_now = mNeedsUpdate && isReadyToUpdate();
 	if (update_now)
 	{
 		doUpdate();
@@ -176,13 +176,13 @@ BOOL LLViewerTexLayerSetBuffer::isInitialized(void) const
 	return mGLTexturep.notNull() && mGLTexturep->isGLTextureCreated();
 }
 
-BOOL LLViewerTexLayerSetBuffer::isReadyToUpdate() const
+bool LLViewerTexLayerSetBuffer::isReadyToUpdate() const
 {
 	// If we requested an update and have the final LOD ready, then update.
-	if (getViewerTexLayerSet()->isLocalTextureDataFinal()) return TRUE;
+	if (getViewerTexLayerSet()->isLocalTextureDataFinal()) return true;
 
 	// If we haven't done an update yet, then just do one now regardless of state of textures.
-	if (mNumLowresUpdates == 0) return TRUE;
+	if (mNumLowresUpdates == 0) return true;
 
 	// Update if we've hit a timeout.  Unlike for uploads, we can make this timeout fairly small
 	// since render unnecessarily doesn't cost much.
@@ -192,20 +192,20 @@ BOOL LLViewerTexLayerSetBuffer::isReadyToUpdate() const
 		// If we hit our timeout and have textures available at even lower resolution, then update.
 		const BOOL is_update_textures_timeout = mNeedsUpdateTimer.getElapsedTimeF32() >= texture_timeout;
 		const BOOL has_lower_lod = getViewerTexLayerSet()->isLocalTextureDataAvailable();
-		if (has_lower_lod && is_update_textures_timeout) return TRUE; 
+		if (has_lower_lod && is_update_textures_timeout) return true; 
 	}
 
-	return FALSE;
+	return false;
 }
 
-BOOL LLViewerTexLayerSetBuffer::requestUpdateImmediate()
+bool LLViewerTexLayerSetBuffer::requestUpdateImmediate()
 {
-	mNeedsUpdate = TRUE;
-	BOOL result = FALSE;
+	mNeedsUpdate = true;
+	bool result = false;
 
 	if (needsRender())
 	{
-		preRender(FALSE);
+		preRender(false);
 		result = render();
 		postRender(result);
 	}
@@ -221,7 +221,7 @@ void LLViewerTexLayerSetBuffer::doUpdate()
 	const BOOL highest_lod = layer_set->isLocalTextureDataFinal();
 	if (highest_lod)
 	{
-		mNeedsUpdate = FALSE;
+		mNeedsUpdate = false;
 	}
 	else
 	{

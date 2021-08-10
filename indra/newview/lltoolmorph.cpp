@@ -62,7 +62,7 @@
 
 //static
 LLVisualParamHint::instance_list_t LLVisualParamHint::sInstances;
-BOOL LLVisualParamReset::sDirty = FALSE;
+bool LLVisualParamReset::sDirty = false;
 
 //-----------------------------------------------------------------------------
 // LLVisualParamHint()
@@ -79,8 +79,8 @@ LLVisualParamHint::LLVisualParamHint(
 	LLJoint* jointp)
 	:
 	LLViewerDynamicTexture(width, height, 3, LLViewerDynamicTexture::ORDER_MIDDLE, TRUE ),
-	mNeedsUpdate( TRUE ),
-	mIsVisible( FALSE ),
+	mNeedsUpdate(true),
+	mIsVisible(false),
 	mJointMesh( mesh ),
 	mVisualParam( param ),
 	mWearablePtr( wearable ),
@@ -141,12 +141,12 @@ void LLVisualParamHint::requestHintUpdates( LLVisualParamHint* exception1, LLVis
 	}
 }
 
-BOOL LLVisualParamHint::needsRender()
+bool LLVisualParamHint::needsRender()
 {
 	return mNeedsUpdate && mDelayFrames-- <= 0 && !gAgentAvatarp->getIsAppearanceAnimating() && mAllowsUpdates;
 }
 
-void LLVisualParamHint::preRender(BOOL clear_depth)
+void LLVisualParamHint::preRender(bool clear_depth)
 {
 	LLViewerWearable* wearable = (LLViewerWearable*)mWearablePtr;
 	if (wearable)
@@ -179,9 +179,9 @@ void LLVisualParamHint::preRender(BOOL clear_depth)
 //-----------------------------------------------------------------------------
 // render()
 //-----------------------------------------------------------------------------
-BOOL LLVisualParamHint::render()
+bool LLVisualParamHint::render()
 {
-	LLVisualParamReset::sDirty = TRUE;
+	LLVisualParamReset::sDirty = true;
 
 	gGL.pushUIMatrix();
 	gGL.loadUIIdentity();
@@ -207,8 +207,8 @@ BOOL LLVisualParamHint::render()
 	gGL.matrixMode(LLRender::MM_MODELVIEW);
 	gGL.popMatrix();
 
-	mNeedsUpdate = FALSE;
-	mIsVisible = TRUE;
+	mNeedsUpdate = false;
+	mIsVisible = true;
 
 	LLQuaternion avatar_rotation;
 	LLJoint* root_joint = gAgentAvatarp->getRootJoint();
@@ -262,7 +262,7 @@ BOOL LLVisualParamHint::render()
 	mGLTexturep->setGLTextureCreated(true);
 	gGL.popUIMatrix();
 
-	return TRUE;
+	return true;
 }
 
 
@@ -310,15 +310,15 @@ S8 LLVisualParamReset::getType() const
 //-----------------------------------------------------------------------------
 // render()
 //-----------------------------------------------------------------------------
-BOOL LLVisualParamReset::render()
+bool LLVisualParamReset::render()
 {
 	if (sDirty)
 	{
 		gAgentAvatarp->updateComposites();
 		gAgentAvatarp->updateVisualParams();
 		gAgentAvatarp->updateGeometry(gAgentAvatarp->mDrawable);
-		sDirty = FALSE;
+		sDirty = false;
 	}
 
-	return FALSE;
+	return false;
 }

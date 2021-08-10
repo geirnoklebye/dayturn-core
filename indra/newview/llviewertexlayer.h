@@ -106,25 +106,25 @@ private:
 	// Dynamic Texture Interface
 	//--------------------------------------------------------------------
 public:
-	/*virtual*/ BOOL		needsRender();
+	/*virtual*/ bool		needsRender();
 protected:
 	// Pass these along for tex layer rendering.
-	virtual void			preRender(BOOL clear_depth) { preRenderTexLayerSet(); }
-	virtual void			postRender(BOOL success) { postRenderTexLayerSet(success); }
-	virtual BOOL			render() { return renderTexLayerSet(mBoundTarget); }
+	virtual void			preRender(bool clear_depth) { preRenderTexLayerSet(); }
+	virtual void			postRender(bool success) { postRenderTexLayerSet(success); }
+	virtual bool			render() { return renderTexLayerSet(mBoundTarget); }
 	
 	//--------------------------------------------------------------------
 	// Updates
 	//--------------------------------------------------------------------
 public:
 	void					requestUpdate();
-	BOOL					requestUpdateImmediate();
+	bool					requestUpdateImmediate();
 protected:
-	BOOL					isReadyToUpdate() const;
+	bool					isReadyToUpdate() const;
 	void					doUpdate();
 	void					restartUpdateTimer();
 private:
-	BOOL					mNeedsUpdate; 					// Whether we need to locally update our baked textures
+	bool					mNeedsUpdate; 					// Whether we need to locally update our baked textures
 	U32						mNumLowresUpdates; 				// Number of times we've locally updated with lowres version of our baked textures
 	LLFrameTimer    		mNeedsUpdateTimer; 				// Tracks time since update was requested and performed.
 };

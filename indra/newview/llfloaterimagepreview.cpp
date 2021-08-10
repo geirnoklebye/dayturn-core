@@ -565,7 +565,7 @@ void LLFloaterImagePreview::onMouseCaptureLostImagePreview(LLMouseHandler* handl
 //-----------------------------------------------------------------------------
 LLImagePreviewAvatar::LLImagePreviewAvatar(S32 width, S32 height) : LLViewerDynamicTexture(width, height, 3, ORDER_MIDDLE, FALSE)
 {
-	mNeedsUpdate = TRUE;
+	mNeedsUpdate = true;
 	mTargetJoint = NULL;
 	mTargetMesh = NULL;
 	mCameraDistance = 0.f;
@@ -643,9 +643,9 @@ void LLImagePreviewAvatar::clearPreviewTexture(const std::string& mesh_name)
 //-----------------------------------------------------------------------------
 // update()
 //-----------------------------------------------------------------------------
-BOOL LLImagePreviewAvatar::render()
+bool LLImagePreviewAvatar::render()
 {
-	mNeedsUpdate = FALSE;
+	mNeedsUpdate = false;
 	LLVOAvatar* avatarp = mDummyAvatar;
 
 	gGL.pushUIMatrix();
@@ -712,7 +712,7 @@ BOOL LLImagePreviewAvatar::render()
 
 	gGL.popUIMatrix();
 	gGL.color4f(1,1,1,1);
-	return TRUE;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -720,7 +720,7 @@ BOOL LLImagePreviewAvatar::render()
 //-----------------------------------------------------------------------------
 void LLImagePreviewAvatar::refresh()
 { 
-	mNeedsUpdate = TRUE; 
+	mNeedsUpdate = true; 
 }
 
 //-----------------------------------------------------------------------------
@@ -754,7 +754,7 @@ void LLImagePreviewAvatar::pan(F32 right, F32 up)
 
 LLImagePreviewSculpted::LLImagePreviewSculpted(S32 width, S32 height) : LLViewerDynamicTexture(width, height, 3, ORDER_MIDDLE, FALSE)
 {
-	mNeedsUpdate = TRUE;
+	mNeedsUpdate = true;
 	mCameraDistance = 0.f;
 	mCameraYaw = 0.f;
 	mCameraPitch = 0.f;
@@ -844,9 +844,9 @@ void LLImagePreviewSculpted::setPreviewTarget(LLImageRaw* imagep, F32 distance)
 //-----------------------------------------------------------------------------
 // render()
 //-----------------------------------------------------------------------------
-BOOL LLImagePreviewSculpted::render()
+bool LLImagePreviewSculpted::render()
 {
-	mNeedsUpdate = FALSE;
+	mNeedsUpdate = false;
 	LLGLSUIDefault def;
 	LLGLDisable no_blend(GL_BLEND);
 	LLGLEnable cull(GL_CULL_FACE);
@@ -913,7 +913,7 @@ BOOL LLImagePreviewSculpted::render()
 
 	gObjectPreviewProgram.unbind();
 
-	return TRUE;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -921,7 +921,7 @@ BOOL LLImagePreviewSculpted::render()
 //-----------------------------------------------------------------------------
 void LLImagePreviewSculpted::refresh()
 { 
-	mNeedsUpdate = TRUE; 
+	mNeedsUpdate = true; 
 }
 
 //-----------------------------------------------------------------------------

@@ -69,10 +69,10 @@ public:
 	
 	S32			getSize()		{ return mFullWidth * mFullHeight * mComponents; }
 
-	virtual BOOL needsRender() { return TRUE; }
-	virtual void preRender(BOOL clear_depth = TRUE);
-	virtual BOOL render();
-	virtual void postRender(BOOL success);
+	virtual bool needsRender() { return true; }
+	virtual void preRender(bool clear_depth = true);
+	virtual bool render();
+	virtual void postRender(bool success);
 
 	virtual void restoreGLTexture() {}
 	virtual void destroyGLTexture() {}

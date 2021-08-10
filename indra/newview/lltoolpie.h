@@ -85,10 +85,10 @@ public:
 	void showVisualContextMenuEffect();
 	
 private:
-	BOOL outsideSlop		(S32 x, S32 y, S32 start_x, S32 start_y);
-	BOOL handleLeftClickPick();
-	BOOL handleRightClickPick();
-	BOOL useClickAction		(MASK mask, LLViewerObject* object,LLViewerObject* parent);
+	bool outsideSlop		(S32 x, S32 y, S32 start_x, S32 start_y);
+	bool handleLeftClickPick();
+	bool handleRightClickPick();
+	bool useClickAction		(MASK mask, LLViewerObject* object,LLViewerObject* parent);
 	
 	//void showVisualContextMenuEffect();
 	ECursorType cursorFromObject(LLViewerObject* object);
@@ -97,7 +97,7 @@ private:
     bool handleMediaDblClick(const LLPickInfo& info);
     bool handleMediaHover(const LLPickInfo& info);
 	bool handleMediaMouseUp(); 
-	BOOL handleTooltipLand(std::string line, std::string tooltip_msg);
+	bool handleTooltipLand(std::string line, std::string tooltip_msg);
 	bool handleTooltipObject( LLViewerObject* hover_object, std::string line, std::string tooltip_msg);
 
 	// <FS:ND> FIRE-10276; handleTooltipObject can be called during name resolution (LLAvatarNameCache), then hover_object can lon gbe destroyed and the pointer invalid.
@@ -129,8 +129,8 @@ private:
 	LLPointer<LLViewerObject> mClickActionObject;
 	U8					mClickAction;
 	LLSafeHandle<LLObjectSelection> mLeftClickSelection;
-	BOOL				mClickActionBuyEnabled;
-	BOOL				mClickActionPayEnabled;
+	bool				mClickActionBuyEnabled;
+	bool				mClickActionPayEnabled;
 	LLFrameTimer mDoubleClickTimer;
 
 	// <FS:ND> Keep track of name resolutions we made and delete them if needed to avoid crashing if this instance dies.
