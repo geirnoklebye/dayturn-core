@@ -3168,7 +3168,8 @@ BOOL LLViewerWindow::handleKey(KEY key, MASK mask)
 			else
 			{
 				LLChatEntry* chat_editor = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat")->getChatBox();
-				if (chat_editor)
+				// KKA-889 Additional fix for KKA-886
+				if (nearby_chat && chat_editor)
 				{
 					// passing NULL here, character will be added later when it is handled by character handler.
 					nearby_chat->startChat(NULL);
