@@ -2523,11 +2523,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c235250fbe63dddf3a98cbacd11f6281</string>
+              <string>1728e634dae711774ee781493a25f034</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.210631836-darwin64-210631836.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.212391544-darwin64-212391544.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -2586,7 +2586,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>8.1.210631353</string>
+        <string>8.1.212391544</string>
       </map>
       <key>libhunspell</key>
       <map>
