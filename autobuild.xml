@@ -2527,7 +2527,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.210631836-darwin64-210631836.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.210631836-darwin64-210631836.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -2553,7 +2553,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.210631353-linux64-210631353.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/downloads/kdu-8.1.210631353-linux64-210631353.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
