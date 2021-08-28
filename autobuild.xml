@@ -2523,11 +2523,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>1728e634dae711774ee781493a25f034</string>
+              <string>c235250fbe63dddf3a98cbacd11f6281</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.212391544-darwin64-212391544.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.210631836-darwin64-210631836.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -2549,11 +2549,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>136d38c849560be9d2c04571ee154e76</string>
+              <string>3221077b092549cf0274ad3292ce3fb8</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.212392322-linux64-212392322.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.210631353-linux64-210631353.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2575,18 +2575,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>6a57c86fd806858eadf5a801a12c11ba</string>
+              <string>cddf280a0e71ce4f3d66938cc089eb38</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.212391748-windows64-212391748.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.210631653-windows64-210631653.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>8.1.212392322</string>
+        <string>8.1.210631653</string>
       </map>
       <key>libhunspell</key>
       <map>
