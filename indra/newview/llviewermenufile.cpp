@@ -833,7 +833,7 @@ void handle_compress_file_test(void*)
 
             S64Bytes initial_size = S64Bytes(get_file_size(infile));
 
-            BOOL success;
+            bool success;
 
             F64 total_seconds = LLTimer::getTotalSeconds();
             success = gzip_file(infile, packfile);
