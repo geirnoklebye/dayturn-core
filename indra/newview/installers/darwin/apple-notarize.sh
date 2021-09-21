@@ -42,12 +42,12 @@ if [ -f "$CONFIG_FILE" ]; then
                 xcrun stapler staple "$app_file"
             elif [["$status" == "invalid"]]; then
                 echo "Notarization error: failed to process the app file"
-                exit 1
+                #exit 1
             fi
         else
             echo "Notarization error: couldn't get request UUID"
             echo $res
-            exit 1
+            #exit 1
         fi
     fi
 fi
