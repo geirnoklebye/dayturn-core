@@ -4375,6 +4375,7 @@ void handle_object_teleport()
 	LLViewerObject *objp = pick.getObject();
 
 	if (!pos.isExactlyZero()
+		&& objp // KKA-894 Bugsplat crash fix
 		&& objp->getRootEdit()
 		&& pick.mObjectID.notNull()
 		&& !objp->isHUDAttachment()
