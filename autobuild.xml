@@ -2549,11 +2549,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>3221077b092549cf0274ad3292ce3fb8</string>
+              <string>6ce5ab27d3898dd57dfc461277259709</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.210631353-linux64-210631353.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.2.1.212680020-linux64-212680020.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2586,7 +2586,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>8.1.210631353</string>
+        <string>8.2.1.212680020</string>
       </map>
       <key>libhunspell</key>
       <map>
