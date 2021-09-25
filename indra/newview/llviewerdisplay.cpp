@@ -98,8 +98,8 @@ bool gDepthDirty = false;
 bool gResizeScreenTexture = false;
 bool gResizeShadowTexture = false;
 bool gWindowResized = false;
-BOOL gSnapshot = FALSE;
-BOOL gShaderProfileFrame = FALSE;
+bool gSnapshot = false;
+bool gShaderProfileFrame = false;
 
 // This is how long the sim will try to teleport you before giving up.
 const F32 TELEPORT_EXPIRY = 15.0f;
@@ -209,13 +209,11 @@ void display_update_camera()
 // Write some stats to LL_INFOS()
 void display_stats()
 {
-	if (gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging")) return;
+	if (gSavedSettings.getbool("KokuaSuppressPeriodicLogging")) return;
 
-	LL_PROFILE_ZONE_SCOPED
 	F32 fps_log_freq = gSavedSettings.getF32("FPSLogFrequency");
 	if (fps_log_freq > 0.f && gRecentFPSTime.getElapsedTimeF32() >= fps_log_freq)
 	{
-		LL_PROFILE_ZONE_NAMED_CATEGORY_DISPLAY("DS - FPS");
 		F32 fps = gRecentFrameCount / fps_log_freq;
 		LL_INFOS() << llformat("FPS: %.02f", fps) << LL_ENDL;
 		gRecentFrameCount = 0;
@@ -224,7 +222,6 @@ void display_stats()
 	F32 mem_log_freq = gSavedSettings.getF32("MemoryLogFrequency");
 	if (mem_log_freq > 0.f && gRecentMemoryTime.getElapsedTimeF32() >= mem_log_freq)
 	{
-		LL_PROFILE_ZONE_NAMED_CATEGORY_DISPLAY("DS - Memory");
 		gMemoryAllocated = U64Bytes(LLMemory::getCurrentRSS());
 		U32Megabytes memory = gMemoryAllocated;
 		LL_INFOS() << "MEMORY: " << memory << LL_ENDL;
@@ -234,7 +231,6 @@ void display_stats()
     F32 asset_storage_log_freq = gSavedSettings.getF32("AssetStorageLogFrequency");
     if (asset_storage_log_freq > 0.f && gAssetStorageLogTime.getElapsedTimeF32() >= asset_storage_log_freq)
     {
-		LL_PROFILE_ZONE_NAMED_CATEGORY_DISPLAY("DS - Asset Storage");
         gAssetStorageLogTime.reset();
         gAssetStorage->logAssetStorageInfo();
     }
@@ -641,7 +637,6 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 	
 	if (!gDisconnected)
 	{
-		LL_PROFILE_ZONE_NAMED_CATEGORY_DISPLAY("display - 1");
 		LLAppViewer::instance()->pingMainloopTimeout("Display:Update");
 		if (gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_HUD))
 		{ //don't draw hud objects in this frame
@@ -714,7 +709,6 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 		LLAppViewer::instance()->pingMainloopTimeout("Display:Swap");
 		
 		{ 
-			LL_PROFILE_ZONE_NAMED_CATEGORY_DISPLAY("display - 2")
 			if (gResizeScreenTexture)
 			{
 				gResizeScreenTexture = false;
@@ -766,7 +760,6 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 
 		//if (!for_snapshot)
 		{
-			LL_PROFILE_ZONE_NAMED_CATEGORY_DISPLAY("display - 3")
 			LLAppViewer::instance()->pingMainloopTimeout("Display:Imagery");
 			gPipeline.generateWaterReflection(*LLViewerCamera::getInstance());
 			gPipeline.generateHighlight(*LLViewerCamera::getInstance());
@@ -826,7 +819,6 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 		//
 		LLAppViewer::instance()->pingMainloopTimeout("Display:StateSort");
 		{
-			LL_PROFILE_ZONE_NAMED_CATEGORY_DISPLAY("display - 4")
 			LLViewerCamera::sCurCameraID = LLViewerCamera::CAMERA_WORLD;
 			gPipeline.stateSort(*LLViewerCamera::getInstance(), result);
 			stop_glerror();
@@ -851,7 +843,6 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 
 		{
 			LLAppViewer::instance()->pingMainloopTimeout("Display:Sky");
-			LL_PROFILE_ZONE_NAMED_CATEGORY_ENVIRONMENT("update sky"); //LL_RECORD_BLOCK_TIME(FTM_UPDATE_SKY);	
 			gSky.updateSky();
 		}
 
@@ -1244,8 +1235,6 @@ bool setup_hud_matrices(const LLRect& screen_region)
 
 void render_ui(F32 zoom_factor, int subfield)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_UI; //LL_RECORD_BLOCK_TIME(FTM_RENDER_UI);
-
 	LLGLState::checkStates();
 	
 	glh::matrix4f saved_view = get_current_modelview();
@@ -1270,13 +1259,6 @@ void render_ui(F32 zoom_factor, int subfield)
 	gPipeline.renderFinalize();
 
 	{
-		// SL-15709
-		// NOTE: Tracy only allows one ZoneScoped per function.
-		// Solutions are:
-		// 1. Use a new scope
-		// 2. Use named zones
-		// 3. Use transient zones
-		LL_PROFILE_ZONE_NAMED_CATEGORY_UI("HUD"); //LL_RECORD_BLOCK_TIME(FTM_RENDER_HUD);
 		render_hud_elements();
 		render_hud_attachments();
 
@@ -1292,7 +1274,6 @@ void render_ui(F32 zoom_factor, int subfield)
 			{
 				if (!gDisconnected)
 				{
-					LL_PROFILE_ZONE_NAMED_CATEGORY_UI("UI 3D"); //LL_RECORD_BLOCK_TIME(FTM_RENDER_UI_3D);
 					render_ui_3d();
 					LLGLState::checkStates();
 				}
@@ -1301,7 +1282,6 @@ void render_ui(F32 zoom_factor, int subfield)
 					render_disconnected_background();
 				}
 
-				LL_PROFILE_ZONE_NAMED_CATEGORY_UI("UI 2D"); //LL_RECORD_BLOCK_TIME(FTM_RENDER_UI_2D);
 				render_ui_2d();
 				LLGLState::checkStates();
 			}
@@ -1428,7 +1408,7 @@ void render_ui_3d()
 	gUIProgram.bind();
 
 	// Coordinate axes
-	if (gSavedSettings.getBOOL("ShowAxes"))
+	if (gSavedSettings.getbool("ShowAxes"))
 	{
 		draw_axes();
 	}
@@ -1483,7 +1463,7 @@ void render_ui_2d()
 	}
 	
 
-	if (gSavedSettings.getBOOL("RenderUIBuffer"))
+	if (gSavedSettings.getbool("RenderUIBuffer"))
 	{
 		if (LLView::sIsRectDirty)
 		{

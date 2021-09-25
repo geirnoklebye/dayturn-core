@@ -538,7 +538,7 @@ void LLWorld::setTerrainDetailScale(F32 val)
 
 LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host)
 {
-	bool suppress = gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging");
+	bool suppress = gSavedSettings.getbool("KokuaSuppressPeriodicLogging");
 	if (!suppress)
 	{
 		LL_INFOS() << "Add region with handle: " << region_handle << " on host " << host << LL_ENDL;
@@ -1586,7 +1586,7 @@ void process_enable_simulator(LLMessageSystem *msg, void **user_data)
   	LLWorld::getInstance()->addRegion(handle, sim);
 
   	// give the simulator a message it can use to get ip and port
-  	if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
+  	if (!gSavedSettings.getbool("KokuaSuppressPeriodicLogging"))
   	{
   		LL_INFOS() << "simulator_enable() Enabling " << sim << " with code " << msg->getOurCircuitCode() << LL_ENDL;
   	}	

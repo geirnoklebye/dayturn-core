@@ -215,7 +215,7 @@ LLUUID LLExperienceCache::getExperienceId(const LLUUID& private_key, bool null_i
 //=========================================================================
 void LLExperienceCache::processExperience(const LLUUID& public_key, const LLSD& experience)
 {
-	if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
+	if (!gSavedSettings.getbool("KokuaSuppressPeriodicLogging"))
 	{
     LL_INFOS("ExperienceCache") << "Processing experience \"" << experience[NAME] << "\" with key " << public_key.asString() << LL_ENDL;
   }
