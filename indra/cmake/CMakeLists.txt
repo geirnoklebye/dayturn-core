@@ -31,7 +31,6 @@ set(cmake_SOURCE_FILES
     FindFMODEX.cmake
     FindGLH.cmake
     FindGLOD.cmake
-    FindGoogleBreakpad.cmake
     FindGooglePerfTools.cmake
     FindHUNSPELL.cmake
     FindJsonCpp.cmake
@@ -49,7 +48,6 @@ set(cmake_SOURCE_FILES
     GetPrerequisites_2_8.cmake
     Glui.cmake
     Glut.cmake
-    GoogleBreakpad.cmake
     GoogleMock.cmake
     GooglePerfTools.cmake
     Havok.cmake
@@ -129,7 +127,6 @@ set(cmake_SOURCE_FILES
     FindFMODSTUDIO.cmake
     FindFMODEX.cmake
     FindGLH.cmake
-    FindGoogleBreakpad.cmake
     FindHUNSPELL.cmake
     FindJsonCpp.cmake
     FindNDOF.cmake
@@ -144,7 +141,6 @@ set(cmake_SOURCE_FILES
     GLEXT.cmake
     GLH.cmake
     GLOD.cmake
-    GoogleBreakpad.cmake
     GoogleMock.cmake
     Havok.cmake
     Hunspell.cmake

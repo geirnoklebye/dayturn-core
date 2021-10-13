@@ -54,7 +54,7 @@ sourceid = ""
 # the viewer_channel_suffix is prefixed by a blank and then appended to the viewer_channel
 # for the package in a setting that overrides the compiled-in value
 ################################################################
-additional_packages = "EDU"
+additional_packages = ""
 Linux.additional_packages = ""
 
 # The EDU package allows us to create a separate release channel whose expirations
