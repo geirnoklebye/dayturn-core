@@ -825,11 +825,11 @@ BOOL LLPanelGroupMembersSubTab::postBuildSubTab(LLView* root)
 
 	if (!mMembersList || !mAssignedRolesList || !mAllowedActionsList || !mActionDescription) return FALSE;
 
-	mAllowedActionsList->setCommitOnSelectionChange(TRUE);
+	mAllowedActionsList->setCommitOnSelectionChange(true);
 	mAllowedActionsList->setCommitCallback(boost::bind(&LLPanelGroupMembersSubTab::updateActionDescription, this));
 
 	// We want to be notified whenever a member is selected.
-	mMembersList->setCommitOnSelectionChange(TRUE);
+	mMembersList->setCommitOnSelectionChange(true);
 	mMembersList->setCommitCallback(onMemberSelect, this);
 	// Show the member's profile on double click.
 	mMembersList->setDoubleClickCallback(onMemberDoubleClick, this);
@@ -2029,14 +2029,14 @@ BOOL LLPanelGroupRolesSubTab::postBuildSubTab(LLView* root)
 		mDeleteRoleButton->setEnabled(false);
 	}
 
-	mRolesList->setCommitOnSelectionChange(TRUE);
+	mRolesList->setCommitOnSelectionChange(true);
 	mRolesList->setCommitCallback(onRoleSelect, this);
 
 	mAssignedMembersList->setContextMenu(LLScrollListCtrl::MENU_AVATAR);
 
 	mMemberVisibleCheck->setCommitCallback(onMemberVisibilityChange, this);
 
-	mAllowedActionsList->setCommitOnSelectionChange(TRUE);
+	mAllowedActionsList->setCommitOnSelectionChange(true);
 	mAllowedActionsList->setCommitCallback(boost::bind(&LLPanelGroupRolesSubTab::updateActionDescription, this));
 
 	mRoleName->setCommitOnFocusLost(true);
@@ -2651,7 +2651,7 @@ void LLPanelGroupRolesSubTab::handleCreateRole()
 	rd.mRoleName = "New Role";
 	gdatap->createRole(new_role_id,rd);
 
-	mRolesList->deselectAllItems(TRUE);
+	mRolesList->deselectAllItems(true);
 	LLSD row;
 	row["id"] = new_role_id;
 	row["columns"][0]["column"] = "name";
@@ -2702,7 +2702,7 @@ void LLPanelGroupRolesSubTab::handleCopyRole()
 	rd.mRoleName += "(Copy)";
 	gdatap->createRole(new_role_id,rd);
 
-	mRolesList->deselectAllItems(TRUE);
+	mRolesList->deselectAllItems(true);
 	LLSD row;
 	row["id"] = new_role_id;
 	row["columns"][0]["column"] = "name";
@@ -2861,7 +2861,7 @@ BOOL LLPanelGroupActionsSubTab::postBuildSubTab(LLView* root)
 
 	if (!mActionList || !mActionDescription || !mActionRoles || !mActionMembers) return FALSE;
 
-	mActionList->setCommitOnSelectionChange(TRUE);
+	mActionList->setCommitOnSelectionChange(true);
 	mActionList->setCommitCallback(boost::bind(&LLPanelGroupActionsSubTab::handleActionSelect, this));
 	mActionList->setContextMenu(LLScrollListCtrl::MENU_AVATAR);
 
@@ -3071,7 +3071,7 @@ BOOL LLPanelGroupBanListSubTab::postBuildSubTab(LLView* root)
 	if(!mBanList || !mCreateBanButton || !mDeleteBanButton || !mRefreshBanListButton || !mBanCountText)
 		return FALSE;
 
-	mBanList->setCommitOnSelectionChange(TRUE);
+	mBanList->setCommitOnSelectionChange(true);
 	mBanList->setCommitCallback(onBanEntrySelect, this);
 
 	mCreateBanButton->setClickedCallback(onCreateBanEntry, this);

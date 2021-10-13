@@ -33,12 +33,12 @@
 LLCtrlSelectionInterface::~LLCtrlSelectionInterface()
 { }
 
-BOOL LLCtrlSelectionInterface::selectByValue(LLSD value)
+bool LLCtrlSelectionInterface::selectByValue(LLSD value)
 {
 	return setSelectedByValue(value, true);
 }
 
-BOOL LLCtrlSelectionInterface::deselectByValue(LLSD value)
+bool LLCtrlSelectionInterface::deselectByValue(LLSD value)
 { 
 	return setSelectedByValue(value, false); 
 }

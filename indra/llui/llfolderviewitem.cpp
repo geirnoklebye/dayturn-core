@@ -125,13 +125,13 @@ LLFolderViewItem::LLFolderViewItem(const LLFolderViewItem::Params& p)
     mSuffixNeedsRefresh(false),
     mLabelPaddingRight(DEFAULT_LABEL_PADDING_RIGHT),
 	mParentFolder( NULL ),
-	mIsSelected( FALSE ),
-	mIsCurSelection( FALSE ),
-	mSelectPending(FALSE),
+	mIsSelected(false),
+	mIsCurSelection(false),
+	mSelectPending(false),
 	mIsItemCut(false),
 	mCutGeneration(0),
 	mLabelStyle( LLFontGL::NORMAL ),
-	mHasVisibleChildren(FALSE),
+	mHasVisibleChildren(false),
     mLocalIndentation(p.folder_indentation),
 	mIndentation(0),
 	mItemHeight(p.item_height),
@@ -210,18 +210,18 @@ const LLFolderView* LLFolderViewItem::getRoot() const
 	return mRoot;
 }
 // Returns true if this object is a child (or grandchild, etc.) of potential_ancestor.
-BOOL LLFolderViewItem::isDescendantOf( const LLFolderViewFolder* potential_ancestor )
+bool LLFolderViewItem::isDescendantOf( const LLFolderViewFolder* potential_ancestor )
 {
 	LLFolderViewItem* root = this;
 	while( root->mParentFolder )
 	{
 		if( root->mParentFolder == potential_ancestor )
 		{
-			return TRUE;
+			return true;
 		}
 		root = root->mParentFolder;
 	}
-	return FALSE;
+	return false;
 }
 
 LLFolderViewItem* LLFolderViewItem::getNextOpenNode(BOOL include_children)
@@ -469,14 +469,14 @@ BOOL LLFolderViewItem::changeSelection(LLFolderViewItem* selection, BOOL selecte
 
 void LLFolderViewItem::deselectItem(void)
 {
-	mIsSelected = FALSE;
+	mIsSelected = false;
 }
 
 void LLFolderViewItem::selectItem(void)
 {
-	if (mIsSelected == FALSE)
+	if (mIsSelected == false)
 	{
-		mIsSelected = TRUE;
+		mIsSelected = true;
 		getViewModelItem()->selectItem();
 	}
 }
@@ -585,7 +585,7 @@ BOOL LLFolderViewItem::handleMouseDown( S32 x, S32 y, MASK mask )
 	{
 		// If selected, we reserve the decision of deselecting/reselecting to the mouse up moment.
 		// This is necessary so we maintain selection consistent when starting a drag.
-		mSelectPending = TRUE;
+		mSelectPending = true;
 	}
 
 	mDragStartX = x;
@@ -667,7 +667,7 @@ BOOL LLFolderViewItem::handleMouseUp( S32 x, S32 y, MASK mask )
 		}
 	}
 
-	mSelectPending = FALSE;
+	mSelectPending = false;
 
 	if( hasMouseCapture() )
 	{
@@ -1576,7 +1576,7 @@ void LLFolderViewFolder::extendSelectionTo(LLFolderViewItem* new_selection)
 
 	LLFolderView* root = getRoot();
 
-	BOOL selection_reverse = new_selection->isSelected(); //indication that some elements are being deselected
+	bool selection_reverse = new_selection->isSelected(); //indication that some elements are being deselected
 
 	// array always go from 'will be selected' to ' will be unselected', iterate
 	// in opposite direction to simplify identification of 'point of origin' in
@@ -1586,12 +1586,12 @@ void LLFolderViewFolder::extendSelectionTo(LLFolderViewItem* new_selection)
 		++it)
 	{
 		LLFolderViewItem* item = *it;
-		BOOL selected = item->isSelected();
+		bool selected = item->isSelected();
 		if (!selection_reverse && selected)
 		{
 			// it is our 'point of origin' where we shift/expand from
 			// don't deselect it
-			selection_reverse = TRUE;
+			selection_reverse = true;
 		}
 		else
 		{

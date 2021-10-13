@@ -211,26 +211,26 @@ public:
 	LLCtrlScrollInterface*		getScrollInterface()	{ return (LLCtrlScrollInterface*)this; }
 
 	// DEPRECATED: Use setSelectedByValue() below.
-	BOOL			setCurrentByID( const LLUUID& id )	{ return selectByID(id); }
+	bool			setCurrentByID( const LLUUID& id )	{ return selectByID(id); }
 	virtual LLUUID	getCurrentID() const				{ return getStringUUIDSelectedItem(); }
 
-	BOOL			operateOnSelection(EOperation op);
-	BOOL			operateOnAll(EOperation op);
+	bool			operateOnSelection(EOperation op);
+	bool			operateOnAll(EOperation op);
 
-	// returns FALSE if unable to set the max count so low
-	BOOL 			setMaxItemCount(S32 max_count);
+	// returns false if unable to set the max count so low
+	bool 			setMaxItemCount(S32 max_count);
 
-	BOOL			selectByID( const LLUUID& id );		// FALSE if item not found
+	bool			selectByID( const LLUUID& id );		// false if item not found
 
 	// Match item by value.asString(), which should work for string, integer, uuid.
-	// Returns FALSE if not found.
+	// Returns false if not found.
 	bool			setSelectedByValue(const LLSD& value, bool selected);
 
-	BOOL			isSorted() const { return mSorted; }
+	bool			isSorted() const { return mSorted; }
 
-	virtual BOOL	isSelected(const LLSD& value) const;
+	virtual bool	isSelected(const LLSD& value) const;
 
-	BOOL 			hasSelectedItem() const;
+	bool 			hasSelectedItem() const;
 
 	bool			handleClick(S32 x, S32 y, MASK mask);
 	BOOL			selectFirstItem();
@@ -314,7 +314,7 @@ public:
 
 	LLScrollListItem*	getItem(const LLSD& sd) const;
 	
-	void setAllowMultipleSelection(BOOL mult )	{ mAllowMultipleSelection = mult; }
+	void setAllowMultipleSelection(bool mult )	{ mAllowMultipleSelection = mult; }
 
 	void setBgWriteableColor(const LLColor4 &c)	{ mBgWriteableColor = c; }
 	void setReadOnlyBgColor(const LLColor4 &c)	{ mBgReadOnlyColor = c; }

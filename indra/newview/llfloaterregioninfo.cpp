@@ -2805,7 +2805,7 @@ bool LLPanelEstateAccess::postBuild()
 	LLNameListCtrl *avatar_name_list = getChild<LLNameListCtrl>("allowed_avatar_name_list");
 	if (avatar_name_list)
 	{
-		avatar_name_list->setCommitOnSelectionChange(TRUE); 
+		avatar_name_list->setCommitOnSelectionChange(true); 
 		avatar_name_list->setMaxItemCount(ESTATE_MAX_ACCESS_IDS);
 	}
 
@@ -2818,7 +2818,7 @@ bool LLPanelEstateAccess::postBuild()
 	LLNameListCtrl* group_name_list = getChild<LLNameListCtrl>("allowed_group_name_list");
 	if (group_name_list)
 	{
-		group_name_list->setCommitOnSelectionChange(TRUE);
+		group_name_list->setCommitOnSelectionChange(true);
 		group_name_list->setMaxItemCount(ESTATE_MAX_ACCESS_IDS);
 	}
 
@@ -2831,7 +2831,7 @@ bool LLPanelEstateAccess::postBuild()
 	LLNameListCtrl* banned_name_list = getChild<LLNameListCtrl>("banned_avatar_name_list");
 	if (banned_name_list)
 	{
-		banned_name_list->setCommitOnSelectionChange(TRUE);
+		banned_name_list->setCommitOnSelectionChange(true);
 		banned_name_list->setMaxItemCount(ESTATE_MAX_ACCESS_IDS);
 	}
 
@@ -3720,7 +3720,7 @@ void LLPanelEstateAccess::searchAgent(LLNameListCtrl* listCtrl, const std::strin
 	}
 	else
 	{
-		listCtrl->deselectAllItems(TRUE);
+		listCtrl->deselectAllItems(true);
 	}
 }
 

@@ -347,7 +347,7 @@ bool LLComboBox::setSimple(const LLStringExplicit& name)
 // virtual
 void LLComboBox::setValue(const LLSD& value)
 {
-	BOOL found = mList->selectByValue(value);
+	bool found = mList->selectByValue(value);
 	if (found)
 	{
 		LLScrollListItem* item = mList->getFirstSelected();
@@ -1150,9 +1150,9 @@ void LLComboBox::sortByColumn(const std::string& name, bool ascending)
 //============================================================================
 //LLCtrlSelectionInterface functions
 
-BOOL LLComboBox::setCurrentByID(const LLUUID& id)
+bool LLComboBox::setCurrentByID(const LLUUID& id)
 {
-	BOOL found = mList->selectByID( id );
+	bool found = mList->selectByID( id );
 
 	if (found)
 	{
@@ -1182,29 +1182,29 @@ LLSD LLComboBox::getSelectedValue()
 	return mList->getSelectedValue();
 }
 
-BOOL LLComboBox::isSelected(const LLSD& value) const
+bool LLComboBox::isSelected(const LLSD& value) const
 {
 	return mList->isSelected(value);
 }
 
-BOOL LLComboBox::operateOnSelection(EOperation op)
+bool LLComboBox::operateOnSelection(EOperation op)
 {
 	if (op == OP_DELETE)
 	{
 		mList->deleteSelectedItems();
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL LLComboBox::operateOnAll(EOperation op)
+bool LLComboBox::operateOnAll(EOperation op)
 {
 	if (op == OP_DELETE)
 	{
 		clearRows();
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 BOOL LLComboBox::selectItemRange( S32 first, S32 last )

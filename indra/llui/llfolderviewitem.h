@@ -154,7 +154,7 @@ protected:
 
 	static LLFontGL* getLabelFontForStyle(U8 style);
 
-	BOOL						mIsSelected;
+	bool		mIsSelected;
 
 public:
 	static void initClass();
@@ -209,13 +209,13 @@ public:
 	BOOL isSelected() const { return mIsSelected; }
 	bool isInSelection() const;
 
-	void setUnselected() { mIsSelected = FALSE; }
+	void setUnselected() { mIsSelected = false; }
 
 	void setIsCurSelection(BOOL select) { mIsCurSelection = select; }
 
 	BOOL getIsCurSelection() { return mIsCurSelection; }
 
-	BOOL hasVisibleChildren() { return mHasVisibleChildren; }
+	bool hasVisibleChildren() { return mHasVisibleChildren; }
 
 	// true if object can't have children
 	virtual bool isFolderComplete() { return true; }
@@ -263,7 +263,7 @@ public:
 
 	virtual LLFolderView*	getRoot();
 	virtual const LLFolderView*	getRoot() const;
-	BOOL			isDescendantOf( const LLFolderViewFolder* potential_ancestor );
+	bool			isDescendantOf( const LLFolderViewFolder* potential_ancestor );
 	S32				getIndentation() { return mIndentation; }
 
 	virtual bool	passedFilter(S32 filter_generation = -1);
