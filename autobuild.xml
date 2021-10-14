@@ -2479,18 +2479,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>cddf280a0e71ce4f3d66938cc089eb38</string>
+              <string>03c00384223b1d92f46f0282dd6b9ba6</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.1.210631653-windows64-210631653.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-kdu8/downloads/kdu-8.2.1.212692226-windows64-212692226.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>8.2.1.212651713</string>
+        <string>8.2.1.212692226</string>
       </map>
       <key>libhunspell</key>
       <map>
