@@ -683,6 +683,7 @@ std::string LLBasicCertificateStore::storeId() const
 // LLBasicCertificateChain
 // This class represents a chain of certs, each cert being signed by the next cert
 // in the chain.  Certs must be properly signed by the parent
+#if !(LL_LINUX)
 LLBasicCertificateChain::LLBasicCertificateChain(X509_STORE_CTX* store)
 {
 
@@ -732,7 +733,64 @@ LLBasicCertificateChain::LLBasicCertificateChain(X509_STORE_CTX* store)
 		}
 	}
 }
+#endif
+#if (LL_LINUX)
+//
+// LLBasicCertificateChain
+// This class represents a chain of certs, each cert being signed by the next cert
+// in the chain.  Certs must be properly signed by the parent
+LLBasicCertificateChain::LLBasicCertificateChain(const X509_STORE_CTX* store)
+{
 
+	// we're passed in a context, which contains a cert, and a blob of untrusted
+	// certificates which compose the chain.
+	if((store == NULL) || (store->cert == NULL))
+	{
+		LL_WARNS("SECAPI") << "An invalid store context was passed in when trying to create a certificate chain" << LL_ENDL;
+		return;
+	}
+	// grab the child cert
+	LLPointer<LLCertificate> current = new LLBasicCertificate(store->cert);
+
+	add(current);
+	if(store->untrusted != NULL)
+	{
+		// if there are other certs in the chain, we build up a vector
+		// of untrusted certs so we can search for the parents of each
+		// consecutive cert.
+		LLBasicCertificateVector untrusted_certs;
+		for(int i = 0; i < sk_X509_num(store->untrusted); i++)
+		{
+			LLPointer<LLCertificate> cert = new LLBasicCertificate(sk_X509_value(store->untrusted, i));
+			untrusted_certs.add(cert);
+
+		}		
+		while(untrusted_certs.size() > 0)
+		{
+			LLSD find_data = LLSD::emptyMap();
+			LLSD cert_data;
+			current->getLLSD(cert_data);
+			// we simply build the chain via subject/issuer name as the
+			// client should not have passed in multiple CA's with the same 
+			// subject name.  If they did, it'll come out in the wash during
+			// validation.
+			find_data[CERT_SUBJECT_NAME_STRING] = cert_data[CERT_ISSUER_NAME_STRING]; 
+			LLBasicCertificateVector::iterator issuer = untrusted_certs.find(find_data);
+			if (issuer != untrusted_certs.end())
+			{
+				current = untrusted_certs.erase(issuer);
+				add(current);
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+}
+
+
+#endif
 
 // subdomain wildcard specifiers can be divided into 3 parts
 // the part before the first *, the part after the first * but before
@@ -1488,9 +1546,7 @@ LLPointer<LLCertificate> LLSecAPIBasicHandler::getCertificate(const std::string&
 	LLPointer<LLCertificate> result = new LLBasicCertificate(pem_cert);
 	return result;
 }
-		
 
-		
 // instiate a certificate from an openssl X509 structure
 LLPointer<LLCertificate> LLSecAPIBasicHandler::getCertificate(X509* openssl_cert)
 {
@@ -1499,12 +1555,20 @@ LLPointer<LLCertificate> LLSecAPIBasicHandler::getCertificate(X509* openssl_cert
 }
 		
 // instantiate a chain from an X509_STORE_CTX
+#if !(LL_LINUX)
 LLPointer<LLCertificateChain> LLSecAPIBasicHandler::getCertificateChain(X509_STORE_CTX* chain)
 {
 	LLPointer<LLCertificateChain> result = new LLBasicCertificateChain(chain);
 	return result;
 }
-		
+#else
+LLPointer<LLCertificateChain> LLSecAPIBasicHandler::getCertificateChain(const X509_STORE_CTX* chain)
+{
+	LLPointer<LLCertificateChain> result = new LLBasicCertificateChain(chain);
+	return result;
+}
+#endif
+	
 // instantiate a cert store given it's id.  if a persisted version
 // exists, it'll be loaded.  If not, one will be created (but not
 // persisted)
