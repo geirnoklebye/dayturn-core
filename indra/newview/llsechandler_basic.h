@@ -197,7 +197,12 @@ class LLBasicCertificateChain : virtual public LLBasicCertificateVector, public 
 {
 	
 public:
+#if !(LL_LINUX)
 	LLBasicCertificateChain(X509_STORE_CTX * store);
+#else
+	LLBasicCertificateChain(const X509_STORE_CTX * store);
+#endif
+
 	
 	virtual ~LLBasicCertificateChain() {}
 	
@@ -241,8 +246,11 @@ public:
 	virtual LLPointer<LLCertificate> getCertificate(X509* openssl_cert);
 	
 	// instantiate a chain from an X509_STORE_CTX
+#if !(LL_LINUX)
 	virtual LLPointer<LLCertificateChain> getCertificateChain(X509_STORE_CTX* chain);
-	
+#else
+	virtual LLPointer<LLCertificateChain> getCertificateChain(const X509_STORE_CTX* chain);
+#endif	
 	// instantiate a cert store given it's id.  if a persisted version
 	// exists, it'll be loaded.  If not, one will be created (but not
 	// persisted)
