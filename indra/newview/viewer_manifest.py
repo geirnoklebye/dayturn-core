@@ -1416,7 +1416,6 @@ class LinuxManifest(ViewerManifest):
 
         with self.prefix(src="", dst="bin"):
             self.path("kokua-bin","do-not-directly-run-kokua-bin")
-            self.path("../linux_crash_logger/linux-crash-logger","linux-crash-logger.bin")
             self.path2basename("../llplugin/slplugin", "SLPlugin")
  
         # recurses, packaged again
