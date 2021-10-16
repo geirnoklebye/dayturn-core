@@ -672,7 +672,7 @@ public:
 		mItem = item;
 	}
 
-	virtual BOOL execute( LLTextBase* editor, S32* delta )
+	virtual S32 execute( LLTextBase* editor, S32* delta )
 	{
 		LLViewerTextEditor* viewer_editor = (LLViewerTextEditor*)editor;
 		// Take this opportunity to remove any unused embedded items from this editor
@@ -684,7 +684,7 @@ public:
 			*delta = insert(editor, getPosition(), ws );
 			return (*delta != 0);
 		}
-		return FALSE;
+		return false;
 	}
 	
 	virtual S32 undo( LLTextBase* editor )
@@ -700,7 +700,7 @@ public:
 		insert(editor, getPosition(), ws );
 		return getPosition() + 1;
 	}
-	virtual BOOL hasExtCharValue( llwchar value ) const
+	virtual bool hasExtCharValue( llwchar value ) const
 	{
 		return (value == mExtCharValue);
 	}
@@ -1384,13 +1384,13 @@ bool LLViewerTextEditor::hasEmbeddedInventory()
 
 ////////////////////////////////////////////////////////////////////////////
 
-BOOL LLViewerTextEditor::importBuffer( const char* buffer, S32 length )
+bool LLViewerTextEditor::importBuffer( const char* buffer, S32 length )
 {
 	LLMemoryStream str((U8*)buffer, length);
 	return importStream(str);
 }
 
-BOOL LLViewerTextEditor::exportBuffer( std::string& buffer )
+bool LLViewerTextEditor::exportBuffer( std::string& buffer )
 {
 	LLNotecard nc(LLNotecard::MAX_SIZE);
 
@@ -1407,6 +1407,6 @@ BOOL LLViewerTextEditor::exportBuffer( std::string& buffer )
 	
 	buffer = out_stream.str();
 	
-	return TRUE;
+	return true;
 }
 

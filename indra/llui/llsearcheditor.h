@@ -67,7 +67,7 @@ public:
 		{}
 	};
 
-	void setCommitOnFocusLost(BOOL b)	{ if (mSearchEditor) mSearchEditor->setCommitOnFocusLost(b); }
+	void setCommitOnFocusLost(bool b)	{ if (mSearchEditor) mSearchEditor->setCommitOnFocusLost(b); }
 
 protected:
 	LLSearchEditor(const Params&);
@@ -84,7 +84,7 @@ public:
 	// LLUICtrl interface
 	virtual void	setValue(const LLSD& value );
 	virtual LLSD	getValue() const;
-	virtual BOOL	setTextArg( const std::string& key, const LLStringExplicit& text );
+	virtual bool	setTextArg( const std::string& key, const LLStringExplicit& text );
 	virtual BOOL	setLabelArg( const std::string& key, const LLStringExplicit& text );
 	virtual void	setLabel( const LLStringExplicit &new_label );
 	virtual void	clear();

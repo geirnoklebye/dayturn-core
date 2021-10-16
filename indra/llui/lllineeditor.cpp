@@ -130,7 +130,7 @@ LLLineEditor::LLLineEditor(const LLLineEditor::Params& p)
 	mKeystrokeOnEsc(FALSE),
 	mRevertOnEsc( p.revert_on_esc ),
 	mKeystrokeCallback( p.keystroke_callback() ),
-	mIsSelecting( FALSE ),
+	mIsSelecting(false),
 	mSelectionStart( 0 ),
 	mSelectionEnd( 0 ),
 	mLastSelectionX(-1),
@@ -146,7 +146,7 @@ LLLineEditor::LLLineEditor(const LLLineEditor::Params& p)
 	mSpellCheckEnd(-1),
 	mSelectAllonFocusReceived( p.select_on_focus ),
 	mSelectAllonCommit( TRUE ),
-	mPassDelete(FALSE),
+	mPassDelete(false),
 	mReadOnly(FALSE),
 	mBgImage( p.background_image ),
 	mBgImageDisabled( p.background_image_disabled ),
@@ -220,7 +220,7 @@ LLLineEditor::LLLineEditor(const LLLineEditor::Params& p)
  
 LLLineEditor::~LLLineEditor()
 {
-	mCommitOnFocusLost = FALSE;
+	mCommitOnFocusLost = false;
     
     // Make sure no context menu linger around once the widget is deleted
 	LLContextMenu* menu = static_cast<LLContextMenu*>(mContextMenuHandle.get());
@@ -532,13 +532,13 @@ void LLLineEditor::deselect()
 {
 	mSelectionStart = 0;
 	mSelectionEnd = 0;
-	mIsSelecting = FALSE;
+	mIsSelecting = false;
 }
 
 
 void LLLineEditor::startSelection()
 {
-	mIsSelecting = TRUE;
+	mIsSelecting = true;
 	mSelectionStart = getCursor();
 	mSelectionEnd = getCursor();
 }
@@ -547,7 +547,7 @@ void LLLineEditor::endSelection()
 {
 	if( mIsSelecting )
 	{
-		mIsSelecting = FALSE;
+		mIsSelecting = false;
 		mSelectionEnd = getCursor();
 	}
 }
@@ -568,7 +568,7 @@ void LLLineEditor::selectAll()
 	mSelectionEnd = 0;
 	setCursor(mSelectionEnd);
 	//mScrollHPos = 0;
-	mIsSelecting = TRUE;
+	mIsSelecting = true;
 	updatePrimary();
 }
 
@@ -715,7 +715,7 @@ bool LLLineEditor::handleDoubleClick(S32 x, S32 y, MASK mask)
 	// We don't want handleMouseUp() to "finish" the selection (and thereby
 	// set mSelectionEnd to where the mouse is), so we finish the selection 
 	// here.
-	mIsSelecting = FALSE;  
+	mIsSelecting = false;  
 
 	// delay cursor flashing
 	mKeystrokeTimer.reset();
@@ -743,7 +743,7 @@ BOOL LLLineEditor::handleMouseDown(S32 x, S32 y, MASK mask)
 		if (mask & MASK_SHIFT)
 		{
 			// assume we're starting a drag select
-			mIsSelecting = TRUE;
+			mIsSelecting = true;
 
 			// Handle selection extension
 			S32 old_cursor_pos = getCursor();
@@ -799,7 +799,7 @@ BOOL LLLineEditor::handleMouseDown(S32 x, S32 y, MASK mask)
 				// We don't want handleMouseUp() to "finish" the selection (and thereby
 				// set mSelectionEnd to where the mouse is), so we finish the selection 
 				// here.
-				mIsSelecting = FALSE;
+				mIsSelecting = false;
 			}
 		}
 
@@ -1039,7 +1039,7 @@ void LLLineEditor::setSelection(S32 start, S32 end)
 {
 	S32 len = mText.length();
 
-	mIsSelecting = TRUE;
+	mIsSelecting = true;
 
 	// JC, yes, this seems odd, but I think you have to presume a 
 	// selection dragged from the end towards the start.
@@ -2191,7 +2191,7 @@ void LLLineEditor::setFocus( BOOL new_state )
 		// We don't want handleMouseUp() to "finish" the selection (and thereby
 		// set mSelectionEnd to where the mouse is), so we finish the selection 
 		// here.
-		mIsSelecting = FALSE;
+		mIsSelecting = false;
 	}
 
 	if( new_state )
@@ -2375,10 +2375,10 @@ void LLLineEditor::setKeystrokeCallback(callback_t callback, void* user_data)
 }
 
 
-BOOL LLLineEditor::setTextArg( const std::string& key, const LLStringExplicit& text )
+bool LLLineEditor::setTextArg( const std::string& key, const LLStringExplicit& text )
 {
 	mText.setArg(key, text);
-	return TRUE;
+	return true;
 }
 
 BOOL LLLineEditor::setLabelArg( const std::string& key, const LLStringExplicit& text )
@@ -2412,7 +2412,7 @@ void LLLineEditor::updateAllowingLanguageInput()
 	}
 }
 
-BOOL LLLineEditor::hasPreeditString() const
+bool LLLineEditor::hasPreeditString() const
 {
 	return (mPreeditPositions.size() > 1);
 }
@@ -2495,7 +2495,7 @@ void LLLineEditor::updatePreedit(const LLWString &preedit_string,
 	mSpellCheckTimer.setTimerExpirySec(SPELLCHECK_DELAY);
 }
 
-BOOL LLLineEditor::getPreeditLocation(S32 query_offset, LLCoordGL *coord, LLRect *bounds, LLRect *control) const
+bool LLLineEditor::getPreeditLocation(S32 query_offset, LLCoordGL *coord, LLRect *bounds, LLRect *control) const
 {
 	if (control)
 	{
@@ -2517,13 +2517,13 @@ BOOL LLLineEditor::getPreeditLocation(S32 query_offset, LLCoordGL *coord, LLRect
 	if (preedit_right_column < mScrollHPos)
 	{
 		// This should not occure...
-		return FALSE;
+		return false;
 	}
 
 	const S32 query = (query_offset >= 0 ? preedit_left_column + query_offset : getCursor());
 	if (query < mScrollHPos || query < preedit_left_column || query > preedit_right_column)
 	{
-		return FALSE;
+		return false;
 	}
 
 	if (coord)
@@ -2550,7 +2550,7 @@ BOOL LLLineEditor::getPreeditLocation(S32 query_offset, LLCoordGL *coord, LLRect
 		LLUI::getInstance()->screenRectToGL(preedit_rect_screen, bounds);
 	}
 
-	return TRUE;
+	return true;
 }
 
 void LLLineEditor::getPreeditRange(S32 *position, S32 *length) const

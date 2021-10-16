@@ -227,7 +227,7 @@ LLTextBase::LLTextBase(const LLTextBase::Params &p)
 	mScrollIndex(-1),
 	mSelectionStart( 0 ),
 	mSelectionEnd( 0 ),
-	mIsSelecting( FALSE ),
+	mIsSelecting(false),
 	mPlainText ( p.plain_text ),
 	mWordWrap(p.wrap),
 	mUseEllipses( p.use_ellipses ),
@@ -1456,7 +1456,7 @@ void LLTextBase::deselect()
 {
 	mSelectionStart = 0;
 	mSelectionEnd = 0;
-	mIsSelecting = FALSE;
+	mIsSelecting = false;
 }
 
 bool LLTextBase::getSpellCheck() const
@@ -2430,7 +2430,7 @@ void LLTextBase::appendAndHighlightTextImpl(const std::string &new_text, S32 hig
 	// Save old state
 	S32 selection_start = mSelectionStart;
 	S32 selection_end = mSelectionEnd;
-	BOOL was_selecting = mIsSelecting;
+	bool was_selecting = mIsSelecting;
 	S32 cursor_pos = mCursorPos;
 	S32 old_length = getLength();
 	BOOL cursor_was_at_end = (mCursorPos == old_length);
@@ -3204,7 +3204,7 @@ void LLTextBase::startSelection()
 {
 	if( !mIsSelecting )
 	{
-		mIsSelecting = TRUE;
+		mIsSelecting = true;
 		mSelectionStart = mCursorPos;
 		mSelectionEnd = mCursorPos;
 	}
@@ -3214,7 +3214,7 @@ void LLTextBase::endSelection()
 {
 	if( mIsSelecting )
 	{
-		mIsSelecting = FALSE;
+		mIsSelecting = false;
 		mSelectionEnd = mCursorPos;
 	}
 }

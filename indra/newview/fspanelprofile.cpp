@@ -1970,7 +1970,7 @@ bool FSPanelAvatarNotes::postBuild()
 	mEditObjectRights->setCommitCallback(boost::bind(&FSPanelAvatarNotes::onCommitRights, this));
 
 	mNotesEditor->setCommitCallback(boost::bind(&FSPanelAvatarNotes::onCommitNotes,this));
-	mNotesEditor->setCommitOnFocusLost(TRUE);
+	mNotesEditor->setCommitOnFocusLost(true);
 
     return true;
 }
