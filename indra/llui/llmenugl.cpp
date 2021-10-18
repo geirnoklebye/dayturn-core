@@ -220,14 +220,14 @@ bool LLMenuItemGL::hasAccelerator(const KEY &key, const MASK &mask) const
 }
 
 //virtual
-BOOL LLMenuItemGL::handleAcceleratorKey(KEY key, MASK mask)
+bool LLMenuItemGL::handleAcceleratorKey(KEY key, MASK mask)
 {
 	if( getEnabled() && (!gKeyboard->getKeyRepeated(key) || mAllowKeyRepeat) && (key == mAcceleratorKey) && (mask == (mAcceleratorMask & MASK_NORMALKEYS)) )
 	{
 		onCommit();
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 bool LLMenuItemGL::handleHover(S32 x, S32 y, MASK mask)
@@ -860,7 +860,7 @@ bool LLMenuItemCallGL::handleKeyHere( KEY key, MASK mask )
 	return LLMenuItemGL::handleKeyHere(key, mask);
 }
 
-BOOL LLMenuItemCallGL::handleAcceleratorKey( KEY key, MASK mask )
+bool LLMenuItemCallGL::handleAcceleratorKey( KEY key, MASK mask )
 {
 	if( (!gKeyboard->getKeyRepeated(key) || getAllowKeyRepeat()) && (key == mAcceleratorKey) && (mask == (mAcceleratorMask & MASK_NORMALKEYS)) )
 	{
@@ -868,10 +868,10 @@ BOOL LLMenuItemCallGL::handleAcceleratorKey( KEY key, MASK mask )
 		if (getEnabled())
 		{
 			onCommit();
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 // handleRightMouseUp moved into base class LLMenuItemGL so clicks are
@@ -1029,7 +1029,7 @@ bool LLMenuItemBranchGL::hasAccelerator(const KEY &key, const MASK &mask) const
 	return getBranch() && getBranch()->hasAccelerator(key, mask);
 }
 
-BOOL LLMenuItemBranchGL::handleAcceleratorKey(KEY key, MASK mask)
+bool LLMenuItemBranchGL::handleAcceleratorKey(KEY key, MASK mask)
 {
 	return getBranch() && getBranch()->handleAcceleratorKey(key, mask);
 }
@@ -1363,7 +1363,7 @@ public:
 	virtual void draw( void );
 	virtual bool handleKeyHere(KEY key, MASK mask);
 	
-	virtual BOOL handleAcceleratorKey(KEY key, MASK mask);
+	virtual bool handleAcceleratorKey(KEY key, MASK mask);
     
     virtual void onFocusLost();
     virtual void setFocus(bool b);
@@ -1509,7 +1509,7 @@ BOOL LLMenuItemBranchDownGL::handleMouseUp( S32 x, S32 y, MASK mask )
 }
 
 
-BOOL LLMenuItemBranchDownGL::handleAcceleratorKey(KEY key, MASK mask)
+bool LLMenuItemBranchDownGL::handleAcceleratorKey(KEY key, MASK mask)
 {
 	bool branch_visible = getBranch()->getVisible();
 	bool handled = getBranch()->handleAcceleratorKey(key, mask);
@@ -1907,7 +1907,7 @@ bool LLMenuGL::postBuild()
 
 // are we the childmost active menu and hence our jump keys should be enabled?
 // or are we a free-standing torn-off menu (which uses jump keys too)
-BOOL LLMenuGL::jumpKeysActive()
+bool LLMenuGL::jumpKeysActive()
 {
 	LLMenuItemGL* highlighted_item = getHighlightedItem();
 	bool active = getVisible() && getEnabled();
@@ -2631,7 +2631,7 @@ void LLMenuGL::setLeftAndBottom(S32 left, S32 bottom)
 	needsArrange();
 }
 
-BOOL LLMenuGL::handleJumpKey(KEY key)
+bool LLMenuGL::handleJumpKey(KEY key)
 {
 	// must perform case-insensitive comparison, so just switch to uppercase input key
 	key = toupper(key);
@@ -2648,7 +2648,7 @@ BOOL LLMenuGL::handleJumpKey(KEY key)
 	}
 	// if we are navigating the menus, we need to eat the keystroke
 	// so rest of UI doesn't handle it
-	return TRUE;
+	return true;
 }
 
 
@@ -3085,12 +3085,12 @@ bool LLMenuGL::hasAccelerator(const KEY &key, const MASK &mask) const
 	return false;
 }
 
-BOOL LLMenuGL::handleAcceleratorKey(KEY key, MASK mask)
+bool LLMenuGL::handleAcceleratorKey(KEY key, MASK mask)
 {
 	// don't handle if not enabled
 	if(!getEnabled())
 	{
-		return FALSE;
+		return false;
 	}
 
 	// Pass down even if not visible
@@ -3100,11 +3100,11 @@ BOOL LLMenuGL::handleAcceleratorKey(KEY key, MASK mask)
 		LLMenuItemGL* itemp = *item_iter;
 		if (itemp->handleAcceleratorKey(key, mask))
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 bool LLMenuGL::handleUnicodeCharHere( llwchar uni_char )
@@ -3407,15 +3407,15 @@ LLMenuBarGL::~LLMenuBarGL()
 	mAccelerators.clear();
 }
 
-BOOL LLMenuBarGL::handleAcceleratorKey(KEY key, MASK mask)
+bool LLMenuBarGL::handleAcceleratorKey(KEY key, MASK mask)
 {
 	if (getHighlightedItem() && mask == MASK_NONE)
 	{
 		// unmodified key accelerators are ignored when navigating menu
 		// (but are used as jump keys so will still work when appropriate menu is up)
-		return FALSE;
+		return false;
 	}
-	BOOL result = LLMenuGL::handleAcceleratorKey(key, mask);
+	bool result = LLMenuGL::handleAcceleratorKey(key, mask);
 	if (result && mask & MASK_ALT)
 	{
 		// ALT key used to trigger hotkey, don't use as shortcut to open menu
@@ -3439,7 +3439,7 @@ BOOL LLMenuBarGL::handleAcceleratorKey(KEY key, MASK mask)
 			highlightNextItem(NULL);
 			LLMenuGL::setKeyboardMode(true);
 		}
-		return TRUE;
+		return true;
 	}
 
 	if (result && !getHighlightedItem() && LLMenuGL::sMenuContainer->hasVisibleMenu())
@@ -3476,7 +3476,7 @@ bool LLMenuBarGL::handleKeyHere(KEY key, MASK mask)
 	return LLMenuGL::handleKeyHere(key, mask);
 }
 
-BOOL LLMenuBarGL::handleJumpKey(KEY key)
+bool LLMenuBarGL::handleJumpKey(KEY key)
 {
 	// perform case-insensitive comparison
 	key = toupper(key);
@@ -3489,7 +3489,7 @@ BOOL LLMenuBarGL::handleJumpKey(KEY key)
 		found_it->second->setHighlight(TRUE);
 		found_it->second->onCommit();
 	}
-	return TRUE;
+	return true;
 }
 
 BOOL LLMenuBarGL::handleMouseDown(S32 x, S32 y, MASK mask)
@@ -3555,7 +3555,7 @@ void LLMenuBarGL::checkMenuTrigger()
 	}
 }
 
-BOOL LLMenuBarGL::jumpKeysActive()
+bool LLMenuBarGL::jumpKeysActive()
 {
 	// require user to be in keyboard navigation mode to activate key triggers
 	// as menu bars are always visible and it is easy to leave the mouse cursor over them

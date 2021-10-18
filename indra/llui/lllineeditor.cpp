@@ -1083,13 +1083,13 @@ S32 LLLineEditor::nextWordPos(S32 cursorPos) const
 }
 
 
-BOOL LLLineEditor::handleSelectionKey(KEY key, MASK mask)
+bool LLLineEditor::handleSelectionKey(KEY key, MASK mask)
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 
 	if( mask & MASK_SHIFT )
 	{
-		handled = TRUE;
+		handled = true;
 
 		switch( key )
 		{
@@ -1142,7 +1142,7 @@ BOOL LLLineEditor::handleSelectionKey(KEY key, MASK mask)
 			}
 
 		default:
-			handled = FALSE;
+			handled = false;
 			break;
 		}
 	}
