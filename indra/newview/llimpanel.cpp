@@ -169,7 +169,7 @@ LLFloaterIMPanel::LLFloaterIMPanel(const std::string& session_label,
 	setTitle(mSessionLabel);
 	mInputEditor->setMaxTextLength(DB_IM_MSG_STR_LEN);
 	// enable line history support for instant message bar
-	mInputEditor->setEnableLineHistory(TRUE);
+	mInputEditor->setEnableLineHistory(true);
 
 	//*TODO we probably need the same "awaiting message" thing in LLFloaterIMSession
 	LLIMModel::LLIMSession* im_session = LLIMModel::getInstance()->findIMSession(mSessionUUID);
@@ -213,7 +213,7 @@ bool LLFloaterIMPanel::postBuild()
 	mInputEditor->setKeystrokeCallback( onInputEditorKeystroke, this );
 	mInputEditor->setCommitCallback( onCommitChat, this );
 	mInputEditor->setCommitOnFocusLost(false);
-	mInputEditor->setRevertOnEsc( FALSE );
+	mInputEditor->setRevertOnEsc(false);
 	mInputEditor->setReplaceNewlinesWithSpaces( FALSE );
 
 	childSetAction("profile_callee_btn", onClickProfile, this);

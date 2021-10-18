@@ -400,18 +400,18 @@ void LLFocusMgr::removeMouseCaptureWithoutCallback( const LLMouseHandler* captor
 }
 
 
-BOOL LLFocusMgr::childIsTopCtrl( const LLView* parent ) const
+bool LLFocusMgr::childIsTopCtrl( const LLView* parent ) const
 {
 	LLView* top_view = (LLView*)mTopCtrl;
 	while( top_view )
 	{
 		if( top_view == parent )
 		{
-			return TRUE;
+			return true;
 		}
 		top_view = top_view->getParent();
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -471,7 +471,7 @@ void LLFocusMgr::triggerFocusFlash()
 	mFocusFlashTimer.reset();
 }
 
-void LLFocusMgr::setAppHasFocus(BOOL focus) 
+void LLFocusMgr::setAppHasFocus(bool focus) 
 { 
 	if (!mAppHasFocus && focus)
 	{

@@ -118,7 +118,7 @@ public:
 	// LLUICtrl interface
 	virtual void	clear();					// select nothing
 	virtual void	onCommit();
-	virtual BOOL	acceptsTextInput() const		{ return mAllowTextEntry; }
+	virtual bool	acceptsTextInput() const		{ return mAllowTextEntry; }
 	virtual bool	isDirty() const;			// Returns TRUE if the user has modified this control.
 	virtual void	resetDirty();				// Clear dirty state
 
@@ -237,7 +237,7 @@ protected:
 	BOOL				mHasAutocompletedText;
 
 private:
-	BOOL				mAllowTextEntry;
+	bool				mAllowTextEntry;
 	BOOL				mAllowNewValues;
 	S32					mMaxChars;
 	BOOL				mTextEntryTentative;

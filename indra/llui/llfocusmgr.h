@@ -104,8 +104,8 @@ public:
 	S32				getFocusFlashWidth() const { return ll_round(lerp(1.f, 3.f, getFocusFlashAmt())); }
 	LLColor4		getFocusColor() const;
 	void			triggerFocusFlash();
-	BOOL			getAppHasFocus() const { return mAppHasFocus; }
-	void			setAppHasFocus(BOOL focus);
+	bool			getAppHasFocus() const { return mAppHasFocus; }
+	void			setAppHasFocus(bool focus);
 	LLView*		getLastFocusForGroup(LLView* subtree_root) const;
 	void			clearLastFocusForGroup(LLView* subtree_root);
 
@@ -119,13 +119,13 @@ public:
 	void			setTopCtrl(LLUICtrl* new_top);
 	LLUICtrl*		getTopCtrl() const					{ return mTopCtrl; }
 	void			removeTopCtrlWithoutCallback( const LLUICtrl* top_view );
-	BOOL			childIsTopCtrl( const LLView* parent ) const;
+	bool			childIsTopCtrl( const LLView* parent ) const;
 
 	// All Three
 	void			releaseFocusIfNeeded( LLView* top_view );
 	void			lockFocus();
 	void			unlockFocus();
-	BOOL			focusLocked() const { return mLockedView != NULL; }
+	bool			focusLocked() const { return mLockedView != NULL; }
 
 	bool			keyboardFocusHasAccelerators() const;
 
@@ -148,7 +148,7 @@ private:
 
 	LLFrameTimer		mFocusFlashTimer;
 
-	BOOL				mAppHasFocus;
+	bool				mAppHasFocus;
 
 	Impl * mImpl;
 };

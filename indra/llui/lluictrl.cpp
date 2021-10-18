@@ -753,9 +753,9 @@ BOOL LLUICtrl::hasTabStop() const
 }
 
 // virtual
-BOOL LLUICtrl::acceptsTextInput() const
+bool LLUICtrl::acceptsTextInput() const
 { 
-	return FALSE; 
+	return false; 
 }
 
 //virtual
