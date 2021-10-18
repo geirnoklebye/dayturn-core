@@ -1094,7 +1094,7 @@ bool LLVivoxVoiceClient::provisionVoiceAccount()
         {
             provisioned = true;
         }        
-    } while (!provisioned && ++retryCount <= PROVISION_RETRY_MAX && !sShuttingDown); //KKA-895 - let's actually increment retryCount
+    } while (!provisioned && retryCount <= PROVISION_RETRY_MAX && !sShuttingDown);
 
     if (sShuttingDown && !provisioned)
     {
