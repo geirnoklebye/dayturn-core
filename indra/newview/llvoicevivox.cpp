@@ -1074,6 +1074,7 @@ bool LLVivoxVoiceClient::provisionVoiceAccount()
         if (status == LLCore::HttpStatus(404))
         {
             F32 timeout = pow(PROVISION_RETRY_TIMEOUT, static_cast<float>(retryCount));
+            retryCount++;
             LL_WARNS("Voice") << "Provision CAP 404.  Retrying in " << timeout << " seconds. Attempt " << retryCount << LL_ENDL;
             if (sShuttingDown)
             {
@@ -1094,7 +1095,7 @@ bool LLVivoxVoiceClient::provisionVoiceAccount()
         {
             provisioned = true;
         }        
-    } while (!provisioned && ++retryCount <= PROVISION_RETRY_MAX && !sShuttingDown); //KKA-895 - let's actually increment retryCount
+    } while (!provisioned && retryCount <= PROVISION_RETRY_MAX && !sShuttingDown);
 
     if (sShuttingDown && !provisioned)
     {
