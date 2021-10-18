@@ -550,7 +550,7 @@ void LLPreviewTexture::updateDimensions()
 		//reshape floater
 		reshape(getRect().getWidth(), getRect().getHeight());
 
-		gFloaterView->adjustToFitScreen(this, FALSE);
+		gFloaterView->adjustToFitScreen(this, false);
 
 		LLRect dim_rect(getChildView("dimensions")->getRect());
 		LLRect aspect_label_rect(getChildView("aspect_ratio")->getRect());

@@ -291,7 +291,7 @@ public:
 	//	virtual void handleDropped();
 	virtual void draw();
 	void drawOpenFolderArrow(const Params& default_params, const LLUIColor& fg_color);
-    void drawHighlight(const BOOL showContent, const BOOL hasKeyboardFocus, const LLUIColor &selectColor, const LLUIColor &flashColor, const LLUIColor &outlineColor, const LLUIColor &mouseOverColor);
+    void drawHighlight(const bool showContent, const bool hasKeyboardFocus, const LLUIColor &selectColor, const LLUIColor &flashColor, const LLUIColor &outlineColor, const LLUIColor &mouseOverColor);
     void drawLabel(const LLFontGL * font, const F32 x, const F32 y, const LLColor4& color, F32 &right_x);
 	virtual bool handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
 									EDragAndDropType cargo_type,
@@ -318,7 +318,7 @@ protected:
 	friend class LLUICtrlFactory;
 
 	void updateLabelRotation();
-	virtual bool isCollapsed() { return FALSE; }
+	virtual bool isCollapsed() { return false; }
 
 public:
 	typedef std::list<LLFolderViewItem*> items_t;
@@ -361,14 +361,14 @@ public:
 	// makes sure that this view and it's children are the right size.
 	virtual S32 arrange( S32* width, S32* height );
 
-	BOOL needsArrange();
+	bool needsArrange();
 
 	bool descendantsPassedFilter(S32 filter_generation = -1);
 
 	// Passes selection information on to children and record
 	// selection information if necessary.
 	// Returns TRUE if this object (or a child) ends up being selected.
-	// If 'openitem' is TRUE then folders are opened up along the way to the selection.
+	// If 'openitem' is true then folders are opened up along the way to the selection.
 	virtual BOOL setSelection(LLFolderViewItem* selection, BOOL openitem, BOOL take_keyboard_focus = TRUE);
 
 	// This method is used to change the selection of an item.

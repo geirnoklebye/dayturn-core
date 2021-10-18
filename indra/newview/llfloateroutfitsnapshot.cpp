@@ -274,7 +274,7 @@ bool LLFloaterOutfitSnapshot::postBuild()
     impl->mPreviewHandle = previewp->getHandle();
     previewp->setContainer(this);
     impl->updateControls(this);
-    impl->setAdvanced(gSavedSettings.getBOOL("AdvanceOutfitSnapshot"));
+    impl->setAdvanced(gSavedSettings.getbool("AdvanceOutfitSnapshot"));
     impl->updateLayout(this);
 
     previewp->mKeepAspectRatio = FALSE;
@@ -290,15 +290,15 @@ void LLFloaterOutfitSnapshot::onOpen(const LLSD& key)
     if (preview)
     {
         LL_DEBUGS() << "opened, updating snapshot" << LL_ENDL;
-        preview->updateSnapshot(TRUE);
+        preview->updateSnapshot(true);
     }
-    focusFirstItem(FALSE);
+    focusFirstItem(false);
     gSnapshotFloaterView->setEnabled(true);
     gSnapshotFloaterView->setVisible(true);
-    gSnapshotFloaterView->adjustToFitScreen(this, FALSE);
+    gSnapshotFloaterView->adjustToFitScreen(this, false);
 
     impl->updateControls(this);
-    impl->setAdvanced(gSavedSettings.getBOOL("AdvanceOutfitSnapshot"));
+    impl->setAdvanced(gSavedSettings.getbool("AdvanceOutfitSnapshot"));
     impl->updateLayout(this);
 
     LLPanel* snapshot_panel = getChild<LLPanel>("panel_outfit_snapshot_inventory");
@@ -309,7 +309,7 @@ void LLFloaterOutfitSnapshot::onOpen(const LLSD& key)
 
 void LLFloaterOutfitSnapshot::onExtendFloater()
 {
-	impl->setAdvanced(gSavedSettings.getBOOL("AdvanceOutfitSnapshot"));
+	impl->setAdvanced(gSavedSettings.getbool("AdvanceOutfitSnapshot"));
 }
 
 // static 

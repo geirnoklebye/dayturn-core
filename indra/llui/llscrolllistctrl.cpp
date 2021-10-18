@@ -3018,7 +3018,7 @@ void LLScrollListCtrl::onScrollChange( S32 new_pos, LLScrollbar* scrollbar )
 }
 
 
-void LLScrollListCtrl::sortByColumn(const std::string& name, BOOL ascending)
+void LLScrollListCtrl::sortByColumn(const std::string& name, bool ascending)
 {
 	column_map_t::iterator itor = mColumns.find(name);
 	if (itor != mColumns.end())

@@ -89,7 +89,7 @@ public:
 	virtual LLScrollListItem* addSimpleElement(const std::string& value, EAddPosition pos, const LLSD& id) = 0;
 
 	virtual void clearRows() = 0;
-	virtual void sortByColumn(const std::string& name, BOOL ascending) = 0;
+	virtual void sortByColumn(const std::string& name, bool ascending) = 0;
 };
 
 class LLCtrlScrollInterface

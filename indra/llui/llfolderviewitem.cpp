@@ -352,7 +352,7 @@ void LLFolderViewItem::arrangeAndSet(BOOL set_selection,
 	}
 	if(set_selection)
 	{
-		getRoot()->setSelection(this, TRUE, take_keyboard_focus);
+		getRoot()->setSelection(this, true, take_keyboard_focus);
 		if(root)
 		{
 			root->scrollToShowSelection();
@@ -610,7 +610,7 @@ bool LLFolderViewItem::handleHover( S32 x, S32 y, MASK mask )
 		{
 					// RN: when starting drag and drop, clear out last auto-open
 					root->autoOpenTest(NULL);
-					root->setShowSelectionContext(TRUE);
+					root->setShowSelectionContext(true);
 
 					// Release keyboard focus, so that if stuff is dropped into the
 					// world, pressing the delete key won't blow away the inventory
@@ -628,7 +628,7 @@ bool LLFolderViewItem::handleHover( S32 x, S32 y, MASK mask )
 	}
 	else
 	{
-		getRoot()->setShowSelectionContext(FALSE);
+		getRoot()->setShowSelectionContext(false);
 		getWindow()->setCursor(UI_CURSOR_ARROW);
 		// let parent handle this then...
 		return false;
@@ -673,7 +673,7 @@ BOOL LLFolderViewItem::handleMouseUp( S32 x, S32 y, MASK mask )
 	{
 		if (getRoot())
 		{
-		getRoot()->setShowSelectionContext(FALSE);
+		getRoot()->setShowSelectionContext(false);
 		}
 		gFocusMgr.setMouseCapture( NULL );
 	}
@@ -761,7 +761,7 @@ void LLFolderViewItem::drawOpenFolderArrow(const Params& default_params, const L
     return mIsItemCut;
 }
 
-void LLFolderViewItem::drawHighlight(const BOOL showContent, const BOOL hasKeyboardFocus, const LLUIColor &selectColor, const LLUIColor &flashColor,  
+void LLFolderViewItem::drawHighlight(const bool showContent, const bool hasKeyboardFocus, const LLUIColor &selectColor, const LLUIColor &flashColor,  
                                                         const LLUIColor &focusOutlineColor, const LLUIColor &mouseOverColor)
 {
     const S32 focus_top = getRect().getHeight();
@@ -1244,7 +1244,7 @@ S32 LLFolderViewFolder::arrange( S32* width, S32* height )
 	return ll_round(mTargetHeight);
 }
 
-BOOL LLFolderViewFolder::needsArrange()
+bool LLFolderViewFolder::needsArrange()
 {
 	return mLastArrangeGeneration < getRoot()->getArrangeGeneration();
 }
@@ -1527,7 +1527,7 @@ void LLFolderViewFolder::gatherChildRangeExclusive(LLFolderViewItem* start, LLFo
 
 void LLFolderViewFolder::extendSelectionTo(LLFolderViewItem* new_selection)
 {
-	if (getRoot()->getAllowMultiSelect() == FALSE) return;
+	if (getRoot()->getAllowMultiSelect() == false) return;
 
 	LLFolderViewItem* cur_selected_item = getRoot()->getCurSelectedItem();
 	if (cur_selected_item == NULL)

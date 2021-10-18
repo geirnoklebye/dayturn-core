@@ -986,7 +986,7 @@ void create_gesture_cb(const LLUUID& inv_item)
 
 			LLPreviewGesture* preview = LLPreviewGesture::show(inv_item,  LLUUID::null);
 			// Force to be entirely onscreen.
-			gFloaterView->adjustToFitScreen(preview, FALSE);
+			gFloaterView->adjustToFitScreen(preview, false);
 		}
 	}
 }

@@ -36,8 +36,8 @@
 // Constants
 //
 
-const BOOL	RADIO_STYLE = TRUE;
-const BOOL	CHECK_STYLE = FALSE;
+const bool	RADIO_STYLE = true;
+const bool	CHECK_STYLE = false;
 
 //
 // Classes

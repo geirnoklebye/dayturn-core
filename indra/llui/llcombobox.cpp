@@ -480,7 +480,7 @@ void LLComboBox::onFocusLost()
 	LLUICtrl::onFocusLost();
 }
 
-void LLComboBox::setButtonVisible(BOOL visible)
+void LLComboBox::setButtonVisible(bool visible)
 {
 	static LLUICachedControl<S32> drop_shadow_button ("DropShadowButton", 0);
 
@@ -881,7 +881,7 @@ void LLComboBox::setTextEntry(const LLStringExplicit& text)
 	if (mTextEntry)
 	{
 		mTextEntry->setText(text);
-		mHasAutocompletedText = FALSE;
+		mHasAutocompletedText = false;
 		updateSelection();
 	}
 }
@@ -999,7 +999,7 @@ void LLComboBox::updateSelection()
 		mTextEntry->setSelection(left_wstring.size(), mTextEntry->getWText().size());
 		mTextEntry->endSelection();
 		mTextEntry->setTentative(false);
-		mHasAutocompletedText = TRUE;
+		mHasAutocompletedText = true;
 		mLastSelectedIndex = mList->getFirstSelectedIndex();
 	}
 	else // no matching items found
@@ -1007,7 +1007,7 @@ void LLComboBox::updateSelection()
 		mList->deselectAllItems();
 		mTextEntry->setText(wstring_to_utf8str(user_wstring)); // removes text added by autocompletion
 		mTextEntry->setTentative(mTextEntryTentative);
-		mHasAutocompletedText = FALSE;
+		mHasAutocompletedText = false;
 		mLastSelectedIndex = -1;
 	}
 }
@@ -1142,7 +1142,7 @@ void LLComboBox::clearRows()
 	mList->clearRows();
 }
 
-void LLComboBox::sortByColumn(const std::string& name, BOOL ascending)
+void LLComboBox::sortByColumn(const std::string& name, bool ascending)
 {
 	mList->sortByColumn(name, ascending);
 }

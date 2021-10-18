@@ -162,11 +162,11 @@ void LLToastIMPanel::spawnNameToolTip()
 	params.background_visible(false);
 	if(!mIsGroupMsg)
 	{
-	params.click_callback(boost::bind(&LLFloaterReg::showInstance, "inspect_avatar", LLSD().with("avatar_id", mAvatarID), FALSE));
+	params.click_callback(boost::bind(&LLFloaterReg::showInstance, "inspect_avatar", LLSD().with("avatar_id", mAvatarID), false));
 	}
 	else
 	{
-		params.click_callback(boost::bind(&LLFloaterReg::showInstance, "inspect_group", LLSD().with("group_id", mSessionID), FALSE));
+		params.click_callback(boost::bind(&LLFloaterReg::showInstance, "inspect_group", LLSD().with("group_id", mSessionID), false));
 	}
 	params.delay_time(0.0f);		// spawn instantly on hover
 	params.image(LLUI::getUIImage("Info_Small"));
@@ -192,7 +192,7 @@ void LLToastIMPanel::spawnGroupIconToolTip()
 
 	LLInspector::Params params;
 	params.fillFrom(LLUICtrlFactory::instance().getDefaultParams<LLInspector>());
-	params.click_callback(boost::bind(&LLFloaterReg::showInstance, "inspect_group", LLSD().with("group_id", mSessionID), FALSE));
+	params.click_callback(boost::bind(&LLFloaterReg::showInstance, "inspect_group", LLSD().with("group_id", mSessionID), false));
 	params.delay_time(0.100f);
 	params.image(LLUI::getUIImage("Info_Small"));
 	params.message(g_data.mName);

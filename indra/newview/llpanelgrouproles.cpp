@@ -844,7 +844,7 @@ BOOL LLPanelGroupMembersSubTab::postBuildSubTab(LLView* root)
 	std::string order_by = gSavedSettings.getString("GroupMembersSortOrder");
 	if(!order_by.empty())
 	{
-		mMembersList->sortByColumn(order_by, TRUE);
+		mMembersList->sortByColumn(order_by, true);
 	}	
 
 	LLButton* button = parent->getChild<LLButton>("member_invite", recurse);
@@ -2209,7 +2209,7 @@ void LLPanelGroupRolesSubTab::update(LLGroupChange gc)
 			}
 		}
 
-		mRolesList->sortByColumn(std::string("name"), TRUE);
+		mRolesList->sortByColumn(std::string("name"), true);
 
 		if ( (gdatap->mRoles.size() < (U32)MAX_ROLES)
 			&& gAgent.hasPowerInGroup(mGroupID, GP_ROLE_CREATE) )

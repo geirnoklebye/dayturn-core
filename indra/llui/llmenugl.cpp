@@ -730,7 +730,7 @@ void LLMenuItemTearOffGL::onCommit()
 		{
 			if (parent_floater)
 			{
-				parent_floater->addDependentFloater(tear_off_menu, FALSE);
+				parent_floater->addDependentFloater(tear_off_menu, false);
 			}
 
 			// give focus to torn off menu because it will have
@@ -4044,7 +4044,7 @@ LLTearOffMenu* LLTearOffMenu::create(LLMenuGL* menup)
 {
 	LLTearOffMenu* tearoffp = new LLTearOffMenu(menup);
 	// keep onscreen
-	gFloaterView->adjustToFitScreen(tearoffp, FALSE);
+	gFloaterView->adjustToFitScreen(tearoffp, false);
 	tearoffp->openFloater(LLSD());
 
 	return tearoffp;

@@ -385,7 +385,7 @@ void LLInvFVBridge::showProperties()
 {
 	if (isMarketplaceListingsFolder())
     {
-        LLFloaterReg::showInstance("item_properties", LLSD().with("id",mUUID),TRUE);
+        LLFloaterReg::showInstance("item_properties", LLSD().with("id",mUUID),true);
         // Force it to show on top as this floater has a tendency to hide when confirmation dialog shows up
         LLFloater* floater_properties = LLFloaterReg::findInstance("item_properties", LLSD().with("id",mUUID));
         if (floater_properties)
@@ -693,7 +693,7 @@ void disable_context_entries_if_present(LLMenuGL& menu,
 			menu_item->setVisible(true);
 			// A bit of a hack so we can remember that some UI element explicitly set this to be visible
 			// so that some other UI element from multi-select doesn't later set this invisible.
-			menu_item->pushVisible(TRUE);
+			menu_item->pushVisible(true);
 
 			menu_item->setEnabled(false);
         }
@@ -757,7 +757,7 @@ void hide_context_entries(LLMenuGL& menu,
 			menu_item->setVisible(true);
 			// A bit of a hack so we can remember that some UI element explicitly set this to be visible
 			// so that some other UI element from multi-select doesn't later set this invisible.
-			menu_item->pushVisible(TRUE);
+			menu_item->pushVisible(true);
 
 			bool enabled = (menu_item->getEnabled() == true);
 			for (itor2 = disabled_entries.begin(); enabled && (itor2 != disabled_entries.end()); ++itor2)

@@ -103,7 +103,7 @@ bool LLFloaterMap::postBuild()
 	sendChildToBack(getDragHandle());
 
 	// keep onscreen
-	gFloaterView->adjustToFitScreen(this, FALSE);
+	gFloaterView->adjustToFitScreen(this, false);
 
 	return true;
 }

@@ -57,7 +57,7 @@ public:
 	virtual bool	canSelectAll() const { return false; }
 	
 	virtual void	deselect() {};
-	virtual bool	canDeselect() const { return FALSE; }
+	virtual bool	canDeselect() const { return false; }
 
 	// TODO: Instead of being a public data member, it would be better to hide it altogether
 	// and have a "set" method and then a bunch of static versions of the cut, copy, paste

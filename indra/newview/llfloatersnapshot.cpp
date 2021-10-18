@@ -1040,7 +1040,7 @@ bool LLFloaterSnapshot::postBuild()
 	impl->mPreviewHandle = previewp->getHandle();
     previewp->setContainer(this);
 	impl->updateControls(this);
-	impl->setAdvanced(gSavedSettings.getBOOL("AdvanceSnapshot"));
+	impl->setAdvanced(gSavedSettings.getbool("AdvanceSnapshot"));
 	impl->updateLayout(this);
 	
 
@@ -1111,10 +1111,10 @@ void LLFloaterSnapshot::onOpen(const LLSD& key)
 	focusFirstItem(FALSE);
 	gSnapshotFloaterView->setEnabled(true);
 	gSnapshotFloaterView->setVisible(true);
-	gSnapshotFloaterView->adjustToFitScreen(this, FALSE);
+	gSnapshotFloaterView->adjustToFitScreen(this, false);
 
 	impl->updateControls(this);
-	impl->setAdvanced(gSavedSettings.getBOOL("AdvanceSnapshot"));
+	impl->setAdvanced(gSavedSettings.getbool("AdvanceSnapshot"));
 	impl->updateLayout(this);
 
 	// Initialize default tab.
@@ -1123,7 +1123,7 @@ void LLFloaterSnapshot::onOpen(const LLSD& key)
 
 void LLFloaterSnapshot::onExtendFloater()
 {
-	impl->setAdvanced(gSavedSettings.getBOOL("AdvanceSnapshot"));
+	impl->setAdvanced(gSavedSettings.getbool("AdvanceSnapshot"));
 }
 
 void LLFloaterSnapshot::on360Snapshot()

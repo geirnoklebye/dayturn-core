@@ -3286,11 +3286,10 @@ BOOL LLWindowWin32::copyTextToClipboard(const LLWString& wstr)
 // Constrains the mouse to the window.
 void LLWindowWin32::setMouseClipping( bool b )
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_WIN32;
     ASSERT_MAIN_THREAD();
 	if( b != mIsMouseClipping )
 	{
-		BOOL success = FALSE;
+		bool success = false;
 
 		if( b )
 		{

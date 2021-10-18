@@ -921,7 +921,7 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 		// don't highlight any placer button
 		for (std::vector<LLButton*>::size_type i = 0; i < mButtons.size(); i++)
 		{
-			mButtons[i]->setToggleState(FALSE);
+			mButtons[i]->setToggleState(false);
 			mButtons[i]->setVisible( create_visible );
 		}
 	}

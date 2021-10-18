@@ -930,7 +930,7 @@ void LLScriptEdCore::onBtnDynamicHelp()
 		LLFloater* parent = dynamic_cast<LLFloater*>(getParent());
 		llassert(parent);
 		if (parent)
-			parent->addDependentFloater(live_help_floater, TRUE);
+			parent->addDependentFloater(live_help_floater, true);
 		live_help_floater->childSetCommitCallback("lock_check", onCheckLock, this);
 		live_help_floater->getChild<LLUICtrl>("lock_check")->setValue(gSavedSettings.getBOOL("ScriptHelpFollowsCursor"));
 		live_help_floater->childSetCommitCallback("history_combo", onHelpComboCommit, this);

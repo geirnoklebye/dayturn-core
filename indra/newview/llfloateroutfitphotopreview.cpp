@@ -200,7 +200,7 @@ void LLFloaterOutfitPhotoPreview::updateDimensions()
 		mUpdateDimensions = FALSE;
 
 		reshape(getRect().getWidth(), getRect().getHeight());
-		gFloaterView->adjustToFitScreen(this, FALSE);
+		gFloaterView->adjustToFitScreen(this, false);
 	}
 }
 

@@ -62,7 +62,7 @@ public:
 
 protected:
 	LLButton*				mActionButton;
-	BOOL					mToggleState;
+	bool					mToggleState;
 };
 
 #endif // LL_LLFLYOUTBUTTON_H

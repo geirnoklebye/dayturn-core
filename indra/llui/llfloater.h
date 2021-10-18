@@ -46,20 +46,20 @@ class LLMultiFloater;
 class LLFloater;
 
 
-const BOOL RESIZE_YES = TRUE;
-const BOOL RESIZE_NO = FALSE;
+const bool RESIZE_YES = true;
+const bool RESIZE_NO = false;
 
-const BOOL DRAG_ON_TOP = FALSE;
-const BOOL DRAG_ON_LEFT = TRUE;
+const bool DRAG_ON_TOP = false;
+const bool DRAG_ON_LEFT = true;
 
-const BOOL MINIMIZE_YES = TRUE;
-const BOOL MINIMIZE_NO = FALSE;
+const bool MINIMIZE_YES = true;
+const bool MINIMIZE_NO = false;
 
-const BOOL CLOSE_YES = TRUE;
-const BOOL CLOSE_NO = FALSE;
+const bool CLOSE_YES = true;
+const bool CLOSE_NO = false;
 
-const BOOL ADJUST_VERTICAL_YES = TRUE;
-const BOOL ADJUST_VERTICAL_NO = FALSE;
+const bool ADJUST_VERTICAL_YES = true;
+const bool ADJUST_VERTICAL_NO = false;
 
 namespace LLFloaterEnums
 {
@@ -255,8 +255,8 @@ public:
 	std::string		getShortTitle() const;
 	virtual void	setMinimized(bool b);
 	void			moveResizeHandlesToFront();
-	void			addDependentFloater(LLFloater* dependent, BOOL reposition = TRUE);
-	void			addDependentFloater(LLHandle<LLFloater> dependent_handle, BOOL reposition = TRUE);
+	void			addDependentFloater(LLFloater* dependent, bool reposition = true);
+	void			addDependentFloater(LLHandle<LLFloater> dependent_handle, bool reposition = true);
 	LLFloater*		getDependee() { return (LLFloater*)mDependeeHandle.get(); }
 	void		removeDependentFloater(LLFloater* dependent);
 	bool			isMinimized() const				{ return mMinimized; }
@@ -558,7 +558,7 @@ public:
 	LLRect			findNeighboringPosition( LLFloater* reference_floater, LLFloater* neighbor );
 
 	// Given a child of gFloaterView, make sure this view can fit entirely onscreen.
-	void			adjustToFitScreen(LLFloater* floater, BOOL allow_partial_outside, BOOL snap_in_toolbars = false);
+	void			adjustToFitScreen(LLFloater* floater, bool allow_partial_outside, bool snap_in_toolbars = false);
 
 	void			setMinimizePositionVerticalOffset(S32 offset) { mMinimizePositionVOffset = offset; }
 	void			getMinimizePosition( S32 *left, S32 *bottom);
@@ -567,9 +567,9 @@ public:
 	void pushVisibleAll(bool visible, const skip_list_t& skip_list = skip_list_t());
 	void popVisibleAll(const skip_list_t& skip_list = skip_list_t());
 
-	void			setCycleMode(BOOL mode) { mFocusCycleMode = mode; }
-	BOOL			getCycleMode() const { return mFocusCycleMode; }
-	void			bringToFront( LLFloater* child, BOOL give_focus = TRUE, BOOL restore = TRUE );
+	void			setCycleMode(bool mode) { mFocusCycleMode = mode; }
+	bool			getCycleMode() const { return mFocusCycleMode; }
+	void			bringToFront( LLFloater* child, bool give_focus = true, bool restore = true );
 	void			highlightFocusedFloater();
 	void			unhighlightFocusedFloater();
 	void			focusFrontFloater();

@@ -69,7 +69,7 @@ bool NACLFloaterExploreSounds::postBuild()
 	mHistoryScroller = getChild<LLScrollListCtrl>("sound_list");
 	mHistoryScroller->setCommitCallback(boost::bind(&NACLFloaterExploreSounds::handleSelection, this));
 	mHistoryScroller->setDoubleClickCallback(boost::bind(&NACLFloaterExploreSounds::handlePlayLocally, this));
-	mHistoryScroller->sortByColumn("playing", TRUE);
+	mHistoryScroller->sortByColumn("playing", true);
 
 	mCollisionSounds = getChild<LLCheckBoxCtrl>("collision_chk");
 	mRepeatedAssets = getChild<LLCheckBoxCtrl>("repeated_asset_chk");

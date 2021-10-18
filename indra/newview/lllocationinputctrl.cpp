@@ -555,7 +555,7 @@ void LLLocationInputCtrl::setText(const LLStringExplicit& text)
 	{
 		mTextEntry->setText(text);
 	}
-	mHasAutocompletedText = FALSE;
+	mHasAutocompletedText = false;
 }
 
 void LLLocationInputCtrl::setFocus(bool b)

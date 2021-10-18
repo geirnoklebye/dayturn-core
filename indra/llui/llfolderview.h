@@ -206,7 +206,7 @@ public:
 								   EAcceptance* accept,
 								   std::string& tooltip_msg);
 	/*virtual*/ void reshape(S32 width, S32 height, BOOL called_from_parent = TRUE);
-	/*virtual*/ void onMouseLeave(S32 x, S32 y, MASK mask) { setShowSelectionContext(FALSE); }
+	/*virtual*/ void onMouseLeave(S32 x, S32 y, MASK mask) { setShowSelectionContext(false); }
 	virtual void draw();
 	virtual void deleteAllChildren();
 
@@ -393,7 +393,7 @@ public:
 class LLSaveFolderState : public LLFolderViewFunctor
 {
 public:
-	LLSaveFolderState() : mApply(FALSE) {}
+	LLSaveFolderState() : mApply(false) {}
 	virtual ~LLSaveFolderState() {}
 	virtual void doFolder(LLFolderViewFolder* folder);
 	virtual void doItem(LLFolderViewItem* item) {}
@@ -401,7 +401,7 @@ public:
 	void clearOpenFolders() { mOpenFolders.clear(); }
 protected:
 	std::set<LLUUID> mOpenFolders;
-	BOOL mApply;
+	bool mApply;
 };
 
 class LLOpenFoldersWithSelection : public LLFolderViewFunctor

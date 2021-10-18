@@ -373,7 +373,7 @@ LLToastAlertPanel::LLToastAlertPanel( LLNotificationPtr notification, bool modal
 	setCheckBoxes(HPAD, VPAD);
 
 	// *TODO: check necessity of this code
-	//gFloaterView->adjustToFitScreen(this, FALSE);
+	//gFloaterView->adjustToFitScreen(this, false);
 	if (mLineEditor)
 	{
 		mLineEditor->selectAll();

@@ -183,7 +183,7 @@ public:
 	virtual LLScrollListItem* addElement(const LLSD& value, EAddPosition pos = ADD_BOTTOM, void* userdata = NULL);
 	virtual LLScrollListItem* addSimpleElement(const std::string& value, EAddPosition pos = ADD_BOTTOM, const LLSD& id = LLSD());
 	virtual void 	clearRows();
-	virtual void 	sortByColumn(const std::string& name, BOOL ascending);
+	virtual void 	sortByColumn(const std::string& name, bool ascending);
 
 	// LLCtrlSelectionInterface functions
 	virtual bool	getCanSelect() const				{ return true; }
@@ -214,7 +214,7 @@ public:
 	*/
 	boost::signals2::connection setReturnCallback( const commit_signal_t::slot_type& cb ) { return mOnReturnSignal.connect(cb); }
 
-	void			setButtonVisible(BOOL visible);
+	void			setButtonVisible(bool visible);
 
 	void			onButtonMouseDown();
 	void			onListMouseUp();
@@ -234,11 +234,11 @@ protected:
 	EPreferredPosition	mListPosition;
 	LLPointer<LLUIImage>	mArrowImage;
 	LLUIString			mLabel;
-	BOOL				mHasAutocompletedText;
+	bool				mHasAutocompletedText;
 
 private:
 	bool				mAllowTextEntry;
-	BOOL				mAllowNewValues;
+	bool				mAllowNewValues;
 	S32					mMaxChars;
 	BOOL				mTextEntryTentative;
 	commit_callback_t	mPrearrangeCallback;

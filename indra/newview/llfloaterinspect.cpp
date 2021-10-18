@@ -149,7 +149,7 @@ LLFloaterInspect::~LLFloaterInspect(void)
 	}
 	else
 	{
-		LLFloaterReg::showInstance("build", LLSD(), TRUE);
+		LLFloaterReg::showInstance("build", LLSD(), true);
 	}
 
 	// <FS:Ansariel> FIRE-22292: Configurable columns

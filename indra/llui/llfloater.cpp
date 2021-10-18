@@ -1507,7 +1507,7 @@ bool LLFloater::isFrontmost()
 				&& floater_view->getFrontmost() == this);
 }
 
-void LLFloater::addDependentFloater(LLFloater* floaterp, BOOL reposition)
+void LLFloater::addDependentFloater(LLFloater* floaterp, bool reposition)
 {
 	mDependents.insert(floaterp->getHandle());
 	floaterp->mDependeeHandle = getHandle();
@@ -1517,7 +1517,7 @@ void LLFloater::addDependentFloater(LLFloater* floaterp, BOOL reposition)
 		floaterp->setRect(gFloaterView->findNeighboringPosition(this, floaterp));
 		floaterp->setSnapTarget(getHandle());
 	}
-	gFloaterView->adjustToFitScreen(floaterp, FALSE, TRUE);
+	gFloaterView->adjustToFitScreen(floaterp, false, true);
 	if (floaterp->isFrontmost())
 	{
 		// make sure to bring self and sibling floaters to front
@@ -1525,7 +1525,7 @@ void LLFloater::addDependentFloater(LLFloater* floaterp, BOOL reposition)
 	}
 }
 
-void LLFloater::addDependentFloater(LLHandle<LLFloater> dependent, BOOL reposition)
+void LLFloater::addDependentFloater(LLHandle<LLFloater> dependent, bool reposition)
 {
 	LLFloater* dependent_floaterp = dependent.get();
 	if(dependent_floaterp)
@@ -1758,7 +1758,7 @@ void LLFloater::onClickTearOff(LLFloater* self)
 			new_rect.setLeftTopAndSize(host_floater->getRect().mLeft + 5, host_floater->getRect().mTop - floater_header_size - 5, self->getRect().getWidth(), self->getRect().getHeight());
 			self->setRect(new_rect);
 		}
-		gFloaterView->adjustToFitScreen(self, FALSE);
+		gFloaterView->adjustToFitScreen(self, false);
 		// give focus to new window to keep continuity for the user
 		self->setFocus(true);
 		self->setTornOff(true);
@@ -2479,7 +2479,7 @@ LLRect LLFloaterView::findNeighboringPosition( LLFloater* reference_floater, LLF
 }
 
 
-void LLFloaterView::bringToFront(LLFloater* child, BOOL give_focus, BOOL restore)
+void LLFloaterView::bringToFront(LLFloater* child, bool give_focus, bool restore)
 {
 	if (!child)
 		return;
@@ -2843,7 +2843,7 @@ void LLFloaterView::refresh()
 	}
 }
 
-void LLFloaterView::adjustToFitScreen(LLFloater* floater, BOOL allow_partial_outside, BOOL snap_in_toolbars/* = false*/)
+void LLFloaterView::adjustToFitScreen(LLFloater* floater, bool allow_partial_outside, bool snap_in_toolbars/* = false*/)
 {
 	if (floater->getParent() != this)
 	{
@@ -3380,7 +3380,7 @@ bool LLFloater::initFloaterXML(LLXMLNodePtr node, LLView *parent, const std::str
 	}
 
 	applyRectControl(); // If we have a saved rect control, apply it
-	gFloaterView->adjustToFitScreen(this, FALSE); // Floaters loaded from XML should all fit on screen	
+	gFloaterView->adjustToFitScreen(this, false); // Floaters loaded from XML should all fit on screen	
 
 	moveResizeHandlesToFront();
 

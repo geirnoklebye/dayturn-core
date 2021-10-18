@@ -200,7 +200,7 @@ public:
 	// Simple add element. Takes a single array of:
 	// [ "value" => value, "font" => font, "font-style" => style ]
 	virtual void clearRows(); // clears all elements
-	virtual void sortByColumn(const std::string& name, BOOL ascending);
+	virtual void sortByColumn(const std::string& name, bool ascending);
 
 	// These functions take and return an array of arrays of elements, as above
 	virtual void	setValue(const LLSD& value );

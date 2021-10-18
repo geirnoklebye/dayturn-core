@@ -253,7 +253,7 @@ LLFloaterReg::const_instance_list_t& LLFloaterReg::getFloaterList(const std::str
 // Visibility Management
 
 //static
-LLFloater* LLFloaterReg::showInstance(const std::string& name, const LLSD& key, BOOL focus) 
+LLFloater* LLFloaterReg::showInstance(const std::string& name, const LLSD& key, bool focus) 
 {
 	if( sBlockShowFloaters
 			// see EXT-7090
@@ -293,7 +293,7 @@ bool LLFloaterReg::toggleInstance(const std::string& name, const LLSD& key)
 	}
 	else
 	{
-		return showInstance(name, key, TRUE) ? true : false;
+		return showInstance(name, key, true) ? true : false;
 	}
 }
 
@@ -315,7 +315,7 @@ void LLFloaterReg::showInitialVisibleInstances()
 		std::string controlname = getVisibilityControlName(name);
 		if (LLFloater::getControlGroup()->controlExists(controlname))
 		{
-			BOOL isvis = LLFloater::getControlGroup()->getBOOL(controlname);
+			bool isvis = (bool)LLFloater::getControlGroup()->getBOOL(controlname);
 			if (isvis)
 			{
 				showInstance(name, LLSD()); // keyed floaters shouldn't set save_vis to true

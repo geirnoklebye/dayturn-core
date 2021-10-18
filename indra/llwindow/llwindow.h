@@ -223,7 +223,7 @@ protected:
 	ECursorType	mNextCursor;
 	BOOL		mCursorHidden;
 	S32			mBusyCount;	// how deep is the "cursor busy" stack?
-	BOOL		mIsMouseClipping;  // Is this window currently clipping the mouse
+	bool		mIsMouseClipping;  // Is this window currently clipping the mouse
 	ESwapMethod mSwapMethod;
 	BOOL		mHideCursorPermanent;
 	U32			mFlags;

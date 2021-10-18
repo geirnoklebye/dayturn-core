@@ -3187,7 +3187,7 @@ void LLIMMgr::inviteToSession(
 		}
 		else
 		{
-			LLFloaterReg::showInstance("incoming_call", payload, FALSE);
+			LLFloaterReg::showInstance("incoming_call", payload, false);
 		}
 		
 		// Add the caller to the Recent List here (at this point 
@@ -3209,7 +3209,7 @@ void LLIMMgr::onInviteNameLookup(LLSD payload, const LLUUID& id, const LLAvatarN
 
 	std::string notify_box_type = payload["notify_box_type"].asString();
 
-	LLFloaterReg::showInstance("incoming_call", payload, FALSE);
+	LLFloaterReg::showInstance("incoming_call", payload, false);
 }
 
 //*TODO disconnects all sessions

@@ -126,7 +126,7 @@ LLScriptFloater* LLScriptFloater::show(const LLUUID& notification_id)
 	}
 
 	//LLDialog(LLGiveInventory and LLLoadURL) should no longer steal focus (see EXT-5445)
-	LLFloaterReg::showTypedInstance<LLScriptFloater>("script_floater", notification_id, FALSE);
+	LLFloaterReg::showTypedInstance<LLScriptFloater>("script_floater", notification_id, false);
 
 	return floater;
 }

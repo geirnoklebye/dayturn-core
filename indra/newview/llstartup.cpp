@@ -2044,7 +2044,7 @@ bool idle_startup()
 		// visible.  JC
 		if (show_hud || gSavedSettings.getBOOL("ShowTutorial"))
 		{
-			LLFloaterReg::showInstance("hud", LLSD(), FALSE);
+			LLFloaterReg::showInstance("hud", LLSD(), false);
 		}
 		display_startup();
 

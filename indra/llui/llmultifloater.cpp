@@ -498,7 +498,7 @@ void LLMultiFloater::updateResizeLimits()
 
 		// make sure this window is visible on screen when it has been modified
 		// (tab added, etc)
-		gFloaterView->adjustToFitScreen(this, TRUE);
+		gFloaterView->adjustToFitScreen(this, true);
 	}
 }
 
