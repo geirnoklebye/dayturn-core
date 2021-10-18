@@ -1363,9 +1363,9 @@ void LLLineEditor::updatePrimary()
 	}
 }
 
-BOOL LLLineEditor::handleSpecialKey(KEY key, MASK mask)	
+bool LLLineEditor::handleSpecialKey(KEY key, MASK mask)	
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 
 	switch( key )
 	{
@@ -1375,7 +1375,7 @@ BOOL LLLineEditor::handleSpecialKey(KEY key, MASK mask)
 			gKeyboard->toggleInsertMode();
 		}
 
-		handled = TRUE;
+		handled = true;
 		break;
 
 	case KEY_BACKSPACE:
@@ -1396,7 +1396,7 @@ BOOL LLLineEditor::handleSpecialKey(KEY key, MASK mask)
 				LLUI::getInstance()->reportBadKeystroke();
 			}
 		}
-		handled = TRUE;
+		handled = true;
 		break;
 
 	case KEY_PAGE_UP:
@@ -1404,7 +1404,7 @@ BOOL LLLineEditor::handleSpecialKey(KEY key, MASK mask)
 		if (!mIgnoreArrowKeys)
 		{
 			setCursor(0);
-			handled = TRUE;
+			handled = true;
 		}
 		break;
 
@@ -1417,7 +1417,7 @@ BOOL LLLineEditor::handleSpecialKey(KEY key, MASK mask)
 			{
 				setCursor(len);
 			}
-			handled = TRUE;
+			handled = true;
 		}
 		break;
 
@@ -1444,7 +1444,7 @@ BOOL LLLineEditor::handleSpecialKey(KEY key, MASK mask)
 			{
 				LLUI::getInstance()->reportBadKeystroke();
 			}
-			handled = TRUE;
+			handled = true;
 		}
 		break;
 
@@ -1471,7 +1471,7 @@ BOOL LLLineEditor::handleSpecialKey(KEY key, MASK mask)
 			{
 				LLUI::getInstance()->reportBadKeystroke();
 			}
-			handled = TRUE;
+			handled = true;
 		}
 		break;
 
@@ -1488,7 +1488,7 @@ BOOL LLLineEditor::handleSpecialKey(KEY key, MASK mask)
 			{
 				LLUI::getInstance()->reportBadKeystroke();
 			}
-			handled = TRUE;
+			handled = true;
 		}
 		break;
 
@@ -1505,7 +1505,7 @@ BOOL LLLineEditor::handleSpecialKey(KEY key, MASK mask)
 			{
 				LLUI::getInstance()->reportBadKeystroke();
 			}
-			handled = TRUE;
+			handled = true;
 		}
 		break;
 

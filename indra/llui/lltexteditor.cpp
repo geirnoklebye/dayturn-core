@@ -1705,11 +1705,11 @@ BOOL LLTextEditor::handleControlKey(const KEY key, const MASK mask)
 }
 
 
-BOOL LLTextEditor::handleSpecialKey(const KEY key, const MASK mask)	
+bool LLTextEditor::handleSpecialKey(const KEY key, const MASK mask)	
 	{
-	BOOL handled = TRUE;
+	bool handled = true;
 
-	if (mReadOnly) return FALSE;
+	if (mReadOnly) return false;
 
 	switch( key )
 	{
@@ -1751,7 +1751,7 @@ BOOL LLTextEditor::handleSpecialKey(const KEY key, const MASK mask)
 		}
 		else
 		{
-			handled = FALSE;
+			handled = false;
 			break;
 		}
 		break;
@@ -1759,7 +1759,7 @@ BOOL LLTextEditor::handleSpecialKey(const KEY key, const MASK mask)
 	case KEY_TAB:
 		if (mask & MASK_CONTROL)
 		{
-			handled = FALSE;
+			handled = false;
 			break;
 		}
 		if( hasSelection() && selectionContainsLineBreaks() )
@@ -1784,7 +1784,7 @@ BOOL LLTextEditor::handleSpecialKey(const KEY key, const MASK mask)
 		break;
 		
 	default:
-		handled = FALSE;
+		handled = false;
 		break;
 	}
 
