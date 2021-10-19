@@ -216,11 +216,11 @@ public:
 	void setIsMasked(BOOL masked) { mIsMasked = masked; }
     
 
-	void setBakeTextureEnabled(BOOL enabled);
+	void setBakeTextureEnabled(bool enabled);
 
 private:
-	BOOL allowDrop(LLInventoryItem* item);
-	BOOL doDrop(LLInventoryItem* item);
+	bool allowDrop(LLInventoryItem* item);
+	bool doDrop(LLInventoryItem* item);
 
 private:
 	drag_n_drop_callback	 	mDragCallback;
@@ -354,8 +354,8 @@ public:
 	static void		onBakeTextureSelect(LLUICtrl* ctrl, void *userdata);
 	static void		onHideBaseMeshRegionCheck(LLUICtrl* ctrl, void *userdata);
 
-	void 			setLocalTextureEnabled(BOOL enabled);
-	void 			setBakeTextureEnabled(BOOL enabled);
+	void 			setLocalTextureEnabled(bool enabled);
+	void 			setBakeTextureEnabled(bool enabled);
 
 protected:
 	LLPointer<LLViewerTexture> mTexturep;
@@ -365,7 +365,7 @@ protected:
 	LLUIImagePtr		mFallbackImage; // What to show if currently selected texture is null.
 	LLUUID				mDefaultImageAssetID;
 	LLUUID				mBlankImageAssetID;
-	BOOL				mTentative;
+	bool				mTentative;
 	BOOL				mAllowNoTexture;
 	LLUUID				mSpecialCurrentImageAssetID;  // Used when the asset id has no corresponding texture in the user's inventory.
 	LLUUID				mOriginalImageAssetID;

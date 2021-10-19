@@ -364,7 +364,7 @@ void LLInspectObject::updateButtons(LLSelectNode* nodep)
 	}
 
 	// No flash
-	focusFirstItem(FALSE, FALSE);
+	focusFirstItem(false, false);
 }
 
 void LLInspectObject::updateSitLabel(LLSelectNode* nodep)

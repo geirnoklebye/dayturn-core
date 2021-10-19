@@ -1888,8 +1888,8 @@ void LLPanelProfileSecondLife::onShowTexturePicker()
                     onCommitProfileImage(image_asset_id);
                 }
             });
-            texture_floaterp->setLocalTextureEnabled(FALSE);
-            texture_floaterp->setBakeTextureEnabled(FALSE);
+            texture_floaterp->setLocalTextureEnabled(false);
+            texture_floaterp->setBakeTextureEnabled(false);
             texture_floaterp->setCanApply(false, true);
 
             parent_floater->addDependentFloater(mFloaterTexturePickerHandle);

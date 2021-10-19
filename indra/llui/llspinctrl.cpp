@@ -145,7 +145,7 @@ LLSpinCtrl::LLSpinCtrl(const LLSpinCtrl::Params& p)
 	addChild(mEditor);
 
 	updateEditor();
-	setUseBoundingRect( TRUE );
+	setUseBoundingRect(true);
 }
 
 F32 clamp_precision(F32 value, S32 decimal_precision)

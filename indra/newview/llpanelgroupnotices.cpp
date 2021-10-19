@@ -286,7 +286,7 @@ bool LLPanelGroupNotices::postBuild()
 	mViewMessage = getChild<LLTextEditor>("view_message",recurse);
 
 	mViewInventoryName =  getChild<LLLineEditor>("view_inventory_name",recurse);
-	mViewInventoryName->setTabStop(FALSE);
+	mViewInventoryName->setTabStop(false);
 	mViewInventoryName->setEnabled(false);
 
 	mViewInventoryIcon = getChild<LLIconCtrl>("view_inv_icon",recurse);

@@ -1497,7 +1497,7 @@ void LLView::reshape(S32 width, S32 height, BOOL called_from_parent)
 	{
 		if (mParentView)
 		{
-			mParentView->reshape(mParentView->getRect().getWidth(), mParentView->getRect().getHeight(), FALSE);
+			mParentView->reshape(mParentView->getRect().getWidth(), mParentView->getRect().getHeight(), false);
 		}
 	}
 

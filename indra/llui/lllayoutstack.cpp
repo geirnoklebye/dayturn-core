@@ -61,7 +61,7 @@ LLLayoutPanel::LLLayoutPanel(const Params& p)
  	mMinDim(p.min_dim), 
  	mAutoResize(p.auto_resize),
  	mUserResize(p.user_resize),
-	mCollapsed(FALSE),
+	mCollapsed(false),
 	mCollapseAmt(0.f),
 	mVisibleAmt(1.f), // default to fully visible
 	mResizeBar(NULL),
@@ -371,7 +371,7 @@ bool LLLayoutStack::addChild(LLView* child, S32 tab_group)
 			{
 				height = dim;
 			}
-			panelp->reshape(width, height, TRUE);
+			panelp->reshape(width, height, true);
 		}
 		// </FS:Zi>
 
@@ -1103,7 +1103,7 @@ void LLLayoutStack::refreshFromSettings()
 		{
 			height = dim;
 		}
-		panelp->reshape(width, height, TRUE);
+		panelp->reshape(width, height, true);
 	}
 	mNeedsLayout = true;
 }

@@ -237,7 +237,7 @@ void LLBadge::draw()
 			S32 badge_char_length = S32_MAX;
 			S32 badge_pixel_length = S32_MAX;
 			F32 *right_position_out = NULL;
-			BOOL do_not_use_ellipses = false;
+			bool do_not_use_ellipses = false;
 
 			F32 badge_width = (2.0f * mPaddingHoriz) +
 				mGLFont->getWidthF32(badge_label_wstring.c_str(), badge_label_begin_offset, badge_char_length);

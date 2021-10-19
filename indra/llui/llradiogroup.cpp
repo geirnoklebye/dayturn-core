@@ -213,7 +213,7 @@ BOOL LLRadioGroup::setSelectedIndex(S32 index, BOOL from_event)
 
 		if (hasFocus())
 		{
-			radio_item->focusFirstItem(FALSE, FALSE);
+			radio_item->focusFirstItem(false, false);
 		}
 	}
 

@@ -519,7 +519,7 @@ S32 LLComboBox::getCurrentIndex() const
 	return -1;
 }
 
-void LLComboBox::setEnabledByValue(const LLSD& value, BOOL enabled)
+void LLComboBox::setEnabledByValue(const LLSD& value, bool enabled)
 {
     LLScrollListItem *found = mList->getItem(value);
     if (found)
@@ -538,7 +538,7 @@ void LLComboBox::createLineEditor(const LLComboBox::Params& p)
 		S32 shadow_size = drop_shadow_button;
 		mButton->setRect(LLRect( getRect().getWidth() - llmax(8,arrow_width) - 2 * shadow_size,
 								rect.mTop, rect.mRight, rect.mBottom));
-		mButton->setTabStop(FALSE);
+		mButton->setTabStop(false);
 		mButton->setHAlign(LLFontGL::HCENTER);
 
 		LLRect text_entry_rect(0, getRect().getHeight(), getRect().getWidth(), 0);
@@ -683,7 +683,7 @@ void LLComboBox::showList()
 	
 	LLUI::getInstance()->addPopup(this);
 
-	setUseBoundingRect(TRUE);
+	setUseBoundingRect(true);
 //	updateBoundingRect();
 }
 
@@ -706,7 +706,7 @@ void LLComboBox::hideList()
 		mList->setVisible(false);
 		mList->mouseOverHighlightNthItem(-1);
 
-		setUseBoundingRect(FALSE);
+		setUseBoundingRect(false);
 		LLUI::getInstance()->removePopup(this);
 //		updateBoundingRect();
 	}
@@ -886,7 +886,7 @@ void LLComboBox::setTextEntry(const LLStringExplicit& text)
 	}
 }
 
-void LLComboBox::setKeystrokeOnEsc(BOOL enable)
+void LLComboBox::setKeystrokeOnEsc(bool enable)
 {
 	if (mTextEntry)
 	{
@@ -1097,7 +1097,7 @@ void LLComboBox::imageLoaded()
             {
                 LLRect text_entry_rect(0, getRect().getHeight(), getRect().getWidth(), 0);
                 text_entry_rect.mRight -= llmax(8, arrow_width) + 2 * drop_shadow_button;
-                mTextEntry->reshape(text_entry_rect.getWidth(), text_entry_rect.getHeight(), TRUE);
+                mTextEntry->reshape(text_entry_rect.getWidth(), text_entry_rect.getHeight(), true);
             }
         }
     }

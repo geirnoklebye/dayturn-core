@@ -186,7 +186,7 @@ LLFloaterTexturePicker::LLFloaterTexturePicker(
 {
 	buildFromFile("floater_texture_ctrl.xml");
 	mCanApplyImmediately = can_apply_immediately;
-	setCanMinimize(FALSE);
+	setCanMinimize(false);
 }
 
 LLFloaterTexturePicker::~LLFloaterTexturePicker()
@@ -383,7 +383,7 @@ bool LLFloaterTexturePicker::handleKeyHere(KEY key, MASK mask)
 		
 		if (mInventoryPanel->hasFocus() && key == KEY_UP)
 		{
-			mFilterEdit->focusFirstItem(TRUE);
+			mFilterEdit->focusFirstItem(true);
 		}
 	}
 
@@ -498,7 +498,7 @@ bool LLFloaterTexturePicker::postBuild()
 	getChild<LLComboBox>("l_bake_use_texture_combo_box")->setCommitCallback(onBakeTextureSelect, this);
 	getChild<LLCheckBoxCtrl>("hide_base_mesh_region")->setCommitCallback(onHideBaseMeshRegionCheck, this);
 
-	setBakeTextureEnabled(TRUE);
+	setBakeTextureEnabled(true);
 	return true;
 }
 
@@ -545,7 +545,7 @@ void LLFloaterTexturePicker::draw()
 
 		if (mTentativeLabel)
 		{
-			mTentativeLabel->setVisible( FALSE  );
+			mTentativeLabel->setVisible(false);
 		}
 
 		getChildView("Default")->setEnabled(mImageAssetID != mDefaultImageAssetID || mTentative);
@@ -1156,14 +1156,14 @@ void LLFloaterTexturePicker::onFilterEdit(const std::string& search_string )
 	mInventoryPanel->setFilterSubString(search_string);
 }
 
-void LLFloaterTexturePicker::setLocalTextureEnabled(BOOL enabled)
+void LLFloaterTexturePicker::setLocalTextureEnabled(bool enabled)
 {
     mModeSelector->setEnabledByValue(1, enabled);
 }
 
-void LLFloaterTexturePicker::setBakeTextureEnabled(BOOL enabled)
+void LLFloaterTexturePicker::setBakeTextureEnabled(bool enabled)
 {
-	BOOL changed = (enabled != mBakeTextureEnabled);
+	bool changed = (enabled != mBakeTextureEnabled);
 
 	mBakeTextureEnabled = enabled;
 	mModeSelector->setEnabledByValue(2, enabled);
@@ -1429,7 +1429,7 @@ void LLTextureCtrl::showPicker(BOOL take_focus)
 		}
 		if (texture_floaterp)
 		{
-			texture_floaterp->setBakeTextureEnabled(TRUE);
+			texture_floaterp->setBakeTextureEnabled(true);
 		}
 
 		LLFloater* root_floater = gFloaterView->getParentFloater(this);
@@ -1625,7 +1625,7 @@ void LLTextureCtrl::setImageAssetID( const LLUUID& asset_id )
 	}
 }
 
-void LLTextureCtrl::setBakeTextureEnabled(BOOL enabled)
+void LLTextureCtrl::setBakeTextureEnabled(bool enabled)
 {
 	LLFloaterTexturePicker* floaterp = (LLFloaterTexturePicker*)mFloaterHandle.get();
 	if (floaterp)
@@ -1801,7 +1801,7 @@ void LLTextureCtrl::draw()
 	LLUICtrl::draw();
 }
 
-BOOL LLTextureCtrl::allowDrop(LLInventoryItem* item)
+bool LLTextureCtrl::allowDrop(LLInventoryItem* item)
 {
 	BOOL copy = item->getPermissions().allowCopyBy(gAgent.getID());
 	BOOL mod = item->getPermissions().allowModifyBy(gAgent.getID());
@@ -1824,16 +1824,16 @@ BOOL LLTextureCtrl::allowDrop(LLInventoryItem* item)
 		}
 		else
 		{
-			return TRUE;
+			return true;
 		}
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 }
 
-BOOL LLTextureCtrl::doDrop(LLInventoryItem* item)
+bool LLTextureCtrl::doDrop(LLInventoryItem* item)
 {
 	// call the callback if it exists.
 	if(mDropCallback)
@@ -1846,7 +1846,7 @@ BOOL LLTextureCtrl::doDrop(LLInventoryItem* item)
 	// no callback installed, so just set the image ids and carry on.
 	setImageAssetID( item->getAssetUUID() );
 	mImageItemID = item->getUUID();
-	return TRUE;
+	return true;
 }
 
 bool LLTextureCtrl::handleUnicodeCharHere(llwchar uni_char)

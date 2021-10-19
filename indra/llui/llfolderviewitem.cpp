@@ -2110,7 +2110,7 @@ LLFolderViewItem* LLFolderViewFolder::getNextFromChild( LLFolderViewItem* item, 
 	{
 		// you should never call this method with an item that isn't a child
 		// so we should always find something
-		llassert(FALSE);
+		llassert(false);
 		return NULL;
 	}
 
@@ -2208,7 +2208,7 @@ LLFolderViewItem* LLFolderViewFolder::getPreviousFromChild( LLFolderViewItem* it
 	{
 		// you should never call this method with an item that isn't a child
 		// so we should always find something
-		llassert(FALSE);
+		llassert(false);
 		return NULL;
 	}
 

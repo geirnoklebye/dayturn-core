@@ -133,7 +133,7 @@ public:
 	virtual LLSD	getValue() const;
 
 	void			setTextEntry(const LLStringExplicit& text);
-	void			setKeystrokeOnEsc(BOOL enable);
+	void			setKeystrokeOnEsc(bool enable);
 
 	LLScrollListItem*	add(const std::string& name, EAddPosition pos = ADD_BOTTOM, BOOL enabled = TRUE);	// add item "name" to menu
 	LLScrollListItem*	add(const std::string& name, const LLUUID& id, EAddPosition pos = ADD_BOTTOM, BOOL enabled = TRUE);
@@ -165,7 +165,7 @@ public:
 	BOOL			setCurrentByIndex( S32 index );
 	S32				getCurrentIndex() const;
 
-	void			setEnabledByValue(const LLSD& value, BOOL enabled);
+	void			setEnabledByValue(const LLSD& value, bool enabled);
 
 	void			createLineEditor(const Params&);
 

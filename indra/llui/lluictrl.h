@@ -235,18 +235,18 @@ public:
 	void				setTransparencyType(ETypeTransparency type);
 	ETypeTransparency	getTransparencyType() const {return mTransparencyType;}
 
-	BOOL	focusNextItem(BOOL text_entry_only);
-	BOOL	focusPrevItem(BOOL text_entry_only);
+	bool	focusNextItem(bool text_entry_only);
+	bool	focusPrevItem(bool text_entry_only);
 
 	// ## Zi: Made this virtual to be able to override it, so we can fix the IM focus issue
-	virtual BOOL 	focusFirstItem(BOOL prefer_text_fields = FALSE, BOOL focus_flash = TRUE );
+	virtual bool 	focusFirstItem(bool prefer_text_fields = false, bool focus_flash = true );
 
 	// Non Virtuals
 	LLHandle<LLUICtrl> getHandle() const { return getDerivedHandle<LLUICtrl>(); }
 	bool			getIsChrome() const;
 	
-	void			setTabStop( BOOL b );
-	BOOL			hasTabStop() const;
+	void			setTabStop( bool b );
+	bool			hasTabStop() const;
 
 	LLUICtrl*		getParentUICtrl() const;
 
@@ -338,9 +338,9 @@ protected:
 private:
 
 	bool			mIsChrome;
-	BOOL			mRequestsFront;
-	BOOL			mTabStop;
-	BOOL			mTentative;
+	bool			mRequestsFront;
+	bool			mTabStop;
+	bool			mTentative;
 
 	ETypeTransparency mTransparencyType;
 

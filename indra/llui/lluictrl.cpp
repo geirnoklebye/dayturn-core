@@ -102,8 +102,8 @@ LLUICtrl::LLUICtrl(const LLUICtrl::Params& p, const LLViewModelPtr& viewmodel)
 :	LLView(p),
 	mIsChrome(false),
 	mRequestsFront(p.requests_front),
-	mTabStop(FALSE),
-	mTentative(FALSE),
+	mTabStop(false),
+	mTentative(false),
     mViewModel(viewmodel),
 	mControlVariable(NULL),
 	mEnabledControlVariable(NULL),
@@ -741,13 +741,13 @@ void LLUICtrl::setFocus(bool b)
 }
 
 // virtual
-void LLUICtrl::setTabStop( BOOL b )	
+void LLUICtrl::setTabStop( bool b )	
 { 
 	mTabStop = b;
 }
 
 // virtual
-BOOL LLUICtrl::hasTabStop() const		
+bool LLUICtrl::hasTabStop() const		
 { 
 	return mTabStop;
 }
@@ -811,7 +811,7 @@ bool LLUICtrl::getIsChrome() const
 }
 
 
-BOOL LLUICtrl::focusFirstItem(BOOL prefer_text_fields, BOOL focus_flash)
+bool LLUICtrl::focusFirstItem(bool prefer_text_fields, bool focus_flash)
 {
     LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
 	// try to select default tab group child
@@ -829,7 +829,7 @@ BOOL LLUICtrl::focusFirstItem(BOOL prefer_text_fields, BOOL focus_flash)
 				gFocusMgr.triggerFocusFlash();
 			}
 		}
-		return TRUE;
+		return true;
 	}	
 	// search for text field first
 	if(prefer_text_fields)
@@ -849,7 +849,7 @@ BOOL LLUICtrl::focusFirstItem(BOOL prefer_text_fields, BOOL focus_flash)
 					gFocusMgr.triggerFocusFlash();
 				}
 			}
-			return TRUE;
+			return true;
 		}
 	}
 	// no text field found, or we don't care about text fields
@@ -866,13 +866,13 @@ BOOL LLUICtrl::focusFirstItem(BOOL prefer_text_fields, BOOL focus_flash)
 				gFocusMgr.triggerFocusFlash();
 			}
 		}
-		return TRUE;
+		return true;
 	}	
-	return FALSE;
+	return false;
 }
 
 
-BOOL LLUICtrl::focusNextItem(BOOL text_fields_only)
+bool LLUICtrl::focusNextItem(bool text_fields_only)
 {
 	// this assumes that this method is called on the focus root.
 	LLViewQuery query = getTabOrderQuery();
@@ -885,7 +885,7 @@ BOOL LLUICtrl::focusNextItem(BOOL text_fields_only)
 	return focusNext(result);
 }
 
-BOOL LLUICtrl::focusPrevItem(BOOL text_fields_only)
+bool LLUICtrl::focusPrevItem(bool text_fields_only)
 {
 	// this assumes that this method is called on the focus root.
 	LLViewQuery query = getTabOrderQuery();

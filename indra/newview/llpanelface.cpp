@@ -1065,7 +1065,7 @@ void LLPanelFace::updateUI(bool force_set_values /*false*/)
 					getChildView("maskcutoff")->setEnabled(editable && mIsAlpha);
 					getChildView("label maskcutoff")->setEnabled(editable && mIsAlpha);
 
-					texture_ctrl->setBakeTextureEnabled(TRUE);
+					texture_ctrl->setBakeTextureEnabled(true);
 				}
 				else if (id.isNull())
 					{
@@ -1091,7 +1091,7 @@ void LLPanelFace::updateUI(bool force_set_values /*false*/)
 					getChildView("maskcutoff")->setEnabled(editable && mIsAlpha);
 					getChildView("label maskcutoff")->setEnabled(editable && mIsAlpha);
 					
-					texture_ctrl->setBakeTextureEnabled(TRUE);
+					texture_ctrl->setBakeTextureEnabled(true);
 				}
 				
 			}

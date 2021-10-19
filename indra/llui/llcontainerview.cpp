@@ -91,7 +91,7 @@ BOOL LLContainerView::handleMouseDown(S32 x, S32 y, MASK mask)
 		if( mShowLabel && (y >= getRect().getHeight() - 10) )
 		{
 			setDisplayChildren(!mDisplayChildren);
-			reshape(getRect().getWidth(), getRect().getHeight(), FALSE);
+			reshape(getRect().getWidth(), getRect().getHeight(), false);
 			handled = TRUE;
 		}
 	}
@@ -242,7 +242,7 @@ void LLContainerView::arrange(S32 width, S32 height, BOOL called_from_parent)
 	{
 		if (getParent())
 		{
-			getParent()->reshape(getParent()->getRect().getWidth(), getParent()->getRect().getHeight(), FALSE);
+			getParent()->reshape(getParent()->getRect().getWidth(), getParent()->getRect().getHeight(), false);
 		}
 	}
 

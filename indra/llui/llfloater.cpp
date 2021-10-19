@@ -2675,7 +2675,7 @@ void LLFloaterView::getMinimizePosition(S32 *left, S32 *bottom)
 		row -= floater_header_size ) //loop rows
 		{
 
-			bool foundGap = TRUE;
+			bool foundGap = true;
 			for(child_list_const_iter_t child_it = getChildList()->begin();
 				child_it != getChildList()->end();
 				++child_it) //loop floaters
@@ -2692,7 +2692,7 @@ void LLFloaterView::getMinimizePosition(S32 *left, S32 *bottom)
 					{
 						// needs the check for off grid. can't drag,
 						// but window resize makes them off
-						foundGap = FALSE;
+						foundGap = false;
 						break;
 					}
 				}
@@ -3292,7 +3292,7 @@ bool LLFloater::initFloaterXML(LLXMLNodePtr node, LLView *parent, const std::str
 			setupParamsForExport(output_params, parent);
 			output_node->setName(node->getName()->mString);
 			parser.writeXUI(output_node, output_params, LLInitParam::default_parse_rules(), &default_params);
-			return TRUE;
+			return true;
 		}
 
 		LLUICtrlFactory::instance().pushFileName(xml_filename);
@@ -3301,7 +3301,7 @@ bool LLFloater::initFloaterXML(LLXMLNodePtr node, LLView *parent, const std::str
 		{
 			LL_WARNS() << "Couldn't parse panel from: " << xml_filename << LL_ENDL;
 
-			return FALSE;
+			return false;
 		}
 
 		Params referenced_params;
@@ -3371,7 +3371,7 @@ bool LLFloater::initFloaterXML(LLXMLNodePtr node, LLView *parent, const std::str
 		setRect(rect);
 	}
 
-	BOOL result;
+	bool result;
 	result = postBuild();
 	
 	if (!result)
