@@ -281,12 +281,12 @@ void LLPanelPermissions::disableAll()
 		combo_click_action->setEnabled(false);
 		combo_click_action->clear();
 	}
-	getChildView("B:")->setVisible(								FALSE);
-	getChildView("O:")->setVisible(								FALSE);
-	getChildView("G:")->setVisible(								FALSE);
-	getChildView("E:")->setVisible(								FALSE);
-	getChildView("N:")->setVisible(								FALSE);
-	getChildView("F:")->setVisible(								FALSE);
+	getChildView("B:")->setVisible(false);
+	getChildView("O:")->setVisible(false);
+	getChildView("G:")->setVisible(false);
+	getChildView("E:")->setVisible(false);
+	getChildView("N:")->setVisible(false);
+	getChildView("F:")->setVisible(false);
 }
 
 void LLPanelPermissions::refresh()
@@ -295,7 +295,7 @@ void LLPanelPermissions::refresh()
 	if(BtnDeedToGroup)
 	{	
 		std::string deedText;
-		if (gWarningSettings.getBOOL("DeedObject"))
+		if (gWarningSettings.getbool("DeedObject"))
 		{
 			deedText = getString("text deed continued");
 		}
@@ -306,14 +306,14 @@ void LLPanelPermissions::refresh()
 		BtnDeedToGroup->setLabelSelected(deedText);
 		BtnDeedToGroup->setLabelUnselected(deedText);
 	}
-	BOOL root_selected = TRUE;
+	bool root_selected = true;
 	LLSelectNode* nodep = LLSelectMgr::getInstance()->getSelection()->getFirstRootNode();
 	S32 object_count = LLSelectMgr::getInstance()->getSelection()->getRootObjectCount();
 	if(!nodep || 0 == object_count)
 	{
 		nodep = LLSelectMgr::getInstance()->getSelection()->getFirstNode();
 		object_count = LLSelectMgr::getInstance()->getSelection()->getObjectCount();
-		root_selected = FALSE;
+		root_selected = false;
 	}
 
 	//BOOL attachment_selected = LLSelectMgr::getInstance()->getSelection()->isAttachment();
@@ -430,7 +430,7 @@ void LLPanelPermissions::refresh()
 	getChildView("Owner:")->setEnabled(true);
 
 	std::string owner_app_link;
-	const BOOL owners_identical = LLSelectMgr::getInstance()->selectGetOwner(mOwnerID, owner_app_link);
+	const bool owners_identical = LLSelectMgr::getInstance()->selectGetOwner(mOwnerID, owner_app_link);
 
 
 	if (LLSelectMgr::getInstance()->selectIsGroupOwned())
@@ -495,12 +495,12 @@ void LLPanelPermissions::refresh()
 	getChildView("Group:")->setEnabled(true);
 	getChild<LLUICtrl>("Group Name")->setValue(LLStringUtil::null);
 	LLUUID group_id;
-	BOOL groups_identical = LLSelectMgr::getInstance()->selectGetGroup(group_id);
+	bool groups_identical = LLSelectMgr::getInstance()->selectGetGroup(group_id);
 	if (groups_identical)
 	{
 		if (mLabelGroupName)
 		{
-			mLabelGroupName->setNameID(group_id,TRUE);
+			mLabelGroupName->setNameID(group_id,true);
 			mLabelGroupName->setEnabled(true);
 		}
 	}
@@ -508,7 +508,7 @@ void LLPanelPermissions::refresh()
 	{
 		if (mLabelGroupName)
 		{
-			mLabelGroupName->setNameID(LLUUID::null, TRUE);
+			mLabelGroupName->setNameID(LLUUID::null, true);
 			mLabelGroupName->refresh(LLUUID::null, std::string(), true);
 			mLabelGroupName->setEnabled(false);
 		}
@@ -538,7 +538,7 @@ void LLPanelPermissions::refresh()
 	}
 	else
 	{
-// FIRE-777: allow batch edit for name and description
+// FIRE-777:Â allow batch edit for name and description
 //		getChild<LLUICtrl>("Object Name")->setValue(LLStringUtil::null);
 //		LineEditorObjectDesc->setText(LLStringUtil::null);
 		if (keyboard_focus_view != LineEditorObjectName)
@@ -557,13 +557,13 @@ void LLPanelPermissions::refresh()
 	}
 
 	// figure out the contents of the name, description, & category
-	BOOL edit_name_desc = FALSE;
-// FIRE-777: allow batch edit for name and description
+	bool edit_name_desc = false;
+// FIRE-777:Â allow batch edit for name and description
 //	if (is_one_object && objectp->permModify() && !objectp->isPermanentEnforced())
 	if (objectp->permModify())
 // /FIRE-777
 	{
-		edit_name_desc = TRUE;
+		edit_name_desc = true;
 	}
 	if (edit_name_desc)
 	{
@@ -587,11 +587,11 @@ void LLPanelPermissions::refresh()
 														   total_sale_price,
 														   individual_sale_price);
 
-	const BOOL self_owned = (gAgent.getID() == mOwnerID);
-	const BOOL group_owned = LLSelectMgr::getInstance()->selectIsGroupOwned() ;
-	const BOOL public_owned = (mOwnerID.isNull() && !LLSelectMgr::getInstance()->selectIsGroupOwned());
-	const BOOL can_transfer = LLSelectMgr::getInstance()->selectGetRootsTransfer();
-	const BOOL can_copy = LLSelectMgr::getInstance()->selectGetRootsCopy();
+	const bool self_owned = (gAgent.getID() == mOwnerID);
+	const bool group_owned = LLSelectMgr::getInstance()->selectIsGroupOwned() ;
+	const bool public_owned = (mOwnerID.isNull() && !LLSelectMgr::getInstance()->selectIsGroupOwned());
+	const bool can_transfer = LLSelectMgr::getInstance()->selectGetRootsTransfer();
+	const bool can_copy = LLSelectMgr::getInstance()->selectGetRootsCopy();
 
 	if (!owners_identical)
 	{
@@ -632,7 +632,7 @@ void LLPanelPermissions::refresh()
 		}
 		// The edit fields are only enabled if you can sell this object
 		// and the sale price is not mixed.
-		BOOL enable_edit = (num_for_sale && can_transfer) ? !is_for_sale_mixed : FALSE;
+		bool enable_edit = (num_for_sale && can_transfer) ? !is_for_sale_mixed : false;
 		getChildView("Cost")->setEnabled(enable_edit);
 		getChildView("Edit Cost")->setEnabled(enable_edit);
 	}
@@ -699,7 +699,7 @@ void LLPanelPermissions::refresh()
 																			&next_owner_mask_off);
 
 
-	if (gSavedSettings.getBOOL("DebugPermissions") )
+	if (gSavedSettings.getbool("DebugPermissions") )
 	{
 		if (valid_base_perms)
 		{
@@ -752,30 +752,30 @@ void LLPanelPermissions::refresh()
 		//if (objectp->permExport())		flag_mask |= PERM_EXPORT;	// <FS:CR> OpenSim export permissions
 
 		getChild<LLUICtrl>("F:")->setValue("F:" + mask_to_string(flag_mask));
-		getChildView("F:")->setVisible(								TRUE);
+		getChildView("F:")->setVisible(true);
 	}
 	else
 	{
-		getChildView("B:")->setVisible(								FALSE);
-		getChildView("O:")->setVisible(								FALSE);
-		getChildView("G:")->setVisible(								FALSE);
-		getChildView("E:")->setVisible(								FALSE);
-		getChildView("N:")->setVisible(								FALSE);
-		getChildView("F:")->setVisible(								FALSE);
+		getChildView("B:")->setVisible(false);
+		getChildView("O:")->setVisible(false);
+		getChildView("G:")->setVisible(false);
+		getChildView("E:")->setVisible(false);
+		getChildView("N:")->setVisible(false);
+		getChildView("F:")->setVisible(false);
 	}
 
-	BOOL has_change_perm_ability = FALSE;
-	BOOL has_change_sale_ability = FALSE;
+	bool has_change_perm_ability = false;
+	bool has_change_sale_ability = false;
 
 	if (valid_base_perms && is_nonpermanent_enforced &&
 		(self_owned || (group_owned && gAgent.hasPowerInGroup(group_id, GP_OBJECT_MANIPULATE))))
 	{
-		has_change_perm_ability = TRUE;
+		has_change_perm_ability = true;
 	}
 	if (valid_base_perms && is_nonpermanent_enforced &&
 	   (self_owned || (group_owned && gAgent.hasPowerInGroup(group_id, GP_OBJECT_SET_SALE))))
 	{
-		has_change_sale_ability = TRUE;
+		has_change_sale_ability = true;
 	}
 
 	if (!has_change_perm_ability && !has_change_sale_ability && !root_selected)
@@ -955,7 +955,7 @@ void LLPanelPermissions::refresh()
 
 	// reflect sale information
 	LLSaleInfo sale_info;
-	BOOL valid_sale_info = LLSelectMgr::getInstance()->selectGetSaleInfo(sale_info);
+	bool valid_sale_info = LLSelectMgr::getInstance()->selectGetSaleInfo(sale_info);
 	LLSaleInfo::EForSale sale_type = sale_info.getSaleType();
 
 	LLComboBox* combo_sale_type = getChild<LLComboBox>("sale type");
@@ -986,9 +986,9 @@ void LLPanelPermissions::refresh()
 	}
 	
 	// Check search status of objects
-	const BOOL all_volume = LLSelectMgr::getInstance()->selectionAllPCode( LL_PCODE_VOLUME );
+	const bool all_volume = LLSelectMgr::getInstance()->selectionAllPCode( LL_PCODE_VOLUME );
 	bool include_in_search;
-	const BOOL all_include_in_search = LLSelectMgr::getInstance()->selectionGetIncludeInSearch(&include_in_search);
+	const bool all_include_in_search = LLSelectMgr::getInstance()->selectionGetIncludeInSearch(&include_in_search);
 	getChildView("search_check")->setEnabled(has_change_sale_ability && all_volume);
 	getChild<LLUICtrl>("search_check")->setValue(include_in_search);
 	getChild<LLUICtrl>("search_check")->setTentative(!all_include_in_search);
@@ -1086,7 +1086,7 @@ void LLPanelPermissions::onClickGroup()
 {
 	LLUUID owner_id;
 	std::string name;
-	BOOL owners_identical = LLSelectMgr::getInstance()->selectGetOwner(owner_id, name);
+	bool owners_identical = LLSelectMgr::getInstance()->selectGetOwner(owner_id, name);
 	LLFloater* parent_floater = gFloaterView->getParentFloater(this);
 
 	if(owners_identical && (owner_id == gAgent.getID()))
@@ -1110,7 +1110,7 @@ void LLPanelPermissions::cbGroupID(LLUUID group_id)
 {
 	if(mLabelGroupName)
 	{
-		mLabelGroupName->setNameID(group_id, TRUE);
+		mLabelGroupName->setNameID(group_id, true);
 	}
 	LLSelectMgr::getInstance()->sendGroup(group_id);
 }
@@ -1298,10 +1298,10 @@ void LLPanelPermissions::setAllSaleInfo()
 	LLSelectMgr::getInstance()->selectionSetObjectSaleInfo(new_sale_info);
 
     // Note: won't work right if a root and non-root are both single-selected (here and other places).
-    BOOL is_perm_modify = (LLSelectMgr::getInstance()->getSelection()->getFirstRootNode()
+    bool is_perm_modify = (LLSelectMgr::getInstance()->getSelection()->getFirstRootNode()
                            && LLSelectMgr::getInstance()->selectGetRootsModify())
                           || LLSelectMgr::getInstance()->selectGetModify();
-    BOOL is_nonpermanent_enforced = (LLSelectMgr::getInstance()->getSelection()->getFirstRootNode()
+    bool is_nonpermanent_enforced = (LLSelectMgr::getInstance()->getSelection()->getFirstRootNode()
                                      && LLSelectMgr::getInstance()->selectGetRootsNonPermanentEnforced())
                                     || LLSelectMgr::getInstance()->selectGetNonPermanentEnforced();
 
