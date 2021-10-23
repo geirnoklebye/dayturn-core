@@ -3738,7 +3738,9 @@ void LLViewerMediaTexture::addFace(U32 ch, LLFace* facep)
 	
 	if(te && te->getID().notNull()) //should have a texture
 	{
-		LL_ERRS() << "The face does not have a valid texture before media texture." << LL_ENDL;
+		//KKA-900 reduce this to a LL_WARNS (to avoid some probably @camtexture-related misbehaviour)
+		LL_WARNS() << "The face does not have a valid texture before media texture." << LL_ENDL;
+		//LL_ERRS() << "The face does not have a valid texture before media texture." << LL_ENDL;
 	}
 }
 
@@ -3822,7 +3824,9 @@ void LLViewerMediaTexture::removeFace(U32 ch, LLFace* facep)
 
 	if(te && te->getID().notNull()) //should have a texture but none found
 	{
-		LL_ERRS() << "mTextureList texture reference number is corrupted. Texture id: " << te->getID() << " List size: " << (U32)mTextureList.size() << LL_ENDL;
+		//KKA-900 reduce this to a LL_WARNS (to avoid some probably @camtexture-related misbehaviour)
+		LL_WARNS() << "mTextureList texture reference number is corrupted. Texture id: " << te->getID() << " List size: " << (U32)mTextureList.size() << LL_ENDL;
+		//LL_ERRS() << "mTextureList texture reference number is corrupted. Texture id: " << te->getID() << " List size: " << (U32)mTextureList.size() << LL_ENDL;
 	}
 }
 
