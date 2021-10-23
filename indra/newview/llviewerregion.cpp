@@ -2584,7 +2584,10 @@ LLVOCacheEntry* LLViewerRegion::getCacheEntry(U32 local_id, bool valid)
 	LLVOCacheEntry::vocache_entry_map_t::iterator iter = mImpl->mCacheMap.find(local_id);
 	if(iter != mImpl->mCacheMap.end())
 	{
-		if(!valid || iter->second->isValid())
+		// KKA-899 Bugsplat crashes 85, 86, 145. Crash occurs when turning on render friends only soon after
+		// a teleport (ie before cleanup for the previous region has taken place). The only scenario I can see
+		// is this happening during cleanup by another thread and iter->second is NULL
+		if(!valid || (iter->second && iter->second->isValid()))
 		{
 			return iter->second;
 		}
