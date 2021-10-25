@@ -1451,6 +1451,15 @@ void LLFloaterIMSession::sRemoveTypingIndicator(const LLSD& data)
 		return;
 
 	floater->removeTypingIndicator();
+
+	//KKA-779 Add a FS-style "is typing" indication in Conversations floater
+	//KKA-903 Clear the indicator here too
+	LLFloaterIMContainer* im_box = LLFloaterIMContainer::findInstance();
+	if (im_box)
+	{
+		LL_INFOS() << "Clearing typing status" << LL_ENDL;
+		im_box->setConversationItemWidgetIsTyping(session_id, FALSE);
+	}
 }
 
 // static
