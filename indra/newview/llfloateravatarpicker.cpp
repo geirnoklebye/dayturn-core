@@ -61,9 +61,9 @@ static const U32 AVATAR_PICKER_SEARCH_TIMEOUT = 180U;
 static std::map<LLUUID, LLAvatarName> sAvatarNameMap;
 
 LLFloaterAvatarPicker* LLFloaterAvatarPicker::show(select_callback_t callback,
-												   BOOL allow_multiple,
-												   BOOL closeOnSelect,
-												   BOOL skip_agent,
+												   bool allow_multiple,
+												   bool closeOnSelect,
+												   bool skip_agent,
                                                    const std::string& name,
                                                    LLView * frustumOrigin)
 {
@@ -78,7 +78,7 @@ LLFloaterAvatarPicker* LLFloaterAvatarPicker::show(select_callback_t callback,
 	
 	floater->mSelectionCallback = callback;
 	floater->setAllowMultiple(allow_multiple);
-	floater->mNearMeListComplete = FALSE;
+	floater->mNearMeListComplete = false;
 	floater->mCloseOnSelect = closeOnSelect;
 	floater->mExcludeAgentFromSearchResults = skip_agent;
 	
@@ -103,7 +103,7 @@ LLFloaterAvatarPicker* LLFloaterAvatarPicker::show(select_callback_t callback,
 LLFloaterAvatarPicker::LLFloaterAvatarPicker(const LLSD& key)
   : LLFloater(key),
 	mNumResultsReturned(0),
-	mNearMeListComplete(FALSE),
+	mNearMeListComplete(false),
 	mCloseOnSelect(false),
     mContextConeOpacity	(0.f),
     mContextConeInAlpha(0.f),
@@ -265,7 +265,7 @@ void LLFloaterAvatarPicker::onBtnRefresh()
 {
 	getChild<LLScrollListCtrl>("NearMe")->deleteAllItems();
 	getChild<LLScrollListCtrl>("NearMe")->setCommentText(getString("searching"));
-	mNearMeListComplete = FALSE;
+	mNearMeListComplete = false;
 }
 
 void LLFloaterAvatarPicker::onBtnClose()
@@ -285,8 +285,8 @@ void LLFloaterAvatarPicker::onList()
 
 void LLFloaterAvatarPicker::populateNearMe()
 {
-	BOOL all_loaded = TRUE;
-	BOOL empty = TRUE;
+	bool all_loaded = true;
+	bool empty = true;
 	LLScrollListCtrl* near_me_scroller = getChild<LLScrollListCtrl>("NearMe");
 	near_me_scroller->deleteAllItems();
 
@@ -304,7 +304,7 @@ void LLFloaterAvatarPicker::populateNearMe()
 		{
 			element["columns"][0]["column"] = "name";
 			element["columns"][0]["value"] = LLCacheName::getDefaultName();
-			all_loaded = FALSE;
+			all_loaded = false;
 		}			
 		else
 		{
@@ -316,7 +316,7 @@ void LLFloaterAvatarPicker::populateNearMe()
 			sAvatarNameMap[av] = av_name;
 		}
 		near_me_scroller->addElement(element);
-		empty = FALSE;
+		empty = false;
 	}
 
 	if (empty)
@@ -336,7 +336,7 @@ void LLFloaterAvatarPicker::populateNearMe()
 
 	if (all_loaded)
 	{
-		mNearMeListComplete = TRUE;
+		mNearMeListComplete = true;
 	}
 }
 
@@ -509,7 +509,7 @@ void LLFloaterAvatarPicker::find()
 	mNumResultsReturned = 0;
 }
 
-void LLFloaterAvatarPicker::setAllowMultiple(BOOL allow_multiple)
+void LLFloaterAvatarPicker::setAllowMultiple(bool allow_multiple)
 {
 	getChild<LLScrollListCtrl>("SearchResults")->setAllowMultipleSelection(allow_multiple);
 	getChild<LLScrollListCtrl>("NearMe")->setAllowMultipleSelection(allow_multiple);

@@ -53,7 +53,7 @@ protected:
 	virtual void		onCommit();
 
 protected:
-	BOOL        mIsAudio;
+	bool        mIsAudio;
 	bool		mIsText;
 
 	std::string		mFilenameAndPath;

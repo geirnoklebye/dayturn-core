@@ -81,7 +81,7 @@ public:
 	void     		onCommitSculpt(const LLSD& data);
 	void     		onCancelSculpt(const LLSD& data);
 	void     		onSelectSculpt(const LLSD& data);
-	BOOL     		onDropSculpt(LLInventoryItem* item);
+	bool     		onDropSculpt(LLInventoryItem* item);
 	static void     onCommitSculptType(    LLUICtrl *ctrl, void* userdata);
 
     void            menuDoToSelected(const LLSD& userdata);
@@ -90,9 +90,9 @@ public:
 protected:
 	void			getState();
 
-	void			sendRotation(BOOL btn_down);
-	void			sendScale(BOOL btn_down);
-	void			sendPosition(BOOL btn_down);
+	void			sendRotation(bool btn_down);
+	void			sendScale(bool btn_down);
+	void			sendPosition(bool btn_down);
 	void			sendIsPhysical();
 	void			sendIsTemporary();
 	void			sendIsPhantom();

@@ -1041,7 +1041,7 @@ void LLFloaterIMContainer::onCustomAction(const LLSD& userdata)
 	}
 }
 
-BOOL LLFloaterIMContainer::isActionChecked(const LLSD& userdata)
+bool LLFloaterIMContainer::isActionChecked(const LLSD& userdata)
 {
 	LLConversationSort order = mConversationViewModel.getSorter();
 	std::string command = userdata.asString();
@@ -1077,7 +1077,7 @@ BOOL LLFloaterIMContainer::isActionChecked(const LLSD& userdata)
 	{
 		return gSavedSettings.getBOOL("TranslateChat");
 	}
-	return FALSE;
+	return false;
 }
 
 void LLFloaterIMContainer::setSortOrderSessions(const LLConversationFilter::ESortOrderType order)

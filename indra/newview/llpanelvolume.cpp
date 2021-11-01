@@ -275,7 +275,7 @@ void LLPanelVolume::getState( )
 	LLSelectMgr::getInstance()->selectGetOwner(owner_id, owner_name);
 
 	// BUG? Check for all objects being editable?
-	BOOL editable = root_objectp->permModify() && !root_objectp->isPermanentEnforced();
+	bool editable = root_objectp->permModify() && !root_objectp->isPermanentEnforced();
 	bool single_volume = LLSelectMgr::getInstance()->selectionAllPCode( LL_PCODE_VOLUME )
 		&& LLSelectMgr::getInstance()->getSelection()->getObjectCount() == 1;
     bool single_root_volume = LLSelectMgr::getInstance()->selectionAllPCode( LL_PCODE_VOLUME ) && 
@@ -417,7 +417,7 @@ void LLPanelVolume::getState( )
 	}
 
 	// Flexible properties
-	BOOL is_flexible = volobjp && volobjp->isFlexible();
+	bool is_flexible = volobjp && volobjp->isFlexible();
 	getChild<LLUICtrl>("Flexible1D Checkbox Ctrl")->setValue(is_flexible);
 	if (is_flexible || (volobjp && volobjp->canBeFlexible()))
 	{

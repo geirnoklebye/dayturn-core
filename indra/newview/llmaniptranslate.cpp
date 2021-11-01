@@ -123,7 +123,7 @@ LLManipTranslate::LLManipTranslate( LLToolComposite* composite )
 	mUpdateTimer(),
 	mSnapOffsetMeters(0.f),
 	mSubdivisions(10.f),
-	mInSnapRegime(FALSE),
+	mInSnapRegime(false),
 	mArrowScales(1.f, 1.f, 1.f),
 	mPlaneScales(1.f, 1.f, 1.f),
 	mPlaneManipPositions(1.f, 1.f, 1.f, 1.f)
@@ -1039,7 +1039,7 @@ BOOL LLManipTranslate::handleMouseUp(S32 x, S32 y, MASK mask)
 		// Might have missed last update due to UPDATE_DELAY timing.
 		LLSelectMgr::getInstance()->sendMultipleUpdate( UPD_POSITION );
 		
-		mInSnapRegime = FALSE;
+		mInSnapRegime = false;
 		LLSelectMgr::getInstance()->saveSelectedObjectTransform(SELECT_ACTION_TYPE_PICK);
 		//gAgent.setObjectTracking(gSavedSettings.getBOOL("TrackFocusObject"));
 	}

@@ -96,7 +96,7 @@ LLManipRotate::LLManipRotate( LLToolComposite* composite )
 	mCenterToProfilePlane(),
 	mCenterToProfilePlaneMag(0.f),
 	mSendUpdateOnMouseUp( FALSE ),
-	mSmoothRotate( FALSE ),
+	mSmoothRotate(false),
 	mCamEdgeOn(FALSE),
 	mManipulatorScales(1.f, 1.f, 1.f, 1.f)
 { }
@@ -555,8 +555,8 @@ void LLManipRotate::drag( S32 x, S32 y )
 		mRotation = dragConstrained(x, y);
 	}
 
-	BOOL damped = mSmoothRotate;
-	mSmoothRotate = FALSE;
+	bool damped = mSmoothRotate;
+	mSmoothRotate = false;
 
 	for (LLObjectSelection::iterator iter = mObjectSelection->begin();
 		 iter != mObjectSelection->end(); iter++)
@@ -1533,9 +1533,9 @@ LLQuaternion LLManipRotate::dragConstrained( S32 x, S32 y )
 	
 				if (!mInSnapRegime)
 				{
-					mSmoothRotate = TRUE;
+					mSmoothRotate = true;
 				}
-				mInSnapRegime = TRUE;
+				mInSnapRegime = true;
 				// 0 to 360 deg
 				F32 mouse_angle = fmodf(atan2(projected_mouse * axis1, projected_mouse * axis2) * RAD_TO_DEG + 360.f, 360.f);
 				
@@ -1567,17 +1567,17 @@ LLQuaternion LLManipRotate::dragConstrained( S32 x, S32 y )
 			{
 				if (mInSnapRegime)
 				{
-					mSmoothRotate = TRUE;
+					mSmoothRotate = true;
 				}
-				mInSnapRegime = FALSE;
+				mInSnapRegime = false;
 			}
 		}
 		else {
 			if (mInSnapRegime)
 			{
-				mSmoothRotate = TRUE;
+				mSmoothRotate = true;
 			}
-			mInSnapRegime = FALSE;
+			mInSnapRegime = false;
 		}
 		
 		if (!mInSnapRegime)
@@ -1619,9 +1619,9 @@ LLQuaternion LLManipRotate::dragConstrained( S32 x, S32 y )
 		{
 			if (!mInSnapRegime)
 			{
-				mSmoothRotate = TRUE;
+				mSmoothRotate = true;
 			}
-			mInSnapRegime = TRUE;
+			mInSnapRegime = true;
 			// 0 to 360 deg
 			F32 mouse_angle = fmodf(atan2(projected_mouse * axis1, projected_mouse * axis2) * RAD_TO_DEG + 360.f, 360.f);
 			
@@ -1650,9 +1650,9 @@ LLQuaternion LLManipRotate::dragConstrained( S32 x, S32 y )
 		{
 			if (mInSnapRegime)
 			{
-				mSmoothRotate = TRUE;
+				mSmoothRotate = true;
 			}
-			mInSnapRegime = FALSE;
+			mInSnapRegime = false;
 		}
 
 		LLVector3 cross_product = mMouseDown % mMouseCur;

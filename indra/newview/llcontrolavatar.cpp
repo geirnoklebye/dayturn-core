@@ -597,7 +597,7 @@ void LLControlAvatar::updateAnimations()
         //if (!mRootVolp->isAnySelected())
         {
             updateVolumeGeom();
-            mRootVolp->recursiveMarkForUpdate(TRUE);
+            mRootVolp->recursiveMarkForUpdate(true);
         }
     }
 

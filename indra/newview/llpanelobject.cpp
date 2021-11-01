@@ -364,8 +364,8 @@ void LLPanelObject::getState( )
 
 	LLSelectMgr::getInstance()->selectGetEditMoveLinksetPermissions(enable_move, enable_modify);
 
-	BOOL enable_scale = enable_modify;
-	BOOL enable_rotate = enable_move; // already accounts for a case of children, which needs permModify() as well
+	bool enable_scale = enable_modify;
+	bool enable_rotate = enable_move; // already accounts for a case of children, which needs permModify() as well
 
 	LLVector3 vec;
 	if (enable_move)
@@ -458,12 +458,12 @@ void LLPanelObject::getState( )
 
 	// BUG? Check for all objects being editable?
 	S32 roots_selected = LLSelectMgr::getInstance()->getSelection()->getRootObjectCount();
-	BOOL editable = root_objectp->permModify();
+	bool editable = root_objectp->permModify();
 
-	BOOL is_flexible = volobjp && volobjp->isFlexible();
-	BOOL is_permanent = root_objectp->flagObjectPermanent();
-	BOOL is_permanent_enforced = root_objectp->isPermanentEnforced();
-	BOOL is_character = root_objectp->flagCharacter();
+	bool is_flexible = volobjp && volobjp->isFlexible();
+	bool is_permanent = root_objectp->flagObjectPermanent();
+	bool is_permanent_enforced = root_objectp->isPermanentEnforced();
+	bool is_character = root_objectp->flagCharacter();
 	llassert(!is_permanent || !is_character); // should never have a permanent object that is also a character
 
 	// Lock checkbox - only modifiable if you own the object.
@@ -471,7 +471,7 @@ void LLPanelObject::getState( )
 	mCheckLock->setEnabled( roots_selected > 0 && self_owned && !is_permanent_enforced);
 
 	// More lock and debit checkbox - get the values
-	BOOL valid;
+	bool valid;
 	U32 owner_mask_on;
 	U32 owner_mask_off;
 	valid = LLSelectMgr::getInstance()->selectGetPerm(PERM_OWNER, &owner_mask_on, &owner_mask_off);
@@ -514,7 +514,7 @@ void LLPanelObject::getState( )
 	mCheckTemporary->setEnabled( roots_selected>0 && editable && !is_permanent);
 
 	mIsPhantom = root_objectp->flagPhantom();
-	BOOL is_volume_detect = root_objectp->flagVolumeDetect();
+	bool is_volume_detect = root_objectp->flagVolumeDetect();
 	llassert(!is_character || !mIsPhantom); // should never have a character that is also a phantom
 	mCheckPhantom->set( mIsPhantom );
 	mCheckPhantom->setEnabled( roots_selected>0 && editable && !is_flexible && !is_permanent_enforced && !is_character && !is_volume_detect);
@@ -1563,7 +1563,7 @@ void LLPanelObject::getVolumeParams(LLVolumeParams& volume_params)
 }
 
 // BUG: Make work with multiple objects
-void LLPanelObject::sendRotation(BOOL btn_down)
+void LLPanelObject::sendRotation(bool btn_down)
 {
 	if (mObject.isNull()) return;
 
@@ -1622,7 +1622,7 @@ void LLPanelObject::sendRotation(BOOL btn_down)
 
 
 // BUG: Make work with multiple objects
-void LLPanelObject::sendScale(BOOL btn_down)
+void LLPanelObject::sendScale(bool btn_down)
 {
 	if (mObject.isNull()) return;
 
@@ -1659,7 +1659,7 @@ void LLPanelObject::sendScale(BOOL btn_down)
 }
 
 
-void LLPanelObject::sendPosition(BOOL btn_down)
+void LLPanelObject::sendPosition(bool btn_down)
 {	
 	if (mObject.isNull()) return;
 
@@ -2007,7 +2007,7 @@ void LLPanelObject::onCommitSculpt( const LLSD& data )
 	sendSculpt();
 }
 
-BOOL LLPanelObject::onDropSculpt(LLInventoryItem* item)
+bool LLPanelObject::onDropSculpt(LLInventoryItem* item)
 {
     LLTextureCtrl* mTextureCtrl = getChild<LLTextureCtrl>("sculpt texture control");
 
@@ -2019,7 +2019,7 @@ BOOL LLPanelObject::onDropSculpt(LLInventoryItem* item)
 		mSculptTextureRevert = asset;
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -2217,7 +2217,7 @@ void LLPanelObject::onPastePos()
     mCtrlPosY->set( mClipboardPos.mV[VY] );
     mCtrlPosZ->set( mClipboardPos.mV[VZ] );
 
-    sendPosition(FALSE);
+    sendPosition(false);
 }
 
 void LLPanelObject::onPasteSize()
@@ -2232,7 +2232,7 @@ void LLPanelObject::onPasteSize()
     mCtrlScaleY->set(mClipboardSize.mV[VY]);
     mCtrlScaleZ->set(mClipboardSize.mV[VZ]);
 
-    sendScale(FALSE);
+    sendScale(false);
 }
 
 void LLPanelObject::onPasteRot()
@@ -2243,7 +2243,7 @@ void LLPanelObject::onPasteRot()
     mCtrlRotY->set(mClipboardRot.mV[VY]);
     mCtrlRotZ->set(mClipboardRot.mV[VZ]);
 
-    sendRotation(FALSE);
+    sendRotation(false);
 }
 
 void LLPanelObject::onCopyParams()
