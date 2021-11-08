@@ -57,9 +57,9 @@ LLSpeaker::LLSpeaker(const LLUUID& id, const std::string& name, const ESpeakerTy
 	mTyping(false),
 	mSortIndex(0),
 	mType(type),
-	mIsModerator(FALSE),
-	mModeratorMutedVoice(FALSE),
-	mModeratorMutedText(FALSE)
+	mIsModerator(false),
+	mModeratorMutedVoice(false),
+	mModeratorMutedText(false)
 {
 	if (name.empty() && type == SPEAKER_AGENT)
 	{
@@ -602,7 +602,7 @@ LLPointer<LLSpeaker> LLSpeakerMgr::findSpeaker(const LLUUID& speaker_id)
 	return found_it->second;
 }
 
-void LLSpeakerMgr::getSpeakerList(speaker_list_t* speaker_list, BOOL include_text)
+void LLSpeakerMgr::getSpeakerList(speaker_list_t* speaker_list, bool include_text)
 {
 	speaker_list->clear();
 	for (speaker_map_t::iterator speaker_it = mSpeakers.begin(); speaker_it != mSpeakers.end(); ++speaker_it)
@@ -647,7 +647,7 @@ void LLSpeakerMgr::speakerChatted(const LLUUID& speaker_id)
 	}
 }
 
-BOOL LLSpeakerMgr::isVoiceActive()
+bool LLSpeakerMgr::isVoiceActive()
 {
 	// mVoiceChannel = NULL means current voice channel, whatever it is
 	return LLVoiceClient::getInstance()->voiceEnabled() && mVoiceChannel && mVoiceChannel->isActive();
@@ -692,7 +692,7 @@ void LLIMSpeakerMgr::setSpeakers(const LLSD& speakers)
 
 			if ( speaker_it->second.isMap() )
 			{
-				BOOL is_moderator = speakerp->mIsModerator;
+				bool is_moderator = speakerp->mIsModerator;
 				speakerp->mIsModerator = speaker_it->second["is_moderator"];
 				speakerp->mModeratorMutedText =
 					speaker_it->second["mutes"]["text"];
@@ -767,7 +767,7 @@ void LLIMSpeakerMgr::updateSpeakers(const LLSD& update)
 
 				if (agent_info.has("is_moderator"))
 				{
-					BOOL is_moderator = speakerp->mIsModerator;
+					bool is_moderator = speakerp->mIsModerator;
 					speakerp->mIsModerator = agent_info["is_moderator"];
 					// Fire event only if moderator changed
 					if ( is_moderator != speakerp->mIsModerator )
@@ -838,7 +838,7 @@ void LLIMSpeakerMgr::moderateVoiceParticipant(const LLUUID& avatar_id, bool unmu
 	if (!speakerp) return;
 
 	// *NOTE: mantipov: probably this condition will be incorrect when avatar will be blocked for
-	// text chat via moderation (LLSpeaker::mModeratorMutedText == TRUE)
+	// text chat via moderation (LLSpeaker::mModeratorMutedText == true)
 	bool is_in_voice = speakerp->mStatus <= LLSpeaker::STATUS_VOICE_ACTIVE || speakerp->mStatus == LLSpeaker::STATUS_MUTED;
 
 	// do not send voice moderation changes for avatars not in voice channel

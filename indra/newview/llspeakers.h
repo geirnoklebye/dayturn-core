@@ -77,9 +77,9 @@ public:
 	bool			mTyping;
 	S32				mSortIndex;
 	ESpeakerType	mType;
-	BOOL			mIsModerator;
-	BOOL			mModeratorMutedVoice;
-	BOOL			mModeratorMutedText;
+	bool			mIsModerator;
+	bool			mModeratorMutedVoice;
+	bool			mModeratorMutedText;
 };
 
 class LLSpeakerUpdateSpeakerEvent : public LLOldEvents::LLEvent
@@ -98,7 +98,7 @@ public:
 	/*virtual*/ LLSD getValue();
 private:
 	const LLUUID& mSpeakerID;
-	BOOL mIsModerator;
+	bool mIsModerator;
 };
 
 class LLSpeakerTextModerationEvent : public LLOldEvents::LLEvent
@@ -236,10 +236,10 @@ public:
 					LLSpeaker::ESpeakerStatus status = LLSpeaker::STATUS_TEXT_ONLY, 
 					LLSpeaker::ESpeakerType = LLSpeaker::SPEAKER_AGENT);
 
-	BOOL isVoiceActive();
+	bool isVoiceActive();
 
 	typedef std::vector<LLPointer<LLSpeaker> > speaker_list_t;
-	void getSpeakerList(speaker_list_t* speaker_list, BOOL include_text);
+	void getSpeakerList(speaker_list_t* speaker_list, bool include_text);
 	LLVoiceChannel* getVoiceChannel() { return mVoiceChannel; }
 	const LLUUID getSessionID();
 	bool isSpeakerToBeRemoved(const LLUUID& speaker_id);

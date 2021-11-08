@@ -2567,7 +2567,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 		// Look for the start of typing so we can put "..." in the bubbles.
 		if (CHAT_TYPE_START == chat.mChatType)
 		{
-			LLLocalSpeakerMgr::getInstance()->setSpeakerTyping(from_id, TRUE);
+			LLLocalSpeakerMgr::getInstance()->setSpeakerTyping(from_id, true);
 
 			// Might not have the avatar constructed yet, eg on login.
 			if (chatter && chatter->isAvatar())
@@ -2578,7 +2578,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 		}
 		else if (CHAT_TYPE_STOP == chat.mChatType)
 		{
-			LLLocalSpeakerMgr::getInstance()->setSpeakerTyping(from_id, FALSE);
+			LLLocalSpeakerMgr::getInstance()->setSpeakerTyping(from_id, false);
 
 			// Might not have the avatar constructed yet, eg on login.
 			if (chatter && chatter->isAvatar())
@@ -2658,7 +2658,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 		// We have a real utterance now, so can stop showing "..." and proceed.
 		if (chatter && chatter->isAvatar())
 		{
-			LLLocalSpeakerMgr::getInstance()->setSpeakerTyping(from_id, FALSE);
+			LLLocalSpeakerMgr::getInstance()->setSpeakerTyping(from_id, false);
 			((LLVOAvatar*)chatter)->stopTyping();
 			
 			if (!is_muted && !is_do_not_disturb)
