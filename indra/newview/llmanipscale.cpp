@@ -394,7 +394,7 @@ BOOL LLManipScale::handleMouseUp(S32 x, S32 y, MASK mask)
 		}
 
 		//send texture update
-		LLSelectMgr::getInstance()->adjustTexturesByScale(TRUE, getStretchTextures());
+		LLSelectMgr::getInstance()->adjustTexturesByScale(true, getStretchTextures());
 
 		LLSelectMgr::getInstance()->enableSilhouette(TRUE);
 		mManipPart = LL_NO_PART;
@@ -440,7 +440,7 @@ bool LLManipScale::handleHover(S32 x, S32 y, MASK mask)
 	}
 
 	// Patch up textures, if possible.
-	LLSelectMgr::getInstance()->adjustTexturesByScale(FALSE, getStretchTextures());
+	LLSelectMgr::getInstance()->adjustTexturesByScale(false, getStretchTextures());
 
 	gViewerWindow->setCursor(UI_CURSOR_TOOLSCALE);
 	return true;
