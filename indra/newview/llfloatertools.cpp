@@ -388,8 +388,8 @@ LLFloaterTools::LLFloaterTools(const LLSD& key)
 
 	mLandImpactsObserver(NULL),
 
-	mDirty(TRUE),
-	mHasSelection(TRUE),
+	mDirty(true),
+	mHasSelection(true),
 	mNeedMediaTitle(TRUE)
 {
 	gFloaterTools = this;

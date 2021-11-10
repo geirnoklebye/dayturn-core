@@ -289,9 +289,9 @@ bool	LLPanelObject::postBuild()
 
 LLPanelObject::LLPanelObject()
 :	LLPanel(),
-	mIsPhysical(FALSE),
-	mIsTemporary(FALSE),
-	mIsPhantom(FALSE),
+	mIsPhysical(false),
+	mIsTemporary(false),
+	mIsPhantom(false),
 	mSelectedType(MI_BOX),
 	mSculptTextureRevert(LLUUID::null),
 	mSculptTypeRevert(0),
@@ -1170,7 +1170,7 @@ bool LLPanelObject::precommitValidate( const LLSD& data )
 
 void LLPanelObject::sendIsPhysical()
 {
-	BOOL value = mCheckPhysics->get();
+	bool value = mCheckPhysics->get();
 	if( mIsPhysical != value )
 	{
 		LLSelectMgr::getInstance()->selectionUpdatePhysics(value);
