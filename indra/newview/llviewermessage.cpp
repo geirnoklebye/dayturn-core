@@ -38,6 +38,7 @@
 #include "llfollowcamparams.h"
 #include "llinventorydefines.h"
 #include "lllslconstants.h"
+#include "llmaterialtable.h"
 #include "llregionhandle.h"
 #include "llsd.h"
 #include "llsdserialize.h"
@@ -4221,6 +4222,10 @@ void process_sound_trigger(LLMessageSystem *msg, void **)
 		return;
 	}
 
+	if (LLMaterialTable::basic.isCollisionSound(sound_id) && !gSavedSettings.getBOOL("EnableCollisionSounds"))
+	{
+		return;
+	}
   // NaCl - Sound Explorer
 	gAudiop->triggerSound(sound_id, owner_id, gain, LLAudioEngine::AUDIO_TYPE_SFX, pos_global, object_id);
   // NaC

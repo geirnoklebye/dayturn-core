@@ -62,15 +62,11 @@
 
 const std::string FILTERS_FILENAME("filters.xml");
 
-static LLPanelInjector<LLPanelMainInventory> t_inventory("panel_main_inventory");
+const std::string ALL_ITEMS("All Items");
+const std::string RECENT_ITEMS("Recent Items");
+const std::string WORN_ITEMS("Worn Items");
 
-void on_file_loaded_for_save(BOOL success, 
-							 LLViewerFetchedTexture *src_vi,
-							 LLImageRaw* src, 
-							 LLImageRaw* aux_src, 
-							 S32 discard_level,
-							 BOOL final,
-							 void* userdata);
+static LLPanelInjector<LLPanelMainInventory> t_inventory("panel_main_inventory");
 
 static bool making_lite = false; // KKA-827 This is a short cut for passing state down from the running instance to the one it's launching
 
@@ -161,7 +157,7 @@ BOOL LLPanelMainInventory::postBuild()
 	//panel->getFilter().markDefault();
 
 	// Set up the default inv. panel/filter settings.
-	mActivePanel = getChild<LLInventoryPanel>("All Items");
+	mActivePanel = getChild<LLInventoryPanel>(ALL_ITEMS);
 	if (mActivePanel)
 	{
 		// "All Items" is the previous only view, so it gets the InventorySortOrder
@@ -171,7 +167,7 @@ BOOL LLPanelMainInventory::postBuild()
 		mActivePanel->setSelectCallback(boost::bind(&LLPanelMainInventory::onSelectionChange, this, mActivePanel, _1, _2));
 		mResortActivePanel = true;
 	}
-	LLInventoryPanel* recent_items_panel = getChild<LLInventoryPanel>("Recent Items");
+	LLInventoryPanel* recent_items_panel = getChild<LLInventoryPanel>(RECENT_ITEMS);
 	if (recent_items_panel)
 	{
 		if (mIsLite)
@@ -193,7 +189,7 @@ BOOL LLPanelMainInventory::postBuild()
 		}
 	}
 
-	mWornItemsPanel = getChild<LLInventoryPanel>("Worn Items");
+	mWornItemsPanel = getChild<LLInventoryPanel>(WORN_ITEMS);
 	if (mWornItemsPanel)
 	{
 		if (mIsLite)
@@ -305,7 +301,7 @@ LLPanelMainInventory::~LLPanelMainInventory( void )
 	// for example, LLParamSDParser doesn't know about U64,
 	// so some FilterOps params should be revised.
 	LLSD filterRoot;
-	LLInventoryPanel* all_items_panel = getChild<LLInventoryPanel>("All Items");
+	LLInventoryPanel* all_items_panel = getChild<LLInventoryPanel>(ALL_ITEMS);
 	if (all_items_panel)
 	{
 		LLSD filterState;
@@ -319,7 +315,7 @@ LLPanelMainInventory::~LLPanelMainInventory( void )
 		}
 	}
 
-	LLInventoryPanel* panel = findChild<LLInventoryPanel>("Recent Items");
+	LLInventoryPanel* panel = findChild<LLInventoryPanel>(RECENT_ITEMS);
 	if (panel && !mIsLite)
 	{
 		LLSD filterState;
@@ -350,12 +346,17 @@ LLPanelMainInventory::~LLPanelMainInventory( void )
 
 LLInventoryPanel* LLPanelMainInventory::getAllItemsPanel()
 {
-	return  getChild<LLInventoryPanel>("All Items");
+	return  getChild<LLInventoryPanel>(ALL_ITEMS);
 }
 
 void LLPanelMainInventory::selectAllItemsPanel()
 {
 	mFilterTabs->selectFirstTab();
+}
+
+bool LLPanelMainInventory::isRecentItemsPanelSelected()
+{
+	return (RECENT_ITEMS == getActivePanel()->getName());
 }
 
 void LLPanelMainInventory::startSearch()
@@ -493,7 +494,7 @@ void LLPanelMainInventory::setSortBy(const LLSD& userdata)
 	}
 
 	getActivePanel()->setSortOrder(sort_order_mask);
-    if ("Recent Items" == getActivePanel()->getName())
+    if (isRecentItemsPanelSelected())
     {
         gSavedSettings.setU32("RecentItemsSortOrder", sort_order_mask);
     }
@@ -897,11 +898,11 @@ void LLPanelMainInventory::toggleFindOptions()
 
 void LLPanelMainInventory::setSelectCallback(const LLFolderView::signal_t::slot_type& cb)
 {
-	getChild<LLInventoryPanel>("All Items")->setSelectCallback(cb);
+	getChild<LLInventoryPanel>(ALL_ITEMS)->setSelectCallback(cb);
 	//KKA-827 Avoid creating a dummy if this is a lite window without recent/worn
 	if (findChild<LLInventoryPanel>("Recent Items"))
 	{
-		getChild<LLInventoryPanel>("Recent Items")->setSelectCallback(cb);
+	getChild<LLInventoryPanel>(RECENT_ITEMS)->setSelectCallback(cb);
 	}
 }
 
@@ -1311,11 +1312,11 @@ void LLPanelMainInventory::onAddButtonClick()
 {
 // Gray out the "New Folder" option when the Recent tab is active as new folders will not be displayed
 // unless "Always show folders" is checked in the filter options.
-	bool recent_active = ("Recent Items" == mActivePanel->getName());
+
 	LLMenuGL* menu = (LLMenuGL*)mMenuAddHandle.get();
 	if (menu)
 	{
-		menu->getChild<LLMenuItemGL>("New Folder")->setEnabled(!recent_active);
+		menu->getChild<LLMenuItemGL>("New Folder")->setEnabled(!isRecentItemsPanelSelected());
 
 		setUploadCostIfNeeded();
 

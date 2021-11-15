@@ -83,6 +83,8 @@ public:
 	const LLInventoryPanel* getActivePanel() const { return mActivePanel; }
 	void resetFilters();
 
+	bool isRecentItemsPanelSelected();
+
 	const std::string& getFilterText() const { return mFilterText; }
 	
 	void setSelectCallback(const LLFolderView::signal_t::slot_type& cb);
