@@ -5,7 +5,6 @@ project(media_plugin_cef)
 #include(Boost)
 include(00-Common)
 include(LLCommon)
-include(LLImage)
 include(LLPlugin)
 include(LLMath)
 include(LLRender)
@@ -14,7 +13,6 @@ include(UI)
 include(Linking)
 include(PluginAPI)
 include(MediaPluginBase)
-include(OpenGL)
 
 include(CEFPlugin)
 
@@ -31,7 +29,6 @@ include_directories(
     ${MEDIA_PLUGIN_BASE_INCLUDE_DIRS}
     ${LLCOMMON_INCLUDE_DIRS}
     ${LLMATH_INCLUDE_DIRS}
-    ${LLIMAGE_INCLUDE_DIRS}
     ${LLRENDER_INCLUDE_DIRS}
     ${LLWINDOW_INCLUDE_DIRS}
     ${CEF_INCLUDE_DIR}

@@ -309,7 +309,8 @@ LLFloaterPreference::LLFloaterPreference(const LLSD& key)
 	mGotPersonalInfo(false),
 	mOriginalIMViaEmail(false),
 	mLanguageChanged(false),
-	mAvatarDataInitialized(false)
+	mAvatarDataInitialized(false),
+	mSearchDataDirty(true)
 {
 	LLConversationLog::instance().addObserver(this);
 
@@ -2515,6 +2516,11 @@ void LLFloaterPreference::updateClickActionViews()
 	getChild<LLComboBox>("double_click_action_combo")->setValue(dbl_click_to_teleport ? 2 : (int)dbl_click_to_walk);
 }
 
+void LLFloaterPreference::updateSearchableItems()
+{
+    mSearchDataDirty = true;
+}
+
 void LLFloaterPreference::applyUIColor(LLUICtrl* ctrl, const LLSD& param)
 {
 	LLUIColorTable::instance().setColor(param.asString(), LLColor4(ctrl->getValue()));
@@ -2706,7 +2712,7 @@ BOOL LLPanelPreference::postBuild()
 	}
 
 	//////////////////////PanelSetup ///////////////////
-	if (hasChild("max_bandwidth"), TRUE)
+	if (hasChild("max_bandwidth", TRUE))
 	{
 		mBandWidthUpdater = new LLPanelPreference::Updater(boost::bind(&handleBandwidthChanged, _1), BANDWIDTH_UPDATER_TIMEOUT);
 		gSavedSettings.getControl("ThrottleBandwidthKBPS")->getSignal()->connect(boost::bind(&LLPanelPreference::Updater::update, mBandWidthUpdater, _2));
@@ -3312,10 +3318,19 @@ void LLPanelPreferenceControls::populateControlTable()
         filename = "control_table_contents_columns_basic.xml";
         break;
     default:
-        // Either unknown mode or MODE_SAVED_SETTINGS
-        // It doesn't have UI or actual settings yet
-        LL_INFOS() << "Unimplemented mode" << LL_ENDL;
-        return;
+        {
+            // Either unknown mode or MODE_SAVED_SETTINGS
+            // It doesn't have UI or actual settings yet
+            LL_WARNS() << "Unimplemented mode" << LL_ENDL;
+
+            // Searchable columns were removed, mark searchables for an update
+            LLFloaterPreference* instance = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
+            if (instance)
+            {
+                instance->updateSearchableItems();
+            }
+            return;
+        }
     }
     addControlTableColumns(filename);
 
@@ -3346,8 +3361,15 @@ void LLPanelPreferenceControls::populateControlTable()
     }
     else
     {
-        LL_INFOS() << "Unimplemented mode" << LL_ENDL;
-        return;
+        LL_WARNS() << "Unimplemented mode" << LL_ENDL;
+    }
+
+    // Searchable columns were removed and readded, mark searchables for an update
+    // Note: at the moment tables/lists lack proper llsearchableui support
+    LLFloaterPreference* instance = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
+    if (instance)
+    {
+        instance->updateSearchableItems();
     }
 }
 
@@ -3955,6 +3977,12 @@ void LLFloaterPreference::onUpdateFilterTerm(bool force)
 	if( !mSearchData || (mSearchData->mLastFilter == seachValue && !force))
 		return;
 
+    if (mSearchDataDirty)
+    {
+        // Data exists, but is obsolete, regenerate
+        collectSearchableItems();
+    }
+
 	mSearchData->mLastFilter = seachValue;
 
 	if( !mSearchData->mRootTab )
@@ -4052,6 +4080,7 @@ void LLFloaterPreference::collectSearchableItems()
 
 		collectChildren( this, ll::prefs::PanelDataPtr(), pRootTabcontainer );
 	}
+	mSearchDataDirty = false;
 }
 
 // [SL:KB] - Patch: Viewer-CrashReporting | Checked: 2010-11-16 (Catznip-2.6.0a) | Added: Catznip-2.4.0b

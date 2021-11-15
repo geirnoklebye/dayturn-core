@@ -2098,7 +2098,7 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 			LLWearableType::EType type = getOutfitLayerAsType (option);
 			if (type != LLWearableType::WT_INVALID) {
 				 // clothes only, not skin, eyes, hair or shape
-				if (LLWearableType::getAssetType(type) == LLAssetType::AT_CLOTHING) {
+				if (LLWearableType::getInstance()->getAssetType(type) == LLAssetType::AT_CLOTHING) {
 //					gAgentWearables.removeWearable (type, false, 0); // remove by layer
 					for (int i = MAX_CLOTHING_PER_TYPE - 1; i >= 0; --i) {
 						removeItemFromAvatar (gInventory.getItem(gAgentWearables.getWearableItemID (type, i)));
