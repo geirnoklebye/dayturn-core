@@ -26,12 +26,12 @@
  */
 
 #include "llviewerprecompiledheaders.h"
-#include <regex>
 #include "kokuafloaterbulkrename.h"
 #include "llfloaterperms.h" // for utilities
 #include "llagent.h"
 #include "llchat.h"
 #include "llinventorydefines.h"
+#include "llregex.h"
 #include "llviewerwindow.h"
 #include "llviewerobject.h"
 #include "llviewerobjectlist.h"
@@ -299,10 +299,10 @@ void KokuaFloaterBulkRename::handleInventory(LLViewerObject* viewer_obj, LLInven
 				if (gAgent.allowOperation(PERM_MODIFY, perm, GP_OBJECT_MANIPULATE))
 				{
 					// Do we get a match on the regex?
-					if (std::regex_search(item->getName(), (std::regex)mSearchRegExp))
+					if (ll_regex_search(item->getName(), (boost::regex)mSearchRegExp))
 					{
 						std::string new_name;
-						new_name = std::regex_replace(item->getName(), (std::regex)mSearchRegExp, mReplaceWith);
+						new_name = ll_regex_replace(item->getName(), (boost::regex)mSearchRegExp, mReplaceWith);
 						//LL_INFOS() << "Got a hit on " << item->getName() << " with " << mSearchRegExp << " renamed to " << new_name << LL_ENDL;
 						new_item->rename(new_name);
 						status_text = getString("renaming_text");

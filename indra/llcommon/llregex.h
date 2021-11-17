@@ -86,4 +86,21 @@ bool ll_regex_search(const S& string, const R& regex)
 		return false;
 	}
 }
+
+// added for Kokua bulk rename KKA-782
+template <typename S, typename R, typename P>
+std::string  ll_regex_replace(const S& string, const R& regex, const P& replace)
+{
+	try
+	{
+		return boost::regex_replace(string, regex, replace);
+	}
+	catch (const std::runtime_error& e)
+	{
+		LL_WARNS() << "error replacing with '" << regex.str() << "': "
+			<< e.what() << ":\n'" << string << "'" << LL_ENDL;
+		return "regexfail";
+	}
+}
+
 #endif  // LLREGEX_H
