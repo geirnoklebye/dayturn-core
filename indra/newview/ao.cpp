@@ -298,7 +298,7 @@ bool FloaterAO::postBuild()
 	reloading(true);
 	updateList();
 
-	if (gSavedPerAccountSettings.getBOOL("UseFullAOInterface"))
+	if (gSavedPerAccountSettings.getbool("UseFullAOInterface"))
 	{
 		onClickMore();
 	}
@@ -306,7 +306,7 @@ bool FloaterAO::postBuild()
 	{
 		onClickLess();
 	}
-	mChatCheckBox->setValue(gSavedPerAccountSettings.getBOOL("AOChatNotifications"));
+	mChatCheckBox->setValue(gSavedPerAccountSettings.getbool("AOChatNotifications"));
 
 	return LLDockableFloater::postBuild();
 }
@@ -601,9 +601,9 @@ void FloaterAO::onCheckDefault()
 
 void FloaterAO::onCheckChat()
 {
-	bool value = !(gSavedPerAccountSettings.getBOOL("AOChatNotifications"));
+	bool value = !(gSavedPerAccountSettings.getbool("AOChatNotifications"));
 	mChatCheckBox->setValue(value);
-	gSavedPerAccountSettings.setBOOL("AOChatNotifications",value);
+	gSavedPerAccountSettings.setbool("AOChatNotifications",value);
 }
 
 void FloaterAO::onCheckOverrideSits()
@@ -814,7 +814,7 @@ void FloaterAO::onClickMore()
 	mMainInterfacePanel->setVisible(true);
 	setCanResize(true);
 
-	gSavedPerAccountSettings.setBOOL("UseFullAOInterface", TRUE);
+	gSavedPerAccountSettings.setbool("UseFullAOInterface", true);
 
 	reshape(getRect().getWidth(), fullSize.getHeight());
 }
@@ -833,7 +833,7 @@ void FloaterAO::onClickLess()
 	mMainInterfacePanel->setVisible(false);
 	setCanResize(false);
 
-	gSavedPerAccountSettings.setBOOL("UseFullAOInterface", FALSE);
+	gSavedPerAccountSettings.setbool("UseFullAOInterface", false);
 
 	reshape(getRect().getWidth(), smallSize.getHeight());
 
