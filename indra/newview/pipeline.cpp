@@ -2359,6 +2359,15 @@ void LLPipeline::updateCull(LLCamera& camera, LLCullResult& result, LLPlane* pla
         camera.disableUserClipPlane();
     }
 
+    if (planep != nullptr)
+    {
+        camera.setUserClipPlane(*planep);
+    }
+    else
+    {
+        camera.disableUserClipPlane();
+    }
+
 	grabReferences(result);
 
 	sCull->clear();
