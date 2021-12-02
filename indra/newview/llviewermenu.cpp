@@ -1171,6 +1171,10 @@ U64 info_display_from_string(std::string info_display)
 	{
 		return LLPipeline::RENDER_DEBUG_IMPOSTORS;
 	}
+	else if ("texture size" == info_display)
+	{
+		return LLPipeline::RENDER_DEBUG_TEXTURE_SIZE;
+	}
 	else
 	{
 		LL_WARNS() << "unrecognized feature name '" << info_display << "'" << LL_ENDL;

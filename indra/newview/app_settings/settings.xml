@@ -21374,6 +21374,19 @@
       <key>Value</key>
       <string />
     </map>
+    <!-- <FS_Zi> Add avatar hitbox debug -->
+    <key>DebugRenderHitboxes</key>
+    <map>
+      <key>Comment</key>
+      <string>Renders the avatars' hitboxes (collision areas) which are unaffected by viewer side animations.</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <!-- <FS_Zi> Add avatar hitbox debug -->
     <key>FSRemoveScriptBlockButton</key>
     <map>
       <key>Comment</key>

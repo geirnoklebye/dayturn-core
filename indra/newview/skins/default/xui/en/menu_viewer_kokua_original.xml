@@ -4053,6 +4053,19 @@
          function="Advanced.ToggleInfoDisplay"
          parameter="bboxes" />
         </menu_item_check>
+        <!-- <FS:Zi> Add avatar hitbox debug -->
+        <menu_item_check
+         label="Avatar Hitboxes"
+         name="Avatar Hitboxes">
+        <menu_item_check.on_check
+         function="CheckControl"
+         parameter="DebugRenderHitboxes" />
+        <menu_item_check.on_click
+         function="ToggleControl"
+         parameter="DebugRenderHitboxes" />
+        </menu_item_check>
+        <!-- </FS:Zi> Add avatar hitbox debug -->
+
         <menu_item_check
          label="Normals"
          name="Normals">
@@ -4263,6 +4276,16 @@
            function="Advanced.ToggleInfoDisplay"
            parameter="sculpt" />
 		</menu_item_check>
+    <menu_item_check
+          label="Texture Size"
+          name="Texture Size">
+      <menu_item_check.on_check
+        function="Advanced.CheckInfoDisplay"
+        parameter="texture size" />
+      <menu_item_check.on_click
+        function="Advanced.ToggleInfoDisplay"
+        parameter="texture size" />
+    </menu_item_check>
        <menu
          create_jump_keys="true"
          label="Texture Density"
