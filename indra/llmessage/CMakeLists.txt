@@ -9,7 +9,7 @@ include(LLCommon)
 include(LLCoreHttp)
 include(LLMath)
 include(LLMessage)
-include(LLVFS)
+include(LLFileSystem)
 include(LLAddBuildTest)
 include(Python)
 include(Tut)
@@ -25,7 +25,7 @@ include_directories(
     ${LLMATH_INCLUDE_DIRS}
     ${LLXML_INCLUDE_DIRS} #<FS:Ansariel> For accessing settings
     ${LLMESSAGE_INCLUDE_DIRS}
-    ${LLVFS_INCLUDE_DIRS}
+    ${LLFILESYSTEM_INCLUDE_DIRS}
     ${JSONCPP_INCLUDE_DIR}
     ${LLXML_INCLUDE_DIRS}
     )
@@ -219,7 +219,7 @@ target_link_libraries(
   llmessage
   ${CURL_LIBRARIES}
   ${LLCOMMON_LIBRARIES}
-  ${LLVFS_LIBRARIES}
+  ${LLFILESYSTEM_LIBRARIES}
   ${LLMATH_LIBRARIES}
   ${LLXML_LIBRARIES} #<FS:Ansariel> For accessing settings
   ${JSONCPP_LIBRARIES}
@@ -238,7 +238,7 @@ target_link_libraries(
   llmessage
   ${CURL_LIBRARIES}
   ${LLCOMMON_LIBRARIES}
-  ${LLVFS_LIBRARIES}
+  ${LLFILESYSTEM_LIBRARIES}
   ${LLMATH_LIBRARIES}
   ${LLXML_LIBRARIES} #<FS:Ansariel> For accessing settings
   ${JSONCPP_LIBRARIES}
@@ -269,7 +269,7 @@ if (LL_TESTS)
 if (LINUX)
   set(test_libs
     ${WINDOWS_LIBRARIES}
-    ${LLVFS_LIBRARIES}
+    ${LLFILESYSTEM_LIBRARIES}
     ${LLMATH_LIBRARIES}
     ${LLXML_LIBRARIES} #<FS:Ansariel> For accessing settings
     ${CURL_LIBRARIES}
@@ -286,7 +286,7 @@ if (LINUX)
 else (LINUX)
   set(test_libs
     ${WINDOWS_LIBRARIES}
-    ${LLVFS_LIBRARIES}
+    ${LLFILESYSTEM_LIBRARIES}
     ${LLMATH_LIBRARIES}
     ${LLXML_LIBRARIES} #<FS:Ansariel> For accessing settings
     ${CURL_LIBRARIES}

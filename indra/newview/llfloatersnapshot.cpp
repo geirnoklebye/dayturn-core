@@ -186,6 +186,10 @@ void LLFloaterSnapshotBase::ImplBase::updateLayout(LLFloaterSnapshotBase* floate
 	thumbnail_placeholder->reshape(panel_width, thumbnail_placeholder->getRect().getHeight());
 	floaterp->getChild<LLUICtrl>("image_res_text")->setVisible(mAdvanced);
 	floaterp->getChild<LLUICtrl>("file_size_label")->setVisible(mAdvanced);
+    if (floaterp->hasChild("360_label", TRUE))
+    { 
+        floaterp->getChild<LLUICtrl>("360_label")->setVisible(mAdvanced);
+    }
 	if(!floaterp->isMinimized())
 	{
 		floaterp->reshape(floater_width, floaterp->getRect().getHeight());
@@ -1031,6 +1035,10 @@ BOOL LLFloaterSnapshot::postBuild()
     getChild<LLButton>("retract_btn")->setCommitCallback(boost::bind(&LLFloaterSnapshot::onExtendFloater, this));
     getChild<LLButton>("extend_btn")->setCommitCallback(boost::bind(&LLFloaterSnapshot::onExtendFloater, this));
 
+    getChild<LLTextBox>("360_label")->setSoundFlags(LLView::MOUSE_UP);
+    getChild<LLTextBox>("360_label")->setShowCursorHand(false);
+    getChild<LLTextBox>("360_label")->setClickedCallback(boost::bind(&LLFloaterSnapshot::on360Snapshot, this));
+
 	// Filters
 	LLComboBox* filterbox = getChild<LLComboBox>("filters_combobox");
 	std::vector<std::string> filter_list = LLImageFiltersManager::getInstance()->getFiltersList();
@@ -1155,6 +1163,12 @@ void LLFloaterSnapshot::onOpen(const LLSD& key)
 void LLFloaterSnapshot::onExtendFloater()
 {
 	impl->setAdvanced(gSavedSettings.getBOOL("AdvanceSnapshot"));
+}
+
+void LLFloaterSnapshot::on360Snapshot()
+{
+    LLFloaterReg::showInstance("360capture");
+    closeFloater();
 }
 
 //virtual

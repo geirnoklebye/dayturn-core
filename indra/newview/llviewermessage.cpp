@@ -45,8 +45,7 @@
 #include "llteleportflags.h"
 #include "lltoastnotifypanel.h"
 #include "lltransactionflags.h"
-#include "llvfile.h"
-#include "llvfs.h"
+#include "llfilesystem.h"
 #include "llxfermanager.h"
 #include "mean_collision_data.h"
 
@@ -7512,18 +7511,15 @@ void process_user_info_reply(LLMessageSystem* msg, void**)
 	if (agent_id != gAgent.getID())
 	{
 		LL_WARNS("Messaging") << "process_user_info_reply - "
-			<< "wrong agent id." << LL_ENDL;
+				<< "wrong agent id." << LL_ENDL;
 	}
-
-	BOOL im_via_email;
-	msg->getBOOLFast(_PREHASH_UserData, _PREHASH_IMViaEMail, im_via_email);
+	
 	std::string email;
 	msg->getStringFast(_PREHASH_UserData, _PREHASH_EMail, email);
 	std::string dir_visibility;
-	msg->getString("UserData", "DirectoryVisibility", dir_visibility);
+	msg->getString( "UserData", "DirectoryVisibility", dir_visibility);
 
-	// For Message based user info information the is_verified is assumed to be false.
-	LLFloaterPreference::updateUserInfo(dir_visibility, im_via_email, false);
+	LLFloaterPreference::updateUserInfo(dir_visibility);   
 	LLFloaterSnapshot::setAgentEmail(email);
 }
 
@@ -7986,16 +7982,15 @@ void process_covenant_reply(LLMessageSystem* msg, void**)
 	}
 }
 
-void onCovenantLoadComplete(LLVFS *vfs,
-					const LLUUID& asset_uuid,
-					LLAssetType::EType type,
-					void* user_data, S32 status, LLExtStat ext_status)
+void onCovenantLoadComplete(const LLUUID& asset_uuid,
+							LLAssetType::EType type,
+							void* user_data, S32 status, LLExtStat ext_status)
 {
 	LL_DEBUGS("Messaging") << "onCovenantLoadComplete()" << LL_ENDL;
 	std::string covenant_text;
 	if(0 == status)
 	{
-		LLVFile file(vfs, asset_uuid, type, LLVFile::READ);
+		LLFileSystem file(asset_uuid, type, LLFileSystem::READ);
 		
 		S32 file_length = file.getSize();
 		
