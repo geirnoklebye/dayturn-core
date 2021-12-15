@@ -36,7 +36,7 @@
 #include <unistd.h>
 #include <glob.h>
 #include <boost/filesystem.hpp>
-#include "llvfs_objc.h"
+#include "lldir_utils_objc.h"
 
 //CA set this to 1 if you want to use skins within the source folder hierarchy when running the app
 //from within the build structure. if set to 0 it will use those packaged with it which is safer

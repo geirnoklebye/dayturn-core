@@ -12,6 +12,7 @@ include(bugsplat)
 include(BuildPackagesInfo)
 include(BuildVersion)
 include(CMakeCopyIfDifferent)
+include(CubemapToEquirectangularJS)
 include(DBusGlib)
 include(DragDrop)
 include(EXPAT)
@@ -19,6 +20,7 @@ include(FMODSTUDIO)
 include(FMODEX)
 include(GLOD)
 include(Hunspell)
+include(JPEGEncoderBasic)
 include(JsonCpp)
 include(LLAppearance)
 include(LLAudio)
@@ -38,7 +40,7 @@ include(LLPlugin)
 include(LLPrimitive)
 include(LLRender)
 include(LLUI)
-include(LLVFS)
+include(LLFileSystem)
 include(LLWindow)
 include(LLXML)
 include(NDOF)
@@ -48,6 +50,7 @@ include(OpenGL)
 include(OpenSSL)
 include(PNG)
 include(TemplateCheck)
+include(ThreeJS)
 include(UI)
 include(UnixInstall)
 include(ViewerMiscLibs)
@@ -97,7 +100,7 @@ include_directories(
     ${LLPRIMITIVE_INCLUDE_DIRS}
     ${LLRENDER_INCLUDE_DIRS}
     ${LLUI_INCLUDE_DIRS}
-    ${LLVFS_INCLUDE_DIRS}
+    ${LLFILESYSTEM_INCLUDE_DIRS}
     ${LLWINDOW_INCLUDE_DIRS}
     ${LLXML_INCLUDE_DIRS}
     ${LLLOGIN_INCLUDE_DIRS}
@@ -250,6 +253,7 @@ set(viewer_SOURCE_FILES
     llfilteredwearablelist.cpp
     llfirstuse.cpp
     llflexibleobject.cpp
+    llfloater360capture.cpp
     llfloaterabout.cpp
 	llfloateradvancedbuildoptions.cpp
     llfloaterbvhpreview.cpp
@@ -327,7 +331,7 @@ set(viewer_SOURCE_FILES
     llfloaternamedesc.cpp
     llfloaternotificationsconsole.cpp
     llfloaternotificationstabbed.cpp
-    llfloateroutfitphotopreview.cpp 
+    llfloateroutfitphotopreview.cpp
     llfloateroutfitsnapshot.cpp
     llfloaterobjectweights.cpp
     llfloateropenobject.cpp
@@ -935,6 +939,7 @@ set(viewer_HEADER_FILES
     llfilteredwearablelist.h
     llfirstuse.h
     llflexibleobject.h
+    llfloater360capture.h
     llfloaterabout.h
 	llfloateradvancedbuildoptions.h
     llfloaterbvhpreview.h
@@ -1498,7 +1503,7 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt"
            "${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION}\n")
 
 set_source_files_properties(
-   llversioninfo.cpp tests/llversioninfo_test.cpp 
+   llversioninfo.cpp tests/llversioninfo_test.cpp
    PROPERTIES
 # using this rebuilds the whole of newview on each hg revision change, instead
 # its function is performed by kokuabuildversion.h(.in)   
@@ -2190,7 +2195,7 @@ endif (WINDOWS)
 # one of these being libz where you can find four or more versions in play
 # at once.  On Linux, libz can be found at link and run time via a number
 # of paths:
-#     
+#
 #      => -lfreetype
 #        => libz.so.1 (on install machine, not build)
 #      => -lSDL
@@ -2221,7 +2226,7 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${LLRENDER_LIBRARIES}
     ${FREETYPE_LIBRARIES}
     ${LLUI_LIBRARIES}
-    ${LLVFS_LIBRARIES}
+    ${LLFILESYSTEM_LIBRARIES}
     ${LLWINDOW_LIBRARIES}
     ${LLXML_LIBRARIES}
     ${LLMATH_LIBRARIES}
@@ -2359,7 +2364,7 @@ if (DARWIN)
 
   # https://blog.kitware.com/upcoming-in-cmake-2-8-12-osx-rpath-support/
   set(CMAKE_MACOSX_RPATH 1)
-  
+
   set_target_properties(
     ${VIEWER_BINARY_NAME}
     PROPERTIES
@@ -2561,7 +2566,7 @@ if (LL_TESTS)
     llworldmap.cpp
     llworldmipmap.cpp
     PROPERTIES
-    LL_TEST_ADDITIONAL_SOURCE_FILES 
+    LL_TEST_ADDITIONAL_SOURCE_FILES
     tests/llviewertexture_stub.cpp
     #llviewertexturelist.cpp
   )
@@ -2595,7 +2600,7 @@ if (LL_TESTS)
     llworldmap.cpp
     llworldmipmap.cpp
     PROPERTIES
-    LL_TEST_ADDITIONAL_SOURCE_FILES 
+    LL_TEST_ADDITIONAL_SOURCE_FILES
     tests/llviewertexture_stub.cpp
     #llviewertexturelist.cpp
     LL_TEST_ADDITIONAL_LIBRARIES "${BOOST_SYSTEM_LIBRARY}"
@@ -2642,7 +2647,7 @@ if (LL_TESTS)
   set(test_libs
     ${LLMESSAGE_LIBRARIES}
     ${WINDOWS_LIBRARIES}
-    ${LLVFS_LIBRARIES}
+    ${LLFILESYSTEM_LIBRARIES}
     ${LLMATH_LIBRARIES}
     ${LLCOMMON_LIBRARIES}
     ${GOOGLEMOCK_LIBRARIES}
@@ -2657,7 +2662,7 @@ if (LL_TESTS)
 
   set(test_libs
     ${WINDOWS_LIBRARIES}
-    ${LLVFS_LIBRARIES}
+    ${LLFILESYSTEM_LIBRARIES}
     ${LLMATH_LIBRARIES}
     ${LLCOMMON_LIBRARIES}
     ${LLMESSAGE_LIBRARIES}

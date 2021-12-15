@@ -58,8 +58,7 @@
 #include "llviewerparcelmgr.h"
 #include "llviewerstats.h"
 #include "llviewerregion.h"
-#include "llvfile.h"
-#include "llvfs.h"
+#include "llfilesystem.h"
 #include "llvolumemessage.h"
 #include "lltrace.h"
 #include "fsexportperms.h"
@@ -1466,7 +1465,8 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 	tid.generate();
 	LLAssetID new_asset_id = tid.makeAssetID(gAgent.getSecureSessionID());
 
-	LLVFile::writeFile((U8*)&asset_data[0], (S32)asset_data.size(), gVFS, new_asset_id, asset_type);
+	LLFileSystem file(new_asset_id, asset_type, LLFileSystem::WRITE);
+	file.write((U8*)&asset_data[0], (S32)asset_data.size());
 
 	LLResourceData* data( new LLResourceData );
 	data->mAssetInfo.mTransactionID = tid;
@@ -1475,7 +1475,21 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 	data->mAssetInfo.mCreatorID = gAgentID;
 	data->mInventoryType = inventory_type;
 	data->mNextOwnerPerm = LLFloaterPerms::getNextOwnerPerms(perms_prefix);
-	data->mExpectedUploadCost = expected_upload_cost;
+	switch (asset_type)
+	{
+		case LLAssetType::AT_TEXTURE:
+			data->mExpectedUploadCost = LLAgentBenefitsMgr::current().getTextureUploadCost();
+			break;
+		case LLAssetType::AT_ANIMATION:
+			data->mExpectedUploadCost = LLAgentBenefitsMgr::current().getAnimationUploadCost();
+			break;
+		case LLAssetType::AT_SOUND:
+			data->mExpectedUploadCost = LLAgentBenefitsMgr::current().getSoundUploadCost();
+			break;
+		default:
+			data->mExpectedUploadCost = 0;
+			break;
+	}
 	FSResourceData* fs_data = new FSResourceData;
 	fs_data->uuid = asset_id;
 	fs_data->mFloater = this;
@@ -1900,7 +1914,7 @@ void uploadCoroutine( LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t &a_httpAdapter
 		return;
 	}
 
-	if (!gVFS->getExists(aAssetId, aAssetType))
+	if (!LLFileSystem::getExists(aAssetId, aAssetType))
 	{
 		LL_WARNS() << "Asset doesn't exist in VFS anymore. Nothing uploaded." << LL_ENDL;
 		self->pushNextAsset( LLUUID::null, fs_data->uuid, aResourceData->mAssetInfo.mType );
@@ -1933,7 +1947,7 @@ void uploadCoroutine( LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t &a_httpAdapter
 	LL_DEBUGS( "import" ) << "result: " << responseResult << " new_id: " << new_id << LL_ENDL;
 
 	// rename the file in the VFS to the actual asset id
-	gVFS->renameFile(aAssetId, aAssetType, new_id, aAssetType);
+	LLFileSystem::renameFile(aAssetId, aAssetType, new_id, aAssetType);
 
 	if( item_id.isNull() )
 	{
@@ -1967,9 +1981,23 @@ void uploadCoroutine( LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t &a_httpAdapter
 		{
 			LLAssetType::EType asset_type = LLAssetType::lookup( aBody[ "asset_type" ].asString() );
 			LLInventoryType::EType inventory_type = LLInventoryType::lookup( aBody[ "inventory_type" ].asString() );
-			S32 upload_price = LLAgentBenefitsMgr::current().getSoundUploadCost();
-			if (inventory_type == LLInventoryType::IT_TEXTURE) upload_price = LLAgentBenefitsMgr::current().getTextureUploadCost();
-			else if (inventory_type == LLInventoryType::IT_ANIMATION) upload_price = LLAgentBenefitsMgr::current().getAnimationUploadCost();
+
+			S32 upload_price;
+			switch (asset_type)
+			{
+				case LLAssetType::AT_TEXTURE:
+					upload_price = LLAgentBenefitsMgr::current().getTextureUploadCost();
+					break;
+				case LLAssetType::AT_ANIMATION:
+					upload_price = LLAgentBenefitsMgr::current().getAnimationUploadCost();
+					break;
+				case LLAssetType::AT_SOUND:
+					upload_price = LLAgentBenefitsMgr::current().getSoundUploadCost();
+					break;
+				default:
+					upload_price = 0;
+					break;
+			}
 
 			const std::string inventory_type_string = aBody[ "asset_type" ].asString();
 			const LLUUID& item_folder_id = aBody[ "folder_id" ].asUUID();

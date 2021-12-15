@@ -210,6 +210,7 @@ public:
 	bool initializeMedia(const std::string& mime_type);
 	bool initializePlugin(const std::string& media_type);
 	void loadURI();
+	void executeJavaScript(const std::string& code);
 	LLPluginClassMedia* getMediaPlugin() { return mMediaSource.get(); }
 	void setSize(int width, int height);
 
