@@ -619,6 +619,20 @@
             <key>name</key>
             <string>darwin64</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>20d72baa0ab007f253004677f067517f</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-cubemap_to_eqr_js/downloads/cubemaptoequirectangular-1.1.0-linux64-213511557.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -1742,6 +1756,8 @@
         <string>Copyright 2006 Paul Rademacher</string>
         <key>description</key>
         <string>GLUI is a GLUT-based C++ user interface library which provides controls such as buttons, checkboxes, radio buttons, and spinners to OpenGL applications.</string>
+        <key>hash_algorithm</key>
+        <string>md5</string>
         <key>license</key>
         <string>ZLIB</string>
         <key>license_file</key>
@@ -1791,8 +1807,6 @@
         </map>
         <key>version</key>
         <string>2.36.297273</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
       </map>
       <key>googlemock</key>
       <map>
@@ -2285,6 +2299,20 @@
             </map>
             <key>name</key>
             <string>darwin64</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>fd05b78a27fa9b209a9e8cda05f6dd68</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-jpeg_encoder_js/downloads/jpegencoderbasic-1.0-linux64-213511545.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -4287,6 +4315,20 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>56a805d0d0566080fcac39cf978a5c37</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-three_js/downloads/threejs-0.132.2-linux64-213511528.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
