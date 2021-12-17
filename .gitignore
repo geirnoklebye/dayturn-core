@@ -49,6 +49,7 @@ ca_*.sh
 /indra/newview/res/ll_icon.*
 /indra/newview/res-sdl/ll_icon.*
 /indra/newview/vivox-runtime
+/indra/newview/skins/default/html/common/equirectangular/js
 /indra/server-linux-*
 /indra/temp
 /indra/test/linden_file.dat
