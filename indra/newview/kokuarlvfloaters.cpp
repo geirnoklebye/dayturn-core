@@ -70,6 +70,7 @@
 
 static bool awaiting_idle_for_worn = false;
 static bool awaiting_idle_for_status = false;
+static bool pause_updating = false;
 
 // ---- inventory observer
 
@@ -643,7 +644,9 @@ KokuaFloaterRLVConsole* KokuaFloaterRLVConsole::getBase()
 
 // ---- RLV Status
 
-KokuaFloaterRLVStatus::KokuaFloaterRLVStatus(const LLSD& sdKey) : LLFloater(LLSD(sdKey))
+KokuaFloaterRLVStatus::KokuaFloaterRLVStatus(const LLSD& sdKey)
+: LLFloater(LLSD(sdKey)),
+	mPauseUpdating(NULL)
 {
 }
 
@@ -654,6 +657,8 @@ KokuaFloaterRLVStatus::~KokuaFloaterRLVStatus()
 BOOL KokuaFloaterRLVStatus::postBuild()
 {
 	getChild<LLUICtrl>("copy_btn")->setCommitCallback(boost::bind(&KokuaFloaterRLVStatus::onBtnCopyToClipboard, this));
+	mPauseUpdating = getChild<LLCheckBoxCtrl>( "pause_updating");
+	mPauseUpdating->setCommitCallback(boost::bind(&KokuaFloaterRLVStatus::onCommitPauseUpdating, this));
 	return TRUE;
 }
 
@@ -668,6 +673,12 @@ void KokuaFloaterRLVStatus::onBtnCopyToClipboard()
 	LLClipboard::instance().copyToClipboard(res, 0, res.length());
 }
 
+void KokuaFloaterRLVStatus::onCommitPauseUpdating()
+{
+	pause_updating = KokuaFloaterRLVStatus::getBase()->mPauseUpdating->get();
+	if (!pause_updating) callRefreshRLVStatus();
+}
+
 void KokuaFloaterRLVStatus::callRefreshRLVStatus()
 {
 	if (KokuaFloaterRLVStatus::getBase())
@@ -679,6 +690,7 @@ void KokuaFloaterRLVStatus::callRefreshRLVStatus()
 void KokuaFloaterRLVStatus::refreshRLVStatus()
 {
 	if (!(KokuaFloaterRLVStatus::getBase() && KokuaFloaterRLVStatus::getBase()->isShown())) return;	
+	if (pause_updating) return;
 	
 	awaiting_idle_for_status = false;
 	LLCtrlListInterface* pBhvrList = childGetListInterface("behaviour_list");

@@ -28,6 +28,7 @@
 #define KOKUARLVFLOATERS_H
 
 #include "llagent.h"
+#include "llcheckboxctrl.h"
 #include "llfloater.h"
 #include "llfloaterreg.h"
 #include "llinventoryobserver.h"
@@ -143,8 +144,10 @@ public:
 
 protected:
 	void onBtnCopyToClipboard();
+	void onCommitPauseUpdating();
 	void onAvatarNameLookup(const LLUUID& idAgent, const LLAvatarName& avName);
 	void onOpen(const LLSD& key);
+	LLCheckBoxCtrl*	mPauseUpdating;
 	
 protected:
 	uuid_vec_t 					m_PendingLookup;

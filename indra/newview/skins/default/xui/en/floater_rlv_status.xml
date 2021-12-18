@@ -4,7 +4,7 @@
   can_close="true"
   can_minimize="true"
   can_resize="true"
-  height="300"
+  height="320"
   min_height="300"
   min_width="600"
   name="rlv_status"
@@ -13,6 +13,15 @@
   single_instance="true"
   title="RLV STATUS"
   width="600">
+    <check_box
+     height="16"
+     label="Pause updating"
+     layout="topleft"
+     left="12"
+     name="pause_updating"
+     tool_tip="Turn on to pause updating"
+     top_pad="2"
+     width="200" />
   <tab_container
     follows="all"
     layout="topleft"
@@ -23,7 +32,7 @@
     tab_height="23"
     tab_min_width="120"
     tab_position="top"
-    top="0" >
+    top="20" >
     <panel
       follows="all"  height="265"
       label="Restrictions"
