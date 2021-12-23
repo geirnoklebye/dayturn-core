@@ -132,8 +132,12 @@ public:
 	mFloater(floater)
 	{
 		LLGroupMgr* groupmgr = LLGroupMgr::getInstance();
-		groupmgr->addObserver(this);
-		groupmgr->sendGroupPropertiesRequest(group_id);
+		if (!group_id.isNull() && groupmgr)
+		{
+			groupmgr->addObserver(this);
+			mID = group_id;
+			groupmgr->sendGroupPropertiesRequest(group_id);
+		}
 	}
 	
 	~FSLegacySearchGroupInfoObserver()
