@@ -1128,6 +1128,17 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
+    <key>RestrainedLoveCommandLogging</key>
+    <map>
+      <key>Comment</key>
+      <string>Toggles the generation of RestrainedLove command debugging information in the viewer's log file (less information than RestrainedLoveLogging but still very verbose).</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
     <key>RestrainedLoveNoSetEnv</key>
     <map>
       <key>Comment</key>

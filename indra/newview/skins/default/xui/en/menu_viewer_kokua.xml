@@ -2607,6 +2607,33 @@
     <menu_item_separator/>
     <menu
      create_jump_keys="true"
+     label="RLV Logging"
+     name="RLV Logging"
+     tear_off="true">
+    <menu_item_check
+     label="Commands Only"
+     name="RLV Logging Commands">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="RestrainedLoveCommandLogging" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="RestrainedLoveCommandLogging" />
+    </menu_item_check>
+    <menu_item_check
+     label="Verbose"
+     name="RLV Logging Verbose">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="RestrainedLoveLogging" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="RestrainedLoveLogging" />
+    </menu_item_check>
+		</menu>
+    <menu_item_separator/>
+    <menu
+     create_jump_keys="true"
      label="Focus"
      name="Focus"
      tear_off="true">

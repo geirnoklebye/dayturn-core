@@ -121,6 +121,12 @@ static bool handleRestrainedLoveLoggingChanged(const LLSD& newvalue)
 	return true;
 }
 
+static bool handleRestrainedLoveCommandLoggingChanged(const LLSD& newvalue)
+{
+	RRInterface::sRestrainedLoveCommandLogging = newvalue.asBoolean();
+	return true;
+}
+
 static bool handleRestrainedLoveLastStandingLocationChanged(const LLSD& newvalue)
 {
 	// Do not let the user change these values manually (could lead to cheating through @standtp)
@@ -912,6 +918,7 @@ void settings_setup_listeners()
 //MK
 	gSavedSettings.getControl("RestrainedLoveDebug")->getSignal()->connect(boost::bind(&handleRestrainedLoveDebugChanged, _2));
 	gSavedSettings.getControl("RestrainedLoveLogging")->getSignal()->connect(boost::bind(&handleRestrainedLoveLoggingChanged, _2));
+	gSavedSettings.getControl("RestrainedLoveCommandLogging")->getSignal()->connect(boost::bind(&handleRestrainedLoveCommandLoggingChanged, _2));
 	gSavedPerAccountSettings.getControl("RestrainedLoveLastStandingLocation")->getSignal()->connect(boost::bind(&handleRestrainedLoveLastStandingLocationChanged, _2));
 	gSavedSettings.getControl("RenderDeferredShowInvisiprims")->getSignal()->connect(boost::bind(&handleRenderDeferredShowInvisiprimsChanged, _2));
 	gSavedSettings.getControl("RestrainedLoveCamDistNbGradients")->getSignal()->connect(boost::bind(&handleRestrainedLoveCamDistNbGradientsChanged, _2));

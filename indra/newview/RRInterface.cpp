@@ -118,7 +118,7 @@ BOOL gRRenabled = TRUE;
 BOOL RRInterface::sRRNoSetEnv = FALSE;
 BOOL RRInterface::sRestrainedLoveDebug = FALSE; // Note: not used in this file; only used in llviewermessage for 'executes/fails command'
 BOOL RRInterface::sRestrainedLoveLogging = FALSE; // Note: currently only used in this file
-BOOL RRInterface::sRestrainedLoveMandatoryLogging = TRUE; // KKA-901 Make some logging full time to aid crash hunting. Currently only used in this file
+BOOL RRInterface::sRestrainedLoveCommandLogging = FALSE; // KKA-901/KKA-914 Make some logging full time to aid crash hunting. Currently only used in this file
 BOOL RRInterface::sRestrainedLoveHeadMouselookRenderRigged = FALSE;
 BOOL RRInterface::sRestrainedLoveRenderInvisibleSurfaces = FALSE;
 BOOL RRInterface::sCanOoc = TRUE;
@@ -1260,7 +1260,7 @@ FolderLock RRInterface::isFolderLockedWithoutExceptionAux (LLInventoryCategory* 
 
 BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string option)
 {
-	if (sRestrainedLoveLogging || sRestrainedLoveMandatoryLogging) {
+	if (sRestrainedLoveLogging || sRestrainedLoveCommandLogging) {
 		LL_INFOS("RLV") << object_uuid.asString() << " " << action << " " << option << LL_ENDL;
 	}
 	
@@ -1405,7 +1405,7 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 
 BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string option)
 {
-	if (sRestrainedLoveLogging || sRestrainedLoveMandatoryLogging) {
+	if (sRestrainedLoveLogging || sRestrainedLoveCommandLogging) {
 		LL_INFOS("RLV") << object_uuid.asString() << " " << action << " " << option << LL_ENDL;
 	}
 
@@ -1529,7 +1529,7 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 
 BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 {
-	if (sRestrainedLoveLogging || sRestrainedLoveMandatoryLogging) {
+	if (sRestrainedLoveLogging || sRestrainedLoveCommandLogging) {
 		LL_INFOS("RLV") << object_uuid.asString() << " " << command << LL_ENDL;
 	}
 
@@ -1618,7 +1618,7 @@ BOOL RRInterface::garbageCollector (BOOL all) {
 //			}
 			objp = gObjectList.findObject(uuid);
 			if (!objp) {
-				if (sRestrainedLoveLogging || sRestrainedLoveMandatoryLogging) {
+				if (sRestrainedLoveLogging || sRestrainedLoveCommandLogging) {
 					LL_INFOS("RLV") << it->first << " not found => cleaning... " << LL_ENDL;
 				}
 				clear(uuid);
@@ -1803,7 +1803,7 @@ BOOL RRInterface::reallyHandleCommand (LLUUID uuid, std::string command)
 		Command cmd;
 		cmd.uuid=uuid;
 		cmd.command=command;
-		if (sRestrainedLoveLogging || sRestrainedLoveMandatoryLogging) {
+		if (sRestrainedLoveLogging || sRestrainedLoveCommandLogging) {
 			LLInventoryItem* item = getItem(uuid);
 			std::string name = "(unknown)";
 			if (item)	{
@@ -1815,7 +1815,7 @@ BOOL RRInterface::reallyHandleCommand (LLUUID uuid, std::string command)
 
 		return TRUE;
 	}
-	else if (sRestrainedLoveMandatoryLogging)	{
+	else if (sRestrainedLoveCommandLogging)	{
 		LLInventoryItem* item = getItem(uuid);
 		std::string name = "(unknown)";
 		if (item)	{
@@ -1943,7 +1943,7 @@ BOOL RRInterface::fireCommands ()
 {
 	BOOL ok=TRUE;
 	if (mRetainedCommands.size ()) {
-		if (sRestrainedLoveLogging || sRestrainedLoveMandatoryLogging) {
+		if (sRestrainedLoveLogging || sRestrainedLoveCommandLogging) {
 			LL_INFOS("RLV") << "Firing commands : " << mRetainedCommands.size () << LL_ENDL;
 		}
 		Command cmd;
@@ -2004,7 +2004,7 @@ static void force_sit(LLUUID object_uuid)
 
 BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string option)
 {
-	if (sRestrainedLoveLogging || sRestrainedLoveMandatoryLogging) {
+	if (sRestrainedLoveLogging || sRestrainedLoveCommandLogging) {
 		LL_INFOS("RLV") << object_uuid.asString() << " : " << command << " " << option << LL_ENDL;
 	}
 
