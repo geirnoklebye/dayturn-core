@@ -40,11 +40,13 @@
 #include "llviewergenericmessage.h"	// send_generic_message
 #include "llmenugl.h"
 #include "llviewermenu.h"
+#include "llviewergenericmessage.h"
 #include "llregistry.h"
 
 #include "llaccordionctrl.h"
 #include "llaccordionctrltab.h"
 #include "llavatarpropertiesprocessor.h"
+#include "fsdispatchclassifiedclickthrough.h"
 #include "fspanelprofile.h"
 #include "fspanelclassified.h"
 
@@ -61,8 +63,9 @@ static const std::string PICK_NAME("pick_name");
 static const std::string CLASSIFIED_ID("classified_id");
 static const std::string CLASSIFIED_NAME("classified_name");
 
+static FSDispatchClassifiedClickThrough sClassifiedClickThrough;
 
-static LLPanelInjector<FSPanelClassifieds> t_panel_classifieds("panel_profile_classified");
+static LLPanelInjector<FSPanelClassifieds> t_panel_fs_classifieds("panel_fs_profile_classified");
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -74,21 +77,24 @@ FSPanelClassifieds::FSPanelClassifieds()
 	mPopupMenu(NULL),
 	mClassifiedsList(NULL),
 	mPanelClassifiedInfo(NULL),
+//	mRlvBehaviorCallbackConnection(),
 	mNoClassifieds(false)
 {
 }
 
 FSPanelClassifieds::~FSPanelClassifieds()
 {
-	if(getAvatarId().notNull())
+	if (getAvatarId().notNull())
 	{
 		LLAvatarPropertiesProcessor::getInstance()->removeObserver(getAvatarId(),this);
 	}
-}
 
-void* FSPanelClassifieds::create(void* data /* = NULL */)
-{
-	return new FSPanelClassifieds();
+//	if (mRlvBehaviorCallbackConnection.connected())
+//	{
+//		mRlvBehaviorCallbackConnection.disconnect();
+//	}
+
+	gGenericDispatcher.addHandler("classifiedclickthrough", NULL);
 }
 
 void FSPanelClassifieds::updateData()
@@ -145,19 +151,19 @@ void FSPanelClassifieds::processProperties(void* data, EAvatarProcessorType type
 		
 		mNoClassifieds = !mClassifiedsList->size();
 
-        bool no_data = mNoClassifieds;
-        mNoItemsLabel->setVisible(no_data);
-        if (no_data)
-        {
-            if(getAvatarId() == gAgentID)
-            {
-                mNoItemsLabel->setValue(LLTrans::getString("NoPicksClassifiedsText"));
-            }
-            else
-            {
-                mNoItemsLabel->setValue(LLTrans::getString("NoAvatarPicksClassifiedsText"));
-            }
-        }
+		bool no_data = mNoClassifieds;
+		mNoItemsLabel->setVisible(no_data);
+		if (no_data)
+		{
+			if (getAvatarId() == gAgentID)
+			{
+				mNoItemsLabel->setValue(LLTrans::getString("NoClassifiedsText"));
+			}
+			else
+			{
+				mNoItemsLabel->setValue(LLTrans::getString("NoAvatarClassifiedsText"));
+			}
+		}
 
         enableControls();
 	}
@@ -182,11 +188,12 @@ BOOL FSPanelClassifieds::postBuild()
 
 	mNoItemsLabel = getChild<LLUICtrl>("picks_panel_text");
 
+	childSetAction(XML_BTN_NEW, boost::bind(&FSPanelClassifieds::createNewClassified, this));
 	childSetAction(XML_BTN_DELETE, boost::bind(&FSPanelClassifieds::onClickDelete, this));
 	childSetAction(XML_BTN_TELEPORT, boost::bind(&FSPanelClassifieds::onClickTeleport, this));
 	childSetAction(XML_BTN_SHOW_ON_MAP, boost::bind(&FSPanelClassifieds::onClickMap, this));
 	childSetAction(XML_BTN_INFO, boost::bind(&FSPanelClassifieds::onClickInfo, this));
-	
+
 	LLUICtrl::CommitCallbackRegistry::ScopedRegistrar registar;
 	registar.add("Classified.Info", boost::bind(&FSPanelClassifieds::onClickInfo, this));
 	registar.add("Classified.Edit", boost::bind(&FSPanelClassifieds::onClickMenuEdit, this)); 
@@ -197,9 +204,10 @@ BOOL FSPanelClassifieds::postBuild()
 	enable_registar.add("Classified.Enable", boost::bind(&FSPanelClassifieds::onEnableMenuItem, this, _2));
 
 	mPopupMenu = LLUICtrlFactory::getInstance()->createFromFile<LLContextMenu>("menu_classifieds.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
-    
-	childSetAction(XML_BTN_NEW, boost::bind(&FSPanelClassifieds::createNewClassified, this));
-	
+
+//	mRlvBehaviorCallbackConnection = gRlvHandler.setBehaviourCallback(boost::bind(&FSPanelClassifieds::updateRlvRestrictions, this, _1, _2));
+//	childSetEnabled(XML_BTN_NEW, !gRlvHandler.hasBehaviour(RLV_BHVR_SHOWLOC));
+
 	return TRUE;
 }
 
@@ -222,7 +230,7 @@ bool FSPanelClassifieds::isClassifiedPublished(FSClassifiedItem* c_item)
 void FSPanelClassifieds::onOpen(const LLSD& key)
 {
 	const LLUUID id(key.asUUID());
-	BOOL self = (gAgent.getID() == id);
+	BOOL self = (gAgentID == id);
 
 	// only agent can edit her picks 
 	getChildView("edit_panel")->setEnabled(self);
@@ -245,6 +253,7 @@ void FSPanelClassifieds::onOpen(const LLSD& key)
 
 	FSPanelProfileTab::onOpen(key);
 
+	gGenericDispatcher.addHandler("classifiedclickthrough", &sClassifiedClickThrough);
 	updateData();
 	updateButtons();  
 }
@@ -403,7 +412,10 @@ void FSPanelClassifieds::onClickInfo()
 void FSPanelClassifieds::openClassifiedInfo()
 {
 	LLSD selected_value = mClassifiedsList->getSelectedValue();
-	if (selected_value.isUndefined()) return;
+	if (selected_value.isUndefined())
+	{
+		return;
+	}
 
 	FSClassifiedItem* c_item = getSelectedClassifiedItem();
 	LLSD params;
@@ -426,7 +438,7 @@ void FSPanelClassifieds::openClassifiedInfo(const LLSD &params)
 void FSPanelClassifieds::openClassifiedEdit(const LLSD& params)
 {
 	LLUUID classified_id = params["classified_id"].asUUID();;
-	LL_INFOS() << "opening classified " << classified_id << " for edit" << LL_ENDL;
+	LL_INFOS("FSPanelClassifieds") << "opening classified " << classified_id << " for edit" << LL_ENDL;
 	editClassified(classified_id);
 }
 
@@ -491,8 +503,7 @@ void FSPanelClassifieds::onPanelClassifiedClose(FSPanelClassifiedInfo* panel)
 			LLUUID c_id = values[n][CLASSIFIED_ID].asUUID();
 			if(panel->getClassifiedId() == c_id)
 			{
-				FSClassifiedItem* c_item = dynamic_cast<FSClassifiedItem*>(
-					mClassifiedsList->getItemByValue(values[n]));
+				FSClassifiedItem* c_item = dynamic_cast<FSClassifiedItem*>(mClassifiedsList->getItemByValue(values[n]));
 				llassert(c_item);
 				if (c_item)
 				{
@@ -569,7 +580,7 @@ void FSPanelClassifieds::editClassified(const LLUUID&  classified_id)
 	FSClassifiedItem* c_item = findClassifiedById(classified_id);
 	if (!c_item)
 	{
-		LL_WARNS() << "item not found for classified_id " << classified_id << LL_ENDL;
+		LL_WARNS("FSPanelClassifieds") << "item not found for classified_id " << classified_id << LL_ENDL;
 		return;
 	}
 
@@ -657,10 +668,19 @@ void FSPanelClassifieds::closePanel(LLPanel* panel)
 		}
 		else
 		{
-			LL_WARNS() << "No underlying panel to focus." << LL_ENDL;
+			LL_WARNS("FSPanelClassifieds") << "No underlying panel to focus." << LL_ENDL;
 		}
 	}
 }
+
+//void FSPanelClassifieds::updateRlvRestrictions(ERlvBehaviour behavior, ERlvParamType type)
+//{
+//	if (behavior == RLV_BHVR_SHOWLOC)
+//	{
+//		childSetEnabled(XML_BTN_NEW, type != RLV_TYPE_ADD);
+//	}
+//}
+
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -717,8 +737,14 @@ BOOL FSClassifiedItem::postBuild()
 
 void FSClassifiedItem::setValue(const LLSD& value)
 {
-	if (!value.isMap()) return;;
-	if (!value.has("selected")) return;
+	if (!value.isMap())
+	{
+		return;
+	}
+	if (!value.has("selected"))
+	{
+		return;
+	}
 	getChildView("selected_icon")->setVisible( value["selected"]);
 }
 

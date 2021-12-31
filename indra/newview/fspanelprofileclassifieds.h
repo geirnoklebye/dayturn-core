@@ -24,8 +24,8 @@
  * $/LicenseInfo$
  */
 
-#ifndef FS_FSPANELCLASSIFIEDS_H
-#define FS_FSPANELCLASSIFIEDS_H
+#ifndef FS_PANELCLASSIFIEDS_H
+#define FS_PANELCLASSIFIEDS_H
 
 #include "llpanel.h"
 #include "v3dmath.h"
@@ -55,8 +55,6 @@ public:
 	FSPanelClassifieds();
 	~FSPanelClassifieds();
 
-	static void* create(void* data);
-
 	/*virtual*/ BOOL postBuild(void);
 
 	/*virtual*/ void onOpen(const LLSD& key);
@@ -84,6 +82,9 @@ private:
 	bool isClassifiedPublished(FSClassifiedItem* c_item);
 
 	void onListCommit(const LLFlatListView* f_list);
+
+//	boost::signals2::connection mRlvBehaviorCallbackConnection;
+//	void updateRlvRestrictions(ERlvBehaviour behavior, ERlvParamType type);
 
 	//------------------------------------------------
 	// Callbacks which require panel toggling
@@ -202,4 +203,4 @@ private:
 	S32 mPriceForListing;
 };
 
-#endif // FS_FSPANELCLASSIFIEDS_H
+#endif // FS_PANELCLASSIFIEDS_H

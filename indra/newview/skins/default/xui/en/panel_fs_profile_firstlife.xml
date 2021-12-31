@@ -30,8 +30,7 @@
      allow_no_texture="true"
      default_image_name="None"
      enabled="false"
-     fallback_image="Generic_Person_Large"
-     scale_image="false" />
+     fallback_image="Generic_Person_Large"/>
 
     <view_border
      top="225"
@@ -50,8 +49,9 @@
      layout="topleft"
      follows="all"
      name="fl_description_edit"
+     trusted_content="false"
      enabled="false"
-     max_length="512"
+     max_length="253"
      word_wrap="true"
      parse_urls="true" />
 </panel>

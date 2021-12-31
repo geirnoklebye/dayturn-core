@@ -138,6 +138,7 @@ set(viewer_SOURCE_FILES
     fscommon.cpp
     fsareasearch.cpp
     fsareasearchmenu.cpp    
+    fsavatarsearchmenu.cpp
     fsexportperms.cpp
     fsfloateraddtocontactset.cpp
     fsfloatercontactsetconfiguration.cpp
@@ -146,7 +147,6 @@ set(viewer_SOURCE_FILES
     fsfloaterposestand.cpp
     fsfloaterprofile.cpp
     fsfloatersearch.cpp
-    fsfloatersearchlegacy.cpp
     fskeywords.cpp
     fsmoneytracker.cpp
     fspanelclassified.cpp
@@ -828,6 +828,8 @@ set(viewer_HEADER_FILES
     floaterhop.h
 	fsareasearch.h
     fsareasearchmenu.h
+    fsavatarsearchmenu.h
+    fsdispatchclassifiedclickthrough.h
     fscommon.h
     fsexportperms.h
     fsfloateraddtocontactset.h
@@ -837,7 +839,6 @@ set(viewer_HEADER_FILES
     fsfloaterposestand.h
     fsfloaterprofile.h
     fsfloatersearch.h
-    fsfloatersearchlegacy.h
     fskeywords.h
     fsmoneytracker.h
     fspanelclassified.h

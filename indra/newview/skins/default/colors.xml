@@ -118,6 +118,9 @@
 	name="LtOrange"
 	value="1 .85 .73 1" />
 	<color
+	 name="SL-Background_66"
+	 value="0.125 0.125 0.125 0.66" />
+	<color
 	name="MdBlue"
 	value=".07 .38 .51 1" />
 	<color
