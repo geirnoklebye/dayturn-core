@@ -1270,6 +1270,8 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 	if (isAllowed (object_uuid, action)) {
 		// Notify if needed
 		notify (object_uuid, action, "=n");
+		// KKA-915 fire off RLVa style callback too
+		m_OnBehaviour(action,true);
 
 		// If this action is blacklisted, do nothing
 		if (canon_action != "notify" && isBlacklisted (canon_action, false)) {
@@ -1418,6 +1420,8 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 	
 	// Notify if needed
 	notify (object_uuid, action, "=y");
+	// KKA-915 fire off RLVa style callback too
+	m_OnBehaviour(action,false);
 	
 	// Actions to do BEFORE removing the behav
 

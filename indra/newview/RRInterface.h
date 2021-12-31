@@ -389,6 +389,13 @@ public:
 
 	BOOL mSitGroundOnStandUp; // when TRUE, automatically sit down on the ground when we're done standing up from an object (this is used for the @sitground command which must be asynchronous)
 
+// CA KKA-915 - need to retain hooks in the latest porting of FS profiles and FS legacy search
+	// The behaviour signal is triggered whenever a command is successfully processed and resulted in adding or removing a behaviour
+	typedef boost::signals2::signal<void (std::string, bool)> rlv_behaviour_signal_t;
+	boost::signals2::connection setBehaviourCallback(const rlv_behaviour_signal_t::slot_type& cb )		 { return m_OnBehaviour.connect(cb); }
+protected:
+	rlv_behaviour_signal_t m_OnBehaviour;
+//CA
 private:
 	bool mScriptsEnabledOnce; // to know if we have been in a script enabled area at least once (so that no-script areas prevent detaching only when we have logged in there)
 	BOOL mInventoryFetched; // FALSE at first, used to fetch RL Share inventory once upon login

@@ -243,7 +243,7 @@ bool enable_god()
 FSPanelProfileSecondLife::FSPanelProfileSecondLife()
  : FSPanelProfileTab()
  , mStatusText(NULL)
-// , mRlvBehaviorCallbackConnection()
+ , mRlvBehaviorCallbackConnection()
 {
 }
 
@@ -259,10 +259,10 @@ FSPanelProfileSecondLife::~FSPanelProfileSecondLife()
 		LLVoiceClient::getInstance()->removeObserver((LLVoiceClientStatusObserver*)this);
 	}
 
-//	if (mRlvBehaviorCallbackConnection.connected())
-//	{
-//		mRlvBehaviorCallbackConnection.disconnect();
-//	}
+	if (mRlvBehaviorCallbackConnection.connected())
+	{
+		mRlvBehaviorCallbackConnection.disconnect();
+	}
 }
 
 BOOL FSPanelProfileSecondLife::postBuild()
@@ -349,6 +349,7 @@ BOOL FSPanelProfileSecondLife::postBuild()
     LLVoiceClient::getInstance()->addObserver((LLVoiceClientStatusObserver*)this);
 
 //	mRlvBehaviorCallbackConnection = gRlvHandler.setBehaviourCallback(boost::bind(&FSPanelProfileSecondLife::updateRlvRestrictions, this, _1));
+	mRlvBehaviorCallbackConnection = gAgent.mRRInterface.setBehaviourCallback(boost::bind(&FSPanelProfileSecondLife::updateRlvRestrictions, this, _1));
 
 	return TRUE;
 }
@@ -775,26 +776,31 @@ void FSPanelProfileSecondLife::updateButtons()
 	if (LLAvatarActions::isFriend(av_id))
 	{
 		const LLRelationship* friend_status = LLAvatarTracker::instance().getBuddyInfo(av_id);
-		bool can_offer_tp = friend_status->isRightGrantedTo(LLRelationship::GRANT_MAP_LOCATION);
+//		bool can_offer_tp = friend_status->isRightGrantedTo(LLRelationship::GRANT_MAP_LOCATION);
 //		bool can_offer_tp = (!gRlvHandler.hasBehaviour(RLV_BHVR_SHOWLOC) ||
 //								(gRlvHandler.isException(RLV_BHVR_TPLURE, av_id, ERlvExceptionCheck::Permissive) ||
 //								friend_status->isRightGrantedTo(LLRelationship::GRANT_MAP_LOCATION)));
-
+		bool can_offer_tp = (!gAgent.mRRInterface.mContainsShowloc) ||
+								(!gAgent.mRRInterface.containsWithoutException("tplure",av_id.asString()) ||
+								friend_status->isRightGrantedTo(LLRelationship::GRANT_MAP_LOCATION));
 		mTeleportButton->setEnabled(is_buddy_online && can_offer_tp);
 		//Disable "Add Friend" button for friends.
 		mAddFriendButton->setEnabled(false);
 	}
 	else
 	{
-		bool can_offer_tp = true;
+//		bool can_offer_tp = true;
 //		bool can_offer_tp = (!gRlvHandler.hasBehaviour(RLV_BHVR_SHOWLOC) ||
 //								gRlvHandler.isException(RLV_BHVR_TPLURE, av_id, ERlvExceptionCheck::Permissive));
+		bool can_offer_tp = (!gAgent.mRRInterface.mContainsShowloc) ||
+								(!gAgent.mRRInterface.containsWithoutException("tplure",av_id.asString()));
 		mTeleportButton->setEnabled(can_offer_tp);
 		mAddFriendButton->setEnabled(true);
 	}
 
 //	bool enable_map_btn = ((is_buddy_online && is_agent_mappable(av_id)) || gAgent.isGodlike()) && !gRlvHandler.hasBehaviour(RLV_BHVR_SHOWWORLDMAP);
-	bool enable_map_btn = ((is_buddy_online && is_agent_mappable(av_id)) || gAgent.isGodlike());
+	bool enable_map_btn = ((is_buddy_online && is_agent_mappable(av_id)) || gAgent.isGodlike()) && !gAgent.mRRInterface.mContainsShowworldmap;
+//	bool enable_map_btn = ((is_buddy_online && is_agent_mappable(av_id)) || gAgent.isGodlike());
 	mShowOnMapButton->setEnabled(enable_map_btn);
 
 	bool enable_block_btn = LLAvatarActions::canBlock(av_id) && !LLAvatarActions::isBlocked(av_id);
@@ -839,14 +845,16 @@ void FSPanelProfileSecondLife::onAvatarNameCacheSetName(const LLUUID& agent_id, 
 	LLFloaterReg::showInstance("display_name");
 }
 
-//void FSPanelProfileSecondLife::updateRlvRestrictions(ERlvBehaviour behavior)
-//{
+void FSPanelProfileSecondLife::updateRlvRestrictions(std::string behavior)
+{
 //	if (behavior == RLV_BHVR_SHOWLOC ||
 //		behavior == RLV_BHVR_SHOWWORLDMAP)
-//	{
-//		updateButtons();
-//	}
-//}
+	if (behavior == "showloc" ||
+		behavior == "showworldmap")
+	{
+		updateButtons();
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -1636,18 +1644,18 @@ void FSPanelPick::updateTabLabel(const std::string& title)
 //////////////////////////////////////////////////////////////////////////
 
 FSPanelProfilePicks::FSPanelProfilePicks()
- : FSPanelProfileTab()
-// : FSPanelProfileTab(),
-//	mRlvBehaviorCallbackConnection()
+// : FSPanelProfileTab()
+ : FSPanelProfileTab(),
+	mRlvBehaviorCallbackConnection()
 {
 }
 
 FSPanelProfilePicks::~FSPanelProfilePicks()
 {
-//	if (mRlvBehaviorCallbackConnection.connected())
-//	{
-//		mRlvBehaviorCallbackConnection.disconnect();
-//	}
+	if (mRlvBehaviorCallbackConnection.connected())
+	{
+		mRlvBehaviorCallbackConnection.disconnect();
+	}
 }
 
 void FSPanelProfilePicks::onOpen(const LLSD& key)
@@ -1676,7 +1684,7 @@ BOOL FSPanelProfilePicks::postBuild()
 	mNewButton->setCommitCallback(boost::bind(&FSPanelProfilePicks::onClickNewBtn, this));
 	mDeleteButton->setCommitCallback(boost::bind(&FSPanelProfilePicks::onClickDelete, this));
 
-//	mRlvBehaviorCallbackConnection = gRlvHandler.setBehaviourCallback(boost::bind(&FSPanelProfilePicks::updateRlvRestrictions, this, _1, _2));
+	mRlvBehaviorCallbackConnection = gAgent.mRRInterface.setBehaviourCallback(boost::bind(&FSPanelProfilePicks::updateRlvRestrictions, this, _1, _2));
 	
 	mNewButton->setEnabled(canAddNewPick());
 	mDeleteButton->setEnabled(canDeletePick());
@@ -1840,20 +1848,22 @@ void FSPanelProfilePicks::updateData()
 	}
 }
 
-//void FSPanelProfilePicks::updateRlvRestrictions(ERlvBehaviour behavior, ERlvParamType type)
-//{
+void FSPanelProfilePicks::updateRlvRestrictions(std::string behavior, bool added)
+{
 //	if (behavior == RLV_BHVR_SHOWLOC)
-//	{
-//		mNewButton->setEnabled(canAddNewPick());
-//	}
-//}
+	if (behavior == "showloc")
+	{
+		mNewButton->setEnabled(canAddNewPick());
+	}
+}
 
 bool FSPanelProfilePicks::canAddNewPick()
 {
-	return true;
-//	return (!LLAgentPicksInfo::getInstance()->isPickLimitReached() &&
-//		mTabContainer->getTabCount() < LLAgentBenefitsMgr::current().getPicksLimit() &&
+//	return true;
+	return (!LLAgentPicksInfo::getInstance()->isPickLimitReached() &&
+		mTabContainer->getTabCount() < LLAgentBenefitsMgr::current().getPicksLimit() &&
 //		!gRlvHandler.hasBehaviour(RLV_BHVR_SHOWLOC));
+		!gAgent.mRRInterface.mContainsShowloc);
 }
 
 bool FSPanelProfilePicks::canDeletePick()

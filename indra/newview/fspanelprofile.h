@@ -35,6 +35,7 @@
 #include "llmediactrl.h"
 #include "llremoteparcelrequest.h"
 //#include "rlvhandler.h"
+#include "RRInterface.h" 
 
 class LLAvatarName;
 class LLCheckBoxCtrl;
@@ -271,8 +272,8 @@ private:
 
 	bool				mVoiceStatus;
 
-//	boost::signals2::connection mRlvBehaviorCallbackConnection;
-//	void updateRlvRestrictions(ERlvBehaviour behavior);
+	boost::signals2::connection mRlvBehaviorCallbackConnection;
+	void updateRlvRestrictions(std::string behavior);
 };
 
 
@@ -538,8 +539,8 @@ private:
 	void onClickDelete();
 	void callbackDeletePick(const LLSD& notification, const LLSD& response);
 
-//	boost::signals2::connection mRlvBehaviorCallbackConnection;
-//	void updateRlvRestrictions(ERlvBehaviour behavior, ERlvParamType type);
+	boost::signals2::connection mRlvBehaviorCallbackConnection;
+	void updateRlvRestrictions(std::string behavior, bool added);
 
 	bool canAddNewPick();
 	bool canDeletePick();

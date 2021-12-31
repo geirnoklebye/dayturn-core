@@ -77,7 +77,7 @@ FSPanelClassifieds::FSPanelClassifieds()
 	mPopupMenu(NULL),
 	mClassifiedsList(NULL),
 	mPanelClassifiedInfo(NULL),
-//	mRlvBehaviorCallbackConnection(),
+	mRlvBehaviorCallbackConnection(),
 	mNoClassifieds(false)
 {
 }
@@ -89,10 +89,10 @@ FSPanelClassifieds::~FSPanelClassifieds()
 		LLAvatarPropertiesProcessor::getInstance()->removeObserver(getAvatarId(),this);
 	}
 
-//	if (mRlvBehaviorCallbackConnection.connected())
-//	{
-//		mRlvBehaviorCallbackConnection.disconnect();
-//	}
+	if (mRlvBehaviorCallbackConnection.connected())
+	{
+		mRlvBehaviorCallbackConnection.disconnect();
+	}
 
 	gGenericDispatcher.addHandler("classifiedclickthrough", NULL);
 }
@@ -205,8 +205,9 @@ BOOL FSPanelClassifieds::postBuild()
 
 	mPopupMenu = LLUICtrlFactory::getInstance()->createFromFile<LLContextMenu>("menu_classifieds.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
 
-//	mRlvBehaviorCallbackConnection = gRlvHandler.setBehaviourCallback(boost::bind(&FSPanelClassifieds::updateRlvRestrictions, this, _1, _2));
+	mRlvBehaviorCallbackConnection = gAgent.mRRInterface.setBehaviourCallback(boost::bind(&FSPanelClassifieds::updateRlvRestrictions, this, _1, _2));
 //	childSetEnabled(XML_BTN_NEW, !gRlvHandler.hasBehaviour(RLV_BHVR_SHOWLOC));
+	childSetEnabled(XML_BTN_NEW, !gAgent.mRRInterface.mContainsShowloc);
 
 	return TRUE;
 }
@@ -680,6 +681,14 @@ void FSPanelClassifieds::closePanel(LLPanel* panel)
 //		childSetEnabled(XML_BTN_NEW, type != RLV_TYPE_ADD);
 //	}
 //}
+
+void FSPanelClassifieds::updateRlvRestrictions(std::string behavior, bool added)
+{
+	if (behavior == "showloc")
+	{
+		childSetEnabled(XML_BTN_NEW, !added);
+	}
+}
 
 
 //////////////////////////////////////////////////////////////////////////
