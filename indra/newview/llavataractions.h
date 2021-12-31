@@ -262,6 +262,9 @@ public:
 	 */
 	static bool canOfferTeleport(const uuid_vec_t& ids);
 
+	// <FS:Ansariel> Extra request teleport
+	static bool canRequestTeleport(const LLUUID& id);
+
 	/**
 	 * Checks whether all items selected in the given inventory panel can be shared
 	 *
@@ -291,6 +294,7 @@ public:
 	 * Opens the chat history for avatar
 	 */
 	static void viewChatHistory(const LLUUID& id);
+	static void report(const LLUUID& idAgent);
 
 	static std::set<LLUUID> getInventorySelectedUUIDs(LLInventoryPanel* active_panel = NULL);
 

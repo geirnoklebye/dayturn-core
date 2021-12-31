@@ -53,12 +53,6 @@ http://www.secondlife.com/account/partners.php?lang=en
      name="display_name_text_args">
 [DISPLAY_NAME]
     </string>
-    <string
-     name="FSDev"
-     value=" Developer" />
-    <string
-     name="FSSupp"
-     value=" Support" />
 
 <!--
 
@@ -75,15 +69,6 @@ KC: Use view_border's around text_editor's due to text render issues with border
          follows="top|right"
          name="progress_indicator"
          visible="false" />
-
-        <text
-         top="9"
-         right="-41"
-         width="41"
-         layout="topleft"
-         follows="top|left"
-         name="status"
-         value="" />
 
         <text
          top="8"
@@ -126,7 +111,7 @@ KC: Use view_border's around text_editor's due to text render issues with border
          height="20"
          width="20"
          layout="topleft"
-         follows="top|left"
+         follows="top|right"
          name="set_name"
          image_overlay="Edit_Wrench"
          tool_tip="Set Display Name"
@@ -169,16 +154,25 @@ KC: Use view_border's around text_editor's due to text render issues with border
          max_length="254"
          value="(loading...)" />
 
-        <button
-         left_pad="3"
-         height="19"
-         width="50"
+        <text
+         left_pad="2"
+         right="-6"
+         height="16"
          layout="topleft"
-         follows="top|left"
-         name="avatar_key_copy"
-         label="Copy"
-         tool_tip="Copy avatar key to the clipboard" />
-
+         follows="top|right"
+         name="status"
+         halign="center"
+         value="" />
+  
+        <button
+         top_delta="-2"
+         right="-6"
+         height="18"
+         layout="topleft"
+         follows="top|right"
+         name="copy_own_uri_button"
+         label="Copy URI" />
+  
         <texture_picker
          top_pad="3"
          left="6"
@@ -211,7 +205,7 @@ KC: Use view_border's around text_editor's due to text render issues with border
          layout="topleft"
          follows="left|top|right"
          bevel_style="in" />
-        <text
+        <text_editor
          top_delta="2"
          left_delta="2"
          right="-6"
@@ -219,7 +213,15 @@ KC: Use view_border's around text_editor's due to text render issues with border
          layout="topleft"
          follows="left|top|right"
          name="register_date"
-         max_length="254" />
+         max_length="254"
+         bg_visible="false"
+         border_visible="false"
+         allow_scroll="false"
+         h_pad="2"
+         v_pad="0"
+         read_only="true"
+         translate="false"
+         word_wrap="true"/>
 
         <text
          top_pad="7"
@@ -277,6 +279,7 @@ KC: Use view_border's around text_editor's due to text render issues with border
          name="info_border4"
          bevel_style="in" />
         <text
+         icon_positioning="left"
          top_delta="2"
          left_delta="2"
          right="-6"
@@ -285,20 +288,7 @@ KC: Use view_border's around text_editor's due to text render issues with border
          follows="left|top|right"
          name="partner_text"
          max_length="254" />
-<!--
-        <button
-         top_pad="8"
-         left="6"
-         height="18"
-         width="40"
-         layout="topleft"
-         follows="left|top"
-         name="bigimg"
-         halign="center"
-         label="&lt; &lt;"
-         label_selected="&gt; &gt;"
-         tool_tip="Open Full Size." />
--->
+
         <text
          top_pad="8"
          left="6"
@@ -312,17 +302,15 @@ KC: Use view_border's around text_editor's due to text render issues with border
 
         <button
          top_delta="20"
-         left="6"
+         left="40"
          height="20"
-         width="55"
+         width="20"
          layout="topleft"
          follows="left|top"
          name="group_invite"
-         word_wrap="true"
-         label="Invite"
-         label_selected="Invite"
-         tool_tip="Invite to Group"
-         commit_callback.function="Profile.GroupInvite" />
+         label="+"
+         label_selected="+"
+         tool_tip="Invite to Group" />
 
         <group_list
          top_delta="-20"
@@ -366,7 +354,8 @@ KC: Use view_border's around text_editor's due to text render issues with border
          border_visible="false"
          font="SansSerifSmall"
          enabled="false"
-         max_length="512"
+         trusted_content="false"
+         max_length="510"
          h_pad="2"
          word_wrap="true"
          parse_urls="true" />
@@ -545,7 +534,6 @@ KC: Use view_border's around text_editor's due to text render issues with border
          layout="topleft"
          follows="all"
          name="drop_target"
-         border_thickness="0"
          mouse_opaque="false" />
 </panel>
 

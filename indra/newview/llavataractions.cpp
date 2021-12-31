@@ -83,6 +83,7 @@
 
 extern LLVOAvatar *find_avatar_from_object(LLViewerObject *object);
 extern LLVOAvatar *find_avatar_from_object(const LLUUID &object_id);
+#include "llfloaterreporter.h"
 
 // Flags for kick message
 const U32 KICK_FLAGS_DEFAULT	= 0x0;
@@ -1235,6 +1236,18 @@ bool LLAvatarActions::canOfferTeleport(const uuid_vec_t& ids)
 	return result;
 }
 
+// <FS:Ansariel> Extra request teleport
+// static
+bool LLAvatarActions::canRequestTeleport(const LLUUID& id)
+{
+	if(LLAvatarTracker::instance().isBuddy(id))
+	{
+		return LLAvatarTracker::instance().isBuddyOnline(id);
+	}
+
+	return true;
+}
+
 void LLAvatarActions::inviteToGroup(const LLUUID& id)
 {
 	LLFloaterGroupPicker* widget = LLFloaterReg::showTypedInstance<LLFloaterGroupPicker>("group_picker", LLSD(id));
@@ -1549,6 +1562,14 @@ bool LLAvatarActions::canBlock(const LLUUID& id)
 	bool is_linden = (full_name.find("Linden") != std::string::npos);
 	bool is_self = id == gAgentID;
 	return !is_self && !is_linden;
+}
+
+void LLAvatarActions::report(const LLUUID& idAgent)
+{
+	LLAvatarName avName;
+	LLAvatarNameCache::get(idAgent, &avName);
+	
+	LLFloaterReporter::showFromAvatar(idAgent, avName.getCompleteName());
 }
 
 // static

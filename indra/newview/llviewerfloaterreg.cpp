@@ -41,7 +41,6 @@
 #include "fsfloaterexport.h"
 #include "fsfloaterprofile.h" // <FS:KC legacy profiles>
 #include "fsfloatersearch.h"
-#include "fsfloatersearchlegacy.h"
 #include "fsmoneytracker.h"
 #include "llcompilequeue.h"
 #include "llfasttimerview.h"
@@ -290,10 +289,6 @@ void LLViewerFloaterReg::registerFloaters()
 // [SL:KB] - Patch: UI-ProfileGroupFloaters | Checked: 2011-01-23 (Catznip-2.5)
 	LLFloaterReg::add("floater_group_info", "floater_group_info.xml", &LLFloaterReg::build<LLFloaterGroupInfo>);
 // [/SL:KB]
-//<FS:KC legacy profiles>
-	LLFloaterReg::add("floater_profile", "floater_profile_view.xml",&LLFloaterReg::build<FSFloaterProfile>);
-//</FS:KC legacy profiles>
-
 	LLFloaterReg::add("font_test", "floater_font_test.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterFontTest>);
 	LLFloaterReg::add("forget_username", "floater_forget_user.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterForgetUser>);
 
@@ -447,14 +442,14 @@ void LLViewerFloaterReg::registerFloaters()
 	// *NOTE: Please keep these alphabetized for easier merges
 	LLFloaterReg::add("animation_explorer", "floater_animation_explorer.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<AnimationExplorer>);	
 	LLFloaterReg::add("animation_overrider", "floater_ao.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FloaterAO>);	// ## Zi: Animation Overrider	
+	LLFloaterReg::add("floater_profile", "floater_fs_profile_view.xml", &LLFloaterReg::build<FSFloaterProfile>);
 	LLFloaterReg::add("fs_add_contact", "floater_fs_contact_add.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterAddToContactSet>);
 	LLFloaterReg::add("fs_contact_set_config", "floater_fs_contact_set_configuration.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterContactSetConfiguration>);
     LLFloaterReg::add("fs_export", "floater_fs_export.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterObjectExport>);
 	LLFloaterReg::add("fs_import", "floater_fs_import.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterImport>);
 	LLFloaterReg::add("fs_posestand", "floater_fs_posestand.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterPoseStand>);
+	LLFloaterReg::add("search_legacy", "floater_fs_search.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterSearch>);
 	LLFloaterReg::add("kokua_chatbar", "floater_chatbar.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<KokuaChatBar>);
-    	// <FS:CR> FIRE-6310: Include Legacy Search
-	LLFloaterReg::add("search_legacy", "floater_fs_search_legacy.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterSearchLegacy>);
 	LLFloaterReg::add("publish_classified_fs", "floater_publish_classified.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSPublishClassifiedFloater>);
 	LLFloaterReg::add("search_replace", "floater_search_replace.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterSearchReplace>);
 	LLFloaterReg::registerControlVariables(); // Make sure visibility and rect controls get preserved when saving
