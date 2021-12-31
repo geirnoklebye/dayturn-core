@@ -390,6 +390,9 @@ public:
 	BOOL mSitGroundOnStandUp; // when TRUE, automatically sit down on the ground when we're done standing up from an object (this is used for the @sitground command which must be asynchronous)
 
 // CA KKA-915 - need to retain hooks in the latest porting of FS profiles and FS legacy search
+	// WARNING: Don't rely on this to give accurate state for whether a particular restriction is on or off overall. Use it instead as a
+	// hint that more detailed processing is necessary because state might have changed and then read the state explicitly.
+	//
 	// The behaviour signal is triggered whenever a command is successfully processed and resulted in adding or removing a behaviour
 	typedef boost::signals2::signal<void (std::string, bool)> rlv_behaviour_signal_t;
 	boost::signals2::connection setBehaviourCallback(const rlv_behaviour_signal_t::slot_type& cb )		 { return m_OnBehaviour.connect(cb); }

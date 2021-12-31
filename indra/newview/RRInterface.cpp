@@ -1548,6 +1548,8 @@ BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 		}
 		if (it->first==object_uuid.asString() && (command=="" || it->second.find (command)!=-1)) {
 			notify (object_uuid, it->second, "=y");
+			// KKA-915 fire off RLVa style callback too
+			m_OnBehaviour(it->second,false);
 			if (sRestrainedLoveLogging) {
 				LL_INFOS() << it->second << " => removed. " << LL_ENDL;
 			}
