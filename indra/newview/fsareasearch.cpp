@@ -1800,8 +1800,11 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 				{
 					LLSelectMgr::getInstance()->selectObjectAndFamily(objectp);
 					LLSelectNode* node = LLSelectMgr::getInstance()->getSelection()->findNode(objectp);
-					node->mName = mFSAreaSearch->mObjectDetails[object_id].name;
-					node->mValid = true;
+					if (node) // KKA-916 Bugsplat crash fix
+					{
+						node->mName = mFSAreaSearch->mObjectDetails[object_id].name;
+						node->mValid = true;
+					}
 				}
 				else if ( c == 'r' || c == 's' )
 				{
