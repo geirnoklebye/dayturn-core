@@ -177,7 +177,7 @@ public:
 	virtual bool voiceEnabled(bool no_cache = false);
 	// </FS:Ansariel>
 	virtual void setVoiceEnabled(bool enabled);
-	virtual BOOL lipSyncEnabled();	
+	virtual bool lipSyncEnabled();	
 	virtual void setLipSyncEnabled(BOOL enabled);
 	virtual void setMuteMic(bool muted);		// Set the mute state of the local mic.
 	//@}

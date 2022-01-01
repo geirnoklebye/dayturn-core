@@ -5323,7 +5323,7 @@ void LLVivoxVoiceClient::setLipSyncEnabled(BOOL enabled)
 	mLipSyncEnabled = enabled;
 }
 
-BOOL LLVivoxVoiceClient::lipSyncEnabled()
+bool LLVivoxVoiceClient::lipSyncEnabled()
 {
 	   
 	if ( mVoiceEnabled )
@@ -5332,7 +5332,7 @@ BOOL LLVivoxVoiceClient::lipSyncEnabled()
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 }
 
