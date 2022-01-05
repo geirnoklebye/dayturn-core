@@ -1879,12 +1879,14 @@ bool LLAppViewer::cleanup()
 	// one because it happens just after mFastTimerLogThread is deleted. This
 	// comment is in case we guessed wrong, so we can move it here instead.
 
+#if LL_LINUX
 	// remove any old breakpad minidump files from the log directory
 	if (! isError())
 	{
 		std::string logdir = gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "");
 		gDirUtilp->deleteFilesInDir(logdir, "*-*-*-*-*.dmp");
 	}
+#endif
 
 	// Kill off LLLeap objects. We can find them all because LLLeap is derived
 	// from LLInstanceTracker.
@@ -4660,11 +4662,6 @@ void LLAppViewer::loadKeyBindings()
 			LLKeyboard::keyFromString(key_string, &key);
 		}
 
-		value = gSavedSettings.getBOOL("PushToTalkToggle");
-		std::string control_name = value ? "toggle_voice" : "voice_follow_key";
-		third_person_view.registerControl(control_name, 0, mouse, key, MASK_NONE, true);
-		sitting_view.registerControl(control_name, 0, mouse, key, MASK_NONE, true);
-
 		if (third_person_view.hasUnsavedChanges())
 		{
 			// calls loadBindingsXML()
@@ -4675,25 +4672,6 @@ void LLAppViewer::loadKeyBindings()
 		{
 			// calls loadBindingsXML()
 			sitting_view.saveToSettings();
-		}
-
-		// in case of voice we need to repeat this in other modes
-
-		for (U32 i = 0; i < LLKeyConflictHandler::MODE_COUNT - 1; ++i)
-		{
-			// edit and first person modes; MODE_SAVED_SETTINGS not in use at the moment
-			if (i != LLKeyConflictHandler::MODE_THIRD_PERSON && i != LLKeyConflictHandler::MODE_SITTING)
-			{
-				LLKeyConflictHandler handler((LLKeyConflictHandler::ESourceMode)i);
-
-				handler.registerControl(control_name, 0, mouse, key, MASK_NONE, true);
-
-				if (handler.hasUnsavedChanges())
-				{
-					// calls loadBindingsXML()
-					handler.saveToSettings();
-				}
-			}
 		}
 	}
 	// since something might have gone wrong or there might have been nothing to save
@@ -5022,6 +5000,10 @@ void LLAppViewer::idle()
 	//
 	// Special case idle if still starting up
 	//
+	if (LLStartUp::getStartupState() >= STATE_WORLD_INIT)
+	{
+		update_texture_time();
+	}
 	if (LLStartUp::getStartupState() < STATE_STARTED)
 	{
 		// Skip rest if idle startup returns false (essentially, no world yet)

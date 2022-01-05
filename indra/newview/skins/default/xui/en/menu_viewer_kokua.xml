@@ -900,8 +900,7 @@
              function="Floater.Visible"
              parameter="search" />
             <menu_item_check.on_click
-             function="Floater.Toggle"
-             parameter="search" />
+             function="Avatar.ToggleSearch"/>
             </menu_item_check>
         <menu_item_check
 			label="Legacy Search"
@@ -1008,7 +1007,7 @@
      label="My Land Holdings..."
      name="My Land">
       <menu_item_call.on_click
-       function="Floater.Show"
+       function="Floater.ShowOrBringToFront"
        parameter="land_holdings" />
     </menu_item_call>
     <menu_item_call
@@ -2111,8 +2110,7 @@
              function="Floater.Visible"
              parameter="search" />
             <menu_item_check.on_click
-             function="Floater.Toggle"
-             parameter="search" />
+             function="Avatar.ToggleSearch"/>
             </menu_item_check>
             <menu_item_call
              enabled="false"
@@ -3091,8 +3089,7 @@
              function="Floater.Visible"
              parameter="search" />
             <menu_item_check.on_click
-             function="Floater.Toggle"
-             parameter="search" />
+             function="Avatar.ToggleSearch"/>
             </menu_item_check>
             <menu_item_call
              enabled="false"

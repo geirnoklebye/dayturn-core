@@ -6745,6 +6745,32 @@ class LLAvatarToggleMyProfile : public view_listener_t
 	}
 };
 
+class LLAvatarToggleSearch : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		LLFloater* instance = LLFloaterReg::findInstance("search");
+		if (LLFloater::isMinimized(instance))
+		{
+			instance->setMinimized(FALSE);
+			instance->setFocus(TRUE);
+		}
+		else if (!LLFloater::isShown(instance))
+		{
+			LLFloaterReg::showInstance("search");
+		}
+		else if (!instance->hasFocus() && !instance->getIsChrome())
+		{
+			instance->setFocus(TRUE);
+		}
+		else
+		{
+			instance->closeFloater();
+		}
+		return true;
+	}
+};
+
 class LLAvatarResetSkeleton: public view_listener_t
 {
     bool handleEvent(const LLSD& userdata)
@@ -10327,6 +10353,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAvatarReportAbuse(), "Avatar.ReportAbuse");
 	view_listener_t::addMenu(new LLAvatarTexRefresh(), "Avatar.TexRefresh");	// ## Zi: Texture Refresh
 	view_listener_t::addMenu(new LLAvatarToggleMyProfile(), "Avatar.ToggleMyProfile");
+	view_listener_t::addMenu(new LLAvatarToggleSearch(), "Avatar.ToggleSearch");
 	view_listener_t::addMenu(new LLAvatarResetSkeleton(), "Avatar.ResetSkeleton");
 	view_listener_t::addMenu(new LLAvatarEnableResetSkeleton(), "Avatar.EnableResetSkeleton");
 	view_listener_t::addMenu(new LLAvatarResetSkeletonAndAnimations(), "Avatar.ResetSkeletonAndAnimations");

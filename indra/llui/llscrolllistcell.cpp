@@ -82,6 +82,14 @@ const LLSD LLScrollListCell::getValue() const
 	return LLStringUtil::null;
 }
 
+
+// virtual
+const LLSD LLScrollListCell::getAltValue() const
+{
+	return LLStringUtil::null;
+}
+
+
 //
 // LLScrollListIcon
 //
@@ -176,6 +184,7 @@ U32 LLScrollListText::sCount = 0;
 LLScrollListText::LLScrollListText(const LLScrollListCell::Params& p)
 :	LLScrollListCell(p),
 	mText(p.label.isProvided() ? p.label() : p.value().asString()),
+	mAltText(p.alt_value().asString()),
 	mFont(p.font),
 	mColor(p.color),
 	mUseColor(p.color.isProvided()),
@@ -278,10 +287,22 @@ void LLScrollListText::setValue(const LLSD& text)
 	setText(text.asString());
 }
 
+//virtual
+void LLScrollListText::setAltValue(const LLSD& text)
+{
+	mAltText = text.asString();
+}
+
 //virtual 
 const LLSD LLScrollListText::getValue() const		
 { 
-	return LLSD(mText.getString()); 
+	return LLSD(mText.getString());  
+}
+
+//virtual 
+const LLSD LLScrollListText::getAltValue() const		
+{ 
+	return LLSD(mAltText.getString());
 }
 
 
