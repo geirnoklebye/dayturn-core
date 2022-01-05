@@ -80,6 +80,10 @@ static void handle_click_action_play();
 static void handle_click_action_open_media(LLPointer<LLViewerObject> objectp);
 static ECursorType cursor_from_parcel_media(U8 click_action);
 
+BOOL rigged_hovering_keep_hand = false;
+U64 last_rigged_hovering_check_clock_count = 0;
+U64 last_rigged_pick_clock_count = 0;
+
 LLToolPie::LLToolPie()
 :	LLTool(std::string("Pie")),
 	mMouseButtonDown( false ),
@@ -114,7 +118,7 @@ BOOL LLToolPie::handleMouseDown(S32 x, S32 y, MASK mask)
 	mMouseDownX = x;
 	mMouseDownY = y;
 	LLTimer pick_timer;
-	BOOL pick_rigged = false; //gSavedSettings.getBOOL("AnimatedObjectsAllowLeftClick");
+	BOOL pick_rigged = gSavedSettings.getBOOL("AnimatedObjectsAllowLeftClick");
 	LLPickInfo transparent_pick = gViewerWindow->pickImmediate(x, y, TRUE /*includes transparent*/, pick_rigged);
 	LLPickInfo visible_pick = gViewerWindow->pickImmediate(x, y, FALSE, pick_rigged);
 	LLViewerObject *transp_object = transparent_pick.getObject();
@@ -175,7 +179,9 @@ BOOL LLToolPie::handleMouseDown(S32 x, S32 y, MASK mask)
 
 	mMouseButtonDown = true;
 
-    return handleLeftClickPick();
+	// If nothing clickable is picked, needs to return
+	// false for click-to-walk or click-to-teleport to work.
+	return handleLeftClickPick();
 }
 
 BOOL LLToolPie::handleMiddleMouseDown(S32 x, S32 y, MASK mask)
@@ -743,7 +749,21 @@ void LLToolPie::selectionPropertiesReceived()
 
 BOOL LLToolPie::handleHover(S32 x, S32 y, MASK mask)
 {
-    BOOL pick_rigged = false; //gSavedSettings.getBOOL("AnimatedObjectsAllowLeftClick");
+	// prevent rigged item hovering causing FPS to drop by faking we're still hovering it for 0.25 seconds
+	U64 current_clock_count = LLTimer::getCurrentClockCount();
+	if (current_clock_count - last_rigged_pick_clock_count < 2500000) {
+		if(rigged_hovering_keep_hand) gViewerWindow->setCursor(UI_CURSOR_HAND);
+		return TRUE;
+	}
+	rigged_hovering_keep_hand = 0;
+
+    static LLCachedControl<bool> pick_rigged_setting(gSavedSettings, "AnimatedObjectsAllowLeftClick");
+    BOOL pick_rigged = pick_rigged_setting;
+	if (pick_rigged) {
+		pick_rigged = (current_clock_count - last_rigged_hovering_check_clock_count > 1000000); // only 10 per seconds
+		if (pick_rigged) last_rigged_hovering_check_clock_count = current_clock_count;
+	}
+	
 	mHoverPick = gViewerWindow->pickImmediate(x, y, FALSE, pick_rigged);
 	LLViewerObject *parent = NULL;
 	LLViewerObject *object = mHoverPick.getObject();
@@ -751,6 +771,10 @@ BOOL LLToolPie::handleHover(S32 x, S32 y, MASK mask)
 	if (object)
 	{
 		parent = object->getRootEdit();
+		// Update gLastRiggedPickClockCount if we're hovering a rigged item
+		if (object->isRiggedMesh()) {
+			last_rigged_pick_clock_count = current_clock_count;
+		}
 	}
 
 	// Show screen-space highlight glow effect
@@ -816,6 +840,7 @@ BOOL LLToolPie::handleHover(S32 x, S32 y, MASK mask)
 		{
 			show_highlight = true;
 			gViewerWindow->setCursor(UI_CURSOR_HAND);
+			rigged_hovering_keep_hand = true;
 			LL_DEBUGS("UserInput") << "hover handled by LLToolPie (inactive)" << LL_ENDL;
 		}
 		else

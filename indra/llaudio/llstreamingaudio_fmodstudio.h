@@ -68,7 +68,7 @@ class LLStreamingAudio_FMODSTUDIO : public LLStreamingAudioInterface
 	/* virtual */ std::string getCurrentStreamLocation();
 	// DKO
 private:
-	bool releaseDeadStreams();
+    void killDeadStreams();
 
 	FMOD::System *mSystem;
 
@@ -80,7 +80,7 @@ private:
 	std::string mURL;
 	std::string mPendingURL;
 	F32 mGain;
-	// <DKO> Streamtitle display
+    S32 mRetryCount;
 	bool mNewMetadata;
 	LLSD mMetadata;
 	// </DKO> Streamtitle display

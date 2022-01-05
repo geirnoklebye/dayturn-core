@@ -156,6 +156,7 @@ private:
 	LLIconCtrl		 *mViewInventoryIcon;
 	
 	LLScrollListCtrl *mNoticesList;
+    std::set<LLUUID>  mKnownNoticeIds; // Dupplicate avoidance, to avoid searching and inserting dupplciates into mNoticesList
 
 	std::string		mNoNoticesStr;
 

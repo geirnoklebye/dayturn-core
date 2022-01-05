@@ -90,6 +90,9 @@ private:
 	bool mCookiesEnabled;
 	bool mPluginsEnabled;
 	bool mJavascriptEnabled;
+    bool mProxyEnabled;
+    std::string mProxyHost;
+    int mProxyPort;
 	bool mDisableGPU;
 #if LL_DARWIN || LL_WINDOWS
 	bool mDisableNetworkService;
@@ -135,6 +138,9 @@ MediaPluginBase(host_send_func, host_user_data)
 	mCookiesEnabled = true;
 	mPluginsEnabled = false;
 	mJavascriptEnabled = true;
+    mProxyEnabled = false;
+    mProxyHost = "";
+    mProxyPort = 0;
 	mDisableGPU = false;
 #if LL_DARWIN || LL_WINDOWS
 	mDisableNetworkService = true;
@@ -546,57 +552,65 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 		}
 		else if (message_class == LLPLUGIN_MESSAGE_CLASS_MEDIA)
 		{
-			if (message_name == "init")
-			{
-				// event callbacks from Dullahan
-				mCEFLib->setOnPageChangedCallback(std::bind(&MediaPluginCEF::onPageChangedCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
-				mCEFLib->setOnCustomSchemeURLCallback(std::bind(&MediaPluginCEF::onCustomSchemeURLCallback, this, std::placeholders::_1));
-				mCEFLib->setOnConsoleMessageCallback(std::bind(&MediaPluginCEF::onConsoleMessageCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-				mCEFLib->setOnStatusMessageCallback(std::bind(&MediaPluginCEF::onStatusMessageCallback, this, std::placeholders::_1));
-				mCEFLib->setOnTitleChangeCallback(std::bind(&MediaPluginCEF::onTitleChangeCallback, this, std::placeholders::_1));
+            if (message_name == "init")
+            {
+                // event callbacks from Dullahan
+                mCEFLib->setOnPageChangedCallback(std::bind(&MediaPluginCEF::onPageChangedCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
+                mCEFLib->setOnCustomSchemeURLCallback(std::bind(&MediaPluginCEF::onCustomSchemeURLCallback, this, std::placeholders::_1));
+                mCEFLib->setOnConsoleMessageCallback(std::bind(&MediaPluginCEF::onConsoleMessageCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+                mCEFLib->setOnStatusMessageCallback(std::bind(&MediaPluginCEF::onStatusMessageCallback, this, std::placeholders::_1));
+                mCEFLib->setOnTitleChangeCallback(std::bind(&MediaPluginCEF::onTitleChangeCallback, this, std::placeholders::_1));
 #if LL_DARWIN || LL_WINDOWS
-				mCEFLib->setOnTooltipCallback(std::bind(&MediaPluginCEF::onTooltipCallback, this, std::placeholders::_1));
+                mCEFLib->setOnTooltipCallback(std::bind(&MediaPluginCEF::onTooltipCallback, this, std::placeholders::_1));
 #endif
-				mCEFLib->setOnLoadStartCallback(std::bind(&MediaPluginCEF::onLoadStartCallback, this));
-				mCEFLib->setOnLoadEndCallback(std::bind(&MediaPluginCEF::onLoadEndCallback, this, std::placeholders::_1, std::placeholders::_2));
-				mCEFLib->setOnLoadErrorCallback(std::bind(&MediaPluginCEF::onLoadError, this, std::placeholders::_1, std::placeholders::_2));
-				mCEFLib->setOnAddressChangeCallback(std::bind(&MediaPluginCEF::onAddressChangeCallback, this, std::placeholders::_1));
-				mCEFLib->setOnOpenPopupCallback(std::bind(&MediaPluginCEF::onOpenPopupCallback, this, std::placeholders::_1, std::placeholders::_2));
-				mCEFLib->setOnHTTPAuthCallback(std::bind(&MediaPluginCEF::onHTTPAuthCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
-				mCEFLib->setOnFileDialogCallback(std::bind(&MediaPluginCEF::onFileDialog, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
-				mCEFLib->setOnCursorChangedCallback(std::bind(&MediaPluginCEF::onCursorChangedCallback, this, std::placeholders::_1));
-				mCEFLib->setOnRequestExitCallback(std::bind(&MediaPluginCEF::onRequestExitCallback, this));
+                mCEFLib->setOnLoadStartCallback(std::bind(&MediaPluginCEF::onLoadStartCallback, this));
+                mCEFLib->setOnLoadEndCallback(std::bind(&MediaPluginCEF::onLoadEndCallback, this, std::placeholders::_1, std::placeholders::_2));
+                mCEFLib->setOnLoadErrorCallback(std::bind(&MediaPluginCEF::onLoadError, this, std::placeholders::_1, std::placeholders::_2));
+                mCEFLib->setOnAddressChangeCallback(std::bind(&MediaPluginCEF::onAddressChangeCallback, this, std::placeholders::_1));
+                mCEFLib->setOnOpenPopupCallback(std::bind(&MediaPluginCEF::onOpenPopupCallback, this, std::placeholders::_1, std::placeholders::_2));
+                mCEFLib->setOnHTTPAuthCallback(std::bind(&MediaPluginCEF::onHTTPAuthCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+                mCEFLib->setOnFileDialogCallback(std::bind(&MediaPluginCEF::onFileDialog, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5));
+                mCEFLib->setOnCursorChangedCallback(std::bind(&MediaPluginCEF::onCursorChangedCallback, this, std::placeholders::_1));
+                mCEFLib->setOnRequestExitCallback(std::bind(&MediaPluginCEF::onRequestExitCallback, this));
 #if LL_DARWIN || LL_WINDOWS
-				mCEFLib->setOnJSDialogCallback(std::bind(&MediaPluginCEF::onJSDialogCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-				mCEFLib->setOnJSBeforeUnloadCallback(std::bind(&MediaPluginCEF::onJSBeforeUnloadCallback, this));
+                mCEFLib->setOnJSDialogCallback(std::bind(&MediaPluginCEF::onJSDialogCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+                mCEFLib->setOnJSBeforeUnloadCallback(std::bind(&MediaPluginCEF::onJSBeforeUnloadCallback, this));
 #endif				
-				dullahan::dullahan_settings settings;
+                dullahan::dullahan_settings settings;
 #if LL_WINDOWS
-				// As of CEF version 83+, for Windows versions, we need to tell CEF 
-				// where the host helper process is since this DLL is not in the same
-				// dir as the executable that loaded it (SLPlugin.exe). The code in 
-				// Dullahan that tried to figure out the location automatically uses 
-				// the location of the exe which isn't helpful so we tell it explicitly.
-				char cur_dir_str[MAX_PATH];
-				GetCurrentDirectoryA(MAX_PATH, cur_dir_str);
-				settings.host_process_path = std::string(cur_dir_str);
+                // As of CEF version 83+, for Windows versions, we need to tell CEF 
+                // where the host helper process is since this DLL is not in the same
+                // dir as the executable that loaded it (SLPlugin.exe). The code in 
+                // Dullahan that tried to figure out the location automatically uses 
+                // the location of the exe which isn't helpful so we tell it explicitly.
+                char cur_dir_str[MAX_PATH];
+                GetCurrentDirectoryA(MAX_PATH, cur_dir_str);
+                settings.host_process_path = std::string(cur_dir_str);
 #endif
-				settings.accept_language_list = mHostLanguage;
+                settings.accept_language_list = mHostLanguage;
 
-				// SL-15560: Product team overruled my change to set the default
-				// embedded background color to match the floater background
-				// and set it to white
-				settings.background_color = 0xffffffff;	// white 
+                // SL-15560: Product team overruled my change to set the default
+                // embedded background color to match the floater background
+                // and set it to white
+                settings.background_color = 0xffffffff;	// white 
 
-				settings.cache_enabled = true;
-				settings.cache_path = mCachePath;
+                settings.cache_enabled = true;
+                settings.cache_path = mCachePath;
 #if LL_LINUX
 				settings.cookie_store_path = mCookiePath;
 #else
 				settings.root_cache_path = mRootCachePath;
-				settings.context_cache_path = mContextCachePath;
+                settings.context_cache_path = mContextCachePath;
 #endif
-				settings.cookies_enabled = mCookiesEnabled;
+                settings.cookies_enabled = mCookiesEnabled;
+
+                // configure proxy argument if enabled and valid
+                if (mProxyEnabled && mProxyHost.length())
+                {
+                    std::ostringstream proxy_url;
+                    proxy_url << mProxyHost << ":" << mProxyPort;
+                    settings.proxy_host_port = proxy_url.str();
+                }
 				settings.disable_gpu = mDisableGPU;
 #if LL_DARWIN
 				settings.disable_network_service = mDisableNetworkService;
@@ -957,6 +971,12 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			{
 				mDisableGPU = message_in.getValueBoolean("disable");
 			}
+            else if (message_name == "proxy_setup")
+            {
+                mProxyEnabled = message_in.getValueBoolean("enable");
+                mProxyHost = message_in.getValue("host");
+                mProxyPort = message_in.getValueS32("port");
+            }
 			else if (message_name == "web_security_disabled")
 			{
 				mDisableWebSecurity = message_in.getValueBoolean("disabled");
