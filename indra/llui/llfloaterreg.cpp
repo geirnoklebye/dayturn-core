@@ -119,6 +119,8 @@ LLFloater* LLFloaterReg::getLastFloaterCascading()
 	return candidate_floater;
 }
 
+// KKA-918 Although exceptions here are only showing on RLV (perhaps due to floaters getting
+// forcibly closed) make it paranoid for all variants
 //static
 LLFloater* LLFloaterReg::findInstance(const std::string& name, const LLSD& key)
 {
@@ -127,13 +129,16 @@ LLFloater* LLFloaterReg::findInstance(const std::string& name, const LLSD& key)
 	if (!groupname.empty())
 	{
 		instance_list_t& list = sInstanceMap[groupname];
-		for (instance_list_t::iterator iter = list.begin(); iter != list.end(); ++iter)
+		if (!list.empty())
 		{
-			LLFloater* inst = *iter;
-			if (inst->matchesKey(key))
+			for (instance_list_t::iterator iter = list.begin(); iter != list.end(); ++iter)
 			{
-				res = inst;
-				break;
+				LLFloater* inst = *iter;
+				if (inst && inst->matchesKey(key))
+				{
+					res = inst;
+					break;
+				}
 			}
 		}
 	}
