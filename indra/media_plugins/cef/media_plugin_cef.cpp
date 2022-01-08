@@ -601,8 +601,6 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 #else
 				settings.root_cache_path = mRootCachePath;
                 settings.context_cache_path = mContextCachePath;
-#endif
-                settings.cookies_enabled = mCookiesEnabled;
 
                 // configure proxy argument if enabled and valid
                 if (mProxyEnabled && mProxyHost.length())
@@ -611,6 +609,10 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
                     proxy_url << mProxyHost << ":" << mProxyPort;
                     settings.proxy_host_port = proxy_url.str();
                 }
+#endif
+                settings.cookies_enabled = mCookiesEnabled;
+
+
 				settings.disable_gpu = mDisableGPU;
 #if LL_DARWIN
 				settings.disable_network_service = mDisableNetworkService;
