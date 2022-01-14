@@ -166,8 +166,8 @@ class ViewerManifest(LLManifest):
                     # Update: 2017-11-01 CP Now we store app code in the html folder
                     #         Initially the HTML/JS code to render equirectangular
                     #         images for the 360 capture feature but more to follow.
+                    # The JS files are now copied directly from installables to build output
                     with self.prefix(src="*/html", dst="*/html"):
-                        self.path("*/*/*/*.js")
                         self.path("*/*/*.html")
 
             #build_data.json.  Standard with exception handling is fine.  If we can't open a new file for writing, we have worse problems
