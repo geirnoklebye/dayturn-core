@@ -580,11 +580,18 @@ void LLVOCacheEntry::updateParentBoundingInfo(const LLVOCacheEntry* child)
 	const LLVector4a* parent_exts = getSpatialExtents();
 	update_min_max(newMin, newMax, parent_exts[0]);
 	update_min_max(newMin, newMax, parent_exts[1]);
-	for(S32 i = 0; i < 4; i++)
-	{
-		llclamp(newMin[i], 0.f, 256.f);
-		llclamp(newMax[i], 0.f, 256.f);
-	}
+
+	// <FS:ND> Either the next to lines are useless, or there was an assignment missing.
+	// The lines are unused, using the clamped values causes big items to go poof.
+
+	// for(S32 i = 0; i < 4; i++)
+	// {
+	// 	llclamp(newMin[i], 0.f, 256.f);
+	// 	llclamp(newMax[i], 0.f, 256.f);
+	// }
+
+	// </FS:ND>
+	
 	setSpatialExtents(newMin, newMax);
 
 	//update parent's bbox center
@@ -1331,7 +1338,9 @@ void LLVOCache::writeCacheHeader()
 
 	bool success = true ;
 	{
-		LLAPRFile apr_file(mHeaderFileName, APR_CREATE|APR_WRITE|APR_BINARY, mLocalAPRFilePoolp);
+		// <FS> Fix bogus cache entry size warning
+		//LLAPRFile apr_file(mHeaderFileName, APR_CREATE|APR_WRITE|APR_BINARY, mLocalAPRFilePoolp);
+		LLAPRFile apr_file(mHeaderFileName, APR_FOPEN_CREATE|APR_FOPEN_WRITE|APR_FOPEN_BINARY|APR_FOPEN_TRUNCATE, mLocalAPRFilePoolp);
 
 		//write the meta element
 		success = check_write(&apr_file, &mMetaInfo, sizeof(HeaderMetaInfo)) ;
