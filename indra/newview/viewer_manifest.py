@@ -63,6 +63,11 @@ class ViewerManifest(LLManifest):
         self.path(src="../../scripts/messages/message_template.msg", dst="app_settings/message_template.msg")
         self.path(src="../../etc/message.xml", dst="app_settings/message.xml")
 
+        # <FS:Ansariel> Copy 360 snapshot JavaScripts
+        pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
+        with self.prefix(src=pkgdir, dst="skins/default/html/common/equirectangular"):
+            self.path("js")
+
         if self.is_packaging_viewer():
             with self.prefix(src_dst="app_settings"):
                 self.exclude("logcontrol.xml")
@@ -161,8 +166,8 @@ class ViewerManifest(LLManifest):
                     # Update: 2017-11-01 CP Now we store app code in the html folder
                     #         Initially the HTML/JS code to render equirectangular
                     #         images for the 360 capture feature but more to follow.
+                    # The JS files are now copied directly from installables to build output
                     with self.prefix(src="*/html", dst="*/html"):
-                        self.path("*/*/*/*.js")
                         self.path("*/*/*.html")
 
             #build_data.json.  Standard with exception handling is fine.  If we can't open a new file for writing, we have worse problems
