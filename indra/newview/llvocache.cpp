@@ -1526,7 +1526,9 @@ void LLVOCache::writeToCache(U64 handle, const LLUUID& id, const LLVOCacheEntry:
 	{
 		std::string filename;
 		getObjectCacheFilename(handle, filename);
-		LLAPRFile apr_file(filename, APR_CREATE|APR_WRITE|APR_BINARY|APR_TRUNCATE, mLocalAPRFilePoolp);
+		// <FS> Fix bogus cache entry size warning
+		//LLAPRFile apr_file(filename, APR_CREATE|APR_WRITE|APR_BINARY|APR_TRUNCATE, mLocalAPRFilePoolp);
+		LLAPRFile apr_file(filename, APR_FOPEN_CREATE|APR_FOPEN_WRITE|APR_FOPEN_BINARY|APR_FOPEN_TRUNCATE, mLocalAPRFilePoolp);
 	
 		success = check_write(&apr_file, (void*)id.mData, UUID_BYTES);
 	
