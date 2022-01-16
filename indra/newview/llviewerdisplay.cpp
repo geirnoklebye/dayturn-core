@@ -78,6 +78,7 @@
 #include "llscenemonitor.h"
 
 #include "llenvironment.h"
+#include "kokuarlvextras.h"
 
 extern LLPointer<LLViewerTexture> gStartTexture;
 extern bool gShiftFrame;
@@ -110,6 +111,7 @@ U32 gRecentFrameCount = 0; // number of 'recent' frames
 LLFrameTimer gRecentFPSTime;
 LLFrameTimer gRecentMemoryTime;
 LLFrameTimer gAssetStorageLogTime;
+LLFrameTimer gRecentRLVLogTime;
 
 // Rendering stuff
 void pre_show_depth_buffer();
@@ -235,6 +237,19 @@ void display_stats()
         gAssetStorageLogTime.reset();
         gAssetStorage->logAssetStorageInfo();
     }
+	F32 rlv_log_freq = gSavedSettings.getF32("KokuaRLVLogSummaryFrequency");
+	if (rlv_log_freq > 0.f && gRecentRLVLogTime.getElapsedTimeF32() >= rlv_log_freq)
+	{
+		if (gRRenabled)
+		{
+			KokuaRLVExtras::writeLogSummary();
+		}
+		else
+		{
+			LL_INFOS_ONCE() << "RLV is disabled" << LL_ENDL;
+		}
+		gRecentRLVLogTime.reset();
+	}
 }
 
 static LLTrace::BlockTimerStatHandle FTM_PICK("Picking");

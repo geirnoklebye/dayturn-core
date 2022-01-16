@@ -1084,6 +1084,28 @@
     <key>Value</key>
     <integer>0</integer>
   </map>  
+  <key>KokuaRLVLogSummaryFrequency</key>
+  <map>
+    <key>Comment</key>
+    <string>Interval in seconds for writing RLV status to the log file. A value of zero disables the logging</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>F32</string>
+    <key>Value</key>
+    <integer>60</integer>
+  </map>
+  <key>KokuaRLVLogSummaryType</key>
+  <map>
+    <key>Comment</key>
+    <string>Bitmask: b0*=terse output (just restrictions, not origins), b1+=as @list (one line), b2*=as @list (multiple lines), b4+*=single line per origin (+ = screen friendly, * = log friendly)</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>U32</string>
+    <key>Value</key>
+    <integer>1</integer>
+  </map>
   <key>ShowRlvMenu</key>
     <map>
       <key>Comment</key>

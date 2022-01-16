@@ -28,13 +28,15 @@
 #include <map>
 
 #include "kokuarlvextras.h"
+#include "kokuarlvfloaters.h"
 
 #include "llagent.h"
 #include "llagentcamera.h"
 #include "llavatarnamecache.h"
 #include "llerror.h"
 #include "llimview.h"
-#include "llsdserialize.h" 
+#include "llsdserialize.h"
+#include "llviewercontrol.h" 
 #include "llworld.h"
 #include "RRInterface.h"
 
@@ -447,6 +449,104 @@ bool KokuaRLVExtras::cannotRecvIM(const LLUUID& im_session_id, const std::string
 		}
 	}
 	return false;
+}
+
+// generate a terse RLV summary in the log file
+void KokuaRLVExtras::writeLogSummary()
+{
+	RRMAP::iterator it = gAgent.mRRInterface.mSpecialObjectBehaviours.begin();
+	S32 reporttype = gSavedSettings.getU32("KokuaRLVLogSummaryType");
+
+	if (it == gAgent.mRRInterface.mSpecialObjectBehaviours.end())
+	{
+		if (reporttype)
+		{
+			LL_INFOS("RLV") << "RLV restrictions: none" << LL_ENDL;
+		}
+	}
+	else
+	{
+		if (reporttype & 1)
+		{
+			// this is a very terse format intended to avoid bloating the log files - don't include originating
+			// objects and don't include duplicates
+			std::vector<std::string> output;
+			std::string outputline;
+
+			while (it != gAgent.mRRInterface.mSpecialObjectBehaviours.end())
+			{
+				std::string action = it->second;
+				if (std::find(output.begin(), output.end(), action) == output.end())
+				{
+					output.push_back(action);
+				}
+				it++;
+			}
+			for (std::vector<std::string>::const_iterator p = output.begin() ; p != output.end(); ++p)
+			{
+				if (p != output.begin())
+				{
+					outputline += " ";
+				}
+				outputline += *p;
+			}
+			LL_INFOS("RLV") << "RLV terse: " << outputline << LL_ENDL;
+		}
+		
+		if (reporttype & 2)
+		{
+			// this is screen friendly using \n but not very log friendly as a result
+			LL_INFOS("RLV") << "RLV list (one-line): " << gAgent.mRRInterface.getRlvRestrictions() << LL_ENDL;
+		}
+		
+		if (reporttype & 4)
+		{
+			// adapted from RRInterface for one log line per output line, more screen-friendly than log friendly
+			it = gAgent.mRRInterface.mSpecialObjectBehaviours.begin();
+			std::string object_name = "";
+			std::string old_object_name = "";
+			std::string res = "";
+			while (it != gAgent.mRRInterface.mSpecialObjectBehaviours.end())
+			{
+				old_object_name = object_name;
+				object_name = KokuaRLVFloaterSupport::getNameFromUUID(LLUUID(it->first),true);
+
+				// print the name of the object
+				if (object_name != old_object_name) {
+					if (res != "") LL_INFOS("RLV") << "RLV list: " << res << LL_ENDL;
+					res = "### " + object_name + " #####################";
+				}
+				if (res != "") LL_INFOS("RLV") << "RLV list: " << res << LL_ENDL;
+				res = "-------- " + it->second;
+
+				it++;
+			}
+			if (res != "") LL_INFOS("RLV") << "RLV list: " << res << LL_ENDL;
+		}
+
+		if (reporttype & 8)
+		{
+			// adapted from RRInterface for log-friendly single line per item output
+			it = gAgent.mRRInterface.mSpecialObjectBehaviours.begin();
+			std::string object_name = "";
+			std::string old_object_name = "";
+			std::string res = "";
+			while (it != gAgent.mRRInterface.mSpecialObjectBehaviours.end())
+			{
+				old_object_name = object_name;
+				object_name = KokuaRLVFloaterSupport::getNameFromUUID(LLUUID(it->first),true);
+
+				// new object? output line so far if so and start a new line
+				if (object_name != old_object_name) {
+					if (res != "") LL_INFOS("RLV") << "RLV source: " << res << LL_ENDL;
+					res = object_name + ":";
+				}
+				res += " " + it->second;
+				it++;
+			}
+			if (res != "") LL_INFOS("RLV") << "RLV source: " << res << LL_ENDL;
+		}
+	}
 }
 
 // These two are adapted from RLVa's equivalents to make porting easier
