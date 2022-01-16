@@ -1707,14 +1707,22 @@ void open_inventory_offer(const uuid_vec_t& objects, const std::string& from_nam
 				break;
 				case LLAssetType::AT_TEXTURE:
 				{
-					LLFloaterReg::showInstance("preview_texture", LLSD(obj_id), take_focus);
+					//KKA-922 - not if @viewtexture is active
+					if (!gRRenabled || !gAgent.mRRInterface.contains("viewtexture"))
+					{
+						LLFloaterReg::showInstance("preview_texture", LLSD(obj_id), take_focus);
+					}
 					break;
 				}
 				case LLAssetType::AT_ANIMATION:
 					LLFloaterReg::showInstance("preview_anim", LLSD(obj_id), take_focus);
 					break;
 				case LLAssetType::AT_SCRIPT:
-					LLFloaterReg::showInstance("preview_script", LLSD(obj_id), take_focus);
+					//KKA-922 - another potential crash here
+					if (!gRRenabled || !gAgent.mRRInterface.contains("viewscript"))
+					{
+						LLFloaterReg::showInstance("preview_script", LLSD(obj_id), take_focus);
+					}
 					break;
 				case LLAssetType::AT_SOUND:
 					LLFloaterReg::showInstance("preview_sound", LLSD(obj_id), take_focus);
