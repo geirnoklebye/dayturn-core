@@ -1578,6 +1578,9 @@ void LLVOCache::writeToCache(U64 handle, const LLUUID& id, const LLVOCacheEntry:
                     success = check_write(&apr_file, (void*)data_buffer, size_in_buffer);
                     size_in_buffer = 0;
                 }
+                
+                //paranoia
+                apr_file.flush();
             }
 		}
 	}
