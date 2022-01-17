@@ -270,6 +270,7 @@ private:
 	F32		getCurrentShinyOffsetU();
 	F32		getCurrentShinyOffsetV();
 
+    LLComboBox *mComboMatMedia;
     LLMediaCtrl *mTitleMedia;
     LLTextBox *mTitleMediaText;
 
