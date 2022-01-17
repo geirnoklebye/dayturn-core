@@ -872,12 +872,20 @@ LLSD LLMemoryInfo::loadStatsMap()
 	DWORDLONG div = 1024;
 
 	stats.add("Percent Memory use", state.dwMemoryLoad/div);
-	stats.add("Total Physical KB",  state.ullTotalPhys/div);
-	stats.add("Avail Physical KB",  state.ullAvailPhys/div);
-	stats.add("Total page KB",      state.ullTotalPageFile/div);
-	stats.add("Avail page KB",      state.ullAvailPageFile/div);
-	stats.add("Total Virtual KB",   state.ullTotalVirtual/div);
-	stats.add("Avail Virtual KB",   state.ullAvailVirtual/div);
+	// <FS:Ansariel> Ugly, but prevent overflow
+	//stats.add("Total Physical KB",  state.ullTotalPhys/div);
+	//stats.add("Avail Physical KB",  state.ullAvailPhys/div);
+	//stats.add("Total page KB",      state.ullTotalPageFile/div);
+	//stats.add("Avail page KB",      state.ullAvailPageFile/div);
+	//stats.add("Total Virtual KB",   state.ullTotalVirtual/div);
+	//stats.add("Avail Virtual KB",   state.ullAvailVirtual/div);
+	stats.add("Total Physical KB",  llclamp(state.ullTotalPhys/div, U64(0), U64(S32_MAX)));
+	stats.add("Avail Physical KB",  llclamp(state.ullAvailPhys/div, U64(0), U64(S32_MAX)));
+	stats.add("Total page KB",      llclamp(state.ullTotalPageFile/div, U64(0), U64(S32_MAX)));
+	stats.add("Avail page KB",      llclamp(state.ullAvailPageFile/div, U64(0), U64(S32_MAX)));
+	stats.add("Total Virtual KB",   llclamp(state.ullTotalVirtual/div, U64(0), U64(S32_MAX)));
+	stats.add("Avail Virtual KB",   llclamp(state.ullAvailVirtual/div, U64(0), U64(S32_MAX)));
+	// </FS:Ansariel>
 
 	// SL-12122 - Call to GetPerformanceInfo() was removed here. Took
 	// on order of 10 ms, causing unacceptable frame time spike every
@@ -1039,10 +1047,26 @@ LLSD LLMemoryInfo::loadStatsMap()
 				}
 				catch (const boost::bad_lexical_cast&)
 				{
-					LL_WARNS("LLMemoryInfo") << "couldn't parse '" << value_str
-											 << "' in " << MEMINFO_FILE << " line: "
-											 << line << LL_ENDL;
+					//<FS:TS> FIRE-10950: Deal with VM sizes too big to fit in 32 bits
+					//LL_WARNS("LLMemoryInfo") << "couldn't parse '" << value_str
+					//						 << "' in " << MEMINFO_FILE << " line: "
+					//						 << line << LL_ENDL;
+					//continue;
+					U64 bigvalue = 0;
+					try
+					{
+						bigvalue = boost::lexical_cast<U64>(value_str);
+					}
+					catch (const boost::bad_lexical_cast&)
+					{
+						LL_WARNS("LLMemoryInfo") << "couldn't parse '" << value_str
+												<< "' in " << MEMINFO_FILE << " line: "
+												<< line << LL_ENDL;
+						continue;
+					}
+					stats.add(key,bigvalue);
 					continue;
+					//</FS:TS> FIRE-10950
 				}
 				// Store this statistic.
 				stats.add(key, value);
