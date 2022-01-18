@@ -2014,6 +2014,15 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 		LL_INFOS("RLV") << object_uuid.asString() << " : " << command << " " << option << LL_ENDL;
 	}
 
+	// RLVa allows #RLV/ to be used at the start of the path, so support it too for compatibility
+	std::string prefix = RR_RLV_REDIR_FOLDER_PREFIX;
+	LLStringUtil::toLower(prefix);
+	prefix = prefix.substr(0,prefix.length()-1); // we don't want to check for or strip the ~
+	if (option.find(prefix) == 0)
+	{
+		option = option.substr(prefix.length());
+	}
+
 	// If this action is blacklisted, do nothing
 	if (isBlacklisted (command, true)) {
 		return TRUE;
