@@ -310,6 +310,11 @@ public:
 	BOOL mContainsTouchattachother;
 	BOOL mContainsTouchhud;
 	BOOL mContainsTouchall;
+	BOOL mContainsViewNote;
+	BOOL mContainsViewTexture;
+	BOOL mContainsCamunlock; // don't use this, use mContainsLockedCamera
+	BOOL mContainsSetcamUnlock; // don't use this, use mContainsLockedCamera
+	BOOL mContainsLockedCamera; // this combines camunlock and setcam_unlock
 
 	BOOL mHandleNoStrip;
 	//BOOL mContainsMoveUp;

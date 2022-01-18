@@ -453,6 +453,14 @@ void refreshCachedVariable (std::string var)
 	else if (var == "touchattachother")				gAgent.mRRInterface.mContainsTouchattachother = contained;
 	else if (var == "touchhud")				gAgent.mRRInterface.mContainsTouchhud = contained;
 	else if (var == "touchall")				gAgent.mRRInterface.mContainsTouchall = contained;
+	else if (var == "viewtexture")				gAgent.mRRInterface.mContainsViewTexture = contained;
+	else if (var == "viewnote")				gAgent.mRRInterface.mContainsViewNote = contained;
+	else if (var == "setcam_unlock" || var == "camunlock") {
+		if (var == "camunlock") gAgent.mRRInterface.mContainsCamunlock = contained;
+		else gAgent.mRRInterface.mContainsSetcamUnlock = contained;
+		gAgent.mRRInterface.mContainsLockedCamera = gAgent.mRRInterface.mContainsCamunlock | gAgent.mRRInterface.mContainsSetcamUnlock;
+	}
+	
 		
 	//else if (var == "moveup")					gAgent.mRRInterface.mContainsMoveUp = contained;
 	//else if (var == "movedown")				gAgent.mRRInterface.mContainsMoveDown = contained;
