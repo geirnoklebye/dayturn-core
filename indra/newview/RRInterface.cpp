@@ -6093,7 +6093,7 @@ bool RRInterface::canTouch(LLViewerObject* object, LLVector3 pick_intersection /
 	// CA turn off logging on this since it gets called a lot for the pointer hover code
 	if (!isAllowed (object_root_id, "touchme", false)) return true; // to check the presence of "touchme" on this object, which means that we can touch it
 
-	if (!root->isHUDAttachment() && contains ("touchall")) return false;
+	if (!root->isHUDAttachment() && gAgent.mRRInterface.mContainsTouchall) return false;
 
 //	if (!root->isHUDAttachment() && contains ("touchallnonhud")) return false;
 
@@ -6105,17 +6105,17 @@ bool RRInterface::canTouch(LLViewerObject* object, LLVector3 pick_intersection /
 
 	if (root->isAttachment()) {
 		if (!root->isHUDAttachment()) {
-			if (contains ("touchattach")) return false;
+			if (gAgent.mRRInterface.mContainsTouchattach) return false;
 
 			LLInventoryItem* inv_item = getItem (root->getID());
 			if (inv_item) { // this attachment is in my inv => it belongs to me
-				if (contains ("touchattachself")) {
+				if (gAgent.mRRInterface.mContainsTouchattachself) {
 					return false;
 				}
 			}
 			else { // this attachment is not in my inv => it does not belong to me
 				LLVOAvatar* av = root->getAvatar();
-				if (contains ("touchattachother")) {
+				if (gAgent.mRRInterface.mContainsTouchattachother) {
 					return false;
 				}
 				else if (av != NULL && contains ("touchattachother:" + av->getID().asString())) {
