@@ -1650,7 +1650,7 @@ void open_inventory_offer(const uuid_vec_t& objects, const std::string& from_nam
 				case LLAssetType::AT_NOTECARD:
 				{
 //MK by CA - KKA-879/Bugsplat crashes 31 & 38 - don't try to use the floater we closed earlier (eg Open Attachment on group notice with notecard)
-					if (!gRRenabled || !gAgent.mRRInterface.contains("viewnote"))
+					if (!(gRRenabled && gAgent.mRRInterface.mContainsViewNote))
 					{
 						LLFloaterReg::showInstance("preview_notecard", LLSD(obj_id), take_focus);
 					}
@@ -1708,7 +1708,7 @@ void open_inventory_offer(const uuid_vec_t& objects, const std::string& from_nam
 				case LLAssetType::AT_TEXTURE:
 				{
 					//KKA-922 - not if @viewtexture is active
-					if (!gRRenabled || !gAgent.mRRInterface.contains("viewtexture"))
+					if (!(gRRenabled && gAgent.mRRInterface.mContainsViewTexture))
 					{
 						LLFloaterReg::showInstance("preview_texture", LLSD(obj_id), take_focus);
 					}
@@ -1719,7 +1719,7 @@ void open_inventory_offer(const uuid_vec_t& objects, const std::string& from_nam
 					break;
 				case LLAssetType::AT_SCRIPT:
 					//KKA-922 - another potential crash here
-					if (!gRRenabled || !gAgent.mRRInterface.contains("viewscript"))
+					if (!(gRRenabled && gAgent.mRRInterface.mContainsViewScript))
 					{
 						LLFloaterReg::showInstance("preview_script", LLSD(obj_id), take_focus);
 					}

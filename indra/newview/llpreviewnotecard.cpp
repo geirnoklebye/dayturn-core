@@ -86,7 +86,7 @@ LLPreviewNotecard::~LLPreviewNotecard()
 BOOL LLPreviewNotecard::postBuild()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.contains("viewnote"))
+	if (gRRenabled && gAgent.mRRInterface.mContainsViewNote)
 	{
 		mForceClose = TRUE;
 		closeFloater();

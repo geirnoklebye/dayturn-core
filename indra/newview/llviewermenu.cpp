@@ -7113,7 +7113,7 @@ void handle_look_at_selection(const LLSD& param)
 void handle_zoom_to_object(LLUUID object_id)
 {
 //MK
-	if (gRRenabled && (gAgent.mRRInterface.contains("camunlock") || gAgent.mRRInterface.contains("setcam_unlock")))
+	if (gRRenabled && gAgent.mRRInterface.mContainsLockedCamera)
 	{
 		return;
 	}

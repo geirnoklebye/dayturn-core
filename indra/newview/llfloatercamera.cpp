@@ -624,7 +624,7 @@ void LLFloaterCamera::onClickResize(const LLSD& param)
 void LLFloaterCamera::switchToPreset(const std::string& name)
 {
 //MK
-	if (gRRenabled && (gAgent.mRRInterface.contains("camunlock") || gAgent.mRRInterface.contains("setcam_unlock")))
+	if (gRRenabled && gAgent.mRRInterface.mContainsLockedCamera)
 	{
 		return;
 	}

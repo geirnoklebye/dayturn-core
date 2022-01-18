@@ -467,7 +467,7 @@ void LLLiveLSLEditor::onToggleExperience( LLUICtrl *ui, void* userdata )
 BOOL LLScriptEdCore::postBuild()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.contains("viewnote"))
+	if (gRRenabled && gAgent.mRRInterface.mContainsViewNote)
 	{
 		mForceClose = TRUE;
 		((LLFloater*)getParent())->closeFloater();
@@ -1591,7 +1591,7 @@ LLPreviewLSL::LLPreviewLSL(const LLSD& key )
 BOOL LLPreviewLSL::postBuild()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.contains("viewnote"))
+	if (gRRenabled && gAgent.mRRInterface.mContainsViewNote)
 	{
 		mForceClose = TRUE;
 		closeFloater();
@@ -2045,7 +2045,7 @@ LLLiveLSLEditor::LLLiveLSLEditor(const LLSD& key) :
 BOOL LLLiveLSLEditor::postBuild()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.contains("viewnote"))
+	if (gRRenabled && gAgent.mRRInterface.mContainsViewNote)
 	{
 		mForceClose = TRUE;
 		closeFloater();

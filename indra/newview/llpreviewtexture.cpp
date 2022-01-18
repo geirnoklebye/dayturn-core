@@ -132,7 +132,7 @@ void LLPreviewTexture::populateRatioList()
 BOOL LLPreviewTexture::postBuild()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.contains("viewtexture"))
+	if (gRRenabled && gAgent.mRRInterface.mContainsViewTexture)
 	{
 		closeFloater();
 		return TRUE;
