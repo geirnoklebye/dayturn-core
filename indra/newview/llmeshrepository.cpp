@@ -1842,6 +1842,7 @@ EMeshProcessingResult LLMeshRepoThread::headerReceived(const LLVolumeParams& mes
         catch (std::bad_alloc&)
         {
             // out of memory, we won't be able to process this mesh
+			LL_WARNS() << "Out of memory, aborting on " << mesh_id << LL_ENDL;
             return MESH_OUT_OF_MEMORY;
         }
 
@@ -1921,6 +1922,7 @@ EMeshProcessingResult LLMeshRepoThread::lodReceived(const LLVolumeParams& mesh_p
 	catch (std::bad_alloc&)
 	{
 		// out of memory, we won't be able to process this mesh
+		LL_WARNS() << "Aborting on lodReceived" << LL_ENDL;
 		return MESH_OUT_OF_MEMORY;
 	}
 
@@ -2053,6 +2055,7 @@ EMeshProcessingResult LLMeshRepoThread::physicsShapeReceived(const LLUUID& mesh_
         catch (std::bad_alloc&)
         {
             // out of memory, we won't be able to process this mesh
+			LL_WARNS() << "Out of memory in physics for " << mesh_id << LL_ENDL;
             delete d;
             return MESH_OUT_OF_MEMORY;
         }
