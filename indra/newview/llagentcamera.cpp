@@ -400,11 +400,7 @@ void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera, BOOL moveme
 void LLAgentCamera::unlockView()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.contains ("camunlock"))
-	{
-		return;
-	}
-	if (gRRenabled && gAgent.mRRInterface.contains("setcam_unlock"))
+	if (gRRenabled && (gAgent.mRRInterface.contains ("camunlock") || gAgent.mRRInterface.contains("setcam_unlock")))
 	{
 		return;
 	}
