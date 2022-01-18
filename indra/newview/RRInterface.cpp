@@ -448,6 +448,11 @@ void refreshCachedVariable (std::string var)
 	//CA add viewscript since the console needs to check for it
 	else if (var == "viewscript")				gAgent.mRRInterface.mContainsViewScript = contained;
 	else if (var == "setsphere")				gAgent.mRRInterface.mContainsSetsphere = contained;
+	else if (var == "touchattach")				gAgent.mRRInterface.mContainsTouchattach = contained;
+	else if (var == "touchattachself")				gAgent.mRRInterface.mContainsTouchattachself = contained;
+	else if (var == "touchattachother")				gAgent.mRRInterface.mContainsTouchattachother = contained;
+	else if (var == "touchhud")				gAgent.mRRInterface.mContainsTouchhud = contained;
+	else if (var == "touchall")				gAgent.mRRInterface.mContainsTouchall = contained;
 		
 	//else if (var == "moveup")					gAgent.mRRInterface.mContainsMoveUp = contained;
 	//else if (var == "movedown")				gAgent.mRRInterface.mContainsMoveDown = contained;

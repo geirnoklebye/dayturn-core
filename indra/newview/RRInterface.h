@@ -305,6 +305,11 @@ public:
 	// CA
 	BOOL mContainsViewScript;
 	BOOL mContainsShowNearby;
+	BOOL mContainsTouchattach;
+	BOOL mContainsTouchattachself;
+	BOOL mContainsTouchattachother;
+	BOOL mContainsTouchhud;
+	BOOL mContainsTouchall;
 
 	BOOL mHandleNoStrip;
 	//BOOL mContainsMoveUp;
