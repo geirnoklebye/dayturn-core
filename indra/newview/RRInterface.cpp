@@ -6082,76 +6082,59 @@ bool RRInterface::canEdit(LLViewerObject* object)
 
 bool RRInterface::canTouch(LLViewerObject* object, LLVector3 pick_intersection /* = LLVector3::zero */)
 {
-	// CA optimise this slightly
-	LLUUID object_root_id = LLUUID::null;
 	if (!object) return true;
 
 	LLViewerObject* root = object->getRootEdit();
 	if (!root) return true;
-	object_root_id = root->getID();
+	LLUUID rootID = root->getID();
+	std::string sRootID = rootID.asString();
+	bool isHUD = root->isHUDAttachment();
 
 	// CA turn off logging on this since it gets called a lot for the pointer hover code
-	if (!isAllowed (object_root_id, "touchme", false)) return true; // to check the presence of "touchme" on this object, which means that we can touch it
+	if (!isAllowed (rootID, "touchme", false)) return true; // to check the presence of "touchme" on this object, which means that we can touch it
 
-	if (!root->isHUDAttachment() && gAgent.mRRInterface.mContainsTouchall) return false;
-
-//	if (!root->isHUDAttachment() && contains ("touchallnonhud")) return false;
-
-	if (root->isHUDAttachment() && containsWithoutException("touchhud", object_root_id.asString())) return false;
-
-	if (contains ("touchthis:"+object_root_id.asString())) return false;
-
-	if (!canTouchFar (object, pick_intersection)) return false;
+	if (!isHUD && gAgent.mRRInterface.mContainsTouchall) return false;
 
 	if (root->isAttachment()) {
-		if (!root->isHUDAttachment()) {
+		if (!isHUD) {
 			if (gAgent.mRRInterface.mContainsTouchattach) return false;
 
-			LLInventoryItem* inv_item = getItem (root->getID());
+			LLInventoryItem* inv_item = getItem (rootID);
 			if (inv_item) { // this attachment is in my inv => it belongs to me
-				if (gAgent.mRRInterface.mContainsTouchattachself) {
-					return false;
-				}
+				if (gAgent.mRRInterface.mContainsTouchattachself) return false;
 			}
 			else { // this attachment is not in my inv => it does not belong to me
 				LLVOAvatar* av = root->getAvatar();
-				if (gAgent.mRRInterface.mContainsTouchattachother) {
-					return false;
-				}
-				else if (av != NULL && contains ("touchattachother:" + av->getID().asString())) {
-					return false;
-				}
+				if (gAgent.mRRInterface.mContainsTouchattachother) return false;
+				else if (av != NULL && contains ("touchattachother:" + av->getID().asString())) return false;
 			}
+		}
+		else
+		{
+			if (containsWithoutException("touchhud", sRootID)) return false;
 		}
 	}
 	else {
-		if (containsWithoutException ("touchworld", object_root_id.asString())) return false;
+		if (containsWithoutException ("touchworld", sRootID)) return false;
+		if (!canTouchFar (object, pick_intersection)) return false;
 	}
+	if (contains ("touchthis:"+sRootID)) return false;
+
 	return true;
 }
 
 bool RRInterface::canTouchFar(LLViewerObject* object, LLVector3 pick_intersection /* = LLVector3::zero */)
 {
-	if (!object) return true;
+	if (!object || object->isHUDAttachment()) return true;
 
-	if (mContainsInteract && !object->isHUDAttachment())
-	{
-		return false;
-	}
+	if (mContainsInteract) return false;
 
 	LLVector3 pos = object->getPositionRegion ();
 	if (pick_intersection != LLVector3::zero) pos = pick_intersection;
 	pos -= gAgent.getPositionAgent ();
 	F32 dist = pos.magVec();
-	if (!object->isHUDAttachment()) {
-		if (dist > mFartouchMax) return false;
-
-		// Deactivate this restriction for now, as there may be cases where we want the avatar to touch
-		// something that is beyond their vision range.
-		//if (dist > mCamDistDrawMax) return false; // don't allow touching or selecting something that is obstructed
-	}
-
-	return true;
+	
+	return !(dist > mFartouchMax);
 }
 
 bool RRInterface::isInventoryItemNew(LLInventoryItem* item)
