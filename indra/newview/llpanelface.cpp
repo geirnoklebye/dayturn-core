@@ -1967,7 +1967,7 @@ bool LLPanelFace::selectedMediaEditable()
 
         if ((owner_mask_on & PERM_MODIFY) ||
             (group_mask_on & PERM_MODIFY) ||
-            (group_mask_on & PERM_MODIFY))
+            (everyone_mask_on & PERM_MODIFY))
         {
             selected_Media_editable = true;
         }
@@ -2541,7 +2541,6 @@ void LLPanelFace::onCommitMaterialsMedia(LLUICtrl* ctrl, void* userdata)
 	self->refreshMedia();
 }
 
-// static
 void LLPanelFace::updateVisibility()
 {	
 	LLRadioGroup* radio_mat_type = getChild<LLRadioGroup>("radio_material_type");
