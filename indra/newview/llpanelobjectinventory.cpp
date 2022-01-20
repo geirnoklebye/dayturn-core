@@ -122,7 +122,7 @@ public:
 
 	virtual LLUIImagePtr getIcon() const;
 	virtual void openItem();
-	virtual BOOL canOpenItem() const { return FALSE; }
+	virtual bool canOpenItem() const { return false; }
 	virtual void closeItem() {}
 	virtual void selectItem() {}
 	virtual bool isItemRenameable() const;
@@ -594,7 +594,7 @@ public:
 							EDragAndDropType cargo_type,
 							void* cargo_data,
 							std::string& tooltip_msg);
-	virtual BOOL canOpenItem() const { return TRUE; }
+	virtual bool canOpenItem() const { return true; }
 	virtual void openItem();
 	virtual EInventorySortGroup getSortGroup() const { return SG_NORMAL_FOLDER; }
 };
@@ -768,7 +768,7 @@ public:
 						const std::string& name) :
 		LLTaskInvFVBridge(panel, uuid, name) {}
 
-	virtual BOOL canOpenItem() const { return TRUE; }
+	virtual bool canOpenItem() const { return true; }
 	virtual void openItem();
 };
 
@@ -800,7 +800,7 @@ public:
 					  const std::string& name) :
 		LLTaskInvFVBridge(panel, uuid, name) {}
 
-	virtual BOOL canOpenItem() const { return TRUE; }
+	virtual bool canOpenItem() const { return true; }
 	virtual void openItem();
 	virtual void performAction(LLInventoryModel* model, std::string action);
 	virtual void buildContextMenu(LLMenuGL& menu, U32 flags);
@@ -994,7 +994,7 @@ public:
 					const std::string& name) :
 		LLTaskScriptBridge(panel, uuid, name) {}
 
-	virtual BOOL canOpenItem() const { return TRUE; }
+	virtual bool canOpenItem() const { return true; }
 	virtual void openItem();
 	virtual bool removeItem();
 	//virtual void buildContextMenu(LLMenuGL& menu);
@@ -1059,7 +1059,7 @@ public:
 						 const std::string& name) :
 		LLTaskInvFVBridge(panel, uuid, name) {}
 
-	virtual BOOL canOpenItem() const { return TRUE; }
+	virtual bool canOpenItem() const { return true; }
 	virtual void openItem();
 	virtual bool removeItem();
 };
@@ -1108,7 +1108,7 @@ public:
 						const std::string& name) :
 	LLTaskInvFVBridge(panel, uuid, name) {}
 
-	virtual BOOL canOpenItem() const { return TRUE; }
+	virtual bool canOpenItem() const { return true; }
 	virtual void openItem();
 	virtual bool removeItem();
 };
@@ -1142,7 +1142,7 @@ public:
 						  const std::string& name) :
 		LLTaskInvFVBridge(panel, uuid, name) {}
 
-	virtual BOOL canOpenItem() const { return TRUE; }
+	virtual bool canOpenItem() const { return true; }
 	virtual void openItem();
 	virtual bool removeItem();
 };
@@ -1327,9 +1327,9 @@ LLPanelObjectInventory::LLPanelObjectInventory(const LLPanelObjectInventory::Par
 	LLPanel(p),
 	mScroller(NULL),
 	mFolders(NULL),
-	mHaveInventory(FALSE),
-	mIsInventoryEmpty(TRUE),
-	mInventoryNeedsUpdate(FALSE),
+	mHaveInventory(false),
+	mIsInventoryEmpty(true),
+	mInventoryNeedsUpdate(false),
 	mInventoryViewModel(p.name)
 {
 	// Setup context menu callbacks
@@ -1370,8 +1370,8 @@ void LLPanelObjectInventory::doToSelected(const LLSD& userdata)
 
 void LLPanelObjectInventory::clearContents()
 {
-	mHaveInventory = FALSE;
-	mIsInventoryEmpty = TRUE;
+	mHaveInventory = false;
+	mIsInventoryEmpty = true;
 	if (LLToolDragAndDrop::getInstance() && LLToolDragAndDrop::getInstance()->getSource() == LLToolDragAndDrop::SOURCE_WORLD)
 	{
 		LLToolDragAndDrop::getInstance()->endDrag();
@@ -1448,7 +1448,7 @@ void LLPanelObjectInventory::inventoryChanged(LLViewerObject* object,
 	//		<< " task  UUID: " << object->mID << LL_ENDL;
 	if(mTaskUUID == object->mID)
 	{
-		mInventoryNeedsUpdate = TRUE;
+		mInventoryNeedsUpdate = true;
 	}
 
 	// refresh any properties floaters that are hanging around.
@@ -1475,7 +1475,7 @@ void LLPanelObjectInventory::updateInventory()
 	// We're still interested in this task's inventory.
 	std::vector<LLUUID> selected_item_ids;
 	std::set<LLFolderViewItem*> selected_items;
-	BOOL inventory_has_focus = FALSE;
+	bool inventory_has_focus = false;
 	if (mHaveInventory && mFolders)
 	{
 		selected_items = mFolders->getSelectionList();
@@ -1498,14 +1498,14 @@ void LLPanelObjectInventory::updateInventory()
 		if (inventory_root)
 		{
 			reset();
-			mIsInventoryEmpty = FALSE;
+			mIsInventoryEmpty = false;
 			createFolderViews(inventory_root, contents);
 			mFolders->setEnabled(true);
 		}
 		else
 		{
 			// TODO: create an empty inventory
-			mIsInventoryEmpty = TRUE;
+			mIsInventoryEmpty = true;
 		}
 
 		mHaveInventory = !mIsInventoryEmpty || !objectp->isInventoryDirty();
@@ -1520,8 +1520,8 @@ void LLPanelObjectInventory::updateInventory()
 	else
 	{
 		// TODO: create an empty inventory
-		mIsInventoryEmpty = TRUE;
-		mHaveInventory = TRUE;
+		mIsInventoryEmpty = true;
+		mHaveInventory = true;
 	}
 
 	// restore previous selection
@@ -1537,7 +1537,7 @@ void LLPanelObjectInventory::updateInventory()
 			if (first_item)
 			{
 				mFolders->setSelection(selected_item, true, inventory_has_focus);
-				first_item = FALSE;
+				first_item = false;
 			}
 			else
 			{
@@ -1550,7 +1550,7 @@ void LLPanelObjectInventory::updateInventory()
 	{
 		mFolders->requestArrange();
 	}
-	mInventoryNeedsUpdate = FALSE;
+	mInventoryNeedsUpdate = false;
 	// Edit menu handler is set in onFocusReceived
 }
 
@@ -1663,8 +1663,8 @@ void LLPanelObjectInventory::createViewsForCategory(LLInventoryObject::object_li
 void LLPanelObjectInventory::refresh()
 {
 	//LL_INFOS() << "LLPanelObjectInventory::refresh()" << LL_ENDL;
-	BOOL has_inventory = FALSE;
-	const BOOL non_root_ok = TRUE;
+	bool has_inventory = false;
+	const bool non_root_ok = true;
 	LLObjectSelectionHandle selection = LLSelectMgr::getInstance()->getSelection();
 	LLSelectNode* node = selection->getFirstRootNode(NULL, non_root_ok);
 	if(node && node->mValid)
@@ -1675,7 +1675,7 @@ void LLPanelObjectInventory::refresh()
 		{
 			// determine if we need to make a request. Start with a
 			// default based on if we have inventory at all.
-			BOOL make_request = !mHaveInventory;
+			bool make_request = !mHaveInventory;
 
 			// If the task id is different than what we've stored,
 			// then make the request.
@@ -1683,7 +1683,7 @@ void LLPanelObjectInventory::refresh()
 			{
 				mTaskUUID = object->mID;
 				mAttachmentUUID = object->getAttachmentItemID();
-				make_request = TRUE;
+				make_request = true;
 
 				// This is a new object so pre-emptively clear the contents
 				// Otherwise we show the old stuff until the update comes in
@@ -1709,7 +1709,7 @@ void LLPanelObjectInventory::refresh()
 			{
 				if(node->mInventorySerial != object->getInventorySerial() || object->isInventoryDirty())
 				{
-					make_request = TRUE;
+					make_request = true;
 				}
 			}
 
@@ -1718,7 +1718,7 @@ void LLPanelObjectInventory::refresh()
 			{
 				requestVOInventory();
 			}
-			has_inventory = TRUE;
+			has_inventory = true;
 		}
 	}
 	if(!has_inventory)
@@ -1899,16 +1899,16 @@ bool LLPanelObjectInventory::handleKeyHere( KEY key, MASK mask )
 	return handled;
 }
 
-BOOL LLPanelObjectInventory::isSelectionRemovable()
+bool LLPanelObjectInventory::isSelectionRemovable()
 {
 	if (!mFolders || !mFolders->getRoot())
 	{
-		return FALSE;
+		return false;
 	}
 	std::set<LLFolderViewItem*> selection_set = mFolders->getRoot()->getSelectionList();
 	if (selection_set.empty())
 	{
-		return FALSE;
+		return false;
 	}
 	for (std::set<LLFolderViewItem*>::iterator iter = selection_set.begin();
 		iter != selection_set.end();
@@ -1918,8 +1918,8 @@ BOOL LLPanelObjectInventory::isSelectionRemovable()
 		const LLFolderViewModelItemInventory *listener = dynamic_cast<const LLFolderViewModelItemInventory*>(item->getViewModelItem());
 		if (!listener || !listener->isItemRemovable() || listener->isItemInTrash())
 		{
-			return FALSE;
+			return false;
 		}
 	}
-	return TRUE;
+	return true;
 }
