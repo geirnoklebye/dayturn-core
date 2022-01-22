@@ -5,22 +5,24 @@ set(PYTHONINTERP_FOUND)
 if (WINDOWS)
   # On Windows, explicitly avoid Cygwin Python.
 
+	# Prefer local over system and new over older
   find_program(PYTHON_EXECUTABLE
     NAMES python.exe
     NO_DEFAULT_PATH # added so that cmake does not find cygwin python
     PATHS
-    [HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\3.7\\InstallPath]
-    [HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\3.8\\InstallPath]
-    [HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\3.9\\InstallPath]
-    [HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\3.10\\InstallPath]
-    [HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\3.11\\InstallPath]
-    [HKEY_CURRENT_USER\\SOFTWARE\\Python\\PythonCore\\3.7\\InstallPath]
-    [HKEY_CURRENT_USER\\SOFTWARE\\Python\\PythonCore\\3.8\\InstallPath]
-    [HKEY_CURRENT_USER\\SOFTWARE\\Python\\PythonCore\\3.9\\InstallPath]
+    [HKEY_CURRENT_USER\\SOFTWARE\\Python\\PythonCore\\3.11\\InstallPath]
     [HKEY_CURRENT_USER\\SOFTWARE\\Python\\PythonCore\\3.10\\InstallPath]
+    [HKEY_CURRENT_USER\\SOFTWARE\\Python\\PythonCore\\3.9\\InstallPath]
+    [HKEY_CURRENT_USER\\SOFTWARE\\Python\\PythonCore\\3.8\\InstallPath]
+    [HKEY_CURRENT_USER\\SOFTWARE\\Python\\PythonCore\\3.7\\InstallPath]
     [HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\3.11\\InstallPath]
+    [HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\3.10\\InstallPath]
+    [HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\3.9\\InstallPath]
+    [HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\3.8\\InstallPath]
+    [HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\3.7\\InstallPath]
     )
-    include(FindPythonInterp)
+# don't do this, it'll probably find the wrong one first
+#    include(FindPythonInterp)
 else()
   find_program(PYTHON_EXECUTABLE python3)
 
@@ -31,6 +33,8 @@ endif (WINDOWS)
 
 if (NOT PYTHON_EXECUTABLE)
   message(FATAL_ERROR "No Python interpreter found")
+#else (NOT PYTHON_EXECUTABLE)
+#	message(STATUS "Python = ${PYTHON_EXECUTABLE}")
 endif (NOT PYTHON_EXECUTABLE)
 
 mark_as_advanced(PYTHON_EXECUTABLE)
