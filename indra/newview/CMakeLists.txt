@@ -1918,6 +1918,10 @@ endif (HAVOK OR HAVOK_TPV)
 set_source_files_properties(llstartup.cpp llfloaterpreference.cpp llprogressview.cpp PROPERTIES COMPILE_FLAGS "${LLSTARTUP_COMPILE_FLAGS}")
 # </FS:Ansariel>
 
+if (GLODLIB)
+  set_source_files_properties(llfloatermodelpreview.cpp PROPERTIES COMPILE_FLAGS "-DLL_GLOD")
+endif (GLODLIB)
+
 list(APPEND viewer_SOURCE_FILES ${viewer_HEADER_FILES})
 
 set_source_files_properties(${viewer_HEADER_FILES}
