@@ -106,6 +106,9 @@ public:
 	static const std::string&	lookup(EType folder_type);
 
 //	static bool 				lookupIsProtectedType(EType folder_type);
+	static bool 				lookupIsAutomaticType(EType folder_type);
+	static bool 				lookupIsSingletonType(EType folder_type);
+//	static bool 				lookupIsProtectedType(EType folder_type);
 // [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
 	static bool 				lookupIsProtectedType(EType folder_type, const LLUUID& folder_id);
 // [/SL:KB]

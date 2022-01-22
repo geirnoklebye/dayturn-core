@@ -94,6 +94,7 @@ LLConversationViewSession::LLConversationViewSession(const LLConversationViewSes
 	mFlashStarted(false)
 {
 	mFlashTimer = new LLFlashTimer();
+	mAreChildrenInited = true; // inventory only
 }
 
 LLConversationViewSession::~LLConversationViewSession()

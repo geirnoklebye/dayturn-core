@@ -7251,6 +7251,7 @@ LLViewerObject* LLPipeline::lineSegmentIntersectInWorld(const LLVector4a& start,
 		{
 			if ((j == LLViewerRegion::PARTITION_VOLUME) || 
 				(j == LLViewerRegion::PARTITION_BRIDGE) ||
+                (j == LLViewerRegion::PARTITION_AVATAR) || // for attachments
 				(j == LLViewerRegion::PARTITION_CONTROL_AV) ||
 				(j == LLViewerRegion::PARTITION_TERRAIN) ||
 				(j == LLViewerRegion::PARTITION_TREE) ||
@@ -7272,6 +7273,7 @@ LLViewerObject* LLPipeline::lineSegmentIntersectInWorld(const LLVector4a& start,
 	
 	if (!sPickAvatar)
 	{
+		pick_rigged = false;
 		//save hit info in case we need to restore
 		//due to attachment override
 		LLVector4a local_normal;
