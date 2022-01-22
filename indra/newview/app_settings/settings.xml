@@ -20604,6 +20604,17 @@
       <key>Value</key>
       <string>https://status.secondlifegrid.net/history.rss</string>
     </map>
+    <key>FSLegacySearchActionOnTeleport</key>
+    <map>
+        <key>Comment</key>
+        <string>Controls what action Legacy Search should take when teleporting: 0 = No effect, 1 = Close floater, 2 Minimise floater</string>
+        <key>Persist</key>
+        <integer>1</integer>
+        <key>Type</key>
+        <string>U32</string>
+        <key>Value</key>
+        <integer>1</integer>
+    </map>
     <!-- <FS:Zi> Backup Settings -->
     <key>SettingsBackupPath</key>
     <map>
