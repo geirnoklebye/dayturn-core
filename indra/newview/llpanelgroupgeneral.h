@@ -73,6 +73,7 @@ private:
 	static void onClickInfo(void* userdata);
 	static void onReceiveNotices(LLUICtrl* ctrl, void* data);
 	static void onCopyGroupUUID(void *data);
+	static void onCopyGroupURI(void *data);
 
     static bool joinDlgCB(const LLSD& notification, const LLSD& response);
 
@@ -90,6 +91,7 @@ private:
 	LLTextEditor		*mEditCharter;
 	LLLineEditor		*mGroupUUIDText;
 	LLButton		*mBtnGroupUUIDCopy;
+	LLButton		*mBtnGroupURICopy;
 	// Options (include any updates in updateChanged)
 	LLCheckBoxCtrl	*mCtrlShowInGroupList;
 	LLCheckBoxCtrl	*mCtrlOpenEnrollment;
