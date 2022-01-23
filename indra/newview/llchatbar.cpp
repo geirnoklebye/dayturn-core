@@ -587,6 +587,11 @@ void LLChatBar::sendChatFromViewer(const LLWString &wtext, EChatType type, BOOL 
 	}
 
 	// Don't animate for chats people can't hear (chat to scripts)
+	if (type == CHAT_TYPE_SHOUT && gSavedSettings.getBOOL("KokuaPreventChatShout"))
+	{
+		type = CHAT_TYPE_NORMAL;
+	}
+
 	if (animate && (channel == 0))
 	{
 		if (type == CHAT_TYPE_WHISPER)
