@@ -83,6 +83,7 @@ LLPanelGroupGeneral::LLPanelGroupGeneral()
 	mComboActiveTitle(NULL),
 	mGroupUUIDText(NULL),
 	mBtnGroupUUIDCopy(NULL),
+	mBtnGroupURICopy(NULL),
 	mCtrlReceiveGroupChat(NULL) // <exodus/>
 {
 
@@ -195,6 +196,12 @@ BOOL LLPanelGroupGeneral::postBuild()
 		mBtnGroupUUIDCopy->setClickedCallback(onCopyGroupUUID, this);
 	}
 
+	mBtnGroupURICopy = getChild<LLButton>("group_uri_copy", recurse);
+	if (mBtnGroupURICopy) {
+		mBtnGroupURICopy->setEnabled(FALSE);
+		mBtnGroupURICopy->setClickedCallback(onCopyGroupURI, this);
+	}
+
 	mIncompleteMemberDataStr = getString("incomplete_member_data_str");
 
 	// If the group_id is null, then we are creating a new group
@@ -291,6 +298,14 @@ void LLPanelGroupGeneral::onCopyGroupUUID(void *data)
 	LLPanelGroupGeneral *self = static_cast<LLPanelGroupGeneral *>(data);
 
 	LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(self->mGroupUUIDText->getText()));
+}
+
+// static
+void LLPanelGroupGeneral::onCopyGroupURI(void *data)
+{
+	LLPanelGroupGeneral *self = static_cast<LLPanelGroupGeneral *>(data);
+
+	LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring("secondlife:///app/group/" + self->mGroupUUIDText->getText() + "/about"));
 }
 
 // static
@@ -636,6 +651,7 @@ void LLPanelGroupGeneral::update(LLGroupChange gc)
 	if (mGroupUUIDText) {
 		mGroupUUIDText->setText(mGroupID.asString());
 		mBtnGroupUUIDCopy->setEnabled(TRUE);
+		mBtnGroupURICopy->setEnabled(TRUE);
 	}
 
 	resetDirty();
@@ -732,6 +748,7 @@ void LLPanelGroupGeneral::reset()
 
 	mGroupUUIDText->clear();
 	mBtnGroupUUIDCopy->setEnabled(FALSE);
+	mBtnGroupURICopy->setEnabled(FALSE);
 
 	resetDirty();
 }

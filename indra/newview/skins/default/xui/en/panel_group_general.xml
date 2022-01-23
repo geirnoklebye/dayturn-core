@@ -276,6 +276,18 @@ Hover your mouse over the options for more help.
        width="300">
            Group UUID:
     </text>
+    <button
+        label="Copy Group URI"
+        name="group_uri_copy"
+        layout="topleft"
+        follows="right|top"
+        height="22"
+        width="110"
+        top_delta="-1"
+        right="-4"
+        mouse_opaque="true"
+        enabled="false"
+        tool_tip="Copy group URI to the clipboard" />
     <line_editor
         type="string"
         name="group_uuid_text"
