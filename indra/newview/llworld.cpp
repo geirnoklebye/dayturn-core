@@ -260,6 +260,12 @@ LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host)
 	return regionp;
 }
 
+void LLWorld::requestObjects()
+{
+	LLViewerRegion *regionp = gAgent.getRegion();
+	LLHost host = regionp->getHost();
+	regionp->requestObjects(host);
+}
 
 void LLWorld::removeRegion(const LLHost &host)
 {
