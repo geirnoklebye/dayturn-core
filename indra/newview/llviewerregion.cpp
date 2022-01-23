@@ -2953,7 +2953,15 @@ void LLViewerRegion::unpackRegionHandshake()
 	// After loading cache, signal that simulator can start
 	// sending data.
 	// TODO: Send all upstream viewer->sim handshake info here.
-	LLHost host = msg->getSender();
+	requestObjects(msg->getSender());
+
+	mRegionTimer.reset(); //reset region timer.
+}
+
+void LLViewerRegion::requestObjects(LLHost host)
+{
+	LLMessageSystem *msg = gMessageSystem;
+
 	msg->newMessage("RegionHandshakeReply");
 	msg->nextBlock("AgentData");
 	msg->addUUID("AgentID", gAgent.getID());
@@ -2973,8 +2981,6 @@ void LLViewerRegion::unpackRegionHandshake()
 	}
 	msg->addU32("Flags", flags );
 	msg->sendReliable(host);
-
-	mRegionTimer.reset(); //reset region timer.
 }
 
 // static

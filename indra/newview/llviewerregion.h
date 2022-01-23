@@ -107,6 +107,7 @@ public:
 	// Call this after you have the region name and handle.
 	void loadObjectCache();
 	void saveObjectCache();
+	void requestObjects(LLHost host);
 
 	void sendMessage(); // Send the current message to this region's simulator
 	void sendReliableMessage(); // Send the current message to this region's simulator

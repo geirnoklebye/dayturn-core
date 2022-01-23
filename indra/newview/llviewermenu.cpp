@@ -9209,10 +9209,15 @@ void handle_rebake_textures(void*)
 void handle_refresh_scene(void*)
 {
 	if (!isAgentAvatarValid()) return;
+	// on RLV this won't do anything this the control it toggles to refresh the scene
+	// is currently forced on lower down, so use this to also do a much more fundamental
+	// kick by restarting the region's object sync with the viewer to try to recover from
+	// items getting lost at login (dropped UDP cache probes, I believe)
  	gSavedSettings.setBOOL("VertexShaderEnable",false);
-	LL_WARNS("Rendering") << "Vertex shaders unloaded" << LL_ENDL; //Purpose is to also kill a little time without sleeping.
+	LL_WARNS("Rendering") << "Vertex shaders unloaded / refresh scene" << LL_ENDL; //Purpose is to also kill a little time without sleeping.
 	//need an event here looking at llvowlsky
 	gSavedSettings.setBOOL("VertexShaderEnable",true);
+	LLWorld::getInstance()->requestObjects();
 }
 
 void toggle_visibility(void* user_data)
