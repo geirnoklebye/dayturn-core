@@ -64,6 +64,7 @@
 // [/SL:KB]
 #include "llfloaterprofiletexture.h"
 #include "llfloaterreg.h"
+#include "llfloaterreporter.h"
 #include "llfilepicker.h"
 #include "llfirstuse.h"
 #include "llgroupactions.h"
@@ -634,6 +635,22 @@ public:
 			}
 			return true;
 		}
+
+        // reportAbuse is here due to convoluted avatar handling
+        // in LLScrollListCtrl and LLTextBase
+        if (verb == "reportAbuse" && web == NULL) 
+        {
+            LLAvatarName av_name;
+            if (LLAvatarNameCache::get(avatar_id, &av_name))
+            {
+                LLFloaterReporter::showFromAvatar(avatar_id, av_name.getCompleteName());
+            }
+            else
+            {
+                LLFloaterReporter::showFromAvatar(avatar_id, "not avaliable");
+            }
+            return true;
+        }
 		return false;
 	}
 };
