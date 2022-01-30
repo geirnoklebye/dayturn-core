@@ -219,7 +219,6 @@ attributedStringInfo getSegments(NSAttributedString *str)
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[super dealloc];
 }
 
 - (id) init
@@ -239,70 +238,72 @@ attributedStringInfo getSegments(NSAttributedString *str)
 
 - (id) initWithFrame:(NSRect)frame withSamples:(NSUInteger)samples andVsync:(BOOL)vsync
 {
-	[self registerForDraggedTypes:[NSArray arrayWithObject:NSURLPboardType]];
-	[self initWithFrame:frame];
-	
-	// Initialize with a default "safe" pixel format that will work with versions dating back to OS X 10.6.
-	// Any specialized pixel formats, i.e. a core profile pixel format, should be initialized through rebuildContextWithFormat.
-	// 10.7 and 10.8 don't really care if we're defining a profile or not.  If we don't explicitly request a core or legacy profile, it'll always assume a legacy profile (for compatibility reasons).
-	NSOpenGLPixelFormatAttribute attrs[] = {
-		NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersionLegacy,
-		NSOpenGLPFANoRecovery,
-		NSOpenGLPFADoubleBuffer,
-		NSOpenGLPFAMinimumPolicy,
-		NSOpenGLPFAAccelerated,
-		NSOpenGLPFASampleBuffers, static_cast<NSOpenGLPixelFormatAttribute>(samples > 0 ? 1 : 0),
-		NSOpenGLPFASamples, static_cast<NSOpenGLPixelFormatAttribute>(samples),
-        NSOpenGLPFASupersample,
-		NSOpenGLPFAStencilSize, 8,
-		NSOpenGLPFADepthSize, 24,
-		NSOpenGLPFAAlphaSize, 8,
-		NSOpenGLPFAColorSize, 24,
-		0
-    };
-	
-	NSOpenGLPixelFormat *pixelFormat = [[[NSOpenGLPixelFormat alloc] initWithAttributes:attrs] autorelease];
-	
-	if (pixelFormat == nil)
-	{
-		NSLog(@"Failed to create pixel format!", nil);
-		return nil;
-	}
-	
-	NSOpenGLContext *glContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
-	
-	if (glContext == nil)
-	{
-		NSLog(@"Failed to create OpenGL context!", nil);
-		return nil;
-	}
-	
-	[self setPixelFormat:pixelFormat];
-
-	//for retina support
-	[self setWantsBestResolutionOpenGLSurface:gHiDPISupport];
-
-	[self setOpenGLContext:glContext];
-	
-	[glContext setView:self];
-	
-	[glContext makeCurrentContext];
-	
-	if (vsync)
-	{
-		GLint value = 1;
-		[glContext setValues:&value forParameter:NSOpenGLCPSwapInterval];
-	} else {
-		// supress this error after move to Xcode 7:
-		// error: null passed to a callee that requires a non-null argument [-Werror,-Wnonnull]
-		// Tried using ObjC 'nonnull' keyword as per SO article but didn't build
-		GLint swapInterval=0;
-		[glContext setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
-	}
-	
-    mOldResize = false;
-    
-	return self;
+    self = [self initWithFrame:frame];
+    if(self != nil)
+    {
+        [self registerForDraggedTypes:@[NSPasteboardTypeURL]];
+        mOldResize = false;
+        
+        // Initialize with a default "safe" pixel format that will work with versions dating back to OS X 10.6.
+        // Any specialized pixel formats, i.e. a core profile pixel format, should be initialized through rebuildContextWithFormat.
+        // 10.7 and 10.8 don't really care if we're defining a profile or not.  If we don't explicitly request a core or legacy profile, it'll always assume a legacy profile (for compatibility reasons).
+        NSOpenGLPixelFormatAttribute attrs[] = {
+            NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersionLegacy,
+            NSOpenGLPFANoRecovery,
+            NSOpenGLPFADoubleBuffer,
+            NSOpenGLPFAClosestPolicy,
+            NSOpenGLPFAAccelerated,
+            NSOpenGLPFASampleBuffers, static_cast<NSOpenGLPixelFormatAttribute>(samples > 0 ? 1 : 0),
+            NSOpenGLPFASamples, static_cast<NSOpenGLPixelFormatAttribute>(samples),
+            NSOpenGLPFAStencilSize, 8,
+            NSOpenGLPFADepthSize, 24,
+            NSOpenGLPFAAlphaSize, 8,
+            NSOpenGLPFAColorSize, 24,
+            0
+        };
+        
+        NSOpenGLPixelFormat *pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+        
+        if (pixelFormat == nil)
+        {
+            NSLog(@"Failed to create pixel format!", nil);
+            return nil;
+        }
+        
+        NSOpenGLContext *glContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
+        
+        if (glContext == nil)
+        {
+            NSLog(@"Failed to create OpenGL context!", nil);
+            return nil;
+        }
+        
+        [self setPixelFormat:pixelFormat];
+        
+        //for retina support
+        [self setWantsBestResolutionOpenGLSurface:gHiDPISupport];
+        
+        [self setOpenGLContext:glContext];
+        
+        [glContext setView:self];
+        
+        [glContext makeCurrentContext];
+        
+        if (vsync)
+        {
+		    GLint value = 1;
+		    [glContext setValues:&value forParameter:NSOpenGLCPSwapInterval];
+        } 
+        else
+        {
+            // supress this error after move to Xcode 7:
+            // error: null passed to a callee that requires a non-null argument [-Werror,-Wnonnull]
+            // Tried using ObjC 'nonnull' keyword as per SO article but didn't build
+            GLint swapInterval=0;
+            [glContext setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
+        }
+    }
+    return self;
 }
 
 - (BOOL) rebuildContext
@@ -315,8 +316,7 @@ attributedStringInfo getSegments(NSAttributedString *str)
 	NSOpenGLContext *ctx = [self openGLContext];
 	
 	[ctx clearDrawable];
-	[ctx initWithFormat:format shareContext:nil];
-	
+
 	if (ctx == nil)
 	{
 		NSLog(@"Failed to create OpenGL context!", nil);
@@ -351,13 +351,13 @@ attributedStringInfo getSegments(NSAttributedString *str)
     mMousePos[1] = mPoint.y;
 
     // Apparently people still use this?
-    if ([theEvent modifierFlags] & NSCommandKeyMask &&
-        !([theEvent modifierFlags] & NSControlKeyMask) &&
-        !([theEvent modifierFlags] & NSShiftKeyMask) &&
-        !([theEvent modifierFlags] & NSAlternateKeyMask) &&
-        !([theEvent modifierFlags] & NSAlphaShiftKeyMask) &&
-        !([theEvent modifierFlags] & NSFunctionKeyMask) &&
-        !([theEvent modifierFlags] & NSHelpKeyMask))
+    if ([theEvent modifierFlags] & NSEventModifierFlagCommand &&
+        !([theEvent modifierFlags] & NSEventModifierFlagControl) &&
+        !([theEvent modifierFlags] & NSEventModifierFlagShift) &&
+        !([theEvent modifierFlags] & NSEventModifierFlagOption) &&
+        !([theEvent modifierFlags] & NSEventModifierFlagCapsLock) &&
+        !([theEvent modifierFlags] & NSEventModifierFlagFunction) &&
+        !([theEvent modifierFlags] & NSEventModifierFlagHelp))
     {
         callRightMouseDown(mMousePos, [theEvent modifierFlags]);
         mSimulatedRightClick = true;
@@ -497,12 +497,11 @@ attributedStringInfo getSegments(NSAttributedString *str)
     // e.g. OS Window for upload something or Input Window...
     // mModifiers instance variable is for insertText: or insertText:replacementRange:  (by Pell Smit)
 	mModifiers = [theEvent modifierFlags];
-
-    bool acceptsText = mHasMarkedText ? false : callKeyDown(&eventData, keycode, mModifiers, [[theEvent characters] characterAtIndex:0]);
+    bool acceptsText = mHasMarkedText ? false : callKeyDown(&eventData, keycode, mModifiers);
     unichar ch;
     if (acceptsText &&
         !mMarkedTextAllowed &&
-        !(mModifiers & (NSControlKeyMask | NSCommandKeyMask)) &&  // commands don't invoke InputWindow
+        !(mModifiers & (NSEventModifierFlagControl | NSEventModifierFlagCommand)) &&  // commands don't invoke InputWindow
         ![(LLAppDelegate*)[NSApp delegate] romanScript] &&
         (ch = [[theEvent charactersIgnoringModifiers] characterAtIndex:0]) > ' ' &&
         ch != NSDeleteCharacter &&
@@ -526,13 +525,13 @@ attributedStringInfo getSegments(NSAttributedString *str)
     switch([theEvent keyCode])
     {        
         case 56:
-            mask = NSShiftKeyMask;
+            mask = NSEventModifierFlagShift;
             break;
         case 58:
-            mask = NSAlternateKeyMask;
+            mask = NSEventModifierFlagOption;
             break;
         case 59:
-            mask = NSControlKeyMask;
+            mask = NSEventModifierFlagControl;
             break;
         default:
             return;            
@@ -541,7 +540,7 @@ attributedStringInfo getSegments(NSAttributedString *str)
     if (mModifiers & mask)
     {
         eventData.mKeyEvent = NativeKeyEventData::KEYDOWN;
-        callKeyDown(&eventData, [theEvent keyCode], 0, [[theEvent characters] characterAtIndex:0]);
+        callKeyDown(&eventData, [theEvent keyCode], 0);
     }
     else
     {
@@ -564,10 +563,10 @@ attributedStringInfo getSegments(NSAttributedString *str)
 	
 	pboard = [sender draggingPasteboard];
 	
-	if ([[pboard types] containsObject:NSURLPboardType])
+	if ([[pboard types] containsObject:NSPasteboardTypeURL])
 	{
 		if (sourceDragMask & NSDragOperationLink) {
-			NSURL *fileUrl = [[pboard readObjectsForClasses:[NSArray arrayWithObject:[NSURL class]] options:[NSDictionary dictionary]] objectAtIndex:0];
+			NSURL *fileUrl = [pboard readObjectsForClasses:[NSArray arrayWithObject:[NSURL class]] options:[NSDictionary dictionary]][0];
 			mLastDraggedUrl = [[fileUrl absoluteString] UTF8String];
             return NSDragOperationLink;
         }
@@ -736,9 +735,9 @@ attributedStringInfo getSegments(NSAttributedString *str)
 
 - (void) insertNewline:(id)sender
 {
-	if (!(mModifiers & NSCommandKeyMask) &&
-		!(mModifiers & NSShiftKeyMask) &&
-		!(mModifiers & NSAlternateKeyMask))
+	if (!(mModifiers & NSEventModifierFlagCommand) &&
+		!(mModifiers & NSEventModifierFlagShift) &&
+		!(mModifiers & NSEventModifierFlagOption))
 	{
 		callUnicodeCallback(13, 0);
 	} else {

@@ -36,8 +36,6 @@
 void launchApplication(const std::string* app_name, const std::vector<std::string>* args)
 {
 
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
 	if (app_name->empty()) return;
 
 	NSMutableString* app_name_ns = [NSMutableString stringWithString:[[NSBundle mainBundle] resourcePath]];	//Path to resource dir
@@ -68,6 +66,5 @@ void launchApplication(const std::string* app_name, const std::vector<std::strin
 //	[workspace launchApplicationAtURL:url options:0 configuration:[NSDictionary dictionaryWithObject:args_ns forKey:NSWorkspaceLaunchConfigurationArguments] error:&error];
 	//TODO Handle error
     
-    [pool release];
 	return;
 }

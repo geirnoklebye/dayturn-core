@@ -27,10 +27,13 @@
 #import <Cocoa/Cocoa.h>
 #import "llopenglview-objc.h"
 
+@interface LLApplication : NSApplication
+@end
+
 @interface LLAppDelegate : NSObject <NSApplicationDelegate> {
-	LLNSWindow *window;
-	NSWindow *inputWindow;
-	LLNonInlineTextView *inputView;
+	LLNSWindow __unsafe_unretained *window;
+	NSWindow __unsafe_unretained *inputWindow;
+	LLNonInlineTextView __unsafe_unretained *inputView;
 	NSTimer *frameTimer;
 	NSString *currentInputLanguage;
     std::string secondLogPath;
@@ -42,11 +45,25 @@
 
 @property (retain) NSString *currentInputLanguage;
 
+- (void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent;
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification;
+
+- (void)applicationDidResignActive:(NSNotification *)notification;
+
+- (void)applicationDidHide:(NSNotification *)notification;
+
+- (void)applicationDidUnhide:(NSNotification *)notification;
+
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender;
+
+
 - (void) oneFrame;
 - (void) showInputWindow:(bool)show withEvent:(NSEvent*)textEvent;
 - (void) languageUpdated;
 - (bool) romanScript;
+
+
+- (void)applicationWillTerminate:(NSNotification *)notification;
 @end
 
-@interface LLApplication : NSApplication
-@end

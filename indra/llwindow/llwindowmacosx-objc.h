@@ -29,9 +29,11 @@
 #define LL_LLWINDOWMACOSX_OBJC_H
 
 #include <map>
+#include <string>
 #include <vector>
+#include <OpenGL/OpenGL.h>
 
-//fir CGSize
+//for CGSize
 #include <CoreGraphics/CGGeometry.h>
 
 typedef std::vector<std::pair<int, bool> > segment_t;
@@ -39,16 +41,15 @@ typedef std::vector<std::pair<int, bool> > segment_t;
 typedef std::vector<int> segment_lengths;
 typedef std::vector<int> segment_standouts;
 
-struct attributedStringInfo {
-	segment_lengths seg_lengths;
-	segment_standouts seg_standouts;
-};
-
 // This will actually hold an NSCursor*, but that type is only available in objective C.
 typedef void *CursorRef;
 typedef void *NSWindowRef;
 typedef void *GLViewRef;
 
+struct attributedStringInfo {
+	segment_lengths seg_lengths;
+	segment_standouts seg_standouts;
+};
 
 struct NativeKeyEventData {
     enum EventType {
@@ -70,7 +71,6 @@ struct NativeKeyEventData {
 typedef const NativeKeyEventData * NSKeyEventRef;
 
 // These are defined in llappviewermacosx.cpp.
-bool initViewer();
 void handleQuit();
 bool pumpMainLoop();
 void initMainLoop();
@@ -79,11 +79,10 @@ void handleUrl(const char* url);
 void dispatchUrl(std::string url);
 
 /* Defined in llwindowmacosx-objc.mm: */
-int createNSApp(int argc, const char **argv);
 void setupCocoa();
 bool pasteBoardAvailable();
 bool copyToPBoard(const unsigned short *str, unsigned int len);
-const unsigned short *copyFromPBoard();
+unsigned short *copyFromPBoard();
 CursorRef createImageCursor(const char *fullpath, int hotspotX, int hotspotY);
 short releaseImageCursor(CursorRef ref);
 short setImageCursor(CursorRef ref);
@@ -104,16 +103,15 @@ void setTitleCocoa(NSWindowRef window, const std::string &title);	// <FS:CR> Set
 
 NSWindowRef createNSWindow(int x, int y, int width, int height);
 
-#include <OpenGL/OpenGL.h>
 
 GLViewRef createOpenGLView(NSWindowRef window, unsigned int samples, bool vsync);
 void glSwapBuffers(void* context);
 CGLContextObj getCGLContextObj(GLViewRef view);
 unsigned long getVramSize(GLViewRef view);
 float getDeviceUnitSize(GLViewRef view);
-CGPoint getContentViewBoundsPosition(NSWindowRef window);
-CGSize getContentViewBoundsSize(NSWindowRef window);
-CGSize getDeviceContentViewSize(NSWindowRef window, GLViewRef view);
+const CGPoint getContentViewBoundsPosition(NSWindowRef window);
+const CGSize getContentViewBoundsSize(NSWindowRef window);
+const CGSize getDeviceContentViewSize(NSWindowRef window, GLViewRef view);
 void getWindowSize(NSWindowRef window, float* size);
 void setWindowSize(NSWindowRef window, int width, int height);
 void getCursorPos(NSWindowRef window, float* pos);
@@ -132,7 +130,7 @@ void setupInputWindow(NSWindowRef window, GLViewRef view);
 // These are all implemented in llwindowmacosx.cpp.
 // This is largely for easier interop between Obj-C and C++ (at least in the viewer's case due to the BOOL vs. BOOL conflict)
 bool callKeyUp(NSKeyEventRef event, unsigned short key, unsigned int mask);
-bool callKeyDown(NSKeyEventRef event, unsigned short key, unsigned int mask, wchar_t character);
+bool callKeyDown(NSKeyEventRef event, unsigned short key, unsigned int mask);
 void callResetKeys();
 bool callUnicodeCallback(wchar_t character, unsigned int mask);
 void callRightMouseDown(float *pos, unsigned int mask);
@@ -159,7 +157,6 @@ void callModifier(unsigned int mask);
 void callQuitHandler();
 void commitCurrentPreedit(GLViewRef glView);
 
-#include <string>
 void callHandleDragEntered(std::string url);
 void callHandleDragExited(std::string url);
 void callHandleDragUpdated(std::string url);
