@@ -2316,6 +2316,7 @@ bool AOSitCancelTimer::tick()
 	if (mTickCount == 10)
 	{
 		mEventTimer.stop();
+	}
 	return false;
 }
 
