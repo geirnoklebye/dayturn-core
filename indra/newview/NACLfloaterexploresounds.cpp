@@ -142,7 +142,7 @@ public:
 	}
 };
 
-BOOL NACLFloaterExploreSounds::tick()
+bool NACLFloaterExploreSounds::tick()
 {
 	static const std::string str_playing =  getString("Playing");
 	static const std::string str_not_playing = getString("NotPlaying");
@@ -311,7 +311,7 @@ BOOL NACLFloaterExploreSounds::tick()
 	mHistoryScroller->selectMultiple(selected_ids);
 	mHistoryScroller->setScrollPos(scroll_pos);
 
-	return FALSE;
+	return false;
 }
 
 void NACLFloaterExploreSounds::handlePlayLocally()
