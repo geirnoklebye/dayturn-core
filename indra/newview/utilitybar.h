@@ -39,7 +39,7 @@ class UtilityBar
 
 	public:
 		void init();
-		virtual BOOL tick();
+		virtual bool tick();
 		void setAOInterfaceButtonExpanded(bool expanded);
 		void setVolumeControlsButtonExpanded(bool expanded);
 

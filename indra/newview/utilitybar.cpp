@@ -107,7 +107,7 @@ void UtilityBar::onParcelMediaClicked()
 	gStatusBar->toggleMedia(!any_media_playing);
 }
 
-BOOL UtilityBar::tick()
+bool UtilityBar::tick()
 {
 	// NOTE: copied from llstatusbar.cpp
 	// This has to be resolved to callbacks or controls eventually -Zi
@@ -147,7 +147,7 @@ BOOL UtilityBar::tick()
 		mPTTButton->setEnabled(LLAgent::isActionAllowed(LLSD("speak")));
 	}
 
-	return FALSE;
+	return false;
 }
 
 void UtilityBar::setAOInterfaceButtonExpanded(bool expanded)
