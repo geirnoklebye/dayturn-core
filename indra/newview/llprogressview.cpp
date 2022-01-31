@@ -407,19 +407,6 @@ void LLProgressView::initLogos()
     S32 pad_y;
     texture_start_x++;
 
-#if LL_USEKDU
-    // kakadu image size is 419x75
-    icon_width = 140;
-    icon_height = 25;
-    pad_y = 0;
-    loadLogo(temp_str + "kakadu_logo.png",
-        image_codec,
-        LLRect(texture_start_x, texture_start_y + pad_y + icon_height, texture_start_x + icon_width, texture_start_y + pad_y),
-        default_clip,
-        default_clip);
-
-    texture_start_x += icon_width + default_pad;
-#endif
 
 #ifdef LL_FMODSTUDIO
     // original image size is 264x96, it is on longer side but
@@ -434,21 +421,6 @@ void LLProgressView::initLogos()
         default_clip);
 
     texture_start_x += icon_width + default_pad + 1;
-#endif
-
-#ifdef LL_HAVOK
-    // original image size is 342x113, central element is on a larger side
-    // plus internal padding, so it gets slightly more height than desired 32
-    icon_width = 88;
-    icon_height = 29;
-    pad_y = -1;
-    loadLogo(temp_str + "havok_logo.png",
-        image_codec,
-        LLRect(texture_start_x, texture_start_y + pad_y + icon_height, texture_start_x + icon_width, texture_start_y + pad_y),
-        default_clip,
-        default_clip);
-
-    texture_start_x += icon_width + default_pad;
 #endif
 
     // 108x41
