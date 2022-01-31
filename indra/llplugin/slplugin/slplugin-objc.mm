@@ -54,7 +54,6 @@ void LLCocoaPlugin::setupCocoa()
 		NSApplicationLoad();
 
 		//	Must first call [[[NSWindow alloc] init] release] to get the NSWindow machinery set up so that NSCursor can use a window to cache the cursor image
-		[[NSWindow alloc] init];
 		
         mPluginWindow = [NSApp mainWindow];
         
@@ -65,7 +64,7 @@ void LLCocoaPlugin::setupCocoa()
 LLCocoaPlugin::LLCocoaPlugin():mHackState(0)
 {
     NSArray* window_list = [NSApp orderedWindows];
-    mFrontWindow = [window_list objectAtIndex:0];
+    mFrontWindow = window_list[0];
 }
 
 void LLCocoaPlugin::processEvents()
