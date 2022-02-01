@@ -585,8 +585,8 @@ void init_menus()
 	std::string kokualoginmenu = "menu_login_dayturn.xml";
 	if (gSavedSettings.getBOOL("KokuaClassicMainMenu"))
 	{
-	    kokuamainmenu="menu_viewer_kokua_original.xml";
-	    kokualoginmenu="menu_login_kokua_original.xml";
+	    kokuamainmenu="menu_viewer_dayturn.xml";
+	    kokualoginmenu="menu_login_dayturn.xml";
 	}
 	
 	gMenuBarView = LLUICtrlFactory::getInstance()->createFromFile<LLMenuBarGL>(kokuamainmenu, gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
