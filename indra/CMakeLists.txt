@@ -15,10 +15,10 @@ project(${ROOT_PROJECT_NAME})
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-# fmodex and fmodstudio are mutually exclusive, make sure we only have one
-# give fmodex priority if both are defined
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if (FMODSTUDIO)
-set (FMODEX OFF CACHE STRING "fmodex" FORCE)
 message("-- Sound system: FMODstudio")
 endif (FMODSTUDIO)
 
@@ -34,11 +34,14 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
       "Build type.  One of: Debug Release RelWithDebInfo" FORCE)
 endif (NOT CMAKE_BUILD_TYPE)
+
 if (HAVOK_TPV)
   add_definitions(-DHAVOK_TPV=1)
   message("-- Compiling with Havok libraries")
 endif (HAVOK_TPV)
+
 #</FS:AW optional opensim support>
+
 #<FS:Ansariel> Support for test builds
 option(TESTBUILD "Generating test build" OFF)
 if(TESTBUILD AND TESTBUILDPERIOD)
