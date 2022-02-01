@@ -37,7 +37,7 @@
 
 static int intAtStringIndex(NSArray *array, int index)
 {
-    return [(NSString *)[array objectAtIndex:index] integerValue];
+    return [(NSString *) array[index] integerValue];
 }
 
 bool LLSysDarwin::getOperatingSystemInfo(int &major, int &minor, int &patch)
