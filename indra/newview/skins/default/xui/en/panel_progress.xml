@@ -118,7 +118,7 @@
                          text_color="LoginProgressBoxTextColor"
                          word_wrap="true"/>
                         <progress_bar
-                         color_bar="0.75 0.47 0.81 0.96"
+                        color_bar="1 1 1 0.96"
                          follows="left|right|top"
                          layout="topleft"
                          image_fill="ProgressBarSolid"
@@ -172,7 +172,7 @@
                          line_spacing.pixels="2"
                          name="logos_lbl"
                          text_color="LoginProgressBoxTextColor">
-                          Kokua uses
+                          Dayturn uses
                         </text>
                       </layout_panel>
                     </layout_stack>
