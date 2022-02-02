@@ -18,20 +18,15 @@
       <file>seguiemj.ttf</file>
     </os>
     <os name="Mac">
-      <file>ヒラギノ角ゴシック W3.ttc</file>  
-      <file>ヒラギノ角ゴ Pro W3.otf</file>
-      <file>ヒラギノ角ゴ ProN W3.otf</file>
-      <file>ヒラギノ明朝 ProN W3.ttc</file>
-      <file>AppleGothic.dfont</file>
-      <file>AppleGothic.ttf</file>
-      <file>AppleSDGothicNeo-Regular.otf</file>
+      <file>SFCompactDisplay.ttf</file>
+      <file>SFNS.ttf</file>
+      <file>Menlo.ttc</file>
+      <file>Symbol.ttf</file>
       <file>AppleSDGothicNeo.ttc</file>
-      <file>华文细黑.ttf</file>
-      <file>PingFang.ttc</file>
+      <file>ヒラギノ角ゴシック W3.ttc</file>  
+      <file>ヒラギノ明朝 ProN.ttc</file>
       <file>STIXGeneral.otf</file>
       <file>Thonburi.ttc</file>
-      <file>AppleSDGothicNeo.ttc</file>
-      <file>Menlo.ttc</file>
     </os>
   </font>
 
@@ -42,7 +37,8 @@
       <file>arialbd.ttf</file>
       </os>
     <os name="Mac">
-      <file>Helvetica.dfont</file>
+      <file>SFNS.ttf</file>
+      <file>SFCompactDisplay.ttf</file>
       </os>
   </font>
 
@@ -52,7 +48,8 @@
       <file>arial.ttf</file>
       </os>
     <os name="Mac">
-      <file>Helvetica.dfont</file>
+      <file>SFNS.ttf</file>
+      <file>SFCompactDisplay.ttf</file>
       </os>
   </font>
 
@@ -60,18 +57,30 @@
 	comment="Name of bold sans-serif font"
 	font_style="BOLD">
     <file>DejaVuSans-Bold.ttf</file>
+    <os name="Mac">
+      <file>SFNS.ttf</file>
+      <file>SFCompactDisplay.ttf</file>
+      </os>
   </font>
 
   <font name="SansSerif"
 	comment="Name of italic sans-serif font"
 	font_style="ITALIC">
     <file>DejaVuSans-Oblique.ttf</file>
+    <os name="Mac">
+      <file>SFNSItalic.ttf</file>
+      <file>SFCompactDisplay.ttf</file>
+      </os>
   </font>
 
   <font name="SansSerif"
 	comment="Name of bold italic sans-serif font"
 	font_style="BOLD|ITALIC">
     <file>DejaVuSans-BoldOblique.ttf</file>
+    <os name="Mac">
+      <file>SFNSItalic.ttf</file>
+      <file>SFCompactDisplay.ttf</file>
+      </os>
   </font>
 
   <font name="Monospace"
@@ -112,7 +121,7 @@
       <file>arial.ttf</file>
       </os>
     <os name="Mac">
-      <file>Helvetica.dfont</file>
+      <file>Helvetica.ttc</file>
       </os>
   </font>
 
@@ -124,7 +133,7 @@
       <file>arialbd.ttf</file>
       </os>
     <os name="Mac">
-      <file>Helvetica.dfont</file>
+      <file>Helvetica.ttc</file>
       </os>
   </font>
 
@@ -136,7 +145,7 @@
       <file>ariali.ttf</file>
       </os>
     <os name="Mac">
-      <file>Helvetica.dfont</file>
+      <file>Helvetica.ttc</file>
       </os>
   </font>
 
@@ -148,12 +157,15 @@
       <file>arialbi.ttf</file>
       </os>
     <os name="Mac">
-      <file>Helvetica.dfont</file>
+      <file>Helvetica.ttc</file>
       </os>
   </font>
   <font name="Scripting"
 	comment="Name of an optional font used for the script editor">
     <file>SourceCodePro-Regular.ttf</file>
+    <os name="Mac">
+      <file>SFNSMono.ttc</file>
+      </os>
   </font>
   <font name="Cascadia"
 	comment="Name of an alternative optional font used for the script editor">
@@ -171,7 +183,7 @@
 
   <font_size name="Scripting"
 	     comment="Size of script editor font (points, or 1/72 of an inch)"
-	     size="8.6"
+	     size="9"
 	     />
   <font_size name="Cascadia"
 	     comment="Size of script editor font (points, or 1/72 of an inch)"
@@ -183,7 +195,7 @@
 	     />
   <font_size name="Monospace"
 	     comment="Size for monospaced font (points, or 1/72 of an inch)"
-	     size="8.0"
+	     size="9.0"
 	     />
   <font_size name="Huge"
 	     comment="Size of huge font (points, or 1/72 of an inch)"
@@ -191,15 +203,15 @@
 	     />
   <font_size name="Large"
 	     comment="Size of large font (points, or 1/72 of an inch)"
-	     size="10.6"
+	     size="11.6"
 	     />
   <font_size name="Medium"
 	     comment="Size of medium font (points, or 1/72 of an inch)"
-	     size="8.6"
+	     size="9.6"
 	     />
   <font_size name="Small"
 	     comment="Size of small font (points, or 1/72 of an inch)"
-	     size="7.6"
+	     size="8.6"
 	     />
   <font_size name="Pie"
 	     comment="Size of pie menu font (points, or 1/72 of an inch)"

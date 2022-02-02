@@ -1188,7 +1188,7 @@ LLFontGL* LLFontGL::getFontDefault()
 std::string LLFontGL::getFontPathSystem()
 {
 #if LL_DARWIN
-    // HACK for Mac OS X
+    // Just return the system font path on macOS
     return "/System/Library/Fonts/";
 
 #elif LL_WINDOWS
@@ -1222,6 +1222,10 @@ std::string LLFontGL::getFontPathLocal()
 {
 	std::string local_path;
 
+#if LL_DARWIN
+    // on macOS user installable fonts are in the user Library
+	local_path = "~/Library/Fonts/";
+#else
 	// Backup files if we can't load from system fonts directory.
 	// We could store this in an end-user writable directory to allow
 	// end users to switch fonts.
@@ -1234,7 +1238,8 @@ std::string LLFontGL::getFontPathLocal()
 	{
 		// assume working directory is executable directory
 		local_path = "./fonts/";
-	}
+	}	
+#endif
 	return local_path;
 }
 
