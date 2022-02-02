@@ -577,7 +577,7 @@ void LLGroupListItem::setGroupIconVisible(bool visible)
 
 void LLGroupListItem::setVisibleInProfile(bool visible)
 {
-    mGroupNameBox->setColor(LLUIColorTable::instance().getColor((visible ? "GroupVisibleInProfile" : "GroupHiddenInProfile"), LLColor4::red).get());
+    mGroupNameBox->setColor(LLUIColorTable::instance().getColor((visible ? "GroupVisibleInProfile" : "GroupHiddenInProfile"), LLColor4::orange4).get());
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -1145,6 +1145,9 @@
       name="SearchableControlHighlightColor"
       reference="orange4" />
   <color
+      name="GroupHiddenInProfile"
+      reference="orange4" />
+  <color
       name="MoneyTrackerIncrease"
       reference="Green" />
   <color
