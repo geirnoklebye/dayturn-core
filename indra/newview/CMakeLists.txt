@@ -17,7 +17,6 @@ include(DBusGlib)
 include(DragDrop)
 include(EXPAT)
 include(FMODSTUDIO)
-include(FMODEX)
 include(Hunspell)
 include(JPEGEncoderBasic)
 include(JsonCpp)
@@ -76,10 +75,6 @@ endif( LLPHYSICSEXTENSIONS_SRC_DIR )
 if(FMODSTUDIO)
   include_directories(${FMODSTUDIO_INCLUDE_DIR})
 endif(FMODSTUDIO)
-
-if(FMODEX)
-  include_directories(${FMODEX_INCLUDE_DIR})
-endif(FMODEX)
 
 include_directories(
     ${DBUSGLIB_INCLUDE_DIRS}
@@ -1893,11 +1888,6 @@ if (FMODSTUDIO)
   set(FMODWRAPPER_LIBRARY ${FMODSTUDIO_LIBRARY})
 endif (FMODSTUDIO)
 
-if (FMODEX)
-  set(LLSTARTUP_COMPILE_FLAGS "${LLSTARTUP_COMPILE_FLAGS} -DLL_FMODEX")
-  set(FMODWRAPPER_LIBRARY ${FMODEX_LIBRARY})
-endif (FMODEX)
-
 if (USE_KDU)
   set(LLSTARTUP_COMPILE_FLAGS "${LLSTARTUP_COMPILE_FLAGS} -DLL_USEKDU")
 endif (USE_KDU)
@@ -1944,8 +1934,6 @@ set(PACKAGE ON CACHE BOOL
     "Add a package target that builds an installer package.")
 if (FMODSTUDIO)
     set(FMODVERSION "fmodstudio")
-elseif (FMODEX)
-    set(FMODVERSION "fmodex")
 endif (FMODSTUDIO)
 
 if (WINDOWS)
@@ -2036,22 +2024,6 @@ if (WINDOWS)
            ${SHARED_LIB_STAGING_DIR}/Debug/fmodstudioL.dll
           )
     endif (FMODSTUDIO)
-
-    if (FMODEX)
-        if ( ADDRESS_SIZE EQUAL 32 )
-      list(APPEND COPY_INPUT_DEPENDENCIES
-           ${SHARED_LIB_STAGING_DIR}/Release/fmodex.dll
-           ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodex.dll
-           ${SHARED_LIB_STAGING_DIR}/Debug/fmodexL.dll
-          )
-        elseif( ADDRESS_SIZE EQUAL 64 )
-                list(APPEND COPY_INPUT_DEPENDENCIES
-                   ${SHARED_LIB_STAGING_DIR}/Release/fmodex64.dll
-                   ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodex64.dll
-                   ${SHARED_LIB_STAGING_DIR}/Debug/fmodexL64.dll
-                  )
-        endif ( ADDRESS_SIZE EQUAL 32 )
-    endif (FMODEX)
 
     if (OPENAL)
       list(APPEND COPY_INPUT_DEPENDENCIES

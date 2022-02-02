@@ -117,7 +117,6 @@ set(cmake_SOURCE_FILES
     FindAPR.cmake
     FindAutobuild.cmake
     FindFMODSTUDIO.cmake
-    FindFMODEX.cmake
     FindGLH.cmake
     FindHUNSPELL.cmake
     FindJsonCpp.cmake
@@ -128,7 +127,6 @@ set(cmake_SOURCE_FILES
     FindXmlRpcEpi.cmake
     FindZLIBNG.cmake
     FMODSTUDIO.cmake
-    FMODEX.cmake
     FreeType.cmake
     GLEXT.cmake
     GLH.cmake

@@ -509,16 +509,6 @@ class WindowsManifest(ViewerManifest):
             except:
                 print("Skipping fmodstudio audio library(assuming other audio engine)")
 
-            # Get fmodex dll, continue if missing
-            try:
-                if self.args['fmodversion'].lower() == 'fmodex':
-                    if(self.address_size == 64):
-                       self.path("fmodex64.dll")
-                    else:
-                       self.path("fmodex.dll")
-            except:
-                print("Skipping fmodex audio library(assuming other audio engine)")
-
             if self.args['openal'] == 'ON':
                 # Get openal dll
                 self.path("OpenAL32.dll")
@@ -1045,19 +1035,6 @@ class DarwinManifest(ViewerManifest):
                     else:
                         for libfile in (
                                     "libfmod.dylib",
-                                    ):
-                            dylibs += path_optional(os.path.join(relpkgdir, libfile), libfile)
-
-                # dylibs that vary based on configuration
-                if self.args['fmodversion'].lower() == 'fmodex':
-                    if self.args['configuration'].lower() == 'debug':
-                        for libfile in (
-                                    "libfmodexL.dylib",
-                                    ):
-                            dylibs += path_optional(os.path.join(debpkgdir, libfile), libfile)
-                    else:
-                        for libfile in (
-                                    "libfmodex.dylib",
                                     ):
                             dylibs += path_optional(os.path.join(relpkgdir, libfile), libfile)
 
@@ -1618,21 +1595,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
                        self.path("libfmod.so*")
             except:
                 print("Skipping libfmodstudio.so - not found")
-                pass
-            try:
-                if self.args['fmodversion'].lower() == 'fmodex':
-                   if self.args['configuration'].lower() == 'debug':
-                      self.path("libfmodex64-*.so")
-                      self.path("libfmodex64.so")
-                      self.path("libfmodex64.so*")
-                   else:
-                      self.path("libfmodex64-*.so")
-                      self.path("libfmodex64.so")
-                      self.path("libfmodex64.so*")
-            except:
-                print("Skipping libfmodex.so - not found")
-                pass
-            
+                pass            
 
             self.path("libapr-1.so*")
             self.path("libaprutil-1.so*")
