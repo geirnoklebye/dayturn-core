@@ -2546,6 +2546,18 @@
         </menu_item_check>
 
         <menu_item_check
+        label="Disable Build Constraints"
+        name="Disable Max Build Constraints"
+        visible="false">
+          <on_click 
+          function="Advanced.ToggleMaxBuildConstraints"
+          userdata="" />
+          <menu_item_check.on_check
+          function="CheckControl"
+          parameter="DisableMaxBuildConstraints" />
+        </menu_item_check>
+
+        <menu_item_check
          label="Disable Camera Constraints"
          name="Disable Camera Distance">
             <menu_item_check.on_check
