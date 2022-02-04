@@ -45,6 +45,7 @@ include(LLXML)
 include(NDOF)
 include(NVAPI)
 include(OPENAL)
+include(Teapot)
 include(OpenGL)
 include(OpenSSL)
 include(PNG)
@@ -99,6 +100,7 @@ include_directories(
     ${LLWINDOW_INCLUDE_DIRS}
     ${LLXML_INCLUDE_DIRS}
     ${LLLOGIN_INCLUDE_DIRS}
+    ${TEAPOT_INCLUDE_DIRS}
     ${COLLADA_INCLUDE_DIRS}
     ${LIBS_PREBUILT_DIR}/include/collada
     ${LIBS_PREBUILD_DIR}/include/hunspell
