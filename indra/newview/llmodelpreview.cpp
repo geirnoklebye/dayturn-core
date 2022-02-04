@@ -3783,7 +3783,10 @@ BOOL LLModelPreview::render()
                 {
                     gDebugProgram.bind();
                 }
-                getPreviewAvatar()->renderCollisionVolumes();
+                if (fmp->mTabContainer->getCurrentPanelIndex() == fmp->mPhysicsTabIndex)
+                {  // Physics collision volumes obscure a lot, so only show them when on the physics tab.
+                    getPreviewAvatar()->renderCollisionVolumes();
+                }
                 if (fmp->mTabContainer->getCurrentPanelIndex() == fmp->mAvatarTabIndex)
                 {
                     getPreviewAvatar()->renderBones(fmp->mSelectedJointName);
@@ -3792,6 +3795,7 @@ BOOL LLModelPreview::render()
                 {
                     getPreviewAvatar()->renderBones();
                 }
+                getPreviewAvatar()->renderGroundPlane(mPelvisZOffset);
                 if (shader)
                 {
                     shader->bind();
