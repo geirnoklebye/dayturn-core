@@ -113,8 +113,10 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   set(WINDOWS ON BOOL FORCE)
+  set(ARCH x86_64)
   set(LL_ARCH ${ARCH}_win32)
   set(LL_ARCH_DIR ${ARCH}-win32)
+  set(ADDRESS_SIZE 64)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 
