@@ -115,7 +115,7 @@ if (WINDOWS)
       "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /Zc:wchar_t- /Zi /MD /MP /GR /O2 -D_SECURE_STL=0 -D_HAS_ITERATOR_DEBUGGING=0"
       CACHE STRING "C++ compiler release-with-debug options" FORCE)
   set(CMAKE_CXX_FLAGS_RELEASE
-      "${CMAKE_CXX_FLAGS_RELEASE} ${LL_CXX_FLAGS} /Zc:wchar_t- /Zi /GR /MD /O2 /Ob2"
+      "${CMAKE_CXX_FLAGS_RELEASE} ${LL_CXX_FLAGS} /Zc:wchar_t- /Zi /GR /MD /MP /O2 /Ob2"
       CACHE STRING "C++ compiler release options" FORCE)
   
   # zlib has assembly-language object files incompatible with SAFESEH
