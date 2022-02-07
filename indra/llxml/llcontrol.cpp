@@ -617,7 +617,7 @@ LLControlVariable* LLControlGroup::declareBOOL(const std::string& name, const BO
 
 LLControlVariable* LLControlGroup::declarebool(const std::string& name, const bool initial_val, const std::string& comment, LLControlVariable::ePersist persist)
 {
-	return declareControl(name, TYPE_BOOLEAN, initial_val, comment, persist);
+	return declareControl(name, TYPE_BOOLEAN, initial_val, comment, SANITY_TYPE_NONE, LLSD(), std::string(""), persist);
 }
 
 LLControlVariable* LLControlGroup::declareString(const std::string& name, const std::string& initial_val, const std::string& comment, LLControlVariable::ePersist persist)
