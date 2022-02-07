@@ -1025,7 +1025,7 @@ public:
 			break;
 		case CHAT_SOURCE_SYSTEM:
 //CA
-//			icon->setValue(LLSD("Kokua_Logo"));
+//			icon->setValue(LLSD("Dayturn_Logo"));
 			// FS:LO FIRE-1439 - Clickable avatar names on local chat radar crossing reports
 			if (chat.mChatType == CHAT_TYPE_RADAR)
 			{

@@ -1662,17 +1662,17 @@ if (WINDOWS)
     message(STATUS "Copying icons for ${ICON_PATH}")
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.ico"
+        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/dayturn_icon.ico"
         "${CMAKE_CURRENT_SOURCE_DIR}/res/ll_icon.ico"
       )
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.BMP"
+        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/dayturn_icon.bmp"
         "${CMAKE_CURRENT_SOURCE_DIR}/res/ll_icon.BMP"
       )
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.BMP"
+        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/dayturn_icon.BMP"
         "${CMAKE_CURRENT_SOURCE_DIR}/res-sdl/ll_icon.BMP"
       )
 
@@ -1713,8 +1713,6 @@ if (WINDOWS)
         res-sdl/ll_icon.BMP
         res/ll_icon.BMP
         res/ll_icon.ico
-        #res/kokua_icon.BMP
-        #res/kokua_icon.ico
         res/resource.h
         res/toolpickobject.cur
         res/toolpickobject2.cur
