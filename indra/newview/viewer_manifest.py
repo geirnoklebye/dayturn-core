@@ -421,6 +421,7 @@ class WindowsManifest(ViewerManifest):
     # We want the platform, per se, for every Windows build to be 'win'. The
     # VMP will concatenate that with the address_size.
     build_data_json_platform = 'win'
+    address_size = 64
 
     def final_exe(self):
         return self.exec_name()+".exe"
