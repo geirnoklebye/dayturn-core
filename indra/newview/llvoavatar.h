@@ -327,17 +327,16 @@ public:
 	static U32		sMaxNonImpostors; // affected by control "RenderAvatarMaxNonImpostors"
 	static bool		sLimitNonImpostors; // use impostors for far away avatars
 	static F32		sRenderDistance; // distance at which avatars will render.
-	static BOOL		sShowAnimationDebug; // show animation debug info
-	static BOOL		sShowFootPlane;	// show foot collision plane reported by server
-	static BOOL		sShowCollisionVolumes;	// show skeletal collision volumes
-	static BOOL		sVisibleInFirstPerson;
+	static bool		sShowAnimationDebug; // show animation debug info
+	static bool		sShowCollisionVolumes;	// show skeletal collision volumes
+	static bool		sVisibleInFirstPerson;
 	static S32		sNumLODChangesThisFrame;
 	static S32		sNumVisibleChatBubbles;
-	static BOOL		sDebugInvisible;
-	static BOOL		sShowAttachmentPoints;
+	static bool		sDebugInvisible;
+	static bool		sShowAttachmentPoints;
 	static F32		sLODFactor; // user-settable LOD factor
 	static F32		sPhysicsLODFactor; // user-settable physics LOD factor
-	static BOOL		sJointDebug; // output total number of joints being touched for each avatar
+	static bool		sJointDebug; // output total number of joints being touched for each avatar
 
     static LLPointer<LLViewerTexture>  sCloudTexture;
 
