@@ -614,7 +614,8 @@ void MediaPluginLibVLC::receiveMessage(const char* message_string)
 				}
 				else if (message_name == "set_loop")
 				{
-					mIsLooping = true;
+					bool loop = message_in.getValueBoolean("loop");
+					mIsLooping = loop;
 				}
 				else if (message_name == "set_volume")
 				{
