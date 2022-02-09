@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
 	<key>CFBundleExecutable</key>
 	<string>${MACOSX_EXECUTABLE_NAME}</string>
 	<key>CFBundleGetInfoString</key>
@@ -26,16 +24,12 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>${VIEWER_VERSION_MAJOR}.${VIEWER_VERSION_MINOR}.${VIEWER_VERSION_PATCH}.${VIEWER_VERSION_REVISION}</string>
-	<key>CSResourcesFileMapped</key>
-	<true/>
-	<key>LSRequiresCarbon</key>
-	<true/>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Microphone access is needed to allow connection to voice.</string>
-    	<key>NSHumanReadableCopyright</key>
+	<key>NSHumanReadableCopyright</key>
 	<string>${MACOSX_BUNDLE_COPYRIGHT}</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>For voice chat, you must grant permission for Second Life to use the microphone.</string>
+	<key>NSPrincipalClass</key>
+	<string>${MACOSX_BUNDLE_NSPRINCIPAL_CLASS}</string>
+	<key>NSMainNibFile</key>
+	<string>${MACOSX_BUNDLE_NSMAIN_NIB_FILE}</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -77,9 +71,17 @@
 			<true/>
 		</dict>
 	</array>
-	<key>NSPrincipalClass</key>
-	<string>${MACOSX_BUNDLE_NSPRINCIPAL_CLASS}</string>
-	<key>NSMainNibFile</key>
-	<string>${MACOSX_BUNDLE_NSMAIN_NIB_FILE}</string>
+	<key>CSResourcesFileMapped</key>
+	<true/>
+	<key>LSRequiresCarbon</key>
+	<true/>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Access to the microphone is needed to connect to voice chat.</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.14.0</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en_US</string>
 </dict>
 </plist>
