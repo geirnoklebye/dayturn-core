@@ -346,7 +346,7 @@ can be attached to notecards.
 
 	<string name="ReleaseNotes">Release Notes</string>
 	<!-- Always mark translate="false" for strings that are nothing but URLs, as they don't need translation. -->
-	<string name="RELEASE_NOTES_BASE_URL" translate="false">http://kokuaviewer.org.uk/releasenotes/Kokua:Release_Notes/</string>
+	<string name="RELEASE_NOTES_BASE_URL" translate="false">https://www.dayturn.com/viewer/index.php?resources/</string>
 
 	<!-- Indicates something is being loaded. Maybe should be merged with RetrievingData -->
 	<string name="LoadingData">Loading...</string>
