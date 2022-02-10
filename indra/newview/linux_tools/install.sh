@@ -48,8 +48,8 @@ function warn()
 function homedir_install()
 {
     warn "You are not running as a privileged user, so you will only be able"
-    warn "to install the Kokua Viewer in your home directory. If you"
-    warn "would like to install the Kokua Viewer system-wide, please run"
+    warn "to install the Dayturn Viewer in your home directory. If you"
+    warn "would like to install the Dayturn Viewer system-wide, please run"
     warn "this script as the root user, or with the 'sudo' command."
     echo
 
@@ -58,13 +58,13 @@ function homedir_install()
 	exit 0
     fi
 
-    install_to_prefix "$HOME/.kokua-install"
+    install_to_prefix "$HOME/.dayturn-install"
     $HOME/.kokua-install/etc/refresh_desktop_app_entry.sh
 }
 
 function root_install()
 {
-    local default_prefix="/opt/kokua-install"
+    local default_prefix="/opt/dayturn-install"
 
     echo -n "Enter the desired installation directory [${default_prefix}]: ";
     read

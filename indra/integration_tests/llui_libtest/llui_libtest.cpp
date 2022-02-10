@@ -115,7 +115,7 @@ void init_llui()
 #else
 	const char* newview_path = "../../../newview";
 #endif
-	gDirUtilp->initAppDirs("Kokua", newview_path);
+	gDirUtilp->initAppDirs("Dayturn", newview_path);
 	gDirUtilp->setSkinFolder("default", "en");
 	
 	// colors are no longer stored in a LLControlGroup file

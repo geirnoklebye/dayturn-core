@@ -1478,11 +1478,11 @@ set(viewer_HEADER_FILES
 # @ONLY restricts the substitute to @variable@ constructs so any ${VAR} won't be
 # accidentally impacted
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/kokuabuildversion.h.in
-    ${CMAKE_CURRENT_BINARY_DIR}/kokuabuildversion.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/dayturnbuildversion.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/dayturnbuildversion.h
     @ONLY
 )
-list(APPEND viewer_HEADER_FILES ${CMAKE_CURRENT_BINARY_DIR}/kokuabuildversion.h)
+list(APPEND viewer_HEADER_FILES ${CMAKE_CURRENT_BINARY_DIR}/dayturnbuildversion.h)
 
 source_group("CMake Rules" FILES ViewerInstall.cmake)
 
@@ -1495,7 +1495,7 @@ set_source_files_properties(
    llversioninfo.cpp tests/llversioninfo_test.cpp 
    PROPERTIES
 # using this rebuilds the whole of newview on each hg revision change, instead
-# its function is performed by kokuabuildversion.h(.in)   
+# its function is performed by dayturnbuildversion.h(.in)   
 #
 #  COMPILE_DEFINITIONS "${VIEWER_CHANNEL_VERSION_DEFINES}" # see BuildVersion.cmake
    )
@@ -1589,7 +1589,7 @@ if (LINUX)
 #         directory every time the Mercurial revision number changes.
 #         Instead of doing that, we use the configure tool to build
 #         fsversionstrings.h with the right numbers in it.
-#         Chorazin: For Kokua this is kokuabuildversion.h based on same principles
+#         Chorazin: For Kokua this is dayturnbuildversion.h based on same principles
 #      COMPILE_DEFINITIONS "${VIEWER_CHANNEL_VERSION_DEFINES}"
       )
     LIST(APPEND viewer_SOURCE_FILES llappviewerlinux_api_dbus.cpp)
@@ -1659,14 +1659,14 @@ if (WINDOWS)
     set(ICON_PATH "test")
     set(VIEWER_MACOSX_PHASE "d")
     string(TOLOWER ${VIEWER_CHANNEL} channel_lower)
-    if(channel_lower MATCHES "^kokua release")
+    if(channel_lower MATCHES "^dayturn release")
     # Use original kokua icons. Can be changed to "release" if desired
-        set(ICON_PATH "kokua")
+        set(ICON_PATH "dayturn")
         set(VIEWER_MACOSX_PHASE "f")
-    elseif(channel_lower MATCHES "^kokua beta")
+    elseif(channel_lower MATCHES "^dayturn beta")
         set(ICON_PATH "beta")
         set(VIEWER_MACOSX_PHASE "b")
-    elseif(channel_lower MATCHES "^kokua project")
+    elseif(channel_lower MATCHES "^dayturn project")
         set(ICON_PATH "project")
         set(VIEWER_MACOSX_PHASE "a")
 
@@ -1955,7 +1955,7 @@ if (WINDOWS)
         # *TODO -reenable this once we get server usage sorted out
         LINK_FLAGS "/debug /NODEFAULTLIB:LIBCMT /SUBSYSTEM:WINDOWS /LARGEADDRESSAWARE"
         LINK_FLAGS_DEBUG "/NODEFAULTLIB:\"LIBCMT;LIBCMTD;MSVCRT\" /INCREMENTAL:NO /LARGEADDRESSAWARE"
-        LINK_FLAGS_RELEASE "/FORCE:MULTIPLE /MAP\"kokua-bin.MAP\" /OPT:REF /INCREMENTAL:NO /LARGEADDRESSAWARE"
+        LINK_FLAGS_RELEASE "/FORCE:MULTIPLE /MAP\"dayturn-bin.MAP\" /OPT:REF /INCREMENTAL:NO /LARGEADDRESSAWARE"
         )
 
     if(USE_PRECOMPILED_HEADERS)
@@ -2451,8 +2451,8 @@ if (PACKAGE AND (RELEASE_CRASH_REPORTING OR NON_RELEASE_CRASH_REPORTING) AND VIE
           "${VIEWER_SYMBOL_FILE_CYGWIN}"
           "-C"
           "${PARENT_DIRECTORY_CYGWIN}"
-          "kokua-bin.pdb"
-        DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-bin.pdb"
+          "dayturn-bin.pdb"
+        DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/dayturn-bin.pdb"
         COMMENT "Packing viewer PDB into ${VIEWER_SYMBOL_FILE_CYGWIN}"
         )
       add_custom_target(generate_symbols DEPENDS "${VIEWER_SYMBOL_FILE}" ${VIEWER_BINARY_NAME})

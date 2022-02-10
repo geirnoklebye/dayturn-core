@@ -99,7 +99,7 @@ SetOverwrite on							# Overwrite files by default
 AutoCloseWindow true					# After all files install, close window
 
 # Registry key paths, ours and Microsoft's
-!define LINDEN_KEY      "SOFTWARE\Kokua and Imprudence"
+!define LINDEN_KEY      "SOFTWARE\Dayturn"
 !define INSTNAME_KEY    "${LINDEN_KEY}\${INSTNAME}"
 !define MSCURRVER_KEY   "SOFTWARE\Microsoft\Windows\CurrentVersion"
 !define MSNTCURRVER_KEY "SOFTWARE\Microsoft\Windows NT\CurrentVersion"
@@ -552,7 +552,7 @@ FunctionEnd
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Function CloseSecondLife
   Push $0
-  FindWindow $0 "Kokua" ""
+  FindWindow $0 "Dayturn" ""
   IntCmp $0 0 DONE
   
   StrCmp $SKIP_DIALOGS "true" CLOSE
@@ -566,8 +566,8 @@ Function CloseSecondLife
     SendMessage $0 16 0 0
 
   LOOP:
-	  FindWindow $0 "Kokua" ""
-	  IntCmp $0 0 SLEEP
+	  FindWindow $0 "Dayturn" ""
+	  IntCmp $0 0 DONE
 	  Sleep 500
 	  Goto LOOP
 	  
@@ -590,7 +590,7 @@ FunctionEnd
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Function un.CloseSecondLife
   Push $0
-  FindWindow $0 "Kokua" ""
+  FindWindow $0 "Dayturn" ""
   IntCmp $0 0 DONE
   MessageBox MB_OKCANCEL $(CloseSecondLifeUnInstMB) IDOK CLOSE IDCANCEL CANCEL_UNINSTALL
 
@@ -602,7 +602,7 @@ Function un.CloseSecondLife
     SendMessage $0 16 0 0
 
   LOOP:
-	  FindWindow $0 "Kokua" ""
+	  FindWindow $0 "Dayturn" ""
 	  IntCmp $0 0 DONE
 	  Sleep 500
 	  Goto LOOP
@@ -684,7 +684,7 @@ Push $0
 Push $1
 Push $2
 
-  DetailPrint "Deleting Kokua data files"
+  DetailPrint "Deleting Dayturn data files"
 
   StrCpy $0 0	# Index number used to iterate via EnumRegKey
 
@@ -698,18 +698,18 @@ Push $2
 # Required since ProfileImagePath is of type REG_EXPAND_SZ
     ExpandEnvStrings $2 $2
 
-# Delete files in \Users\<User>\AppData\Roaming\Kokua
+# Delete files in \Users\<User>\AppData\Roaming\Dayturn
 # Remove all settings files but leave any other .txt files to preserve the chat logs
-;    RMDir /r "$2\AppData\Roaming\Kokua\logs"
-    RMDir /r "$2\AppData\Roaming\Kokua\browser_profile"
-    RMDir /r "$2\AppData\Roaming\Kokua\user_settings"
-    Delete  "$2\AppData\Roaming\Kokua\*.xml"
-    Delete  "$2\AppData\Roaming\Kokua\*.bmp"
-    Delete  "$2\AppData\Roaming\Kokua\search_history.txt"
-    Delete  "$2\AppData\Roaming\Kokua\plugin_cookies.txt"
-    Delete  "$2\AppData\Roaming\Kokua\typed_locations.txt"
-# Delete files in \Users\<User>\AppData\Local\Kokua
-    RmDir /r  "$2\AppData\Local\Kokua"							#Delete the cache folder
+;    RMDir /r "$2\AppData\Roaming\Dayturn\logs"
+    RMDir /r "$2\AppData\Roaming\Dayturn\browser_profile"
+    RMDir /r "$2\AppData\Roaming\Dayturn\user_settings"
+    Delete  "$2\AppData\Roaming\Dayturn\*.xml"
+    Delete  "$2\AppData\Roaming\Dayturn\*.bmp"
+    Delete  "$2\AppData\Roaming\Dayturn\search_history.txt"
+    Delete  "$2\AppData\Roaming\Dayturn\plugin_cookies.txt"
+    Delete  "$2\AppData\Roaming\Dayturn\typed_locations.txt"
+# Delete files in \Users\<User>\AppData\Local\Dayturn
+    RmDir /r  "$2\AppData\Local\Dayturn"							#Delete the cache folder
 
   CONTINUE:
     IntOp $0 $0 + 1
@@ -720,11 +720,11 @@ Pop $2
 Pop $1
 Pop $0
 
-# Delete files in ProgramData\Kokua
+# Delete files in ProgramData\Dayturn
 Push $0
   ReadRegStr $0 SHELL_CONTEXT "${MSCURRVER_KEY}\Explorer\Shell Folders" "Common AppData"
   StrCmp $0 "" +2
-  RMDir /r "$0\Kokua"
+  RMDir /r "$0\Dayturn"
 Pop $0
 
 Keep:
@@ -752,14 +752,14 @@ Delete "$INSTDIR\dronesettings.ini"
 Delete "$INSTDIR\message_template.msg"
 Delete "$INSTDIR\newview.pdb"
 Delete "$INSTDIR\newview.map"
-Delete "$INSTDIR\Kokua.pdb"
-Delete "$INSTDIR\Kokua.map"
+Delete "$INSTDIR\Dayturn.pdb"
+Delete "$INSTDIR\Dayturn.map"
 Delete "$INSTDIR\comm.dat"
 Delete "$INSTDIR\*.glsl"
 Delete "$INSTDIR\motions\*.lla"
 Delete "$INSTDIR\trial\*.html"
 Delete "$INSTDIR\newview.exe"
-Delete "$INSTDIR\KokuaViewer.exe"
+Delete "$INSTDIR\DayturnViewer.exe"
 
 # MAINT-3099 workaround - prevent these log files, if present, from causing a user alert
 Delete "$INSTDIR\VivoxVoiceService-*.log"

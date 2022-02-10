@@ -489,8 +489,8 @@ class WindowsManifest(ViewerManifest):
         debpkgdir = os.path.join(pkgdir, "lib", "debug")
 
         if self.is_packaging_viewer():
-            # Find kokua-bin.exe in the 'configuration' dir, then rename it to the result of final_exe.
-            self.path(src='%s/kokua-bin.exe' % self.args['configuration'], dst=self.final_exe())
+            # Find dayturn-bin.exe in the 'configuration' dir, then rename it to the result of final_exe.
+            self.path(src='%s/dayturn-bin.exe' % self.args['configuration'], dst=self.final_exe())
 
         # Plugin host application
         self.path2basename(os.path.join(os.pardir,
@@ -753,7 +753,7 @@ class WindowsManifest(ViewerManifest):
             OutFile "%(installer_file)s"
             !define INSTNAME   "%(app_name_oneword)s"
             !define SHORTCUT   "%(app_name)s"
-            !define URLNAME   "kokua"
+            !define URLNAME   "dayturn"
             Caption "%(caption)s"
             """
 
@@ -764,7 +764,7 @@ class WindowsManifest(ViewerManifest):
             engage_registry="SetRegView 32"
             program_files=""
 
-        tempfile = "kokua_setup_tmp.nsi"
+        tempfile = "dayturn_setup_tmp.nsi"
         # the following replaces strings in the nsi template
         # it also does python-style % substitution
         self.replace_in("installers/windows/installer_template.nsi", tempfile, {

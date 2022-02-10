@@ -31,7 +31,7 @@
 
 // This brings in the version information instead of the cmake mechanism
 // which rebuilds the whole of newbuild for each hg commit
-#include "kokuabuildversion.h"
+#include "dayturnbuildversion.h"
 
  #include <iostream>
 

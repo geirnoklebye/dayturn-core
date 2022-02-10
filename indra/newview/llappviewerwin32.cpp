@@ -243,7 +243,7 @@ extern "C" {
 #endif
 #endif
 
-const std::string LLAppViewerWin32::sWindowClass = "Kokua";
+const std::string LLAppViewerWin32::sWindowClass = "Dayturn";
 
 /*
     This function is used to print to the command line a text message 
@@ -270,7 +270,7 @@ void nvapi_error(NvAPI_Status status)
 bool create_app_mutex()
 {
 	bool result = true;
-	LPCWSTR unique_mutex_name = L"KokuaAppMutex";
+	LPCWSTR unique_mutex_name = L"DayturnAppMutex";
 	HANDLE hMutex;
 	hMutex = CreateMutex(NULL, TRUE, unique_mutex_name); 
 	if(GetLastError() == ERROR_ALREADY_EXISTS) 
@@ -756,9 +756,9 @@ bool LLAppViewerWin32::init()
 	checkTemp(); // Always do and log this, no matter if using Bugsplat or not
 
 	// Save those early so we don't have to deal with the dynamic memory during in process crash handling.
-	Kokua::LogfileIn = ll_convert_string_to_wide(gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "Kokua.log"));
-	Kokua::LogfileOut = ll_convert_string_to_wide(gDirUtilp->getExpandedFilename(LL_PATH_DUMP, "Kokua.log"));
-	Kokua::DumpFile = ll_convert_string_to_wide(gDirUtilp->getExpandedFilename(LL_PATH_DUMP, "Kokua.dmp"));
+	Kokua::LogfileIn = ll_convert_string_to_wide(gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "Dayturn.log"));
+	Kokua::LogfileOut = ll_convert_string_to_wide(gDirUtilp->getExpandedFilename(LL_PATH_DUMP, "Dayturn.log"));
+	Kokua::DumpFile = ll_convert_string_to_wide(gDirUtilp->getExpandedFilename(LL_PATH_DUMP, "Dayturn.dmp"));
 
 	S32 nCrashSubmitBehavior = gCrashSettings.getS32("CrashSubmitBehavior");
 	// Don't ever send? bail out!

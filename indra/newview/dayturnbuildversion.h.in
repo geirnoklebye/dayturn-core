@@ -1,5 +1,5 @@
 /** 
- * @file kokuabuildversion.h.in
+ * @file dayturnbuildversion.h.in
  * @author Chorazin Allen
  * @brief Alternative injection of viewer version number into build process
  *
@@ -27,8 +27,8 @@
 
 // This file is populated by cmake at compile time
 
-#ifndef KOKUABUILDVERSION_H
-#define KOKUABUILDVERSION_H
+#ifndef DAYTURNBUILDVERSION_H
+#define DAYTURNBUILDVERSION_H
 
 // This technique (adapted from FS:TS's original) gets away from changes
 // in the hg commit revision number triggering a complete rebuild
