@@ -14,13 +14,13 @@
 /* Class = "NSMenu"; title = "Main Menu"; ObjectID = "29"; */
 "29.title" = "Main Menu";
 
-/* Class = "NSMenuItem"; title = "Kokua OS"; ObjectID = "56"; */
+/* Class = "NSMenuItem"; title = "Dayturn"; ObjectID = "56"; */
 "56.title" = "Dayturn";
 
-/* Class = "NSMenu"; title = "Kokua OS"; ObjectID = "57"; */
+/* Class = "NSMenu"; title = "Dayturn"; ObjectID = "57"; */
 "57.title" = "Dayturn";
 
-/* Class = "NSMenuItem"; title = "About Kokua OS"; ObjectID = "58"; */
+/* Class = "NSMenuItem"; title = "About Dayturn"; ObjectID = "58"; */
 "58.title" = "About Dayturn";
 
 /* Class = "NSMenuItem"; title = "Help"; ObjectID = "103"; */
@@ -35,10 +35,10 @@
 /* Class = "NSMenuItem"; title = "Services"; ObjectID = "131"; */
 "131.title" = "Services";
 
-/* Class = "NSMenuItem"; title = "Hide Kokua OS"; ObjectID = "134"; */
+/* Class = "NSMenuItem"; title = "Hide Dayturn"; ObjectID = "134"; */
 "134.title" = "Hide Dayturn";
 
-/* Class = "NSMenuItem"; title = "Quit Kokua OS"; ObjectID = "136"; */
+/* Class = "NSMenuItem"; title = "Quit Dayturn"; ObjectID = "136"; */
 "136.title" = "Quit Dayturn";
 
 /* Class = "NSMenuItem"; title = "Hide Others"; ObjectID = "145"; */
@@ -74,8 +74,8 @@
 /* Class = "NSMenuItem"; title = "Select All"; ObjectID = "721"; */
 "721.title" = "Select All";
 
-/* Class = "NSWindow"; title = "Kokua OS"; ObjectID = "828"; */
-"828.title" = "Kokua OS";
+/* Class = "NSWindow"; title = "Dayturn"; ObjectID = "828"; */
+"828.title" = "Dayturn";
 
 /* Class = "NSMenuItem"; title = "Enter Full Screen"; ObjectID = "841"; */
 "841.title" = "Enter Full Screen";
