@@ -511,7 +511,7 @@ BOOL LLMessageSystem::checkMessages(LockMessageChecker&, S64 frame_count )
 		U8* buffer = mTrueReceiveBuffer;
 		
 		mTrueReceiveSize = mPacketRing.receivePacket(mSocket, (char *)mTrueReceiveBuffer);
-		// If you want to dump all received packets into Kokua.log, uncomment this
+		// If you want to dump all received packets into Dayturn.log, uncomment this
 		//dumpPacketToLog();
 		
 		receive_size = mTrueReceiveSize;

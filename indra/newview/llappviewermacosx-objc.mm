@@ -25,7 +25,7 @@
  */ 
 
 #if !defined LL_DARWIN
-	#error "Use only with Mac OS X"
+	#error "Use only with macOS"
 #endif
 
 #import <Cocoa/Cocoa.h>
@@ -37,10 +37,8 @@ void launchApplication(const std::string* app_name, const std::vector<std::strin
 {
 
 	if (app_name->empty()) return;
-
-	NSMutableString* app_name_ns = [NSMutableString stringWithString:[[NSBundle mainBundle] resourcePath]];	//Path to resource dir
-	[app_name_ns appendFormat:@"/%@", [NSString stringWithCString:app_name->c_str() 
-								encoding:[NSString defaultCStringEncoding]]];
+	
+	NSString* app_name_ns = @"Dayturn";
 
 	NSMutableArray *args_ns = nil;
 	args_ns = [[NSMutableArray alloc] init];
@@ -55,16 +53,15 @@ void launchApplication(const std::string* app_name, const std::vector<std::strin
 
     NSTask *task = [[NSTask alloc] init];
     NSBundle *bundle = [NSBundle bundleWithPath:[[NSWorkspace sharedWorkspace] fullPathForApplication:app_name_ns]];
-    [task setLaunchPath:[bundle executablePath]];
+    @try {
+            [task setLaunchPath:[bundle executablePath]];
+    }
+    @catch (NSException *theException) {
+        NSLog(@"Executable path exception %@. Terminating", theException);
+        return;
+    }
     [task setArguments:args_ns];
     [task launch];
-    
-//	NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
-//	NSURL *url = [NSURL fileURLWithPath:[workspace fullPathForApplication:app_name_ns]];
-//
-//	NSError *error = nil;
-//	[workspace launchApplicationAtURL:url options:0 configuration:[NSDictionary dictionaryWithObject:args_ns forKey:NSWorkspaceLaunchConfigurationArguments] error:&error];
-	//TODO Handle error
     
 	return;
 }

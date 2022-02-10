@@ -69,7 +69,7 @@ LLDir_Mac::LLDir_Mac()
 {
 	mDirDelimiter = "/";
 
-    const std::string     secondLifeString = "Kokua";
+    const std::string     secondLifeString = "Dayturn";
     
     std::string *executablepathstr = getSystemExecutableFolder();
 
@@ -104,10 +104,10 @@ LLDir_Mac::LLDir_Mac()
 		// folders as part of packaging and it's those copies that are referenced
 		// when the app is run from within the build folders. However on Darwin
 		// there is no intermediate copy and instead it points back to the source
-		// file structure. This is a really bad idea for Kokua where there are
+		// file structure. This is a really bad idea for Dayturn where there are
 		// three different targets that could be built and is the cause of a
 		// long-running, perplexing problem where a RLV version would fail to
-		// start because it couldn't locate kokua_rlv_names.xml (because the
+		// start because it couldn't locate dayturn_rlv_names.xml (because the
 		// source structure had been changed to a non-RLV checkout). The pain
 		// this causes outweighs the benefits of on-the-fly xml editing/testing
 		// so this is going to be disabled by an #if construct so that the 

@@ -380,11 +380,11 @@ WorkQueue gMainloopWork("mainloop", 1024*1024);
 // Internal globals... that should be removed.
 static std::string gArgs;
 const int MAX_MARKER_LENGTH = 1024;
-const std::string MARKER_FILE_NAME("Kokua.exec_marker");
-const std::string START_MARKER_FILE_NAME("Kokua.start_marker");
-const std::string ERROR_MARKER_FILE_NAME("Kokua.error_marker");
-const std::string LLERROR_MARKER_FILE_NAME("Kokua.llerror_marker");
-const std::string LOGOUT_MARKER_FILE_NAME("Kokua.logout_marker");
+const std::string MARKER_FILE_NAME("Dayturn.exec_marker");
+const std::string START_MARKER_FILE_NAME("Dayturn.start_marker");
+const std::string ERROR_MARKER_FILE_NAME("Dayturn.error_marker");
+const std::string LLERROR_MARKER_FILE_NAME("Dayturn.llerror_marker");
+const std::string LOGOUT_MARKER_FILE_NAME("Dayturn.logout_marker");
 static BOOL gDoDisconnect = FALSE;
 static std::string gLaunchFileOnQuit;
 
@@ -688,7 +688,7 @@ LLAppViewer::LLAppViewer()
 
 	// Need to do this initialization before we do anything else, since anything
 	// that touches files should really go through the lldir API
-	gDirUtilp->initAppDirs("Kokua");
+	gDirUtilp->initAppDirs("Dayturn");
 	//
 	// IMPORTANT! Do NOT put anything that will write
 	// into the log files during normal startup until AFTER
@@ -761,7 +761,7 @@ bool LLAppViewer::init()
 	//initialize particle index pool
 	LLVOPartGroup::initClass();
 
-	gDirUtilp->initAppDirs("Kokua");// this is setting up $HOME/.kokua
+	gDirUtilp->initAppDirs("Dayturn");// this is setting up $HOME/.dayturn
 	// set skin search path to default, will be overridden later
 	// this allows simple skinned file lookups to work
 	gDirUtilp->setSkinFolder("default", "en");
@@ -775,7 +775,7 @@ bool LLAppViewer::init()
 // <FS>
 	// SJ/AO:  Reset Configuration here, if our marker file exists. Configuration needs to be reset before settings files 
 	// are read in to avoid file locks.
-	// Extended for Kokua to have a colours-only option too
+	// Extended for Dayturn to have a colours-only option too
 
 	std::string clear_settings_filename = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"CLEAR");
 	std::string clear_color_settings_filename = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"CLEAR_COLOR");
@@ -1248,7 +1248,7 @@ bool LLAppViewer::init()
 	}
 
 	gGLActive = FALSE;
-#if 0 // no updater for Kokua
+#if 0 // no updater for Dayturn
 //#if LL_RELEASE_FOR_DOWNLOAD 
     // Skip updater if this is a non-interactive instance
     if (!gSavedSettings.getBOOL("CmdLineSkipUpdater") && !gNonInteractive)
@@ -1344,13 +1344,13 @@ bool LLAppViewer::init()
         }
     }
 #endif //!LL_LINUX
-    if (gSavedSettings.getBOOL("QAMode") && gSavedSettings.getS32("QAModeEventHostPort") > 0)
-    {
-        LL_WARNS("InitInfo") << "QAModeEventHostPort DEPRECATED: "
-                             << "lleventhost no longer supported as a dynamic library"
-                             << LL_ENDL;
-    }
-#endif // LL_RELEASE_FOR_DOWNLOAD in LL or 0 for Kokua
+	if (gSavedSettings.getBOOL("QAMode") && gSavedSettings.getS32("QAModeEventHostPort") > 0)
+	{
+		LL_WARNS("InitInfo") << "QAModeEventHostPort DEPRECATED: "
+							 << "lleventhost no longer supported as a dynamic library"
+							 << LL_ENDL;
+	}
+#endif // LL_RELEASE_FOR_DOWNLOAD in LL or 0 for Dayturn
 
 	LLTextUtil::TextHelpers::iconCallbackCreationFunction = create_text_segment_icon_from_url_match;
 
@@ -2490,12 +2490,12 @@ void LLAppViewer::initLoggingAndGetLastDuration()
 
         // Remove the last ".old" log file.
         std::string old_log_file = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,
-							     "Kokua.old");
+							     "Dayturn.old");
         LLFile::remove(old_log_file);
 
         // Get name of the log file
         std::string log_file = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,
-							     "Kokua.log");
+							     "Dayturn.log");
         /*
         * Before touching any log files, compute the duration of the last run
         * by comparing the ctime of the previous start marker file with the ctime
@@ -3778,10 +3778,10 @@ void LLAppViewer::writeSystemInfo()
         gDebugInfo["Dynamic"] = LLSD::emptyMap();
     
 #if LL_WINDOWS && !LL_BUGSPLAT
-	gDebugInfo["SLLog"] = gDirUtilp->getExpandedFilename(LL_PATH_DUMP,"Kokua.log");
+	gDebugInfo["SLLog"] = gDirUtilp->getExpandedFilename(LL_PATH_DUMP,"Dayturn.log");
 #else
     //Not ideal but sufficient for good reporting.
-    gDebugInfo["SLLog"] = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"Kokua.old");  //LLError::logFileName();
+    gDebugInfo["SLLog"] = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"Dayturn.old");  //LLError::logFileName();
 #endif
 
 	gDebugInfo["ClientInfo"]["Name"] = LLVersionInfo::instance().getChannel();
@@ -4126,10 +4126,10 @@ bool LLAppViewer::markerIsSameVersion(const std::string& marker_name) const
 void LLAppViewer::processMarkerFiles()
 {
 	//We've got 4 things to test for here
-	// - Other Process Running (Kokua.exec_marker present, locked)
-	// - Freeze (Kokua.exec_marker present, not locked)
-	// - LLError Crash (Kokua.llerror_marker present)
-	// - Other Crash (Kokua.error_marker present)
+	// - Other Process Running (Dayturn.exec_marker present, locked)
+	// - Freeze (Dayturn.exec_marker present, not locked)
+	// - LLError Crash (Dayturn.llerror_marker present)
+	// - Other Crash (Dayturn.error_marker present)
 	// These checks should also remove these files for the last 2 cases if they currently exist
 
 	std::ostringstream marker_log_stream;
@@ -4462,18 +4462,18 @@ void LLAppViewer::abortQuit()
 void LLAppViewer::migrateCacheDirectory()
 {
 #if LL_WINDOWS || LL_DARWIN
-	// NOTE: (Nyx) as of 1.21, cache for mac is moving to /library/caches/Kokua from
-	// /library/application support/Kokua/cache This should clear/delete the old dir.
+	// NOTE: (Nyx) as of 1.21, cache for mac is moving to /library/caches/Dayturn from
+	// /library/application support/Dayturn/cache This should clear/delete the old dir.
 
 	// As of 1.23 the Windows cache moved from
-	//   C:\Documents and Settings\James\Application Support\Kokua\cache
+	//   C:\Documents and Settings\James\Application Support\Dayturn\cache
 	// to
-	//   C:\Documents and Settings\James\Local Settings\Application Support\Kokua
+	//   C:\Documents and Settings\James\Local Settings\Application Support\Dayturn
 	//
 	// The Windows Vista equivalent is from
-	//   C:\Users\James\AppData\Roaming\Kokua\cache
+	//   C:\Users\James\AppData\Roaming\Dayturn\cache
 	// to
-	//   C:\Users\James\AppData\Local\Kokua
+	//   C:\Users\James\AppData\Local\Dayturn
 	//
 	// Note the absence of \cache on the second path.  James.
 

@@ -1,0 +1,7 @@
+/* Localized versions of Info.plist keys */
+
+CFBundleName = "Dayturn";
+
+CFBundleShortVersionString = "Dayturn version %%VERSION%%";
+CFBundleGetInfoString = "Dayturn version %%VERSION%%, Copyright 2021 Geir Nøklebye, Dayturn.";
+

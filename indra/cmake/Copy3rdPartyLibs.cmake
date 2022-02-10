@@ -1,7 +1,7 @@
 # -*- cmake -*-
 
 # The copy_win_libs folder contains file lists and a script used to
-# copy dlls, exes and such needed to run the Kokua.sln from within
+# copy dlls, exes and such needed to run the Dayturn.sln from within
 # VisualStudio.
 
 include(CMakeCopyIfDifferent)

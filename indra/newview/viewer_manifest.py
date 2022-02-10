@@ -942,34 +942,35 @@ class DarwinManifest(ViewerManifest):
                 with self.prefix(src_dst="cursors_mac"):
                     self.path("*.tif")
 
+                self.path("Base.lproj/Dayturn.nib")
+
                 self.path("licenses-mac.txt", dst="licenses.txt")
                 self.path("featuretable_mac.txt")
-                self.path("Kokua.nib")
 
                 with self.prefix(src=pkgdir,dst=""):
                     self.path("ca-bundle.crt")
 
                 # Translations
-                self.path("English.lproj/language.txt")
-                self.replace_in(src="English.lproj/InfoPlist.strings",
-                                dst="English.lproj/InfoPlist.strings",
+                self.path("en.lproj/Dayturn.strings")
+                self.replace_in(src="en.lproj/InfoPlist.strings",
+                                dst="en.lproj/InfoPlist.strings",
                                 searchdict={'%%VERSION%%':'.'.join(self.args['version'])}
                                 )
-                self.path("German.lproj")
-                self.path("Japanese.lproj")
-                self.path("Korean.lproj")
-                self.path("da.lproj")
-                self.path("es.lproj")
-                self.path("fr.lproj")
-                self.path("hu.lproj")
-                self.path("it.lproj")
-                self.path("nl.lproj")
-                self.path("pl.lproj")
-                self.path("pt.lproj")
-                self.path("ru.lproj")
-                self.path("tr.lproj")
-                self.path("uk.lproj")
-                self.path("zh-Hans.lproj")
+                self.path("de.lproj/Dayturn.strings")
+                self.path("ja.lproj/Dayturn.strings")
+                self.path("ko.lproj/Dayturn.strings")
+                self.path("da.lproj/Dayturn.strings")
+                self.path("es.lproj/Dayturn.strings")
+                self.path("fr.lproj/Dayturn.strings")
+                self.path("hu-HU.lproj/Dayturn.strings")
+                self.path("it.lproj/Dayturn.strings")
+                self.path("nl.lproj/Dayturn.strings")
+                self.path("pl.lproj/Dayturn.strings")
+                self.path("pt-PT.lproj/Dayturn.strings")
+                self.path("ru.lproj/Dayturn.strings")
+                self.path("tr.lproj/Dayturn.strings")
+                self.path("en-GB.lproj/Dayturn.strings")
+                self.path("zh-Hans.lproj/Dayturn.strings")
 
                 def path_optional(src, dst):
                     """

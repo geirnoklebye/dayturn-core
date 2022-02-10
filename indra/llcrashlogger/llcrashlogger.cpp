@@ -244,7 +244,7 @@ void LLCrashLogger::gatherFiles()
         mergeLogs(dynamic_sd);
 		mCrashInPreviousExec = mDebugLog["CrashNotHandled"].asBoolean();
 
-		mFileMap["KokuaLog"] = mDebugLog["KLog"].asString();
+		mFileMap["DayturnLog"] = mDebugLog["KLog"].asString();
 		mFileMap["SettingsXml"] = mDebugLog["SettingsFilename"].asString();
         mFileMap["CrashHostUrl"] = loadCrashURLSetting();
 		if(mDebugLog.has("CAFilename"))
@@ -258,7 +258,7 @@ void LLCrashLogger::gatherFiles()
                 LLCore::HttpRequest::GLOBAL_POLICY_ID, gDirUtilp->getCAFile(), NULL);
 		}
 
-		LL_INFOS("CRASHREPORT") << "Using log file from debug log " << mFileMap["SecondLifeLog"] << LL_ENDL;
+		LL_INFOS("CRASHREPORT") << "Using log file from debug log " << mFileMap["DayturnLog"] << LL_ENDL;
 		LL_INFOS("CRASHREPORT") << "Using settings file from debug log " << mFileMap["SettingsXml"] << LL_ENDL;
 	}
 	else
@@ -267,13 +267,13 @@ void LLCrashLogger::gatherFiles()
         LLCore::HttpRequest::setStaticPolicyOption(LLCore::HttpRequest::PO_CA_FILE,
             LLCore::HttpRequest::GLOBAL_POLICY_ID, gDirUtilp->getCAFile(), NULL);
         
-		mFileMap["KokuaLog"] = gDirUtilp->getExpandedFilename(LL_PATH_DUMP,"Kokua.log");
+		mFileMap["DayturnLog"] = gDirUtilp->getExpandedFilename(LL_PATH_DUMP,"Dayturn.log");
         mFileMap["SettingsXml"] = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS,"settings.xml");
 	}
 
-    if (!gDirUtilp->fileExists(mFileMap["KokuaLog"]) ) //We would prefer to get this from the per-run but here's our fallback.
+    if (!gDirUtilp->fileExists(mFileMap["DayturnLog"]) ) //We would prefer to get this from the per-run but here's our fallback.
     {
-        mFileMap["KokuaLog"] = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"Kokua.old");
+        mFileMap["DayturnLog"] = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"Dayturn.old");
     }
 
 	gatherPlatformSpecificFiles();
@@ -308,7 +308,7 @@ void LLCrashLogger::gatherFiles()
                 s << f.rdbuf();
 
                 std::string crash_info = s.str();
-		if(itr->first == "KokuaLog")
+		if(itr->first == "DayturnLog")
                 {
                     if(!mCrashInfo["DebugLog"].has("StartupState"))
                     {
@@ -548,7 +548,7 @@ bool LLCrashLogger::sendCrashLog(std::string dump_dir)
     gDirUtilp->setDumpDir( dump_dir );
     
     std::string dump_path = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,
-                                                           "KokuaCrashReport");
+                                                           "DayturnCrashReport");
     std::string report_file = dump_path + ".log";
 
     LL_DEBUGS("CRASHREPORT") << "sending " << report_file << LL_ENDL;
@@ -567,7 +567,7 @@ bool LLCrashLogger::sendCrashLog(std::string dump_dir)
     
 	bool sent = false;
 
-	// CA: KKA-795 It looks like LL have turned off their log receiver as part of cloud uplift and Kokua doesn't have its own receiver, so...
+	// CA: KKA-795 It looks like LL have turned off their log receiver as part of cloud uplift and Dayturn doesn't have its own receiver, so...
 #if 0 // KKA-795 don't bother sending anything, however we do need to return success so the logs get rolled over 
     if(mCrashHost != "")
 	{
@@ -674,11 +674,11 @@ bool LLCrashLogger::init()
     LLCore::LLHttp::initialize();
 
 	// We assume that all the logs we're looking for reside on the current drive
-	gDirUtilp->initAppDirs("Kokua");
+	gDirUtilp->initAppDirs("Dayturn");
 
 	LLError::initForApplication(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, ""), gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS, ""));
 
-	mProductName = "Kokua";
+	mProductName = "Dayturn";
 
 	// Rename current log file to ".old"
 	std::string old_log_file = gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "crashreport.log.old");

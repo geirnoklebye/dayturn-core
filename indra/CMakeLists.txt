@@ -9,8 +9,8 @@ cmake_minimum_required(VERSION 3.8.0 FATAL_ERROR)
 # As of XCode 12 this no longer defaults sensibly - adopt the fix implemented in CMake 3.18.1
 set(CMAKE_OSX_ARCHITECTURES $(NATIVE_ARCH_ACTUAL) CACHE STRING "Set arch to actual" FORCE)
 
-set(ROOT_PROJECT_NAME "Kokua" CACHE STRING
-    "The root project/makefile/solution name. Defaults to Kokua.")
+set(ROOT_PROJECT_NAME "Dayturn" CACHE STRING
+    "The root project/makefile/solution name. Defaults to Dayturn.")
 project(${ROOT_PROJECT_NAME})
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -118,7 +118,7 @@ endif (WINDOWS)
 # sets the 'startup project' for debugging from visual studio.
 set_property(
     DIRECTORY ${VIEWER_PREFIX}
-    PROPERTY VS_STARTUP_PROJECT kokua-bin
+    PROPERTY VS_STARTUP_PROJECT dayturn-bin
     )
 
 if (USE_BUGSPLAT)
@@ -132,7 +132,7 @@ else (USE_BUGSPLAT)
 endif (USE_BUGSPLAT)
 
 add_subdirectory(${VIEWER_PREFIX}newview)
-  add_dependencies(viewer kokua-bin)
+  add_dependencies(viewer dayturn-bin)
 
 
 if (LL_TESTS)
