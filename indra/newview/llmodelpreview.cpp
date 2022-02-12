@@ -2779,7 +2779,6 @@ void LLModelPreview::genBuffers(S32 lod, bool include_skin_weights)
             continue;
         }
 
-        LLModel* base_mdl = *base_iter;
         base_iter++;
 
         S32 num_faces = mdl->getNumVolumeFaces();
@@ -2854,7 +2853,7 @@ void LLModelPreview::genBuffers(S32 lod, bool include_skin_weights)
                     //find closest weight to vf.mVertices[i].mPosition
                     LLVector3 pos(vf.mPositions[i].getF32ptr());
 
-                    const LLModel::weight_list& weight_list = base_mdl->getJointInfluences(pos);
+                    const LLModel::weight_list& weight_list = mdl->getJointInfluences(pos);
                     llassert(weight_list.size()>0 && weight_list.size() <= 4); // LLModel::loadModel() should guarantee this
 
                     LLVector4 w(0, 0, 0, 0);
