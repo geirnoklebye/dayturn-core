@@ -165,6 +165,8 @@
 #include "fspose.h"
 #include "llmodel.h"
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 using namespace LLAvatarAppearanceDefines;
 
 typedef LLPointer<LLViewerObject> LLViewerObjectPtr;

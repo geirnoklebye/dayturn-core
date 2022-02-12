@@ -65,6 +65,7 @@
 #include <map>
 #include <cstring>
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
 
 //
 // Globals

@@ -46,6 +46,10 @@
 #include "llscrollcontainer.h"
 #include "llcorehttputil.h"
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
+const S32 MINIMUM_PRICE_FOR_LISTING = 50;	// L$
+
 //static
 LLPanelClassifiedInfo::panel_list_t LLPanelClassifiedInfo::sAllPanels;
 static LLPanelInjector<LLPanelClassifiedInfo> t_panel_panel_classified_info("panel_classified_info");

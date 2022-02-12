@@ -222,6 +222,8 @@
 #include "llwindowwin32.h" // For AltGr handling
 #endif
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 //
 // Globals
 //

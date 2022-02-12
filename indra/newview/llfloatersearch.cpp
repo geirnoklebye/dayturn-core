@@ -41,6 +41,7 @@
 #include "llweb.h"
 #include "llviewernetwork.h"// </FS:AW  opensim search support>
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
 
 // support secondlife:///app/search/{CATEGORY}/{QUERY} SLapps
 class LLSearchHandler : public LLCommandHandler

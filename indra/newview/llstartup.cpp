@@ -227,6 +227,9 @@
 //
 // exported globals
 //
+
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 bool gAgentMovementCompleted = false;
 
 const std::string SCREEN_HOME_FILENAME = "screen_home%s.png";

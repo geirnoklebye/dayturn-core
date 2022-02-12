@@ -45,9 +45,11 @@
 
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-extern BOOL gIsInSecondLife; //Opensim or SecondLife
 using namespace boost::posix_time;
 using namespace boost::gregorian;
+
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 static const std::string LL_LINDEN = "Linden";
 static const std::string LL_MOLE = "Mole";
 static const std::string LL_PRODUCTENGINE = "ProductEngine";

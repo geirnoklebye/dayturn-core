@@ -86,6 +86,8 @@
 #include "llgroupactions.h"
 #include "llenvironment.h"
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 const F64 COVENANT_REFRESH_TIME_SEC = 60.0f;
 
 static std::string OWNER_ONLINE 	= "0";

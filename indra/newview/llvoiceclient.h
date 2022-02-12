@@ -38,6 +38,8 @@ class LLVOAvatar;
 #include "llsecapi.h"
 #include "llcontrol.h"
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 // devices
 
 class LLVoiceDevice

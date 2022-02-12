@@ -50,6 +50,8 @@
 #include "llsd.h"
 #include "stringize.h"
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 static LLURLDispatcherListener sURLDispatcherListener;
 
 class LLURLDispatcherImpl

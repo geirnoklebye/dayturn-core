@@ -85,6 +85,8 @@
 
 #include <boost/regex.hpp>
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 #ifdef LL_WINDOWS
 	#pragma warning(disable:4355)
 #endif

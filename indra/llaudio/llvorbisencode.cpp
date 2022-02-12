@@ -34,6 +34,8 @@
 #include "llmath.h"
 #include "llapr.h"
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 //#if LL_DARWIN
 // MBW -- XXX -- Getting rid of SecondLifeVorbis for now
 #if 0

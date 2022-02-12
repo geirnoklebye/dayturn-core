@@ -31,6 +31,8 @@
 #include <string>
 #include <boost/function.hpp>
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 ///
 /// The LLUrlAction class provides a number of static functions that
 /// let you open Urls in web browsers, execute SLURLs, and copy Urls

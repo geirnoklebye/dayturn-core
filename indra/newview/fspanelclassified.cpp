@@ -59,6 +59,8 @@
 #include "llviewernetwork.h"
 #endif // OPENSIM
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 const S32 MINIMUM_PRICE_FOR_LISTING = 50;	// L$
 
 //static

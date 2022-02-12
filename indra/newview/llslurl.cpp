@@ -37,6 +37,8 @@
 #include <boost/algorithm/string.hpp>
 #include "llworld.h"
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 const char* LLSLURL::SLURL_HTTP_SCHEME		 = "http";
 const char* LLSLURL::SLURL_HTTPS_SCHEME		 = "https";
 const char* LLSLURL::SLURL_SECONDLIFE_SCHEME	 = "secondlife";

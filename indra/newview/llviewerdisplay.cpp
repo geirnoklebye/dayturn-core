@@ -79,6 +79,8 @@
 
 #include "llenvironment.h"
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 extern LLPointer<LLViewerTexture> gStartTexture;
 extern bool gShiftFrame;
 

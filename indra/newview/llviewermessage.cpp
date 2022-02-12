@@ -134,6 +134,8 @@
 #include "animationexplorer.h"		// <FS:Zi> Animation Explorer
 #include "NACLfloaterexploresounds.h" // KKA-796 adding Block to Sound Explorer
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 extern void on_new_message(const LLSD& msg);
 
 //

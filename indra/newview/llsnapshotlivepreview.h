@@ -31,6 +31,8 @@
 #include "llviewertexture.h"
 #include "llviewerwindow.h"
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 class LLImageJPEG;
 
 ///----------------------------------------------------------------------------

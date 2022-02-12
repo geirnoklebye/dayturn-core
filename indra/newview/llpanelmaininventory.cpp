@@ -60,6 +60,9 @@
 #include "llradiogroup.h"
 #include "llenvironment.h"
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
+
 const std::string FILTERS_FILENAME("filters.xml");
 
 const std::string ALL_ITEMS("All Items");
