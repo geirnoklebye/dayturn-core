@@ -170,6 +170,8 @@ private:
 	S32 mMouseY;
 
 	boost::signals2::connection mEndDragConnection;
+	boost::signals2::connection mRlvBehaviorCallbackConnection; // KKA-928
+	void updateRlvRestrictions(std::string behavior); // KKA-928
 };
 
 /**

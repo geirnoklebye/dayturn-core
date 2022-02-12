@@ -115,6 +115,8 @@ private:
 //MK
 	void onAvatarHeightOffsetResetButtonClicked();
 //mk
+	boost::signals2::connection mRlvBehaviorCallbackConnection; // KKA-928
+	void updateRlvRestrictions(std::string behavior); // KKA-928
 	void onTeleportHistoryMenuItemClicked(const LLSD& userdata);
 	void onTeleportHistoryChanged();
 	void onBackButtonClicked();

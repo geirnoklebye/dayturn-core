@@ -1283,8 +1283,6 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 	if (isAllowed (object_uuid, action)) {
 		// Notify if needed
 		notify (object_uuid, action, "=n");
-		// KKA-915 fire off RLVa style callback too
-		m_OnBehaviour(action,true);
 
 		// If this action is blacklisted, do nothing
 		if (canon_action != "notify" && isBlacklisted (canon_action, false)) {
@@ -1412,7 +1410,9 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 		//and feed it into the RLV status/worn floaters
 		std::string notify = action + "=n";
 		KokuaRLVFloaterSupport::commandNotify(object_uuid, notify);
-
+		// KKA-915 fire off RLVa style callback too
+		// KKA-928 change the firing to be after all other RLV state has updated
+		m_OnBehaviour(action,true);
 		return TRUE;
 	}
 	return FALSE;
@@ -1433,8 +1433,6 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 	
 	// Notify if needed
 	notify (object_uuid, action, "=y");
-	// KKA-915 fire off RLVa style callback too
-	m_OnBehaviour(action,false);
 	
 	// Actions to do BEFORE removing the behav
 
@@ -1540,6 +1538,9 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 		//	floater_graphics_advanced->refreshEnabledState();
 		//}
 	}
+	// KKA-915 fire off RLVa style callback too
+	// KKA-928 change the firing to be after all other RLV state has updated
+	m_OnBehaviour(action,false);
 
 	return removed_behav;
 }
@@ -1561,8 +1562,6 @@ BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 		}
 		if (it->first==object_uuid.asString() && (command=="" || it->second.find (command)!=-1)) {
 			notify (object_uuid, it->second, "=y");
-			// KKA-915 fire off RLVa style callback too
-			m_OnBehaviour(it->second,false);
 			if (sRestrainedLoveLogging) {
 				LL_INFOS() << it->second << " => removed. " << LL_ENDL;
 			}
@@ -1570,6 +1569,9 @@ BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 			mSpecialObjectBehaviours.erase(it);
 			refreshCachedVariable(tmp);
 			it = mSpecialObjectBehaviours.begin ();
+			// KKA-915 fire off RLVa style callback too
+			// KKA-928 change the firing to be after all other RLV state has updated
+		m_OnBehaviour(tmp,false);
 		}
 		else {
 			it++;

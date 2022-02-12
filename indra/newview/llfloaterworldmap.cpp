@@ -528,7 +528,7 @@ void LLFloaterWorldMap::draw()
 	bool enable_go_home = gAgent.isGodlike() || !agent_on_prelude;
 	// <FS:Ansariel> Performance improvement
 	//getChildView("Go Home")->setEnabled(enable_go_home);
-	go_home_btn->setEnabled(enable_go_home);
+	// go_home_btn->setEnabled(enable_go_home); // KKA-928 it gets set later on
 	// </FS:Ansariel> Performance improvement
 
 	updateLocation();
@@ -604,12 +604,14 @@ void LLFloaterWorldMap::draw()
 //	//	getChildView("Clear")->setEnabled((BOOL)tracking_status);
 //	getChildView("Show Destination")->setEnabled((BOOL)tracking_status || LLWorldMap::getInstance()->isTracking());
 //	getChildView("copy_slurl")->setEnabled((mSLURL.isValid()) );
-	teleport_btn->setEnabled((BOOL)tracking_status);
+	// KKA-928 also drive the Teleport button as well as the Home button
+	bool canTP = !gRRenabled || !gAgent.mRRInterface.mContainsTp;
+	teleport_btn->setEnabled((BOOL)tracking_status && canTP);
 	//clear_btn->setEnabled((BOOL)tracking_status);
 	show_destination_btn->setEnabled((BOOL)tracking_status || LLWorldMap::getInstance()->isTracking());
 	copy_slurl_btn->setEnabled((mSLURL.isValid()) );
 	//CA Convert RLVa code to RLV
-	go_home_btn->setEnabled(!gRRenabled || !gAgent.mRRInterface.mContainsTp);
+	go_home_btn->setEnabled(enable_go_home && canTP);
 	// </FS:Ansariel> Performance improvement
 
 	setMouseOpaque(TRUE);
