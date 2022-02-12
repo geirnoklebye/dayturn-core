@@ -387,6 +387,7 @@ LLFavoritesBarCtrl::LLFavoritesBarCtrl(const LLFavoritesBarCtrl::Params& p)
 	mGetPrevItems(true),
 	mMouseX(0),
 	mMouseY(0),
+	mRlvBehaviorCallbackConnection(), // KKA-928
 	mItemsChangedTimer()
 {
 	// Register callback for menus with current registrar (will be parent panel's registrar)
@@ -416,6 +417,10 @@ LLFavoritesBarCtrl::LLFavoritesBarCtrl(const LLFavoritesBarCtrl::Params& p)
 
 LLFavoritesBarCtrl::~LLFavoritesBarCtrl()
 {
+	if (mRlvBehaviorCallbackConnection.connected()) // KKA-928
+	{
+		mRlvBehaviorCallbackConnection.disconnect();
+	}
 	gInventory.removeObserver(this);
 
 	if (mOverflowMenuHandle.get()) mOverflowMenuHandle.get()->die();
@@ -776,6 +781,8 @@ void LLFavoritesBarCtrl::updateButtons(bool force_update)
 
 	const LLButton::Params& button_params = getButtonParams();
 
+	BOOL canTP = !gRRenabled || !gAgent.mRRInterface.contains("tplm"); // KKA-928
+
 	if(mItems.empty())
 	{
 		mBarLabel->setVisible(TRUE);
@@ -859,6 +866,8 @@ void LLFavoritesBarCtrl::updateButtons(bool force_update)
 			}
 			sendChildToBack(last_new_button);
 			last_right_edge = last_new_button->getRect().mRight;
+			
+			last_new_button->setEnabled(canTP); // KKA-928
 
 			mLastTab = last_new_button;
 		}
@@ -880,6 +889,7 @@ void LLFavoritesBarCtrl::updateButtons(bool force_update)
 			addChild(mMoreTextBox);
 			mMoreTextBox->setRect(rect);
 			mMoreTextBox->setVisible(TRUE);
+			mMoreTextBox->setEnabled(canTP); // KKA-928
 		}
 		// Update overflow menu
 		LLToggleableMenu* overflow_menu = static_cast <LLToggleableMenu*> (mOverflowMenuHandle.get());
@@ -960,7 +970,17 @@ BOOL LLFavoritesBarCtrl::postBuild()
 	menu->setBackgroundColor(LLUIColorTable::instance().getColor("MenuPopupBgColor"));
 	mContextMenuHandle = menu->getHandle();
 
+	mRlvBehaviorCallbackConnection = gAgent.mRRInterface.setBehaviourCallback(boost::bind(&LLFavoritesBarCtrl::updateRlvRestrictions, this, _1)); // KKA-928
+
 	return TRUE;
+}
+
+void LLFavoritesBarCtrl::updateRlvRestrictions(std::string behavior) // KKA-928
+{
+	if (behavior == "tplm")
+	{
+		updateButtons(true);
+	}
 }
 
 BOOL LLFavoritesBarCtrl::collectFavoriteItems(LLInventoryModel::item_array_t &items)

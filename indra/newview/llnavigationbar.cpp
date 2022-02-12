@@ -276,6 +276,7 @@ LLNavigationBar::LLNavigationBar()
 	mSaveToLocationHistory(false),
 	mNavigationPanel(NULL),
 	mFavoritePanel(NULL),
+	mRlvBehaviorCallbackConnection(), // KKA-928
 	mNavPanWidth(0)
 {
 	buildFromFile( "panel_navigation_bar.xml");
@@ -286,6 +287,10 @@ LLNavigationBar::LLNavigationBar()
 
 LLNavigationBar::~LLNavigationBar()
 {
+	if (mRlvBehaviorCallbackConnection.connected()) // KKA-928
+	{
+		mRlvBehaviorCallbackConnection.disconnect();
+	}
 	mTeleportFinishConnection.disconnect();
 	mTeleportFailedConnection.disconnect();
 }
@@ -340,7 +345,17 @@ BOOL LLNavigationBar::postBuild()
 	mNavigationPanel->getResizeBar()->setResizeListener(boost::bind(&LLNavigationBar::onNavbarResized, this));
 	mFavoritePanel->getResizeBar()->setResizeListener(boost::bind(&LLNavigationBar::onNavbarResized, this));
 
+	mRlvBehaviorCallbackConnection = gAgent.mRRInterface.setBehaviourCallback(boost::bind(&LLNavigationBar::updateRlvRestrictions, this, _1)); // KKA-928
+
 	return TRUE;
+}
+
+void LLNavigationBar::updateRlvRestrictions(std::string behavior) // KKA-928
+{
+	if (behavior == "tplm")
+	{
+		onTeleportHistoryChanged();
+	}
 }
 
 void LLNavigationBar::setVisible(BOOL visible)
@@ -592,8 +607,10 @@ void LLNavigationBar::onTeleportHistoryChanged()
 	// Update navigation controls.
 	LLTeleportHistory* h = LLTeleportHistory::getInstance();
 	int cur_item = h->getCurrentItemIndex();
-	mBtnBack->setEnabled(cur_item > 0);
-	mBtnForward->setEnabled(cur_item < ((int)h->getItems().size() - 1));
+	BOOL canTP = !gRRenabled || !gAgent.mRRInterface.contains("tplm"); // KKA-928
+	mBtnBack->setEnabled(canTP && cur_item > 0);
+	mBtnForward->setEnabled(canTP && cur_item < ((int)h->getItems().size() - 1));
+	mBtnHome->setEnabled(canTP);
 }
 
 void LLNavigationBar::rebuildTeleportHistoryMenu()
