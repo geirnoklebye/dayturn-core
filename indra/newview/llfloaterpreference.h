@@ -126,10 +126,6 @@ protected:
 	void		onNameTagOpacityChange(const LLSD& newvalue);
 
 	// set value of "DoNotDisturbResponseChanged" in account settings depending on whether do not disturb response
-	// ## Zi: Pie menu
-	// make sure controls get greyed out or enwbled when pie color override is toggled
-	void onPieColorsOverrideChanged();
-	// ## Zi: Pie menu
 
 	void onStreamMetadataAnnounceChanged();
 	void onMiniMapChatRingChanged();

@@ -104,7 +104,6 @@
 #include "llpanelmaininventory.h"
 #include "llmarketplacefunctions.h"
 #include "llmenuoptionpathfindingrebakenavmesh.h"
-#include "piemenu.h"		// ## Zi: Pie menu
 #include "llmoveview.h"
 #include "llparcel.h"
 #include "llrootview.h"
@@ -212,13 +211,6 @@ LLContextMenu	*gMenuAttachmentSelf = NULL;
 LLContextMenu	*gMenuAttachmentOther = NULL;
 LLContextMenu	*gMenuLand	= NULL;
 LLContextMenu	*gMenuMuteParticle = NULL;
-// ## Zi: Pie menus
-PieMenu		*gPieMenuAvatarSelf	= NULL;
-PieMenu		*gPieMenuAvatarOther = NULL;
-PieMenu		*gPieMenuObject = NULL;
-PieMenu		*gPieMenuAttachmentSelf = NULL;
-PieMenu		*gPieMenuAttachmentOther = NULL;
-PieMenu		*gPieMenuLand	= NULL;
 
 const std::string SAVE_INTO_TASK_INVENTORY("Save Object Back to Object Contents");
 
@@ -236,12 +228,6 @@ LLContextMenu* gDetachAttSelfMenu = NULL;
 LLContextMenu* gDetachHUDAttSelfMenu = NULL;
 LLContextMenu* gDetachBodyPartPieMenus[9];
 
-PieMenu* gPieAttachScreenMenu = NULL;
-PieMenu* gPieAttachMenu = NULL;
-PieMenu* gPieAttachBodyPartMenus[8];
-PieMenu* gPieDetachMenu = NULL;
-PieMenu* gPieDetachScreenMenu = NULL;
-PieMenu* gPieDetachBodyPartMenus[8];
 //
 // Local prototypes
 
@@ -532,30 +518,6 @@ void init_menus()
 	gMenuMuteParticle = LLUICtrlFactory::createFromFile<LLContextMenu>(
 		"menu_mute_particle.xml", gMenuHolder, registry);
 
-// ## Zi: Pie menu
-	gPieMenuAvatarSelf = LLUICtrlFactory::createFromFile<PieMenu>(
-		"menu_pie_avatar_self.xml", gMenuHolder, registry);
-	gPieMenuAvatarOther = LLUICtrlFactory::createFromFile<PieMenu>(
-		"menu_pie_avatar_other.xml", gMenuHolder, registry);
-
-	// added "Pie" to the control names to keep them unique
-	gPieDetachScreenMenu = gMenuHolder->getChild<PieMenu>("Pie Object Detach HUD", true);
-	gPieDetachMenu = gMenuHolder->getChild<PieMenu>("Pie Object Detach", true);
-
-	gPieMenuObject = LLUICtrlFactory::createFromFile<PieMenu>(
-		"menu_pie_object.xml", gMenuHolder, registry);
-
-	// added "Pie" to the control names to keep them unique
-	gPieAttachScreenMenu = gMenuHolder->getChild<PieMenu>("Pie Object Attach HUD");
-	gPieAttachMenu = gMenuHolder->getChild<PieMenu>("Pie Object Attach");
-
-	gPieMenuAttachmentSelf = LLUICtrlFactory::createFromFile<PieMenu>(
-		"menu_pie_attachment_self.xml", gMenuHolder, registry);
-	gPieMenuAttachmentOther = LLUICtrlFactory::createFromFile<PieMenu>(
-		"menu_pie_attachment_other.xml", gMenuHolder, registry);
-
-	gPieMenuLand = LLUICtrlFactory::createFromFile<PieMenu>(
-		"menu_pie_land.xml", gMenuHolder, registry);
 	///
 	/// set up the colors
 	///

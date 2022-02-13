@@ -783,9 +783,6 @@ set(viewer_SOURCE_FILES
     llxmlrpctransaction.cpp
     noise.cpp
     qtoolalign.cpp
-    piemenu.cpp
-    pieseparator.cpp
-    pieslice.cpp
     pipeline.cpp
     utilitybar.cpp
     viewerinfo.cpp
@@ -1457,9 +1454,6 @@ set(viewer_HEADER_FILES
     llxmlrpctransaction.h
     noise.h
     qtoolalign.h
-    piemenu.h
-    pieseparator.h
-    pieslice.h
     pipeline.h
     roles_constants.h
     sanitycheck.h

@@ -95,7 +95,6 @@
 
 // additional includes for right click passes to selection feature
 #include "llmutelist.h"
-#include "piemenu.h"
 #include "llviewermenu.h"
 
 // Globals
@@ -1636,25 +1635,16 @@ void LLFloaterTools::onClickBtnGiveMenu()
 			if (is_other_attachment)
 			{
 				gMenuAttachmentOther->getChild<LLUICtrl>("Avatar Mute")->setValue(mute_msg);
-					if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
-						gPieMenuAttachmentOther->show(x, y);
-					else
 				gMenuAttachmentOther->show(x, y);
 			}
 			else
 			{
 				gMenuAvatarOther->getChild<LLUICtrl>("Avatar Mute")->setValue(mute_msg);
-					if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
-						gPieMenuAvatarOther->show(x, y);
-					else
 				gMenuAvatarOther->show(x, y);
 			}
 		}
 		else if (object->isAttachment())
 		{
-			if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
-				gPieMenuAttachmentSelf->show(x, y);
-			else
 			gMenuAttachmentSelf->show(x, y);
 		}
 		else
@@ -1667,9 +1657,6 @@ void LLFloaterTools::onClickBtnGiveMenu()
 				name = node->mName;
 			}
 
-				if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
-					gPieMenuObject->show(x, y);
-				else
 			gMenuObject->show(x, y);
 
 			LLToolPie::getInstance()->showVisualContextMenuEffect();
