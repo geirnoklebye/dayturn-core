@@ -40,7 +40,7 @@
   <icon
     height="82"
     width="82"
-    image_name="login_kokua_logo"
+    image_name="login_dayturn_logo"
     left="0"
     top="28"
     name="kokua_logo_small" />
@@ -120,7 +120,7 @@
    <icon
     height="82"
     width="82"
-    image_name="login_kokua_logo"
+    image_name="login_dayturn_logo"
     right="-86"
     top="28"
     name="kokua_logo_small" />   
