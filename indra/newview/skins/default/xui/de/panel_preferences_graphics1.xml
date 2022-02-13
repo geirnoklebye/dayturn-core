@@ -38,4 +38,7 @@
 	<button label="Voreinstellung löschen" name="PrefDeleteButton" width="130"/>
 	<button label="Auf empfohlene Einstellungen zurücksetzen" name="Defaults" width="248"/>
 	<button label="Erweiterte Einstellungen..." name="AdvancedSettings"/>
+	
+		<check_box label="Textur-Komprimierung aktivieren (Erfordert Neustart)" name="texture compression" tool_tip="Komprimiert Texturen im Videospeicher und erlaubt dadurch eine höhrere Auflösung und/oder Laden von mehr Texturen auf Kosten der Textqualität."/>
+		<check_box label="Unterstützung für Retina-Displays aktivieren (nur macOS; erfordert Neustart)" name="use Retina" tool_tip="Aktiviert OpenGL für High-Resolution Drawing."/>
 </panel>

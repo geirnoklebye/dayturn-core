@@ -72,8 +72,8 @@ SLURL: &lt;nolink&gt;[SLURL]&lt;/nolink&gt;
 Расширенная модель освещения: [GPU_SHADERS]
 Память текстур: [TEXTURE_MEMORY] МБ
 	</string>
-	<string name="AboutOSXHiDPI">
-		Режим отображения HiDPI: [HIDPI]
+	<string name="AboutRetina">
+		Режим отображения Retina: [RETINA_DISPLAY]
 	</string>
 	<string name="AboutLibs">
 		Версия декодера J2C: [J2C_VERSION] 

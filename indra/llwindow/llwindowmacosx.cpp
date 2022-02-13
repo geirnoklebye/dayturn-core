@@ -44,7 +44,7 @@
 #include <CoreGraphics/CGDisplayConfiguration.h>
 
 extern BOOL gDebugWindowProc;
-BOOL gHiDPISupport = TRUE;
+bool gRetinaSupport = true;
 
 const S32	BITS_PER_PIXEL = 32;
 const S32	MAX_NUM_RESOLUTIONS = 32;
@@ -878,7 +878,7 @@ BOOL LLWindowMacOSX::getSize(LLCoordScreen *size)
 	}
 	else if(mWindow)
 	{
-		const CGSize & sz = gHiDPISupport ? getDeviceContentViewSize(mWindow, mGLView) : getContentViewBoundsSize(mWindow);
+		const CGSize & sz = gRetinaSupport ? getDeviceContentViewSize(mWindow, mGLView) : getContentViewBoundsSize(mWindow);
 
 		size->mX = sz.width;
 		size->mY = sz.height;
@@ -904,7 +904,7 @@ BOOL LLWindowMacOSX::getSize(LLCoordWindow *size)
 	}
 	else if(mWindow)
 	{
-		const CGSize & sz = gHiDPISupport ? getDeviceContentViewSize(mWindow, mGLView) : getContentViewBoundsSize(mWindow);
+		const CGSize & sz = gRetinaSupport ? getDeviceContentViewSize(mWindow, mGLView) : getContentViewBoundsSize(mWindow);
 		
 		size->mX = sz.width;
 		size->mY = sz.height;
@@ -2011,7 +2011,7 @@ MASK LLWindowMacOSX::modifiersToMask(S16 modifiers)
 
 F32 LLWindowMacOSX::getSystemUISize()
 {
-	return gHiDPISupport ? ::getDeviceUnitSize(mGLView) : LLWindow::getSystemUISize();
+	return gRetinaSupport ? ::getDeviceUnitSize(mGLView) : LLWindow::getSystemUISize();
 }
 
 #if LL_OS_DRAGDROP_ENABLED

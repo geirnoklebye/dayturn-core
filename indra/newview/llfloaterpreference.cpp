@@ -3637,8 +3637,8 @@ BOOL LLFloaterPreference::postBuildAdvanced()
         combo->remove("16x");
     }
 	
-	LLCheckBoxCtrl *use_HiDPI = getChild<LLCheckBoxCtrl>("use HiDPI");
-	use_HiDPI->setVisible(FALSE);
+	LLCheckBoxCtrl *use_Retina = getChild<LLCheckBoxCtrl>("use Retina");
+	use_Retina->setVisible(FALSE);
 #endif
 
     return TRUE;

@@ -72,8 +72,8 @@ LOD 係数: [LOD_FACTOR]
 高度なライティングモデル: [GPU_SHADERS]
 テクスチャメモリ: [TEXTURE_MEMORY]MB
 	</string>
-	<string name="AboutOSXHiDPI">
-		HiDPI 表示モード: [HIDPI]
+	<string name="AboutRetina">
+		Retina 表示モード: [RETINA_DISPLAY]
 	</string>
 	<string name="AboutLibs">
 		J2C デコーダバージョン： [J2C_VERSION] 

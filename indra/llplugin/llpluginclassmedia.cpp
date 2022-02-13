@@ -35,7 +35,7 @@
 
 extern LLControlGroup gSavedSettings;
 #if LL_DARWIN
-extern BOOL gHiDPISupport;
+extern bool gRetinaSupport;
 #endif
 
 static int LOW_PRIORITY_TEXTURE_SIZE_DEFAULT = 256;
@@ -369,7 +369,7 @@ void LLPluginClassMedia::setSizeInternal(void)
 	}
 
 #if LL_DARWIN
-    if (!gHiDPISupport)
+    if (!gRetinaSupport)
 #endif
 //<FS:TS> FIRE-30019: This clamp doesn't make sense on Linux, which can have
 //        huge windows without needing to turn on HiDPI support

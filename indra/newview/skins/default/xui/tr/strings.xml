@@ -72,8 +72,8 @@ LOD faktörü: [LOD_FACTOR]
 Gelişmiş Aydınlatma Modeli: [GPU_SHADERS]
 Doku belleği: [TEXTURE_MEMORY]MB
 	</string>
-	<string name="AboutOSXHiDPI">
-		HiDPI görüntü modu: [HIDPI]
+	<string name="AboutRetina">
+		Retina görüntü modu: [RETINA_DISPLAY]
 	</string>
 	<string name="AboutLibs">
 		J2C Kod Çözücü Sürümü: [J2C_VERSION] 

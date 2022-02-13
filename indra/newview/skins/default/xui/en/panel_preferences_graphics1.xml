@@ -898,15 +898,15 @@ width="120">
     width="315" />
 
   <check_box
-    control_name="RenderHiDPI"
+    control_name="RenderRetina"
     height="16"
     initial_value="false"
-    label="Enable support for HiDPI displays (requires restart)"
+    label="Enable support for Retina displays (requires restart)"
     layout="topleft"
     left="30"
     top_delta="16"
-    name="use HiDPI"
-    tool_tip="Enable OpenGL for High-Resolution Drawing."
+    name="use Retina"
+    tool_tip="Enable OpenGL for drawing on Retina Displays."
     width="315" />
 
   <text

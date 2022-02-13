@@ -61,8 +61,8 @@ Advanced Lighting Model: [GPU_SHADERS]
 Texture memory: [TEXTURE_MEMORY]MB
 Disk cache: [DISK_CACHE_INFO]
 	</string>
-  <string name="AboutOSXHiDPI">
-HiDPI display mode: [HIDPI]
+  <string name="AboutRetina">
+Retina display mode: [RETINA_DISPLAY]
 	</string>
 	<string name="AboutLibs">
 J2C Decoder Version: [J2C_VERSION]

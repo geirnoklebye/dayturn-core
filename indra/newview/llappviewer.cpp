@@ -291,7 +291,7 @@ extern BOOL gPeriodicSlowFrame;
 extern BOOL gDebugGL;
 
 #if LL_DARWIN
-extern BOOL gHiDPISupport;
+extern bool gRetinaSupport;
 #endif
 
 ////////////////////////////////////////////////////////////
@@ -579,7 +579,7 @@ static void settings_to_globals()
 	LLWorldMapView::sMapScale = gSavedSettings.getF32("MapScale");
 	
 #if LL_DARWIN
-	gHiDPISupport = gSavedSettings.getBOOL("RenderHiDPI");
+	gRetinaSupport = gSavedSettings.getBOOL("RenderRetina");
 #endif
 }
 
@@ -3550,8 +3550,15 @@ LLSD LLAppViewer::getViewerInfo() const
     info["GPU_SHADERS"] = gSavedSettings.getBOOL("RenderDeferred") ? "Enabled" : "Disabled";
     info["TEXTURE_MEMORY"] = gSavedSettings.getS32("TextureMemory");
 
-#if LL_DARWIN
-    info["HIDPI"] = gHiDPISupport;
+#if LL_DARWIN  
+    if (gRetinaSupport)
+    {
+        info["RETINA_DISPLAY"] = "ON";
+    }
+    else
+    {
+        info["RETINA_DISPLAY"] = "OFF";
+    }
 #endif
 
 	// Libraries
@@ -3698,7 +3705,7 @@ std::string LLAppViewer::getViewerInfoString(bool default_string) const
 	support << "\n" << LLTrans::getString("AboutOGL", args, default_string);
 	support << "\n\n" << LLTrans::getString("AboutSettings", args, default_string);
 #if LL_DARWIN
-	support << "\n" << LLTrans::getString("AboutOSXHiDPI", args, default_string);
+	support << "\n" << LLTrans::getString("AboutRetina", args, default_string);
 #endif
 	support << "\n\n" << LLTrans::getString("AboutLibs", args, default_string);
 	if (info.has("COMPILER"))

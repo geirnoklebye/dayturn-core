@@ -72,8 +72,8 @@ Qualité de rendu : [RENDER_QUALITY]
 Modèle d’éclairage avancé : [GPU_SHADERS]
 Mémoire textures : [TEXTURE_MEMORY] Mo
 	</string>
-	<string name="AboutOSXHiDPI">
-		Mode d&apos;affichage HiDPI : [HIDPI]
+	<string name="AboutRetina">
+		Mode d&apos;affichage Retina : [RETINA_DISPLAY]
 	</string>
 	<string name="AboutLibs">
 		J2C Decoder Version: [J2C_VERSION] 

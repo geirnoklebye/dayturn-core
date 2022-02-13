@@ -71,8 +71,8 @@ Darstellungsqualität: [RENDER_QUALITY]
 Erweitertes Beleuchtungsmodell: [GPU_SHADERS]
 Texturspeicher: [TEXTURE_MEMORY] MB
 	</string>
-	<string name="AboutOSXHiDPI">
-		HiDPI-Anzeigemodus: [HIDPI]
+	<string name="AboutRetina">
+		Retina-Anzeigemodus: [RETINA_DISPLAY]
 	</string>
 	<string name="AboutLibs">
 		J2C-Decoderversion: [J2C_VERSION]
