@@ -295,23 +295,7 @@ void LLSnapshotLivePreview::draw()
 		gGL.pushMatrix();
 		{	
 			gGL.translatef((F32)rect.mLeft, (F32)rect.mBottom + TOP_PANEL_HEIGHT, 0.f);
-			// <FS:Ansariel> Remove QUADS rendering mode
-			//gGL.begin(LLRender::QUADS);
-			//{
-			//	gGL.texCoord2f(uv_width, uv_height);
-			//	gGL.vertex2i(rect.getWidth(), rect.getHeight() );
-
-			//	gGL.texCoord2f(0.f, uv_height);
-			//	gGL.vertex2i(0, rect.getHeight() );
-
-			//	gGL.texCoord2f(0.f, 0.f);
-			//	gGL.vertex2i(0, 0);
-
-			//	gGL.texCoord2f(uv_width, 0.f);
-			//	gGL.vertex2i(rect.getWidth(), 0);
-			//}
-			//gGL.end();
-			gGL.begin(LLRender::TRIANGLES);
+			gGL.begin(LLRender::QUADS);
 			{
 				gGL.texCoord2f(uv_width, uv_height);
 				gGL.vertex2i(rect.getWidth(), rect.getHeight() );
@@ -322,18 +306,10 @@ void LLSnapshotLivePreview::draw()
 				gGL.texCoord2f(0.f, 0.f);
 				gGL.vertex2i(0, 0);
 
-
-				gGL.texCoord2f(uv_width, uv_height);
-				gGL.vertex2i(rect.getWidth(), rect.getHeight() );
-
-				gGL.texCoord2f(0.f, 0.f);
-				gGL.vertex2i(0, 0);
-
 				gGL.texCoord2f(uv_width, 0.f);
 				gGL.vertex2i(rect.getWidth(), 0);
 			}
 			gGL.end();
-			// </FS:Ansariel>
 		}
 		gGL.popMatrix();
 
@@ -381,53 +357,23 @@ void LLSnapshotLivePreview::draw()
 				S32 y2 = gViewerWindow->getWindowHeightScaled() + TOP_PANEL_HEIGHT;
 
 				gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
-				// <FS:Ansariel> Remove QUADS rendering mode
-				//gGL.begin(LLRender::QUADS);
-				//{
-				//	gGL.color4f(1.f, 1.f, 1.f, 0.f);
-				//	gGL.vertex2i(x1, y1);
-				//	gGL.vertex2i(x1 + gViewerWindow->getWindowWidthScaled(), y2);
-				//	gGL.color4f(1.f, 1.f, 1.f, SHINE_OPACITY);
-				//	gGL.vertex2i(x2 + gViewerWindow->getWindowWidthScaled(), y2);
-				//	gGL.vertex2i(x2, y1);
-
-				//	gGL.color4f(1.f, 1.f, 1.f, SHINE_OPACITY);
-				//	gGL.vertex2i(x2, y1);
-				//	gGL.vertex2i(x2 + gViewerWindow->getWindowWidthScaled(), y2);
-				//	gGL.color4f(1.f, 1.f, 1.f, 0.f);
-				//	gGL.vertex2i(x3 + gViewerWindow->getWindowWidthScaled(), y2);
-				//	gGL.vertex2i(x3, y1);
-				//}
-				//gGL.end();
-				gGL.begin(LLRender::TRIANGLES);
+				gGL.begin(LLRender::QUADS);
 				{
 					gGL.color4f(1.f, 1.f, 1.f, 0.f);
 					gGL.vertex2i(x1, y1);
 					gGL.vertex2i(x1 + gViewerWindow->getWindowWidthScaled(), y2);
 					gGL.color4f(1.f, 1.f, 1.f, SHINE_OPACITY);
 					gGL.vertex2i(x2 + gViewerWindow->getWindowWidthScaled(), y2);
-
-					gGL.color4f(1.f, 1.f, 1.f, 0.f);
-					gGL.vertex2i(x1, y1);
-					gGL.color4f(1.f, 1.f, 1.f, SHINE_OPACITY);
-					gGL.vertex2i(x2 + gViewerWindow->getWindowWidthScaled(), y2);
 					gGL.vertex2i(x2, y1);
-
 
 					gGL.color4f(1.f, 1.f, 1.f, SHINE_OPACITY);
 					gGL.vertex2i(x2, y1);
 					gGL.vertex2i(x2 + gViewerWindow->getWindowWidthScaled(), y2);
-					gGL.color4f(1.f, 1.f, 1.f, 0.f);
-					gGL.vertex2i(x3 + gViewerWindow->getWindowWidthScaled(), y2);
-
-					gGL.color4f(1.f, 1.f, 1.f, SHINE_OPACITY);
-					gGL.vertex2i(x2, y1);
 					gGL.color4f(1.f, 1.f, 1.f, 0.f);
 					gGL.vertex2i(x3 + gViewerWindow->getWindowWidthScaled(), y2);
 					gGL.vertex2i(x3, y1);
 				}
 				gGL.end();
-				// </FS:Ansariel>
 			}
 
 			// if we're at the end of the animation, stop
@@ -460,23 +406,7 @@ void LLSnapshotLivePreview::draw()
 				LLRect& rect = mImageRect[old_image_index];
 				gGL.translatef((F32)rect.mLeft, (F32)rect.mBottom - ll_round(getRect().getHeight() * 2.f * (fall_interp * fall_interp)), 0.f);
 				gGL.rotatef(-45.f * fall_interp, 0.f, 0.f, 1.f);
-				// <FS:Ansariel> Remove QUADS rendering mode
-				//gGL.begin(LLRender::QUADS);
-				//{
-				//	gGL.texCoord2f(uv_width, uv_height);
-				//	gGL.vertex2i(rect.getWidth(), rect.getHeight() );
-
-				//	gGL.texCoord2f(0.f, uv_height);
-				//	gGL.vertex2i(0, rect.getHeight() );
-
-				//	gGL.texCoord2f(0.f, 0.f);
-				//	gGL.vertex2i(0, 0);
-
-				//	gGL.texCoord2f(uv_width, 0.f);
-				//	gGL.vertex2i(rect.getWidth(), 0);
-				//}
-				//gGL.end();
-				gGL.begin(LLRender::TRIANGLES);
+				gGL.begin(LLRender::QUADS);
 				{
 					gGL.texCoord2f(uv_width, uv_height);
 					gGL.vertex2i(rect.getWidth(), rect.getHeight() );
@@ -487,17 +417,10 @@ void LLSnapshotLivePreview::draw()
 					gGL.texCoord2f(0.f, 0.f);
 					gGL.vertex2i(0, 0);
 
-					gGL.texCoord2f(uv_width, uv_height);
-					gGL.vertex2i(rect.getWidth(), rect.getHeight() );
-
-					gGL.texCoord2f(0.f, 0.f);
-					gGL.vertex2i(0, 0);
-
 					gGL.texCoord2f(uv_width, 0.f);
 					gGL.vertex2i(rect.getWidth(), 0);
 				}
 				gGL.end();
-				// </FS:Ansariel>
 			}
 			gGL.popMatrix();
 		}

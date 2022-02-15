@@ -365,6 +365,7 @@ void LLFloaterAvatarPicker::drawFrustum()
     drawConeToOwner(mContextConeOpacity, max_opacity, mFrustumOrigin.get(), mContextConeFadeTime, mContextConeInAlpha, mContextConeOutAlpha);
 }
 
+
 void LLFloaterAvatarPicker::draw()
 {
     drawFrustum();

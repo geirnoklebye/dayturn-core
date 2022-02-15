@@ -123,25 +123,12 @@ void gl_rect_2d(S32 left, S32 top, S32 right, S32 bottom, BOOL filled )
 	// Counterclockwise quad will face the viewer
 	if( filled )
 	{ 
-		// <FS:Ansariel> Remove QUADS rendering mode
-		//gGL.begin( LLRender::QUADS );
-		//	gGL.vertex2i(left, top);
-		//	gGL.vertex2i(left, bottom);
-		//	gGL.vertex2i(right, bottom);
-		//	gGL.vertex2i(right, top);
-		//gGL.end();
-		gGL.begin( LLRender::TRIANGLES );
-		{
+		gGL.begin( LLRender::QUADS );
 			gGL.vertex2i(left, top);
 			gGL.vertex2i(left, bottom);
 			gGL.vertex2i(right, bottom);
-
-			gGL.vertex2i(left, top);
-			gGL.vertex2i(right, bottom);
 			gGL.vertex2i(right, top);
-		}
 		gGL.end();
-		// </FS:Ansariel>
 	}
 	else
 	{
@@ -187,10 +174,7 @@ void gl_drop_shadow(S32 left, S32 top, S32 right, S32 bottom, const LLColor4 &st
 	LLColor4 end_color = start_color;
 	end_color.mV[VALPHA] = 0.f;
 
-	// <FS:Ansariel> Remove QUADS rendering mode
-	//gGL.begin(LLRender::QUADS);
-	gGL.begin(LLRender::TRIANGLES);
-	// </FS:Ansariel>
+	gGL.begin(LLRender::QUADS);
 
 	// Right edge, CCW faces screen
 	gGL.color4fv(start_color.mV);
@@ -198,12 +182,6 @@ void gl_drop_shadow(S32 left, S32 top, S32 right, S32 bottom, const LLColor4 &st
 	gGL.vertex2i(right,		bottom);
 	gGL.color4fv(end_color.mV);
 	gGL.vertex2i(right+lines, bottom);
-	// <FS:Ansariel> Remove QUADS rendering mode
-	gGL.color4fv(start_color.mV);
-	gGL.vertex2i(right,		top-lines);
-	gGL.color4fv(end_color.mV);
-	gGL.vertex2i(right+lines, bottom);
-	// </FS:Ansariel>
 	gGL.vertex2i(right+lines, top-lines);
 
 	// Bottom edge, CCW faces screen
@@ -212,12 +190,6 @@ void gl_drop_shadow(S32 left, S32 top, S32 right, S32 bottom, const LLColor4 &st
 	gGL.vertex2i(left+lines,	bottom);
 	gGL.color4fv(end_color.mV);
 	gGL.vertex2i(left+lines,	bottom-lines);
-	// <FS:Ansariel> Remove QUADS rendering mode
-	gGL.color4fv(start_color.mV);
-	gGL.vertex2i(right,		bottom);
-	gGL.color4fv(end_color.mV);
-	gGL.vertex2i(left+lines,	bottom-lines);
-	// </FS:Ansariel>
 	gGL.vertex2i(right,		bottom-lines);
 
 	// bottom left Corner
@@ -227,12 +199,6 @@ void gl_drop_shadow(S32 left, S32 top, S32 right, S32 bottom, const LLColor4 &st
 	gGL.vertex2i(left,		bottom);
 	// make the bottom left corner not sharp
 	gGL.vertex2i(left+1,		bottom-lines+1);
-	// <FS:Ansariel> Remove QUADS rendering mode
-	gGL.color4fv(start_color.mV);
-	gGL.vertex2i(left+lines,	bottom);
-	gGL.color4fv(end_color.mV);
-	gGL.vertex2i(left+1,		bottom-lines+1);
-	// </FS:Ansariel>
 	gGL.vertex2i(left+lines,	bottom-lines);
 
 	// bottom right corner
@@ -242,12 +208,6 @@ void gl_drop_shadow(S32 left, S32 top, S32 right, S32 bottom, const LLColor4 &st
 	gGL.vertex2i(right,		bottom-lines);
 	// make the rightmost corner not sharp
 	gGL.vertex2i(right+lines-1,	bottom-lines+1);
-	// <FS:Ansariel> Remove QUADS rendering mode
-	gGL.color4fv(start_color.mV);
-	gGL.vertex2i(right,		bottom);
-	gGL.color4fv(end_color.mV);
-	gGL.vertex2i(right+lines-1,	bottom-lines+1);
-	// </FS:Ansariel>
 	gGL.vertex2i(right+lines,	bottom);
 
 	// top right corner
@@ -257,12 +217,6 @@ void gl_drop_shadow(S32 left, S32 top, S32 right, S32 bottom, const LLColor4 &st
 	gGL.vertex2i( right+lines,	top-lines );
 	// make the corner not sharp
 	gGL.vertex2i( right+lines-1,	top-1 );
-	// <FS:Ansariel> Remove QUADS rendering mode
-	gGL.color4fv(start_color.mV);
-	gGL.vertex2i( right,			top-lines );
-	gGL.color4fv(end_color.mV);
-	gGL.vertex2i( right+lines-1,	top-1 );
-	// </FS:Ansariel>
 	gGL.vertex2i( right,			top );
 
 	gGL.end();
@@ -477,19 +431,13 @@ void gl_draw_scaled_image_with_border(S32 x, S32 y, S32 width, S32 height, LLTex
 
 		gGL.color4fv(color.mV);
 	
-		// <FS:Ansariel> Remove QUADS rendering mode
-		//const S32 NUM_VERTICES = 9 * 4; // 9 quads
-		const S32 NUM_VERTICES = 9 * 6; // 9 quads
-		// </FS:Ansariel>
+		const S32 NUM_VERTICES = 9 * 4; // 9 quads
 		LLVector2 uv[NUM_VERTICES];
 		LLVector3 pos[NUM_VERTICES];
 
 		S32 index = 0;
 
-		// <FS:Ansariel> Remove QUADS rendering mode
-		//gGL.begin(LLRender::QUADS);
-		gGL.begin(LLRender::TRIANGLES);
-		// </FS:Ansariel>
+		gGL.begin(LLRender::QUADS);
 		{
 			// draw bottom left
 			uv[index] = LLVector2(uv_outer_rect.mLeft, uv_outer_rect.mBottom);
@@ -503,16 +451,6 @@ void gl_draw_scaled_image_with_border(S32 x, S32 y, S32 width, S32 height, LLTex
 			uv[index] = LLVector2(uv_center_rect.mLeft, uv_center_rect.mBottom);
 			pos[index] = LLVector3(draw_center_rect.mLeft, draw_center_rect.mBottom, 0.f);
 			index++;
-
-			// <FS:Ansariel> Remove QUADS rendering mode
-			uv[index] = LLVector2(uv_outer_rect.mLeft, uv_outer_rect.mBottom);
-			pos[index] = LLVector3(draw_outer_rect.mLeft, draw_outer_rect.mBottom, 0.f);
-			index++;
-
-			uv[index] = LLVector2(uv_center_rect.mLeft, uv_center_rect.mBottom);
-			pos[index] = LLVector3(draw_center_rect.mLeft, draw_center_rect.mBottom, 0.f);
-			index++;
-			// </FS:Ansariel>
 
 			uv[index] = LLVector2(uv_outer_rect.mLeft, uv_center_rect.mBottom);
 			pos[index] = LLVector3(draw_outer_rect.mLeft, draw_center_rect.mBottom, 0.f);
@@ -531,16 +469,6 @@ void gl_draw_scaled_image_with_border(S32 x, S32 y, S32 width, S32 height, LLTex
 			pos[index] = LLVector3(draw_center_rect.mRight, draw_center_rect.mBottom, 0.f);
 			index++;
 
-			// <FS:Ansariel> Remove QUADS rendering mode
-			uv[index] = LLVector2(uv_center_rect.mLeft, uv_outer_rect.mBottom);
-			pos[index] = LLVector3(draw_center_rect.mLeft, draw_outer_rect.mBottom, 0.f);
-			index++;
-
-			uv[index] = LLVector2(uv_center_rect.mRight, uv_center_rect.mBottom);
-			pos[index] = LLVector3(draw_center_rect.mRight, draw_center_rect.mBottom, 0.f);
-			index++;
-			// </FS:Ansariel>
-
 			uv[index] = LLVector2(uv_center_rect.mLeft, uv_center_rect.mBottom);
 			pos[index] = LLVector3(draw_center_rect.mLeft, draw_center_rect.mBottom, 0.f);
 			index++;
@@ -557,16 +485,6 @@ void gl_draw_scaled_image_with_border(S32 x, S32 y, S32 width, S32 height, LLTex
 			uv[index] = LLVector2(uv_outer_rect.mRight, uv_center_rect.mBottom);
 			pos[index] = LLVector3(draw_outer_rect.mRight, draw_center_rect.mBottom, 0.f);
 			index++;
-
-			// <FS:Ansariel> Remove QUADS rendering mode
-			uv[index] = LLVector2(uv_center_rect.mRight, uv_outer_rect.mBottom);
-			pos[index] = LLVector3(draw_center_rect.mRight, draw_outer_rect.mBottom, 0.f);
-			index++;
-
-			uv[index] = LLVector2(uv_outer_rect.mRight, uv_center_rect.mBottom);
-			pos[index] = LLVector3(draw_outer_rect.mRight, draw_center_rect.mBottom, 0.f);
-			index++;
-			// </FS:Ansariel>
 
 			uv[index] = LLVector2(uv_center_rect.mRight, uv_center_rect.mBottom);
 			pos[index] = LLVector3(draw_center_rect.mRight, draw_center_rect.mBottom, 0.f);
@@ -585,16 +503,6 @@ void gl_draw_scaled_image_with_border(S32 x, S32 y, S32 width, S32 height, LLTex
 			pos[index] = LLVector3(draw_center_rect.mLeft, draw_center_rect.mTop, 0.f);
 			index++;
 
-			// <FS:Ansariel> Remove QUADS rendering mode
-			uv[index] = LLVector2(uv_outer_rect.mLeft, uv_center_rect.mBottom);
-			pos[index] = LLVector3(draw_outer_rect.mLeft, draw_center_rect.mBottom, 0.f);
-			index++;
-
-			uv[index] = LLVector2(uv_center_rect.mLeft, uv_center_rect.mTop);
-			pos[index] = LLVector3(draw_center_rect.mLeft, draw_center_rect.mTop, 0.f);
-			index++;
-			// </FS:Ansariel>
-
 			uv[index] = LLVector2(uv_outer_rect.mLeft, uv_center_rect.mTop);
 			pos[index] = LLVector3(draw_outer_rect.mLeft, draw_center_rect.mTop, 0.f);
 			index++;
@@ -611,16 +519,6 @@ void gl_draw_scaled_image_with_border(S32 x, S32 y, S32 width, S32 height, LLTex
 			uv[index] = LLVector2(uv_center_rect.mRight, uv_center_rect.mTop);
 			pos[index] = LLVector3(draw_center_rect.mRight, draw_center_rect.mTop, 0.f);
 			index++;
-
-			// <FS:Ansariel> Remove QUADS rendering mode
-			uv[index] = LLVector2(uv_center_rect.mLeft, uv_center_rect.mBottom);
-			pos[index] = LLVector3(draw_center_rect.mLeft, draw_center_rect.mBottom, 0.f);
-			index++;
-
-			uv[index] = LLVector2(uv_center_rect.mRight, uv_center_rect.mTop);
-			pos[index] = LLVector3(draw_center_rect.mRight, draw_center_rect.mTop, 0.f);
-			index++;
-			// </FS:Ansariel>
 
 			uv[index] = LLVector2(uv_center_rect.mLeft, uv_center_rect.mTop);
 			pos[index] = LLVector3(draw_center_rect.mLeft, draw_center_rect.mTop, 0.f);
@@ -639,16 +537,6 @@ void gl_draw_scaled_image_with_border(S32 x, S32 y, S32 width, S32 height, LLTex
 			pos[index] = LLVector3(draw_outer_rect.mRight, draw_center_rect.mTop, 0.f);
 			index++;
 
-			// <FS:Ansariel> Remove QUADS rendering mode
-			uv[index] = LLVector2(uv_center_rect.mRight, uv_center_rect.mBottom);
-			pos[index] = LLVector3(draw_center_rect.mRight, draw_center_rect.mBottom, 0.f);
-			index++;
-
-			uv[index] = LLVector2(uv_outer_rect.mRight, uv_center_rect.mTop);
-			pos[index] = LLVector3(draw_outer_rect.mRight, draw_center_rect.mTop, 0.f);
-			index++;
-			// </FS:Ansariel>
-
 			uv[index] = LLVector2(uv_center_rect.mRight, uv_center_rect.mTop);
 			pos[index] = LLVector3(draw_center_rect.mRight, draw_center_rect.mTop, 0.f);
 			index++;
@@ -665,16 +553,6 @@ void gl_draw_scaled_image_with_border(S32 x, S32 y, S32 width, S32 height, LLTex
 			uv[index] = LLVector2(uv_center_rect.mLeft, uv_outer_rect.mTop);
 			pos[index] = LLVector3(draw_center_rect.mLeft, draw_outer_rect.mTop, 0.f);
 			index++;
-
-			// <FS:Ansariel> Remove QUADS rendering mode
-			uv[index] = LLVector2(uv_outer_rect.mLeft, uv_center_rect.mTop);
-			pos[index] = LLVector3(draw_outer_rect.mLeft, draw_center_rect.mTop, 0.f);
-			index++;
-
-			uv[index] = LLVector2(uv_center_rect.mLeft, uv_outer_rect.mTop);
-			pos[index] = LLVector3(draw_center_rect.mLeft, draw_outer_rect.mTop, 0.f);
-			index++;
-			// </FS:Ansariel>
 
 			uv[index] = LLVector2(uv_outer_rect.mLeft, uv_outer_rect.mTop);
 			pos[index] = LLVector3(draw_outer_rect.mLeft, draw_outer_rect.mTop, 0.f);
@@ -693,16 +571,6 @@ void gl_draw_scaled_image_with_border(S32 x, S32 y, S32 width, S32 height, LLTex
 			pos[index] = LLVector3(draw_center_rect.mRight, draw_outer_rect.mTop, 0.f);
 			index++;
 
-			// <FS:Ansariel> Remove QUADS rendering mode
-			uv[index] = LLVector2(uv_center_rect.mLeft, uv_center_rect.mTop);
-			pos[index] = LLVector3(draw_center_rect.mLeft, draw_center_rect.mTop, 0.f);
-			index++;
-
-			uv[index] = LLVector2(uv_center_rect.mRight, uv_outer_rect.mTop);
-			pos[index] = LLVector3(draw_center_rect.mRight, draw_outer_rect.mTop, 0.f);
-			index++;
-			// </FS:Ansariel>
-
 			uv[index] = LLVector2(uv_center_rect.mLeft, uv_outer_rect.mTop);
 			pos[index] = LLVector3(draw_center_rect.mLeft, draw_outer_rect.mTop, 0.f);
 			index++;
@@ -719,16 +587,6 @@ void gl_draw_scaled_image_with_border(S32 x, S32 y, S32 width, S32 height, LLTex
 			uv[index] = LLVector2(uv_outer_rect.mRight, uv_outer_rect.mTop);
 			pos[index] = LLVector3(draw_outer_rect.mRight, draw_outer_rect.mTop, 0.f);
 			index++;
-
-			// <FS:Ansariel> Remove QUADS rendering mode
-			uv[index] = LLVector2(uv_center_rect.mRight, uv_center_rect.mTop);
-			pos[index] = LLVector3(draw_center_rect.mRight, draw_center_rect.mTop, 0.f);
-			index++;
-
-			uv[index] = LLVector2(uv_outer_rect.mRight, uv_outer_rect.mTop);
-			pos[index] = LLVector3(draw_outer_rect.mRight, draw_outer_rect.mTop, 0.f);
-			index++;
-			// </FS:Ansariel>
 
 			uv[index] = LLVector2(uv_center_rect.mRight, uv_outer_rect.mTop);
 			pos[index] = LLVector3(draw_center_rect.mRight, draw_outer_rect.mTop, 0.f);
@@ -773,17 +631,11 @@ void gl_draw_scaled_rotated_image(S32 x, S32 y, S32 width, S32 height, F32 degre
 
 	if (degrees == 0.f)
 	{
-		// <FS:Ansariel> Remove QUADS rendering mode
-		//const S32 NUM_VERTICES = 4; // 9 quads
-		const S32 NUM_VERTICES = 6; // 9 quads
-		// </FS:Ansariel>
+		const S32 NUM_VERTICES = 4; // 9 quads
 		LLVector2 uv[NUM_VERTICES];
 		LLVector3 pos[NUM_VERTICES];
 
-		// <FS:Ansariel> Remove QUADS rendering mode
-		//gGL.begin(LLRender::QUADS);
-		gGL.begin(LLRender::TRIANGLES);
-		// </FS:Ansariel>
+		gGL.begin(LLRender::QUADS);
 		{
 			LLVector3 ui_scale = gGL.getUIScale();
 			LLVector3 ui_translation = gGL.getUITranslation();
@@ -805,16 +657,6 @@ void gl_draw_scaled_rotated_image(S32 x, S32 y, S32 width, S32 height, F32 degre
 			uv[index] = LLVector2(uv_rect.mLeft, uv_rect.mBottom);
 			pos[index] = LLVector3(ui_translation.mV[VX], ui_translation.mV[VY], 0.f);
 			index++;
-
-			// <FS:Ansariel> Remove QUADS rendering mode
-			uv[index] = LLVector2(uv_rect.mRight, uv_rect.mTop);
-			pos[index] = LLVector3(ui_translation.mV[VX] + scaled_width, ui_translation.mV[VY] + scaled_height, 0.f);
-			index++;
-
-			uv[index] = LLVector2(uv_rect.mLeft, uv_rect.mBottom);
-			pos[index] = LLVector3(ui_translation.mV[VX], ui_translation.mV[VY], 0.f);
-			index++;
-			// </FS:Ansariel>
 
 			uv[index] = LLVector2(uv_rect.mRight, uv_rect.mBottom);
 			pos[index] = LLVector3(ui_translation.mV[VX] + scaled_width, ui_translation.mV[VY], 0.f);
@@ -847,56 +689,27 @@ void gl_draw_scaled_rotated_image(S32 x, S32 y, S32 width, S32 height, F32 degre
 
 		gGL.color4fv(color.mV);
 
-		// <FS:Ansariel> Remove QUADS rendering mode
-		//gGL.begin(LLRender::QUADS);
-		//{
-		//	LLVector3 v;
-
-		//	v = LLVector3(offset_x, offset_y, 0.f) * quat;
-		//	gGL.texCoord2f(uv_rect.mRight, uv_rect.mTop);
-		//	gGL.vertex2f(v.mV[0], v.mV[1] );
-
-		//	v = LLVector3(-offset_x, offset_y, 0.f) * quat;
-		//	gGL.texCoord2f(uv_rect.mLeft, uv_rect.mTop);
-		//	gGL.vertex2f(v.mV[0], v.mV[1] );
-
-		//	v = LLVector3(-offset_x, -offset_y, 0.f) * quat;
-		//	gGL.texCoord2f(uv_rect.mLeft, uv_rect.mBottom);
-		//	gGL.vertex2f(v.mV[0], v.mV[1] );
-
-		//	v = LLVector3(offset_x, -offset_y, 0.f) * quat;
-		//	gGL.texCoord2f(uv_rect.mRight, uv_rect.mBottom);
-		//	gGL.vertex2f(v.mV[0], v.mV[1] );
-		//}
-		//gGL.end();
-		gGL.begin(LLRender::TRIANGLES);
+		gGL.begin(LLRender::QUADS);
 		{
-			LLVector3 v1 = LLVector3(offset_x, offset_y, 0.f) * quat;
-			LLVector3 v2 = LLVector3(-offset_x, offset_y, 0.f) * quat;
-			LLVector3 v3 = LLVector3(-offset_x, -offset_y, 0.f) * quat;
-			LLVector3 v4 = LLVector3(offset_x, -offset_y, 0.f) * quat;
+			LLVector3 v;
 
+			v = LLVector3(offset_x, offset_y, 0.f) * quat;
 			gGL.texCoord2f(uv_rect.mRight, uv_rect.mTop);
-			gGL.vertex2f(v1.mV[0], v1.mV[1] );
+			gGL.vertex2f(v.mV[0], v.mV[1] );
 
+			v = LLVector3(-offset_x, offset_y, 0.f) * quat;
 			gGL.texCoord2f(uv_rect.mLeft, uv_rect.mTop);
-			gGL.vertex2f(v2.mV[0], v2.mV[1] );
+			gGL.vertex2f(v.mV[0], v.mV[1] );
 
+			v = LLVector3(-offset_x, -offset_y, 0.f) * quat;
 			gGL.texCoord2f(uv_rect.mLeft, uv_rect.mBottom);
-			gGL.vertex2f(v3.mV[0], v3.mV[1] );
+			gGL.vertex2f(v.mV[0], v.mV[1] );
 
-
-			gGL.texCoord2f(uv_rect.mRight, uv_rect.mTop);
-			gGL.vertex2f(v1.mV[0], v1.mV[1] );
-
-			gGL.texCoord2f(uv_rect.mLeft, uv_rect.mBottom);
-			gGL.vertex2f(v3.mV[0], v3.mV[1] );
-
+			v = LLVector3(offset_x, -offset_y, 0.f) * quat;
 			gGL.texCoord2f(uv_rect.mRight, uv_rect.mBottom);
-			gGL.vertex2f(v4.mV[0], v4.mV[1] );
+			gGL.vertex2f(v.mV[0], v.mV[1] );
 		}
 		gGL.end();
-		// </FS:Ansariel>
 		gGL.popUIMatrix();
 	}
 }
@@ -1140,24 +953,8 @@ void gl_washer_segment_2d(F32 outer_radius, F32 inner_radius, F32 start_radians,
 
 void gl_rect_2d_simple_tex( S32 width, S32 height )
 {
-	// <FS:Ansariel> Remove QUADS rendering mode
-	//gGL.begin( LLRender::QUADS );
+	gGL.begin( LLRender::QUADS );
 
-	//	gGL.texCoord2f(1.f, 1.f);
-	//	gGL.vertex2i(width, height);
-
-	//	gGL.texCoord2f(0.f, 1.f);
-	//	gGL.vertex2i(0, height);
-
-	//	gGL.texCoord2f(0.f, 0.f);
-	//	gGL.vertex2i(0, 0);
-
-	//	gGL.texCoord2f(1.f, 0.f);
-	//	gGL.vertex2i(width, 0);
-	//
-	//gGL.end();
-	gGL.begin( LLRender::TRIANGLES );
-	{
 		gGL.texCoord2f(1.f, 1.f);
 		gGL.vertex2i(width, height);
 
@@ -1167,41 +964,20 @@ void gl_rect_2d_simple_tex( S32 width, S32 height )
 		gGL.texCoord2f(0.f, 0.f);
 		gGL.vertex2i(0, 0);
 
-
-		gGL.texCoord2f(1.f, 1.f);
-		gGL.vertex2i(width, height);
-
-		gGL.texCoord2f(0.f, 0.f);
-		gGL.vertex2i(0, 0);
-
 		gGL.texCoord2f(1.f, 0.f);
 		gGL.vertex2i(width, 0);
-	}
+	
 	gGL.end();
-	// </FS:Ansariel>
 }
 
 void gl_rect_2d_simple( S32 width, S32 height )
 {
-	// <FS:Ansariel> Remove QUADS rendering mode
-	//gGL.begin( LLRender::QUADS );
-	//	gGL.vertex2i(width, height);
-	//	gGL.vertex2i(0, height);
-	//	gGL.vertex2i(0, 0);
-	//	gGL.vertex2i(width, 0);
-	//gGL.end();
-	gGL.begin( LLRender::TRIANGLES );
-	{
+	gGL.begin( LLRender::QUADS );
 		gGL.vertex2i(width, height);
 		gGL.vertex2i(0, height);
 		gGL.vertex2i(0, 0);
-
-		gGL.vertex2i(width, height);
-		gGL.vertex2i(0, 0);
 		gGL.vertex2i(width, 0);
-	}
 	gGL.end();
-	// </FS:Ansariel>
 }
 
 void gl_segmented_rect_2d_tex(const S32 left, 
@@ -1240,10 +1016,7 @@ void gl_segmented_rect_2d_tex(const S32 left,
 	LLVector2 width_vec((F32)width, 0.f);
 	LLVector2 height_vec(0.f, (F32)height);
 
-	// <FS:Ansariel> Remove QUADS rendering mode
-	//gGL.begin(LLRender::QUADS);
-	gGL.begin(LLRender::TRIANGLES);
-	// </FS:Ansariel>
+	gGL.begin(LLRender::QUADS);
 	{
 		// draw bottom left
 		gGL.texCoord2f(0.f, 0.f);
@@ -1254,14 +1027,6 @@ void gl_segmented_rect_2d_tex(const S32 left,
 
 		gGL.texCoord2f(border_uv_scale.mV[VX], border_uv_scale.mV[VY]);
 		gGL.vertex2fv((border_width_left + border_height_bottom).mV);
-
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(0.f, 0.f);
-		gGL.vertex2f(0.f, 0.f);
-
-		gGL.texCoord2f(border_uv_scale.mV[VX], border_uv_scale.mV[VY]);
-		gGL.vertex2fv((border_width_left + border_height_bottom).mV);
-		// </FS:Ansariel>
 
 		gGL.texCoord2f(0.f, border_uv_scale.mV[VY]);
 		gGL.vertex2fv(border_height_bottom.mV);
@@ -1276,14 +1041,6 @@ void gl_segmented_rect_2d_tex(const S32 left,
 		gGL.texCoord2f(1.f - border_uv_scale.mV[VX], border_uv_scale.mV[VY]);
 		gGL.vertex2fv((width_vec - border_width_right + border_height_bottom).mV);
 
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(border_uv_scale.mV[VX], 0.f);
-		gGL.vertex2fv(border_width_left.mV);
-
-		gGL.texCoord2f(1.f - border_uv_scale.mV[VX], border_uv_scale.mV[VY]);
-		gGL.vertex2fv((width_vec - border_width_right + border_height_bottom).mV);
-		// </FS:Ansariel>
-
 		gGL.texCoord2f(border_uv_scale.mV[VX], border_uv_scale.mV[VY]);
 		gGL.vertex2fv((border_width_left + border_height_bottom).mV);
 
@@ -1296,14 +1053,6 @@ void gl_segmented_rect_2d_tex(const S32 left,
 
 		gGL.texCoord2f(1.f, border_uv_scale.mV[VY]);
 		gGL.vertex2fv((width_vec + border_height_bottom).mV);
-
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(1.f - border_uv_scale.mV[VX], 0.f);
-		gGL.vertex2fv((width_vec - border_width_right).mV);
-
-		gGL.texCoord2f(1.f, border_uv_scale.mV[VY]);
-		gGL.vertex2fv((width_vec + border_height_bottom).mV);
-		// </FS:Ansariel>
 
 		gGL.texCoord2f(1.f - border_uv_scale.mV[VX], border_uv_scale.mV[VY]);
 		gGL.vertex2fv((width_vec - border_width_right + border_height_bottom).mV);
@@ -1318,14 +1067,6 @@ void gl_segmented_rect_2d_tex(const S32 left,
 		gGL.texCoord2f(border_uv_scale.mV[VX], 1.f - border_uv_scale.mV[VY]);
 		gGL.vertex2fv((border_width_left + height_vec - border_height_top).mV);
 
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(0.f, border_uv_scale.mV[VY]);
-		gGL.vertex2fv(border_height_bottom.mV);
-
-		gGL.texCoord2f(border_uv_scale.mV[VX], 1.f - border_uv_scale.mV[VY]);
-		gGL.vertex2fv((border_width_left + height_vec - border_height_top).mV);
-		// </FS:Ansariel>
-
 		gGL.texCoord2f(0.f, 1.f - border_uv_scale.mV[VY]);
 		gGL.vertex2fv((height_vec - border_height_top).mV);
 
@@ -1338,14 +1079,6 @@ void gl_segmented_rect_2d_tex(const S32 left,
 
 		gGL.texCoord2f(1.f - border_uv_scale.mV[VX], 1.f - border_uv_scale.mV[VY]);
 		gGL.vertex2fv((width_vec - border_width_right + height_vec - border_height_top).mV);
-
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(border_uv_scale.mV[VX], border_uv_scale.mV[VY]);
-		gGL.vertex2fv((border_width_left + border_height_bottom).mV);
-
-		gGL.texCoord2f(1.f - border_uv_scale.mV[VX], 1.f - border_uv_scale.mV[VY]);
-		gGL.vertex2fv((width_vec - border_width_right + height_vec - border_height_top).mV);
-		// </FS:Ansariel>
 
 		gGL.texCoord2f(border_uv_scale.mV[VX], 1.f - border_uv_scale.mV[VY]);
 		gGL.vertex2fv((border_width_left + height_vec - border_height_top).mV);
@@ -1360,14 +1093,6 @@ void gl_segmented_rect_2d_tex(const S32 left,
 		gGL.texCoord2f(1.f, 1.f - border_uv_scale.mV[VY]);
 		gGL.vertex2fv((width_vec + height_vec - border_height_top).mV);
 
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(1.f - border_uv_scale.mV[VX], border_uv_scale.mV[VY]);
-		gGL.vertex2fv((width_vec - border_width_right + border_height_bottom).mV);
-
-		gGL.texCoord2f(1.f, 1.f - border_uv_scale.mV[VY]);
-		gGL.vertex2fv((width_vec + height_vec - border_height_top).mV);
-		// </FS:Ansariel>
-
 		gGL.texCoord2f(1.f - border_uv_scale.mV[VX], 1.f - border_uv_scale.mV[VY]);
 		gGL.vertex2fv((width_vec - border_width_right + height_vec - border_height_top).mV);
 
@@ -1380,14 +1105,6 @@ void gl_segmented_rect_2d_tex(const S32 left,
 
 		gGL.texCoord2f(border_uv_scale.mV[VX], 1.f);
 		gGL.vertex2fv((border_width_left + height_vec).mV);
-
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(0.f, 1.f - border_uv_scale.mV[VY]);
-		gGL.vertex2fv((height_vec - border_height_top).mV);
-
-		gGL.texCoord2f(border_uv_scale.mV[VX], 1.f);
-		gGL.vertex2fv((border_width_left + height_vec).mV);
-		// </FS:Ansariel>
 
 		gGL.texCoord2f(0.f, 1.f);
 		gGL.vertex2fv((height_vec).mV);
@@ -1402,14 +1119,6 @@ void gl_segmented_rect_2d_tex(const S32 left,
 		gGL.texCoord2f(1.f - border_uv_scale.mV[VX], 1.f);
 		gGL.vertex2fv((width_vec - border_width_right + height_vec).mV);
 
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(border_uv_scale.mV[VX], 1.f - border_uv_scale.mV[VY]);
-		gGL.vertex2fv((border_width_left + height_vec - border_height_top).mV);
-
-		gGL.texCoord2f(1.f - border_uv_scale.mV[VX], 1.f);
-		gGL.vertex2fv((width_vec - border_width_right + height_vec).mV);
-		// </FS:Ansariel>
-
 		gGL.texCoord2f(border_uv_scale.mV[VX], 1.f);
 		gGL.vertex2fv((border_width_left + height_vec).mV);
 
@@ -1422,14 +1131,6 @@ void gl_segmented_rect_2d_tex(const S32 left,
 
 		gGL.texCoord2f(1.f, 1.f);
 		gGL.vertex2fv((width_vec + height_vec).mV);
-
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(1.f - border_uv_scale.mV[VX], 1.f - border_uv_scale.mV[VY]);
-		gGL.vertex2fv((width_vec - border_width_right + height_vec - border_height_top).mV);
-
-		gGL.texCoord2f(1.f, 1.f);
-		gGL.vertex2fv((width_vec + height_vec).mV);
-		// </FS:Ansariel>
 
 		gGL.texCoord2f(1.f - border_uv_scale.mV[VX], 1.f);
 		gGL.vertex2fv((width_vec - border_width_right + height_vec).mV);
@@ -1485,10 +1186,7 @@ void gl_segmented_rect_2d_fragment_tex(const LLRect& rect,
 	LLVector2 x_min;
 	LLVector2 x_max;
 
-	// <FS:Ansariel> Remove QUADS rendering mode
-	//gGL.begin(LLRender::QUADS);
-	gGL.begin(LLRender::TRIANGLES);
-	// </FS:Ansariel>
+	gGL.begin(LLRender::QUADS);
 	{
 		if (start_fragment < middle_start)
 		{
@@ -1507,14 +1205,6 @@ void gl_segmented_rect_2d_fragment_tex(const LLRect& rect,
 			gGL.texCoord2f(u_max, border_uv_scale.mV[VY]);
 			gGL.vertex2fv((x_max + border_height_bottom).mV);
 
-			// <FS:Ansariel> Remove QUADS rendering mode
-			gGL.texCoord2f(u_min, 0.f);
-			gGL.vertex2fv(x_min.mV);
-
-			gGL.texCoord2f(u_max, border_uv_scale.mV[VY]);
-			gGL.vertex2fv((x_max + border_height_bottom).mV);
-			// </FS:Ansariel>
-
 			gGL.texCoord2f(u_min, border_uv_scale.mV[VY]);
 			gGL.vertex2fv((x_min + border_height_bottom).mV);
 
@@ -1528,14 +1218,6 @@ void gl_segmented_rect_2d_fragment_tex(const LLRect& rect,
 			gGL.texCoord2f(u_max, 1.f - border_uv_scale.mV[VY]);
 			gGL.vertex2fv((x_max + height_vec - border_height_top).mV);
 
-			// <FS:Ansariel> Remove QUADS rendering mode
-			gGL.texCoord2f(u_min, border_uv_scale.mV[VY]);
-			gGL.vertex2fv((x_min + border_height_bottom).mV);
-
-			gGL.texCoord2f(u_max, 1.f - border_uv_scale.mV[VY]);
-			gGL.vertex2fv((x_max + height_vec - border_height_top).mV);
-			// </FS:Ansariel>
-
 			gGL.texCoord2f(u_min, 1.f - border_uv_scale.mV[VY]);
 			gGL.vertex2fv((x_min + height_vec - border_height_top).mV);
 
@@ -1548,14 +1230,6 @@ void gl_segmented_rect_2d_fragment_tex(const LLRect& rect,
 
 			gGL.texCoord2f(u_max, 1.f);
 			gGL.vertex2fv((x_max + height_vec).mV);
-
-			// <FS:Ansariel> Remove QUADS rendering mode
-			gGL.texCoord2f(u_min, 1.f - border_uv_scale.mV[VY]);
-			gGL.vertex2fv((x_min + height_vec - border_height_top).mV);
-
-			gGL.texCoord2f(u_max, 1.f);
-			gGL.vertex2fv((x_max + height_vec).mV);
-			// </FS:Ansariel>
 
 			gGL.texCoord2f(u_min, 1.f);
 			gGL.vertex2fv((x_min + height_vec).mV);
@@ -1576,14 +1250,6 @@ void gl_segmented_rect_2d_fragment_tex(const LLRect& rect,
 			gGL.texCoord2f(1.f - border_uv_scale.mV[VX], border_uv_scale.mV[VY]);
 			gGL.vertex2fv((x_max + border_height_bottom).mV);
 
-			// <FS:Ansariel> Remove QUADS rendering mode
-			gGL.texCoord2f(border_uv_scale.mV[VX], 0.f);
-			gGL.vertex2fv(x_min.mV);
-
-			gGL.texCoord2f(1.f - border_uv_scale.mV[VX], border_uv_scale.mV[VY]);
-			gGL.vertex2fv((x_max + border_height_bottom).mV);
-			// </FS:Ansariel>
-
 			gGL.texCoord2f(border_uv_scale.mV[VX], border_uv_scale.mV[VY]);
 			gGL.vertex2fv((x_min + border_height_bottom).mV);
 
@@ -1597,14 +1263,6 @@ void gl_segmented_rect_2d_fragment_tex(const LLRect& rect,
 			gGL.texCoord2f(1.f - border_uv_scale.mV[VX], 1.f - border_uv_scale.mV[VY]);
 			gGL.vertex2fv((x_max + height_vec - border_height_top).mV);
 
-			// <FS:Ansariel> Remove QUADS rendering mode
-			gGL.texCoord2f(border_uv_scale.mV[VX], border_uv_scale.mV[VY]);
-			gGL.vertex2fv((x_min + border_height_bottom).mV);
-
-			gGL.texCoord2f(1.f - border_uv_scale.mV[VX], 1.f - border_uv_scale.mV[VY]);
-			gGL.vertex2fv((x_max + height_vec - border_height_top).mV);
-			// </FS:Ansariel>
-
 			gGL.texCoord2f(border_uv_scale.mV[VX], 1.f - border_uv_scale.mV[VY]);
 			gGL.vertex2fv((x_min + height_vec - border_height_top).mV);
 
@@ -1617,14 +1275,6 @@ void gl_segmented_rect_2d_fragment_tex(const LLRect& rect,
 
 			gGL.texCoord2f(1.f - border_uv_scale.mV[VX], 1.f);
 			gGL.vertex2fv((x_max + height_vec).mV);
-
-			// <FS:Ansariel> Remove QUADS rendering mode
-			gGL.texCoord2f(border_uv_scale.mV[VX], 1.f - border_uv_scale.mV[VY]);
-			gGL.vertex2fv((x_min + height_vec - border_height_top).mV);
-
-			gGL.texCoord2f(1.f - border_uv_scale.mV[VX], 1.f);
-			gGL.vertex2fv((x_max + height_vec).mV);
-			// </FS:Ansariel>
 
 			gGL.texCoord2f(border_uv_scale.mV[VX], 1.f);
 			gGL.vertex2fv((x_min + height_vec).mV);
@@ -1647,14 +1297,6 @@ void gl_segmented_rect_2d_fragment_tex(const LLRect& rect,
 			gGL.texCoord2f(u_max, border_uv_scale.mV[VY]);
 			gGL.vertex2fv((x_max + border_height_bottom).mV);
 
-			// <FS:Ansariel> Remove QUADS rendering mode
-			gGL.texCoord2f(u_min, 0.f);
-			gGL.vertex2fv((x_min).mV);
-
-			gGL.texCoord2f(u_max, border_uv_scale.mV[VY]);
-			gGL.vertex2fv((x_max + border_height_bottom).mV);
-			// </FS:Ansariel>
-
 			gGL.texCoord2f(u_min, border_uv_scale.mV[VY]);
 			gGL.vertex2fv((x_min + border_height_bottom).mV);
 
@@ -1668,14 +1310,6 @@ void gl_segmented_rect_2d_fragment_tex(const LLRect& rect,
 			gGL.texCoord2f(u_max, 1.f - border_uv_scale.mV[VY]);
 			gGL.vertex2fv((x_max + height_vec - border_height_top).mV);
 
-			// <FS:Ansariel> Remove QUADS rendering mode
-			gGL.texCoord2f(u_min, border_uv_scale.mV[VY]);
-			gGL.vertex2fv((x_min + border_height_bottom).mV);
-
-			gGL.texCoord2f(u_max, 1.f - border_uv_scale.mV[VY]);
-			gGL.vertex2fv((x_max + height_vec - border_height_top).mV);
-			// </FS:Ansariel>
-
 			gGL.texCoord2f(u_min, 1.f - border_uv_scale.mV[VY]);
 			gGL.vertex2fv((x_min + height_vec - border_height_top).mV);
 
@@ -1688,14 +1322,6 @@ void gl_segmented_rect_2d_fragment_tex(const LLRect& rect,
 
 			gGL.texCoord2f(u_max, 1.f);
 			gGL.vertex2fv((x_max + height_vec).mV);
-
-			// <FS:Ansariel> Remove QUADS rendering mode
-			gGL.texCoord2f(u_min, 1.f - border_uv_scale.mV[VY]);
-			gGL.vertex2fv((x_min + height_vec - border_height_top).mV);
-
-			gGL.texCoord2f(u_max, 1.f);
-			gGL.vertex2fv((x_max + height_vec).mV);
-			// </FS:Ansariel>
 
 			gGL.texCoord2f(u_min, 1.f);
 			gGL.vertex2fv((x_min + height_vec).mV);
@@ -1711,10 +1337,7 @@ void gl_segmented_rect_3d_tex(const LLRectf& clip_rect, const LLRectf& center_uv
 {
     LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
 
-	// <FS:Ansariel> Remove QUADS rendering mode
-	//gGL.begin(LLRender::QUADS);
-	gGL.begin(LLRender::TRIANGLES);
-	// </FS:Ansariel>
+	gGL.begin(LLRender::QUADS);
 	{
 		// draw bottom left
 		gGL.texCoord2f(clip_rect.mLeft, clip_rect.mBottom);
@@ -1725,14 +1348,6 @@ void gl_segmented_rect_3d_tex(const LLRectf& clip_rect, const LLRectf& center_uv
 
 		gGL.texCoord2f(center_uv_rect.mLeft, center_uv_rect.mBottom);
 		gGL.vertex3fv((center_draw_rect.mLeft * width_vec + center_draw_rect.mBottom * height_vec).mV);
-
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(clip_rect.mLeft, clip_rect.mBottom);
-		gGL.vertex3f(0.f, 0.f, 0.f);
-
-		gGL.texCoord2f(center_uv_rect.mLeft, center_uv_rect.mBottom);
-		gGL.vertex3fv((center_draw_rect.mLeft * width_vec + center_draw_rect.mBottom * height_vec).mV);
-		// </FS:Ansariel>
 
 		gGL.texCoord2f(clip_rect.mLeft, center_uv_rect.mBottom);
 		gGL.vertex3fv((center_draw_rect.mBottom * height_vec).mV);
@@ -1747,14 +1362,6 @@ void gl_segmented_rect_3d_tex(const LLRectf& clip_rect, const LLRectf& center_uv
 		gGL.texCoord2f(center_uv_rect.mRight, center_uv_rect.mBottom);
 		gGL.vertex3fv((center_draw_rect.mRight * width_vec + center_draw_rect.mBottom * height_vec).mV);
 
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(center_uv_rect.mLeft, clip_rect.mBottom);
-		gGL.vertex3fv((center_draw_rect.mLeft * width_vec).mV);
-
-		gGL.texCoord2f(center_uv_rect.mRight, center_uv_rect.mBottom);
-		gGL.vertex3fv((center_draw_rect.mRight * width_vec + center_draw_rect.mBottom * height_vec).mV);
-		// </FS:Ansariel>
-
 		gGL.texCoord2f(center_uv_rect.mLeft, center_uv_rect.mBottom);
 		gGL.vertex3fv((center_draw_rect.mLeft * width_vec + center_draw_rect.mBottom * height_vec).mV);
 
@@ -1767,14 +1374,6 @@ void gl_segmented_rect_3d_tex(const LLRectf& clip_rect, const LLRectf& center_uv
 
 		gGL.texCoord2f(clip_rect.mRight, center_uv_rect.mBottom);
 		gGL.vertex3fv((width_vec + center_draw_rect.mBottom * height_vec).mV);
-
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(center_uv_rect.mRight, clip_rect.mBottom);
-		gGL.vertex3fv((center_draw_rect.mRight * width_vec).mV);
-
-		gGL.texCoord2f(clip_rect.mRight, center_uv_rect.mBottom);
-		gGL.vertex3fv((width_vec + center_draw_rect.mBottom * height_vec).mV);
-		// </FS:Ansariel>
 
 		gGL.texCoord2f(center_uv_rect.mRight, center_uv_rect.mBottom);
 		gGL.vertex3fv((center_draw_rect.mRight * width_vec + center_draw_rect.mBottom * height_vec).mV);
@@ -1789,14 +1388,6 @@ void gl_segmented_rect_3d_tex(const LLRectf& clip_rect, const LLRectf& center_uv
 		gGL.texCoord2f(center_uv_rect.mLeft, center_uv_rect.mTop);
 		gGL.vertex3fv((center_draw_rect.mLeft * width_vec + center_draw_rect.mTop * height_vec).mV);
 
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(clip_rect.mLeft, center_uv_rect.mBottom);
-		gGL.vertex3fv((center_draw_rect.mBottom * height_vec).mV);
-
-		gGL.texCoord2f(center_uv_rect.mLeft, center_uv_rect.mTop);
-		gGL.vertex3fv((center_draw_rect.mLeft * width_vec + center_draw_rect.mTop * height_vec).mV);
-		// </FS:Ansariel>
-
 		gGL.texCoord2f(clip_rect.mLeft, center_uv_rect.mTop);
 		gGL.vertex3fv((center_draw_rect.mTop * height_vec).mV);
 
@@ -1809,14 +1400,6 @@ void gl_segmented_rect_3d_tex(const LLRectf& clip_rect, const LLRectf& center_uv
 
 		gGL.texCoord2f(center_uv_rect.mRight, center_uv_rect.mTop);
 		gGL.vertex3fv((center_draw_rect.mRight * width_vec + center_draw_rect.mTop * height_vec).mV);
-
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(center_uv_rect.mLeft, center_uv_rect.mBottom);
-		gGL.vertex3fv((center_draw_rect.mLeft * width_vec + center_draw_rect.mBottom * height_vec).mV);
-
-		gGL.texCoord2f(center_uv_rect.mRight, center_uv_rect.mTop);
-		gGL.vertex3fv((center_draw_rect.mRight * width_vec + center_draw_rect.mTop * height_vec).mV);
-		// </FS:Ansariel>
 
 		gGL.texCoord2f(center_uv_rect.mLeft, center_uv_rect.mTop);
 		gGL.vertex3fv((center_draw_rect.mLeft * width_vec + center_draw_rect.mTop * height_vec).mV);
@@ -1831,14 +1414,6 @@ void gl_segmented_rect_3d_tex(const LLRectf& clip_rect, const LLRectf& center_uv
 		gGL.texCoord2f(clip_rect.mRight, center_uv_rect.mTop);
 		gGL.vertex3fv((width_vec + center_draw_rect.mTop * height_vec).mV);
 
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(center_uv_rect.mRight, center_uv_rect.mBottom);
-		gGL.vertex3fv((center_draw_rect.mRight * width_vec + center_draw_rect.mBottom * height_vec).mV);
-
-		gGL.texCoord2f(clip_rect.mRight, center_uv_rect.mTop);
-		gGL.vertex3fv((width_vec + center_draw_rect.mTop * height_vec).mV);
-		// </FS:Ansariel>
-
 		gGL.texCoord2f(center_uv_rect.mRight, center_uv_rect.mTop);
 		gGL.vertex3fv((center_draw_rect.mRight * width_vec + center_draw_rect.mTop * height_vec).mV);
 
@@ -1851,14 +1426,6 @@ void gl_segmented_rect_3d_tex(const LLRectf& clip_rect, const LLRectf& center_uv
 
 		gGL.texCoord2f(center_uv_rect.mLeft, clip_rect.mTop);
 		gGL.vertex3fv((center_draw_rect.mLeft * width_vec + height_vec).mV);
-
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(clip_rect.mLeft, center_uv_rect.mTop);
-		gGL.vertex3fv((center_draw_rect.mTop * height_vec).mV);
-
-		gGL.texCoord2f(center_uv_rect.mLeft, clip_rect.mTop);
-		gGL.vertex3fv((center_draw_rect.mLeft * width_vec + height_vec).mV);
-		// </FS:Ansariel>
 
 		gGL.texCoord2f(clip_rect.mLeft, clip_rect.mTop);
 		gGL.vertex3fv((height_vec).mV);
@@ -1873,14 +1440,6 @@ void gl_segmented_rect_3d_tex(const LLRectf& clip_rect, const LLRectf& center_uv
 		gGL.texCoord2f(center_uv_rect.mRight, clip_rect.mTop);
 		gGL.vertex3fv((center_draw_rect.mRight * width_vec + height_vec).mV);
 
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(center_uv_rect.mLeft, center_uv_rect.mTop);
-		gGL.vertex3fv((center_draw_rect.mLeft * width_vec + center_draw_rect.mTop * height_vec).mV);
-
-		gGL.texCoord2f(center_uv_rect.mRight, clip_rect.mTop);
-		gGL.vertex3fv((center_draw_rect.mRight * width_vec + height_vec).mV);
-		// </FS:Ansariel>
-
 		gGL.texCoord2f(center_uv_rect.mLeft, clip_rect.mTop);
 		gGL.vertex3fv((center_draw_rect.mLeft * width_vec + height_vec).mV);
 
@@ -1893,14 +1452,6 @@ void gl_segmented_rect_3d_tex(const LLRectf& clip_rect, const LLRectf& center_uv
 
 		gGL.texCoord2f(clip_rect.mRight, clip_rect.mTop);
 		gGL.vertex3fv((width_vec + height_vec).mV);
-
-		// <FS:Ansariel> Remove QUADS rendering mode
-		gGL.texCoord2f(center_uv_rect.mRight, center_uv_rect.mTop);
-		gGL.vertex3fv((center_draw_rect.mRight * width_vec + center_draw_rect.mTop * height_vec).mV);
-
-		gGL.texCoord2f(clip_rect.mRight, clip_rect.mTop);
-		gGL.vertex3fv((width_vec + height_vec).mV);
-		// </FS:Ansariel>
 
 		gGL.texCoord2f(center_uv_rect.mRight, clip_rect.mTop);
 		gGL.vertex3fv((center_draw_rect.mRight * width_vec + height_vec).mV);

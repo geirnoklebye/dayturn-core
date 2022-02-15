@@ -387,7 +387,7 @@ const U32 LLVertexBuffer::sGLMode[LLRender::NUM_MODES] =
 	GL_POINTS,
 	GL_LINES,
 	GL_LINE_STRIP,
-	//GL_QUADS, // <FS:Ansariel> Remove QUADS rendering mode
+	GL_QUADS,
 	GL_LINE_LOOP,
 };
 

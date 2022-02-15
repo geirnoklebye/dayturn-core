@@ -793,56 +793,22 @@ void LLFloaterModelPreview::draw3dPreview()
 
 	gGL.getTexUnit(0)->bind(mModelPreview);
 
-
-
-	LLView* preview_panel = getChild<LLView>("preview_panel");
-
-	if (!preview_panel)
-	{
-		LL_WARNS() << "preview_panel not found in floater definition" << LL_ENDL;
-	}
-	LLRect rect = preview_panel->getRect();
-
-	if (rect != mPreviewRect)
-	{
-		mModelPreview->refresh();
-		mPreviewRect = preview_panel->getRect();
-	}
-
-	// <FS:Ansariel> Remove QUADS rendering mode
-	//gGL.begin( LLRender::QUADS );
-	//{
-	//	gGL.texCoord2f(0.f, 1.f);
-	//	gGL.vertex2i(mPreviewRect.mLeft, mPreviewRect.mTop-1);
-	//	gGL.texCoord2f(0.f, 0.f);
-	//	gGL.vertex2i(mPreviewRect.mLeft, mPreviewRect.mBottom);
-	//	gGL.texCoord2f(1.f, 0.f);
-	//	gGL.vertex2i(mPreviewRect.mRight-1, mPreviewRect.mBottom);
-	//	gGL.texCoord2f(1.f, 1.f);
-	//	gGL.vertex2i(mPreviewRect.mRight-1, mPreviewRect.mTop-1);
-	//}
-	//gGL.end();
-	gGL.begin(LLRender::TRIANGLES);
+	gGL.begin( LLRender::QUADS );
 	{
 		gGL.texCoord2f(0.f, 1.f);
-		gGL.vertex2i(mPreviewRect.mLeft, mPreviewRect.mTop - 1);
+		gGL.vertex2i(mPreviewRect.mLeft+1, mPreviewRect.mTop-1);
 		gGL.texCoord2f(0.f, 0.f);
-		gGL.vertex2i(mPreviewRect.mLeft, mPreviewRect.mBottom);
+		gGL.vertex2i(mPreviewRect.mLeft+1, mPreviewRect.mBottom+1);
 		gGL.texCoord2f(1.f, 0.f);
-		gGL.vertex2i(mPreviewRect.mRight - 1, mPreviewRect.mBottom);
-
-		gGL.texCoord2f(1.f, 0.f);
-		gGL.vertex2i(mPreviewRect.mRight - 1, mPreviewRect.mBottom);
+		gGL.vertex2i(mPreviewRect.mRight-1, mPreviewRect.mBottom+1);
 		gGL.texCoord2f(1.f, 1.f);
-		gGL.vertex2i(mPreviewRect.mRight - 1, mPreviewRect.mTop - 1);
-		gGL.texCoord2f(0.f, 1.f);
-		gGL.vertex2i(mPreviewRect.mLeft, mPreviewRect.mTop - 1);
+		gGL.vertex2i(mPreviewRect.mRight-1, mPreviewRect.mTop-1);
 	}
 	gGL.end();
-	// </FS:Ansariel>
 
 	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 }
+
 
 //-----------------------------------------------------------------------------
 // draw()

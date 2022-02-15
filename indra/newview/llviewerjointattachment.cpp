@@ -91,26 +91,13 @@ U32 LLViewerJointAttachment::drawShape( F32 pixelArea, BOOL first_pass, BOOL is_
 		LLGLDisable cull_face(GL_CULL_FACE);
 		
 		gGL.color4f(1.f, 1.f, 1.f, 1.f);
-		// <FS:Ansariel> Remove QUADS rendering mode
-		//gGL.begin(LLRender::QUADS);
-		//{
-		//	gGL.vertex3f(-0.1f, 0.1f, 0.f);
-		//	gGL.vertex3f(-0.1f, -0.1f, 0.f);
-		//	gGL.vertex3f(0.1f, -0.1f, 0.f);
-		//	gGL.vertex3f(0.1f, 0.1f, 0.f);
-		//}gGL.end();
-		gGL.begin(LLRender::TRIANGLES);
+		gGL.begin(LLRender::QUADS);
 		{
 			gGL.vertex3f(-0.1f, 0.1f, 0.f);
 			gGL.vertex3f(-0.1f, -0.1f, 0.f);
 			gGL.vertex3f(0.1f, -0.1f, 0.f);
-
-			gGL.vertex3f(-0.1f, 0.1f, 0.f);
-			gGL.vertex3f(0.1f, -0.1f, 0.f);
 			gGL.vertex3f(0.1f, 0.1f, 0.f);
-		}
-		gGL.end();
-		// </FS:Ansariel>
+		}gGL.end();
 	}
 	return 0;
 }
