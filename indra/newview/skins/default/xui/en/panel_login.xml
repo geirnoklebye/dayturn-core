@@ -63,19 +63,19 @@ top="10"
           tool_tip="The username you chose when you registered, like bobsmith12 or Steller Sunshine"
           top_pad="0"
           name="username_combo"
-          width="178">
+          width="180">
         <combo_box.combo_button
-            visible ="false"/>
+            visible ="true"/>
         <combo_box.drop_down_button
-            visible ="false"/>
+            visible ="true"/>
       </combo_box>
       <text
           follows="left|bottom"
           font="SansSerifSmall"
           height="15"
-          left_pad="-19"
+          left_pad="10"
           name="password_text"
-top="10"
+        top="10"
           width="150">
         Password:
       </text>
@@ -90,16 +90,30 @@ top="10"
           is_password="true" 
           select_on_focus="true"
           top_pad="0"
-          width="135" />
+          width="160" />
+      <check_box
+          follows="left|bottom"
+          font="SansSerifSmall"
+          left="17"
+          top_pad="8"
+          height="16"
+          label="Remember me"
+          word_wrap="down"
+          check_button.bottom="3"
+          name="remember_name"
+          tool_tip="Already remembered user can be forgotten from Me &gt; Preferences &gt; Advanced &gt; Remembered Usernames."
+          width="170" />
       <check_box
           control_name="RememberPassword"
           follows="left|bottom"
           font="SansSerifSmall"
+          left="209"
           height="16"
           label="Remember password"
           word_wrap="down"
-          top_pad="3"
-          name="remember_check"
+          check_button.bottom="3"
+          top_pad="-12"
+          name="remember_password"
           width="170" />
       <button
         follows="left|bottom"
@@ -108,10 +122,11 @@ top="10"
           image_selected="PushButton_On_Selected"
           label="Log In"
           label_color="White"
-        layout="topleft"
+          layout="topleft"
           left_pad="10"
           name="connect_btn"
-  top="25"
+          enabled="true"
+          top="25"
           width="90" />
       <text
           follows="left|bottom"
@@ -172,7 +187,6 @@ top="10"
   follows="left|bottom"
   height="23"
   image_unselected="PushButton_Off"
-  image_selected="PushButton_On_Selected"
   label="Grid Manager"
   layout="topleft"
   left_pad="1"
