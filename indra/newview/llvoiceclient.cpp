@@ -210,9 +210,9 @@ const LLVoiceVersionInfo LLVoiceClient::getVersion()
 
 void LLVoiceClient::updateSettings()
 {
-	setUsePTT(gSavedSettings.getBOOL("PTTCurrentlyEnabled"));
-	setPTTIsToggle(gSavedSettings.getBOOL("PushToTalkToggle"));
-	mDisableMic = gSavedSettings.getBOOL("VoiceDisableMic");
+	setUsePTT(gSavedSettings.getbool("PTTCurrentlyEnabled"));
+	setPTTIsToggle(gSavedSettings.getbool("PushToTalkToggle"));
+	mDisableMic = gSavedSettings.getbool("VoiceDisableMic");
 
 	updateMicMuteLogic();
 
@@ -706,7 +706,7 @@ bool LLVoiceClient::isVoiceWorking() const
 // KKA-839 moved here from LLAvatarActions since it's needed for groups too
 bool LLVoiceClient::canCall()
 {
-  return voiceEnabled() && isVoiceWorking() && !gSavedSettings.getBOOL("KokuaDisableVoiceCallStart");
+  return voiceEnabled() && isVoiceWorking() && !gSavedSettings.getbool("KokuaDisableVoiceCallStart");
 }
 
 bool LLVoiceClient::isParticipantAvatar(const LLUUID& id)
@@ -868,7 +868,7 @@ class LLViewerRequiredVoiceVersion : public LLHTTPNode
 				{
 					//sAlertedUser = true;
 					LLNotificationsUtil::add("VoiceVersionMismatch");
-					gSavedSettings.setBOOL("EnableVoiceChat", FALSE); // toggles listener
+					gSavedSettings.setbool("EnableVoiceChat", false); // toggles listener
 				}
 			}
 		}

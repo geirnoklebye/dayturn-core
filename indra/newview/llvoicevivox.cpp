@@ -949,7 +949,7 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
             std::string host(gSavedSettings.getString("VivoxVoiceHost"));
             U32 port = portbase + portoffset;
             // Chorazin: Re-implement VoiceMultiInstance here (see comments below)            
-            if (gSavedSettings.getBOOL("VoiceMultiInstance"))
+            if (gSavedSettings.getbool("VoiceMultiInstance"))
             {
             	port = 30000 + ll_rand(20000);
             }
@@ -2529,7 +2529,7 @@ void LLVivoxVoiceClient::loginSendMessage()
 {
 	std::ostringstream stream;
 
-	bool autoPostCrashDumps = gSavedSettings.getBOOL("VivoxAutoPostCrashDumps");
+	bool autoPostCrashDumps = gSavedSettings.getbool("VivoxAutoPostCrashDumps");
 
 	stream
 	<< "<Request requestId=\"" << mCommandCookie++ << "\" action=\"Account.Login.1\">"
@@ -5612,8 +5612,8 @@ void LLVivoxVoiceClient::setVoiceEnabled(bool enabled)
 
 bool LLVivoxVoiceClient::voiceEnabled()
 {
-    return gSavedSettings.getBOOL("EnableVoiceChat") &&
-          !gSavedSettings.getBOOL("CmdLineDisableVoice") &&
+    return gSavedSettings.getbool("EnableVoiceChat") &&
+          !gSavedSettings.getbool("CmdLineDisableVoice") &&
           !gNonInteractive;
 }
 
