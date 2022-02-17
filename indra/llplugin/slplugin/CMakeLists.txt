@@ -59,6 +59,7 @@ else ()
 set_target_properties(SLPlugin
   PROPERTIES
   MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/slplugin_info.plist
+  XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME NO  #set to YES for notarization
   )
 endif ()
 
