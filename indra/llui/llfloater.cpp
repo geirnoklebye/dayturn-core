@@ -1654,7 +1654,7 @@ void LLFloater::bringToFront( S32 x, S32 y )
 
 
 // virtual
-void LLFloater::setVisibleAndFrontmost(BOOL take_focus,const LLSD& key)
+void LLFloater::setVisibleAndFrontmost(bool take_focus,const LLSD& key)
 {
 	LLUIUsage::instance().logFloater(getInstanceName());
 	LLMultiFloater* hostp = getHost();
