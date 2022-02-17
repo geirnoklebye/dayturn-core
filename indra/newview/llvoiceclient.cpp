@@ -709,7 +709,7 @@ bool LLVoiceClient::canCall()
   return voiceEnabled() && isVoiceWorking() && !gSavedSettings.getBOOL("KokuaDisableVoiceCallStart");
 }
 
-BOOL LLVoiceClient::isParticipantAvatar(const LLUUID& id)
+bool LLVoiceClient::isParticipantAvatar(const LLUUID& id)
 {
 	if (mVoiceModule) 
 	{
