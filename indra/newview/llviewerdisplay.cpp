@@ -230,7 +230,7 @@ void display_stats()
 		gMemoryAllocated = U64Bytes(LLMemory::getCurrentRSS());
 		U32Megabytes memory = gMemoryAllocated;
 		LL_INFOS() << "MEMORY: " << memory << LL_ENDL;
-		LLMemory::logMemoryInfo(TRUE) ;
+		LLMemory::logMemoryInfo(true) ;
 		gRecentMemoryTime.reset();
 	}
     F32 asset_storage_log_freq = gSavedSettings.getF32("AssetStorageLogFrequency");

@@ -1484,7 +1484,7 @@ bool LLAppViewer::frame()
 		}
 		catch (std::bad_alloc&)
 		{
-			LLMemory::logMemoryInfo(TRUE);
+			LLMemory::logMemoryInfo(true);
 			LLFloaterMemLeak* mem_leak_instance = LLFloaterReg::findTypedInstance<LLFloaterMemLeak>("mem_leaking");
 			if (mem_leak_instance)
 			{
