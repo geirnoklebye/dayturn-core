@@ -251,10 +251,10 @@ U32 LLDir_Linux::countFilesInDir(const std::string &dirname, const std::string &
 
 // get the next file in the directory
 // AO: Used by LGG Selection Beams
-BOOL LLDir_Linux::getNextFileInDir(const std::string &dirname, const std::string &mask, std::string &fname)
+bool LLDir_Linux::getNextFileInDir(const std::string &dirname, const std::string &mask, std::string &fname)
 {
         glob_t g;
-        BOOL result = FALSE;
+        bool result = false;
         fname = "";
 
         if(!(dirname == mCurrentDir))
@@ -299,7 +299,7 @@ BOOL LLDir_Linux::getNextFileInDir(const std::string &dirname, const std::string
 
                                 fname = s;
 
-                                result = TRUE;
+                                result = true;
                         }
                 }
 
@@ -330,11 +330,11 @@ bool LLDir_Linux::fileExists(const std::string &filename) const
 	int res = stat(filename.c_str(), &stat_data);
 	if (!res)
 	{
-		return TRUE;
+		return true;
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 }
 
