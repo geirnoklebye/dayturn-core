@@ -121,7 +121,7 @@ void LLWearableData::pushWearable(const LLWearableType::EType type,
 }
 
 // virtual
-void LLWearableData::wearableUpdated(LLWearable *wearable, BOOL removed)
+void LLWearableData::wearableUpdated(LLWearable *wearable, bool removed)
 {
 	wearable->setUpdated();
 	if (!removed)

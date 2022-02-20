@@ -76,7 +76,7 @@ protected:
 	void 			setWearable(const LLWearableType::EType type, U32 index, LLWearable *wearable);
 	void 			pushWearable(const LLWearableType::EType type, LLWearable *wearable, 
 								 bool trigger_updated = true);
-	virtual void	wearableUpdated(LLWearable *wearable, BOOL removed);
+	virtual void	wearableUpdated(LLWearable *wearable, bool removed);
 	void 			eraseWearable(LLWearable *wearable);
 	void			eraseWearable(const LLWearableType::EType type, U32 index);
 	void			clearWearableType(const LLWearableType::EType type);

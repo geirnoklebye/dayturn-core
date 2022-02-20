@@ -342,7 +342,7 @@ S32 receive_packet(int hSocket, char * receiveBuffer)
 }
 
 // Returns TRUE on success.
-BOOL send_packet(int hSocket, const char *sendBuffer, int size, U32 recipient, int nPort)
+bool send_packet(int hSocket, const char *sendBuffer, int size, U32 recipient, int nPort)
 {
 	//  Sends a packet to the address set in initNet
 	//  
@@ -367,7 +367,7 @@ BOOL send_packet(int hSocket, const char *sendBuffer, int size, U32 recipient, i
 				// assume it is.  JNC 2002.01.18
 				if (WSAECONNRESET == WSAGetLastError())
 				{
-					return TRUE;
+					return true;
 				}
 				LL_INFOS() << "sendto() failed to " << u32_to_ip_string(recipient) << ":" << nPort 
 					<< ", Error " << last_error << LL_ENDL;
