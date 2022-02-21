@@ -2273,7 +2273,7 @@ std::map<std::string, LLImportMaterial> LLDAELoader::getMaterials(LLModel* model
 LLImportMaterial LLDAELoader::profileToMaterial(domProfile_COMMON* material, DAE* dae)
 {
 	LLImportMaterial mat;
-	mat.mFullbright = FALSE;
+	mat.mFullbright = false;
 
 	daeElement* diffuse = material->getDescendant("diffuse");
 	if (diffuse)
@@ -2358,7 +2358,7 @@ LLImportMaterial LLDAELoader::profileToMaterial(domProfile_COMMON* material, DAE
 		LLColor4 emission_color = getDaeColor(emission);
 		if (((emission_color[0] + emission_color[1] + emission_color[2]) / 3.0) > 0.25)
 		{
-			mat.mFullbright = TRUE;
+			mat.mFullbright = true;
 		}
 	}
 
