@@ -208,7 +208,8 @@ private:
 
 
 LLVOVolume::LLVOVolume(const LLUUID &id, const LLPCode pcode, LLViewerRegion *regionp)
-	: LLViewerObject(id, pcode, regionp)
+	: LLViewerObject(id, pcode, regionp),
+	mVolumeImpl(NULL)
 {
 	mTexAnimMode = 0;
 	mRelativeXform.setIdentity();

@@ -411,8 +411,6 @@ public:
     F32 mLODAdjustedDistance;
     F32 mLODRadius;
 
-	F32 mVolumeSurfaceArea; // ZK LBG
-
 private:
 	friend class LLDrawable;
 	friend class LLFace;

@@ -353,7 +353,6 @@ bool	LLPipeline::sRenderDeferred = false;
 S32		LLPipeline::sVisibleLightCount = 0;
 bool	LLPipeline::sRenderingHUDs;
 F32     LLPipeline::sDistortionWaterClipPlaneMargin = 1.0125f;
-F32	LLPipeline::sVolumeSAFrame = 0.f; // ZK LBG
 
 // EventHost API LLPipeline listener.
 static LLPipelineListener sPipelineListener;
@@ -3762,7 +3761,6 @@ void LLPipeline::postSort(LLCamera& camera)
     LL_PROFILE_ZONE_SCOPED_CATEGORY_PIPELINE;
 
 	assertInitialized();
-	sVolumeSAFrame = 0.f; //ZK LBG
 
 	LL_PUSH_CALLSTACKS();
 	//rebuild drawable geometry
