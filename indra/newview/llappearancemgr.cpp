@@ -840,7 +840,7 @@ void LLWearableHoldingPattern::onAllComplete()
 
 	if (isAgentAvatarValid())
 	{
-		LL_INFOS("Avatar") << self_av_string() << "Updating " << mObjItems.size() << " attachments" << LL_ENDL;
+		LL_DEBUGS("Avatar") << self_av_string() << "Updating " << mObjItems.size() << " attachments" << LL_ENDL;
 		LLAgentWearables::llvo_vec_t objects_to_remove;
 		LLAgentWearables::llvo_vec_t objects_to_retain;
 		LLInventoryModel::item_array_t items_to_add;
@@ -850,7 +850,7 @@ void LLWearableHoldingPattern::onAllComplete()
 													   objects_to_retain,
 													   items_to_add);
 
-		LL_INFOS("Avatar") << self_av_string() << "Removing " << objects_to_remove.size()
+		LL_DEBUGS("Avatar") << self_av_string() << "Removing " << objects_to_remove.size()
 							<< " attachments" << LL_ENDL;
 
 		// Here we remove the attachment pos overrides for *all*
@@ -861,7 +861,7 @@ void LLWearableHoldingPattern::onAllComplete()
 
 		if (objects_to_remove.size() || items_to_add.size())
 		{
-			LL_INFOS("Avatar") << "ATT will remove " << objects_to_remove.size()
+			LL_DEBUGS("Avatar") << "ATT will remove " << objects_to_remove.size()
 								<< " and add " << items_to_add.size() << " items" << LL_ENDL;
 		}
 
@@ -887,7 +887,7 @@ void LLWearableHoldingPattern::onAllComplete()
 		}
 		
 		// Add new attachments to match those requested.
-		LL_INFOS("Avatar") << self_av_string() << "Adding " << items_to_add.size() << " attachments" << LL_ENDL;
+		LL_DEBUGS("Avatar") << self_av_string() << "Adding " << items_to_add.size() << " attachments" << LL_ENDL;
 		LLAgentWearables::userAttachMultipleAttachments(items_to_add);
 	}
 
@@ -1318,7 +1318,6 @@ static void removeDuplicateItems(LLInventoryModel::item_array_t& items)
 	{
 		new_items.push_back(*it);
 	}
-	LL_INFOS() << "Original size: " << items.size() << " without duplicates: " << new_items.size() << LL_ENDL; 
 	items = new_items;
 }
 
@@ -3167,7 +3166,7 @@ void LLAppearanceMgr::updateIsDirty()
 
 		if(outfit_items.size() != cof_items.size())
 		{
-			LL_INFOS("Avatar") << "item count different - base " << outfit_items.size() << " cof " << cof_items.size() << LL_ENDL;
+			LL_DEBUGS("Avatar") << "item count different - base " << outfit_items.size() << " cof " << cof_items.size() << LL_ENDL;
 			// Current outfit folder should have one more item than the outfit folder.
 			// this one item is the link back to the outfit folder itself.
 			mOutfitIsDirty = true;
@@ -3189,17 +3188,17 @@ void LLAppearanceMgr::updateIsDirty()
 			{
 				if (item1->getLinkedUUID() != item2->getLinkedUUID())
 				{
-					LL_INFOS("Avatar") << "link id different " << LL_ENDL;
+					LL_DEBUGS("Avatar") << "link id different " << LL_ENDL;
 				}
 				else
 				{
 					if (item1->getName() != item2->getName())
 					{
-						LL_INFOS("Avatar") << "name different " << item1->getName() << " " << item2->getName() << LL_ENDL;
+						LL_DEBUGS("Avatar") << "name different " << item1->getName() << " " << item2->getName() << LL_ENDL;
 					}
 					if (item1->getActualDescription() != item2->getActualDescription())
 					{
-						LL_INFOS("Avatar") << "desc different " << item1->getActualDescription()
+						LL_DEBUGS("Avatar") << "desc different " << item1->getActualDescription()
 											<< " " << item2->getActualDescription() 
 											<< " names " << item1->getName() << " " << item2->getName() << LL_ENDL;
 					}
@@ -3210,7 +3209,7 @@ void LLAppearanceMgr::updateIsDirty()
 		}
 	}
 	llassert(!mOutfitIsDirty);
-	LL_INFOS("Avatar") << "clean" << LL_ENDL;
+	LL_DEBUGS("Avatar") << "clean" << LL_ENDL;
 }
 
 // *HACK: Must match name in Library or agent inventory
@@ -4551,7 +4550,6 @@ public:
 		for(S32 i = 0; i < count; ++i)
 		{
 			ids.push_back(item_array.at(i)->getUUID());
-			LL_INFOS() << "item id " << item_array.at(i)->getUUID() << " name " << item_array.at(i)->getName() << LL_ENDL;
 		}
 		
 		gInventory.removeObserver(this);
