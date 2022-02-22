@@ -1084,10 +1084,6 @@ public:
 	
 	void sculpt(U16 sculpt_width, U16 sculpt_height, S8 sculpt_components, const U8* sculpt_data, S32 sculpt_level, bool visible_placeholder);
 
-	// NaCl - Graphics crasher protection
-	void calcSurfaceArea(); // ZK LBG
-	// NaCl End
-
 	void copyVolumeFaces(const LLVolume* volume);
 	void copyFacesTo(std::vector<LLVolumeFace> &faces) const;
 	void copyFacesFrom(const std::vector<LLVolumeFace> &faces);
