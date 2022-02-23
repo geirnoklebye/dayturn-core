@@ -282,7 +282,7 @@ void LLHUDText::addLine(const std::string &text_utf8,
 	}
 }
 
-void LLHUDText::setZCompare(const BOOL zcompare)
+void LLHUDText::setZCompare(const bool zcompare)
 {
 	mZCompare = zcompare;
 }
@@ -314,7 +314,7 @@ void LLHUDText::setAlpha(F32 alpha)
 }
 
 
-void LLHUDText::setDoFade(const BOOL do_fade)
+void LLHUDText::setDoFade(const bool do_fade)
 {
 	mDoFade = do_fade;
 }
@@ -444,7 +444,7 @@ LLVector2 LLHUDText::updateScreenPos(LLVector2 &offset)
 	LLVector3 y_pixel_vec;
 	LLViewerCamera::getInstance()->getPixelVectors(mPositionAgent, y_pixel_vec, x_pixel_vec);
 //	LLVector3 world_pos = mPositionAgent + (offset.mV[VX] * x_pixel_vec) + (offset.mV[VY] * y_pixel_vec);
-//	if (!LLViewerCamera::getInstance()->projectPosAgentToScreen(world_pos, screen_pos, FALSE) && mVisibleOffScreen)
+//	if (!LLViewerCamera::getInstance()->projectPosAgentToScreen(world_pos, screen_pos, false) && mVisibleOffScreen)
 //	{
 //		// bubble off-screen, so find a spot for it along screen edge
 //		LLViewerCamera::getInstance()->projectPosAgentToScreenEdge(world_pos, screen_pos);

@@ -5527,8 +5527,8 @@ void LLViewerObject::setDebugText(const std::string &utf8text)
 	}
 	mText->setColor(LLColor4::white);
 	mText->setString(utf8text);
-	mText->setZCompare(FALSE);
-	mText->setDoFade(FALSE);
+	mText->setZCompare(false);
+	mText->setDoFade(false);
 	updateText();
 }
 
@@ -5561,8 +5561,8 @@ void LLViewerObject::restoreHudText()
         else
         {
             // Restore default values
-            mText->setZCompare(TRUE);
-            mText->setDoFade(TRUE);
+            mText->setZCompare(true);
+            mText->setDoFade(true);
         }
         mText->setColor(mHudTextColor);
         mText->setString(mHudText);

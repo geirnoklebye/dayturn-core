@@ -893,7 +893,7 @@ void LLViewerObjectList::renderObjectBeacons()
 			}
 			LLHUDText *hud_textp = (LLHUDText *)LLHUDObject::addHUDObject(LLHUDObject::LL_HUD_TEXT);
 
-			hud_textp->setZCompare(FALSE);
+			hud_textp->setZCompare(false);
 			LLColor4 color;
 			color = debug_beacon.mTextColor;
 			color.mV[3] *= 1.f;

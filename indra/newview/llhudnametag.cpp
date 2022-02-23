@@ -175,7 +175,7 @@ BOOL LLHUDNameTag::lineSegmentIntersect(const LLVector4a& start, const LLVector4
 	LLVector3 height_vec = mHeight * y_pixel_vec;
 	
 	LLCoordGL screen_pos;
-	LLViewerCamera::getInstance()->projectPosAgentToScreen(position, screen_pos, FALSE);
+	LLViewerCamera::getInstance()->projectPosAgentToScreen(position, screen_pos, false);
 
 	LLVector2 screen_offset;
 	screen_offset = updateScreenPos(mPositionOffset);
@@ -296,7 +296,7 @@ void LLHUDNameTag::renderText(BOOL for_select)
 	mRadius = (width_vec + height_vec).magVec() * 0.5f;
 
 	LLCoordGL screen_pos;
-	LLViewerCamera::getInstance()->projectPosAgentToScreen(mPositionAgent, screen_pos, FALSE);
+	LLViewerCamera::getInstance()->projectPosAgentToScreen(mPositionAgent, screen_pos, false);
 
 	LLVector2 screen_offset = updateScreenPos(mPositionOffset);
 
@@ -527,7 +527,7 @@ void LLHUDNameTag::addLabelWithColorAndEmphasis(const std::string& label_utf8, c
 	}
 }
 
-void LLHUDNameTag::setZCompare(const BOOL zcompare)
+void LLHUDNameTag::setZCompare(const bool zcompare)
 {
 	mZCompare = zcompare;
 }
@@ -559,7 +559,7 @@ void LLHUDNameTag::setAlpha(F32 alpha)
 }
 
 
-void LLHUDNameTag::setDoFade(const BOOL do_fade)
+void LLHUDNameTag::setDoFade(const bool do_fade)
 {
 	mDoFade = do_fade;
 }
@@ -651,7 +651,7 @@ LLVector2 LLHUDNameTag::updateScreenPos(LLVector2 &offset)
 	LLVector3 y_pixel_vec;
 	LLViewerCamera::getInstance()->getPixelVectors(mPositionAgent, y_pixel_vec, x_pixel_vec);
 	LLVector3 world_pos = mPositionAgent + (offset.mV[VX] * x_pixel_vec) + (offset.mV[VY] * y_pixel_vec);
-	if (!LLViewerCamera::getInstance()->projectPosAgentToScreen(world_pos, screen_pos, FALSE) && mVisibleOffScreen)
+	if (!LLViewerCamera::getInstance()->projectPosAgentToScreen(world_pos, screen_pos, false) && mVisibleOffScreen)
 	{
 		// bubble off-screen, so find a spot for it along screen edge
 		LLViewerCamera::getInstance()->projectPosAgentToScreenEdge(world_pos, screen_pos);

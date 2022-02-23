@@ -103,8 +103,8 @@ public:
 	void setFont(const LLFontGL* font);
 	void setColor(const LLColor4 &color);
 	void setAlpha(F32 alpha);
-	void setZCompare(const BOOL zcompare);
-	void setDoFade(const BOOL do_fade);
+	void setZCompare(const bool zcompare);
+	void setDoFade(const bool do_fade);
 	void setVisibleOffScreen(BOOL visible) { mVisibleOffScreen = visible; }
 	
 	// mMaxLines of -1 means unlimited lines.
