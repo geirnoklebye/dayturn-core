@@ -96,7 +96,10 @@ LLWorld::LLWorld() :
 	mLastPacketsIn(0),
 	mLastPacketsOut(0),
 	mLastPacketsLost(0),
-	mSpaceTimeUSec(0)
+	mSpaceTimeUSec(0),
+	mInferredServerScaleXY(OS_DEFAULT_MAX_PRIM_SCALE),
+	mInferredServerScaleZ(OS_DEFAULT_MAX_PRIM_SCALE),
+	mLimitsNeedRefresh(true)// <AW: opensim-limits>
 {
 	for (S32 i = 0; i < 8; i++)
 	{
@@ -142,6 +145,396 @@ void LLWorld::resetClass()
 	LLSceneMonitor::deleteSingleton();
 }
 
+// <NP: disable build constraints> //see /indra/llcommon/stdtypes.h for defined values F32_MIN = FLT_MIN = 0 NOT -INF 
+F32 LLWorld::getRegionMinPrimScale() const
+{
+	if (gSavedSettings.getbool("DisableMaxBuildConstraints"))
+	{
+		return ( mRegionMinPrimScale * 0.1f );
+	}
+	else
+	{
+		return mRegionMinPrimScale;
+	}
+}
+
+F32 LLWorld::getRegionMaxPrimXPos() const
+{
+	if (gSavedSettings.getbool("DisableMaxBuildConstraints"))
+	{
+		return F32_MAX;
+	}
+	else
+	{
+		return mRegionMaxPrimXPos;
+	}
+}
+
+F32 LLWorld::getRegionMaxPrimYPos() const
+{
+	if (gSavedSettings.getbool("DisableMaxBuildConstraints"))
+	{
+		return F32_MAX;
+	}
+	else
+	{
+		return mRegionMaxPrimYPos;
+	}
+}
+
+F32 LLWorld::getRegionMaxPrimZPos() const
+{
+	if (gSavedSettings.getbool("DisableMaxBuildConstraints"))
+	{
+		return F32_MAX;
+	}
+	else
+	{
+		return mRegionMaxPrimZPos;
+	}
+}
+
+F32 LLWorld::getRegionMinPrimXPos() const
+{
+	if (gSavedSettings.getbool("DisableMaxBuildConstraints"))
+	{
+		return ( mRegionMinPrimXPos * 0.1f );
+	}
+	else
+	{
+		return mRegionMinPrimXPos;
+	}
+}
+
+F32 LLWorld::getRegionMinPrimYPos() const
+{
+	if (gSavedSettings.getbool("DisableMaxBuildConstraints"))
+	{
+		return ( mRegionMinPrimYPos * 0.1f );
+	}
+	else
+	{
+		return mRegionMinPrimYPos;
+	}
+}
+
+F32 LLWorld::getRegionMinPrimZPos() const
+{
+	if (gSavedSettings.getbool("DisableMaxBuildConstraints"))
+	{
+		return ( mRegionMinPrimZPos * 0.1F );
+	}
+	else
+	{
+		return mRegionMinPrimZPos;
+	}
+}
+
+// </NP: disable build constraints>
+
+// <AW: opensim-limits>
+void LLWorld::refreshLimits()
+{
+
+	mLimitsNeedRefresh = false;
+
+	if (!gIsInSecondLife)
+	{
+		//llmath/xform.h
+		mRegionMaxHeight = OS_MAX_OBJECT_Z; //llmath/xform.h
+		mRegionMinPrimScale = OS_MIN_PRIM_SCALE;
+
+		mRegionMinPrimXPos = 0.0f;
+		mRegionMinPrimYPos = 0.0f;
+		mRegionMinPrimZPos = 0.0f;
+
+		// <NP: disable build constraints>
+		if (gSavedSettings.getBOOL("DisableMaxBuildConstraints")) // adjusts max and min constrains
+		{
+				mRegionMaxPrimScale = F32_MAX;
+				mRegionMinPrimScale = 0.000001f;
+				mRegionMaxPrimXPos = F32_MAX;
+				mRegionMaxPrimYPos = F32_MAX;
+				mRegionMaxPrimZPos = F32_MAX;
+
+			}
+		else
+			{
+				mRegionMaxPrimScale = OS_DEFAULT_MAX_PRIM_SCALE;
+				mRegionMinPrimScale = OS_MIN_PRIM_SCALE;
+				//scale constants form xform.h should and be easier to modify if future need arrises
+				mRegionMaxPrimXPos = getRegionWidthInMeters();
+				mRegionMaxPrimYPos = mRegionMaxPrimXPos; // only supporting square regions
+				mRegionMaxPrimZPos = 4096; // default max building height. Disable build constraint otherwise
+			}
+		// </NP: disable build constraints>
+		mRegionMaxPrimScaleNoMesh = OS_DEFAULT_MAX_PRIM_SCALE;// no restrictions here
+		mRegionMaxHollowSize = OS_OBJECT_MAX_HOLLOW_SIZE;
+		mRegionMinHoleSize = OS_OBJECT_MIN_HOLE_SIZE;
+		mMaxPhysPrimScale = OS_DEFAULT_MAX_PRIM_SCALE;
+		mMaxLinkedPrims = 10000;
+		mMaxPhysLinkedPrims = 10000;
+		mMaxInventoryItemsTransfer = 42;
+		mAllowRenderName = gSavedSettings.getS32("AvatarNameTagMode");
+		mAllowMinimap = true;
+		mAllowPhysicalPrims = true;
+
+		mMaxPrimXPos = OS_MAX_OBJECT_XY;
+		mMaxPrimYPos = OS_MAX_OBJECT_XY;
+		mMaxPrimZPos = OS_MAX_OBJECT_Z;
+		mMinPrimXPos = 0;
+		mMinPrimYPos = 0;
+		mMinPrimZPos = OS_MIN_OBJECT_Z;
+		mMaxDragDistance = gSavedSettings.getF32("MaxDragDistance");
+		mClassicCloudsEnabled = false;
+		mAllowParcelWindLight = true;
+		mEnableTeenMode = false; //get saved settings?
+		mEnforceMaxBuild = false;
+		mLockedDrawDistance = false;
+
+		mWhisperDistance = CHAT_WHISPER_RADIUS;
+		mSayDistance = CHAT_NORMAL_RADIUS;
+		mShoutDistance = CHAT_SHOUT_RADIUS;
+
+		mDrawDistance = -1.f;
+		mTerrainDetailScale = -1.f;
+        
+        mRegionWidth = OS_MAX_OBJECT_XY;  // this is NOT correct for Opensim - need to be able to find the exact size of a VAR.
+	}
+	else
+	{
+		//llmath/xform.h
+		mRegionMaxHeight = SL_MAX_OBJECT_Z;
+		mRegionMinPrimScale = SL_MIN_PRIM_SCALE;
+		mRegionMaxPrimScale = SL_DEFAULT_MAX_PRIM_SCALE;
+		mRegionMaxPrimScaleNoMesh = SL_DEFAULT_MAX_PRIM_SCALE_NO_MESH;
+		//llprimitive/llprimitive.*
+		mRegionMaxHollowSize = SL_OBJECT_MAX_HOLLOW_SIZE;
+		mRegionMinHoleSize = SL_OBJECT_MIN_HOLE_SIZE;
+		mRegionMaxPrimXPos = SL_MAX_OBJECT_XY;
+		mRegionMaxPrimYPos = SL_MAX_OBJECT_XY;
+		mRegionMaxPrimZPos = SL_MAX_OBJECT_Z;
+		mMaxPhysPrimScale = SL_DEFAULT_MAX_PRIM_SCALE;
+		mMaxLinkedPrims = MAX_CHILDREN_PER_TASK;
+		mMaxPhysLinkedPrims = MAX_CHILDREN_PER_PHYSICAL_TASK;
+		mMaxInventoryItemsTransfer = 42;
+		mAllowRenderName = gSavedSettings.getS32("AvatarNameTagMode");
+		mAllowMinimap = true;
+		mAllowPhysicalPrims = true;
+
+		mMaxPrimXPos = 256;
+		mMaxPrimYPos = 256;
+		mMaxPrimZPos = 4096;
+		mMinPrimXPos = 0;
+		mMinPrimYPos = 0;
+		mMinPrimZPos = SL_MIN_OBJECT_Z;
+		mMaxDragDistance = gSavedSettings.getF32("MaxDragDistance");
+		mClassicCloudsEnabled = false;
+		mAllowParcelWindLight = false;
+		mEnableTeenMode = false; //get saved settings?
+		mEnforceMaxBuild = false;
+		mLockedDrawDistance = false;
+
+		mWhisperDistance = CHAT_WHISPER_RADIUS;
+		mSayDistance = CHAT_NORMAL_RADIUS;
+		mShoutDistance = CHAT_SHOUT_RADIUS;
+
+		mDrawDistance = -1.f;
+		mTerrainDetailScale = -1.f;
+        
+        mRegionWidth = SL_MAX_OBJECT_XY; 
+	}
+	LL_DEBUGS("OS_SETTINGS") << "RegionMaxHeight    " << mRegionMaxHeight << LL_ENDL;
+	LL_DEBUGS("OS_SETTINGS") << "RegionMinPrimScale " << mRegionMinPrimScale << LL_ENDL;
+	LL_DEBUGS("OS_SETTINGS") << "RegionMaxPrimScale " << mRegionMaxPrimScale << LL_ENDL;
+	LL_DEBUGS("OS_SETTINGS") << "RegionMaxHollowSize    " << mRegionMaxHollowSize << LL_ENDL;
+	LL_DEBUGS("OS_SETTINGS") << "RegionMinHoleSize  " << mRegionMinHoleSize << LL_ENDL;
+
+}
+
+void LLWorld::setRegionMaxHeight(F32 val)
+{ 
+	if(val <= 0.0f)
+		mRegionMaxHeight = OS_MAX_OBJECT_Z;
+	else
+		mRegionMaxHeight = val; 
+}
+
+void LLWorld::setRegionMinPrimScale(F32 val)
+{
+	if(val <= 0.0f)
+		mRegionMinPrimScale = OS_MIN_PRIM_SCALE;
+	else
+		mRegionMinPrimScale = val;
+}
+
+void LLWorld::setRegionMaxPrimScale(F32 val)
+{
+	if(val <= 0.0f)
+		mRegionMaxPrimScale = OS_DEFAULT_MAX_PRIM_SCALE;
+	else
+		mRegionMaxPrimScale = val;
+}
+
+void LLWorld::setRegionMaxPrimScaleNoMesh(F32 val)
+{
+	if(val <= 0.0f)
+		mRegionMaxPrimScaleNoMesh = OS_DEFAULT_MAX_PRIM_SCALE;
+	else
+		mRegionMaxPrimScaleNoMesh = val;
+}
+
+void LLWorld::setRegionMaxHollowSize(F32 val)
+{
+	if(val <= 0.0f)
+		mRegionMaxHollowSize = OS_OBJECT_MAX_HOLLOW_SIZE;
+	else
+		mRegionMaxHollowSize = val;
+}
+
+void LLWorld::setRegionMinHoleSize(F32 val)
+{
+	if(val <= 0.0f)
+		mRegionMinHoleSize = OS_OBJECT_MIN_HOLE_SIZE;
+	else
+		mRegionMinHoleSize = val;
+}
+
+void LLWorld::setMaxPhysPrimScale(F32 val)
+{
+	if(val <= 0.0f)
+		mMaxPhysPrimScale = mRegionMaxPrimScale;
+	else
+		mMaxPhysPrimScale = val;
+}
+
+void LLWorld::setMaxDragDistance(F32 val)
+{
+	if(val <= 0.0f)
+		mMaxDragDistance = gSavedSettings.getF32("MaxDragDistance");
+	else
+		mMaxDragDistance = val;
+}
+
+void LLWorld::setMaxLinkedPrims(S32 val)
+{
+	if(val < 0)
+		mMaxLinkedPrims = 10000;
+	else
+		mMaxLinkedPrims = val;
+}
+
+void LLWorld::setMaxPhysLinkedPrims(S32 val)
+{
+	if(val < 0)
+		mMaxPhysLinkedPrims = 10000;
+	else
+		mMaxPhysLinkedPrims = val;
+}
+
+void LLWorld::setMaxInventoryItemsTransfer(S32 val)
+{
+	if(val < 0)
+		mMaxInventoryItemsTransfer = 42;
+	else
+		mMaxInventoryItemsTransfer = val;
+}
+
+void LLWorld::setMaxPrimXPos(F32 val)
+{
+    if(val <= 0.0f)
+		mMaxPrimXPos = mRegionWidth;
+	else
+		mMaxPrimXPos = val;
+}
+
+void LLWorld::setMaxPrimYPos(F32 val)
+{  
+	if(val <= 0.0f)
+		mMaxPrimYPos = mRegionWidth;
+	else
+		mMaxPrimYPos = val;
+}
+
+void LLWorld::setMaxPrimZPos(F32 val)
+{
+	if(val <= 0.0f)
+		mMaxPrimZPos = F32_MAX;
+	else
+		mMaxPrimZPos = val;
+}
+
+void LLWorld::setMinPrimXPos(F32 val)
+{
+	if(val < 0.0f)
+		mMinPrimXPos = 0.0f;
+	else
+		mMinPrimXPos = val;
+}
+
+void LLWorld::setMinPrimYPos(F32 val)
+{
+	if(val < 0.0f)
+		mMinPrimYPos = 0.0f;
+	else
+		mMinPrimYPos = val;
+}
+
+void LLWorld::setMinPrimZPos(F32 val)
+{
+	F32 minZLimit = SL_MIN_OBJECT_Z;
+    
+	if (!gIsInSecondLife)
+    {
+        minZLimit = OS_MIN_OBJECT_Z;
+    }
+    
+    if(val < minZLimit)
+		mMinPrimZPos = minZLimit;
+	else
+		mMinPrimZPos = val;
+}
+
+void LLWorld::setWhisperDistance(F32 val)
+{
+	if(val <= 0.0f)
+		mWhisperDistance = CHAT_WHISPER_RADIUS;
+	else
+		mWhisperDistance = val;
+}
+
+void LLWorld::setSayDistance(F32 val)
+{
+	if(val <= 0.0f)
+		mSayDistance = CHAT_NORMAL_RADIUS;
+	else
+		mSayDistance = val;
+}
+
+void LLWorld::setShoutDistance(F32 val)
+{
+	if(val < 0.0f)
+		mShoutDistance = CHAT_SHOUT_RADIUS;
+	else
+		mShoutDistance = val;
+}
+
+void LLWorld::setDrawDistance(F32 val)
+{
+	if(val < 0.0f)
+		mDrawDistance = -1.f;
+	else
+		mDrawDistance = val;
+}
+
+void LLWorld::setTerrainDetailScale(F32 val)
+{
+	if(val < 0.0f)
+		mTerrainDetailScale = -1.f;
+	else
+		mTerrainDetailScale = val;
+}
+// </AW: opensim-limits>
 
 LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host)
 {
