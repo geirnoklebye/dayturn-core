@@ -309,7 +309,7 @@ LLUUID FSCommon::getGroupForRezzing()
 	LLUUID group_id = gAgent.getGroupID();
 	LLParcel* parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
 
-	if (parcel && gSavedSettings.getBOOL("RezUnderLandGroup"))
+	if (parcel && gSavedSettings.getbool("RezUnderLandGroup"))
 	{
 		// In both cases, group-owned or not, the group ID is the same;
 		// No need to query the parcel owner ID as it will be either

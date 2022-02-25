@@ -278,7 +278,7 @@ void LLToolSelect::onMouseCaptureLost()
 {
 	// Finish drag
 
-	LLSelectMgr::getInstance()->enableSilhouette(TRUE);
+	LLSelectMgr::getInstance()->enableSilhouette(true);
 
 	// Clean up drag-specific variables
 	mIgnoreGroup = FALSE;

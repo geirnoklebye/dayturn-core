@@ -350,7 +350,7 @@ public:
 	bool contains(LLViewerObject* object, S32 te);
 
 	// returns TRUE is any node is currenly worn as an attachment
-	BOOL isAttachment();
+	bool isAttachment();
 
     bool checkAnimatedObjectEstTris();
     bool checkAnimatedObjectLinkable();
@@ -489,13 +489,13 @@ public:
 	//
 	// *NOTE: You must hold on to the object selection handle, otherwise
 	// the objects will be automatically deselected in 1 frame.
-	LLObjectSelectionHandle selectObjectAndFamily(LLViewerObject* object, BOOL add_to_end = FALSE, BOOL ignore_select_owned = FALSE);
+	LLObjectSelectionHandle selectObjectAndFamily(LLViewerObject* object, bool add_to_end = false, bool ignore_select_owned = false);
 
 	// For when you want just a child object.
 	LLObjectSelectionHandle selectObjectOnly(LLViewerObject* object, S32 face = SELECT_ALL_TES);
 
 	// Same as above, but takes a list of objects.  Used by rectangle select.
-	LLObjectSelectionHandle selectObjectAndFamily(const std::vector<LLViewerObject*>& object_list, BOOL send_to_sim = TRUE);
+	LLObjectSelectionHandle selectObjectAndFamily(const std::vector<LLViewerObject*>& object_list, bool send_to_sim = true);
 
 	// converts all objects currently highlighted to a selection, and returns it
 	LLObjectSelectionHandle selectHighlightedObjects();
@@ -577,8 +577,8 @@ public:
 	void cleanup();
 
 	void updateSilhouettes();
-	void renderSilhouettes(BOOL for_hud);
-	void enableSilhouette(BOOL enable) { mRenderSilhouettes = enable; }
+	void renderSilhouettes(bool for_hud);
+	void enableSilhouette(bool enable) { mRenderSilhouettes = enable; }
 	
 	////////////////////////////////////////////////////////////////
 	// Utility functions that operate on the current selection
@@ -627,7 +627,7 @@ public:
 	void selectionSetMaterialParams(LLSelectedTEMaterialFunctor* material_func, int specific_te = -1);
 	void selectionRemoveMaterial();
 
-	void selectionSetObjectPermissions(U8 perm_field, BOOL set, U32 perm_mask, BOOL override = FALSE);
+	void selectionSetObjectPermissions(U8 perm_field, bool set, U32 perm_mask, bool override = false);
 	void selectionSetObjectName(const std::string& name);
 	void selectionSetObjectDescription(const std::string& desc);
 	void selectionSetObjectCategory(const LLCategory& category);
@@ -747,12 +747,12 @@ public:
 	void repeatDuplicate();
 	void selectDuplicateOnRay(const LLVector3 &ray_start_region,
 								const LLVector3 &ray_end_region,
-								BOOL bypass_raycast,
-								BOOL ray_end_is_intersection,
+								bool bypass_raycast,
+								bool ray_end_is_intersection,
 								const LLUUID &ray_target_id,
-								BOOL copy_centers,
-								BOOL copy_rotates,
-								BOOL select_copy);
+								bool copy_centers,
+								bool copy_rotates,
+								bool select_copy);
 
 	void sendMultipleUpdate(U32 type);	// Position, rotation, scale all in one
 	void sendOwner(const LLUUID& owner_id, const LLUUID& group_id, bool override = false);
@@ -888,7 +888,7 @@ private:
 	LLVector3d				mLastSentSelectionCenterGlobal;
 	bool					mShowSelection; // do we send the selection center name value and do we animate this selection?
 	LLVector3d				mLastCameraPos;		// camera position from last generation of selection silhouette
-	BOOL					mRenderSilhouettes;	// do we render the silhouette
+	bool					mRenderSilhouettes;	// do we render the silhouette
 	LLBBox					mSavedSelectionBBox;
 
 	LLFrameTimer			mEffectsTimer;
@@ -984,7 +984,7 @@ template <typename T> bool LLObjectSelection::isMultipleTEValue(LLSelectedTEGetF
 	T selected_value = T();
 	
 	// Now iterate through all TEs to test for sameness
-	bool unique = TRUE;
+	bool unique = true;
 	for (iterator iter = begin(); iter != end(); iter++)
 	{
 		LLSelectNode* node = *iter;

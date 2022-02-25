@@ -240,9 +240,9 @@ LLSelectMgr::LLSelectMgr()
 	sHighlightInspectColor = LLUIColorTable::instance().getColor("HighlightInspectColor");
 	sContextSilhouetteColor = LLUIColorTable::instance().getColor("ContextSilhouetteColor")*0.5f;
 
-	sRenderLightRadius = gSavedSettings.getBOOL("RenderLightRadius");
+	sRenderLightRadius = gSavedSettings.getbool("RenderLightRadius");
 	
-	mRenderSilhouettes = TRUE;
+	mRenderSilhouettes = true;
 
 	mGridMode = GRID_MODE_WORLD;
 	gSavedSettings.setS32("GridMode", (S32)GRID_MODE_WORLD);
@@ -420,7 +420,7 @@ LLObjectSelectionHandle LLSelectMgr::selectObjectOnly(LLViewerObject* object, S3
 //-----------------------------------------------------------------------------
 // Select the object, parents and children.
 //-----------------------------------------------------------------------------
-LLObjectSelectionHandle LLSelectMgr::selectObjectAndFamily(LLViewerObject* obj, BOOL add_to_end, BOOL ignore_select_owned)
+LLObjectSelectionHandle LLSelectMgr::selectObjectAndFamily(LLViewerObject* obj, bool add_to_end, bool ignore_select_owned)
 {
 	llassert( obj );
 
@@ -481,9 +481,9 @@ LLObjectSelectionHandle LLSelectMgr::selectObjectAndFamily(LLViewerObject* obj, 
 	root->resetRot();
 
 	// leave component mode
-	if (gSavedSettings.getBOOL("EditLinkedParts"))
+	if (gSavedSettings.getbool("EditLinkedParts"))
 	{
-		gSavedSettings.setBOOL("EditLinkedParts", FALSE);
+		gSavedSettings.setbool("EditLinkedParts", false);
 		promoteSelectionToRoot();
 	}
 
@@ -501,7 +501,7 @@ LLObjectSelectionHandle LLSelectMgr::selectObjectAndFamily(LLViewerObject* obj, 
 // Select the object, parents and children.
 //-----------------------------------------------------------------------------
 LLObjectSelectionHandle LLSelectMgr::selectObjectAndFamily(const std::vector<LLViewerObject*>& object_list,
-														   BOOL send_to_sim)
+														   bool send_to_sim)
 {
 	// Collect all of the objects, children included
 	std::vector<LLViewerObject*> objects;
@@ -551,9 +551,9 @@ LLObjectSelectionHandle LLSelectMgr::selectObjectAndFamily(const std::vector<LLV
 	}
 
 	// leave component mode
-	if (gSavedSettings.getBOOL("EditLinkedParts"))
+	if (gSavedSettings.getbool("EditLinkedParts"))
 	{		
-		gSavedSettings.setBOOL("EditLinkedParts", FALSE);
+		gSavedSettings.setbool("EditLinkedParts", false);
 		promoteSelectionToRoot();
 	}
 
@@ -726,7 +726,7 @@ bool LLSelectMgr::enableLinkObjects()
 	// user can modify at least one of the selected objects.
 
 	// in component mode, can't link
-	if (!gSavedSettings.getBOOL("EditLinkedParts"))
+	if (!gSavedSettings.getbool("EditLinkedParts"))
 	{
 		if(LLSelectMgr::getInstance()->selectGetAllRootsValid() && LLSelectMgr::getInstance()->getSelection()->getRootObjectCount() >= 2)
 		{
@@ -1069,8 +1069,8 @@ void LLSelectMgr::highlightObjectOnly(LLViewerObject* objectp)
 		return;
 	}
 	
-	if ((gSavedSettings.getBOOL("SelectOwnedOnly") && !objectp->permYouOwner()) 
-		|| (gSavedSettings.getBOOL("SelectMovableOnly") && (!objectp->permMove() ||  objectp->isPermanentEnforced())))
+	if ((gSavedSettings.getbool("SelectOwnedOnly") && !objectp->permYouOwner()) 
+		|| (gSavedSettings.getbool("SelectMovableOnly") && (!objectp->permMove() ||  objectp->isPermanentEnforced())))
 	{
 		// only select my own objects
 		return;
@@ -1229,7 +1229,7 @@ LLObjectSelectionHandle LLSelectMgr::selectHighlightedObjects()
 
 void LLSelectMgr::deselectHighlightedObjects()
 {
-	BOOL select_linked_set = !gSavedSettings.getBOOL("EditLinkedParts");
+	bool select_linked_set = !gSavedSettings.getbool("EditLinkedParts");
 	for (std::set<LLPointer<LLViewerObject> >::iterator iter = mRectSelectedObjects.begin();
 		 iter != mRectSelectedObjects.end(); iter++)
 	{
@@ -1315,7 +1315,7 @@ void LLSelectMgr::getGrid(LLVector3& origin, LLQuaternion &rotation, LLVector3 &
 
 		LLVector4a min_extents(F32_MAX);
 		LLVector4a max_extents(-F32_MAX);
-		BOOL grid_changed = FALSE;
+		bool grid_changed = false;
 		for (LLObjectSelection::iterator iter = mGridObjects.begin();
 			 iter != mGridObjects.end(); ++iter)
 		{
@@ -1326,7 +1326,7 @@ void LLSelectMgr::getGrid(LLVector3& origin, LLQuaternion &rotation, LLVector3 &
 				const LLVector4a* ext = drawable->getSpatialExtents();
 				update_min_max(min_extents, max_extents, ext[0]);
 				update_min_max(min_extents, max_extents, ext[1]);
-				grid_changed = TRUE;
+				grid_changed = true;
 			}
 		}
 		if (grid_changed)
@@ -1348,7 +1348,7 @@ void LLSelectMgr::getGrid(LLVector3& origin, LLQuaternion &rotation, LLVector3 &
 	}
 	else // GRID_MODE_WORLD or just plain default
 	{
-		const BOOL non_root_ok = TRUE;
+		const bool non_root_ok = true;
 		LLViewerObject* first_object = mSelectedObjects->getFirstRootObject(non_root_ok);
 
 		mGridOrigin.clearVec();
@@ -1494,7 +1494,7 @@ void LLSelectMgr::promoteSelectionToRoot()
 {
 	std::set<LLViewerObject*> selection_set;
 
-	BOOL selection_changed = FALSE;
+	bool selection_changed = false;
 
 	for (LLObjectSelection::iterator iter = getSelection()->begin();
 		 iter != getSelection()->end(); )
@@ -1505,7 +1505,7 @@ void LLSelectMgr::promoteSelectionToRoot()
 
 		if (nodep->mIndividualSelection)
 		{
-			selection_changed = TRUE;
+			selection_changed = true;
 		}
 
 		LLViewerObject* parentp = object;
@@ -3344,7 +3344,7 @@ private:
 
 void LLSelectMgr::getFirst(LLSelectGetFirstTest* test)
 {
-	if (gSavedSettings.getBOOL("EditLinkedParts"))
+	if (gSavedSettings.getbool("EditLinkedParts"))
 	{
 		for (LLObjectSelection::valid_iterator iter = getSelection()->valid_begin();
 			iter != getSelection()->valid_end(); ++iter )
@@ -3645,9 +3645,9 @@ void LLSelectMgr::selectDelete()
 {
 	S32 deleteable_count = 0;
 
-	BOOL locked_but_deleteable_object = FALSE;
-	BOOL no_copy_but_deleteable_object = FALSE;
-	BOOL all_owned_by_you = TRUE;
+	bool locked_but_deleteable_object = false;
+	bool no_copy_but_deleteable_object = false;
+	bool all_owned_by_you = true;
 
 	for (LLObjectSelection::iterator iter = getSelection()->begin();
 		 iter != getSelection()->end(); iter++)
@@ -3664,15 +3664,15 @@ void LLSelectMgr::selectDelete()
 		// Check to see if you can delete objects which are locked.
 		if(!obj->permMove())
 		{
-			locked_but_deleteable_object = TRUE;
+			locked_but_deleteable_object = true;
 		}
 		if(!obj->permCopy())
 		{
-			no_copy_but_deleteable_object = TRUE;
+			no_copy_but_deleteable_object = true;
 		}
 		if(!obj->permYouOwner())
 		{
-			all_owned_by_you = FALSE;
+			all_owned_by_you = false;
 		}
 	}
 
@@ -3804,7 +3804,7 @@ bool LLSelectMgr::selectGetEditMoveLinksetPermissions(bool &move, bool &modify)
 {
     move = true;
     modify = true;
-    bool selecting_linked_set = !gSavedSettings.getBOOL("EditLinkedParts");
+    bool selecting_linked_set = !gSavedSettings.getbool("EditLinkedParts");
 
     for (LLObjectSelection::iterator iter = getSelection()->begin();
         iter != getSelection()->end(); iter++)
@@ -4116,22 +4116,22 @@ struct LLDuplicateOnRayData
 {
 	LLVector3	mRayStartRegion;
 	LLVector3	mRayEndRegion;
-	BOOL		mBypassRaycast;
-	BOOL		mRayEndIsIntersection;
+	bool		mBypassRaycast;
+	bool		mRayEndIsIntersection;
 	LLUUID		mRayTargetID;
-	BOOL		mCopyCenters;
-	BOOL		mCopyRotates;
+	bool		mCopyCenters;
+	bool		mCopyRotates;
 	U32			mFlags;
 };
 
 void LLSelectMgr::selectDuplicateOnRay(const LLVector3 &ray_start_region,
 									   const LLVector3 &ray_end_region,
-									   BOOL bypass_raycast,
-									   BOOL ray_end_is_intersection,
+									   bool bypass_raycast,
+									   bool ray_end_is_intersection,
 									   const LLUUID &ray_target_id,
-									   BOOL copy_centers,
-									   BOOL copy_rotates,
-									   BOOL select_copy)
+									   bool copy_centers,
+									   bool copy_rotates,
+									   bool select_copy)
 {
 	if (mSelectedObjects->isAttachment())
 	{
@@ -4172,7 +4172,7 @@ void LLSelectMgr::packDuplicateOnRayHead(void *user_data)
 	msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID() );
 
 	LLUUID group_id = gAgent.getGroupID();
-	if (gSavedSettings.getBOOL("RezUnderLandGroup"))
+	if (gSavedSettings.getbool("RezUnderLandGroup"))
 	{
 		LLParcel *parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
  		if (gAgent.isInGroup(parcel->getGroupID()))
@@ -4206,7 +4206,7 @@ void LLSelectMgr::sendMultipleUpdate(U32 type)
 {
 	if (type == UPD_NONE) return;
 	// send individual updates when selecting textures or individual objects
-	ESendType send_type = (!gSavedSettings.getBOOL("EditLinkedParts") && !getTEMode()) ? SEND_ONLY_ROOTS : SEND_ROOTS_FIRST;
+	ESendType send_type = (!gSavedSettings.getbool("EditLinkedParts") && !getTEMode()) ? SEND_ONLY_ROOTS : SEND_ROOTS_FIRST;
 	if (send_type == SEND_ONLY_ROOTS)
 	{
 		// tell simulator to apply to whole linked sets
@@ -4355,16 +4355,16 @@ void LLSelectMgr::packBuyObjectIDs(LLSelectNode* node, void* data)
 struct LLPermData
 {
 	U8 mField;
-	BOOL mSet;
+	bool mSet;
 	U32 mMask;
-	BOOL mOverride;
+	bool mOverride;
 };
 
 // TODO: Make this able to fail elegantly.
 void LLSelectMgr::selectionSetObjectPermissions(U8 field,
-									   BOOL set,
+									   bool set,
 									   U32 mask,
-									   BOOL override)
+									   bool override)
 {
 	LLPermData data;
 
@@ -4492,7 +4492,7 @@ void LLSelectMgr::deselectAllIfTooFar()
 	}
 
 	LLVector3d selectionCenter = getSelectionCenterGlobal();
-	if (gSavedSettings.getBOOL("LimitSelectDistance")
+	if (gSavedSettings.getbool("LimitSelectDistance")
 		&& (!mSelectedObjects->getPrimaryObject() || !mSelectedObjects->getPrimaryObject()->isAvatar())
 		&& (mSelectedObjects->getPrimaryObject() != LLViewerMediaFocus::getInstance()->getFocusedObject())
 		&& !mSelectedObjects->isAttachment()
@@ -4627,7 +4627,7 @@ void LLSelectMgr::sendAttach(LLObjectSelectionHandle selection_handle, U8 attach
 		return;
 	}
 
-	BOOL build_mode = LLToolMgr::getInstance()->inEdit();
+	bool build_mode = LLToolMgr::getInstance()->inEdit();
 	// Special case: Attach to default location for this object.
 	if (0 == attachment_point ||
 		get_if_there(gAgentAvatarp->mAttachmentPoints, (S32)attachment_point, (LLViewerJointAttachment*)NULL))
@@ -4944,9 +4944,9 @@ void LLSelectMgr::saveSelectedObjectTransform(EActionType action_type)
 
 struct LLSelectMgrApplyFlags : public LLSelectedObjectFunctor
 {
-	LLSelectMgrApplyFlags(U32 flags, BOOL state) : mFlags(flags), mState(state) {}
+	LLSelectMgrApplyFlags(U32 flags, bool state) : mFlags(flags), mState(state) {}
 	U32 mFlags;
-	BOOL mState;
+	bool mState;
 	virtual bool apply(LLViewerObject* object)
 	{
 		if ( object->permModify())
@@ -5037,7 +5037,7 @@ void LLSelectMgr::packDuplicateHeader(void* data)
 {
 	LLUUID group_id(gAgent.getGroupID());
 
-	if (gSavedSettings.getBOOL("RezUnderLandGroup"))
+	if (gSavedSettings.getbool("RezUnderLandGroup"))
 	{
 		LLParcel *parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
  		if (gAgent.isInGroup(parcel->getGroupID()))
@@ -5062,7 +5062,7 @@ void LLSelectMgr::packDuplicateHeader(void* data)
 // static
 void LLSelectMgr::packDeleteHeader(void* userdata)
 {
-	BOOL force = (BOOL)(intptr_t)userdata;
+	bool force = (intptr_t)userdata;
 
 	gMessageSystem->nextBlockFast(_PREHASH_AgentData);
 	gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgent.getID() );
@@ -5279,7 +5279,7 @@ void LLSelectMgr::sendListToRegions(LLObjectSelectionHandle selected_handle,
 		{
 			if (node->getObject())
 			{
-				BOOL is_root = node->getObject()->isRootEdit();
+				bool is_root = node->getObject()->isRootEdit();
 				if ((mRoots && is_root) || (!mRoots && !is_root))
 				{
 					nodes_to_send.push(node);
@@ -5289,8 +5289,8 @@ void LLSelectMgr::sendListToRegions(LLObjectSelectionHandle selected_handle,
 		}
 	};
 	struct push_all  pushall(nodes_to_send);
-	struct push_some pushroots(nodes_to_send, TRUE);
-	struct push_some pushnonroots(nodes_to_send, FALSE);
+	struct push_some pushroots(nodes_to_send, true);
+	struct push_some pushnonroots(nodes_to_send, false);
 	
 	switch(send_type)
 	{
@@ -5550,8 +5550,8 @@ void LLSelectMgr::processObjectProperties(LLMessageSystem* msg, void** user_data
 			// save texture data as soon as we get texture perms first time
 			if (!node->mValid)
 			{
-				BOOL can_copy = FALSE;
-				BOOL can_transfer = FALSE;
+				bool can_copy = false;
+				bool can_transfer = false;
 
 				LLAggregatePermissions::EValue value = LLAggregatePermissions::AP_NONE;
 				if(node->getObject()->permYouOwner())
@@ -5559,12 +5559,12 @@ void LLSelectMgr::processObjectProperties(LLMessageSystem* msg, void** user_data
 					value = ag_texture_perms_owner.getValue(PERM_COPY);
 					if (value == LLAggregatePermissions::AP_EMPTY || value == LLAggregatePermissions::AP_ALL)
 					{
-						can_copy = TRUE;
+						can_copy = true;
 					}
 					value = ag_texture_perms_owner.getValue(PERM_TRANSFER);
 					if (value == LLAggregatePermissions::AP_EMPTY || value == LLAggregatePermissions::AP_ALL)
 					{
-						can_transfer = TRUE;
+						can_transfer = true;
 					}
 				}
 				else
@@ -5572,12 +5572,12 @@ void LLSelectMgr::processObjectProperties(LLMessageSystem* msg, void** user_data
 					value = ag_texture_perms.getValue(PERM_COPY);
 					if (value == LLAggregatePermissions::AP_EMPTY || value == LLAggregatePermissions::AP_ALL)
 					{
-						can_copy = TRUE;
+						can_copy = true;
 					}
 					value = ag_texture_perms.getValue(PERM_TRANSFER);
 					if (value == LLAggregatePermissions::AP_EMPTY || value == LLAggregatePermissions::AP_ALL)
 					{
-						can_transfer = TRUE;
+						can_transfer = true;
 					}
 				}
 
@@ -5780,7 +5780,7 @@ void LLSelectMgr::updateSilhouettes()
 		// persists from frame to frame to avoid regenerating object silhouettes
 		// mHighlightedObjects includes all siblings of rect selected objects
 
-		BOOL select_linked_set = !gSavedSettings.getBOOL("EditLinkedParts");
+		bool select_linked_set = !gSavedSettings.getbool("EditLinkedParts");
 
 		// generate list of roots from current object selection
 		for (std::set<LLPointer<LLViewerObject> >::iterator iter = mRectSelectedObjects.begin();
@@ -5902,8 +5902,8 @@ void LLSelectMgr::updateSilhouettes()
 					continue;
 				
 				// do roots first, then children so that root flags are cleared ASAP
-				BOOL roots_only = (pass == 0);
-				BOOL is_root = objectp->isRootEdit();
+				bool roots_only = (pass == 0);
+				bool is_root = objectp->isRootEdit();
 				if (roots_only != is_root)
 				{
 					continue;
@@ -5977,8 +5977,8 @@ void LLSelectMgr::updateSelectionSilhouette(LLObjectSelectionHandle object_handl
 				if (!objectp)
 					continue;
 				// do roots first, then children so that root flags are cleared ASAP
-				BOOL roots_only = (pass == 0);
-				BOOL is_root = (objectp->isRootEdit());
+				bool roots_only = (pass == 0);
+				bool is_root = (objectp->isRootEdit());
 				if (roots_only != is_root || objectp->mDrawable.isNull())
 				{
 					continue;
@@ -6008,7 +6008,7 @@ void LLSelectMgr::updateSelectionSilhouette(LLObjectSelectionHandle object_handl
 		}
 	}
 }
-void LLSelectMgr::renderSilhouettes(BOOL for_hud)
+void LLSelectMgr::renderSilhouettes(bool for_hud)
 {
 	if (!mRenderSilhouettes || !mRenderHighlightSelections)
 	{
@@ -6064,7 +6064,7 @@ void LLSelectMgr::renderSilhouettes(BOOL for_hud)
 		gGL.matrixMode(LLRender::MM_MODELVIEW);
 		gGL.pushMatrix();
 
-		BOOL is_hud_object = objectp->isHUDAttachment();
+		bool is_hud_object = objectp->isHUDAttachment();
 
 		if (!is_hud_object)
 		{
@@ -6184,8 +6184,8 @@ void LLSelectMgr::renderSilhouettes(BOOL for_hud)
                     }
                     else if (node->isTransient())
                     {
-                        BOOL oldHidden = LLSelectMgr::sRenderHiddenSelections;
-                        LLSelectMgr::sRenderHiddenSelections = FALSE;
+                        bool oldHidden = LLSelectMgr::sRenderHiddenSelections;
+                        LLSelectMgr::sRenderHiddenSelections = false;
                         node->renderOneSilhouette(sContextSilhouetteColor);
                         LLSelectMgr::sRenderHiddenSelections = oldHidden;
                     }
@@ -6205,7 +6205,7 @@ void LLSelectMgr::renderSilhouettes(BOOL for_hud)
 	if (mHighlightedObjects->getNumNodes())
 	{
 		// render silhouettes for highlighted objects
-		BOOL subtracting_from_selection = (gKeyboard->currentMask(TRUE) == MASK_CONTROL);
+		bool subtracting_from_selection = (gKeyboard->currentMask(TRUE) == MASK_CONTROL);
 		for (S32 pass = 0; pass < 2; pass++)
 		{
 			for (LLObjectSelection::iterator iter = mHighlightedObjects->begin();
@@ -6502,7 +6502,7 @@ void LLSelectNode::saveTextureScaleRatios(LLRender::eTexIndex index_to_query)
 bool LLSelectNode::allowOperationOnNode(PermissionBit op, U64 group_proxy_power) const
 {
 	// Extract ownership.
-	BOOL object_is_group_owned = FALSE;
+	BOOL object_is_group_owned = FALSE;  //BOOL used as S32?
 	LLUUID object_owner_id;
 	mPermissions->getOwnership(object_owner_id, object_is_group_owned);
 
@@ -6621,7 +6621,7 @@ void LLSelectNode::renderOneSilhouette(const LLColor4 &color)
 		return;
 	}
 
-	BOOL is_hud_object = objectp->isHUDAttachment();
+	bool is_hud_object = objectp->isHUDAttachment();
 	
 	if (mSilhouetteVertices.size() == 0 || mSilhouetteNormals.size() != mSilhouetteVertices.size())
 	{
@@ -7055,7 +7055,7 @@ bool LLSelectMgr::canUndo() const
 //-----------------------------------------------------------------------------
 void LLSelectMgr::undo()
 {
-	BOOL select_linked_set = !gSavedSettings.getBOOL("EditLinkedParts");
+	bool select_linked_set = !gSavedSettings.getbool("EditLinkedParts");
 	LLUUID group_id(gAgent.getGroupID());
 	sendListToRegions("Undo", packAgentAndSessionAndGroupID, packObjectID, logNoOp, &group_id, select_linked_set ? SEND_ONLY_ROOTS : SEND_CHILDREN_FIRST);
 }
@@ -7073,7 +7073,7 @@ bool LLSelectMgr::canRedo() const
 //-----------------------------------------------------------------------------
 void LLSelectMgr::redo()
 {
-	BOOL select_linked_set = !gSavedSettings.getBOOL("EditLinkedParts");
+	bool select_linked_set = !gSavedSettings.getbool("EditLinkedParts");
 	LLUUID group_id(gAgent.getGroupID());
 	sendListToRegions("Redo", packAgentAndSessionAndGroupID, packObjectID, logNoOp, &group_id, select_linked_set ? SEND_ONLY_ROOTS : SEND_CHILDREN_FIRST);
 }
@@ -7191,8 +7191,8 @@ bool LLSelectMgr::canSelectObject(LLViewerObject* object, bool ignore_select_own
 
 	if(!ignore_select_owned)
 	{
-	if ((gSavedSettings.getBOOL("SelectOwnedOnly") && !object->permYouOwner()) ||
-		(gSavedSettings.getBOOL("SelectMovableOnly") && (!object->permMove() ||  object->isPermanentEnforced())))
+	if ((gSavedSettings.getbool("SelectOwnedOnly") && !object->permYouOwner()) ||
+		(gSavedSettings.getbool("SelectMovableOnly") && (!object->permMove() ||  object->isPermanentEnforced())))
 	{
 		// only select my own objects
 			return false;
@@ -7815,8 +7815,8 @@ bool LLObjectSelection::contains(LLViewerObject* object, S32 te)
 	}
 }
 
-// returns TRUE is any node is currenly worn as an attachment
-BOOL LLObjectSelection::isAttachment()
+// returns true is any node is currenly worn as an attachment
+bool LLObjectSelection::isAttachment()
 {
 	return (mSelectType == SELECT_TYPE_ATTACHMENT || mSelectType == SELECT_TYPE_HUD);
 }
@@ -8039,7 +8039,7 @@ bool LLSelectMgr::selectionMove(const LLVector3& displ,
 	bool update_success = true;
 	bool update_position = update_type & UPD_POSITION;
 	bool update_rotation = update_type & UPD_ROTATION;
-	const bool noedit_linked_parts = !gSavedSettings.getBOOL("EditLinkedParts");
+	const bool noedit_linked_parts = !gSavedSettings.getbool("EditLinkedParts");
 	
 	if (update_position)
 	{
@@ -8172,7 +8172,7 @@ void LLSelectMgr::sendSelectionMove()
 	S32 objects_in_this_packet = 0;
 
 	// apply to linked objects if unable to select their individual parts 
-	if (!gSavedSettings.getBOOL("EditLinkedParts") && !getTEMode())
+	if (!gSavedSettings.getbool("EditLinkedParts") && !getTEMode())
 	{
 		// tell simulator to apply to whole linked sets
 		update_type |= UPD_LINKED_SETS;

@@ -249,7 +249,7 @@ BOOL LLToolPlacer::addObject( LLPCode pcode, S32 x, S32 y, U8 use_physics )
 	gMessageSystem->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
 
 	LLUUID group_id = gAgent.getGroupID();
-	if (gSavedSettings.getBOOL("RezUnderLandGroup"))
+	if (gSavedSettings.getbool("RezUnderLandGroup"))
 	{
 		LLParcel *parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
  		if (gAgent.isInGroup(parcel->getGroupID()))
@@ -510,11 +510,11 @@ BOOL LLToolPlacer::addDuplicate(S32 x, S32 y)
 	LLSelectMgr::getInstance()->selectDuplicateOnRay(ray_start_region,
 										ray_end_region,
 										b_hit_land,			// suppress raycast
-										FALSE,				// intersection
+										false,				// intersection
 										ray_target_id,
-										gSavedSettings.getBOOL("CreateToolCopyCenters"),
-										gSavedSettings.getBOOL("CreateToolCopyRotates"),
-										FALSE);				// select copy
+										gSavedSettings.getbool("CreateToolCopyCenters"),
+										gSavedSettings.getbool("CreateToolCopyRotates"),
+										false);				// select copy
 
 	if (regionp
 		&& (regionp->getRegionFlag(REGION_FLAGS_SANDBOX)))

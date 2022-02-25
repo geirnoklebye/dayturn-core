@@ -344,7 +344,7 @@ BOOL LLManipScale::handleMouseDownOnPart( S32 x, S32 y, MASK mask )
 	highlightManipulators(x, y);
 	S32 hit_part = mHighlightedPart;
 
-	LLSelectMgr::getInstance()->enableSilhouette(FALSE);
+	LLSelectMgr::getInstance()->enableSilhouette(false);
 	mManipPart = (EManipPart)hit_part;
 
 	LLBBox bbox = LLSelectMgr::getInstance()->getBBoxOfSelection();
@@ -396,7 +396,7 @@ BOOL LLManipScale::handleMouseUp(S32 x, S32 y, MASK mask)
 		//send texture update
 		LLSelectMgr::getInstance()->adjustTexturesByScale(true, getStretchTextures());
 
-		LLSelectMgr::getInstance()->enableSilhouette(TRUE);
+		LLSelectMgr::getInstance()->enableSilhouette(true);
 		mManipPart = LL_NO_PART;
 
 		// Might have missed last update due to UPDATE_DELAY timing
