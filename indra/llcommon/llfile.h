@@ -80,8 +80,10 @@ public:
 	static	int		stat(const std::string&	filename,llstat*	file_status);
 	static	bool	isdir(const std::string&	filename);
 	static	bool	isfile(const std::string&	filename);
+#if LL_WINDOWS
 	static	LLFILE *	_Fiopen(const std::string& filename, 
 			std::ios::openmode mode);
+#endif
 
 	static  const char * tmpdir();
 };
