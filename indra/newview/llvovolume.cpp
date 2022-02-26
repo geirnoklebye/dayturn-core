@@ -4056,7 +4056,7 @@ BOOL LLVOVolume::isAttachment() const
 	return mAttachmentState != 0 ;
 }
 
-BOOL LLVOVolume::isHUDAttachment() const
+bool LLVOVolume::isHUDAttachment() const
 {
 	// *NOTE: we assume hud attachment points are in defined range
 	// since this range is constant for backwards compatibility

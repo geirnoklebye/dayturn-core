@@ -178,7 +178,7 @@ public:
 	const std::string& getAttachmentItemName() const;
 
 	virtual LLVOAvatar* getAvatar() const;  //get the avatar this object is attached to, or NULL if object is not an attachment
-	virtual BOOL	isHUDAttachment() const { return FALSE; }
+	virtual bool	isHUDAttachment() const { return false; }
 	virtual BOOL	isTempAttachment() const;
 
 	virtual BOOL isHiglightedOrBeacon() const;
