@@ -71,7 +71,7 @@ bool LLFloaterEditWater::postBuild()
 	mMakeDefaultCheckBox = getChild<LLCheckBoxCtrl>("make_default_cb");
 	mSaveButton = getChild<LLButton>("save");
 
-    mWaterAdapter = boost::make_shared<LLWatterSettingsAdapter>();
+    mWaterAdapter = std::make_shared<LLWatterSettingsAdapter>();
 
     LLEnvironment::instance().setWaterListChange(boost::bind(&LLFloaterEditWater::onWaterPresetListChange, this));
 

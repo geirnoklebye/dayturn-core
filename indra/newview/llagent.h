@@ -63,7 +63,7 @@ class LLTeleportRequest;
 
 
 
-typedef boost::shared_ptr<LLTeleportRequest> LLTeleportRequestPtr;
+typedef std::shared_ptr<LLTeleportRequest> LLTeleportRequestPtr;
 
 //--------------------------------------------------------------------
 // Types
@@ -130,7 +130,7 @@ public:
 private:
 	BOOL			mInitialized;
 	BOOL			mFirstLogin;
-	boost::shared_ptr<LLAgentListener> mListener;
+	std::shared_ptr<LLAgentListener> mListener;
 
 	//--------------------------------------------------------------------
 	// Session

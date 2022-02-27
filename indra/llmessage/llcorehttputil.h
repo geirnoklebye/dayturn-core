@@ -326,8 +326,8 @@ public:
     static const std::string HTTP_RESULTS_CONTENT;
     static const std::string HTTP_RESULTS_RAW;
 
-    typedef boost::shared_ptr<HttpCoroutineAdapter> ptr_t;
-    typedef boost::weak_ptr<HttpCoroutineAdapter>   wptr_t;
+    typedef std::shared_ptr<HttpCoroutineAdapter> ptr_t;
+    typedef std::weak_ptr<HttpCoroutineAdapter>   wptr_t;
 
     HttpCoroutineAdapter(const std::string &name, LLCore::HttpRequest::policy_t policyId,
         LLCore::HttpRequest::priority_t priority = 0L);

@@ -631,7 +631,7 @@ namespace LLInitParam
 		UserData*			mUserData;
 	};
 
-	typedef boost::shared_ptr<ParamDescriptor> ParamDescriptorPtr;
+	typedef std::shared_ptr<ParamDescriptor> ParamDescriptorPtr;
 
 	// each derived Block class keeps a static data structure maintaining offsets to various params
 	class LL_COMMON_API BlockDescriptor
