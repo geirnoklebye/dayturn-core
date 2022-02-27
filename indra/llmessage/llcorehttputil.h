@@ -272,8 +272,8 @@ class HttpCoroHandler : public LLCore::HttpHandler
 {
 public:
 
-    typedef boost::shared_ptr<HttpCoroHandler>  ptr_t;
-    typedef boost::weak_ptr<HttpCoroHandler>    wptr_t;
+    typedef std::shared_ptr<HttpCoroHandler>  ptr_t;
+    typedef std::weak_ptr<HttpCoroHandler>    wptr_t;
 
     HttpCoroHandler(LLEventStream &reply);
 

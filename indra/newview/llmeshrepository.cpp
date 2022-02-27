@@ -572,10 +572,10 @@ S32 LLMeshRepoThread::sRequestWaterLevel = 0;
 //   LLMeshUploadThread
 
 class LLMeshHandlerBase : public LLCore::HttpHandler,
-    public boost::enable_shared_from_this<LLMeshHandlerBase>
+    public std::enable_shared_from_this<LLMeshHandlerBase>
 {
 public:
-    typedef boost::shared_ptr<LLMeshHandlerBase> ptr_t;
+    typedef std::shared_ptr<LLMeshHandlerBase> ptr_t;
 
 	LOG_CLASS(LLMeshHandlerBase);
 	LLMeshHandlerBase(U32 offset, U32 requested_bytes)
