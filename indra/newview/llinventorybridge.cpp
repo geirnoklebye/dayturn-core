@@ -88,8 +88,6 @@
 
 #include "llenvironment.h"
 
-#include <boost/shared_ptr.hpp>
-
 void copy_slurl_to_clipboard_callback_inv(const std::string& slurl);
 
 typedef std::pair<LLUUID, LLUUID> two_uuids_t;

@@ -57,7 +57,6 @@ static const auto& nil(nil_);
 #endif
 
 #include <string>
-#include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 #include <boost/iterator/transform_iterator.hpp>

@@ -28,8 +28,6 @@
 
 #include "llfloatereditwater.h"
 
-#include <boost/make_shared.hpp>
-
 // libs
 #include "llbutton.h"
 #include "llcheckboxctrl.h"
