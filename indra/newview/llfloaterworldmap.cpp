@@ -83,7 +83,6 @@
 //---------------------------------------------------------------------------
 // Constants
 //---------------------------------------------------------------------------
-static const F32 MAP_ZOOM_TIME = 0.2f;
 
 // Merov: we switched from using the "world size" (which varies depending where the user went) to a fixed
 // width of 512 regions max visible at a time. This makes the zoom slider works in a consistent way across
@@ -351,14 +350,12 @@ bool LLFloaterWorldMap::postBuild()
 	landmark_combo->setTextChangedCallback( boost::bind(&LLFloaterWorldMap::onComboTextEntry, this) );
 	mListLandmarkCombo = dynamic_cast<LLCtrlListInterface *>(landmark_combo);
 	
-	mCurZoomVal = log(LLWorldMapView::sMapScale/256.f)/log(2.f);
-	getChild<LLUICtrl>("zoom slider")->setValue(mCurZoomVal);
+    F32 slider_zoom = LLWorldMapView::getZoom();
+    getChild<LLUICtrl>("zoom slider")->setValue(slider_zoom);
 
     getChild<LLPanel>("expand_btn_panel")->setMouseDownCallback(boost::bind(&LLFloaterWorldMap::onExpandCollapseBtn, this));
 	
 	setDefaultBtn(NULL);
-	
-	mZoomTimer.stop();
 	
 	onChangeMaturity();
 	
@@ -472,18 +469,21 @@ bool LLFloaterWorldMap::handleHover(S32 x, S32 y, MASK mask)
 
 bool LLFloaterWorldMap::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
-	if (!isMinimized() && isFrontmost())
-	{
-		if(mPanel->pointInView(x, y))
-		{
-			F32 slider_value = (F32)getChild<LLUICtrl>("zoom slider")->getValue().asReal();
-			slider_value += ((F32)clicks * -0.3333f);
-			getChild<LLUICtrl>("zoom slider")->setValue(LLSD(slider_value));
-			return true;
-		}
-	}
-	
-	return LLFloater::handleScrollWheel(x, y, clicks);
+    if (!isMinimized() && isFrontmost())
+    {
+        if (mPanel->pointInView(x, y))
+        {
+            F32 old_slider_zoom = (F32)getChild<LLUICtrl>("zoom slider")->getValue().asReal();
+            F32 slider_zoom = old_slider_zoom + ((F32)clicks * -0.3333f);
+            getChild<LLUICtrl>("zoom slider")->setValue(LLSD(slider_zoom));
+            S32 map_x = x - mPanel->getRect().mLeft;
+            S32 map_y = y - mPanel->getRect().mBottom;
+            LLWorldMapView::zoomWithPivot(slider_zoom, map_x, map_y);
+            return true;
+        }
+    }
+    
+    return LLFloater::handleScrollWheel(x, y, clicks);
 }
 
 
@@ -610,47 +610,20 @@ void LLFloaterWorldMap::draw()
 
 	setMouseOpaque(true);
 	getDragHandle()->setMouseOpaque(true);
-	
-	//RN: snaps to zoom value because interpolation caused jitter in the text rendering
-	// <FS:Ansariel> Performance improvement
-	//if (!mZoomTimer.getStarted() && mCurZoomVal != (F32)getChild<LLUICtrl>("zoom slider")->getValue().asReal())
-	if (!mZoomTimer.getStarted() && mCurZoomVal != (F32)zoom_slider->getValue().asReal())
-	// </FS:Ansariel> Performance improvement
-	{
-		mZoomTimer.start();
-	}
-	F32 interp = mZoomTimer.getElapsedTimeF32() / MAP_ZOOM_TIME;
-	if (interp > 1.f)
-	{
-		interp = 1.f;
-		mZoomTimer.stop();
-	}
-	// <FS:Ansariel> Performance improvement
-	//mCurZoomVal = lerp(mCurZoomVal, (F32)getChild<LLUICtrl>("zoom slider")->getValue().asReal(), interp);
-	mCurZoomVal = lerp(mCurZoomVal, (F32)zoom_slider->getValue().asReal(), interp);
-	// </FS:Ansariel> Performance improvement
-	F32 map_scale = 256.f*pow(2.f, mCurZoomVal);
-	LLWorldMapView::setScale( map_scale );
+
+    LLWorldMapView::zoom((F32)getChild<LLUICtrl>("zoom slider")->getValue().asReal());
 	
 	// Enable/disable checkboxes depending on the zoom level
 	// If above threshold level (i.e. low res) -> Disable all checkboxes
 	// If under threshold level (i.e. high res) -> Enable all checkboxes
 	bool enable = LLWorldMapView::showRegionInfo();
-	// <FS:Ansariel> Performance improvement
-	//getChildView("people_chk")->setEnabled(enable);
-	//getChildView("infohub_chk")->setEnabled(enable);
-	//getChildView("telehub_chk")->setEnabled(enable); // <FS:Ansariel> Does not exist as of 12-02-2014!
-	//getChildView("land_for_sale_chk")->setEnabled(enable);
-	//getChildView("event_chk")->setEnabled(enable);
-	//getChildView("events_mature_chk")->setEnabled(enable);
-	//getChildView("events_adult_chk")->setEnabled(enable);
-	people_chk->setEnabled(enable);
-	infohub_chk->setEnabled(enable);
-	land_for_sale_chk->setEnabled(enable);
-	event_chk->setEnabled(enable);
-	events_mature_chk->setEnabled(enable);
-	events_adult_chk->setEnabled(enable);
-	// </FS:Ansariel> Performance improvement
+	getChildView("people_chk")->setEnabled(enable);
+	getChildView("infohub_chk")->setEnabled(enable);
+	getChildView("telehub_chk")->setEnabled(enable);
+	getChildView("land_for_sale_chk")->setEnabled(enable);
+	getChildView("event_chk")->setEnabled(enable);
+	getChildView("events_mature_chk")->setEnabled(enable);
+	getChildView("events_adult_chk")->setEnabled(enable);
 	
 	LLFloater::draw();
 }
@@ -1636,9 +1609,10 @@ void LLFloaterWorldMap::centerOnTarget(bool animate)
 		pos_global.clearVec();
 	}
 	
-	LLWorldMapView::setPan( -llfloor((F32)(pos_global.mdV[VX] * (F64)LLWorldMapView::sMapScale / REGION_WIDTH_METERS)), 
-						   -llfloor((F32)(pos_global.mdV[VY] * (F64)LLWorldMapView::sMapScale / REGION_WIDTH_METERS)),
-						   !animate);
+    F64 map_scale = (F64)LLWorldMapView::getScale();
+	LLWorldMapView::setPan( -llfloor((F32)(pos_global.mdV[VX] * map_scale / REGION_WIDTH_METERS)), 
+                           -llfloor((F32)(pos_global.mdV[VY] * map_scale / REGION_WIDTH_METERS)),
+                           !animate);
 	mWaitingForTracker = false;
 }
 

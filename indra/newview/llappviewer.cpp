@@ -563,7 +563,7 @@ static void settings_to_globals()
 
 	gDebugWindowProc = gSavedSettings.getBOOL("DebugWindowProc");
 	gShowObjectUpdates = gSavedSettings.getbool("ShowObjectUpdates");
-	LLWorldMapView::sMapScale = gSavedSettings.getF32("MapScale");
+    LLWorldMapView::setScale(gSavedSettings.getF32("MapScale"));
 	
 #if LL_DARWIN
 	gRetinaSupport = gSavedSettings.getbool("RenderRetina");
@@ -3742,7 +3742,7 @@ void LLAppViewer::cleanupSavedSettings()
 		}
 	}
 
-	gSavedSettings.setF32("MapScale", LLWorldMapView::sMapScale );
+    gSavedSettings.setF32("MapScale", LLWorldMapView::getScale());
 
 	// Some things are cached in LLAgent.
 	if (gAgent.isInitialized())
