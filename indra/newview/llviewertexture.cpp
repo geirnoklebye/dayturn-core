@@ -844,12 +844,12 @@ void LLViewerTexture::forceImmediateUpdate()
 {
 }
 
-void LLViewerTexture::addTextureStats(F32 virtual_size, BOOL needs_gltexture) const 
+void LLViewerTexture::addTextureStats(F32 virtual_size, bool needs_gltexture) const 
 {
     LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if(needs_gltexture)
 	{
-		mNeedsGLTexture = TRUE;
+		mNeedsGLTexture = true;
 	}
 
 	virtual_size *= sTexelPixelRatio;

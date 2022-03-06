@@ -145,7 +145,7 @@ public:
 	void setTextureListType(S32 tex_type) { mTextureListType = tex_type; }
 	S32 getTextureListType() { return mTextureListType; }
 
-	void addTextureStats(F32 virtual_size, BOOL needs_gltexture = TRUE) const;
+	void addTextureStats(F32 virtual_size, bool needs_gltexture = true) const;
 	void resetTextureStats();	
 	void setMaxVirtualSizeResetInterval(S32 interval)const {mMaxVirtualSizeResetInterval = interval;}
 	void resetMaxVirtualSizeResetCounter()const {mMaxVirtualSizeResetCounter = mMaxVirtualSizeResetInterval;}

@@ -192,7 +192,7 @@ void LLViewerTextureList::doPreloadImages()
 	memset(img_blak_square_tex->getData(), 0, img_blak_square_tex->getDataSize());
 	LLPointer<LLViewerFetchedTexture> img_blak_square(new LLViewerFetchedTexture(img_blak_square_tex, FTT_DEFAULT, FALSE));
 	gBlackSquareID = img_blak_square->getID();
-	img_blak_square->setUnremovable(TRUE);
+	img_blak_square->setUnremovable(true);
 	addImage(img_blak_square, TEX_LIST_STANDARD);
 }
 

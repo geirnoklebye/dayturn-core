@@ -195,7 +195,7 @@ protected:
 	bool mUseMipMaps;
 	S8  mComponents;
 	U32 mTexelsPerImage;			// Texels per image.
-	mutable S8  mNeedsGLTexture;
+	mutable bool  mNeedsGLTexture;
 
 	//GL texture
 	LLPointer<LLImageGL> mGLTexturep ;
