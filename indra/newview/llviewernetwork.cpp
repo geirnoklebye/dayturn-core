@@ -6,6 +6,7 @@
  * $LicenseInfo:firstyear=2006&license=viewerlgpl$
  * Second Life Viewer Source Code
  * Copyright (C) 2010, Linden Research, Inc.
+ * With modifications Copyright (C) 2012, arminweatherwax@lavabit.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -571,30 +572,6 @@ void LLGridManager::getLoginIdentifierTypes(LLSD& idTypes)
 std::string LLGridManager::getGridLoginID()
 {
 	return mGridList[mGrid][GRID_ID_VALUE];
-}
-
-std::string LLGridManager::getUpdateServiceURL()
-{
-	std::string update_url_base = gSavedSettings.getString("CmdLineUpdateService");;
-	if ( !update_url_base.empty() )
-	{
-		LL_INFOS("UpdaterService","GridManager")
-			<< "Update URL base overridden from command line: " << update_url_base
-			<< LL_ENDL;
-	}
-	else if ( mGridList[mGrid].has(GRID_UPDATE_SERVICE_URL) )
-	{
-		update_url_base = mGridList[mGrid][GRID_UPDATE_SERVICE_URL].asString();
-	}
-	else
-	{
-		LL_WARNS("UpdaterService","GridManager")
-			<< "The grid property '" << GRID_UPDATE_SERVICE_URL
-			<< "' is not defined for the grid '" << mGrid << "'"
-			<< LL_ENDL;
-	}
-			
-	return update_url_base;
 }
 
 void LLGridManager::updateIsInProductionGrid()

@@ -138,16 +138,6 @@ public:
 	* I am not sure which is which
 	*/
 
-	//@}
-	/* ================================================================
-	* @name Update Related Properties
-	* @{
-	*/
-	/// Get the update service URL base (host and path) for the selected grid
-	std::string getUpdateServiceURL();
-
-	//@}
-
 	/* ================================================================
 	* @name URL Construction Properties
 	* @{
