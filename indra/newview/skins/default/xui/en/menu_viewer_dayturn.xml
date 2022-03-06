@@ -698,6 +698,14 @@
           function="Floater.Toggle"
           parameter="sound_explorer" />
     </menu_item_check>
+    <menu_item_call
+        label="Animation Explorer"
+        name="Animation Explorer">
+        <menu_item_call.on_click
+          function="Floater.Toggle"
+          parameter="animation_explorer" />
+    </menu_item_call>	
+    
     <menu_item_separator/>    
     <menu_item_call
      label="Place profile"
@@ -822,7 +830,8 @@
          tear_off="false">
             <menu_item_check
              label="Sunrise"
-             name="Sunrise">
+             name="Sunrise"
+             shortcut="control|shift|O">
                 <menu_item_check.on_click
                  function="World.EnvSettings"
                  parameter="sunrise" />
@@ -854,7 +863,8 @@
             </menu_item_check>
             <menu_item_check
              label="Midnight"
-             name="Midnight">
+             name="Midnight"
+             shortcut="control|shift|Z">
                 <menu_item_check.on_click
                  function="World.EnvSettings"
                  parameter="midnight" />
@@ -875,121 +885,37 @@
             </menu_item_check>
         </menu>
 
-
-    <menu
-     create_jump_keys="true"
-     label="Environment Editor"
-     name="Environment Editor"
-     tear_off="false">
-
-      <menu_item_call
-       label="Environment Settings..."
-       name="Environment Settings">
-        <menu_item_call.on_click
-         function="World.EnvSettings"
-               parameter="editor"/>
-      </menu_item_call>
-
-      <menu_item_separator/>
-
-      <menu
-       label="Water Presets"
-       name="Water Presets">
-        <menu_item_call
-         label="New preset..."
-         name="new_water_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="new_water"/>
-        </menu_item_call>
-        <menu_item_call
-         label="Edit preset..."
-         name="edit_water_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="edit_water"/>
-        </menu_item_call>
-        <menu_item_call
-         label="Delete preset..."
-         name="delete_water_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="delete_water"/>
-          <menu_item_call.on_enable
-          function="World.EnableEnvPreset"
-          parameter="delete_water"/>
-        </menu_item_call>
-      </menu>
-
-      <menu
-       label="Sky Presets"
-       name="Sky Presets">
-        <menu_item_call
-         label="New preset..."
-         name="new_sky_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="new_sky"/>
-        </menu_item_call>
-        <menu_item_call
-         label="Edit preset..."
-         name="edit_sky_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="edit_sky"/>
-        </menu_item_call>
-        <menu_item_call
-         label="Delete preset..."
-         name="delete_sky_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="delete_sky"/>
-          <menu_item_call.on_enable
-          function="World.EnableEnvPreset"
-          parameter="delete_sky"/>
-        </menu_item_call>
-      </menu>
-
-      <menu
-       label="Day Presets"
-       name="Day Presets">
-        <menu_item_call
-         label="New preset..."
-         name="new_day_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="new_day_cycle"/>
-        </menu_item_call>
-        <menu_item_call
-         label="Edit preset..."
-         name="edit_day_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="edit_day_cycle"/>
-        </menu_item_call>
-        <menu_item_call
-         label="Delete preset..."
-         name="delete_day_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="delete_day_cycle"/>
-          <menu_item_call.on_enable
-          function="World.EnableEnvPreset"
-          parameter="delete_day_cycle"/>
-        </menu_item_call>
-      </menu>
-    </menu>
-    
-    <menu_item_check
-         label="LightShare"
-         name="Toggle LightShare On or Off">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="EnableLightShare" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="EnableLightShare" />
-    </menu_item_check>
+        <menu
+         create_jump_keys="true"
+         label="Environment"
+         name="Environment"
+         tear_off="false">
+	     	<menu_item_call
+	     	 label="My Environments..."
+	     	 name="my_environs">
+	     	 	<menu_item_call.on_click
+	     	 	 function="World.EnvSettings"
+                 parameter="my_environs" />
+	     	</menu_item_call>
+            <menu_item_call
+	     	 	 label="Personal Lighting..."
+	     	 	 name="adjustment_tool">
+	     	 	 	<menu_item_call.on_click
+	     	 	 	function="World.EnvSettings"
+	     	 	 	parameter="adjust_tool" />
+	     	 	</menu_item_call>
+	     	 	<menu_item_separator/>
+	     	 	 <menu_item_check
+	     	 	 label="Pause Clouds"
+	     	 	 name="pause_clouds">
+	     	 	 	<menu_item_check.on_click
+	     	 	 	function="World.EnvSettings"
+	     	 	 	parameter="pause_clouds" />
+	     	 	 	<menu_item_check.on_check
+	     	 	 	function="World.EnableEnvSettings" 
+	     	 	 	parameter="pause_clouds" />
+	     	 	</menu_item_check>
+	     	</menu>
   </menu>
 <!-- END OF WORLD MENU -->   
 
