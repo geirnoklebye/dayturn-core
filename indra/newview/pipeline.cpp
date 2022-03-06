@@ -225,7 +225,7 @@ const U32 DEFERRED_VB_MASK = LLVertexBuffer::MAP_VERTEX | LLVertexBuffer::MAP_TE
 
 extern S32 gBoxFrame;
 //extern BOOL gHideSelectedObjects;
-extern BOOL gDisplaySwapBuffers;
+extern bool gDisplaySwapBuffers;
 extern bool gDebugGL;
 
 bool	gAvatarBacklight = false;
@@ -728,14 +728,14 @@ void LLPipeline::requestResizeScreenTexture()
 
 void LLPipeline::requestResizeShadowTexture()
 {
-    gResizeShadowTexture = TRUE;
+    gResizeShadowTexture = true;
 }
 
 void LLPipeline::resizeShadowTexture()
 {
     releaseShadowTargets();
     allocateShadowBuffer(mScreenWidth, mScreenHeight);
-    gResizeShadowTexture = FALSE;
+    gResizeShadowTexture = false;
 }
 
 void LLPipeline::resizeScreenTexture()

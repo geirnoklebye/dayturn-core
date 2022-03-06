@@ -304,8 +304,8 @@ public:
 	void			moveCursorToCenter();								// move to center of window
 													
 	void			initTextures(S32 location_id);
-	void			setShowProgress(const BOOL show);
-	BOOL			getShowProgress() const;
+	void			setShowProgress(const bool show);
+	bool			getShowProgress() const;
 	void			setProgressString(const std::string& string);
 	void			setProgressPercent(const F32 percent);
 	void			setProgressMessage(const std::string& msg);

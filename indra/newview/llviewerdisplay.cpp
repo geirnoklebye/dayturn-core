@@ -87,17 +87,17 @@ extern bool gShiftFrame;
 LLPointer<LLViewerTexture> gDisconnectedImagep = NULL;
 
 // used to toggle renderer back on after teleport
-BOOL		 gTeleportDisplay = FALSE;
+bool		 gTeleportDisplay = false;
 LLFrameTimer gTeleportDisplayTimer;
 LLFrameTimer gTeleportArrivalTimer;
 const F32		RESTORE_GL_TIME = 5.f;	// Wait this long while reloading textures before we raise the curtain
 
-BOOL gForceRenderLandFence = FALSE;
-BOOL gDisplaySwapBuffers = FALSE;
-BOOL gDepthDirty = FALSE;
+bool gForceRenderLandFence = false;
+bool gDisplaySwapBuffers = false;
+bool gDepthDirty = false;
 bool gResizeScreenTexture = false;
-BOOL gResizeShadowTexture = FALSE;
-BOOL gWindowResized = FALSE;
+bool gResizeShadowTexture = false;
+bool gWindowResized = false;
 BOOL gSnapshot = FALSE;
 BOOL gShaderProfileFrame = FALSE;
 
@@ -258,7 +258,7 @@ static LLTrace::BlockTimerStatHandle FTM_TELEPORT_DISPLAY("Teleport Display");
 static LLTrace::BlockTimerStatHandle FTM_EEP_UPDATE("Env Update");
 
 // Paint the display!
-void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
+void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 {
 	LL_RECORD_BLOCK_TIME(FTM_RENDER);
 
@@ -272,19 +272,19 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 		LLPipeline::refreshCachedSettings();
 		gPipeline.resizeScreenTexture();
 		gResizeScreenTexture = false;
-		gWindowResized = FALSE;
+		gWindowResized = false;
 		return;
 	}
 
     if (gResizeShadowTexture)
 	{ //skip render on frames where window has been resized
 		gPipeline.resizeShadowTexture();
-		gResizeShadowTexture = FALSE;
+		gResizeShadowTexture = false;
 	}
 
 	if (LLPipeline::sRenderDeferred)
 	{ //hack to make sky show up in deferred snapshots
-		for_snapshot = FALSE;
+		for_snapshot = false;
 	}
 
 	if (LLPipeline::sRenderFrameTest)
@@ -398,9 +398,9 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 	LLImageGL::updateStats(gFrameTimeSeconds);
 	
 	LLVOAvatar::sRenderName = gSavedSettings.getS32("AvatarNameTagMode");
-	LLVOAvatar::sRenderGroupTitles = (gSavedSettings.getBOOL("NameTagShowGroupTitles") && gSavedSettings.getS32("AvatarNameTagMode"));
+	LLVOAvatar::sRenderGroupTitles = (gSavedSettings.getbool("NameTagShowGroupTitles") && gSavedSettings.getS32("AvatarNameTagMode"));
 	
-	gPipeline.mBackfaceCull = TRUE;
+	gPipeline.mBackfaceCull = true;
 	gFrameCount++;
 	gRecentFrameCount++;
 	if (gFocusMgr.getAppHasFocus())
@@ -441,7 +441,7 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 		{
 		case LLAgent::TELEPORT_PENDING:
 			gTeleportDisplayTimer.reset();
-			gViewerWindow->setShowProgress(TRUE);
+			gViewerWindow->setShowProgress(true);
 			gViewerWindow->setProgressPercent(llmin(teleport_percent, 0.0f));
 			gAgent.setTeleportMessage(LLAgent::sTeleportProgressMessages["pending"]);
 			gViewerWindow->setProgressString(LLAgent::sTeleportProgressMessages["pending"]);
@@ -451,7 +451,7 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 			// Transition to REQUESTED.  Viewer has sent some kind
 			// of TeleportRequest to the source simulator
 			gTeleportDisplayTimer.reset();
-			gViewerWindow->setShowProgress(TRUE);
+			gViewerWindow->setShowProgress(true);
 			gViewerWindow->setProgressPercent(llmin(teleport_percent, 0.0f));
 			LL_INFOS("Teleport") << "A teleport request has been sent, setting state to TELEPORT_REQUESTED" << LL_ENDL;
 			gAgent.setTeleportState( LLAgent::TELEPORT_REQUESTED );
@@ -523,8 +523,8 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 
 		case LLAgent::TELEPORT_NONE:
 			// No teleport in progress
-			gViewerWindow->setShowProgress(FALSE);
-			gTeleportDisplay = FALSE;
+			gViewerWindow->setShowProgress(false);
+			gTeleportDisplay = false;
 			break;
 		}
 	}
@@ -552,8 +552,8 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 		F32 percent_done = gRestoreGLTimer.getElapsedTimeF32() * 100.f / RESTORE_GL_TIME;
 		if( percent_done > 100.f )
 		{
-			gViewerWindow->setShowProgress(FALSE);
-			gRestoreGL = FALSE;
+			gViewerWindow->setShowProgress(false);
+			gRestoreGL = false;
 		}
 		else
 		{
@@ -697,7 +697,7 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 		{ //depth buffer is invalid, don't overwrite occlusion state
 			LLPipeline::sUseOcclusion = llmin(occlusion, 1);
 		}
-		gDepthDirty = FALSE;
+		gDepthDirty = false;
 
 		LLGLState::checkStates();
 		LLGLState::checkTextureChannels();
@@ -933,10 +933,9 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 		if (!(LLAppViewer::instance()->logoutRequestSent() && LLAppViewer::instance()->hasSavedFinalSnapshot())
 				&& !gRestoreGL)
 		{
-			LL_PROFILE_ZONE_NAMED_CATEGORY_DISPLAY("display - 5")
 			LLViewerCamera::sCurCameraID = LLViewerCamera::CAMERA_WORLD;
 
-			if (gSavedSettings.getBOOL("RenderDepthPrePass"))
+			if (gSavedSettings.getbool("RenderDepthPrePass"))
 			{
 				gGL.setColorMask(false, false);
 
@@ -1075,7 +1074,7 @@ void render_hud_attachments()
 		hud_cam.setAxes(LLVector3(1,0,0), LLVector3(0,1,0), LLVector3(0,0,1));
 		LLViewerCamera::updateFrustumPlanes(hud_cam, TRUE);
 
-		bool render_particles = gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_PARTICLES) && gSavedSettings.getBOOL("RenderHUDParticles");
+		bool render_particles = gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_PARTICLES) && gSavedSettings.getbool("RenderHUDParticles");
 		
 		//only render hud objects
 		gPipeline.pushRenderTypeMask();
@@ -1206,11 +1205,11 @@ bool get_hud_matrices(const LLRect& screen_region, glh::matrix4f &proj, glh::mat
 		
 		tmp_model *= mat;
 		model = tmp_model;		
-		return TRUE;
+		return true;
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 }
 
@@ -1240,7 +1239,7 @@ bool setup_hud_matrices(const LLRect& screen_region)
 	gGL.matrixMode(LLRender::MM_MODELVIEW);
 	gGL.loadMatrix(model.m);
 	set_current_modelview(model);
-	return TRUE;
+	return true;
 }
 
 void render_ui(F32 zoom_factor, int subfield)
@@ -1334,7 +1333,7 @@ void swap()
 	{
 		gViewerWindow->getWindow()->swapBuffers();
 	}
-	gDisplaySwapBuffers = TRUE;
+	gDisplaySwapBuffers = true;
 }
 
 void renderCoordinateAxes()

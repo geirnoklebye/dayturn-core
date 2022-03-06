@@ -965,7 +965,7 @@ bool idle_startup()
 				gUserCredential = gLoginHandler.initializeLoginInfo();                 
 			}     
 			// Make sure the process dialog doesn't hide things
-			gViewerWindow->setShowProgress(FALSE);
+			gViewerWindow->setShowProgress(false);
 			// Show the login dialog
 			login_show();
 			// connect dialog is already shown, so fill in the names
@@ -1201,7 +1201,7 @@ bool idle_startup()
 
 		// Display the startup progress bar.
 		gViewerWindow->initTextures(agent_location_id);
-		gViewerWindow->setShowProgress(TRUE);
+		gViewerWindow->setShowProgress(true);
 		gViewerWindow->setProgressCancelButtonVisible(TRUE, LLTrans::getString("Quit"));
 
 		gViewerWindow->revealIntroPanel();
@@ -2254,7 +2254,7 @@ bool idle_startup()
 			LLGestureMgr::instance().setFetchIDs(item_ids);
 			LLGestureMgr::instance().startFetch();
 		}
-		gDisplaySwapBuffers = TRUE;
+		gDisplaySwapBuffers = true;
 		display_startup();
 
 		LLMessageSystem* msg = gMessageSystem;

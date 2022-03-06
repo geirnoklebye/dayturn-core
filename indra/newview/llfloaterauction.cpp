@@ -186,7 +186,7 @@ void LLFloaterAuction::onClickSnapshot(void* data)
 											  FALSE, //UI
 											  FALSE, //HUD
 											  FALSE);
-	gForceRenderLandFence = FALSE;
+	gForceRenderLandFence = false;
 
 	if (success)
 	{

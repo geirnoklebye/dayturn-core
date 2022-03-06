@@ -98,7 +98,7 @@ LLControlGroup gWarningSettings("Warnings"); // persists ignored dialogs/warning
 
 std::string gLastRunVersion;
 extern bool gResizeScreenTexture;
-extern BOOL gResizeShadowTexture;
+extern bool gResizeShadowTexture;
 extern bool gDebugGL;
 ////////////////////////////////////////////////////////////////////////////
 // Listeners

@@ -660,7 +660,7 @@ const LLUUID LLVOAvatar::sStepSounds[LL_MCODE_END] =
 };
 
 S32 LLVOAvatar::sRenderName = RENDER_NAME_ALWAYS;
-BOOL LLVOAvatar::sRenderGroupTitles = TRUE;
+bool LLVOAvatar::sRenderGroupTitles = true;
 S32 LLVOAvatar::sNumVisibleChatBubbles = 0;
 BOOL LLVOAvatar::sDebugInvisible = FALSE;
 BOOL LLVOAvatar::sShowAttachmentPoints = FALSE;
@@ -770,7 +770,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mMeshTexturesDirty = FALSE;
 	mHeadp = NULL;
 
-	mRenderGroupTitles = (gSavedSettings.getS32("AvatarNameTagMode") && gSavedSettings.getBOOL("NameTagShowGroupTitles"));
+	mRenderGroupTitles = (gSavedSettings.getS32("AvatarNameTagMode") && gSavedSettings.getbool("NameTagShowGroupTitles"));
 
 	// set up animation variables
 	mSpeed = 0.f;

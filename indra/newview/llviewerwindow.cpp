@@ -231,8 +231,8 @@ void render_ui(F32 zoom_factor = 1.f, int subfield = 0);
 void swap();
 
 extern BOOL gDebugClicks;
-extern BOOL gDisplaySwapBuffers;
-extern BOOL gDepthDirty;
+extern bool gDisplaySwapBuffers;
+extern bool gDepthDirty;
 extern bool gResizeScreenTexture;
 
 LLViewerWindow	*gViewerWindow = NULL;
@@ -2216,7 +2216,7 @@ void LLViewerWindow::initBase()
 
 	// Add the progress bar view (startup view), which overrides everything
 	mProgressView = getRootView()->findChild<LLProgressView>("progress_view");
-	setShowProgress(FALSE);
+	setShowProgress(false);
 	setProgressCancelButtonVisible(FALSE);
 
 	gMenuHolder = getRootView()->getChild<LLViewerMenuHolderGL>("Menu Holder");
@@ -2549,7 +2549,7 @@ void LLViewerWindow::reshape(S32 width, S32 height)
 	// may have been destructed.
 	if (!LLApp::isExiting())
 	{
-		gWindowResized = TRUE;
+		gWindowResized = true;
 
 		// update our window rectangle
 		mWindowRectRaw.mRight = mWindowRectRaw.mLeft + width;
@@ -4954,7 +4954,7 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 	}
 
 	// PRE SNAPSHOT
-	gDisplaySwapBuffers = FALSE;
+	gDisplaySwapBuffers = false;
 	
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	setCursor(UI_CURSOR_WAIT);
@@ -5111,8 +5111,8 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 		S32 output_buffer_offset_x = 0;
 		for (int subimage_x = 0; subimage_x < scale_factor; ++subimage_x)
 		{
-			gDisplaySwapBuffers = FALSE;
-			gDepthDirty = TRUE;
+			gDisplaySwapBuffers = false;
+			gDepthDirty = true;
 
 			S32 subimage_x_offset = llclamp(buffer_x_offset - (subimage_x * window_width), 0, window_width);
 			// handle fractional rows
@@ -5192,8 +5192,8 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 		output_buffer_offset_y += subimage_y_offset;
 	}
 
-	gDisplaySwapBuffers = FALSE;
-	gDepthDirty = TRUE;
+	gDisplaySwapBuffers = false;
+	gDepthDirty = true;
 
 	// POST SNAPSHOT
 	if (!gPipeline.hasRenderDebugFeatureMask(LLPipeline::RENDER_DEBUG_FEATURE_UI))
@@ -5261,7 +5261,7 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 
 BOOL LLViewerWindow::simpleSnapshot(LLImageRaw* raw, S32 image_width, S32 image_height, const int num_render_passes)
 {
-    gDisplaySwapBuffers = FALSE;
+    gDisplaySwapBuffers = false;
 
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     setCursor(UI_CURSOR_WAIT);
@@ -5314,13 +5314,13 @@ BOOL LLViewerWindow::simpleSnapshot(LLImageRaw* raw, S32 image_width, S32 image_
         // of render passes is more than 1. We need to also
         // set it here because code in LLViewerDisplay resets
         // it to TRUE each time.
-        gDisplaySwapBuffers = FALSE;
+        gDisplaySwapBuffers = false;
 
         // actually render the scene
         const U32 subfield = 0;
         const bool do_rebuild = true;
         const F32 zoom = 1.0;
-        const bool for_snapshot = TRUE;
+        const bool for_snapshot = true;
         display(do_rebuild, zoom, subfield, for_snapshot);
     }
 
@@ -5333,8 +5333,8 @@ BOOL LLViewerWindow::simpleSnapshot(LLImageRaw* raw, S32 image_width, S32 image_
     );
     stop_glerror();
 
-    gDisplaySwapBuffers = FALSE;
-    gDepthDirty = TRUE;
+    gDisplaySwapBuffers = false;
+    gDepthDirty = true;
 
     if (!gPipeline.hasRenderDebugFeatureMask(LLPipeline::RENDER_DEBUG_FEATURE_UI))
     {
@@ -5501,7 +5501,7 @@ void LLViewerWindow::initTextures(S32 location_id)
     }
 }
 
-void LLViewerWindow::setShowProgress(const BOOL show)
+void LLViewerWindow::setShowProgress(const bool show)
 {
 	if (mProgressView)
 	{
@@ -5517,7 +5517,7 @@ void LLViewerWindow::setStartupComplete()
 	}
 }
 
-BOOL LLViewerWindow::getShowProgress() const
+bool LLViewerWindow::getShowProgress() const
 {
 	return (mProgressView && mProgressView->getVisible());
 }
@@ -5662,7 +5662,7 @@ void LLViewerWindow::restoreGL(const std::string& progress_message)
 		LLVOPartGroup::restoreGL();
 		
 		gResizeScreenTexture = true;
-		gWindowResized = TRUE;
+		gWindowResized = true;
 
 		if (isAgentAvatarValid() && gAgentAvatarp->isEditingAppearance())
 		{
@@ -5672,8 +5672,8 @@ void LLViewerWindow::restoreGL(const std::string& progress_message)
 		if (!progress_message.empty())
 		{
 			gRestoreGLTimer.reset();
-			gRestoreGL = TRUE;
-			setShowProgress(TRUE);
+			gRestoreGL = true;
+			setShowProgress(true);
 			setProgressString(progress_message);
 		}
 		LL_INFOS() << "...Restoring GL done" << LL_ENDL;

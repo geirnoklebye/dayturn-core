@@ -2785,7 +2785,7 @@ void process_teleport_start(LLMessageSystem *msg, void**)
 
 	if( gAgent.getTeleportState() == LLAgent::TELEPORT_NONE )
 	{
-		gTeleportDisplay = TRUE;
+		gTeleportDisplay = true;
 		gAgent.setTeleportState( LLAgent::TELEPORT_START );
 		make_ui_sound("UISndTeleportOut");
 		
@@ -2957,7 +2957,7 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
         {
             // Race condition? Make sure all variables are set correctly for teleport to work
             LL_WARNS("Teleport","Messaging") << "Teleport 'finish' message without 'start'. Setting state to TELEPORT_REQUESTED" << LL_ENDL;
-            gTeleportDisplay = TRUE;
+            gTeleportDisplay = true;
             LLViewerMessage::getInstance()->mTeleportStartedSignal();
             gAgent.setTeleportState(LLAgent::TELEPORT_REQUESTED);
             make_ui_sound("UISndTeleportOut");
@@ -3076,9 +3076,9 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 	effectp->setColor(LLColor4U(gAgent.getEffectColor()));
 	LLHUDManager::getInstance()->sendEffects();
 
-//	gTeleportDisplay = TRUE;
+//	gTeleportDisplay = true;
 //	gTeleportDisplayTimer.reset();
-//	gViewerWindow->setShowProgress(TRUE);
+//	gViewerWindow->setShowProgress(true);
 }
 
 // stuff we have to do every time we get an AvatarInitComplete from a sim
@@ -6226,7 +6226,7 @@ void process_teleport_local(LLMessageSystem *msg,void**)
 			// after tp, keep the teleport state and let progress screen clear it after a short delay
 			// (progress screen is active but not visible)  *TODO: remove when SVC-5290 is fixed
 			gTeleportDisplayTimer.reset();
-			gTeleportDisplay = TRUE;
+			gTeleportDisplay = true;
 		}
 		else
 		{

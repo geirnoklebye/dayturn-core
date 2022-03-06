@@ -1280,7 +1280,7 @@ class LLAdvancedToggleWireframe : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		gUseWireframe = !(gUseWireframe);
-		gWindowResized = TRUE;
+		gWindowResized = true;
 
 		LLPipeline::updateRenderDeferred();
 

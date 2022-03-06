@@ -63,7 +63,7 @@
 #include "llfloaterwebcontent.h"
 #include "llwindowshade.h"
 
-extern BOOL gRestoreGL;
+extern bool gRestoreGL;
 
 static LLDefaultChildRegistry::Register<LLMediaCtrl> r("web_browser");
 

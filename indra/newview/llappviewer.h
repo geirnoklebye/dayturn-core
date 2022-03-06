@@ -402,7 +402,7 @@ extern F32 gSimFrames;
 extern BOOL		gDisconnected;
 
 extern LLFrameTimer	gRestoreGLTimer;
-extern BOOL			gRestoreGL;
+extern bool			gRestoreGL;
 extern bool		gUseWireframe;
 extern bool		gInitialDeferredModeForWireframe;
 

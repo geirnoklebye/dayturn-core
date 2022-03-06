@@ -764,19 +764,18 @@ void LLViewerTextureList::dirtyImage(LLViewerFetchedTexture *image)
 
 void LLViewerTextureList::updateImages(F32 max_time)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
-	static BOOL cleared = FALSE;
+	static bool cleared = false;
 	if(gTeleportDisplay)
 	{
 		if(!cleared)
 		{
 			clearFetchingRequests();
 			gPipeline.clearRebuildGroups();
-			cleared = TRUE;
+			cleared = true;
 		}
 		return;
 	}
-	cleared = FALSE;
+	cleared = false;
 
 	LLAppViewer::getTextureFetch()->setTextureBandwidth(LLTrace::get_frame_recording().getPeriodMeanPerSec(LLStatViewer::TEXTURE_NETWORK_DATA_RECEIVED).value());
 

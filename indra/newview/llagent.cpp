@@ -4109,7 +4109,7 @@ bool LLAgent::teleportCore(bool is_local)
 	}
 	else
 	{
-		gTeleportDisplay = TRUE;
+		gTeleportDisplay = true;
 		LL_INFOS("Teleport") << "Non-local, setting teleport state to TELEPORT_START" << LL_ENDL;
 		gAgent.setTeleportState( LLAgent::TELEPORT_START );
 
@@ -4183,7 +4183,7 @@ void LLAgent::startTeleportRequest()
         mTeleportCanceled.reset();
 		if  (!isMaturityPreferenceSyncedWithServer())
 		{
-			gTeleportDisplay = TRUE;
+			gTeleportDisplay = true;
 			LL_INFOS("Teleport") << "Maturity preference not synced yet, setting teleport state to TELEPORT_PENDING" << LL_ENDL;
 			setTeleportState(TELEPORT_PENDING);
 		}
@@ -4262,8 +4262,8 @@ void LLAgent::handleTeleportFailed()
 
     setTeleportState(LLAgent::TELEPORT_NONE);
     // Unlock the UI if the progress bar has been shown.
-//     gViewerWindow->setShowProgress(FALSE);
-//     gTeleportDisplay = FALSE;
+//     gViewerWindow->setShowProgress(false);
+//     gTeleportDisplay = false;
 
     if (mTeleportRequest)
 	{
@@ -4473,7 +4473,7 @@ void LLAgent::restoreCanceledTeleportRequest()
         gAgent.setTeleportState( LLAgent::TELEPORT_REQUESTED );
         mTeleportRequest = mTeleportCanceled;
         mTeleportCanceled.reset();
-        gTeleportDisplay = TRUE;
+        gTeleportDisplay = true;
         gTeleportDisplayTimer.reset();
     }
 }
