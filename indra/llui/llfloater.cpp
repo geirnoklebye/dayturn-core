@@ -1594,7 +1594,7 @@ BOOL LLFloater::handleMouseDown(S32 x, S32 y, MASK mask)
 		if(offerClickToButton(x, y, mask, BUTTON_TEAR_OFF)) return TRUE;
 		if(offerClickToButton(x, y, mask, BUTTON_DOCK)) return TRUE;
 
-		setFrontmost(TRUE, FALSE);
+		setFrontmost(true, false);
 		// Otherwise pass to drag handle for movement
 		return mDragHandle->handleMouseDown(x, y, mask);
 	}
