@@ -58,6 +58,8 @@
 
 #include "../newview/llviewernetwork.h"
 
+extern bool gIsInSecondLife; //Opensim or SecondLife
+
 static const S32 LINE_HEIGHT = 15;
 
 S32		LLView::sDepth = 0;
@@ -114,6 +116,7 @@ LLView::Params::Params()
 :	name("name", std::string("unnamed")),
 	enabled("enabled", true),
 	visible("visible", true),
+	only_in_sl("only_in_sl", false),
 	mouse_opaque("mouse_opaque", true),
 	follows("follows"),
 	hover_cursor("hover_cursor", "UI_CURSOR_ARROW"),
@@ -143,6 +146,7 @@ LLView::Params::Params()
 
 LLView::LLView(const LLView::Params& p)
 :	mVisible(p.visible),
+	mOnlyInSL(p.only_in_sl),
 	mInDraw(false),
 	mName(p.name),
 	mParentView(NULL),
@@ -482,6 +486,19 @@ std::string LLView::getPathname(const LLView* view)
         return "NULL";
     }
     return view->getPathname();
+}
+
+const bool LLView::isAvailableOnThisGrid() const
+{
+	//
+	//	only show SL-specific items when in SL
+	//
+	if (mOnlyInSL && !gIsInSecondLife) 
+	{
+		return false;
+	}
+
+	return true;
 }
 
 // virtual
