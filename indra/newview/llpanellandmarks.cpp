@@ -1189,7 +1189,7 @@ static void collapse_all_folders(LLFolderView* root_folder)
 	if (!root_folder)
 		return;
 
-	root_folder->setOpenArrangeRecursively(FALSE, LLFolderViewFolder::RECURSE_DOWN);
+	root_folder->setOpenArrangeRecursively(false, LLFolderViewFolder::RECURSE_DOWN);
 	root_folder->arrangeAll();
 }
 
@@ -1198,7 +1198,7 @@ static void expand_all_folders(LLFolderView* root_folder)
 	if (!root_folder)
 		return;
 
-	root_folder->setOpenArrangeRecursively(TRUE, LLFolderViewFolder::RECURSE_DOWN);
+	root_folder->setOpenArrangeRecursively(true, LLFolderViewFolder::RECURSE_DOWN);
 	root_folder->arrangeAll();
 }
 

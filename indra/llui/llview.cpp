@@ -1653,7 +1653,7 @@ BOOL LLView::childHasKeyboardFocus( const std::string& childname ) const
 
 //-----------------------------------------------------------------------------
 
-BOOL LLView::hasChild(const std::string& childname, BOOL recurse) const
+bool LLView::hasChild(const std::string& childname, bool recurse) const
 {
 	return findChildView(childname, recurse) != NULL;
 }

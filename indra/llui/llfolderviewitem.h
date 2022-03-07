@@ -419,7 +419,7 @@ public:
 	// method was written because the list iterators destroy the state
 	// of other iterations, thus, we can't arrange while iterating
 	// through the children (such as when setting which is selected.
-	virtual void setOpenArrangeRecursively(BOOL openitem, ERecurseType recurse = RECURSE_NO);
+	virtual void setOpenArrangeRecursively(bool openitem, ERecurseType recurse = RECURSE_NO);
 
 	// Get the current state of the folder.
 	virtual BOOL isOpen() const { return mIsOpen; }

@@ -349,7 +349,7 @@ public:
 	S32			getChildCount()	const			{ return (S32)mChildList.size(); }
 	template<class _Pr3> void sortChildren(_Pr3 _Pred) { mChildList.sort(_Pred); }
 	BOOL		hasAncestor(const LLView* parentp) const;
-	BOOL		hasChild(const std::string& childname, BOOL recurse = FALSE) const;
+	bool		hasChild(const std::string& childname, bool recurse = false) const;
 	BOOL 		childHasKeyboardFocus( const std::string& childname ) const;
 	
 	// these iterators are used for collapsing various tree traversals into for loops

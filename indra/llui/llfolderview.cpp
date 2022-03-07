@@ -302,7 +302,7 @@ void LLFolderView::addFolder( LLFolderViewFolder* folder)
 void LLFolderView::closeAllFolders()
 {
 	// Close all the folders
-	setOpenArrangeRecursively(FALSE, LLFolderViewFolder::RECURSE_DOWN);
+	setOpenArrangeRecursively(false, LLFolderViewFolder::RECURSE_DOWN);
 	arrangeAll();
 }
 
@@ -834,7 +834,7 @@ void LLFolderView::autoOpenItem( LLFolderViewFolder* item )
 	while (close_item && close_item != item->getParentFolder())
 	{
 		mAutoOpenItems.pop();
-		close_item->setOpenArrangeRecursively(FALSE);
+		close_item->setOpenArrangeRecursively(false);
 		close_item = mAutoOpenItems.check();
 	}
 

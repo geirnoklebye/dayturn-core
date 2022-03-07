@@ -1300,7 +1300,7 @@ BOOL LLFolderViewFolder::setSelection(LLFolderViewItem* selection, BOOL openitem
 	}
 	if(openitem && child_selected)
 	{
-		setOpenArrangeRecursively(TRUE);
+		setOpenArrangeRecursively(true);
 	}
 	return rv;
 }
@@ -1794,7 +1794,7 @@ void LLFolderViewFolder::setOpen(BOOL openitem)
 	setOpenArrangeRecursively(openitem);
 }
 
-void LLFolderViewFolder::setOpenArrangeRecursively(BOOL openitem, ERecurseType recurse)
+void LLFolderViewFolder::setOpenArrangeRecursively(bool openitem, ERecurseType recurse)
 {
 	BOOL was_open = isOpen();
 	mIsOpen = openitem;

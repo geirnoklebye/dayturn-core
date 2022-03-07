@@ -1422,7 +1422,7 @@ void LLPanelOutfitEdit::saveListSelection()
 			LLFolderViewFolder* parent = item->getParentFolder();
 			if(parent)
 			{
-				parent->setOpenArrangeRecursively(TRUE, LLFolderViewFolder::RECURSE_UP);
+				parent->setOpenArrangeRecursively(true, LLFolderViewFolder::RECURSE_UP);
 			}
 			mInventoryItemsPanel->getRootFolder()->changeSelection(item, TRUE);
 		}
