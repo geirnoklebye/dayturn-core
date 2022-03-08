@@ -376,7 +376,7 @@ void LLPanel::setFocus(BOOL b)
 	}
 }
 
-void LLPanel::setBorderVisible(BOOL b)
+void LLPanel::setBorderVisible(bool b)
 {
 	if (mBorder)
 	{

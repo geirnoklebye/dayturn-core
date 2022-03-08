@@ -275,7 +275,7 @@ bool LLFolderViewItem::passedFilter(S32 filter_generation)
 	return getViewModelItem()->passedFilter(filter_generation);
 }
 
-BOOL LLFolderViewItem::isPotentiallyVisible(S32 filter_generation)
+bool LLFolderViewItem::isPotentiallyVisible(S32 filter_generation)
 {
 	if (filter_generation < 0)
 	{

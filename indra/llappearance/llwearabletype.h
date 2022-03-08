@@ -85,8 +85,8 @@ private:
             const std::string& default_new_name,
             LLAssetType::EType assetType,
             LLInventoryType::EIconName iconName,
-            BOOL disable_camera_switch = FALSE,
-            BOOL allow_multiwear = TRUE) :
+            bool disable_camera_switch = false,
+            bool allow_multiwear = true) :
             LLDictionaryEntry(name),
             mAssetType(assetType),
             mDefaultNewName(default_new_name),

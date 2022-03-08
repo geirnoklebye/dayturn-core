@@ -1056,7 +1056,7 @@ void LLFloaterIMSessionTab::onTearOffClicked()
 void LLFloaterIMSessionTab::updateGearBtn()
 {
 
-	BOOL prevVisibility = mGearBtn->getVisible();
+	bool prevVisibility = mGearBtn->getVisible();
 	mGearBtn->setVisible(checkIfTornOff() && mIsP2PChat);
 
 

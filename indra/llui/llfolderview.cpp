@@ -672,12 +672,12 @@ void LLFolderView::draw()
 
 	if (hasVisibleChildren())
 	{
-		mStatusTextBox->setVisible( FALSE );
+		mStatusTextBox->setVisible( false );
 	}
 	else if (mShowEmptyMessage)
 	{
 		mStatusTextBox->setValue(getFolderViewModel()->getStatusText());
-		mStatusTextBox->setVisible( TRUE );
+		mStatusTextBox->setVisible( true );
 		
 		// firstly reshape message textbox with current size. This is necessary to
 		// LLTextBox::getTextPixelHeight works properly
@@ -1068,7 +1068,7 @@ void LLFolderView::startRenamingSelectedItem( void )
 
 		mRenamer->setText(item->getName());
 		mRenamer->selectAll();
-		mRenamer->setVisible( TRUE );
+		mRenamer->setVisible( true );
 		// set focus will fail unless item is visible
 		mRenamer->setFocus( TRUE );
 		mRenamer->setTopLostCallback(boost::bind(&LLFolderView::onRenamerLost, this));
@@ -1846,7 +1846,7 @@ void LLFolderView::updateMenuOptions(LLMenuGL* menu)
 	for (menu_itor = list->begin(); menu_itor != list->end(); ++menu_itor)
 	{
 		(*menu_itor)->setVisible(false);
-		(*menu_itor)->pushVisible(TRUE);
+		(*menu_itor)->pushVisible(true);
 		(*menu_itor)->setEnabled(TRUE);
 	}
 

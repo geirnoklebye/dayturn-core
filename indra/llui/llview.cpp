@@ -654,7 +654,7 @@ void LLView::setAllChildrenEnabled(BOOL b)
 }
 
 // virtual
-void LLView::setVisible(BOOL visible)
+void LLView::setVisible(bool visible)
 {
 	if ( mVisible != visible )
 	{

@@ -289,16 +289,16 @@ void LLSidepanelAppearance::onEditAppearanceButtonClicked()
 
 void LLSidepanelAppearance::showOutfitsInventoryPanel()
 {
-	toggleWearableEditPanel(FALSE);
-	toggleOutfitEditPanel(FALSE);
-	toggleMyOutfitsPanel(TRUE, "");
+	toggleWearableEditPanel(false);
+	toggleOutfitEditPanel(false);
+	toggleMyOutfitsPanel(true, "");
 }
 
 void LLSidepanelAppearance::showOutfitsInventoryPanel(const std::string &tab_name)
 {
-    toggleWearableEditPanel(FALSE);
-    toggleOutfitEditPanel(FALSE);
-    toggleMyOutfitsPanel(TRUE, tab_name);
+    toggleWearableEditPanel(false);
+    toggleOutfitEditPanel(false);
+    toggleMyOutfitsPanel(true, tab_name);
 }
 
 void LLSidepanelAppearance::showOutfitEditPanel()
@@ -308,7 +308,7 @@ void LLSidepanelAppearance::showOutfitEditPanel()
 	// Accordion's state must be reset in all cases except the one when user
 	// is returning back to the mOutfitEdit panel from the mEditWearable panel.
 	// The simplest way to control this is to check the visibility state of the mEditWearable
-	// BEFORE it is changed by the call to the toggleWearableEditPanel(FALSE, NULL, TRUE).
+	// BEFORE it is changed by the call to the toggleWearableEditPanel(false, NULL, true).
 	if (mEditWearable != NULL && !mEditWearable->getVisible() && mOutfitEdit != NULL)
 	{
 		mOutfitEdit->resetAccordionState();
@@ -323,19 +323,19 @@ void LLSidepanelAppearance::showOutfitEditPanel()
 		return;
 	}
 
-	toggleMyOutfitsPanel(FALSE, "");
-	toggleWearableEditPanel(FALSE, NULL, TRUE); // don't switch out of edit appearance mode
-	toggleOutfitEditPanel(TRUE);
+	toggleMyOutfitsPanel(false, "");
+	toggleWearableEditPanel(false, NULL, true); // don't switch out of edit appearance mode
+	toggleOutfitEditPanel(true);
 }
 
-void LLSidepanelAppearance::showWearableEditPanel(LLViewerWearable *wearable /* = NULL*/, BOOL disable_camera_switch)
+void LLSidepanelAppearance::showWearableEditPanel(LLViewerWearable *wearable /* = NULL*/, bool disable_camera_switch)
 {
-	toggleMyOutfitsPanel(FALSE, "");
-	toggleOutfitEditPanel(FALSE, TRUE); // don't switch out of edit appearance mode
-	toggleWearableEditPanel(TRUE, wearable, disable_camera_switch);
+	toggleMyOutfitsPanel(false, "");
+	toggleOutfitEditPanel(false, true); // don't switch out of edit appearance mode
+	toggleWearableEditPanel(true, wearable, disable_camera_switch);
 }
 
-void LLSidepanelAppearance::toggleMyOutfitsPanel(BOOL visible, const std::string& tab_name)
+void LLSidepanelAppearance::toggleMyOutfitsPanel(bool visible, const std::string& tab_name)
 {
     if (!mPanelOutfitsInventory
         || (mPanelOutfitsInventory->getVisible() == visible && tab_name.empty()))
@@ -361,7 +361,7 @@ void LLSidepanelAppearance::toggleMyOutfitsPanel(BOOL visible, const std::string
     }
 }
 
-void LLSidepanelAppearance::toggleOutfitEditPanel(BOOL visible, BOOL disable_camera_switch)
+void LLSidepanelAppearance::toggleOutfitEditPanel(bool visible, bool disable_camera_switch)
 {
 	if (!mOutfitEdit || mOutfitEdit->getVisible() == visible)
 	{
@@ -386,7 +386,7 @@ void LLSidepanelAppearance::toggleOutfitEditPanel(BOOL visible, BOOL disable_cam
 	}
 }
 
-void LLSidepanelAppearance::toggleWearableEditPanel(BOOL visible, LLViewerWearable *wearable, BOOL disable_camera_switch)
+void LLSidepanelAppearance::toggleWearableEditPanel(bool visible, LLViewerWearable *wearable, bool disable_camera_switch)
 {
 	if (!mEditWearable)
 	{
@@ -402,7 +402,7 @@ void LLSidepanelAppearance::toggleWearableEditPanel(BOOL visible, LLViewerWearab
 	// If we're just switching between outfit and wearable editing or updating item,
 	// don't end customization and don't switch camera
 	// Don't end customization and don't switch camera without visibility change
-	BOOL change_state = !disable_camera_switch && mEditWearable->getVisible() != visible;
+	bool change_state = !disable_camera_switch && mEditWearable->getVisible() != visible;
 
 	if (!wearable)
 	{
@@ -464,7 +464,7 @@ void LLSidepanelAppearance::refreshCurrentOutfitName(const std::string& name)
 }
 
 //static
-void LLSidepanelAppearance::editWearable(LLViewerWearable *wearable, LLView *data, BOOL disable_camera_switch)
+void LLSidepanelAppearance::editWearable(LLViewerWearable *wearable, LLView *data, bool disable_camera_switch)
 {
 	LLFloaterSidePanelContainer::showPanel("appearance", LLSD());
 	LLSidepanelAppearance *panel = dynamic_cast<LLSidepanelAppearance*>(data);

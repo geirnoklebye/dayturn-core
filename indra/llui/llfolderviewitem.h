@@ -267,7 +267,7 @@ public:
 	S32				getIndentation() { return mIndentation; }
 
 	virtual bool	passedFilter(S32 filter_generation = -1);
-	virtual BOOL	isPotentiallyVisible(S32 filter_generation = -1);
+	virtual bool	isPotentiallyVisible(S32 filter_generation = -1);
 
     // refresh information from the object being viewed.
     // refreshes label, suffixes and sets icons. Expensive!

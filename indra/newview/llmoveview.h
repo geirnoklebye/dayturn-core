@@ -86,7 +86,7 @@ private:
 	void initModeButtonMap();
 	void setModeButtonToggleState(const EMovementMode mode);
 	void updateButtonsWithMovementMode(const EMovementMode newMode);
-	void showModeButtons(BOOL bShow);
+	void showModeButtons(bool bShow);
 
 public:
 

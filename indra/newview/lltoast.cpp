@@ -387,7 +387,7 @@ void LLToast::draw()
 }
 
 //--------------------------------------------------------------------------
-void LLToast::setVisible(BOOL show)
+void LLToast::setVisible(bool show)
 {
 	if(mIsHidden)
 	{

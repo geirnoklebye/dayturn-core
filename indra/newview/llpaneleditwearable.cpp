@@ -876,11 +876,11 @@ void LLPanelEditWearable::setVisible(bool visible)
         LLPanel::setVisible(visible);
 }
 
-void LLPanelEditWearable::setWearable(LLViewerWearable *wearable, BOOL disable_camera_switch)
+void LLPanelEditWearable::setWearable(LLViewerWearable *wearable, bool disable_camera_switch)
 {
-        showWearable(mWearablePtr, FALSE, disable_camera_switch);
+        showWearable(mWearablePtr, false, disable_camera_switch);
         mWearablePtr = wearable;
-        showWearable(mWearablePtr, TRUE, disable_camera_switch);
+        showWearable(mWearablePtr, true, disable_camera_switch);
 }
 
 //static 
@@ -1139,7 +1139,7 @@ void LLPanelEditWearable::revertChanges()
         gAgentAvatarp->wearableUpdated(mWearablePtr->getType());
 }
 
-void LLPanelEditWearable::showWearable(LLViewerWearable* wearable, BOOL show, BOOL disable_camera_switch)
+void LLPanelEditWearable::showWearable(LLViewerWearable* wearable, bool show, bool disable_camera_switch)
 {
         if (!wearable)
         {

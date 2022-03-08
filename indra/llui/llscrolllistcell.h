@@ -190,7 +190,7 @@ protected:
 	LLColor4		mHighlightColor;
 	U8				mUseColor;
 	LLFontGL::HAlign mFontAlignment;
-	BOOL			mVisible;
+	bool			mVisible;
 	S32				mHighlightCount;
 	S32				mHighlightOffset;
 

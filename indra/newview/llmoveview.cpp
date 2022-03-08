@@ -451,7 +451,7 @@ void LLFloaterMove::sUpdateFlyingStatus()
 	
 }
 
-void LLFloaterMove::showModeButtons(BOOL bShow)
+void LLFloaterMove::showModeButtons(bool bShow)
 {
 	if (mModeActionsPanel->getVisible() == bShow)
 		return;

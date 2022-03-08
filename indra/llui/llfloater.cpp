@@ -1263,7 +1263,7 @@ void LLFloater::setMinimized(BOOL minimize)
 			mButtonsEnabled[BUTTON_RESTORE] = TRUE;
 		}
 
-		setBorderVisible(TRUE);
+		setBorderVisible(true);
 
 		for(handle_set_iter_t dependent_it = mDependents.begin();
 			dependent_it != mDependents.end();
@@ -3083,7 +3083,7 @@ S32 LLFloaterView::getZOrder(LLFloater* child)
 	return rv;
 }
 
-void LLFloaterView::pushVisibleAll(BOOL visible, const skip_list_t& skip_list)
+void LLFloaterView::pushVisibleAll(bool visible, const skip_list_t& skip_list)
 {
 	for (child_list_const_iter_t child_iter = getChildList()->begin();
 		 child_iter != getChildList()->end(); ++child_iter)

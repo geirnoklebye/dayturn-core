@@ -337,7 +337,7 @@ void LLFloaterReg::hideVisibleInstances(const std::set<std::string>& exceptions)
 		for (instance_list_t::iterator iter = list.begin(); iter != list.end(); ++iter)
 		{
 			LLFloater* floater = *iter;
-			floater->pushVisible(FALSE);
+			floater->pushVisible(false);
 		}
 	}
 }

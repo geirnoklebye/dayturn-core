@@ -131,7 +131,7 @@ public:
 	void addBorder();
 	void			removeBorder();
 	BOOL			hasBorder() const { return mBorder != NULL; }
-	void			setBorderVisible( BOOL b );
+	void			setBorderVisible( bool b );
 
 	void			setBackgroundColor( const LLColor4& color ) { mBgOpaqueColor = color; }
 	const LLColor4&	getBackgroundColor() const { return mBgOpaqueColor; }

@@ -1156,7 +1156,7 @@ void LLMenuItemBranchGL::setHighlight( BOOL highlight )
 		}
 		else
 		{
-			branch->setVisible( FALSE );
+			branch->setVisible( false );
 		}
 	}
 }
@@ -1318,7 +1318,7 @@ void LLMenuItemBranchGL::openMenu()
 		}
 		branch->translate( delta_x, delta_y );
 
-		branch->setVisible( TRUE );
+		branch->setVisible( true );
 		branch->getParent()->sendChildToFront(branch);
 
 		dirtyRect();
@@ -1398,7 +1398,7 @@ void LLMenuItemBranchDownGL::openMenu( void )
 	LLMenuGL* branch = getBranch();
 	if( branch->getVisible() && !branch->getTornOff() )
 	{
-		branch->setVisible( FALSE );
+		branch->setVisible( false );
 	}
 	else
 	{
@@ -1440,7 +1440,7 @@ void LLMenuItemBranchDownGL::openMenu( void )
 			branch->translate( delta_x, 0 );
 
 			setHighlight(TRUE);
-			branch->setVisible( TRUE );
+			branch->setVisible( true );
 			branch->getParent()->sendChildToFront(branch);
 		}
 	}
@@ -1472,7 +1472,7 @@ void LLMenuItemBranchDownGL::setHighlight( BOOL highlight )
 		}
 		else
 		{
-			branch->setVisible( FALSE );
+			branch->setVisible( false );
 		}
 	}
 }
@@ -3299,7 +3299,7 @@ BOOL LLMenuGL::clearHoverItem()
 
 void hide_top_view( LLView* view )
 {
-	if( view ) view->setVisible( FALSE );
+	if( view ) view->setVisible( false );
 }
 
 
@@ -3316,7 +3316,7 @@ void LLMenuGL::showPopup(LLView* spawning_view, LLMenuGL* menu, S32 x, S32 y, S3
 		return;
 	}
 
-	menu->setVisible( TRUE );
+	menu->setVisible( true );
 
 	if(!menu->getAlwaysShowMenu())
 	{
@@ -3332,7 +3332,7 @@ void LLMenuGL::showPopup(LLView* spawning_view, LLMenuGL* menu, S32 x, S32 y, S3
 
 		if(!item_enabled)
 		{
-			menu->setVisible( FALSE );
+			menu->setVisible( false );
 			return;
 		}
 	}

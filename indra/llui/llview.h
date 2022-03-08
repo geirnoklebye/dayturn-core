@@ -294,7 +294,7 @@ public:
 
 	void 	setAllChildrenEnabled(BOOL b);
 
-	virtual void	setVisible(BOOL visible);
+	virtual void	setVisible(bool visible);
 	const bool		getVisible() const			{ return isAvailableOnThisGrid() && mVisible; }
 	virtual void	setEnabled(BOOL enabled);
 	bool			getEnabled() const			{ return isAvailableOnThisGrid() && mEnabled; }
@@ -314,7 +314,7 @@ public:
 	virtual void	onVisibilityChange ( BOOL new_visibility );
 	virtual void	onUpdateScrollToChild(const LLUICtrl * cntrl);
 
-	void			pushVisible(BOOL visible)	{ mLastVisible = mVisible; setVisible(visible); }
+	void			pushVisible(bool visible)	{ mLastVisible = mVisible; setVisible(visible); }
 	void			popVisible()				{ setVisible(mLastVisible); }
 	BOOL			getLastVisible()	const	{ return mLastVisible; }
 
@@ -597,7 +597,7 @@ private:
 	child_list_t mChildList;
 
 	// location in pixels, relative to surrounding structure, bottom,left=0,0
-	BOOL		mVisible;
+	bool		mVisible;
 	bool		mOnlyInSL;
 	LLRect		mRect;
 	LLRect		mBoundingRect;
