@@ -923,7 +923,7 @@ BOOL LLWindowWin32::isValid()
 	return (mWindowHandle != NULL);
 }
 
-BOOL LLWindowWin32::getVisible()
+bool LLWindowWin32::getVisible()
 {
 	return (mWindowHandle && IsWindowVisible(mWindowHandle));
 }

@@ -700,7 +700,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mTimeVisible(),
 	mTyping(FALSE),
 	mMeshValid(FALSE),
-	mVisible(FALSE),
+	mVisible(false),
 	mLastImpostorUpdateFrameTime(0.f),
 	mLastImpostorUpdateReason(0),
 	mWindFreq(0.f),
@@ -5177,37 +5177,37 @@ void LLVOAvatar::postPelvisSetRecalc()
 //------------------------------------------------------------------------
 void LLVOAvatar::updateVisibility()
 {
-	BOOL visible = FALSE;
+	bool visible = false;
 
 	if (mIsDummy)
 	{
-		visible = FALSE;
+		visible = false;
 	}
 	else if (mDrawable.isNull())
 	{
-		visible = FALSE;
+		visible = false;
 	}
 	else
 	{
 		if (!mDrawable->getSpatialGroup() || mDrawable->getSpatialGroup()->isVisible())
 		{
-			visible = TRUE;
+			visible = true;
 		}
 		else
 		{
-			visible = FALSE;
+			visible = false;
 		}
 
 		if(isSelf())
 		{
 			if (!gAgentWearables.areWearablesLoaded())
 			{
-				visible = FALSE;
+				visible = false;
 			}
 		}
 		else if( !mFirstAppearanceMessageReceived )
 		{
-			visible = FALSE;
+			visible = false;
 		}
 
 		if (sDebugInvisible)

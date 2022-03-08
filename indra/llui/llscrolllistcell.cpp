@@ -240,7 +240,7 @@ BOOL LLScrollListText::needsToolTip() const
 }
 
 //virtual 
-BOOL LLScrollListText::getVisible() const
+bool LLScrollListText::getVisible() const
 {
 	return mVisible;
 }

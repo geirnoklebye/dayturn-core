@@ -550,7 +550,7 @@ protected:
 	void 		updateVisibility();
 private:
 	U32	 		mVisibilityRank;
-	BOOL 		mVisible;
+	bool 		mVisible;
 	
 	//--------------------------------------------------------------------
 	// Shadowing

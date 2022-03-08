@@ -54,7 +54,7 @@ public:
 	LLUUID getSelectedUUID();
 	virtual void draw();
 	virtual void refresh();
-//	static BOOL isVisible();
+//	static bool isVisible();
 	virtual void onFocusReceived();
 	void onClickCreatorProfile();
 	void onClickOwnerProfile();

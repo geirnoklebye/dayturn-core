@@ -123,7 +123,7 @@ public:
 // [/SL:KB]
 	virtual const std::string &getToolTip() const { return mToolTip; }
 	virtual void			setToolTip(const std::string &str) { mToolTip = str; }
-	virtual BOOL			getVisible() const { return TRUE; }
+	virtual bool			getVisible() const { return true; }
 	virtual void			setWidth(S32 width) { mWidth = width; }
 	virtual void			highlightText(S32 offset, S32 num_chars) {}
 	virtual BOOL			isText() const { return FALSE; }
@@ -165,8 +165,8 @@ public:
 	/*virtual*/ void	setValue(const LLSD& value);
 	/*virtual*/ void	setAltValue(const LLSD& value);
 	/*virtual*/ const LLSD getValue() const;
-	/*virtual*/ const LLSD getAltValue() const;
-	/*virtual*/ BOOL	getVisible() const;
+    /*virtual*/ const LLSD getAltValue() const;
+    /*virtual*/ bool	getVisible() const;
 	/*virtual*/ void	highlightText(S32 offset, S32 num_chars);
 
 	/*virtual*/ void	setColor(const LLColor4&);

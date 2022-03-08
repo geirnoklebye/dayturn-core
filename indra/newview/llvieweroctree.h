@@ -216,7 +216,7 @@ public:
 	BOOL isDead()							{ return hasState(DEAD); }	
 
 	void setVisible();
-	BOOL isVisible() const;
+	bool isVisible() const;
 	virtual BOOL isRecentlyVisible() const;
 	S32  getVisible(LLViewerCamera::eCameraID id) const {return mVisible[id];}
 	S32  getAnyVisible() const {return mAnyVisible;}

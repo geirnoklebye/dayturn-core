@@ -101,7 +101,7 @@ protected:
 	~LLStyle() { }
 
 private:
-	BOOL				mVisible;
+	bool				mVisible;
 	LLUIColor			mColor;
 	LLUIColor   		mReadOnlyColor;
 	LLUIColor			mSelectedColor;

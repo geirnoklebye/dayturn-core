@@ -47,7 +47,7 @@ public:
 	void show() override;
 	void hide() override;
 	void close() override;
-	BOOL getVisible() override;
+	bool getVisible() override;
 	BOOL getMinimized() override;
 	BOOL getMaximized() override;
 	BOOL maximize() override;

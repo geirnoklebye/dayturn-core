@@ -795,16 +795,16 @@ BOOL LLWindowMacOSX::isValid()
 	return (mWindow != NULL);
 }
 
-BOOL LLWindowMacOSX::getVisible()
+bool LLWindowMacOSX::getVisible()
 {
-	BOOL result = FALSE;
+	bool result = false;
 
 	if(mFullscreen)
 	{
-		result = TRUE;
+		result = true;
 	}if (mWindow)
 	{
-			result = TRUE;
+			result = true;
 	}
 
 	return(result);

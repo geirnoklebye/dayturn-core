@@ -576,7 +576,7 @@ void LLHUDNameTag::updateVisibility()
 	if (!mSourceObject)
 	{
 		//LL_WARNS() << "LLHUDNameTag::updateScreenPos -- mSourceObject is NULL!" << LL_ENDL;
-		mVisible = TRUE;
+		mVisible = true;
 		sVisibleTextObjects.push_back(LLPointer<LLHUDNameTag> (this));
 		return;
 	}
@@ -584,7 +584,7 @@ void LLHUDNameTag::updateVisibility()
 	// Not visible if parent object is dead
 	if (mSourceObject->isDead())
 	{
-		mVisible = FALSE;
+		mVisible = false;
 		return;
 	}
 
@@ -595,7 +595,7 @@ void LLHUDNameTag::updateVisibility()
 
 	if (dir_from_camera * LLViewerCamera::getInstance()->getAtAxis() <= 0.f)
 	{ //text is behind camera, don't render
-		mVisible = FALSE;
+		mVisible = false;
 		return;
 	}
 		
@@ -612,7 +612,7 @@ void LLHUDNameTag::updateVisibility()
 
 	if (mLOD >= 3 || !mTextSegments.size() || (mDoFade && (mLastDistance > mFadeDistance + mFadeRange)))
 	{
-		mVisible = FALSE;
+		mVisible = false;
 		return;
 	}
 
@@ -630,7 +630,7 @@ void LLHUDNameTag::updateVisibility()
 	{
 		if (!mVisibleOffScreen)
 		{
-			mVisible = FALSE;
+			mVisible = false;
 			return;
 		}
 		else
@@ -639,7 +639,7 @@ void LLHUDNameTag::updateVisibility()
 		}
 	}
 
-	mVisible = TRUE;
+	mVisible = true;
 	sVisibleTextObjects.push_back(LLPointer<LLHUDNameTag> (this));
 }
 

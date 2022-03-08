@@ -35,7 +35,7 @@ public:
 	/*virtual*/ void show() {};
 	/*virtual*/ void hide() {};
 	/*virtual*/ void close() {};
-	/*virtual*/ BOOL getVisible() {return FALSE;};
+	/*virtual*/ bool getVisible() {return false;};
 	/*virtual*/ BOOL getMinimized() {return FALSE;};
 	/*virtual*/ BOOL getMaximized() {return FALSE;};
 	/*virtual*/ BOOL maximize() {return FALSE;};

@@ -909,7 +909,7 @@ void LLSpatialPartition::move(LLDrawable *drawablep, LLSpatialGroup *curp, BOOL 
 		return;
 	}
 		
-	BOOL was_visible = curp ? curp->isVisible() : FALSE;
+	bool was_visible = curp ? curp->isVisible() : false;
 
 	if (curp && curp->getSpatialPartition() != this)
 	{
@@ -1838,7 +1838,7 @@ void renderVisibility(LLSpatialGroup* group, LLCamera* camera)
 
 void renderXRay(LLSpatialGroup* group, LLCamera* camera)
 {
-	BOOL render_objects = (!LLPipeline::sUseOcclusion || !group->isOcclusionState(LLSpatialGroup::OCCLUDED)) && group->isVisible() &&
+	bool render_objects = (!LLPipeline::sUseOcclusion || !group->isOcclusionState(LLSpatialGroup::OCCLUDED)) && group->isVisible() &&
 							!group->isEmpty();
 	
 	if (render_objects)
@@ -3779,14 +3779,14 @@ bool LLSpatialPartition::isHUDPartition()
 	return mPartitionType == LLViewerRegion::PARTITION_HUD ;
 } 
 
-BOOL LLSpatialPartition::isVisible(const LLVector3& v)
+bool LLSpatialPartition::isVisible(const LLVector3& v)
 {
 	if (!LLViewerCamera::getInstance()->sphereInFrustum(v, 4.0f))
 	{
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 LL_ALIGN_PREFIX(16)
