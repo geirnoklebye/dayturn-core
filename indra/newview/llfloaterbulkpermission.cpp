@@ -200,10 +200,10 @@ void LLFloaterBulkPermission::onCloseBtn()
 void LLFloaterBulkPermission::onCommitCopy()
 {
 	// Implements fair use
-	bool copyable = (bool)gSavedSettings.getBOOL("BulkChangeNextOwnerCopy");
+	bool copyable = gSavedSettings.getbool("BulkChangeNextOwnerCopy");
 	if(!copyable)
 	{
-		gSavedSettings.setBOOL("BulkChangeNextOwnerTransfer", TRUE);
+		gSavedSettings.setbool("BulkChangeNextOwnerTransfer", true);
 	}
 	LLCheckBoxCtrl* xfer =getChild<LLCheckBoxCtrl>("next_owner_transfer");
 	xfer->setEnabled(copyable);
