@@ -39,7 +39,7 @@
 #include <stdint.h>
 #endif
 
-#include <x86intrin.h>
+#include <immintrin.h>
 
 #include "llmemory.h"
 #include "llsimdtypes.h"
