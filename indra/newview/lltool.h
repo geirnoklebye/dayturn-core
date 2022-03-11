@@ -56,12 +56,12 @@ public:
 	virtual BOOL	handleMiddleMouseUp(S32 x, S32 y, MASK mask);
 
 	virtual bool	handleHover(S32 x, S32 y, MASK mask);
-	virtual BOOL	handleScrollWheel(S32 x, S32 y, S32 clicks);
-	virtual BOOL	handleScrollHWheel(S32 x, S32 y, S32 clicks);
+	virtual bool	handleScrollWheel(S32 x, S32 y, S32 clicks);
+	virtual bool	handleScrollHWheel(S32 x, S32 y, S32 clicks);
 	virtual BOOL	handleDoubleClick(S32 x, S32 y, MASK mask);
 	virtual BOOL	handleRightMouseDown(S32 x, S32 y, MASK mask);
 	virtual BOOL	handleRightMouseUp(S32 x, S32 y, MASK mask);
-	virtual BOOL	handleToolTip(S32 x, S32 y, MASK mask);
+	virtual bool	handleToolTip(S32 x, S32 y, MASK mask);
 
 		// Return FALSE to allow context menu to be shown.
 	virtual void	screenPointToLocal(S32 screen_x, S32 screen_y, S32* local_x, S32* local_y) const

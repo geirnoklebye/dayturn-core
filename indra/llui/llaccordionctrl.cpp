@@ -554,12 +554,12 @@ void LLAccordionCtrl::arrange()
 
 //---------------------------------------------------------------------------------
 
-BOOL LLAccordionCtrl::handleScrollWheel		( S32 x, S32 y, S32 clicks )
+bool LLAccordionCtrl::handleScrollWheel		( S32 x, S32 y, S32 clicks )
 {
 	if(LLPanel::handleScrollWheel(x,y,clicks))
-		return TRUE;
+		return true;
 	if( mScrollbar->getVisible() && mScrollbar->handleScrollWheel( 0, 0, clicks ) )
-		return TRUE;
+		return true;
 	return false;
 
 }

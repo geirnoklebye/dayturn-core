@@ -160,7 +160,7 @@ class LLFavoriteLandmarkButton : public LLButton
 {
 public:
 
-	BOOL handleToolTip(S32 x, S32 y, MASK mask)
+	bool handleToolTip(S32 x, S32 y, MASK mask)
 	{
 		std::string region_name = mLandmarkInfoGetter.getName();
 		
@@ -176,7 +176,7 @@ public:
 
 			LLToolTipMgr::instance().show(params);
 		}
-		return TRUE;
+		return true;
 	}
 
 	/*virtual*/ bool	handleHover(S32 x, S32 y, MASK mask)
@@ -224,7 +224,7 @@ private:
 class LLFavoriteLandmarkMenuItem : public LLMenuItemCallGL
 {
 public:
-	BOOL handleToolTip(S32 x, S32 y, MASK mask)
+	bool handleToolTip(S32 x, S32 y, MASK mask)
 	{
 		std::string region_name = mLandmarkInfoGetter.getName();
 		if (!region_name.empty())
@@ -234,7 +234,7 @@ public:
 			params.sticky_rect = calcScreenRect();
 			LLToolTipMgr::instance().show(params);
 		}
-		return TRUE;
+		return true;
 	}
 	
 	void setLandmarkID(const LLUUID& id){ mLandmarkInfoGetter.setLandmarkID(id); }

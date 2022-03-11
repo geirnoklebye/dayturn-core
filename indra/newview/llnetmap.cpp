@@ -777,7 +777,7 @@ LLVector3d LLNetMap::viewPosToGlobal( S32 x, S32 y )
 	return pos_global;
 }
 
-BOOL LLNetMap::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLNetMap::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
 	// note that clicks are reversed from what you'd think: i.e. > 0  means zoom out, < 0 means zoom in
 	F32 new_scale = mScale * pow(MAP_SCALE_ZOOM_FACTOR, -clicks);
@@ -795,21 +795,21 @@ BOOL LLNetMap::handleScrollWheel(S32 x, S32 y, S32 clicks)
 		mCurPan -= zoom_offset * mScale / old_scale - zoom_offset;
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL LLNetMap::handleToolTip( S32 x, S32 y, MASK mask )
+bool LLNetMap::handleToolTip( S32 x, S32 y, MASK mask )
 {
 	if (gDisconnected)
 	{
-		return FALSE;
+		return false;
 	}
 
 	// If the cursor is near an avatar on the minimap, a mini-inspector will be
 	// shown for the avatar, instead of the normal map tooltip.
 	if (handleToolTipAgent(mClosestAgentToCursor))
 	{
-		return TRUE;
+		return true;
 	}
 
 	LLRect sticky_rect;
@@ -838,15 +838,15 @@ BOOL LLNetMap::handleToolTip( S32 x, S32 y, MASK mask )
 		.message(msg)
 		.sticky_rect(sticky_rect));
 		
-	return TRUE;
+	return true;
 }
 
-BOOL LLNetMap::handleToolTipAgent(const LLUUID& avatar_id)
+bool LLNetMap::handleToolTipAgent(const LLUUID& avatar_id)
 {
 	LLAvatarName av_name;
 	if (avatar_id.isNull() || !LLAvatarNameCache::get(avatar_id, &av_name))
 	{
-		return FALSE;
+		return false;
 	}
 
 	// only show tooltip if same inspector not already open
@@ -867,7 +867,7 @@ BOOL LLNetMap::handleToolTipAgent(const LLUUID& avatar_id)
 
 		LLToolTipMgr::instance().show(p);
 	}
-	return TRUE;
+	return true;
 }
 
 // static

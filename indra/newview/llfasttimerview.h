@@ -60,8 +60,8 @@ public:
 	virtual BOOL handleRightMouseDown(S32 x, S32 y, MASK mask);
 	virtual BOOL handleMouseUp(S32 x, S32 y, MASK mask);
 	virtual bool handleHover(S32 x, S32 y, MASK mask);
-	virtual BOOL handleToolTip(S32 x, S32 y, MASK mask);
-	virtual BOOL handleScrollWheel(S32 x, S32 y, S32 clicks);
+	virtual bool handleToolTip(S32 x, S32 y, MASK mask);
+	virtual bool handleScrollWheel(S32 x, S32 y, S32 clicks);
 	virtual void draw();
 	virtual void onOpen(const LLSD& key);
 	virtual void onClose(bool app_quitting);

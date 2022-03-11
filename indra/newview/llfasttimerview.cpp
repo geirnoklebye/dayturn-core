@@ -314,7 +314,7 @@ static std::string get_tooltip(BlockTimerStatHandle& timer, S32 history_index, P
 	return tooltip;
 }
 
-BOOL LLFastTimerView::handleToolTip(S32 x, S32 y, MASK mask)
+bool LLFastTimerView::handleToolTip(S32 x, S32 y, MASK mask)
 {
 	if(mPauseHistory && mBarRect.pointInRect(x, y))
 	{
@@ -331,7 +331,7 @@ BOOL LLFastTimerView::handleToolTip(S32 x, S32 y, MASK mask)
 				.sticky_rect(screen_rect)
 				.delay_time(0.f));
 
-			return TRUE;
+			return true;
 		}
 	}
 	else
@@ -344,7 +344,7 @@ BOOL LLFastTimerView::handleToolTip(S32 x, S32 y, MASK mask)
 			{
 				LLToolTipMgr::instance().show(get_tooltip(*idp, 0, mRecording));
 
-				return TRUE;
+				return true;
 			}
 		}
 	}
@@ -352,7 +352,7 @@ BOOL LLFastTimerView::handleToolTip(S32 x, S32 y, MASK mask)
 	return LLFloater::handleToolTip(x, y, mask);
 }
 
-BOOL LLFastTimerView::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLFastTimerView::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
     if (x < mBarRect.mLeft)
     {
@@ -366,7 +366,7 @@ BOOL LLFastTimerView::handleScrollWheel(S32 x, S32 y, S32 clicks)
 							0,
 							llmin((S32)mRecording.getNumRecordedPeriods(), (S32)mRecording.getNumRecordedPeriods() - MAX_VISIBLE_HISTORY));
     }
-	return TRUE;
+	return true;
 }
 
 static BlockTimerStatHandle FTM_RENDER_TIMER("Timers");

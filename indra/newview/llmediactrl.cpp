@@ -200,35 +200,35 @@ bool LLMediaCtrl::handleHover( S32 x, S32 y, MASK mask )
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-BOOL LLMediaCtrl::handleScrollWheel( S32 x, S32 y, S32 clicks )
+bool LLMediaCtrl::handleScrollWheel( S32 x, S32 y, S32 clicks )
 {
-	if (LLPanel::handleScrollWheel(x, y, clicks)) return TRUE;
+	if (LLPanel::handleScrollWheel(x, y, clicks)) return true;
 	if (mMediaSource && mMediaSource->hasMedia())
 	{
 		convertInputCoords(x, y);
 		mMediaSource->scrollWheel(x, y, 0, clicks, gKeyboard->currentMask(TRUE));
 	}
 
-	return TRUE;
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-BOOL LLMediaCtrl::handleScrollHWheel(S32 x, S32 y, S32 clicks)
+bool LLMediaCtrl::handleScrollHWheel(S32 x, S32 y, S32 clicks)
 {
-    if (LLPanel::handleScrollHWheel(x, y, clicks)) return TRUE;
+    if (LLPanel::handleScrollHWheel(x, y, clicks)) return true;
     if (mMediaSource && mMediaSource->hasMedia())
     {
         convertInputCoords(x, y);
         mMediaSource->scrollWheel(x, y, clicks, 0, gKeyboard->currentMask(TRUE));
     }
 
-    return TRUE;
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //	virtual 
-BOOL LLMediaCtrl::handleToolTip(S32 x, S32 y, MASK mask)
+bool LLMediaCtrl::handleToolTip(S32 x, S32 y, MASK mask)
 {
 	std::string hover_text;
 	
@@ -237,7 +237,7 @@ BOOL LLMediaCtrl::handleToolTip(S32 x, S32 y, MASK mask)
 	
 	if(hover_text.empty())
 	{
-		return FALSE;
+		return false;
 	}
 	else
 	{
@@ -252,7 +252,7 @@ BOOL LLMediaCtrl::handleToolTip(S32 x, S32 y, MASK mask)
 			.sticky_rect(sticky_rect_screen));		
 	}
 
-	return TRUE;
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

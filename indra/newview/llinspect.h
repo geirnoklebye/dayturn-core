@@ -41,7 +41,7 @@ public:
 	/*virtual*/ void draw();
 	
 	/*virtual*/ bool handleHover(S32 x, S32 y, MASK mask);
-	/*virtual*/ BOOL handleToolTip(S32 x, S32 y, MASK mask);
+	/*virtual*/ bool handleToolTip(S32 x, S32 y, MASK mask);
 	/*virtual*/ void onMouseLeave(S32 x, S32 y, MASK mask);
 	
 	/// Start open animation

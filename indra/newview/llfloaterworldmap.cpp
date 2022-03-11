@@ -470,7 +470,7 @@ bool LLFloaterWorldMap::handleHover(S32 x, S32 y, MASK mask)
 	return handled;
 }
 
-BOOL LLFloaterWorldMap::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLFloaterWorldMap::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
 	if (!isMinimized() && isFrontmost())
 	{
@@ -479,7 +479,7 @@ BOOL LLFloaterWorldMap::handleScrollWheel(S32 x, S32 y, S32 clicks)
 			F32 slider_value = (F32)getChild<LLUICtrl>("zoom slider")->getValue().asReal();
 			slider_value += ((F32)clicks * -0.3333f);
 			getChild<LLUICtrl>("zoom slider")->setValue(LLSD(slider_value));
-			return TRUE;
+			return true;
 		}
 	}
 	

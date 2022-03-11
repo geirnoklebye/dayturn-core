@@ -399,13 +399,13 @@ void LLPanelInventoryListItemBase::setTitle(const std::string& title,
 		highlit_text);
 }
 
-BOOL LLPanelInventoryListItemBase::handleToolTip( S32 x, S32 y, MASK mask)
+bool LLPanelInventoryListItemBase::handleToolTip( S32 x, S32 y, MASK mask)
 {
 	LLRect text_box_rect = mTitleCtrl->getRect();
 	if (text_box_rect.pointInRect(x, y) &&
 		mTitleCtrl->getTextPixelWidth() <= text_box_rect.getWidth())
 	{
-		return FALSE;
+		return false;
 	}
 	return LLPanel::handleToolTip(x, y, mask);
 }

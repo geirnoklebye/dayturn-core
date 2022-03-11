@@ -554,7 +554,7 @@ bool LLFloaterBvhPreview::handleHover(S32 x, S32 y, MASK mask)
 //-----------------------------------------------------------------------------
 // handleScrollWheel()
 //-----------------------------------------------------------------------------
-BOOL LLFloaterBvhPreview::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLFloaterBvhPreview::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
 	if (!mAnimPreview)
 		return false;
@@ -562,7 +562,7 @@ BOOL LLFloaterBvhPreview::handleScrollWheel(S32 x, S32 y, S32 clicks)
 	mAnimPreview->zoom((F32)clicks * -0.2f);
 	mAnimPreview->requestUpdate();
 
-	return TRUE;
+	return true;
 }
 
 //-----------------------------------------------------------------------------

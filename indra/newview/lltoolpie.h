@@ -51,10 +51,10 @@ public:
 	virtual BOOL		handleRightMouseUp(S32 x, S32 y, MASK mask);
 	virtual bool		handleHover(S32 x, S32 y, MASK mask);
 	virtual BOOL		handleDoubleClick(S32 x, S32 y, MASK mask);
-	BOOL				handleScrollWheelAny(S32 x, S32 y, S32 clicks_x, S32 clicks_y);
-	virtual BOOL		handleScrollWheel(S32 x, S32 y, S32 clicks);
-	virtual BOOL		handleScrollHWheel(S32 x, S32 y, S32 clicks);
-	virtual BOOL		handleToolTip(S32 x, S32 y, MASK mask);
+	bool				handleScrollWheelAny(S32 x, S32 y, S32 clicks_x, S32 clicks_y);
+	virtual bool		handleScrollWheel(S32 x, S32 y, S32 clicks);
+	virtual bool		handleScrollHWheel(S32 x, S32 y, S32 clicks);
+	virtual bool		handleToolTip(S32 x, S32 y, MASK mask);
 
 	virtual void		render();
 
@@ -98,12 +98,12 @@ private:
     bool handleMediaHover(const LLPickInfo& info);
 	bool handleMediaMouseUp(); 
 	BOOL handleTooltipLand(std::string line, std::string tooltip_msg);
-	BOOL handleTooltipObject( LLViewerObject* hover_object, std::string line, std::string tooltip_msg);
+	bool handleTooltipObject( LLViewerObject* hover_object, std::string line, std::string tooltip_msg);
 
 	// <FS:ND> FIRE-10276; handleTooltipObject can be called during name resolution (LLAvatarNameCache), then hover_object can lon gbe destroyed and the pointer invalid.
 	// To circumvent this just pass the id and try to fetch the object from gObjectList.
 
-	BOOL handleTooltipObjectById( LLUUID hoverObjectId, std::string line, std::string tooltip_msg);
+	bool handleTooltipObjectById( LLUUID hoverObjectId, std::string line, std::string tooltip_msg);
 
 	// </FS:ND>
 

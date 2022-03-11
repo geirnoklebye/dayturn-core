@@ -277,13 +277,13 @@ BOOL LLSlider::handleKeyHere(KEY key, MASK mask)
 	return handled;
 }
 
-BOOL LLSlider::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLSlider::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
 	if ( mOrientation == VERTICAL )
 	{
 		F32 new_val = getValueF32() - clicks * getIncrement();
 		setValueAndCommit(new_val);
-		return TRUE;
+		return true;
 	}
 	return LLF32UICtrl::handleScrollWheel(x,y,clicks);
 }

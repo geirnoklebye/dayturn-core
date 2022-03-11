@@ -775,7 +775,7 @@ protected:
 	/**
 	 * Callback for mouse wheel scrolled, calls scrollRight() or scrollLeft()
 	 */
-	BOOL handleScrollWheel(S32 x, S32 y, S32 clicks);
+	bool handleScrollWheel(S32 x, S32 y, S32 clicks);
 
 	/**
 	 * Notifies subscribers about click on chiclet.

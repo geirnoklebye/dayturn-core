@@ -118,10 +118,10 @@ BOOL LLToolTipView::handleRightMouseDown(S32 x, S32 y, MASK mask)
 }
 
 
-BOOL LLToolTipView::handleScrollWheel( S32 x, S32 y, S32 clicks )
+bool LLToolTipView::handleScrollWheel( S32 x, S32 y, S32 clicks )
 {
 	LLToolTipMgr::instance().blockToolTips();
-	return FALSE;
+	return false;
 }
 
 void LLToolTipView::drawStickyRect()

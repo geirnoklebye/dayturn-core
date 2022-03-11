@@ -1563,10 +1563,10 @@ BOOL LLFloater::offerClickToButton(S32 x, S32 y, MASK mask, EFloaterButton index
 	return FALSE;
 }
 
-BOOL LLFloater::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLFloater::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
 	LLPanel::handleScrollWheel(x,y,clicks);
-	return TRUE;//always
+	return true;//always
 }
 
 // virtual

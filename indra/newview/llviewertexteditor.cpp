@@ -272,14 +272,14 @@ public:
 		LLUI::getInstance()->getWindow()->setCursor(UI_CURSOR_HAND);
 		return TRUE;
 	}
-	virtual BOOL				handleToolTip(S32 x, S32 y, MASK mask )
+	virtual bool				handleToolTip(S32 x, S32 y, MASK mask )
 	{ 
 		if (!mToolTip.empty())
 		{
 			LLToolTipMgr::instance().show(mToolTip);
-			return TRUE;
+			return true;
 		}
-		return FALSE; 
+		return false; 
 	}
 
 // [SL:KB] - Patch: UI-Notecards | Checked: 2010-09-12 (Catznip-2.1.2d) | Added: Catznip-2.1.2d

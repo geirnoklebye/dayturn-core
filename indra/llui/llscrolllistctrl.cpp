@@ -1914,7 +1914,7 @@ void LLScrollListCtrl::setEnabled(BOOL enabled)
 	mScrollbar->setTabStop(!enabled && mScrollbar->getPageSize() < mScrollbar->getDocSize());
 }
 
-BOOL LLScrollListCtrl::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLScrollListCtrl::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
 	// <FS> FIRE-10172: Let the LLTextbox handle the mouse scroll if it's visible
 	if (mCommentTextView && mCommentTextView->getVisible())
@@ -1923,27 +1923,27 @@ BOOL LLScrollListCtrl::handleScrollWheel(S32 x, S32 y, S32 clicks)
 	}
 	// </FS>
 
-	BOOL handled = FALSE;
+	bool handled = false;
 	// Pretend the mouse is over the scrollbar
 	handled = mScrollbar->handleScrollWheel( 0, 0, clicks );
 
 	if (mMouseWheelOpaque)
 	{
-		return TRUE;
+		return true;
 	}
 
 	return handled;
 }
 
-BOOL LLScrollListCtrl::handleScrollHWheel(S32 x, S32 y, S32 clicks)
+bool LLScrollListCtrl::handleScrollHWheel(S32 x, S32 y, S32 clicks)
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 	// Pretend the mouse is over the scrollbar
 	handled = mScrollbar->handleScrollHWheel( 0, 0, clicks );
 
 	if (mMouseWheelOpaque)
 	{
-		return TRUE;
+		return true;
 	}
 
 	return handled;
@@ -1961,20 +1961,20 @@ LLRect LLScrollListCtrl::getCellRect(S32 row_index, S32 column_index)
 	return cell_rect;
 }
 
-BOOL LLScrollListCtrl::handleToolTip(S32 x, S32 y, MASK mask)
+bool LLScrollListCtrl::handleToolTip(S32 x, S32 y, MASK mask)
 {
 	S32 column_index = getColumnIndexFromOffset(x);
 	LLScrollListColumn* columnp = getColumn(column_index);
 
-	if (columnp == NULL) return FALSE;
+	if (columnp == NULL) return false;
 
-	BOOL handled = FALSE;
+	bool handled = false;
 	// show tooltip for full name of hovered item if it has been truncated
 	LLScrollListItem* hit_item = hitItem(x, y);
 	if (hit_item)
 	{
 		LLScrollListCell* hit_cell = hit_item->getColumn(column_index);
-		if (!hit_cell) return FALSE;
+		if (!hit_cell) return false;
 		if (hit_cell 
 			&& hit_cell->isText()
 			&& hit_cell->needsToolTip())
@@ -1993,7 +1993,7 @@ BOOL LLScrollListCtrl::handleToolTip(S32 x, S32 y, MASK mask)
 										.delay_time(0.2f)
 										.sticky_rect(sticky_rect));		
 		}
-		handled = TRUE;
+		handled = true;
 	}
 
 	// otherwise, look for a tooltip associated with this column

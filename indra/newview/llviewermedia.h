@@ -251,7 +251,7 @@ public:
 	void navigateTo(const std::string& url, const std::string& mime_type = "", bool rediscover_type = false, bool server_request = false, bool clean_browser = false);
 	void navigateInternal();
 	void navigateStop();
-	bool handleKeyHere(KEY key, MASK mask);
+	BOOL handleKeyHere(KEY key, MASK mask);
 	bool handleKeyUpHere(KEY key, MASK mask);
 	bool handleUnicodeCharHere(llwchar uni_char);
 	bool canNavigateForward();
@@ -326,12 +326,12 @@ public:
 	// Sadly, these are all pure virtual, so I have to supply implementations here:
 	/*virtual*/ BOOL	handleMouseDown(S32 x, S32 y, MASK mask) { return FALSE; };
 	/*virtual*/ bool	handleHover(S32 x, S32 y, MASK mask) { return false; };
-	/*virtual*/ BOOL	handleScrollWheel(S32 x, S32 y, S32 clicks) { return FALSE; };
-	/*virtual*/ BOOL	handleScrollHWheel(S32 x, S32 y, S32 clicks) { return FALSE; };
+	/*virtual*/ bool	handleScrollWheel(S32 x, S32 y, S32 clicks) { return false; };
+	/*virtual*/ bool	handleScrollHWheel(S32 x, S32 y, S32 clicks) { return false; };
 	/*virtual*/ BOOL	handleDoubleClick(S32 x, S32 y, MASK mask) { return FALSE; };
 	/*virtual*/ BOOL	handleRightMouseDown(S32 x, S32 y, MASK mask) { return FALSE; };
 	/*virtual*/ BOOL	handleRightMouseUp(S32 x, S32 y, MASK mask) { return FALSE; };
-	/*virtual*/ BOOL	handleToolTip(S32 x, S32 y, MASK mask) { return FALSE; };
+	/*virtual*/ bool	handleToolTip(S32 x, S32 y, MASK mask) { return false; };
 	/*virtual*/ BOOL	handleMiddleMouseDown(S32 x, S32 y, MASK mask) { return FALSE; };
 	/*virtual*/ BOOL	handleMiddleMouseUp(S32 x, S32 y, MASK mask) {return FALSE; };
 	/*virtual*/ const std::string& getName() const;

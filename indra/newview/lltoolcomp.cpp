@@ -831,12 +831,12 @@ void	LLToolCompGun::handleDeselect()
 }
 
 
-BOOL LLToolCompGun::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLToolCompGun::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
 	if (clicks > 0)
 	{
 		gAgentCamera.changeCameraToDefault();
 
 	}
-	return TRUE;
+	return true;
 }

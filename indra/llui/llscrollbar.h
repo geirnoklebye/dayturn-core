@@ -88,8 +88,8 @@ public:
 	virtual BOOL	handleMouseUp(S32 x, S32 y, MASK mask);
 	virtual BOOL	handleDoubleClick(S32 x, S32 y, MASK mask);
 	virtual bool	handleHover(S32 x, S32 y, MASK mask);
-	virtual BOOL	handleScrollWheel(S32 x, S32 y, S32 clicks);
-	virtual BOOL	handleScrollHWheel(S32 x, S32 y, S32 clicks);
+	virtual bool	handleScrollWheel(S32 x, S32 y, S32 clicks);
+	virtual bool	handleScrollHWheel(S32 x, S32 y, S32 clicks);
 	virtual BOOL	handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop, 
 		EDragAndDropType cargo_type, void *cargo_data, EAcceptance *accept, std::string &tooltip_msg);
 
@@ -130,7 +130,7 @@ public:
 
 private:
 	void				updateThumbRect();
-	bool				changeLine(S32 delta, BOOL update_thumb );
+	bool				changeLine(S32 delta, bool update_thumb );
 
 	callback_t			mChangeCallback;
 

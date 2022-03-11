@@ -84,7 +84,7 @@ public:
 
 	/*virtual*/ void reshape( S32 width, S32 height, BOOL called_from_parent = TRUE );
 	/*virtual*/ bool handleHover(S32 x, S32 y, MASK mask);
-	/*virtual*/ BOOL handleScrollWheel(S32 x, S32 y, S32 clicks);
+	/*virtual*/ bool handleScrollWheel(S32 x, S32 y, S32 clicks);
 	/*virtual*/ void draw();
 
 	/*virtual*/ void onFocusLost();

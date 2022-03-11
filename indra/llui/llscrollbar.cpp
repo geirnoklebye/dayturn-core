@@ -329,7 +329,7 @@ bool LLScrollbar::handleHover(S32 x, S32 y, MASK mask)
 					S32 new_pos = llclamp( S32(variable_lines - ratio * variable_lines + 0.5f), 0, variable_lines );
 					// Note: we do not call updateThumbRect() here.  Instead we let the thumb and the document go slightly
 					// out of sync (less than a line's worth) to make the thumb feel responsive.
-					changeLine( new_pos - mDocPos, FALSE );
+					changeLine( new_pos - mDocPos, false );
 				}
 			}
 
@@ -373,7 +373,7 @@ bool LLScrollbar::handleHover(S32 x, S32 y, MASK mask)
 	
 					// Note: we do not call updateThumbRect() here.  Instead we let the thumb and the document go slightly
 					// out of sync (less than a line's worth) to make the thumb feel responsive.
-					changeLine( new_pos - mDocPos, FALSE );
+					changeLine( new_pos - mDocPos, false );
 				}
 			}
 
@@ -402,18 +402,18 @@ bool LLScrollbar::handleHover(S32 x, S32 y, MASK mask)
 } // end handleHover
 
 
-BOOL LLScrollbar::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLScrollbar::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
-	BOOL handled = changeLine( clicks * mStepSize, TRUE );
+	bool handled = changeLine( clicks * mStepSize, true );
 	return handled;
 }
 
-BOOL LLScrollbar::handleScrollHWheel(S32 x, S32 y, S32 clicks)
+bool LLScrollbar::handleScrollHWheel(S32 x, S32 y, S32 clicks)
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 	if (LLScrollbar::HORIZONTAL == mOrientation)
 	{
-		handled = changeLine(clicks * mStepSize, TRUE);
+		handled = changeLine(clicks * mStepSize, true);
 	}
 	return handled;
 }
@@ -434,7 +434,7 @@ BOOL LLScrollbar::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 	//		: F32(pos - SCROLLBAR_SIZE) / usable_track_length;	
 	//	S32 new_pos = (VERTICAL == mOrientation) ? llclamp( S32(variable_lines - ratio * variable_lines + 0.5f), 0, variable_lines )
 	//		: llclamp( S32(ratio * variable_lines + 0.5f), 0, variable_lines );
-	//	changeLine( new_pos - mDocPos, TRUE );
+	//	changeLine( new_pos - mDocPos, true );
 	//}
 	//return TRUE;
 	return FALSE;
@@ -578,7 +578,7 @@ void LLScrollbar::draw()
 } // end draw
 
 
-bool LLScrollbar::changeLine( S32 delta, BOOL update_thumb )
+bool LLScrollbar::changeLine( S32 delta, bool update_thumb )
 {
 	return setDocPos(mDocPos + delta, update_thumb);
 }
@@ -631,7 +631,7 @@ void LLScrollbar::pageUp(S32 overlap)
 {
 	if (mDocSize > mPageSize)
 	{
-		changeLine( -(mPageSize - overlap), TRUE );
+		changeLine( -(mPageSize - overlap), true );
 	}
 }
 
@@ -639,18 +639,18 @@ void LLScrollbar::pageDown(S32 overlap)
 {
 	if (mDocSize > mPageSize)
 	{
-		changeLine( mPageSize - overlap, TRUE );
+		changeLine( mPageSize - overlap, true );
 	}
 }
 
 void LLScrollbar::onLineUpBtnPressed( const LLSD& data )
 {
-	changeLine( -mStepSize, TRUE );
+	changeLine( -mStepSize, true );
 }
 
 void LLScrollbar::onLineDownBtnPressed( const LLSD& data )
 {
-	changeLine( mStepSize, TRUE );
+	changeLine( mStepSize, true );
 }
 
 void LLScrollbar::setThickness(S32 thickness)

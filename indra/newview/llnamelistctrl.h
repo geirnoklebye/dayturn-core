@@ -177,7 +177,7 @@ public:
 									  BOOL drop, EDragAndDropType cargo_type, void *cargo_data,
 									  EAcceptance *accept,
 									  std::string& tooltip_msg) override;
-	/*virtual*/ BOOL handleToolTip(S32 x, S32 y, MASK mask) override;
+	/*virtual*/ bool handleToolTip(S32 x, S32 y, MASK mask) override;
 
 	void setAllowCallingCardDrop(BOOL b) { mAllowCallingCardDrop = b; }
 

@@ -971,7 +971,7 @@ boost::signals2::connection LLChicletPanel::setChicletClickedCallback(
 	return setCommitCallback(cb);
 }
 
-BOOL LLChicletPanel::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLChicletPanel::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
 	if(clicks > 0)
 	{
@@ -981,7 +981,7 @@ BOOL LLChicletPanel::handleScrollWheel(S32 x, S32 y, S32 clicks)
 	{
 		scrollLeft();
 	}
-	return TRUE;
+	return true;
 }
 
 bool LLChicletPanel::isAnyIMFloaterDoked()

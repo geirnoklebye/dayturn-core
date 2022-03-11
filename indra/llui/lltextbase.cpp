@@ -1259,23 +1259,23 @@ bool LLTextBase::handleHover(S32 x, S32 y, MASK mask)
 	return LLUICtrl::handleHover(x, y, mask);
 }
 
-BOOL LLTextBase::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLTextBase::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
 	LLTextSegmentPtr cur_segment = getSegmentAtLocalPos(x, y);
 	if (cur_segment && cur_segment->handleScrollWheel(x, y, clicks))
 	{
-		return TRUE;
+		return true;
 	}
 
 	return LLUICtrl::handleScrollWheel(x, y, clicks);
 }
 
-BOOL LLTextBase::handleToolTip(S32 x, S32 y, MASK mask)
+bool LLTextBase::handleToolTip(S32 x, S32 y, MASK mask)
 {
 	LLTextSegmentPtr cur_segment = getSegmentAtLocalPos(x, y);
 	if (cur_segment && cur_segment->handleToolTip(x, y, mask))
 	{
-		return TRUE;
+		return true;
 	}
 
 	return LLUICtrl::handleToolTip(x, y, mask);
@@ -3330,10 +3330,10 @@ BOOL LLTextSegment::handleMiddleMouseUp(S32 x, S32 y, MASK mask) { return FALSE;
 BOOL LLTextSegment::handleRightMouseDown(S32 x, S32 y, MASK mask) { return FALSE; }
 BOOL LLTextSegment::handleRightMouseUp(S32 x, S32 y, MASK mask) { return FALSE; }
 BOOL LLTextSegment::handleDoubleClick(S32 x, S32 y, MASK mask) { return FALSE; }
-bool LLTextSegment::handleHover(S32 x, S32 y, MASK mask) { return FALSE; }
-BOOL LLTextSegment::handleScrollWheel(S32 x, S32 y, S32 clicks) { return FALSE; }
-BOOL LLTextSegment::handleScrollHWheel(S32 x, S32 y, S32 clicks) { return FALSE; }
-BOOL LLTextSegment::handleToolTip(S32 x, S32 y, MASK mask) { return FALSE; }
+bool LLTextSegment::handleHover(S32 x, S32 y, MASK mask) { return false; }
+bool LLTextSegment::handleScrollWheel(S32 x, S32 y, S32 clicks) { return false; }
+bool LLTextSegment::handleScrollHWheel(S32 x, S32 y, S32 clicks) { return false; }
+bool LLTextSegment::handleToolTip(S32 x, S32 y, MASK mask) { return false; }
 const std::string&	LLTextSegment::getName() const 
 {
 	return LLStringUtil::null;
@@ -3525,7 +3525,7 @@ BOOL LLNormalTextSegment::handleMouseUp(S32 x, S32 y, MASK mask)
 	return FALSE;
 }
 
-BOOL LLNormalTextSegment::handleToolTip(S32 x, S32 y, MASK mask)
+bool LLNormalTextSegment::handleToolTip(S32 x, S32 y, MASK mask)
 {
 	std::string msg;
 	// do we have a tooltip for a loaded keyword (for script editor)?
@@ -3533,16 +3533,16 @@ BOOL LLNormalTextSegment::handleToolTip(S32 x, S32 y, MASK mask)
 	{
 		const LLWString& wmsg = mToken->getToolTip();
 		LLToolTipMgr::instance().show(wstring_to_utf8str(wmsg));
-		return TRUE;
+		return true;
 	}
 	// or do we have an explicitly set tooltip (e.g., for Urls)
 	if (!mTooltip.empty())
 	{
 		LLToolTipMgr::instance().show(mTooltip);
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 void LLNormalTextSegment::setToolTip(const std::string& tooltip)
@@ -3894,15 +3894,15 @@ S32	 LLImageTextSegment::getNumChars(S32 num_pixels, S32 segment_offset, S32 lin
 	return 0;
 }
 
-BOOL LLImageTextSegment::handleToolTip(S32 x, S32 y, MASK mask)
+bool LLImageTextSegment::handleToolTip(S32 x, S32 y, MASK mask)
 {
 	if (!mTooltip.empty())
 	{
 		LLToolTipMgr::instance().show(mTooltip);
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 void LLImageTextSegment::setToolTip(const std::string& tooltip)

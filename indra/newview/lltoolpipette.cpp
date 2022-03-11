@@ -87,11 +87,11 @@ bool LLToolPipette::handleHover(S32 x, S32 y, MASK mask)
 	return false;
 }
 
-BOOL LLToolPipette::handleToolTip(S32 x, S32 y, MASK mask)
+bool LLToolPipette::handleToolTip(S32 x, S32 y, MASK mask)
 {
 	if (mTooltipMsg.empty())
 	{
-		return FALSE;
+		return false;
 	}
 
 	LLRect sticky_rect;
@@ -100,7 +100,7 @@ BOOL LLToolPipette::handleToolTip(S32 x, S32 y, MASK mask)
 		.message(mTooltipMsg)
 		.sticky_rect(sticky_rect));
 
-	return TRUE;
+	return true;
 }
 
 void LLToolPipette::setTextureEntry(const LLTextureEntry* entry)

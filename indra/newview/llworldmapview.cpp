@@ -1126,7 +1126,7 @@ LLVector3d LLWorldMapView::viewPosToGlobal( S32 x, S32 y )
 }
 
 
-BOOL LLWorldMapView::handleToolTip( S32 x, S32 y, MASK mask )
+bool LLWorldMapView::handleToolTip( S32 x, S32 y, MASK mask )
 {
 	LLVector3d pos_global = viewPosToGlobal(x, y);
 	U64 handle = to_region_handle(pos_global);
@@ -1179,7 +1179,7 @@ BOOL LLWorldMapView::handleToolTip( S32 x, S32 y, MASK mask )
 			.message(tooltip_msg)
 			.sticky_rect(sticky_rect_screen));
 	}
-	return TRUE;
+	return true;
 }
 
 // Pass relative Z of 0 to draw at same level.

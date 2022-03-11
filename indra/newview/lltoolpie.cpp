@@ -219,9 +219,9 @@ BOOL LLToolPie::handleRightMouseUp(S32 x, S32 y, MASK mask)
 	return LLTool::handleRightMouseUp(x, y, mask);
 }
 
-BOOL LLToolPie::handleScrollWheelAny(S32 x, S32 y, S32 clicks_x, S32 clicks_y)
+bool LLToolPie::handleScrollWheelAny(S32 x, S32 y, S32 clicks_x, S32 clicks_y)
 {
-    BOOL res = FALSE;
+    bool res = false;
     // mHoverPick should have updated on its own and we should have a face
     // in LLViewerMediaFocus in case of media, so just reuse mHoverPick
     if (mHoverPick.mUVCoords.mV[VX] >= 0.f && mHoverPick.mUVCoords.mV[VY] >= 0.f)
@@ -236,12 +236,12 @@ BOOL LLToolPie::handleScrollWheelAny(S32 x, S32 y, S32 clicks_x, S32 clicks_y)
     return res;
 }
 
-BOOL LLToolPie::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLToolPie::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
     return handleScrollWheelAny(x, y, 0, clicks);
 }
 
-BOOL LLToolPie::handleScrollHWheel(S32 x, S32 y, S32 clicks)
+bool LLToolPie::handleScrollHWheel(S32 x, S32 y, S32 clicks)
 {
     return handleScrollWheelAny(x, y, clicks, 0);
 }
@@ -1087,12 +1087,12 @@ BOOL LLToolPie::handleTooltipLand(std::string line, std::string tooltip_msg)
 	return TRUE;
 }
 
-BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string line, std::string tooltip_msg)
+bool LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string line, std::string tooltip_msg)
 {
 	// <FS:Ansariel> FIRE-9522: Crashfix
 	if (!hover_object)
 	{
-		return TRUE;
+		return true;
 	}
 	// </FS:Ansariel>
 
@@ -1105,7 +1105,7 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 	{
 		// no hover tips for HUD elements, since they can obscure
 		// what the HUD is displaying
-		return TRUE;
+		return true;
 	}
 	
 	if ( hover_object->isAttachment() )
@@ -1115,7 +1115,7 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 		if (!root_edit)
 		{
 			// Strange parenting issue, don't show any text
-			return TRUE;
+			return true;
 		}
 		hover_object = (LLViewerObject*)root_edit->getParent();
 		if (!hover_object)
@@ -1445,14 +1445,14 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 		}
 	}
 	
-	return TRUE;
+	return true;
 }
 
-BOOL LLToolPie::handleToolTip(S32 local_x, S32 local_y, MASK mask)
+bool LLToolPie::handleToolTip(S32 local_x, S32 local_y, MASK mask)
 {
 	static LLCachedControl<bool> show_hover_tips(*LLUI::getInstance()->mSettingGroups["config"], "ShowHoverTips", true);
-	if (!show_hover_tips) return TRUE;
-	if (!mHoverPick.isValid()) return TRUE;
+	if (!show_hover_tips) return true;
+	if (!mHoverPick.isValid()) return true;
 
 	LLViewerObject* hover_object = mHoverPick.getObject();
 	
@@ -1472,7 +1472,7 @@ BOOL LLToolPie::handleToolTip(S32 local_x, S32 local_y, MASK mask)
 		handleTooltipLand(line, tooltip_msg);
 	}
 
-	return TRUE;
+	return true;
 }
 
 static void show_inspector(const char* inspector, const char* param, const LLUUID& source_id)
@@ -2280,12 +2280,12 @@ LLToolPie::~LLToolPie()
 // <FS:ND> FIRE-10276; handleTooltipObject can be called during name resolution (LLAvatarNameCache), then hover_object can lon gbe destroyed and the pointer invalid.
 // To circumvent this just pass the id and try to fetch the object from gObjectList.
 
-BOOL LLToolPie::handleTooltipObjectById( LLUUID hoverObjectId, std::string line, std::string tooltip_msg)
+bool LLToolPie::handleTooltipObjectById( LLUUID hoverObjectId, std::string line, std::string tooltip_msg)
 {
 	LLViewerObject* pObject = gObjectList.findObject( hoverObjectId );
 
 	if( !pObject )
-		return TRUE;
+		return true;
 
 	return handleTooltipObject( pObject, line, tooltip_msg );
 }

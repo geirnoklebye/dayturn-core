@@ -142,7 +142,7 @@ public:
 	/*virtual*/ BOOL handleMouseDown( S32 x, S32 y, MASK mask );
 	/*virtual*/ bool handleHover( S32 x, S32 y, MASK mask );
 	/*virtual*/ BOOL handleMouseUp( S32 x, S32 y, MASK mask );
-	/*virtual*/ BOOL handleToolTip(S32 x, S32 y, MASK mask);
+	/*virtual*/ bool handleToolTip(S32 x, S32 y, MASK mask);
 	/*virtual*/ BOOL handleKeyHere(KEY key, MASK mask);
 	/*virtual*/ BOOL handleDragAndDrop(S32 x, S32 y, MASK mask,	BOOL drop,
 									   EDragAndDropType type, void* cargo_data,

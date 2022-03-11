@@ -566,7 +566,7 @@ BOOL LLToolDragAndDrop::handleKey(KEY key, MASK mask)
 	return FALSE;
 }
 
-BOOL LLToolDragAndDrop::handleToolTip(S32 x, S32 y, MASK mask)
+bool LLToolDragAndDrop::handleToolTip(S32 x, S32 y, MASK mask)
 {
 	if (!mToolTipMsg.empty())
 	{
@@ -574,9 +574,9 @@ BOOL LLToolDragAndDrop::handleToolTip(S32 x, S32 y, MASK mask)
 		LLToolTipMgr::instance().show(LLToolTip::Params()
 			.message(mToolTipMsg)
 			.delay_time(gSavedSettings.getF32( "DragAndDropToolTipDelay" )));
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 void LLToolDragAndDrop::handleDeselect()

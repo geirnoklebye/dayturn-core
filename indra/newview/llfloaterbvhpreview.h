@@ -79,7 +79,7 @@ public:
 	BOOL handleMouseDown(S32 x, S32 y, MASK mask);
 	BOOL handleMouseUp(S32 x, S32 y, MASK mask);
 	bool handleHover(S32 x, S32 y, MASK mask);
-	BOOL handleScrollWheel(S32 x, S32 y, S32 clicks); 
+	bool handleScrollWheel(S32 x, S32 y, S32 clicks); 
 	void onMouseCaptureLost();
 
 	void refresh();

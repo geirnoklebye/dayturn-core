@@ -194,7 +194,7 @@ protected:
 	/**
 	 * Show tool tip if item name text size > panel size
 	 */
-	virtual BOOL handleToolTip( S32 x, S32 y, MASK mask);
+	virtual bool handleToolTip( S32 x, S32 y, MASK mask);
 
 	const LLUUID mInventoryItemUUID;
 

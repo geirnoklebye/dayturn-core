@@ -1076,7 +1076,7 @@ void LLAccordionCtrlTab::ctrlSetLeftTopAndSize(LLView* panel, S32 left, S32 top,
 	panel->reshape( width, height, 1);
 	panel->setRect(panel_rect);
 }
-BOOL LLAccordionCtrlTab::handleToolTip(S32 x, S32 y, MASK mask)
+bool LLAccordionCtrlTab::handleToolTip(S32 x, S32 y, MASK mask)
 {
 	//header may be not the first child but we need to process it first
 	if(y >= (getRect().getHeight() - HEADER_HEIGHT - HEADER_HEIGHT/2) )
@@ -1084,20 +1084,20 @@ BOOL LLAccordionCtrlTab::handleToolTip(S32 x, S32 y, MASK mask)
 		//inside tab header
 		//fix for EXT-6619
 		mHeader->handleToolTip(x, y, mask);
-		return TRUE;
+		return true;
 	}
 	return LLUICtrl::handleToolTip(x, y, mask);
 }
-BOOL LLAccordionCtrlTab::handleScrollWheel		( S32 x, S32 y, S32 clicks )
+bool LLAccordionCtrlTab::handleScrollWheel		( S32 x, S32 y, S32 clicks )
 {
 	if( LLUICtrl::handleScrollWheel(x,y,clicks))
 	{
-		return TRUE;
+		return true;
 	}
 	if( mScrollbar && mScrollbar->getVisible() && mScrollbar->handleScrollWheel( 0, 0, clicks ) )
 	{
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 

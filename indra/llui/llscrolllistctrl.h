@@ -368,9 +368,9 @@ public:
 	/*virtual*/ bool	handleHover(S32 x, S32 y, MASK mask);
 	/*virtual*/ BOOL	handleKeyHere(KEY key, MASK mask);
 	/*virtual*/ bool	handleUnicodeCharHere(llwchar uni_char);
-	/*virtual*/ BOOL	handleScrollWheel(S32 x, S32 y, S32 clicks);
-	/*virtual*/ BOOL	handleScrollHWheel(S32 x, S32 y, S32 clicks);
-	/*virtual*/ BOOL	handleToolTip(S32 x, S32 y, MASK mask);
+	/*virtual*/ bool	handleScrollWheel(S32 x, S32 y, S32 clicks);
+	/*virtual*/ bool	handleScrollHWheel(S32 x, S32 y, S32 clicks);
+	/*virtual*/ bool	handleToolTip(S32 x, S32 y, MASK mask);
 	/*virtual*/ void	setEnabled(BOOL enabled);
 	/*virtual*/ void	setFocus( BOOL b );
 	/*virtual*/ void	onFocusReceived();

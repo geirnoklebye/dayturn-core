@@ -91,7 +91,7 @@ public:
 	virtual bool postBuild();
 	
 	virtual BOOL handleRightMouseDown	( S32 x, S32 y, MASK mask); 
-	virtual BOOL handleScrollWheel		( S32 x, S32 y, S32 clicks );
+	virtual bool handleScrollWheel		( S32 x, S32 y, S32 clicks );
 	virtual BOOL handleKeyHere			(KEY key, MASK mask);
 	virtual BOOL handleDragAndDrop		(S32 x, S32 y, MASK mask, BOOL drop,
 										 EDragAndDropType cargo_type,

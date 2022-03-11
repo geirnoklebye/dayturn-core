@@ -721,10 +721,10 @@ BOOL LLTabContainer::handleMouseUp( S32 x, S32 y, MASK mask )
 }
 
 // virtual
-BOOL LLTabContainer::handleToolTip( S32 x, S32 y, MASK mask)
+bool LLTabContainer::handleToolTip( S32 x, S32 y, MASK mask)
 {
 	static LLUICachedControl<S32> tabcntrv_pad ("UITabCntrvPad", 0);
-	BOOL handled = LLPanel::handleToolTip( x, y, mask);
+	bool handled = LLPanel::handleToolTip( x, y, mask);
 	if (!handled && getTabCount() > 0 && !getTabsHidden()) 
 	{
 		LLTabTuple* firsttuple = getTab(0);

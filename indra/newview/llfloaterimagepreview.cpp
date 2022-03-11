@@ -536,7 +536,7 @@ bool LLFloaterImagePreview::handleHover(S32 x, S32 y, MASK mask)
 //-----------------------------------------------------------------------------
 // handleScrollWheel()
 //-----------------------------------------------------------------------------
-BOOL LLFloaterImagePreview::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLFloaterImagePreview::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
 	if (mPreviewRect.pointInRect(x, y) && mAvatarPreview)
 	{
@@ -547,7 +547,7 @@ BOOL LLFloaterImagePreview::handleScrollWheel(S32 x, S32 y, S32 clicks)
 		mSculptedPreview->refresh();
 	}
 
-	return TRUE;
+	return true;
 }
 
 //-----------------------------------------------------------------------------

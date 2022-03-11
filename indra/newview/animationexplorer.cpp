@@ -545,13 +545,13 @@ bool AnimationExplorer::handleHover(S32 x, S32 y, MASK mask)
 }
 
 // (Almost) Copied from llfloaterbvhpreview.cpp
-BOOL AnimationExplorer::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool AnimationExplorer::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
 	if (mPreviewCtrl && mPreviewCtrl->getRect().pointInRect(x, y))
 	{
 		mAnimationPreview->zoom((F32)clicks * -0.2f);
 		mAnimationPreview->requestUpdate();
-		return TRUE;
+		return true;
 	}
 	return LLFloater::handleScrollWheel(x, y, clicks);
 }

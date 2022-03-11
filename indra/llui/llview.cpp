@@ -941,14 +941,14 @@ LLView*	LLView::childFromPoint(S32 x, S32 y, bool recur)
 	return 0;
 }
 
-BOOL LLView::handleToolTip(S32 x, S32 y, MASK mask)
+bool LLView::handleToolTip(S32 x, S32 y, MASK mask)
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 
 	// TS: Don't bother with a tooltip unless the app itself has focus.
 	if (!gFocusMgr.getAppHasFocus())
 	{
-		return TRUE;
+		return true;
 	}
 
 	// parents provide tooltips first, which are optionally
@@ -973,14 +973,14 @@ BOOL LLView::handleToolTip(S32 x, S32 y, MASK mask)
 			                              .sticky_rect(calcScreenRect())
 			                              .delay_time(timeout));
 		}
-		handled = TRUE;
+		handled = true;
 	}
 
 	// child tooltips will override our own
 	LLView* child_handler = childrenHandleToolTip(x, y, mask);
 	if (child_handler)
 	{
-		handled = TRUE;
+		handled = true;
 	}
 
 	return handled;
@@ -1143,12 +1143,12 @@ BOOL LLView::handleDoubleClick(S32 x, S32 y, MASK mask)
 	return childrenHandleDoubleClick( x, y, mask ) != NULL;
 }
 
-BOOL LLView::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLView::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
 	return childrenHandleScrollWheel( x, y, clicks ) != NULL;
 }
 
-BOOL LLView::handleScrollHWheel(S32 x, S32 y, S32 clicks)
+bool LLView::handleScrollHWheel(S32 x, S32 y, S32 clicks)
 {
 	return childrenHandleScrollHWheel( x, y, clicks ) != NULL;
 }

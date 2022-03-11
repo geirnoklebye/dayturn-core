@@ -216,9 +216,9 @@ bool LLPopupView::handleHover(S32 x, S32 y, MASK mask)
 	return handled;	
 }
 
-BOOL LLPopupView::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLPopupView::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
-	BOOL handled = handleMouseEvent(boost::bind(&LLMouseHandler::handleScrollWheel, _1, _2, _3, clicks), view_visible_and_enabled, x, y, false);
+	bool handled = handleMouseEvent(boost::bind(&LLMouseHandler::handleScrollWheel, _1, _2, _3, clicks), view_visible_and_enabled, x, y, false);
 	if (!handled)
 	{
 		handled = LLPanel::handleScrollWheel(x, y, clicks);
@@ -226,9 +226,9 @@ BOOL LLPopupView::handleScrollWheel(S32 x, S32 y, S32 clicks)
 	return handled;	
 }
 
-BOOL LLPopupView::handleToolTip(S32 x, S32 y, MASK mask)
+bool LLPopupView::handleToolTip(S32 x, S32 y, MASK mask)
 {
-	BOOL handled = handleMouseEvent(boost::bind(&LLMouseHandler::handleToolTip, _1, _2, _3, mask), view_visible, x, y, false);
+	bool handled = handleMouseEvent(boost::bind(&LLMouseHandler::handleToolTip, _1, _2, _3, mask), view_visible, x, y, false);
 	if (!handled)
 	{
 		handled = LLPanel::handleToolTip(x, y, mask);

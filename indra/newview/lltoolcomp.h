@@ -51,7 +51,7 @@ public:
 
 	// Map virtual functions to the currently active internal tool
     virtual bool			handleHover(S32 x, S32 y, MASK mask)			{ return mCur->handleHover( x, y, mask ); }
-	virtual BOOL			handleScrollWheel(S32 x, S32 y, S32 clicks)		{ return mCur->handleScrollWheel( x, y, clicks ); }
+	virtual bool			handleScrollWheel(S32 x, S32 y, S32 clicks)		{ return mCur->handleScrollWheel( x, y, clicks ); }
 	virtual BOOL			handleRightMouseDown(S32 x, S32 y, MASK mask)	{ return mCur->handleRightMouseDown( x, y, mask ); }
 
 	virtual LLViewerObject*	getEditingObject()								{ return mCur->getEditingObject(); }
@@ -229,7 +229,7 @@ public:
 	virtual BOOL			handleDoubleClick(S32 x, S32 y, MASK mask);
 	virtual BOOL			handleRightMouseDown(S32 x, S32 y, MASK mask);
 	virtual BOOL			handleMouseUp(S32 x, S32 y, MASK mask);
-	virtual BOOL			handleScrollWheel(S32 x, S32 y, S32 clicks);
+	virtual bool			handleScrollWheel(S32 x, S32 y, S32 clicks);
 	virtual void			onMouseCaptureLost();
 	virtual void			handleSelect();
 	virtual void			handleDeselect();

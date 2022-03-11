@@ -108,17 +108,17 @@ bool LLTool::handleHover(S32 x, S32 y, MASK mask)
 	return true;
 }
 
-BOOL LLTool::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLTool::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
 	// by default, didn't handle it
 	// LL_INFOS() << "LLTool::handleScrollWheel" << LL_ENDL;
-	return FALSE;
+	return false;
 }
 
-BOOL LLTool::handleScrollHWheel(S32 x, S32 y, S32 clicks)
+bool LLTool::handleScrollHWheel(S32 x, S32 y, S32 clicks)
 {
     // by default, didn't handle it
-    return FALSE;
+    return false;
 }
 
 BOOL LLTool::handleDoubleClick(S32 x,S32 y,MASK mask)
@@ -156,11 +156,11 @@ BOOL LLTool::handleMiddleMouseUp(S32 x, S32 y, MASK mask)
 	return FALSE;
 }
 
-BOOL LLTool::handleToolTip(S32 x, S32 y, MASK mask)
+bool LLTool::handleToolTip(S32 x, S32 y, MASK mask)
 {
 	// by default, didn't handle it
 	// LL_INFOS() << "LLTool::handleToolTip" << LL_ENDL;
-	return FALSE;
+	return false;
 }
 
 void LLTool::setMouseCapture( BOOL b )

@@ -2743,9 +2743,9 @@ void LLViewerMediaImpl::navigateStop()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-bool LLViewerMediaImpl::handleKeyHere(KEY key, MASK mask)
+BOOL LLViewerMediaImpl::handleKeyHere(KEY key, MASK mask)
 {
-	bool result = false;
+	BOOL result = FALSE;
 
 	if (mMediaSource)
 	{
@@ -2753,7 +2753,7 @@ bool LLViewerMediaImpl::handleKeyHere(KEY key, MASK mask)
 		// Menu keys should be handled by the menu system and not passed to UI elements, but this is how LLTextEditor and LLLineEditor do it...
 		if (MASK_CONTROL & mask && key != KEY_LEFT && key != KEY_RIGHT && key != KEY_HOME && key != KEY_END)
 		{
-			result = true;
+			result = TRUE;
 		}
 
 		if (!result)

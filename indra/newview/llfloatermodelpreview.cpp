@@ -946,7 +946,7 @@ bool LLFloaterModelPreview::handleHover	(S32 x, S32 y, MASK mask)
 //-----------------------------------------------------------------------------
 // handleScrollWheel()
 //-----------------------------------------------------------------------------
-BOOL LLFloaterModelPreview::handleScrollWheel(S32 x, S32 y, S32 clicks)
+bool LLFloaterModelPreview::handleScrollWheel(S32 x, S32 y, S32 clicks)
 {
 	if (mPreviewRect.pointInRect(x, y) && mModelPreview)
 	{
@@ -957,7 +957,7 @@ BOOL LLFloaterModelPreview::handleScrollWheel(S32 x, S32 y, S32 clicks)
     {
         LLFloaterModelUploadBase::handleScrollWheel(x, y, clicks);
     }
-	return TRUE;
+	return true;
 }
 
 /*virtual*/
