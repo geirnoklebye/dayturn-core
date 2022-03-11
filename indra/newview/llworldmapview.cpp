@@ -189,9 +189,9 @@ LLWorldMapView::LLWorldMapView()
     mMapScale(0.f),
     mTargetMapScale(0.f)
 {
-	//LL_INFOS("WorldMap") << "Creating the Map -> LLWorldMapView::LLWorldMapView()" << LL_ENDL;
+    // LL_INFOS("WorldMap") << "Creating the Map -> LLWorldMapView::LLWorldMapView()" << LL_ENDL;
 
-	clearLastClick();
+    clearLastClick();
 }
 
 bool LLWorldMapView::postBuild()
@@ -255,69 +255,57 @@ void LLWorldMapView::zoom(F32 zoom)
 void LLWorldMapView::zoomWithPivot(F32 zoom, S32 x, S32 y)
 {
     mTargetMapScale = scaleFromZoom(zoom);
-    sZoomPivot = LLVector2(x, y);
+    sZoomPivot      = LLVector2(x, y);
     if (!sZoomTimer.getStarted() && mMapScale != mTargetMapScale)
     {
         sZoomTimer.start();
     }
 }
 
-F32 LLWorldMapView::getZoom()
-{
-    return LLWorldMapView::zoomFromScale(mMapScale);
-}
+F32 LLWorldMapView::getZoom() { return LLWorldMapView::zoomFromScale(mMapScale); }
 
-F32 LLWorldMapView::getScale()
-{
-    return mMapScale;
-}
+F32 LLWorldMapView::getScale() { return mMapScale; }
 
 // static
-void LLWorldMapView::setScaleSetting(F32 scaleSetting)
-{
-    sMapScaleSetting = scaleSetting;
-}
+void LLWorldMapView::setScaleSetting(F32 scaleSetting) { sMapScaleSetting = scaleSetting; }
 
 // static
-F32 LLWorldMapView::getScaleSetting()
-{
-    return sMapScaleSetting;
-}
+F32 LLWorldMapView::getScaleSetting() { return sMapScaleSetting; }
 
 void LLWorldMapView::setScale(F32 scale, bool snap)
 {
-	if (scale != mMapScale)
-	{
-		F32 old_scale = mMapScale;
+    if (scale != mMapScale)
+    {
+        F32 old_scale = mMapScale;
 
-		mMapScale = scale;
+        mMapScale = scale;
         // Set the scale used when saving the setting
         sMapScaleSetting = scale;
-		if (mMapScale <= 0.f)
-		{
-			mMapScale = 0.1f;
-		}
+        if (mMapScale <= 0.f)
+        {
+            mMapScale = 0.1f;
+        }
 
-		F32 ratio = (scale / old_scale);
-		mPanX *= ratio;
-		mPanY *= ratio;
-		mTargetPanX = mPanX;
-		mTargetPanY = mPanY;
-		sVisibleTilesLoaded = false;
-        
+        F32 ratio = (scale / old_scale);
+        mPanX *= ratio;
+        mPanY *= ratio;
+        mTargetPanX         = mPanX;
+        mTargetPanY         = mPanY;
+        sVisibleTilesLoaded = false;
+
         // If we are zooming relative to somewhere else rather than the center of the map, compensate for the difference in panning here
         if (!sZoomPivot.isExactlyZero())
         {
             LLVector2 relative_pivot;
-            relative_pivot.mV[VX] = sZoomPivot.mV[VX] - (getRect().getWidth() / 2.0);
-            relative_pivot.mV[VY] = sZoomPivot.mV[VY] - (getRect().getHeight() / 2.0);
+            relative_pivot.mV[VX]     = sZoomPivot.mV[VX] - (getRect().getWidth() / 2.0);
+            relative_pivot.mV[VY]     = sZoomPivot.mV[VY] - (getRect().getHeight() / 2.0);
             LLVector2 zoom_pan_offset = relative_pivot - (relative_pivot * scale / old_scale);
             mPanX += zoom_pan_offset.mV[VX];
             mPanY += zoom_pan_offset.mV[VY];
             mTargetPanX += zoom_pan_offset.mV[VX];
             mTargetPanY += zoom_pan_offset.mV[VY];
         }
-	}
+    }
 
     if (snap)
     {
@@ -326,33 +314,30 @@ void LLWorldMapView::setScale(F32 scale, bool snap)
 }
 
 // static
-void LLWorldMapView::translatePan( S32 delta_x, S32 delta_y )
+void LLWorldMapView::translatePan(S32 delta_x, S32 delta_y)
 {
-	mPanX += delta_x;
-	mPanY += delta_y;
-	mTargetPanX = mPanX;
-	mTargetPanY = mPanY;
-	sVisibleTilesLoaded = false;
+    mPanX += delta_x;
+    mPanY += delta_y;
+    mTargetPanX         = mPanX;
+    mTargetPanY         = mPanY;
+    sVisibleTilesLoaded = false;
 }
 
 
 // static
 void LLWorldMapView::setPan( S32 x, S32 y, bool snap )
 {
-	mTargetPanX = (F32)x;
-	mTargetPanY = (F32)y;
-	if (snap)
-	{
-		mPanX = mTargetPanX;
-		mPanY = mTargetPanY;
-	}
-	sVisibleTilesLoaded = false;
+    mTargetPanX = (F32) x;
+    mTargetPanY = (F32) y;
+    if (snap)
+    {
+        mPanX = mTargetPanX;
+        mPanY = mTargetPanY;
+    }
+    sVisibleTilesLoaded = false;
 }
 
-bool LLWorldMapView::showRegionInfo()
-{
-	return (LLWorldMipmap::scaleToLevel(mMapScale) <= DRAW_SIMINFO_THRESHOLD ? true : false);
-}
+bool LLWorldMapView::showRegionInfo() { return (LLWorldMipmap::scaleToLevel(mMapScale) <= DRAW_SIMINFO_THRESHOLD ? true : false); }
 
 ///////////////////////////////////////////////////////////////////////////////////
 // HELPERS
@@ -1959,14 +1944,7 @@ bool LLWorldMapView::handleDoubleClick( S32 x, S32 y, MASK mask )
 }
 
 // static
-F32 LLWorldMapView::scaleFromZoom(F32 zoom)
-{
-    return exp2(zoom) * 256.0f;
-}
+F32 LLWorldMapView::scaleFromZoom(F32 zoom) { return exp2(zoom) * 256.0f; }
 
 // static
-F32 LLWorldMapView::zoomFromScale(F32 scale)
-{
-    return log2(scale / 256.f);
-}
-
+F32 LLWorldMapView::zoomFromScale(F32 scale) { return log2(scale / 256.f); }

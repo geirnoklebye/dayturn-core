@@ -473,14 +473,14 @@ bool LLFloaterWorldMap::handleScrollWheel(S32 x, S32 y, S32 clicks)
         S32 map_y = y - mMapView->getRect().mBottom;
         if (mMapView->pointInView(map_x, map_y))
         {
-            F32 old_slider_zoom = (F32)getChild<LLUICtrl>("zoom slider")->getValue().asReal();
-            F32 slider_zoom = old_slider_zoom + ((F32)clicks * -0.3333f);
+            F32 old_slider_zoom = (F32) getChild<LLUICtrl>("zoom slider")->getValue().asReal();
+            F32 slider_zoom     = old_slider_zoom + ((F32) clicks * -0.3333f);
             getChild<LLUICtrl>("zoom slider")->setValue(LLSD(slider_zoom));
             mMapView->zoomWithPivot(slider_zoom, map_x, map_y);
             return true;
         }
     }
-    
+
     return LLFloater::handleScrollWheel(x, y, clicks);
 }
 
@@ -1535,8 +1535,8 @@ void LLFloaterWorldMap::onShowTargetBtn()
 
 void LLFloaterWorldMap::onShowAgentBtn()
 {
-    mMapView->setPan(0, 0, false); // false == animate
-	// Set flag so user's location will be displayed if not tracking anything else
+    mMapView->setPan(0, 0, false);  // false == animate
+    // Set flag so user's location will be displayed if not tracking anything else
     mSetToUserPosition = true;
 }
 
@@ -1916,7 +1916,7 @@ void LLFloaterWorldMap::onChangeMaturity()
 
 void LLFloaterWorldMap::onFocusLost()
 {
-	gViewerWindow->showCursor();
+    gViewerWindow->showCursor();
     mMapView->mPanning = false;
 }
 
