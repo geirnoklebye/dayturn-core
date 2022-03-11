@@ -108,7 +108,7 @@ private:
     void                    onButtonCancel();
     void                    onButtonSelect();
     virtual BOOL            handleDoubleClick(S32 x, S32 y, MASK mask) override;
-    BOOL                    handleKeyHere(KEY key, MASK mask) override;
+    bool                    handleKeyHere(KEY key, MASK mask) override;
     void                    onFocusLost() override;
 
 

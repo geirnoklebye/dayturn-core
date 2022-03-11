@@ -172,7 +172,7 @@ public:
 	static LLFloaterScriptSearch* getInstance() { return sInstance; }
 
 	virtual bool hasAccelerators() const;
-	virtual BOOL handleKeyHere(KEY key, MASK mask);
+	virtual bool handleKeyHere(KEY key, MASK mask);
 
 private:
 
@@ -300,21 +300,21 @@ bool LLFloaterScriptSearch::hasAccelerators() const
 	{
 		return mEditorCore->hasAccelerators();
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL LLFloaterScriptSearch::handleKeyHere(KEY key, MASK mask)
+bool LLFloaterScriptSearch::handleKeyHere(KEY key, MASK mask)
 {
 	if (mEditorCore)
 	{
-		BOOL handled = mEditorCore->handleKeyHere(key, mask);
+		bool handled = mEditorCore->handleKeyHere(key, mask);
 		if (!handled)
 		{
 			LLFloater::handleKeyHere(key, mask);
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void LLFloaterScriptSearch::onSearchBoxCommit()
@@ -1201,7 +1201,7 @@ void LLScriptEdCore::deleteBridges()
 }
 
 // virtual
-BOOL LLScriptEdCore::handleKeyHere(KEY key, MASK mask)
+bool LLScriptEdCore::handleKeyHere(KEY key, MASK mask)
 {
 	bool just_control = MASK_CONTROL == (mask & MASK_MODIFIERS);
 
@@ -1213,7 +1213,7 @@ BOOL LLScriptEdCore::handleKeyHere(KEY key, MASK mask)
 			mSaveCallback(mUserdata, FALSE);
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	if(('F' == key) && just_control)
@@ -1223,10 +1223,10 @@ BOOL LLScriptEdCore::handleKeyHere(KEY key, MASK mask)
 			mSearchReplaceCallback(mUserdata);
 		}
 
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 void LLScriptEdCore::onBtnLoadFromFile( void* data )

@@ -532,7 +532,7 @@ void LLFloaterEditExtDayCycle::setEditName(const std::string &name)
 }
 
 /* virtual */
-BOOL LLFloaterEditExtDayCycle::handleKeyUp(KEY key, MASK mask, BOOL called_from_parent)
+bool LLFloaterEditExtDayCycle::handleKeyUp(KEY key, MASK mask, bool called_from_parent)
 {
     if (!mEditDay)
     {

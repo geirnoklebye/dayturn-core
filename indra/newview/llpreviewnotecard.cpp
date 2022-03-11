@@ -148,19 +148,19 @@ bool LLPreviewNotecard::hasAccelerators() const
 // [/SL:KB]
 
 // virtual
-BOOL LLPreviewNotecard::handleKeyHere(KEY key, MASK mask)
+bool LLPreviewNotecard::handleKeyHere(KEY key, MASK mask)
 {
 	if(('S' == key) && (MASK_CONTROL == (mask & MASK_CONTROL)))
 	{
 		saveIfNeeded();
-		return TRUE;
+		return true;
 	}
 
 // [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-11-05 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
 	if(('F' == key) && (MASK_CONTROL == (mask & MASK_CONTROL)))
 	{
 		LLFloaterSearchReplace::show(getEditor());
-		return TRUE;
+		return true;
 	}
 // [/SL:KB]
 

@@ -100,7 +100,7 @@ public:
     virtual LLSettingsBase::ptr_t getEditSettings()   const override { return mEditDay; }
 
 
-    BOOL			            handleKeyUp(KEY key, MASK mask, BOOL called_from_parent) override;
+    bool			            handleKeyUp(KEY key, MASK mask, bool called_from_parent) override;
 
 protected:
     virtual void                setEditSettingsAndUpdate(const LLSettingsBase::ptr_t &settings) override;

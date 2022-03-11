@@ -280,14 +280,14 @@
 //    }
 //}
 //
-//BOOL LLFloaterAvatarRenderSettings::handleKeyHere(KEY key, MASK mask )
+//bool LLFloaterAvatarRenderSettings::handleKeyHere(KEY key, MASK mask )
 //{
-//    BOOL handled = FALSE;
+//    bool handled = false;
 //
 //    if (KEY_DELETE == key)
 //    {
 //        setAvatarRenderSetting(mAvatarSettingsList->getCurrentID(), (S32)LLVOAvatar::AV_RENDER_NORMALLY);
-//        handled = TRUE;
+//        handled = true;
 //    }
 //    return handled;
 //}

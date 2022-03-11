@@ -806,16 +806,16 @@ bool LLComboBox::handleToolTip(S32 x, S32 y, MASK mask)
 	return true;
 }
 
-BOOL LLComboBox::handleKeyHere(KEY key, MASK mask)
+bool LLComboBox::handleKeyHere(KEY key, MASK mask)
 {
-	BOOL result = FALSE;
+	bool result = false;
 	if (hasFocus())
 	{
 		if (mList->getVisible() 
 			&& key == KEY_ESCAPE && mask == MASK_NONE)
 		{
 			hideList();
-			return TRUE;
+			return true;
 		}
 		//give list a chance to pop up and handle key
 		LLScrollListItem* last_selected_item = mList->getLastSelectedItem();

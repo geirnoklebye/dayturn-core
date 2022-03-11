@@ -2518,9 +2518,9 @@ void LLScrollListCtrl::onMouseLeave(S32 x, S32 y, MASK mask)
 	mouseOverHighlightNthItem(-1);
 }
 
-BOOL LLScrollListCtrl::handleKeyHere(KEY key,MASK mask )
+bool LLScrollListCtrl::handleKeyHere(KEY key,MASK mask )
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 
 	// not called from parent means we have keyboard focus or a child does
 	if (mCanSelect) 
@@ -2535,7 +2535,7 @@ BOOL LLScrollListCtrl::handleKeyHere(KEY key,MASK mask )
 					// commit implicit in call
 					selectPrevItem(FALSE);
 					mNeedsScroll = true;
-					handled = TRUE;
+					handled = true;
 				}
 				break;
 			case KEY_DOWN:
@@ -2544,7 +2544,7 @@ BOOL LLScrollListCtrl::handleKeyHere(KEY key,MASK mask )
 					// commit implicit in call
 					selectNextItem(FALSE);
 					mNeedsScroll = true;
-					handled = TRUE;
+					handled = true;
 				}
 				break;
             case KEY_LEFT:
@@ -2569,7 +2569,7 @@ BOOL LLScrollListCtrl::handleKeyHere(KEY key,MASK mask )
                             break;
                         }
                         item->setSelectedCell(cell);
-                        handled = TRUE;
+                        handled = true;
                     }
                 }
                 break;
@@ -2595,7 +2595,7 @@ BOOL LLScrollListCtrl::handleKeyHere(KEY key,MASK mask )
                             break;
                         }
                         item->setSelectedCell(cell);
-                        handled = TRUE;
+                        handled = true;
                     }
                 }
                 break;
@@ -2609,7 +2609,7 @@ BOOL LLScrollListCtrl::handleKeyHere(KEY key,MASK mask )
 					{
 						onCommit();
 					}
-					handled = TRUE;
+					handled = true;
 				}
 				break;
 			case KEY_PAGE_DOWN:
@@ -2622,7 +2622,7 @@ BOOL LLScrollListCtrl::handleKeyHere(KEY key,MASK mask )
 					{
 						onCommit();
 					}
-					handled = TRUE;
+					handled = true;
 				}
 				break;
 			case KEY_HOME:
@@ -2635,7 +2635,7 @@ BOOL LLScrollListCtrl::handleKeyHere(KEY key,MASK mask )
 					{
 						onCommit();
 					}
-					handled = TRUE;
+					handled = true;
 				}
 				break;
 			case KEY_END:
@@ -2648,7 +2648,7 @@ BOOL LLScrollListCtrl::handleKeyHere(KEY key,MASK mask )
 					{
 						onCommit();
 					}
-					handled = TRUE;
+					handled = true;
 				}
 				break;
 			case KEY_RETURN:
@@ -2659,7 +2659,7 @@ BOOL LLScrollListCtrl::handleKeyHere(KEY key,MASK mask )
 				{
 					onCommit();
 					mSearchString.clear();
-					handled = TRUE;
+					handled = true;
 				}
 				break;
 			case KEY_BACKSPACE:

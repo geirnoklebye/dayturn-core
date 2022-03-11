@@ -33,9 +33,9 @@ class LLWindowCallbacks
 {
 public:
 	virtual ~LLWindowCallbacks() {}
-	virtual BOOL handleTranslatedKeyDown(KEY key,  MASK mask, BOOL repeated);
-	virtual BOOL handleTranslatedKeyUp(KEY key,  MASK mask);
-	virtual void handleScanKey(KEY key, BOOL key_down, BOOL key_up, BOOL key_level);
+	virtual bool handleTranslatedKeyDown(KEY key,  MASK mask, bool repeated);
+	virtual bool handleTranslatedKeyUp(KEY key,  MASK mask);
+	virtual void handleScanKey(KEY key, bool key_down, bool key_up, bool key_level);
 	virtual bool handleUnicodeChar(llwchar uni_char, MASK mask);
 
 	virtual BOOL handleMouseDown(LLWindow *window,  LLCoordGL pos, MASK mask);

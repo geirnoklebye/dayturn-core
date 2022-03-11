@@ -352,7 +352,7 @@ BOOL LLFloaterTexturePicker::handleDragAndDrop(
 	return handled;
 }
 
-BOOL LLFloaterTexturePicker::handleKeyHere(KEY key, MASK mask)
+bool LLFloaterTexturePicker::handleKeyHere(KEY key, MASK mask)
 {
 	LLFolderView* root_folder = mInventoryPanel->getRootFolder();
 
@@ -378,7 +378,7 @@ BOOL LLFloaterTexturePicker::handleKeyHere(KEY key, MASK mask)
 			// treat this as a user selection of the first filtered result
 			commitIfImmediateSet();
 			
-			return TRUE;
+			return true;
 		}
 		
 		if (mInventoryPanel->hasFocus() && key == KEY_UP)

@@ -108,8 +108,8 @@ public:
 
 	LLViewerInput();
 
-	BOOL			handleKey(KEY key, MASK mask, BOOL repeated);
-	BOOL			handleKeyUp(KEY key, MASK mask);
+	bool			handleKey(KEY key, MASK mask, bool repeated);
+	bool			handleKeyUp(KEY key, MASK mask);
 
     // Handle 'global' keybindings that do not consume event,
     // yet need to be processed early
@@ -125,9 +125,9 @@ public:
 	static BOOL		mouseFromString(const std::string& string, EMouseClickType *mode);// False on failure
 
     bool            scanKey(KEY key,
-                            BOOL key_down,
-                            BOOL key_up,
-                            BOOL key_level) const;
+                            bool key_down,
+                            bool key_up,
+                            bool key_level) const;
 
     // handleMouse() records state, scanMouse() goes through states, scanMouse(click) processes individual saved states after UI is done with them
     BOOL            handleMouse(LLWindow *window_impl, LLCoordGL pos, MASK mask, EMouseClickType clicktype, BOOL down);
@@ -141,9 +141,9 @@ private:
                             S32 binding_count,
                             KEY key,
                             MASK mask,
-                            BOOL key_down,
-                            BOOL key_up,
-                            BOOL key_level,
+                            bool key_down,
+                            bool key_up,
+                            bool key_level,
                             bool repeat) const;
 
     enum EMouseState

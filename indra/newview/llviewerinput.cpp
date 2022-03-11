@@ -1084,7 +1084,7 @@ BOOL LLViewerInput::mouseFromString(const std::string& string, EMouseClickType *
     }
 }
 
-BOOL LLViewerInput::handleKey(KEY translated_key, MASK translated_mask, BOOL repeated)
+bool LLViewerInput::handleKey(KEY translated_key, MASK translated_mask, bool repeated)
 {
 	// check for re-map
 	EKeyboardMode mode = gViewerInput.getMode();
@@ -1097,10 +1097,10 @@ BOOL LLViewerInput::handleKey(KEY translated_key, MASK translated_mask, BOOL rep
 	}
 
 	// No repeats of F-keys
-	BOOL repeatable_key = (translated_key < KEY_F1 || translated_key > KEY_F12);
+	bool repeatable_key = (translated_key < KEY_F1 || translated_key > KEY_F12);
 	if (!repeatable_key && repeated)
 	{
-		return FALSE;
+		return false;
 	}
 
 	LL_DEBUGS("UserInput") << "keydown -" << translated_key << "-" << LL_ENDL;
@@ -1122,7 +1122,7 @@ BOOL LLViewerInput::handleKey(KEY translated_key, MASK translated_mask, BOOL rep
 	return mKeyHandledByUI[translated_key];
 }
 
-BOOL LLViewerInput::handleKeyUp(KEY translated_key, MASK translated_mask)
+bool LLViewerInput::handleKeyUp(KEY translated_key, MASK translated_mask)
 {
 	return gViewerWindow->handleKeyUp(translated_key, translated_mask);
 }
@@ -1562,9 +1562,9 @@ bool LLViewerInput::scanKey(const std::vector<LLKeyboardBinding> &binding,
                                S32 binding_count,
                                KEY key,
                                MASK mask,
-                               BOOL key_down,
-                               BOOL key_up,
-                               BOOL key_level,
+                               bool key_down,
+                               bool key_up,
+                               bool key_level,
                                bool repeat) const
 {
 	for (S32 i = 0; i < binding_count; i++)
@@ -1600,7 +1600,7 @@ bool LLViewerInput::scanKey(const std::vector<LLKeyboardBinding> &binding,
 }
 
 // Called from scanKeyboard.
-bool LLViewerInput::scanKey(KEY key, BOOL key_down, BOOL key_up, BOOL key_level) const
+bool LLViewerInput::scanKey(KEY key, bool key_down, bool key_up, bool key_level) const
 {
 	if (LLApp::isExiting())
 	{
@@ -1617,7 +1617,7 @@ bool LLViewerInput::scanKey(KEY key, BOOL key_down, BOOL key_up, BOOL key_level)
 	}
 
 	// don't process key down on repeated keys
-	BOOL repeat = gKeyboard->getKeyRepeated(key);
+	bool repeat = gKeyboard->getKeyRepeated(key);
 
     bool res = scanKey(mKeyBindings[mode], mKeyBindings[mode].size(), key, mask, key_down, key_up, key_level, repeat);
 

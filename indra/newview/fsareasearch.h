@@ -330,7 +330,7 @@ public:
 	virtual ~FSPanelAreaSearchFind();
 
 	/*virtual*/ bool postBuild();
-	/*virtual*/ BOOL handleKeyHere(KEY key,MASK mask);
+	/*virtual*/ bool handleKeyHere(KEY key,MASK mask);
 
 	LLLineEditor* mNameLineEditor;
 	LLLineEditor* mDescriptionLineEditor;

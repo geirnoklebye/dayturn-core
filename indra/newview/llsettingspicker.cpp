@@ -400,7 +400,7 @@ BOOL LLFloaterSettingsPicker::handleDoubleClick(S32 x, S32 y, MASK mask)
     return result;
 }
 
-BOOL LLFloaterSettingsPicker::handleKeyHere(KEY key, MASK mask)
+bool LLFloaterSettingsPicker::handleKeyHere(KEY key, MASK mask)
 {
     if ((key == KEY_RETURN) && (mask == MASK_NONE))
     {
@@ -416,7 +416,7 @@ BOOL LLFloaterSettingsPicker::handleKeyHere(KEY key, MASK mask)
                 (*mCommitSignal)(this, res);
             }
             closeFloater();
-            return TRUE;
+            return true;
         }
     }
 

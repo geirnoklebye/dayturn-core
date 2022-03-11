@@ -32,18 +32,18 @@
 // LLWindowCallbacks
 //
 
-BOOL LLWindowCallbacks::handleTranslatedKeyDown(const KEY key, const MASK mask, BOOL repeated)
+bool LLWindowCallbacks::handleTranslatedKeyDown(const KEY key, const MASK mask, bool repeated)
 {
-	return FALSE;
+	return false;
 }
 
 
-BOOL LLWindowCallbacks::handleTranslatedKeyUp(const KEY key, const MASK mask)
+bool LLWindowCallbacks::handleTranslatedKeyUp(const KEY key, const MASK mask)
 {
-	return FALSE;
+	return false;
 }
 
-void LLWindowCallbacks::handleScanKey(KEY key, BOOL key_down, BOOL key_up, BOOL key_level)
+void LLWindowCallbacks::handleScanKey(KEY key, bool key_down, bool key_up, bool key_level)
 {
 }
 

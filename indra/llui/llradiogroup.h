@@ -66,7 +66,7 @@ public:
 	
 	virtual bool postBuild();
 	
-	virtual BOOL handleKeyHere(KEY key, MASK mask);
+	virtual bool handleKeyHere(KEY key, MASK mask);
 
 	void setIndexEnabled(S32 index, BOOL enabled);
 	// return the index value of the selected item

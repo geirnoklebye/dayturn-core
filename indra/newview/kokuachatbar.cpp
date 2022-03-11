@@ -163,21 +163,21 @@ void KokuaChatBar::onChatBoxFocusReceived()
 }
 
 // virtual
-BOOL KokuaChatBar::handleKeyHere( KEY key, MASK mask )
+bool KokuaChatBar::handleKeyHere( KEY key, MASK mask )
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 
 	if( KEY_RETURN == key && mask == MASK_CONTROL)
 	{
 		// shout
 		sendChat(CHAT_TYPE_SHOUT);
-		handled = TRUE;
+		handled = true;
 	}
 	else if (KEY_RETURN == key && mask == MASK_SHIFT)
 	{
 		// whisper
 		sendChat(CHAT_TYPE_WHISPER);
-		handled = TRUE;
+		handled = true;
 	}
 
 	return handled;

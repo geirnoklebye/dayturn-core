@@ -420,7 +420,7 @@ void LLMenuItemGL::onCommit( void )
 }
 
 
-BOOL LLMenuItemGL::handleKeyHere( KEY key, MASK mask )
+bool LLMenuItemGL::handleKeyHere( KEY key, MASK mask )
 {
 	if (getHighlight() && 
 		getMenu()->isOpen())
@@ -431,7 +431,7 @@ BOOL LLMenuItemGL::handleKeyHere( KEY key, MASK mask )
 			LLMenuGL::setKeyboardMode(TRUE);
 
 			getMenu()->highlightPrevItem(this);
-			return TRUE;
+			return true;
 		}
 		else if (key == KEY_DOWN)
 		{
@@ -439,7 +439,7 @@ BOOL LLMenuItemGL::handleKeyHere( KEY key, MASK mask )
 			LLMenuGL::setKeyboardMode(TRUE);
 
 			getMenu()->highlightNextItem(this);
-			return TRUE;
+			return true;
 		}
 		else if (key == KEY_RETURN && mask == MASK_NONE)
 		{
@@ -447,11 +447,11 @@ BOOL LLMenuItemGL::handleKeyHere( KEY key, MASK mask )
 			LLMenuGL::setKeyboardMode(TRUE);
 
 			onCommit();
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 BOOL LLMenuItemGL::handleMouseUp( S32 x, S32 y, MASK mask)
@@ -855,7 +855,7 @@ void LLMenuItemCallGL::buildDrawLabel( void )
 	LLMenuItemGL::buildDrawLabel();
 }
 
-BOOL LLMenuItemCallGL::handleKeyHere( KEY key, MASK mask )
+bool LLMenuItemCallGL::handleKeyHere( KEY key, MASK mask )
 {
 	return LLMenuItemGL::handleKeyHere(key, mask);
 }
@@ -1188,7 +1188,7 @@ void LLMenuItemBranchGL::onVisibilityChange( BOOL new_visibility )
 	LLMenuItemGL::onVisibilityChange(new_visibility);
 }
 
-BOOL LLMenuItemBranchGL::handleKeyHere( KEY key, MASK mask )
+bool LLMenuItemBranchGL::handleKeyHere( KEY key, MASK mask )
 {
 	LLMenuGL* branch = getBranch();
 	if (!branch)
@@ -1205,7 +1205,7 @@ BOOL LLMenuItemBranchGL::handleKeyHere( KEY key, MASK mask )
 			// switch to keyboard navigation mode
 			LLMenuGL::setKeyboardMode(TRUE);
 
-			BOOL handled = branch->clearHoverItem();
+			bool handled = branch->clearHoverItem();
 			if (branch->getTornOff())
 			{
 				LLFloater * branch_parent = dynamic_cast<LLFloater *>(branch->getParent());
@@ -1233,7 +1233,7 @@ BOOL LLMenuItemBranchGL::handleKeyHere( KEY key, MASK mask )
 			LLMenuItemGL* itemp = branch->highlightNextItem(NULL);
 			if (itemp)
 			{
-				return TRUE;
+				return true;
 			}
 		}
 	}
@@ -1361,7 +1361,7 @@ public:
 	virtual BOOL handleMouseDown( S32 x, S32 y, MASK mask );
 	virtual BOOL handleMouseUp( S32 x, S32 y, MASK mask ); 
 	virtual void draw( void );
-	virtual BOOL handleKeyHere(KEY key, MASK mask);
+	virtual bool handleKeyHere(KEY key, MASK mask);
 	
 	virtual BOOL handleAcceleratorKey(KEY key, MASK mask);
     
@@ -1537,9 +1537,9 @@ void LLMenuItemBranchDownGL::setFocus(BOOL b)
     setHighlight(b);
 }
 
-BOOL LLMenuItemBranchDownGL::handleKeyHere(KEY key, MASK mask)
+bool LLMenuItemBranchDownGL::handleKeyHere(KEY key, MASK mask)
 {
-	BOOL menu_open = getBranch()->getVisible();
+	bool menu_open = getBranch()->getVisible();
 	// don't do keyboard navigation of top-level menus unless in keyboard mode, or menu expanded
 	if (getHighlight() && getMenu()->isOpen() && (isActive() || LLMenuGL::getKeyboardMode()))
 	{
@@ -1555,7 +1555,7 @@ BOOL LLMenuItemBranchDownGL::handleKeyHere(KEY key, MASK mask)
 				itemp->onCommit();
 			}
 
-			return TRUE;
+			return true;
 		}
 		else if (key == KEY_RIGHT)
 		{
@@ -1569,7 +1569,7 @@ BOOL LLMenuItemBranchDownGL::handleKeyHere(KEY key, MASK mask)
 				itemp->onCommit();
 			}
 
-			return TRUE;
+			return true;
 		}
 		else if (key == KEY_DOWN)
 		{
@@ -1581,7 +1581,7 @@ BOOL LLMenuItemBranchDownGL::handleKeyHere(KEY key, MASK mask)
 				onCommit();
 			}
 			getBranch()->highlightNextItem(NULL);
-			return TRUE;
+			return true;
 		}
 		else if (key == KEY_UP)
 		{
@@ -1593,11 +1593,11 @@ BOOL LLMenuItemBranchDownGL::handleKeyHere(KEY key, MASK mask)
 				onCommit();
 			}
 			getBranch()->highlightPrevItem(NULL);
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void LLMenuItemBranchDownGL::draw( void )
@@ -3451,7 +3451,7 @@ BOOL LLMenuBarGL::handleAcceleratorKey(KEY key, MASK mask)
 	return result;
 }
 
-BOOL LLMenuBarGL::handleKeyHere(KEY key, MASK mask)
+bool LLMenuBarGL::handleKeyHere(KEY key, MASK mask)
 {
 	static LLUICachedControl<bool> use_altkey_for_menus ("UseAltKeyForMenus", 0);
 	if(key == KEY_ALT && !gKeyboard->getKeyRepeated(key) && use_altkey_for_menus)
@@ -4010,19 +4010,19 @@ bool LLTearOffMenu::handleUnicodeChar(llwchar uni_char, bool called_from_parent)
 	return mMenu->handleUnicodeChar(uni_char, true);
 }
 
-BOOL LLTearOffMenu::handleKeyHere(KEY key, MASK mask)
+bool LLTearOffMenu::handleKeyHere(KEY key, MASK mask)
 {
 	if (!mMenu->getHighlightedItem())
 	{
 		if (key == KEY_UP)
 		{
 			mMenu->highlightPrevItem(NULL);		
-			return TRUE;
+			return true;
 		}
 		else if (key == KEY_DOWN)
 		{
 			mMenu->highlightNextItem(NULL);
-			return TRUE;
+			return true;
 		}
 	}
 	// pass keystrokes down to menu

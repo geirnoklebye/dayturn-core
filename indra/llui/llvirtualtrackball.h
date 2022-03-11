@@ -85,7 +85,7 @@ public:
     virtual BOOL    handleMouseUp(S32 x, S32 y, MASK mask);
     virtual BOOL    handleMouseDown(S32 x, S32 y, MASK mask);
     virtual BOOL    handleRightMouseDown(S32 x, S32 y, MASK mask);
-    virtual BOOL    handleKeyHere(KEY key, MASK mask);
+    virtual bool    handleKeyHere(KEY key, MASK mask);
 
     virtual void    draw();
 

@@ -986,9 +986,9 @@ bool LLView::handleToolTip(S32 x, S32 y, MASK mask)
 	return handled;
 }
 
-BOOL LLView::handleKey(KEY key, MASK mask, BOOL called_from_parent)
+bool LLView::handleKey(KEY key, MASK mask, bool called_from_parent)
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 
 	if (getVisible() && getEnabled())
 	{
@@ -1018,9 +1018,9 @@ BOOL LLView::handleKey(KEY key, MASK mask, BOOL called_from_parent)
 	return handled;
 }
 
-BOOL LLView::handleKeyUp(KEY key, MASK mask, BOOL called_from_parent)
+bool LLView::handleKeyUp(KEY key, MASK mask, bool called_from_parent)
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 
 	if (getVisible() && getEnabled())
 	{
@@ -1052,16 +1052,16 @@ BOOL LLView::handleKeyUp(KEY key, MASK mask, BOOL called_from_parent)
 
 // Called from handleKey()
 // Handles key in this object.  Checking parents and children happens in handleKey()
-BOOL LLView::handleKeyHere(KEY key, MASK mask)
+bool LLView::handleKeyHere(KEY key, MASK mask)
 {
-	return FALSE;
+	return false;
 }
 
 // Called from handleKey()
 // Handles key in this object.  Checking parents and children happens in handleKey()
-BOOL LLView::handleKeyUpHere(KEY key, MASK mask)
+bool LLView::handleKeyUpHere(KEY key, MASK mask)
 {
-	return FALSE;
+	return false;
 }
 
 bool LLView::handleUnicodeChar(llwchar uni_char, bool called_from_parent)

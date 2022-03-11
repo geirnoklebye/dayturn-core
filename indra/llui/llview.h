@@ -389,8 +389,8 @@ public:
 	virtual void	setSnappedTo(const LLView* snap_view);
 
 	// inherited from LLFocusableElement
-	/* virtual */ BOOL	handleKey(KEY key, MASK mask, BOOL called_from_parent);
-	/* virtual */ BOOL	handleKeyUp(KEY key, MASK mask, BOOL called_from_parent);
+	/* virtual */ bool	handleKey(KEY key, MASK mask, bool called_from_parent);
+	/* virtual */ bool	handleKeyUp(KEY key, MASK mask, bool called_from_parent);
 	/* virtual */ bool	handleUnicodeChar(llwchar uni_char, bool called_from_parent);
 
 	virtual BOOL	handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
@@ -522,8 +522,8 @@ public:
 	static void setupParamsForExport(Params& p, LLView* parent);
 	
 	//virtual BOOL	addChildFromParam(const LLInitParam::BaseBlock& params) { return TRUE; }
-	virtual BOOL	handleKeyHere(KEY key, MASK mask);
-	virtual BOOL	handleKeyUpHere(KEY key, MASK mask);
+	virtual bool	handleKeyHere(KEY key, MASK mask);
+	virtual bool	handleKeyUpHere(KEY key, MASK mask);
 	virtual bool	handleUnicodeCharHere(llwchar uni_char);
 
 	virtual void	handleReshape(const LLRect& rect, bool by_user);

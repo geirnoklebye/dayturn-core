@@ -59,7 +59,7 @@ public:
 // [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-11-05 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
 	virtual bool hasAccelerators() const override;
 // [/SL:KB]
-	BOOL handleKeyHere(KEY key, MASK mask) override;
+	bool handleKeyHere(KEY key, MASK mask) override;
 	void setEnabled( BOOL enabled ) override;
 
 	// llfloater

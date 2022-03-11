@@ -2025,9 +2025,9 @@ bool LLInventoryPanel::isUserProtectedFolder() const
 	return false;
 }
 // [/SL:KB]
-BOOL LLInventoryPanel::handleKeyHere( KEY key, MASK mask )
+bool LLInventoryPanel::handleKeyHere( KEY key, MASK mask )
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 	switch (key)
 	{
 	case KEY_RETURN:
@@ -2047,7 +2047,7 @@ BOOL LLInventoryPanel::handleKeyHere( KEY key, MASK mask )
 				}
 			}
 			LLInventoryAction::doToSelected(mInventory, mFolderRoot.get(), "open");
-			handled = TRUE;
+			handled = true;
 		}
 		break;
 	case KEY_DELETE:
@@ -2059,7 +2059,7 @@ BOOL LLInventoryPanel::handleKeyHere( KEY key, MASK mask )
 		if (isSelectionRemovable() && (mask == MASK_NONE))
 		{
 			LLInventoryAction::doToSelected(mInventory, mFolderRoot.get(), "delete");
-			handled = TRUE;
+			handled = true;
 		}
 		break;
 	}

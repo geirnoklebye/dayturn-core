@@ -1076,9 +1076,9 @@ void LLFolderView::startRenamingSelectedItem( void )
 	}
 }
 
-BOOL LLFolderView::handleKeyHere( KEY key, MASK mask )
+bool LLFolderView::handleKeyHere( KEY key, MASK mask )
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 
 	// SL-51858: Key presses are not being passed to the Popup menu.
 	// A proper fix is non-trivial so instead just close the menu.
@@ -1093,7 +1093,7 @@ BOOL LLFolderView::handleKeyHere( KEY key, MASK mask )
 	case KEY_F2:
 		mSearchString.clear();
 		startRenamingSelectedItem();
-		handled = TRUE;
+		handled = true;
 		break;
 
 	case KEY_RETURN:
@@ -1103,7 +1103,7 @@ BOOL LLFolderView::handleKeyHere( KEY key, MASK mask )
 			{
 				finishRenamingItem();
 				mSearchString.clear();
-				handled = TRUE;
+				handled = true;
 			}
 		}
 		break;
@@ -1112,7 +1112,7 @@ BOOL LLFolderView::handleKeyHere( KEY key, MASK mask )
 		if( mRenameItem && mRenamer->getVisible() )
 		{
 			closeRenamer();
-			handled = TRUE;
+			handled = true;
 		}
 		mSearchString.clear();
 		break;
@@ -1123,7 +1123,7 @@ BOOL LLFolderView::handleKeyHere( KEY key, MASK mask )
 		{
 		mScrollContainer->pageUp(30);
 		}
-		handled = TRUE;
+		handled = true;
 		break;
 
 	case KEY_PAGE_DOWN:
@@ -1132,7 +1132,7 @@ BOOL LLFolderView::handleKeyHere( KEY key, MASK mask )
 		{
 		mScrollContainer->pageDown(30);
 		}
-		handled = TRUE;
+		handled = true;
 		break;
 
 	case KEY_HOME:
@@ -1141,7 +1141,7 @@ BOOL LLFolderView::handleKeyHere( KEY key, MASK mask )
 		{
 		mScrollContainer->goToTop();
 		}
-		handled = TRUE;
+		handled = true;
 		break;
 
 	case KEY_END:
@@ -1192,9 +1192,9 @@ BOOL LLFolderView::handleKeyHere( KEY key, MASK mask )
 						if(notifyParent(LLSD().with("action","select_next")) > 0 )//message was processed
 						{
 							clearSelection();
-							return TRUE;
+							return true;
 						}
-						return FALSE;
+						return false;
 					}
 					setSelection( next, FALSE, TRUE );
 				}
@@ -1204,14 +1204,14 @@ BOOL LLFolderView::handleKeyHere( KEY key, MASK mask )
 					if(notifyParent(LLSD().with("action","select_next")) > 0 )//message was processed
 					{
 						clearSelection();
-						return TRUE;
+						return true;
 					}
-					return FALSE;
+					return false;
 				}
 			}
 			scrollToShowSelection();
 			mSearchString.clear();
-			handled = TRUE;
+			handled = true;
 		}
 		break;
 
@@ -1255,10 +1255,10 @@ BOOL LLFolderView::handleKeyHere( KEY key, MASK mask )
 						if(notifyParent(LLSD().with("action","select_prev")) > 0 )//message was processed
 						{
 							clearSelection();
-							return TRUE;
+							return true;
 						}
 
-						return FALSE;
+						return false;
 					}
 					setSelection( prev, FALSE, TRUE );
 				}
@@ -1266,7 +1266,7 @@ BOOL LLFolderView::handleKeyHere( KEY key, MASK mask )
 			scrollToShowSelection();
 			mSearchString.clear();
 
-			handled = TRUE;
+			handled = true;
 		}
 		break;
 
@@ -1276,7 +1276,7 @@ BOOL LLFolderView::handleKeyHere( KEY key, MASK mask )
 			LLFolderViewItem* last_selected = getCurSelectedItem();
 			last_selected->setOpen( TRUE );
 			mSearchString.clear();
-			handled = TRUE;
+			handled = true;
 		}
 		break;
 
@@ -1295,7 +1295,7 @@ BOOL LLFolderView::handleKeyHere( KEY key, MASK mask )
 			}
 			mSearchString.clear();
 			scrollToShowSelection();
-			handled = TRUE;
+			handled = true;
 		}
 		break;
 	}

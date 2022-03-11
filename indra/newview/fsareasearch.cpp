@@ -2002,12 +2002,12 @@ void FSPanelAreaSearchFind::onButtonClickedClear()
 }
 
 // handle the "enter" key
-BOOL FSPanelAreaSearchFind::handleKeyHere(KEY key, MASK mask)
+bool FSPanelAreaSearchFind::handleKeyHere(KEY key, MASK mask)
 {
 	if( KEY_RETURN == key )
 	{
 		mFSAreaSearch->onButtonClickedSearch();
-		return TRUE;
+		return true;
 	}
 
 	return LLPanel::handleKeyHere(key, mask);

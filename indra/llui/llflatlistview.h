@@ -367,7 +367,7 @@ protected:
 	 */
 	void notifyParentItemsRectChanged();
 
-	virtual BOOL handleKeyHere(KEY key, MASK mask);
+	virtual bool handleKeyHere(KEY key, MASK mask);
 
 	virtual bool postBuild();
 

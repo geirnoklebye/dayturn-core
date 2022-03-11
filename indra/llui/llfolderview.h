@@ -194,7 +194,7 @@ public:
 
 	// LLView functionality
 	///*virtual*/ BOOL handleKey( KEY key, MASK mask, BOOL called_from_parent );
-	/*virtual*/ BOOL handleKeyHere( KEY key, MASK mask );
+	/*virtual*/ bool handleKeyHere( KEY key, MASK mask );
 	/*virtual*/ bool handleUnicodeCharHere(llwchar uni_char);
 	/*virtual*/ BOOL handleMouseDown( S32 x, S32 y, MASK mask );
 	/*virtual*/ BOOL handleDoubleClick( S32 x, S32 y, MASK mask );

@@ -491,26 +491,26 @@ BOOL LLVirtualTrackball::handleRightMouseDown(S32 x, S32 y, MASK mask)
     return LLView::handleRightMouseDown(x, y, mask);
 }
 
-BOOL LLVirtualTrackball::handleKeyHere(KEY key, MASK mask)
+bool LLVirtualTrackball::handleKeyHere(KEY key, MASK mask)
 {
-    BOOL handled = FALSE;
+    bool handled = false;
     switch (key)
     {
     case KEY_DOWN:
         onRotateTopClick();
-        handled = TRUE;
+        handled = true;
         break;
     case KEY_LEFT:
         onRotateRightClick();
-        handled = TRUE;
+        handled = true;
         break;
     case KEY_UP:
         onRotateBottomClick();
-        handled = TRUE;
+        handled = true;
         break;
     case KEY_RIGHT:
         onRotateLeftClick();
-        handled = TRUE;
+        handled = true;
         break;
     default:
         break;

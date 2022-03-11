@@ -181,9 +181,9 @@ public:
 	//
 	// LLWindowCallback interface implementation
 	//
-	/*virtual*/ BOOL handleTranslatedKeyDown(KEY key,  MASK mask, BOOL repeated);
-	/*virtual*/ BOOL handleTranslatedKeyUp(KEY key,  MASK mask);
-	/*virtual*/ void handleScanKey(KEY key, BOOL key_down, BOOL key_up, BOOL key_level);
+	/*virtual*/ bool handleTranslatedKeyDown(KEY key,  MASK mask, bool repeated);
+	/*virtual*/ bool handleTranslatedKeyUp(KEY key,  MASK mask);
+	/*virtual*/ void handleScanKey(KEY key, bool key_down, bool key_up, bool key_level);
 	/*virtual*/ bool handleUnicodeChar(llwchar uni_char, MASK mask);	// NOT going to handle extended 
 	/*virtual*/ BOOL handleMouseDown(LLWindow *window,  LLCoordGL pos, MASK mask);
 	/*virtual*/ BOOL handleMouseUp(LLWindow *window,  LLCoordGL pos, MASK mask);
@@ -325,8 +325,8 @@ public:
 	LLView*			getToolBarHolder() { return mToolBarHolder.get(); }
 	LLView*			getHintHolder() { return mHintHolder.get(); }
 	LLView*			getLoginPanelHolder() { return mLoginPanelHolder.get(); }
-	BOOL			handleKey(KEY key, MASK mask);
-	BOOL			handleKeyUp(KEY key, MASK mask);
+	bool			handleKey(KEY key, MASK mask);
+	bool			handleKeyUp(KEY key, MASK mask);
 	void			handleScrollWheel	(S32 clicks);
 	void			handleScrollHWheel	(S32 clicks);
 

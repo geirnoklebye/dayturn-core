@@ -52,7 +52,7 @@ public:
 
 	// LLView
 	/*virtual*/ void draw();
-	/*virtual*/ BOOL handleKeyHere(KEY key, MASK mask);
+	/*virtual*/ bool handleKeyHere(KEY key, MASK mask);
 	/*virtual*/ BOOL handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 									 EDragAndDropType cargo_type,
 									 void* cargo_data,

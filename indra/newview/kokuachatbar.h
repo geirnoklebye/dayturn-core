@@ -38,7 +38,7 @@ class KokuaChatBar : public LLFloater
 public:
 	KokuaChatBar(LLSD const & key);
 	virtual ~KokuaChatBar();
-	virtual BOOL handleKeyHere( KEY key, MASK mask );
+	virtual bool handleKeyHere( KEY key, MASK mask );
 	static void startChat(const char* line);
 	void show();
 		

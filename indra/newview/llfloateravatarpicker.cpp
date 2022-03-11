@@ -735,7 +735,7 @@ void LLFloaterAvatarPicker::editKeystroke(LLLineEditor* caller, void* user_data)
 }
 
 // virtual
-BOOL LLFloaterAvatarPicker::handleKeyHere(KEY key, MASK mask)
+bool LLFloaterAvatarPicker::handleKeyHere(KEY key, MASK mask)
 {
 	if (key == KEY_RETURN && mask == MASK_NONE)
 	{
@@ -747,12 +747,12 @@ BOOL LLFloaterAvatarPicker::handleKeyHere(KEY key, MASK mask)
 		{
 			onBtnSelect();
 		}
-		return TRUE;
+		return true;
 	}
 	else if (key == KEY_ESCAPE && mask == MASK_NONE)
 	{
 		closeFloater();
-		return TRUE;
+		return true;
 	}
 
 	return LLFloater::handleKeyHere(key, mask);

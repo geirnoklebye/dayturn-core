@@ -78,14 +78,14 @@ LLFloaterHowTo* LLFloaterHowTo::getInstance()
     return LLFloaterReg::getTypedInstance<LLFloaterHowTo>("guidebook");
 }
 
-BOOL LLFloaterHowTo::handleKeyHere(KEY key, MASK mask)
+bool LLFloaterHowTo::handleKeyHere(KEY key, MASK mask)
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 
 	if (KEY_F1 == key )
 	{
 		closeFloater();
-		handled = TRUE;
+		handled = true;
 	}
 
 	return handled;

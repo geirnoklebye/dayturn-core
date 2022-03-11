@@ -1534,10 +1534,10 @@ bool LLLineEditor::handleSpecialKey(KEY key, MASK mask)
 }
 
 
-BOOL LLLineEditor::handleKeyHere(KEY key, MASK mask )
+bool LLLineEditor::handleKeyHere(KEY key, MASK mask )
 {
-	BOOL	handled = FALSE;
-	BOOL	selection_modified = FALSE;
+	bool	handled = false;
+	bool	selection_modified = false;
 
 	if ( gFocusMgr.getKeyboardFocus() == this )
 	{
@@ -1572,7 +1572,7 @@ BOOL LLLineEditor::handleKeyHere(KEY key, MASK mask )
 				deselect();
 			}
 
-			BOOL need_to_rollback = FALSE;
+			bool need_to_rollback = false;
 
 			// If read-only, don't allow changes
 			need_to_rollback |= (mReadOnly && (mText.getString() == rollback.getText()));

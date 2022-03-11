@@ -41,7 +41,7 @@ public:
 	 * LLView overrides
 	 */
 public:
-	/*virtual*/ BOOL handleKeyHere(KEY key, MASK mask);
+	/*virtual*/ bool handleKeyHere(KEY key, MASK mask);
 	/*virtual*/ bool hasAccelerators() const;
 	/*virtual*/ bool postBuild();
 	/*virtual*/ void onOpen(const LLSD& sdKey);
