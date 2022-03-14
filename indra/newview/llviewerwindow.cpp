@@ -1574,9 +1574,11 @@ void LLViewerWindow::handleFocusLost(LLWindow *window)
 	showCursor();
 	getWindow()->setMouseClipping(FALSE);
 
-	// If losing focus while keys are down, reset them.
+	// If losing focus while keys are down, handle them as
+    // an 'up' to correctly release states, then reset states
 	if (gKeyboard)
 	{
+        gKeyboard->resetKeyDownAndHandle();
 		gKeyboard->resetKeys();
 	}
 
