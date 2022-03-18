@@ -213,10 +213,10 @@ public:
 	/*virtual*/ void handleWindowBlock(LLWindow *window);
 	/*virtual*/ void handleWindowUnblock(LLWindow *window);
 	/*virtual*/ void handleDataCopy(LLWindow *window, S32 data_type, void *data);
-	/*virtual*/ BOOL handleTimerEvent(LLWindow *window);
-	/*virtual*/ BOOL handleDeviceChange(LLWindow *window);
-	/*virtual*/ BOOL handleDPIChanged(LLWindow *window, F32 ui_scale_factor, S32 window_width, S32 window_height);
-	/*virtual*/ BOOL handleWindowDidChangeScreen(LLWindow *window);
+	/*virtual*/ bool handleTimerEvent(LLWindow *window);
+	/*virtual*/ bool handleDeviceChange(LLWindow *window);
+	/*virtual*/ bool handleDPIChanged(LLWindow *window, F32 ui_scale_factor, S32 window_width, S32 window_height);
+	/*virtual*/ bool handleWindowDidChangeScreen(LLWindow *window);
 
 	/*virtual*/ void handlePingWatchdog(LLWindow *window, const char * msg);
 	/*virtual*/ void handlePauseWatchdog(LLWindow *window);

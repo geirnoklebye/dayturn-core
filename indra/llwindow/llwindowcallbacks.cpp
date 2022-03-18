@@ -179,24 +179,24 @@ LLWindowCallbacks::DragNDropResult LLWindowCallbacks::handleDragNDrop(LLWindow *
 	return LLWindowCallbacks::DND_NONE;
 }
 
-BOOL LLWindowCallbacks::handleTimerEvent(LLWindow *window)
+bool LLWindowCallbacks::handleTimerEvent(LLWindow *window)
 {
-	return FALSE;
+	return false;
 }
 
-BOOL LLWindowCallbacks::handleDeviceChange(LLWindow *window)
+bool LLWindowCallbacks::handleDeviceChange(LLWindow *window)
 {
-	return FALSE;
+	return false;
 }
 
-BOOL LLWindowCallbacks::handleDPIChanged(LLWindow *window, F32 ui_scale_factor, S32 window_width, S32 window_height)
+bool LLWindowCallbacks::handleDPIChanged(LLWindow *window, F32 ui_scale_factor, S32 window_width, S32 window_height)
 {
-	return FALSE;
+	return false;
 }
 
-BOOL LLWindowCallbacks::handleWindowDidChangeScreen(LLWindow *window)
+bool LLWindowCallbacks::handleWindowDidChangeScreen(LLWindow *window)
 {
-	return FALSE;
+	return false;
 }
 
 void LLWindowCallbacks::handlePingWatchdog(LLWindow *window, const char * msg)

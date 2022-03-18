@@ -3329,7 +3329,7 @@ BOOL LLTextSegment::handleMiddleMouseDown(S32 x, S32 y, MASK mask) { return FALS
 BOOL LLTextSegment::handleMiddleMouseUp(S32 x, S32 y, MASK mask) { return FALSE; }
 BOOL LLTextSegment::handleRightMouseDown(S32 x, S32 y, MASK mask) { return FALSE; }
 BOOL LLTextSegment::handleRightMouseUp(S32 x, S32 y, MASK mask) { return FALSE; }
-bool LLTextSegment::handleDoubleClick(S32 x, S32 y, MASK mask) { return FALSE; }
+bool LLTextSegment::handleDoubleClick(S32 x, S32 y, MASK mask) { return false; }
 bool LLTextSegment::handleHover(S32 x, S32 y, MASK mask) { return false; }
 bool LLTextSegment::handleScrollWheel(S32 x, S32 y, S32 clicks) { return false; }
 bool LLTextSegment::handleScrollHWheel(S32 x, S32 y, S32 clicks) { return false; }

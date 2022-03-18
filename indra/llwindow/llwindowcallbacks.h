@@ -66,10 +66,10 @@ public:
 	virtual void handleWindowBlock(LLWindow *window);							// window is taking over CPU for a while
 	virtual void handleWindowUnblock(LLWindow *window);							// window coming back after taking over CPU for a while
 	virtual void handleDataCopy(LLWindow *window, S32 data_type, void *data);
-	virtual BOOL handleTimerEvent(LLWindow *window);
-	virtual BOOL handleDeviceChange(LLWindow *window);
-	virtual BOOL handleDPIChanged(LLWindow *window, F32 ui_scale_factor, S32 window_width, S32 window_height);
-	virtual BOOL handleWindowDidChangeScreen(LLWindow *window);
+	virtual bool handleTimerEvent(LLWindow *window);
+	virtual bool handleDeviceChange(LLWindow *window);
+	virtual bool handleDPIChanged(LLWindow *window, F32 ui_scale_factor, S32 window_width, S32 window_height);
+	virtual bool handleWindowDidChangeScreen(LLWindow *window);
 
 	enum DragNDropAction {
 		DNDA_START_TRACKING = 0,// Start tracking an incoming drag

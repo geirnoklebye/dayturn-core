@@ -97,7 +97,7 @@ BOOL LLToolSelectLand::handleMouseDown(S32 x, S32 y, MASK mask)
 bool LLToolSelectLand::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	LLVector3d pos_global;
-	BOOL hit_land = gViewerWindow->mousePointOnLandGlobal(x, y, &pos_global);
+	bool hit_land = gViewerWindow->mousePointOnLandGlobal(x, y, &pos_global);
 	if (hit_land)
 	{
 		// Auto-select this parcel

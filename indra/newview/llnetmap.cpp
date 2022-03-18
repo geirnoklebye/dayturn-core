@@ -1106,8 +1106,8 @@ bool LLNetMap::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	LLVector3d pos_global = viewPosToGlobal(x, y);
 
-	bool double_click_teleport = gSavedSettings.getBOOL("DoubleClickTeleport");
-	bool double_click_show_world_map = gSavedSettings.getBOOL("DoubleClickShowWorldMap");
+	bool double_click_teleport = gSavedSettings.getbool("DoubleClickTeleport");
+	bool double_click_show_world_map = gSavedSettings.getbool("DoubleClickShowWorldMap");
 
 	if (double_click_teleport || double_click_show_world_map)
 	{

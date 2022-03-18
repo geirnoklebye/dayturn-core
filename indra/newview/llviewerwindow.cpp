@@ -1774,49 +1774,49 @@ void LLViewerWindow::handleDataCopy(LLWindow *window, S32 data_type, void *data)
 	}
 }
 
-BOOL LLViewerWindow::handleTimerEvent(LLWindow *window)
+bool LLViewerWindow::handleTimerEvent(LLWindow *window)
 {
     //TODO: just call this every frame from gatherInput instead of using a convoluted 30fps timer callback
 	if (LLViewerJoystick::getInstance()->getOverrideCamera())
 	{
 		LLViewerJoystick::getInstance()->updateStatus();
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL LLViewerWindow::handleDeviceChange(LLWindow *window)
+bool LLViewerWindow::handleDeviceChange(LLWindow *window)
 {
 	// give a chance to use a joystick after startup (hot-plugging)
 	if (!LLViewerJoystick::getInstance()->isJoystickInitialized() )
 	{
 		LLViewerJoystick::getInstance()->init(true);
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL LLViewerWindow::handleDPIChanged(LLWindow *window, F32 ui_scale_factor, S32 window_width, S32 window_height)
+bool LLViewerWindow::handleDPIChanged(LLWindow *window, F32 ui_scale_factor, S32 window_width, S32 window_height)
 {
     if (ui_scale_factor >= MIN_UI_SCALE && ui_scale_factor <= MAX_UI_SCALE)
     {
         LLViewerWindow::reshape(window_width, window_height);
         mResDirty = true;
-        return TRUE;
+        return true;
     }
     else
     {
         LL_WARNS() << "DPI change caused UI scale to go out of bounds: " << ui_scale_factor << LL_ENDL;
-        return FALSE;
+        return false;
     }
 }
 
-BOOL LLViewerWindow::handleWindowDidChangeScreen(LLWindow *window)
+bool LLViewerWindow::handleWindowDidChangeScreen(LLWindow *window)
 {
 	LLCoordScreen window_rect;
 	mWindow->getSize(&window_rect);
 	reshape(window_rect.mX, window_rect.mY);
-	return TRUE;
+	return true;
 }
 
 void LLViewerWindow::handlePingWatchdog(LLWindow *window, const char * msg)

@@ -680,7 +680,7 @@ bool LLLineEditor::handleDoubleClick(S32 x, S32 y, MASK mask)
 	{
 		const LLWString& wtext = mText.getWString();
 
-		BOOL doSelectAll = TRUE;
+		bool doSelectAll = true;
 
 		// Select the word we're on
 		if( LLWStringUtil::isPartOfWord( wtext[mCursorPos] ) )
