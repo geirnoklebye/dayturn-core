@@ -47,7 +47,7 @@ public:
 		SHOW_ALWAYS,
 	} EShowToolTip;
 
-	virtual BOOL	handleAnyMouseClick(S32 x, S32 y, MASK mask, EMouseClickType clicktype, BOOL down);
+	virtual bool	handleAnyMouseClick(S32 x, S32 y, MASK mask, EMouseClickType clicktype, bool down);
 	virtual BOOL	handleMouseDown(S32 x, S32 y, MASK mask) = 0;
 	virtual BOOL	handleMouseUp(S32 x, S32 y, MASK mask) = 0;
 	virtual BOOL	handleMiddleMouseDown(S32 x, S32 y, MASK mask) = 0;

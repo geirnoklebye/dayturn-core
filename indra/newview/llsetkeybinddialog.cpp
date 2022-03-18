@@ -272,14 +272,14 @@ bool LLSetKeyBindDialog::recordAndHandleKey(KEY key, MASK mask, bool down)
     return true;
 }
 
-BOOL LLSetKeyBindDialog::handleAnyMouseClick(S32 x, S32 y, MASK mask, EMouseClickType clicktype, BOOL down)
+bool LLSetKeyBindDialog::handleAnyMouseClick(S32 x, S32 y, MASK mask, EMouseClickType clicktype, bool down)
 {
-    BOOL result = FALSE;
+    bool result = false;
     if (!pParent)
     {
         // we already processed 'down' event, this is 'up', consume
         closeFloater();
-        result = TRUE;
+        result = true;
     }
     if (!result && clicktype == CLICK_LEFT)
     {
@@ -305,7 +305,7 @@ BOOL LLSetKeyBindDialog::handleAnyMouseClick(S32 x, S32 y, MASK mask, EMouseClic
             {
                 // Note: default doubleclick time is 500ms, but can stretch up to 5s
                 pUpdater = new Updater(boost::bind(&onClickTimeout, this, _1), 0.7f, mask);
-                result = TRUE;
+                result = true;
             }
         }
     }
@@ -317,7 +317,7 @@ BOOL LLSetKeyBindDialog::handleAnyMouseClick(S32 x, S32 y, MASK mask, EMouseClic
         && ((mKeyFilterMask & ALLOW_MASK_MOUSE) != 0 || mask == 0)) // reserved for selection
     {
         setKeyBind(clicktype, KEY_NONE, mask, pCheckBox->getValue().asBoolean());
-        result = TRUE;
+        result = true;
         if (!down)
         {
             // wait for 'up' event before closing

@@ -1944,8 +1944,6 @@ void LLWindowWin32::hideCursor()
 
 void LLWindowWin32::showCursor()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_WIN32;
-
     ASSERT_MAIN_THREAD();
 	
     mWindowThread->post([=]()
@@ -2061,7 +2059,6 @@ void LLWindowWin32::initCursors()
 void LLWindowWin32::updateCursor()
 {
     ASSERT_MAIN_THREAD();
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_WIN32
 	if (mNextCursor == UI_CURSOR_ARROW
 		&& mBusyCount > 0)
 	{
@@ -2091,7 +2088,6 @@ void LLWindowWin32::captureMouse()
 
 void LLWindowWin32::releaseMouse()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_WIN32;
 	ReleaseCapture();
 }
 
@@ -2105,7 +2101,6 @@ void LLWindowWin32::delayInputProcessing()
 void LLWindowWin32::gatherInput()
 {
     ASSERT_MAIN_THREAD();
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_WIN32
     MSG msg;
 
     {
@@ -2119,13 +2114,11 @@ void LLWindowWin32::gatherInput()
 
     if (mWindowThread->getQueue().size())
     {
-        LL_PROFILE_ZONE_NAMED_CATEGORY_WIN32("gi - PostMessage");
         kickWindowThread();
     }
         
     while (mWindowThread->mMessageQueue.tryPopBack(msg))
     {
-        LL_PROFILE_ZONE_NAMED_CATEGORY_WIN32("gi - message queue");
         if (mInputProcessingPaused)
         {
             continue;
@@ -2134,13 +2127,11 @@ void LLWindowWin32::gatherInput()
         // For async host by name support.  Really hacky.
         if (gAsyncMsgCallback && (LL_WM_HOST_RESOLVED == msg.message))
         {
-            LL_PROFILE_ZONE_NAMED_CATEGORY_WIN32("gi - callback");
             gAsyncMsgCallback(msg);
         }
     }
 
     {
-        LL_PROFILE_ZONE_NAMED_CATEGORY_WIN32("gi - PeekMessage");
         S32 msg_count = 0;
         while ((msg_count < MAX_MESSAGE_PER_UPDATE) && PeekMessage(&msg, NULL, WM_USER, WM_USER, PM_REMOVE))
         {
@@ -2151,7 +2142,6 @@ void LLWindowWin32::gatherInput()
     }
 
     {
-        LL_PROFILE_ZONE_NAMED_CATEGORY_WIN32("gi - function queue");
         //process any pending functions
         std::function<void()> curFunc;
         while (mFunctionQueue.tryPopBack(curFunc))
@@ -2163,14 +2153,12 @@ void LLWindowWin32::gatherInput()
     // send one and only one mouse move event per frame BEFORE handling mouse button presses
     if (mLastCursorPosition != mCursorPosition)
     {
-        LL_PROFILE_ZONE_NAMED_CATEGORY_WIN32("gi - mouse move");
         mCallbacks->handleMouseMove(this, mCursorPosition.convert(), mMouseMask);
     }
     
     mLastCursorPosition = mCursorPosition;
 
     {
-        LL_PROFILE_ZONE_NAMED_CATEGORY_WIN32("gi - mouse queue");
         // handle mouse button presses AFTER updating mouse cursor position
         std::function<void()> curFunc;
         while (mMouseQueue.tryPopBack(curFunc))
@@ -2192,8 +2180,6 @@ static LLTrace::BlockTimerStatHandle FTM_MOUSEHANDLER("Handle Mouse");
 LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_param, LPARAM l_param)
 {
     ASSERT_WINDOW_THREAD();
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_WIN32;
-
     LL_DEBUGS("Window") << "mainWindowProc(" << std::hex << h_wnd
                         << ", " << u_msg
                         << ", " << w_param << ")" << std::dec << LL_ENDL;
@@ -2263,7 +2249,6 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
 
         case WM_PAINT:
         {
-            LL_PROFILE_ZONE_NAMED_CATEGORY_WIN32("mwp - WM_PAINT");
             GetUpdateRect(window_imp->mWindowHandle, &update_rect, FALSE);
             update_width = update_rect.right - update_rect.left + 1;
             update_height = update_rect.bottom - update_rect.top + 1;
@@ -2692,6 +2677,15 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
         }
         break;
 
+	// Note: custom cursors that are not found make LoadCursor() return NULL.
+	for( S32 i = 0; i < UI_CURSOR_COUNT; i++ )
+	{
+		if( !mCursor[i] )
+		{
+			mCursor[i] = LoadCursor(NULL, IDC_ARROW);
+		}
+	}
+}
         case WM_MBUTTONDOWN:
             //		case WM_MBUTTONDBLCLK:
         {
@@ -2747,8 +2741,21 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
             window_imp->postMouseButtonEvent([=]()
                 {
 
+void LLWindowWin32::updateCursor()
+{
+	if (mNextCursor == UI_CURSOR_ARROW
+		&& mBusyCount > 0)
+	{
+		mNextCursor = UI_CURSOR_WORKING;
+	}
                     LL_RECORD_BLOCK_TIME(FTM_MOUSEHANDLER);
 
+	if( mCurrentCursor != mNextCursor )
+	{
+		mCurrentCursor = mNextCursor;
+		SetCursor( mCursor[mNextCursor] );
+	}
+}
                     S32 button = GET_XBUTTON_WPARAM(w_param);
                     MASK mask = gKeyboard->currentMask(TRUE);
                     // Windows uses numbers 1 and 2 for buttons, remap to 4, 5
@@ -2757,12 +2764,30 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
         }
         break;
 
+ECursorType LLWindowWin32::getCursor() const
+{
+	return mCurrentCursor;
+}
         case WM_MOUSEWHEEL:
         {
             static short z_delta = 0;
 
+void LLWindowWin32::captureMouse()
+{
+	SetCapture(mWindowHandle);
+}
             RECT	client_rect;
 
+void LLWindowWin32::releaseMouse()
+{
+	// *NOTE:Mani ReleaseCapture will spawn new windows messages...
+	// which will in turn call our MainWindowProc. It therefore requires
+	// pausing *and more importantly resumption* of the mainlooptimeout...
+	// just like DispatchMessage below.
+	mCallbacks->handlePauseWatchdog(this);
+	ReleaseCapture();
+	mCallbacks->handleResumeWatchdog(this);
+}
             // eat scroll events that occur outside our window, since we use mouse position to direct scroll
             // instead of keyboard focus
             // NOTE: mouse_coord is in *window* coordinates for scroll events
@@ -2780,6 +2805,10 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
                 }
             }
 
+void LLWindowWin32::delayInputProcessing()
+{
+	mInputProcessingPaused = TRUE;
+}
             S16 incoming_z_delta = HIWORD(w_param);
             z_delta += incoming_z_delta;
             // cout << "z_delta " << z_delta << endl;
@@ -2817,13 +2846,26 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
         {
             static short h_delta = 0;
 
+void LLWindowWin32::gatherInput()
+{
+	MSG		msg;
+	int		msg_count = 0;
             RECT	client_rect;
 
+	while ((msg_count < MAX_MESSAGE_PER_UPDATE) && PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+	{
+		mCallbacks->handlePingWatchdog(this, "Main:TranslateGatherInput");
+		TranslateMessage(&msg);
             // eat scroll events that occur outside our window, since we use mouse position to direct scroll
             // instead of keyboard focus
             // NOTE: mouse_coord is in *window* coordinates for scroll events
             POINT mouse_coord = { (S32)(S16)LOWORD(l_param), (S32)(S16)HIWORD(l_param) };
 
+		// turn watchdog off in here to not fail if windows is doing something wacky
+		mCallbacks->handlePauseWatchdog(this);
+		DispatchMessage(&msg);
+		mCallbacks->handleResumeWatchdog(this);
+		msg_count++;
             if (ScreenToClient(window_imp->mWindowHandle, &mouse_coord)
                 && GetClientRect(window_imp->mWindowHandle, &client_rect))
             {
@@ -2836,9 +2878,18 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
                 }
             }
 
+		if ( mInputProcessingPaused )
+		{
+			break;
+		}
+		/* Attempted workaround for problem where typing fast and hitting
+		   return would result in only part of the text being sent. JC
             S16 incoming_h_delta = HIWORD(w_param);
             h_delta += incoming_h_delta;
 
+		BOOL key_posted = TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		msg_count++;
             // If the user rapidly spins the wheel, we can get messages with
             // large deltas, like 480 or so.  Thus we need to scroll more quickly.
             if (h_delta <= -WHEEL_DELTA || WHEEL_DELTA <= h_delta)
@@ -2864,6 +2915,25 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
             return 0;
         }
 
+		// If a key was translated, a WM_CHAR might have been posted to the end
+		// of the event queue.  We need it immediately.
+		if (key_posted && msg.message == WM_KEYDOWN)
+		{
+			if (PeekMessage(&msg, NULL, WM_CHAR, WM_CHAR, PM_REMOVE))
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+				msg_count++;
+			}
+		}
+		*/
+		mCallbacks->handlePingWatchdog(this, "Main:AsyncCallbackGatherInput");
+		// For async host by name support.  Really hacky.
+		if (gAsyncMsgCallback && (LL_WM_HOST_RESOLVED == msg.message))
+		{
+			gAsyncMsgCallback(msg);
+		}
+	}
         case WM_GETMINMAXINFO:
         {
             LPMINMAXINFO min_max = (LPMINMAXINFO)l_param;
@@ -2872,6 +2942,7 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
             return 0;
         }
 
+	mInputProcessingPaused = FALSE;
         case WM_MOVE:
         {
             window_imp->updateWindowRect();
@@ -2883,6 +2954,7 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
             S32 width = S32(LOWORD(l_param));
             S32 height = S32(HIWORD(l_param));
 
+	updateCursor();
             
             if (debug_window_proc)
             {
@@ -2898,6 +2970,10 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
                     << LL_ENDL;
             }
 
+	// clear this once we've processed all mouse messages that might have occurred after
+	// we slammed the mouse position
+	mMousePositionModified = FALSE;
+}
             // There's an odd behavior with WM_SIZE that I would call a bug. If 
             // the window is maximized, and you call MoveWindow() with a size smaller
             // than a maximized window, it ends up sending WM_SIZE with w_param set 
@@ -2905,6 +2981,8 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
             // (SL-44655). Fixed it by calling ShowWindow(SW_RESTORE) first (see 
             // LLWindowWin32::moveWindow in this file). 
 
+static LLTrace::BlockTimerStatHandle FTM_KEYHANDLER("Handle Keyboard");
+static LLTrace::BlockTimerStatHandle FTM_MOUSEHANDLER("Handle Mouse");
             // If we are now restored, but we weren't before, this
             // means that the window was un-minimized.
             if (w_param == SIZE_RESTORED && window_imp->mLastSizeWParam != SIZE_RESTORED)
@@ -2912,6 +2990,8 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
                 WINDOW_IMP_POST(window_imp->mCallbacks->handleActivate(window_imp, TRUE));
             }
 
+LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_param, LPARAM l_param)
+{
             // handle case of window being maximized from fully minimized state
             if (w_param == SIZE_MAXIMIZED && window_imp->mLastSizeWParam != SIZE_MAXIMIZED)
             {
@@ -4576,8 +4656,6 @@ void LLWindowWin32::LLWindowWin32Thread::run()
 
     while (! getQueue().done())
     {
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_WIN32;
-
         if (mWindowHandle != 0)
         {
             MSG msg;
@@ -4606,7 +4684,6 @@ void LLWindowWin32::LLWindowWin32Thread::run()
         }
 
         {
-            LL_PROFILE_ZONE_NAMED_CATEGORY_WIN32("w32t - Function Queue");
             logger.onChange("runPending()");
             //process any pending functions
             getQueue().runPending();
@@ -4614,7 +4691,6 @@ void LLWindowWin32::LLWindowWin32Thread::run()
         
 #if 0
         {
-            LL_PROFILE_ZONE_NAMED_CATEGORY_WIN32("w32t - Sleep");
             logger.always("sleep(1)");
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
@@ -4651,7 +4727,6 @@ void LLWindowWin32::kickWindowThread(HWND windowHandle)
 
 void LLWindowWin32::updateWindowRect()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_WIN32;
     //called from window thread
     RECT rect;
     RECT client_rect;

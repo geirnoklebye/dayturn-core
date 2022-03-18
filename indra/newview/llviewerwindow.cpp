@@ -1048,7 +1048,7 @@ void LLViewerWindow::handlePieMenu(S32 x, S32 y, MASK mask)
     }
 }
 
-BOOL LLViewerWindow::handleAnyMouseClick(LLWindow *window, LLCoordGL pos, MASK mask, EMouseClickType clicktype, BOOL down)
+bool LLViewerWindow::handleAnyMouseClick(LLWindow *window, LLCoordGL pos, MASK mask, EMouseClickType clicktype, bool down)
 {
 	const char* buttonname = "";
 	const char* buttonstatestr = "";
@@ -1140,7 +1140,7 @@ BOOL LLViewerWindow::handleAnyMouseClick(LLWindow *window, LLCoordGL pos, MASK m
 				LL_INFOS() << buttonname << " Mouse " << buttonstatestr << " handled by captor " << mouse_captor->getName() << LL_ENDL;
 			}
 
-			BOOL r = mouse_captor->handleAnyMouseClick(local_x, local_y, mask, clicktype, down); 
+			bool r = mouse_captor->handleAnyMouseClick(local_x, local_y, mask, clicktype, down); 
 			if (r) {
 
 				LL_DEBUGS() << "LLViewerWindow::handleAnyMouseClick viewer with mousecaptor calling updatemouseeventinfo - local_x|global x  "<< local_x << " " << x  << "local/global y " << local_y << " " << y << LL_ENDL;
@@ -1152,7 +1152,7 @@ BOOL LLViewerWindow::handleAnyMouseClick(LLWindow *window, LLCoordGL pos, MASK m
 			else if (down && clicktype == CLICK_RIGHT)
 			{
 				handlePieMenu(x, y, mask);
-				r = TRUE;
+				r = true;
 			}
 			return r;
 		}
@@ -1160,11 +1160,11 @@ BOOL LLViewerWindow::handleAnyMouseClick(LLWindow *window, LLCoordGL pos, MASK m
 		// Mark the click as handled and return if we aren't within the root view to avoid spurious bugs
 		if( !mRootView->pointInView(x, y) )
 		{
-			return TRUE;
+			return true;
 		}
 		// Give the UI views a chance to process the click
 
-		BOOL r= mRootView->handleAnyMouseClick(x, y, mask, clicktype, down) ;
+		bool r= mRootView->handleAnyMouseClick(x, y, mask, clicktype, down) ;
 		if (r) 
 		{
 
@@ -1186,7 +1186,7 @@ BOOL LLViewerWindow::handleAnyMouseClick(LLWindow *window, LLCoordGL pos, MASK m
 			{
 				LL_INFOS() << buttonname << " Mouse " << buttonstatestr << " " << LLViewerEventRecorder::instance().get_xui()	<< LL_ENDL;
 			} 
-			return TRUE;
+			return true;
 		} else if (LLView::sDebugMouseHandling)
 			{
 				LL_INFOS() << buttonname << " Mouse " << buttonstatestr << " not handled by view" << LL_ENDL;
@@ -1197,18 +1197,18 @@ BOOL LLViewerWindow::handleAnyMouseClick(LLWindow *window, LLCoordGL pos, MASK m
 	if(!gDisconnected && LLToolMgr::getInstance()->getCurrentTool()->handleAnyMouseClick( x, y, mask, clicktype, down ) )
 	{
 		LLViewerEventRecorder::instance().clear_xui(); 
-		return TRUE;
+		return true;
 	}
 
 	if (down && clicktype == CLICK_RIGHT)
 	{
 		handlePieMenu(x, y, mask);
-		return TRUE;
+		return true;
 	}
 
 	// If we got this far on a down-click, it wasn't handled.
 	// Up-clicks, though, are always handled as far as the OS is concerned.
-	BOOL default_rtn = !down;
+	bool default_rtn = !down;
 	return default_rtn;
 }
 
@@ -1223,7 +1223,7 @@ BOOL LLViewerWindow::handleMouseDown(LLWindow *window,  LLCoordGL pos, MASK mask
     {
         mMouseDownTimer.reset();
     }    
-    BOOL down = TRUE;
+    bool down = true;
     //handleMouse() loops back to LLViewerWindow::handleAnyMouseClick
     return gViewerInput.handleMouse(window, pos, mask, CLICK_LEFT, down);
 }
@@ -1246,24 +1246,24 @@ BOOL LLViewerWindow::handleMouseUp(LLWindow *window,  LLCoordGL pos, MASK mask)
     {
         mMouseDownTimer.stop();
     }
-    BOOL down = FALSE;
+    bool down = false;
     return gViewerInput.handleMouse(window, pos, mask, CLICK_LEFT, down);
 }
 BOOL LLViewerWindow::handleRightMouseDown(LLWindow *window,  LLCoordGL pos, MASK mask)
 {
-	BOOL down = TRUE;
+	bool down = true;
 	return gViewerInput.handleMouse(window, pos, mask, CLICK_RIGHT, down);
 }
 
 BOOL LLViewerWindow::handleRightMouseUp(LLWindow *window,  LLCoordGL pos, MASK mask)
 {
-	BOOL down = FALSE;
+	bool down = false;
  	return gViewerInput.handleMouse(window, pos, mask, CLICK_RIGHT, down);
 }
 
 BOOL LLViewerWindow::handleMiddleMouseDown(LLWindow *window,  LLCoordGL pos, MASK mask)
 {
-	BOOL down = TRUE;
+	bool down = true;
  	gViewerInput.handleMouse(window, pos, mask, CLICK_MIDDLE, down);
   
   	// Always handled as far as the OS is concerned.
@@ -1418,14 +1418,14 @@ LLWindowCallbacks::DragNDropResult LLViewerWindow::handleDragNDrop( LLWindow *wi
 
 BOOL LLViewerWindow::handleMiddleMouseUp(LLWindow *window,  LLCoordGL pos, MASK mask)
 {
-	BOOL down = FALSE;
+	bool down = false;
  	gViewerInput.handleMouse(window, pos, mask, CLICK_MIDDLE, down);
   
   	// Always handled as far as the OS is concerned.
 	return TRUE;
 }
 
-BOOL LLViewerWindow::handleOtherMouse(LLWindow *window, LLCoordGL pos, MASK mask, S32 button, bool down)
+bool LLViewerWindow::handleOtherMouse(LLWindow *window, LLCoordGL pos, MASK mask, S32 button, bool down)
 {
     switch (button)
     {
@@ -1440,17 +1440,17 @@ BOOL LLViewerWindow::handleOtherMouse(LLWindow *window, LLCoordGL pos, MASK mask
     }
 
     // Always handled as far as the OS is concerned.
-    return TRUE;
+    return true;
 }
 
-BOOL LLViewerWindow::handleOtherMouseDown(LLWindow *window, LLCoordGL pos, MASK mask, S32 button)
+bool LLViewerWindow::handleOtherMouseDown(LLWindow *window, LLCoordGL pos, MASK mask, S32 button)
 {
-    return handleOtherMouse(window, pos, mask, button, TRUE);
+    return handleOtherMouse(window, pos, mask, button, true);
 }
 
-BOOL LLViewerWindow::handleOtherMouseUp(LLWindow *window, LLCoordGL pos, MASK mask, S32 button)
+bool LLViewerWindow::handleOtherMouseUp(LLWindow *window, LLCoordGL pos, MASK mask, S32 button)
 {
-    return handleOtherMouse(window, pos, mask, button, FALSE);
+    return handleOtherMouse(window, pos, mask, button, false);
 }
 
 // WARNING: this is potentially called multiple times per frame
@@ -1508,13 +1508,13 @@ void LLViewerWindow::handleMouseLeave(LLWindow *window)
 	LLToolTipMgr::instance().blockToolTips();
 }
 
-BOOL LLViewerWindow::handleCloseRequest(LLWindow *window)
+bool LLViewerWindow::handleCloseRequest(LLWindow *window)
 {
 	// User has indicated they want to close, but we may need to ask
 	// about modified documents.
 	LLAppViewer::instance()->userQuit();
 	// Don't quit immediately
-	return FALSE;
+	return false;
 }
 
 void LLViewerWindow::handleQuit(LLWindow *window)
@@ -1641,7 +1641,7 @@ void LLViewerWindow::handleScanKey(KEY key, bool key_down, bool key_up, bool key
 
 
 
-BOOL LLViewerWindow::handleActivate(LLWindow *window, BOOL activated)
+bool LLViewerWindow::handleActivate(LLWindow *window, bool activated)
 {
 	if (activated)
 	{
@@ -1673,15 +1673,15 @@ BOOL LLViewerWindow::handleActivate(LLWindow *window, BOOL activated)
 		// Mute audio
 		audio_update_volume();
 	}
-	return TRUE;
+	return true;
 }
 
-BOOL LLViewerWindow::handleActivateApp(LLWindow *window, BOOL activating)
+bool LLViewerWindow::handleActivateApp(LLWindow *window, bool activating)
 {
 	//if (!activating) gAgentCamera.changeCameraToDefault();
 
 	LLViewerJoystick::getInstance()->setNeedsReset(true);
-	return FALSE;
+	return false;
 }
 
 
@@ -1690,7 +1690,7 @@ void LLViewerWindow::handleMenuSelect(LLWindow *window,  S32 menu_item)
 }
 
 
-BOOL LLViewerWindow::handlePaint(LLWindow *window,  S32 x,  S32 y, S32 width,  S32 height)
+bool LLViewerWindow::handlePaint(LLWindow *window,  S32 x,  S32 y, S32 width,  S32 height)
 {
 	// *TODO: Enable similar information output for other platforms?  DK 2011-02-18
 #if LL_WINDOWS
@@ -1727,10 +1727,10 @@ BOOL LLViewerWindow::handlePaint(LLWindow *window,  S32 x,  S32 y, S32 width,  S
 
 		TextOutA(hdc, 0, 50, "Set \"HeadlessClient FALSE\" in settings.ini file to reenable", 61);
 		EndPaint(window_handle, &ps); 
-		return TRUE;
+		return true;
 	}
 #endif
-	return FALSE;
+	return false;
 }
 
 

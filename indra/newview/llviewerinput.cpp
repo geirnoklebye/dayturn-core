@@ -1624,9 +1624,9 @@ bool LLViewerInput::scanKey(KEY key, bool key_down, bool key_up, bool key_level)
     return res;
 }
 
-BOOL LLViewerInput::handleMouse(LLWindow *window_impl, LLCoordGL pos, MASK mask, EMouseClickType clicktype, BOOL down)
+bool LLViewerInput::handleMouse(LLWindow *window_impl, LLCoordGL pos, MASK mask, EMouseClickType clicktype, bool down)
 {
-    BOOL handled = gViewerWindow->handleAnyMouseClick(window_impl, pos, mask, clicktype, down);
+    bool handled = gViewerWindow->handleAnyMouseClick(window_impl, pos, mask, clicktype, down);
 
     if (clicktype != CLICK_NONE)
     {

@@ -176,7 +176,7 @@ public:
 	bool			getUIVisibility();
 	void			handlePieMenu(S32 x, S32 y, MASK mask);
 
-	BOOL handleAnyMouseClick(LLWindow *window, LLCoordGL pos, MASK mask, EMouseClickType clicktype, BOOL down);
+	bool handleAnyMouseClick(LLWindow *window, LLCoordGL pos, MASK mask, EMouseClickType clicktype, bool down);
 
 	//
 	// LLWindowCallback interface implementation
@@ -187,15 +187,15 @@ public:
 	/*virtual*/ bool handleUnicodeChar(llwchar uni_char, MASK mask);	// NOT going to handle extended 
 	/*virtual*/ BOOL handleMouseDown(LLWindow *window,  LLCoordGL pos, MASK mask);
 	/*virtual*/ BOOL handleMouseUp(LLWindow *window,  LLCoordGL pos, MASK mask);
-	/*virtual*/ BOOL handleCloseRequest(LLWindow *window);
+	/*virtual*/ bool handleCloseRequest(LLWindow *window);
 	/*virtual*/ void handleQuit(LLWindow *window);
 	/*virtual*/ BOOL handleRightMouseDown(LLWindow *window,  LLCoordGL pos, MASK mask);
 	/*virtual*/ BOOL handleRightMouseUp(LLWindow *window,  LLCoordGL pos, MASK mask);
 	/*virtual*/ BOOL handleMiddleMouseDown(LLWindow *window,  LLCoordGL pos, MASK mask);
 	/*virtual*/ BOOL handleMiddleMouseUp(LLWindow *window, LLCoordGL pos, MASK mask);
-	/*virtual*/ BOOL handleOtherMouseDown(LLWindow *window, LLCoordGL pos, MASK mask, S32 button);
-	/*virtual*/ BOOL handleOtherMouseUp(LLWindow *window, LLCoordGL pos, MASK mask, S32 button);
-	BOOL handleOtherMouse(LLWindow *window, LLCoordGL pos, MASK mask, S32 button, bool down);
+	/*virtual*/ bool handleOtherMouseDown(LLWindow *window, LLCoordGL pos, MASK mask, S32 button);
+	/*virtual*/ bool handleOtherMouseUp(LLWindow *window, LLCoordGL pos, MASK mask, S32 button);
+	bool handleOtherMouse(LLWindow *window, LLCoordGL pos, MASK mask, S32 button, bool down);
 	/*virtual*/ LLWindowCallbacks::DragNDropResult handleDragNDrop(LLWindow *window, LLCoordGL pos, MASK mask, LLWindowCallbacks::DragNDropAction action, std::string data);
 				void handleMouseMove(LLWindow *window,  LLCoordGL pos, MASK mask);
                 void handleMouseDragged(LLWindow *window,  LLCoordGL pos, MASK mask);
@@ -203,10 +203,10 @@ public:
 	/*virtual*/ void handleResize(LLWindow *window,  S32 x,  S32 y);
 	/*virtual*/ void handleFocus(LLWindow *window);
 	/*virtual*/ void handleFocusLost(LLWindow *window);
-	/*virtual*/ BOOL handleActivate(LLWindow *window, BOOL activated);
-	/*virtual*/ BOOL handleActivateApp(LLWindow *window, BOOL activating);
+	/*virtual*/ bool handleActivate(LLWindow *window, bool activated);
+	/*virtual*/ bool handleActivateApp(LLWindow *window, bool activating);
 	/*virtual*/ void handleMenuSelect(LLWindow *window,  S32 menu_item);
-	/*virtual*/ BOOL handlePaint(LLWindow *window,  S32 x,  S32 y,  S32 width,  S32 height);
+	/*virtual*/ bool handlePaint(LLWindow *window,  S32 x,  S32 y,  S32 width,  S32 height);
 	/*virtual*/ void handleScrollWheel(LLWindow *window,  S32 clicks);
 	/*virtual*/ void handleScrollHWheel(LLWindow *window,  S32 clicks);
 	/*virtual*/ bool handleDoubleClick(LLWindow *window,  LLCoordGL pos, MASK mask);
