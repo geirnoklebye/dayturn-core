@@ -4834,7 +4834,7 @@ void LLViewerWindow::saveImageLocal(LLImageFormatted *image, const snapshot_save
 
 	LL_INFOS() << "Saving snapshot to " << filepath << LL_ENDL;
 
-    if (gSavedSettings.getBOOL("FSLogSnapshotsToLocal"))
+    if (gSavedSettings.getbool("FSLogSnapshotsToLocal"))
     {
         LLStringUtil::format_map_t args;
         args["FILENAME"] = filepath;
@@ -4965,7 +4965,7 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 	setCursor(UI_CURSOR_WAIT);
 
 	// Hide all the UI widgets first and draw a frame
-	BOOL prev_draw_ui = gPipeline.hasRenderDebugFeatureMask(LLPipeline::RENDER_DEBUG_FEATURE_UI) ? TRUE : FALSE;
+	bool prev_draw_ui = gPipeline.hasRenderDebugFeatureMask(LLPipeline::RENDER_DEBUG_FEATURE_UI) ? true : false;
 
 	if ( prev_draw_ui != show_ui)
 	{
@@ -4978,7 +4978,7 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 		LLPipeline::sShowHUDAttachments = FALSE;
 	}
 
-	if(show_ui && gSavedSettings.getBOOL("HideBalanceInSnapshots"))
+	if(show_ui && gSavedSettings.getbool("HideBalanceInSnapshots"))
 	{
 		gStatusBar->hideBalance(true);
 	}
