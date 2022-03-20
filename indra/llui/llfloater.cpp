@@ -2324,7 +2324,7 @@ static LLDefaultChildRegistry::Register<LLFloaterView> r("floater_view");
 
 LLFloaterView::LLFloaterView (const Params& p)
 :	LLUICtrl (p),
-	mFocusCycleMode(FALSE),
+	mFocusCycleMode(false),
 	mMinimizePositionVOffset(0),
 	mSnapOffsetBottom(0),
 	mSnapOffsetRight(0),

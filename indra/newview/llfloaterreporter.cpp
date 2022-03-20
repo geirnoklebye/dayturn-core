@@ -922,7 +922,7 @@ void LLFloaterReporter::takeNewSnapshot()
 
 	// Take a screenshot, but don't draw this floater.
 	setVisible(false);
-    if (!gViewerWindow->rawSnapshot(mImageRaw,IMAGE_WIDTH, IMAGE_HEIGHT, TRUE, FALSE, TRUE /*UI*/, TRUE, FALSE))
+    if (!gViewerWindow->rawSnapshot(mImageRaw,IMAGE_WIDTH, IMAGE_HEIGHT, true, false, true /*UI*/, true, false))
 	{
 		LL_WARNS() << "Unable to take screenshot" << LL_ENDL;
 		setVisible(true);
@@ -930,7 +930,7 @@ void LLFloaterReporter::takeNewSnapshot()
 	}
 	setVisible(true);
 
-	if(gSavedPerAccountSettings.getBOOL("PreviousScreenshotForReport"))
+	if(gSavedPerAccountSettings.getbool("PreviousScreenshotForReport"))
 	{
 		std::string screenshot_filename(gDirUtilp->getLindenUserDir() + gDirUtilp->getDirDelimiter() + SCREEN_PREV_FILENAME);
 		mPrevImageRaw = new LLImageRaw;

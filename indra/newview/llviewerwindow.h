@@ -271,9 +271,9 @@ public:
 	S32				getCurrentMouseDY()		const	{ return mCurrentMouseDelta.mY; }
 	LLCoordGL		getCurrentMouseDelta()	const	{ return mCurrentMouseDelta; }
 	static LLTrace::SampleStatHandle<>*	getMouseVelocityStat()		{ return &sMouseVelocityStat; }
-	BOOL			getLeftMouseDown()	const	{ return mLeftMouseDown; }
-	BOOL			getMiddleMouseDown()	const	{ return mMiddleMouseDown; }
-	BOOL			getRightMouseDown()	const	{ return mRightMouseDown; }
+	bool			getLeftMouseDown()	const	{ return mLeftMouseDown; }
+	bool			getMiddleMouseDown()	const	{ return mMiddleMouseDown; }
+	bool			getRightMouseDown()	const	{ return mRightMouseDown; }
 
 	const LLPickInfo&	getLastPick() const { return mLastPick; }
 
@@ -353,19 +353,22 @@ public:
 	// snapshot functionality.
 	// perhaps some of this should move to llfloatershapshot?  -MG
 
-	BOOL			saveSnapshot(const std::string&  filename, S32 image_width, S32 image_height, BOOL show_ui = TRUE, BOOL show_hud = TRUE, BOOL do_rebuild = FALSE, LLSnapshotModel::ESnapshotLayerType type = LLSnapshotModel::SNAPSHOT_TYPE_COLOR, LLSnapshotModel::ESnapshotFormat format = LLSnapshotModel::SNAPSHOT_FORMAT_BMP);
-	BOOL			rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_height, BOOL keep_window_aspect = TRUE, BOOL is_texture = FALSE,
-	BOOL            show_ui = TRUE, BOOL show_hud = TRUE, BOOL do_rebuild = FALSE, LLSnapshotModel::ESnapshotLayerType type = LLSnapshotModel::SNAPSHOT_TYPE_COLOR, S32 max_size = MAX_SNAPSHOT_IMAGE_SIZE);
+	bool			saveSnapshot(const std::string&  filename, S32 image_width, S32 image_height, bool show_ui = true, bool show_hud = true, 
+	                bool do_rebuild = false, LLSnapshotModel::ESnapshotLayerType type = LLSnapshotModel::SNAPSHOT_TYPE_COLOR, LLSnapshotModel::ESnapshotFormat format = LLSnapshotModel::SNAPSHOT_FORMAT_BMP);
+	bool			rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_height, bool keep_window_aspect = true, bool is_texture = false,
+	                bool show_ui = true, bool show_hud = true, bool do_rebuild = false, LLSnapshotModel::ESnapshotLayerType type = LLSnapshotModel::SNAPSHOT_TYPE_COLOR,
+	                S32 max_size = MAX_SNAPSHOT_IMAGE_SIZE);
 
-    BOOL			simpleSnapshot(LLImageRaw *raw, S32 image_width, S32 image_height, const int num_render_passes);
+    bool			simpleSnapshot(LLImageRaw *raw, S32 image_width, S32 image_height, const int num_render_passes);
 
-    BOOL			thumbnailSnapshot(LLImageRaw *raw, S32 preview_width, S32 preview_height, BOOL show_ui, BOOL show_hud, BOOL do_rebuild, LLSnapshotModel::ESnapshotLayerType type);
-	BOOL			isSnapshotLocSet() const;
+    bool			thumbnailSnapshot(LLImageRaw *raw, S32 preview_width, S32 preview_height, bool show_ui, bool show_hud, 
+                    bool do_rebuild, LLSnapshotModel::ESnapshotLayerType type);
+	bool			isSnapshotLocSet() const;
 	void			resetSnapshotLoc() const;
 
 	typedef boost::signals2::signal<void(void)> snapshot_saved_signal_t;
 
-	void			saveImageNumbered(LLImageFormatted *image, BOOL force_picker, const snapshot_saved_signal_t::slot_type& success_cb, const snapshot_saved_signal_t::slot_type& failure_cb);
+	void			saveImageNumbered(LLImageFormatted *image, bool force_picker, const snapshot_saved_signal_t::slot_type& success_cb, const snapshot_saved_signal_t::slot_type& failure_cb);
 	void			onDirectorySelected(const std::vector<std::string>& filenames, LLImageFormatted *image, const snapshot_saved_signal_t::slot_type& success_cb, const snapshot_saved_signal_t::slot_type& failure_cb);
 	void			saveImageLocal(LLImageFormatted *image, const snapshot_saved_signal_t::slot_type& success_cb, const snapshot_saved_signal_t::slot_type& failure_cb);
 	void			onSelectionFailure(const snapshot_saved_signal_t::slot_type& failure_cb);
@@ -425,9 +428,9 @@ public:
 	// handle shutting down GL and bringing it back up
 	void			requestResolutionUpdate();
 	void			checkSettings();
-	void			restartDisplay(BOOL show_progress_bar);
-	BOOL			changeDisplaySettings(LLCoordScreen size, BOOL enable_vsync, BOOL show_progress_bar);
-	BOOL			getIgnoreDestroyWindow() { return mIgnoreActivate; }
+	void			restartDisplay(bool show_progress_bar);
+	bool			changeDisplaySettings(LLCoordScreen size, bool disable_vsync, bool show_progress_bar);
+	bool			getIgnoreDestroyWindow() { return mIgnoreActivate; }
 	F32				getWorldViewAspectRatio() const;
 	const LLVector2& getDisplayScale() const { return mDisplayScale; }
 	void			calcDisplayScale();
@@ -444,7 +447,7 @@ private:
 	void			switchToolByMask(MASK mask);
 	void			destroyWindow();
 	void			drawMouselookInstructions();
-	void			stopGL(BOOL save_state = TRUE);
+	void			stopGL(bool save_state = true);
 	void			restoreGL(const std::string& progress_message = LLStringUtil::null);
 	void			initFonts(F32 zoom_factor = 1.f);
 	void			schedulePick(LLPickInfo& pick_info);
@@ -471,9 +474,9 @@ private:
 	LLCoordGL		mCurrentMousePoint;			// last mouse position in GL coords
 	LLCoordGL		mLastMousePoint;		// Mouse point at last frame.
 	LLCoordGL		mCurrentMouseDelta;		//amount mouse moved this frame
-	BOOL			mLeftMouseDown;
-	BOOL			mMiddleMouseDown;
-	BOOL			mRightMouseDown;
+	bool			mLeftMouseDown;
+	bool			mMiddleMouseDown;
+	bool			mRightMouseDown;
 
 	LLProgressView	*mProgressView;
 
@@ -482,9 +485,9 @@ private:
 	std::string		mLastToolTipMessage;
 	LLRect			mToolTipStickyRect;			// Once a tool tip is shown, it will stay visible until the mouse leaves this rect.
 
-	BOOL			mMouseInWindow;				// True if the mouse is over our window or if we have captured the mouse.
-	BOOL			mFocusCycleMode;
-    BOOL            mAllowMouseDragging;
+	bool			mMouseInWindow;				// True if the mouse is over our window or if we have captured the mouse.
+	bool			mFocusCycleMode;
+    bool            mAllowMouseDragging;
     LLFrameTimer    mMouseDownTimer;
 	typedef std::set<LLHandle<LLView> > view_handle_set_t;
 	view_handle_set_t mMouseHoverViews;
@@ -501,7 +504,7 @@ private:
 
 	std::string		mOverlayTitle;		// Used for special titles such as "Second Life - Special E3 2003 Beta"
 
-	BOOL			mIgnoreActivate;
+	bool			mIgnoreActivate;
 
 	std::string		mInitAlert;			// Window / GL initialization requires an alert
 
@@ -546,9 +549,9 @@ extern S32				gDebugRaycastFaceHit;
 extern LLVector4a		gDebugRaycastStart;
 extern LLVector4a		gDebugRaycastEnd;
 
-extern BOOL			gDisplayCameraPos;
-extern BOOL			gDisplayWindInfo;
-extern BOOL			gDisplayFOV;
-extern BOOL			gDisplayBadge;
+extern bool			gDisplayCameraPos;
+extern bool			gDisplayWindInfo;
+extern bool			gDisplayFOV;
+extern bool			gDisplayBadge;
 
 #endif

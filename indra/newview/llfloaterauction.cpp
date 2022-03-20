@@ -178,14 +178,14 @@ void LLFloaterAuction::onClickSnapshot(void* data)
 	LLPointer<LLImageRaw> raw = new LLImageRaw;
 
 	gForceRenderLandFence = self->getChild<LLUICtrl>("fence_check")->getValue().asBoolean();
-	BOOL success = gViewerWindow->rawSnapshot(raw,
+	bool success = gViewerWindow->rawSnapshot(raw,
 											  gViewerWindow->getWindowWidthScaled(),
 											  gViewerWindow->getWindowHeightScaled(),
-											  TRUE,
-											  FALSE,
-											  FALSE, //UI
-											  FALSE, //HUD
-											  FALSE);
+											  true,
+											  false,
+											  false, //UI
+											  false, //HUD
+											  false);
 	gForceRenderLandFence = false;
 
 	if (success)

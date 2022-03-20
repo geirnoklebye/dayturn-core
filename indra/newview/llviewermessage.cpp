@@ -5265,9 +5265,9 @@ bool attempt_standard_notification(LLMessageSystem* msgsystem)
             gViewerWindow->saveSnapshot(snap_filename,
                                         gViewerWindow->getWindowWidthRaw(),
                                         gViewerWindow->getWindowHeightRaw(),
-                                        FALSE, //UI
-                                        gSavedSettings.getBOOL("RenderHUDInSnapshot"),
-                                        FALSE,
+                                        false, //UI
+                                        gSavedSettings.getbool("RenderHUDInSnapshot"),
+                                        false,
                                         LLSnapshotModel::SNAPSHOT_TYPE_COLOR,
                                         LLSnapshotModel::SNAPSHOT_FORMAT_PNG);
 		}
@@ -5370,9 +5370,9 @@ static void process_special_alert_messages(const std::string & message)
 		gViewerWindow->saveSnapshot(snap_filename,
                                     gViewerWindow->getWindowWidthRaw(),
                                     gViewerWindow->getWindowHeightRaw(),
-                                    FALSE,
-                                    gSavedSettings.getBOOL("RenderHUDInSnapshot"),
-                                    FALSE,
+                                    false,
+                                    gSavedSettings.getbool("RenderHUDInSnapshot"),
+                                    false,
                                     LLSnapshotModel::SNAPSHOT_TYPE_COLOR,
                                     LLSnapshotModel::SNAPSHOT_FORMAT_PNG);
 	}

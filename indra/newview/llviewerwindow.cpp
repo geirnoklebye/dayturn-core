@@ -254,13 +254,13 @@ LLVector4a		 gDebugRaycastStart;
 LLVector4a		 gDebugRaycastEnd;
 
 // HUD display lines in lower right
-BOOL				gDisplayWindInfo = FALSE;
-BOOL				gDisplayCameraPos = FALSE;
-BOOL				gDisplayFOV = FALSE;
-BOOL				gDisplayBadge = FALSE;
+bool				gDisplayWindInfo = false;
+bool				gDisplayCameraPos = false;
+bool				gDisplayFOV = false;
+bool				gDisplayBadge = false;
 
 static const U8 NO_FACE = 255;
-BOOL gQuietSnapshot = FALSE;
+bool gQuietSnapshot = false;
 
 // Minimum value for UIScaleFactor, also defined in preferences, ui_scale_slider
 static const F32 MIN_UI_SCALE = 0.75f;
@@ -1214,7 +1214,7 @@ BOOL LLViewerWindow::handleAnyMouseClick(LLWindow *window, LLCoordGL pos, MASK m
 
 BOOL LLViewerWindow::handleMouseDown(LLWindow *window,  LLCoordGL pos, MASK mask)
 {
-    mAllowMouseDragging = FALSE;
+    mAllowMouseDragging = false;
     if (!mMouseDownTimer.getStarted())
     {
         mMouseDownTimer.start();
@@ -1462,7 +1462,7 @@ void LLViewerWindow::handleMouseMove(LLWindow *window,  LLCoordGL pos, MASK mask
 	x = ll_round((F32)x / mDisplayScale.mV[VX]);
 	y = ll_round((F32)y / mDisplayScale.mV[VY]);
 
-	mMouseInWindow = TRUE;
+	mMouseInWindow = true;
 
 	// Save mouse point for access during idle() and display()
 
@@ -1490,7 +1490,7 @@ void LLViewerWindow::handleMouseDragged(LLWindow *window,  LLCoordGL pos, MASK m
     {
         if (mMouseDownTimer.getElapsedTimeF32() > 0.1)
         {
-            mAllowMouseDragging = TRUE;
+            mAllowMouseDragging = true;
             mMouseDownTimer.stop();
         }
     }
@@ -1504,7 +1504,7 @@ void LLViewerWindow::handleMouseLeave(LLWindow *window)
 {
 	// Note: we won't get this if we have captured the mouse.
 	llassert( gFocusMgr.getMouseCapture() == NULL );
-	mMouseInWindow = FALSE;
+	mMouseInWindow = false;
 	LLToolTipMgr::instance().blockToolTips();
 }
 
@@ -1867,17 +1867,17 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	mWindowRectRaw(0, p.height, p.width, 0),
 	mWindowRectScaled(0, p.height, p.width, 0),
 	mWorldViewRectRaw(0, p.height, p.width, 0),
-	mLeftMouseDown(FALSE),
-	mMiddleMouseDown(FALSE),
-	mRightMouseDown(FALSE),
-	mMouseInWindow( FALSE ),
-    mAllowMouseDragging(TRUE),
+	mLeftMouseDown(false),
+	mMiddleMouseDown(false),
+	mRightMouseDown(false),
+	mMouseInWindow(false),
+    mAllowMouseDragging(true),
     mMouseDownTimer(),
 	mLastMask( MASK_NONE ),
 	mToolStored( NULL ),
 	mHideCursorPermanent( FALSE ),
 	mCursorHidden(FALSE),
-	mIgnoreActivate( FALSE ),
+	mIgnoreActivate(false),
 	mResDirty(false),
 	mStatesDirty(false),
 	mCurrResolutionIndex(0),
@@ -2476,7 +2476,7 @@ void LLViewerWindow::shutdownGL()
 	LLSelectMgr::getInstance()->cleanup();	
 
 	LL_INFOS() << "Stopping GL during shutdown" << LL_ENDL;
-	stopGL(FALSE);
+	stopGL(false);
 	stop_glerror();
 
 	gGL.shutdown();
@@ -3880,11 +3880,11 @@ void LLViewerWindow::updateMouseDelta()
 		mouse_pos.mX > mWindowRectRaw.getWidth() ||
 		mouse_pos.mY > mWindowRectRaw.getHeight())
 	{
-		mMouseInWindow = FALSE;
+		mMouseInWindow = false;
 	}
 	else
 	{
-		mMouseInWindow = TRUE;
+		mMouseInWindow = true;
 	}
 
 	LLVector2 mouse_vel; 
@@ -4708,7 +4708,7 @@ bool LLViewerWindow::mousePointOnLandGlobal(const S32 x, const S32 y, LLVector3d
 }
 
 // Saves an image to the harddrive as "SnapshotX" where X >= 1.
-void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, BOOL force_picker, const snapshot_saved_signal_t::slot_type& success_cb, const snapshot_saved_signal_t::slot_type& failure_cb)
+void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picker, const snapshot_saved_signal_t::slot_type& success_cb, const snapshot_saved_signal_t::slot_type& failure_cb)
 {
 	if (!image)
 	{
@@ -4807,7 +4807,7 @@ void LLViewerWindow::saveImageLocal(LLImageFormatted *image, const snapshot_save
 	}
 	
 	// Look for an unused file name
-	BOOL is_snapshot_name_loc_set = isSnapshotLocSet();
+	bool is_snapshot_name_loc_set = isSnapshotLocSet();
 	std::string filepath;
 	S32 i = 1;
 	S32 err = 0;
@@ -4869,12 +4869,12 @@ void LLViewerWindow::movieSize(S32 new_width, S32 new_height)
 	}
 }
 
-BOOL LLViewerWindow::saveSnapshot(const std::string& filepath, S32 image_width, S32 image_height, BOOL show_ui, BOOL show_hud, BOOL do_rebuild, LLSnapshotModel::ESnapshotLayerType type, LLSnapshotModel::ESnapshotFormat format)
+bool LLViewerWindow::saveSnapshot(const std::string& filepath, S32 image_width, S32 image_height, bool show_ui, bool show_hud, bool do_rebuild, LLSnapshotModel::ESnapshotLayerType type, LLSnapshotModel::ESnapshotFormat format)
 {
     LL_INFOS() << "Saving snapshot to: " << filepath << LL_ENDL;
 
     LLPointer<LLImageRaw> raw = new LLImageRaw;
-    BOOL success = rawSnapshot(raw, image_width, image_height, TRUE, FALSE, show_ui, show_hud, do_rebuild);
+    bool success = rawSnapshot(raw, image_width, image_height, true, false, show_ui, show_hud, do_rebuild);
 
     if (success)
     {
@@ -4914,7 +4914,7 @@ BOOL LLViewerWindow::saveSnapshot(const std::string& filepath, S32 image_width, 
 
 void LLViewerWindow::playSnapshotAnimAndSound()
 {
-	if (gSavedSettings.getBOOL("QuietSnapshotsToDisk"))
+	if (gSavedSettings.getbool("QuietSnapshotsToDisk"))
 	{
 		return;
 	}
@@ -4922,7 +4922,7 @@ void LLViewerWindow::playSnapshotAnimAndSound()
 	send_sound_trigger(LLUUID(gSavedSettings.getString("UISndSnapshot")), 1.0f);
 }
 
-BOOL LLViewerWindow::isSnapshotLocSet() const
+bool LLViewerWindow::isSnapshotLocSet() const
 {
 	std::string snapshot_dir = sSnapshotDir;
 	return !snapshot_dir.empty();
@@ -4933,20 +4933,21 @@ void LLViewerWindow::resetSnapshotLoc() const
 	gSavedPerAccountSettings.setString("SnapshotBaseDir", std::string());
 }
 
-BOOL LLViewerWindow::thumbnailSnapshot(LLImageRaw *raw, S32 preview_width, S32 preview_height, BOOL show_ui, BOOL show_hud, BOOL do_rebuild, LLSnapshotModel::ESnapshotLayerType type)
+bool LLViewerWindow::thumbnailSnapshot(LLImageRaw *raw, S32 preview_width, S32 preview_height, bool show_ui, bool show_hud, bool do_rebuild, LLSnapshotModel::ESnapshotLayerType type)
 {
-	return rawSnapshot(raw, preview_width, preview_height, FALSE, FALSE, show_ui, show_hud, do_rebuild, type);
+	return rawSnapshot(raw, preview_width, preview_height, false, false, show_ui, show_hud, do_rebuild, type);
 }
 
 // Saves the image from the screen to a raw image
 // Since the required size might be bigger than the available screen, this method rerenders the scene in parts (called subimages) and copy
 // the results over to the final raw image.
-BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_height, 
-    BOOL keep_window_aspect, BOOL is_texture, BOOL show_ui, BOOL show_hud, BOOL do_rebuild, LLSnapshotModel::ESnapshotLayerType type, S32 max_size)
+bool LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_height, 
+    bool keep_window_aspect, bool is_texture, bool show_ui, bool show_hud, bool do_rebuild, 
+    LLSnapshotModel::ESnapshotLayerType type, S32 max_size)
 {
 	if (!raw)
 	{
-		return FALSE;
+		return false;
 	}
 	//check if there is enough memory for the snapshot image
 	if(image_width * image_height > (1 << 22)) //if snapshot image is larger than 2K by 2K
@@ -4954,7 +4955,7 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 		if(!LLMemory::tryToAlloc(NULL, image_width * image_height * 3))
 		{
 			LL_WARNS() << "No enough memory to take the snapshot with size (w : h): " << image_width << " : " << image_height << LL_ENDL ;
-			return FALSE ; //there is no enough memory for taking this snapshot.
+			return false ; //there is no enough memory for taking this snapshot.
 		}
 	}
 
@@ -4972,10 +4973,10 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 		LLPipeline::toggleRenderDebugFeature(LLPipeline::RENDER_DEBUG_FEATURE_UI);
 	}
 
-    BOOL hide_hud = !show_hud && LLPipeline::sShowHUDAttachments;
+    bool hide_hud = !show_hud && LLPipeline::sShowHUDAttachments;
 	if (hide_hud)
 	{
-		LLPipeline::sShowHUDAttachments = FALSE;
+		LLPipeline::sShowHUDAttachments = false;
 	}
 
 	if(show_ui && gSavedSettings.getbool("HideBalanceInSnapshots"))
@@ -5078,15 +5079,15 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 	else
 	{
 		gStatusBar->hideBalance(false);
-		return FALSE ;
+		return false ;
 	}
 	if (raw->isBufferInvalid())
 	{
 		gStatusBar->hideBalance(false);
-		return FALSE ;
+		return false ;
 	}
 
-	BOOL high_res = scale_factor >= 2.f; // Font scaling is slow, only do so if rez is much higher
+	bool high_res = scale_factor >= 2.f; // Font scaling is slow, only do so if rez is much higher
 	if (high_res && show_ui)
 	{
 		// Note: we should never get there...
@@ -5208,7 +5209,7 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 
 	if (hide_hud)
 	{
-		LLPipeline::sShowHUDAttachments = TRUE;
+		LLPipeline::sShowHUDAttachments = true;
 	}
 
 	/*if (high_res)
@@ -5221,7 +5222,7 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 	// Note: this formula depends on the number of components being 3.  Not obvious, but it's correct.	
 	image_width += (image_width * 3) % 4;
 
-	BOOL ret = TRUE ;
+	bool ret = true ;
 	// Resize image
 	if(llabs(image_width - image_buffer_x) > 4 || llabs(image_height - image_buffer_y) > 4)
 	{
@@ -5264,7 +5265,7 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 	return ret;
 }
 
-BOOL LLViewerWindow::simpleSnapshot(LLImageRaw* raw, S32 image_width, S32 image_height, const int num_render_passes)
+bool LLViewerWindow::simpleSnapshot(LLImageRaw* raw, S32 image_width, S32 image_height, const int num_render_passes)
 {
     gDisplaySwapBuffers = false;
 
@@ -5277,7 +5278,7 @@ BOOL LLViewerWindow::simpleSnapshot(LLImageRaw* raw, S32 image_width, S32 image_
         LLPipeline::toggleRenderDebugFeature(LLPipeline::RENDER_DEBUG_FEATURE_UI);
     }
 
-    LLPipeline::sShowHUDAttachments = FALSE;
+    LLPipeline::sShowHUDAttachments = false;
     LLRect window_rect = getWorldViewRectRaw();
 
     S32 original_width = LLPipeline::sRenderDeferred ? gPipeline.mDeferredScreen.getWidth() : gViewerWindow->getWorldViewWidthRaw();
@@ -5349,7 +5350,7 @@ BOOL LLViewerWindow::simpleSnapshot(LLImageRaw* raw, S32 image_width, S32 image_
         }
     }
 
-    LLPipeline::sShowHUDAttachments = TRUE;
+    LLPipeline::sShowHUDAttachments = true;
 
     setCursor(UI_CURSOR_ARROW);
 
@@ -5572,7 +5573,7 @@ void LLViewerWindow::dumpState()
 		<< LL_ENDL;
 }
 
-void LLViewerWindow::stopGL(BOOL save_state)
+void LLViewerWindow::stopGL(bool save_state)
 {
 	//Note: --bao
 	//if not necessary, do not change the order of the function calls in this function.
@@ -5730,7 +5731,7 @@ void LLViewerWindow::checkSettings()
 	}	
 }
 
-void LLViewerWindow::restartDisplay(BOOL show_progress_bar)
+void LLViewerWindow::restartDisplay(bool show_progress_bar)
 {
 	LL_INFOS() << "Restaring GL" << LL_ENDL;
 	stopGL();
@@ -5744,7 +5745,7 @@ void LLViewerWindow::restartDisplay(BOOL show_progress_bar)
 	}
 }
 
-BOOL LLViewerWindow::changeDisplaySettings(LLCoordScreen size, BOOL enable_vsync, BOOL show_progress_bar)
+bool LLViewerWindow::changeDisplaySettings(LLCoordScreen size, bool disable_vsync, bool show_progress_bar)
 {
 	//BOOL was_maximized = gSavedSettings.getBOOL("WindowMaximized");
 
@@ -5762,7 +5763,7 @@ BOOL LLViewerWindow::changeDisplaySettings(LLCoordScreen size, BOOL enable_vsync
 
 	//if (fsaa == old_fsaa)
 	{
-		return TRUE;
+		return true;
 	}
 
 /*
@@ -5777,7 +5778,7 @@ BOOL LLViewerWindow::changeDisplaySettings(LLCoordScreen size, BOOL enable_vsync
 	send_agent_pause();
 	LL_INFOS() << "Stopping GL during changeDisplaySettings" << LL_ENDL;
 	stopGL();
-	mIgnoreActivate = TRUE;
+	mIgnoreActivate = true;
 	LLCoordScreen old_size;
 	LLCoordScreen old_pos;
 	mWindow->getSize(&old_size);
@@ -5795,7 +5796,7 @@ BOOL LLViewerWindow::changeDisplaySettings(LLCoordScreen size, BOOL enable_vsync
 		{
 			// we are stuck...try once again with a minimal resolution?
 			send_agent_resume();
-			mIgnoreActivate = FALSE;
+			mIgnoreActivate = false;
 			return FALSE;
 		}
 	}
@@ -5838,7 +5839,7 @@ BOOL LLViewerWindow::changeDisplaySettings(LLCoordScreen size, BOOL enable_vsync
 		}
 	}
 
-	mIgnoreActivate = FALSE;
+	mIgnoreActivate = false;
 	gFocusMgr.setKeyboardFocus(keyboard_focus);
 	
 	return success;

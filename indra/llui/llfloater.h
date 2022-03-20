@@ -607,7 +607,7 @@ private:
 	LLRect				mToolbarBottomRect;
 	LLRect				mToolbarRightRect;
 	LLHandle<LLView>	mSnapView;
-	BOOL			mFocusCycleMode;
+	bool			mFocusCycleMode;
 	S32				mSnapOffsetBottom;
 	S32				mSnapOffsetRight;
 	S32				mMinimizePositionVOffset;

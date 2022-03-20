@@ -4789,12 +4789,12 @@ void LLAppViewer::saveFinalSnapshot()
 		gViewerWindow->saveSnapshot(snap_filename,
 									gViewerWindow->getWindowWidthRaw(),
 									gViewerWindow->getWindowHeightRaw(),
-									FALSE,
-									gSavedSettings.getBOOL("RenderHUDInSnapshot"),
-									TRUE,
+									false,
+									gSavedSettings.getbool("RenderHUDInSnapshot"),
+									true,
 									LLSnapshotModel::SNAPSHOT_TYPE_COLOR,
 									LLSnapshotModel::SNAPSHOT_FORMAT_PNG);
-		mSavedFinalSnapshot = TRUE;
+		mSavedFinalSnapshot = true;
 
 		if (gAgent.isInHomeRegion())
 		{

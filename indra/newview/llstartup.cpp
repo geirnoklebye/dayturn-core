@@ -2042,7 +2042,7 @@ bool idle_startup()
 		// Either we want to show tutorial because this is the first login
 		// to a Linden Help Island or the user quit with the tutorial
 		// visible.  JC
-		if (show_hud || gSavedSettings.getBOOL("ShowTutorial"))
+		if (show_hud || gSavedSettings.getbool("ShowTutorial"))
 		{
 			LLFloaterReg::showInstance("hud", LLSD(), false);
 		}

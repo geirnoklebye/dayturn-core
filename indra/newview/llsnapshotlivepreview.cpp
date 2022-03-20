@@ -1052,5 +1052,5 @@ void LLSnapshotLivePreview::saveLocal(LLPointer<LLImageFormatted> image, const s
 {
 	sSaveLocalImage = image;
 
-	gViewerWindow->saveImageNumbered(sSaveLocalImage, FALSE, success_cb, failure_cb);
+	gViewerWindow->saveImageNumbered(sSaveLocalImage, false, success_cb, failure_cb);
 }
