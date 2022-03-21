@@ -299,7 +299,7 @@ bool LLFloaterModelPreview::postBuild()
 // reshape()
 //-----------------------------------------------------------------------------
 
-void LLFloaterModelPreview::reshape(S32 width, S32 height, BOOL called_from_parent)
+void LLFloaterModelPreview::reshape(S32 width, S32 height, bool called_from_parent)
 {
     LLFloaterModelUploadBase::reshape(width, height, called_from_parent);
 

@@ -440,7 +440,7 @@ void LLSliderCtrl::setRect(const LLRect& rect)
 }
 
 //virtual
-void LLSliderCtrl::reshape(S32 width, S32 height, BOOL called_from_parent)
+void LLSliderCtrl::reshape(S32 width, S32 height, bool called_from_parent)
 {
     LLF32UICtrl::reshape(width, height, called_from_parent);
     updateSliderRect();
