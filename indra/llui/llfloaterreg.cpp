@@ -565,7 +565,7 @@ void LLFloaterReg::showInstanceOrBringToFront(const LLSD& sdname, const LLSD& ke
         {
             instance->openFloater(key);
             instance->setVisibleAndFrontmost(true, key);
-            instance->setFocus(TRUE);
+            instance->setFocus(true);
         }
     }
     else

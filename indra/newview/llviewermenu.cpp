@@ -6840,7 +6840,7 @@ class LLAvatarTogglePicks : public view_listener_t
         if (LLFloater::isMinimized(instance) || (instance && !instance->hasFocus() && !instance->getIsChrome()))
         {
             instance->setMinimized(false);
-            instance->setFocus(TRUE);
+            instance->setFocus(true);
             LLAvatarActions::showPicks(gAgent.getID());
         }
         else if (picks_tab_visible())
@@ -6863,7 +6863,7 @@ class LLAvatarToggleSearch : public view_listener_t
 		if (LLFloater::isMinimized(instance))
 		{
 			instance->setMinimized(false);
-			instance->setFocus(TRUE);
+			instance->setFocus(true);
 		}
 		else if (!LLFloater::isShown(instance))
 		{
@@ -6871,7 +6871,7 @@ class LLAvatarToggleSearch : public view_listener_t
 		}
 		else if (!instance->hasFocus() && !instance->getIsChrome())
 		{
-			instance->setFocus(TRUE);
+			instance->setFocus(true);
 		}
 		else
 		{

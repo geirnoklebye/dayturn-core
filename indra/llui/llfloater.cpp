@@ -529,7 +529,7 @@ LLFloater::~LLFloater()
 	// This is important so that floaters with persistent rects (i.e., those
 	// created with rect control rather than an LLRect) are restored in their
 	// correct, non-minimized positions.
-	setMinimized( false );
+	setMinimized(false);
 
 	delete mDragHandle;
 	for (S32 i = 0; i < 4; i++) 

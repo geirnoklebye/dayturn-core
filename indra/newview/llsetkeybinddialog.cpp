@@ -294,7 +294,7 @@ BOOL LLSetKeyBindDialog::handleAnyMouseClick(S32 x, S32 y, MASK mask, EMouseClic
         }
         if (result)
         {
-            setFocus(TRUE);
+            setFocus(true);
             gFocusMgr.setKeystrokesOnly(true);
         }
         // ignore selection related combinations

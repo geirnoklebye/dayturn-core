@@ -218,7 +218,7 @@ void LLToast::hide()
 }
 
 /*virtual*/
-void LLToast::setFocus(BOOL b)
+void LLToast::setFocus(bool b)
 {
     if (b && !hasFocus() && mPanel)
     {

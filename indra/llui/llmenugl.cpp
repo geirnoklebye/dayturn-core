@@ -270,7 +270,7 @@ BOOL LLMenuItemGL::handleRightMouseUp(S32 x, S32 y, MASK mask)
 
 // This function checks to see if the accelerator key is already in use;
 // if not, it will be added to the list
-BOOL LLMenuItemGL::addToAcceleratorList(std::list <LLMenuKeyboardBinding*> *listp)
+bool LLMenuItemGL::addToAcceleratorList(std::list <LLMenuKeyboardBinding*> *listp)
 {
 	LLMenuKeyboardBinding *accelerator = NULL;
 
@@ -295,7 +295,7 @@ BOOL LLMenuItemGL::addToAcceleratorList(std::list <LLMenuKeyboardBinding*> *list
 
 			//	LL_WARNS() << warning << LL_ENDL;
 			//	LLAlertDialog::modalAlert(warning);
-				return FALSE;
+				return false;
 			}
 		}
 		if (!accelerator)
@@ -310,7 +310,7 @@ BOOL LLMenuItemGL::addToAcceleratorList(std::list <LLMenuKeyboardBinding*> *list
 			listp->push_back(accelerator);//addData(accelerator);
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 // This function appends the character string representation of
@@ -1036,11 +1036,11 @@ BOOL LLMenuItemBranchGL::handleAcceleratorKey(KEY key, MASK mask)
 
 // This function checks to see if the accelerator key is already in use;
 // if not, it will be added to the list
-BOOL LLMenuItemBranchGL::addToAcceleratorList(std::list<LLMenuKeyboardBinding*> *listp)
+bool LLMenuItemBranchGL::addToAcceleratorList(std::list<LLMenuKeyboardBinding*> *listp)
 {
 	LLMenuGL* branch = getBranch();
 	if (!branch)
-		return FALSE;
+		return false;
 
 	U32 item_count = branch->getItemCount();
 	LLMenuItemGL *item;
@@ -1053,7 +1053,7 @@ BOOL LLMenuItemBranchGL::addToAcceleratorList(std::list<LLMenuKeyboardBinding*> 
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 

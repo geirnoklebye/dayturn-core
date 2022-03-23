@@ -152,7 +152,7 @@ public:
 	//
 	virtual void hide();
 
-	/*virtual*/ void setFocus(BOOL b);
+	/*virtual*/ void setFocus(bool b);
 
 	/*virtual*/ void onFocusLost();
 

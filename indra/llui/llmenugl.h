@@ -117,7 +117,7 @@ public:
 	virtual void setBriefItem(BOOL brief);
 	virtual BOOL isBriefItem() const;
 
-	virtual BOOL addToAcceleratorList(std::list<LLMenuKeyboardBinding*> *listp);
+	virtual bool addToAcceleratorList(std::list<LLMenuKeyboardBinding*> *listp);
 	void setAllowKeyRepeat(BOOL allow) { mAllowKeyRepeat = allow; }
 	BOOL getAllowKeyRepeat() const { return mAllowKeyRepeat; }
 
@@ -641,7 +641,7 @@ public:
 	virtual BOOL handleAcceleratorKey(KEY key, MASK mask);
 
 	// check if we've used these accelerators already
-	virtual BOOL addToAcceleratorList(std::list <LLMenuKeyboardBinding*> *listp);
+	virtual bool addToAcceleratorList(std::list <LLMenuKeyboardBinding*> *listp);
 
 	// called to rebuild the draw label
 	virtual void buildDrawLabel( void );
