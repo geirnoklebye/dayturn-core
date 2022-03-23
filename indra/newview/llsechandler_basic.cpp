@@ -355,7 +355,7 @@ LLSD cert_name_from_X509_NAME(X509_NAME* name)
 		char buffer[32];
 		X509_NAME_ENTRY *entry = X509_NAME_get_entry(name, entry_index);
 		
-		std::string name_value = std::string((const char*)ASN1_STRING_data(X509_NAME_ENTRY_get_data(entry)), 
+		std::string name_value = std::string((const char*)ASN1_STRING_get0_data(X509_NAME_ENTRY_get_data(entry)), 
 											 ASN1_STRING_length(X509_NAME_ENTRY_get_data(entry)));
 
 		ASN1_OBJECT* name_obj = X509_NAME_ENTRY_get_object(entry);		
@@ -580,10 +580,16 @@ void LLBasicCertificateStore::load_from_file(const std::string& filename)
 	// scan the PEM file extracting each certificate
 	if (LLFile::isfile(filename))
 	{
-        BIO* file_bio = BIO_new(BIO_s_file());
+	// <FS:ND> Do not use BIO_new(BIO_s_file())/BIO_read_filename. This will fail if filename is an UTF8 encoded unicode path. Instead
+	// use BIO_new_file. BIO_new_file handles UTF8 encoded filenames gracefully.
+
+        //BIO* file_bio = BIO_new(BIO_s_file());
+        BIO *file_bio( BIO_new_file( filename.c_str(), "rt" ) );
+	// </FS:ND>
+
         if(file_bio)
         {
-            if (BIO_read_filename(file_bio, filename.c_str()) > 0)
+            // if (BIO_read_filename(file_bio, filename.c_str()) > 0) // <FS:ND/>
             {	
                 X509 *cert_x509 = NULL;
                 while((PEM_read_bio_X509(file_bio, &cert_x509, 0, NULL)) && 
@@ -621,10 +627,12 @@ void LLBasicCertificateStore::load_from_file(const std::string& filename)
                 }
                 BIO_free(file_bio);
             }
-            else
-            {
-                LL_WARNS("SECAPI") << "BIO read failed for " << filename << LL_ENDL;
-            }
+            // <FS:Ansariel> Not needed because of Nicky's change
+            //else
+            //{
+            //    LL_WARNS("SECAPI") << "BIO read failed for " << filename << LL_ENDL;
+            //}
+            // </FS:Ansariel>
 
             LL_INFOS("SECAPI") << "loaded " << loaded << " good certificates (rejected " << rejected << ") from " << filename << LL_ENDL;
         }
@@ -683,7 +691,6 @@ std::string LLBasicCertificateStore::storeId() const
 // LLBasicCertificateChain
 // This class represents a chain of certs, each cert being signed by the next cert
 // in the chain.  Certs must be properly signed by the parent
-#if !(LL_LINUX)
 LLBasicCertificateChain::LLBasicCertificateChain(X509_STORE_CTX* store)
 {
 
@@ -733,64 +740,7 @@ LLBasicCertificateChain::LLBasicCertificateChain(X509_STORE_CTX* store)
 		}
 	}
 }
-#endif
-#if (LL_LINUX)
-//
-// LLBasicCertificateChain
-// This class represents a chain of certs, each cert being signed by the next cert
-// in the chain.  Certs must be properly signed by the parent
-LLBasicCertificateChain::LLBasicCertificateChain(const X509_STORE_CTX* store)
-{
 
-	// we're passed in a context, which contains a cert, and a blob of untrusted
-	// certificates which compose the chain.
-	if((store == NULL) || (store->cert == NULL))
-	{
-		LL_WARNS("SECAPI") << "An invalid store context was passed in when trying to create a certificate chain" << LL_ENDL;
-		return;
-	}
-	// grab the child cert
-	LLPointer<LLCertificate> current = new LLBasicCertificate(store->cert);
-
-	add(current);
-	if(store->untrusted != NULL)
-	{
-		// if there are other certs in the chain, we build up a vector
-		// of untrusted certs so we can search for the parents of each
-		// consecutive cert.
-		LLBasicCertificateVector untrusted_certs;
-		for(int i = 0; i < sk_X509_num(store->untrusted); i++)
-		{
-			LLPointer<LLCertificate> cert = new LLBasicCertificate(sk_X509_value(store->untrusted, i));
-			untrusted_certs.add(cert);
-
-		}		
-		while(untrusted_certs.size() > 0)
-		{
-			LLSD find_data = LLSD::emptyMap();
-			LLSD cert_data;
-			current->getLLSD(cert_data);
-			// we simply build the chain via subject/issuer name as the
-			// client should not have passed in multiple CA's with the same 
-			// subject name.  If they did, it'll come out in the wash during
-			// validation.
-			find_data[CERT_SUBJECT_NAME_STRING] = cert_data[CERT_ISSUER_NAME_STRING]; 
-			LLBasicCertificateVector::iterator issuer = untrusted_certs.find(find_data);
-			if (issuer != untrusted_certs.end())
-			{
-				current = untrusted_certs.erase(issuer);
-				add(current);
-			}
-			else
-			{
-				break;
-			}
-		}
-	}
-}
-
-
-#endif
 
 // subdomain wildcard specifiers can be divided into 3 parts
 // the part before the first *, the part after the first * but before
@@ -1365,7 +1315,10 @@ void LLSecAPIBasicHandler::init()
 }
 LLSecAPIBasicHandler::~LLSecAPIBasicHandler()
 {
-	_writeProtectedData();
+	// SA: no reason to write to data store during destruction. In particular this implies erasing all credentials
+	// if the viewer was previously unable to decode the existing file, which would happen if the network interface changed, for instance.
+	//
+	//_writeProtectedData();
 }
 
 void LLSecAPIBasicHandler::_readProtectedData(unsigned char *unique_id, U32 id_len)
@@ -1577,20 +1530,12 @@ LLPointer<LLCertificate> LLSecAPIBasicHandler::getCertificate(X509* openssl_cert
 }
 		
 // instantiate a chain from an X509_STORE_CTX
-#if !(LL_LINUX)
 LLPointer<LLCertificateChain> LLSecAPIBasicHandler::getCertificateChain(X509_STORE_CTX* chain)
 {
 	LLPointer<LLCertificateChain> result = new LLBasicCertificateChain(chain);
 	return result;
 }
-#else
-LLPointer<LLCertificateChain> LLSecAPIBasicHandler::getCertificateChain(const X509_STORE_CTX* chain)
-{
-	LLPointer<LLCertificateChain> result = new LLBasicCertificateChain(chain);
-	return result;
-}
-#endif
-	
+		
 // instantiate a cert store given it's id.  if a persisted version
 // exists, it'll be loaded.  If not, one will be created (but not
 // persisted)
