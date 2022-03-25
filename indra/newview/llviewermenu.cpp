@@ -545,11 +545,11 @@ void init_menus()
 	{
 		color = LLUIColorTable::instance().getColor( "MenuNonProductionBgColor" );
 	}
-	std::string kokuamainmenu = "menu_viewer_kokua.xml";
+	std::string kokuamainmenu = "menu_viewer_dayturn.xml";
 	std::string kokualoginmenu = "menu_login_dayturn.xml";
 	if (gSavedSettings.getBOOL("KokuaClassicMainMenu"))
 	{
-	    kokuamainmenu="menu_viewer_dayturn.xml";
+	    kokuamainmenu="menu_viewer_kokua.xml";
 	    kokualoginmenu="menu_login_dayturn.xml";
 	}
 	
