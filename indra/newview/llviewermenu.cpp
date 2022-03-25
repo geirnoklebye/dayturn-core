@@ -105,6 +105,7 @@
 #include "llmarketplacefunctions.h"
 #include "llmenuoptionpathfindingrebakenavmesh.h"
 #include "llmoveview.h"
+#include "llnavigationbar.h"
 #include "llparcel.h"
 #include "llrootview.h"
 #include "llsceneview.h"
@@ -5641,12 +5642,10 @@ class LLToolsEnablePathfindingRebakeRegion : public view_listener_t
 	{
 		bool returnValue = false;
 
-		if (LLPathfindingManager::getInstance() != NULL)
-		{
-			LLMenuOptionPathfindingRebakeNavmesh *rebakeInstance = LLMenuOptionPathfindingRebakeNavmesh::getInstance();
-			returnValue = (rebakeInstance->canRebakeRegion() &&
-				(rebakeInstance->getMode() == LLMenuOptionPathfindingRebakeNavmesh::kRebakeNavMesh_Available));
-		}
+        if (LLNavigationBar::instanceExists())
+        {
+            returnValue = LLNavigationBar::getInstance()->isRebakeNavMeshAvailable();
+        }
 		return returnValue;
 	}
 };
