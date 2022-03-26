@@ -1137,27 +1137,10 @@ bool LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 			// Try to get display name + username
 			std::string final_name;
 
-			// <FS:Zi> Build group prefix
-			std::string group_title;
-			if (gSavedSettings.getBOOL("FSShowGroupTitleInTooltip"))
-			{
-				LLNameValue* group = hover_object->getNVPair("Title");
-				if (group)
-				{
-					group_title = group->getString();
-					if (!group_title.empty())
-					{
-						group_title += "\n";
-					}
-				}
-			}
-			// </FS:Zi>
-
 			LLAvatarName av_name;
 			if (LLAvatarNameCache::get(hover_object->getID(), &av_name))
 			{
 				final_name = av_name.getCompleteName();
-				final_name = group_title + final_name;
 			}
 			else
 			{
