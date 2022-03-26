@@ -146,7 +146,7 @@ void LLFloaterIMSessionTab::setVisible(bool visible)
 		LLFloaterIMSessionTab::addToHost(mSessionID);
 		LLFloaterIMSessionTab* conversp = LLFloaterIMSessionTab::getConversation(mSessionID);
 
-		if (conversp && conversp->isNearbyChat() && gSavedPerAccountSettings.getBOOL("NearbyChatIsNotCollapsed"))
+		if (conversp && conversp->isNearbyChat() && gSavedPerAccountSettings.getbool("NearbyChatIsNotCollapsed"))
 		{
 			onCollapseToLine(this);
 		}
@@ -202,7 +202,7 @@ void LLFloaterIMSessionTab::addToHost(const LLUUID& session_id)
 			conversp->setHostAttached(true);
 
 			if (!conversp->isNearbyChat()
-					|| gSavedPerAccountSettings.getBOOL("NearbyChatIsNotTornOff"))
+					|| gSavedPerAccountSettings.getbool("NearbyChatIsNotTornOff"))
 			{
 				floater_container->addFloater(conversp, false, LLTabContainer::RIGHT_OF_CURRENT);
 			}
@@ -300,7 +300,7 @@ bool LLFloaterIMSessionTab::postBuild()
 	setOpenPositioning(LLFloaterEnums::POSITIONING_RELATIVE);
 
 	mSaveRect = isNearbyChat()
-					&&  !gSavedPerAccountSettings.getBOOL("NearbyChatIsNotTornOff");
+					&&  !gSavedPerAccountSettings.getbool("NearbyChatIsNotTornOff");
 	initRectControl();
 
 	if (isChatMultiTab())
@@ -680,12 +680,12 @@ void LLFloaterIMSessionTab::onIMSessionMenuItemClicked(const LLSD& userdata)
 
 	if (item == "compact_view" || item == "expanded_view")
 	{
-		gSavedSettings.setBOOL("PlainTextChatHistory", item == "compact_view");
+		gSavedSettings.setbool("PlainTextChatHistory", item == "compact_view");
 	}
 	else
 	{
-		bool prev_value = gSavedSettings.getBOOL(item);
-		gSavedSettings.setBOOL(item, !prev_value);
+		bool prev_value = gSavedSettings.getbool(item);
+		gSavedSettings.setbool(item, !prev_value);
 	}
 
 	LLFloaterIMSessionTab::processChatHistoryStyleUpdate();
@@ -694,7 +694,7 @@ void LLFloaterIMSessionTab::onIMSessionMenuItemClicked(const LLSD& userdata)
 bool LLFloaterIMSessionTab::onIMCompactExpandedMenuItemCheck(const LLSD& userdata)
 {
 	std::string item = userdata.asString();
-	bool is_plain_text_mode = gSavedSettings.getBOOL("PlainTextChatHistory");
+	bool is_plain_text_mode = gSavedSettings.getbool("PlainTextChatHistory");
 
 	return is_plain_text_mode? item == "compact_view" : item == "expanded_view";
 }
@@ -702,14 +702,14 @@ bool LLFloaterIMSessionTab::onIMCompactExpandedMenuItemCheck(const LLSD& userdat
 
 bool LLFloaterIMSessionTab::onIMShowModesMenuItemCheck(const LLSD& userdata)
 {
-	return gSavedSettings.getBOOL(userdata.asString());
+	return gSavedSettings.getbool(userdata.asString());
 }
 
 // enable/disable states for the "show time" and "show names" items of the show-modes menu
 bool LLFloaterIMSessionTab::onIMShowModesMenuItemEnable(const LLSD& userdata)
 {
 	std::string item = userdata.asString();
-	bool plain_text = gSavedSettings.getBOOL("PlainTextChatHistory");
+	bool plain_text = gSavedSettings.getbool("PlainTextChatHistory");
 	bool is_not_names = (item != "IMShowNamesForP2PConv");
 	return (plain_text && (is_not_names || mIsP2PChat));
 }
@@ -1192,7 +1192,7 @@ void LLFloaterIMSessionTab::saveCollapsedState()
 	LLFloaterIMSessionTab* conversp = LLFloaterIMSessionTab::getConversation(mSessionID);
 	if(conversp->isNearbyChat())
 	{
-		gSavedPerAccountSettings.setBOOL("NearbyChatIsNotCollapsed", isMessagePaneExpanded());
+		gSavedPerAccountSettings.setbool("NearbyChatIsNotCollapsed", isMessagePaneExpanded());
 	}
 }
 

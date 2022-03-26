@@ -83,7 +83,7 @@ protected:
 		S32		    mHeight;
 		BOOL	    mCanMinimize;
 		BOOL	    mCanResize;
-		BOOL        mSaveRect;
+		bool        mSaveRect;
 	};
 
 	LLTabContainer*		mTabContainer;

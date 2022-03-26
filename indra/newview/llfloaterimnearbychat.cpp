@@ -307,7 +307,7 @@ void LLFloaterIMNearbyChat::onTearOffClicked()
 
 	// see CHUI-170: Save torn-off state of the nearby chat between sessions
 	bool in_the_multifloater(getHost());
-	gSavedPerAccountSettings.setBOOL("NearbyChatIsNotTornOff", in_the_multifloater);
+	gSavedPerAccountSettings.setbool("NearbyChatIsNotTornOff", in_the_multifloater);
 }
 
 
@@ -372,7 +372,7 @@ bool LLFloaterIMNearbyChat::isChatVisible() const
 	if (im_box != NULL)
 	{
 		isVisible =
-				isChatMultiTab() && gSavedPerAccountSettings.getBOOL("NearbyChatIsNotTornOff")?
+				isChatMultiTab() && gSavedPerAccountSettings.getbool("NearbyChatIsNotTornOff")?
 						im_box->getVisible() && !im_box->isMinimized() :
 						getVisible() && !isMinimized();
 	}
