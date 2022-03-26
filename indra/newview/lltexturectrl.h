@@ -309,7 +309,7 @@ public:
 	const LLUUID&	findItemID(const LLUUID& asset_id, BOOL copyable_only, BOOL ignore_library = FALSE);
 	void			setCanApplyImmediately(bool b);
 
-	void			setActive(BOOL active);
+	void			setActive(bool active);
 
 	LLView*			getOwner() const { return mOwner; }
 	void			setOwner(LLView* owner) { mOwner = owner; }

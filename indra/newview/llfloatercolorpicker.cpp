@@ -1069,7 +1069,7 @@ void LLFloaterColorPicker::setMouseDownInSwatch (BOOL mouse_down_in_swatch)
 	}
 }
 
-void LLFloaterColorPicker::setActive(BOOL active) 
+void LLFloaterColorPicker::setActive(bool active) 
 { 
 	// shut down pipette tool if active
 	if (!active && mPipetteBtn->getToggleState())

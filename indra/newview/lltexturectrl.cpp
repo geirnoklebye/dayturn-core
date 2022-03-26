@@ -244,7 +244,7 @@ void LLFloaterTexturePicker::setImageID(const LLUUID& image_id, bool set_selecti
 	}
 }
 
-void LLFloaterTexturePicker::setActive( BOOL active )					
+void LLFloaterTexturePicker::setActive(bool active)					
 {
 	if (!active && getChild<LLUICtrl>("Pipette")->getValue().asBoolean())
 	{
@@ -1363,7 +1363,7 @@ void LLTextureCtrl::setValid(bool valid )
 		LLFloaterTexturePicker* pickerp = (LLFloaterTexturePicker*)mFloaterHandle.get();
 		if (pickerp)
 		{
-			pickerp->setActive(FALSE);
+			pickerp->setActive(false);
 		}
 	}
 }
