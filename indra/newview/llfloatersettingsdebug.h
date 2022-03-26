@@ -29,17 +29,6 @@
 
 #include "llcontrol.h"
 #include "llfloater.h"
-#include "llmath.h"
-
-class LLTextEditor;
-class LLSpinCtrl;
-class LLColorSwatchCtrl;
-class LLLineEditor;
-class LLRadioGroup;
-class LLButton;
-class LLScrollListCtrl;
-class LLControlVariable;
-class LLSearchEditor;
 
 class LLFloaterSettingsDebug 
 :	public LLFloater
@@ -51,50 +40,21 @@ public:
 	virtual bool postBuild();
 	virtual void draw();
 
-	void updateControl();
+	void updateControl(LLControlVariable* control);
 
-	// updates control filter to display in the controls list on keytroke
-	void onUpdateFilter();
-	void onSettingSelect();
+	void onSettingSelect(LLUICtrl* ctrl);
 	void onCommitSettings();
 	void onClickDefault();
-	void onCopyToClipboard();
-	void onSanityCheck();
-	void onClickSanityWarning();
-	static void showControl(const std::string& control);
 
 private:
 	// key - selects which settings to show, one of:
 	// "all", "base", "account", "skin"
 	LLFloaterSettingsDebug(const LLSD& key);
 	virtual ~LLFloaterSettingsDebug();
-
-	// returns a pointer to the currently selected control variable, or NULL
-	LLControlVariable* getControlVariable();
 	
 protected:
-	typedef std::map<std::string,LLControlVariable*> settings_map_t;
-
-	settings_map_t mSettingsMap;
-
-	std::string mOldSearchTerm;
-	LLControlVariable* mCurrentControlVariable;
-	LLControlVariable* mOldControlVariable;
-	bool mOldVisibility;
-
-	LLSearchEditor* mSearchSettingsInput;
-	LLScrollListCtrl* mSettingsScrollList;
-	LLTextEditor* mComment;
-	LLSpinCtrl* mSpinner1;
-	LLSpinCtrl* mSpinner2;
-	LLSpinCtrl* mSpinner3;
-	LLSpinCtrl* mSpinner4;
-	LLColorSwatchCtrl* mColorSwatch;
-	LLLineEditor* mValText;
-	LLRadioGroup* mBooleanCombo;
-	LLButton* mCopyButton;
-	LLButton* mDefaultButton;
-	LLButton* mSanityButton;
+	class LLTextEditor* mComment;
 };
 
 #endif //LLFLOATERDEBUGSETTINGS_H
+
