@@ -86,9 +86,9 @@ public:
 	//-------------------------------------------------------------------------
 
 	// motions must specify whether or not they loop
-	virtual BOOL getLoop() { 
+	virtual bool getLoop() { 
 		if (mJointMotionList) return mJointMotionList->mLoop; 
-		else return FALSE;
+		else return false;
 	}
 
 	// motions must report their total duration

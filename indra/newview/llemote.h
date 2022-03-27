@@ -69,7 +69,7 @@ public:
 	//-------------------------------------------------------------------------
 
 	// motions must specify whether or not they loop
-	virtual BOOL getLoop() { return FALSE; }
+	virtual bool getLoop() { return false; }
 
 	// motions must report their total duration
 	virtual F32 getDuration() { return EMOTE_MORPH_FADEIN_TIME + EMOTE_MORPH_IN_TIME + EMOTE_MORPH_FADEOUT_TIME; }
