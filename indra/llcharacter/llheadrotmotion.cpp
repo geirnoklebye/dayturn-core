@@ -164,16 +164,16 @@ LLMotion::LLMotionInitStatus LLHeadRotMotion::onInitialize(LLCharacter *characte
 //-----------------------------------------------------------------------------
 // LLHeadRotMotion::onActivate()
 //-----------------------------------------------------------------------------
-BOOL LLHeadRotMotion::onActivate()
+bool LLHeadRotMotion::onActivate()
 {
-	return TRUE;
+	return true;
 }
 
 
 //-----------------------------------------------------------------------------
 // LLHeadRotMotion::onUpdate()
 //-----------------------------------------------------------------------------
-BOOL LLHeadRotMotion::onUpdate(F32 time, U8* joint_mask)
+bool LLHeadRotMotion::onUpdate(F32 time, U8* joint_mask)
 {
     LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 	LLQuaternion	targetHeadRotWorld;
@@ -251,7 +251,7 @@ BOOL LLHeadRotMotion::onUpdate(F32 time, U8* joint_mask)
 		mHeadState->setRotation( nlerp(1.f - NECK_LAG, LLQuaternion::DEFAULT, head_rot_local));
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -362,9 +362,9 @@ LLMotion::LLMotionInitStatus LLEyeMotion::onInitialize(LLCharacter *character)
 //-----------------------------------------------------------------------------
 // LLEyeMotion::onActivate()
 //-----------------------------------------------------------------------------
-BOOL LLEyeMotion::onActivate()
+bool LLEyeMotion::onActivate()
 {
-	return TRUE;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -457,7 +457,7 @@ void LLEyeMotion::adjustEyeTarget(LLVector3* targetPos, LLJointState& left_eye_s
 //-----------------------------------------------------------------------------
 // LLEyeMotion::onUpdate()
 //-----------------------------------------------------------------------------
-BOOL LLEyeMotion::onUpdate(F32 time, U8* joint_mask)
+bool LLEyeMotion::onUpdate(F32 time, U8* joint_mask)
 {
     LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 	//calculate jitter
@@ -537,7 +537,7 @@ BOOL LLEyeMotion::onUpdate(F32 time, U8* joint_mask)
     adjustEyeTarget(targetPos, *mLeftEyeState, *mRightEyeState); 
     adjustEyeTarget(targetPos, *mAltLeftEyeState, *mAltRightEyeState); 
 
-	return TRUE;
+	return true;
 }
 
 

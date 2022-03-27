@@ -330,12 +330,12 @@ public:
 	// called when a motion is activated
 	// must return TRUE to indicate success, or else
 	// it will be deactivated
-	virtual BOOL onActivate() { return TRUE; }
+	virtual bool onActivate() { return true; }
 
 	// called per time step
 	// must return TRUE while it is active, and
 	// must return FALSE when the motion is completed.
-	virtual BOOL onUpdate(F32 time, U8* joint_mask)
+	virtual bool onUpdate(F32 time, U8* joint_mask)
 	{
         LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 		F32 nx[2];
@@ -353,7 +353,7 @@ public:
 		tQn.setQuat( rx, ry, 0.0f );
 		mTorsoState->setRotation( tQn );
 
-		return TRUE;
+		return true;
 	}
 
 	// called when a motion is deactivated
@@ -425,7 +425,7 @@ public:
 	virtual LLMotionInitStatus onInitialize(LLCharacter *character)
 	{		
 		mCharacter = character;
-		BOOL success = true;
+		bool success = true;
 
 		if ( !mChestState->setJoint( character->getJoint( "mChest" ) ) )
 		{
@@ -451,12 +451,12 @@ public:
 	// called when a motion is activated
 	// must return TRUE to indicate success, or else
 	// it will be deactivated
-	virtual BOOL onActivate() { return TRUE; }
+	virtual bool onActivate() { return true; }
 
 	// called per time step
 	// must return TRUE while it is active, and
 	// must return FALSE when the motion is completed.
-	virtual BOOL onUpdate(F32 time, U8* joint_mask)
+	virtual bool onUpdate(F32 time, U8* joint_mask)
 	{
         LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 		mBreatheRate = 1.f;
@@ -465,7 +465,7 @@ public:
 
 		mChestState->setRotation(LLQuaternion(breathe_amt, LLVector3(0.f, 1.f, 0.f)));
 
-		return TRUE;
+		return true;
 	}
 
 	// called when a motion is deactivated
@@ -553,17 +553,17 @@ public:
 	// called when a motion is activated
 	// must return TRUE to indicate success, or else
 	// it will be deactivated
-	virtual BOOL onActivate() { return TRUE; }
+	virtual bool onActivate() { return true; }
 
 	// called per time step
 	// must return TRUE while it is active, and
 	// must return FALSE when the motion is completed.
-	virtual BOOL onUpdate(F32 time, U8* joint_mask)
+	virtual bool onUpdate(F32 time, U8* joint_mask)
 	{
         LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 		mPelvisState->setPosition(LLVector3::zero);
 
-		return TRUE;
+		return true;
 	}
 
 	// called when a motion is deactivated

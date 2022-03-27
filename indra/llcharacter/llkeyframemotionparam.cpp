@@ -140,7 +140,7 @@ LLMotion::LLMotionInitStatus LLKeyframeMotionParam::onInitialize(LLCharacter *ch
 //-----------------------------------------------------------------------------
 // LLKeyframeMotionParam::onActivate()
 //-----------------------------------------------------------------------------
-BOOL LLKeyframeMotionParam::onActivate()
+bool LLKeyframeMotionParam::onActivate()
 {
 	for (motion_map_t::iterator iter = mParameterizedMotions.begin();
 		 iter != mParameterizedMotions.end(); ++iter)
@@ -152,14 +152,14 @@ BOOL LLKeyframeMotionParam::onActivate()
 			paramMotion.mMotion->activate(mActivationTimestamp);
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 
 //-----------------------------------------------------------------------------
 // LLKeyframeMotionParam::onUpdate()
 //-----------------------------------------------------------------------------
-BOOL LLKeyframeMotionParam::onUpdate(F32 time, U8* joint_mask)
+bool LLKeyframeMotionParam::onUpdate(F32 time, U8* joint_mask)
 {
     LL_PROFILE_ZONE_SCOPED;
 	F32 weightFactor = 1.f / (F32)mParameterizedMotions.size();
@@ -275,7 +275,7 @@ BOOL LLKeyframeMotionParam::onUpdate(F32 time, U8* joint_mask)
 
 	LL_INFOS() << "Param Motion weight " << mPoseBlender.getBlendedPose()->getWeight() << LL_ENDL;
 
-	return TRUE;
+	return true;
 }
 
 //-----------------------------------------------------------------------------

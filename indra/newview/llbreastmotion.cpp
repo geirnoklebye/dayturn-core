@@ -91,9 +91,9 @@ LLBreastMotion::~LLBreastMotion()
 {
 }
 
-BOOL LLBreastMotion::onActivate() 
+bool LLBreastMotion::onActivate() 
 { 
-	return TRUE; 
+	return true; 
 }
 
 void LLBreastMotion::onDeactivate() 
@@ -195,12 +195,12 @@ LLVector3 LLBreastMotion::calculateAcceleration_local(const LLVector3 &new_char_
 	return char_acceleration_local_vec;
 }
 
-BOOL LLBreastMotion::onUpdate(F32 time, U8* joint_mask)
+bool LLBreastMotion::onUpdate(F32 time, U8* joint_mask)
 {
 	// Skip if disabled globally.
-	if (!gSavedSettings.getBOOL("AvatarPhysics"))
+	if (!gSavedSettings.getbool("AvatarPhysics"))
 	{
-		return TRUE;
+		return true;
 	}
 
 	// Higher LOD is better.  This controls the granularity
@@ -208,12 +208,12 @@ BOOL LLBreastMotion::onUpdate(F32 time, U8* joint_mask)
 	const F32 lod_factor = LLVOAvatar::sPhysicsLODFactor;
 	if (lod_factor == 0)
 	{
-		return TRUE;
+		return true;
 	}
 	
-	if (mCharacter->getSex() != SEX_FEMALE) return TRUE;
+	if (mCharacter->getSex() != SEX_FEMALE) return true;
 	const F32 time_delta = calculateTimeDelta();
-	if (time_delta < .01 || time_delta > 10.0) return TRUE;
+	if (time_delta < .01 || time_delta > 10.0) return true;
 
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -370,7 +370,7 @@ BOOL LLBreastMotion::onUpdate(F32 time, U8* joint_mask)
 		const F32 pixel_area = fsqrtf(mCharacter->getPixelArea());
 		if (pixel_area < area_for_this_setting)
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
@@ -383,7 +383,7 @@ BOOL LLBreastMotion::onUpdate(F32 time, U8* joint_mask)
 		{
 			mCharacter->updateVisualParams();
 			mBreastLastUpdatePosition_local_pt = new_local_pt;
-			return TRUE;
+			return true;
 		}
 	}
 	
@@ -391,5 +391,5 @@ BOOL LLBreastMotion::onUpdate(F32 time, U8* joint_mask)
 	// End update visual params
 	////////////////////////////////////////////////////////////////////////////////
 
-	return TRUE;
+	return true;
 }

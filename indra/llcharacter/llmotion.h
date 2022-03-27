@@ -146,7 +146,7 @@ public:
 	// called per time step
 	// must return TRUE while it is active, and
 	// must return FALSE when the motion is completed.
-	virtual BOOL onUpdate(F32 activeTime, U8* joint_mask) = 0;
+	virtual bool onUpdate(F32 activeTime, U8* joint_mask) = 0;
 
 	// called when a motion is deactivated
 	virtual void onDeactivate() = 0;
@@ -154,7 +154,7 @@ public:
 	// can we crossfade this motion with a new instance when restarted?
 	// should ultimately always be TRUE, but lack of emote blending, etc
 	// requires this
-	virtual BOOL canDeprecate();
+	virtual bool canDeprecate();
 
 	// optional callback routine called when animation deactivated.
 	void	setDeactivateCallback( void (*cb)(void *), void* userdata );
@@ -163,7 +163,7 @@ protected:
 	// called when a motion is activated
 	// must return TRUE to indicate success, or else
 	// it will be deactivated
-	virtual BOOL onActivate() = 0;
+	virtual bool onActivate() = 0;
 
 	void addJointState(const LLPointer<LLJointState>& jointState);
 
@@ -208,8 +208,8 @@ public:
 	F32 getMinPixelArea() { return 0.f; }
 	
 	LLMotionInitStatus onInitialize(LLCharacter*) { LL_INFOS() << "LLTestMotion::onInitialize()" << LL_ENDL; return STATUS_SUCCESS; }
-	BOOL onActivate() { LL_INFOS() << "LLTestMotion::onActivate()" << LL_ENDL; return TRUE; }
-	BOOL onUpdate(F32 time, U8* joint_mask) { LL_INFOS() << "LLTestMotion::onUpdate(" << time << ")" << LL_ENDL; return TRUE; }
+	bool onActivate() { LL_INFOS() << "LLTestMotion::onActivate()" << LL_ENDL; return true; }
+	bool onUpdate(F32 time, U8* joint_mask) { LL_INFOS() << "LLTestMotion::onUpdate(" << time << ")" << LL_ENDL; return true; }
 	void onDeactivate() { LL_INFOS() << "LLTestMotion::onDeactivate()" << LL_ENDL; }
 };
 
@@ -253,12 +253,12 @@ public:
 	// called when a motion is activated
 	// must return TRUE to indicate success, or else
 	// it will be deactivated
-	/*virtual*/ BOOL onActivate() { return TRUE; }
+	/*virtual*/ bool onActivate() { return true; }
 
 	// called per time step
 	// must return TRUE while it is active, and
 	// must return FALSE when the motion is completed.
-	/*virtual*/ BOOL onUpdate(F32 activeTime, U8* joint_mask) { return TRUE; }
+	/*virtual*/ bool onUpdate(F32 activeTime, U8* joint_mask) { return true; }
 
 	// called when a motion is deactivated
 	/*virtual*/ void onDeactivate() {}
