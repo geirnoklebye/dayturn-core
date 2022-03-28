@@ -623,7 +623,11 @@ void LLViewerMedia::updateMedia(void *dummy_arg)
 	LL_RECORD_BLOCK_TIME(FTM_MEDIA_UPDATE);
 
 	// Enable/disable the plugin read thread
-	LLPluginProcessParent::setUseReadThread(gSavedSettings.getBOOL("PluginUseReadThread"));
+	// <FS:Ansariel> Replace frequently called gSavedSettings
+	//LLPluginProcessParent::setUseReadThread(gSavedSettings.getBOOL("PluginUseReadThread"));
+	static LLCachedControl<bool> sPluginUseReadThread(gSavedSettings, "PluginUseReadThread");
+	LLPluginProcessParent::setUseReadThread(sPluginUseReadThread);
+	// </FS:Ansariel>
 
 	// HACK: we always try to keep a spare running webkit plugin around to improve launch times.
 	// 2017-04-19 Removed CP - this doesn't appear to buy us much and consumes a lot of resources so
@@ -672,10 +676,22 @@ void LLViewerMedia::updateMedia(void *dummy_arg)
 
 	static LLCachedControl<bool> inworld_media_enabled(gSavedSettings, "AudioStreamingMedia", true);
 	static LLCachedControl<bool> inworld_audio_enabled(gSavedSettings, "AudioStreamingMusic", true);
-	U32 max_instances = gSavedSettings.getU32("PluginInstancesTotal");
-	U32 max_normal = gSavedSettings.getU32("PluginInstancesNormal");
-	U32 max_low = gSavedSettings.getU32("PluginInstancesLow");
-	F32 max_cpu = gSavedSettings.getF32("PluginInstancesCPULimit");
+	// <FS:Ansariel> Replace frequently called gSavedSettings
+	//U32 max_instances = gSavedSettings.getU32("PluginInstancesTotal");
+	//U32 max_normal = gSavedSettings.getU32("PluginInstancesNormal");
+	//U32 max_low = gSavedSettings.getU32("PluginInstancesLow");
+	//F32 max_cpu = gSavedSettings.getF32("PluginInstancesCPULimit");
+
+	static LLCachedControl<U32> sPluginInstancesTotal(gSavedSettings, "PluginInstancesTotal");
+	static LLCachedControl<U32> sPluginInstancesNormal(gSavedSettings, "PluginInstancesNormal");
+	static LLCachedControl<U32> sPluginInstancesLow(gSavedSettings, "PluginInstancesLow");
+	static LLCachedControl<F32> sPluginInstancesCPULimit(gSavedSettings, "PluginInstancesCPULimit");
+
+	U32 max_instances = sPluginInstancesTotal();
+	U32 max_normal = sPluginInstancesNormal();
+	U32 max_low = sPluginInstancesLow();
+	F32 max_cpu = sPluginInstancesCPULimit();
+	// </FS:Ansariel>
 	// Setting max_cpu to 0.0 disables CPU usage checking.
 	bool check_cpu_usage = (max_cpu != 0.0f);
 
@@ -864,7 +880,11 @@ void LLViewerMedia::updateMedia(void *dummy_arg)
 		}
 	}
 
-	if(gSavedSettings.getBOOL("MediaPerformanceManagerDebug"))
+	// <FS:Ansariel> Replace frequently called gSavedSettings
+	//if(gSavedSettings.getBOOL("MediaPerformanceManagerDebug"))
+	static LLCachedControl<bool> sMediaPerformanceManagerDebug(gSavedSettings, "MediaPerformanceManagerDebug");
+	if(sMediaPerformanceManagerDebug)
+	// </FS:Ansariel>
 	{
 		// Give impls the same ordering as the priority list
 		// they're already in the right order for this.
@@ -1667,6 +1687,23 @@ LLPluginClassMedia* LLViewerMediaImpl::newSourceFromMediaType(std::string media_
 	std::string plugin_basename = LLMIMETypes::implType(media_type);
 	LLPluginClassMedia* media_source = NULL;
 
+#ifdef LL_LINUX
+	if( plugin_basename == "media_plugin_cef" )
+	{
+		std::string strSandbox = gDirUtilp->getExecutableDir() + gDirUtilp->getDirDelimiter() + "chrome-sandbox";
+		llstat st;
+		if( LLFile::stat( strSandbox, &st ) )
+		{
+			LL_WARNS() << strSandbox << " not found, CEF will run without using the sandbox" << LL_ENDL;
+		}
+		else if( st.st_uid != 0 || st.st_gid != 0 || (st.st_mode & S_ISUID ) != S_ISUID )
+		{
+			LL_WARNS() << strSandbox << " is either not owned by root:root or does not have the suid bit set, CEF will run without using the sandbox" << LL_ENDL;
+		}
+	}
+#endif
+
+	
 	// HACK: we always try to keep a spare running webkit plugin around to improve launch times.
 	// If a spare was already created before PluginAttachDebuggerToPlugins was set, don't use it.
     // Do not use a spare if launching with full viewer control (e.g. Twitter and few others)
@@ -1696,26 +1733,7 @@ LLPluginClassMedia* LLViewerMediaImpl::newSourceFromMediaType(std::string media_
 		std::string user_data_path_cache = gDirUtilp->getCacheDir(false);
 		user_data_path_cache += gDirUtilp->getDirDelimiter();
 
-#if LL_LINUX
-		std::string user_data_path_cookies = gDirUtilp->getOSUserAppDir();
-		user_data_path_cookies += gDirUtilp->getDirDelimiter();
-#endif
-
 		std::string user_data_path_cef_log = gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "cef_log.txt");
-
-#if LL_LINUX
-		// Fix for EXT-5960 - make browser profile specific to user (cache, cookies etc.)
-		// If the linden username returned is blank, that can only mean we are
-		// at the login page displaying login Web page or Web browser test via Develop menu.
-		// In this case we just use whatever gDirUtilp->getOSUserAppDir() gives us (this
-		// is what we always used before this change)
-		std::string linden_user_dir = gDirUtilp->getLindenUserDir();
-		if ( ! linden_user_dir.empty() )
-		{
-			user_data_path_cookies = linden_user_dir;
-			user_data_path_cookies += gDirUtilp->getDirDelimiter();
-		};
-#endif
 
 		// See if the plugin executable exists
 		llstat s;
@@ -1733,11 +1751,7 @@ LLPluginClassMedia* LLViewerMediaImpl::newSourceFromMediaType(std::string media_
 		{
 			media_source = new LLPluginClassMedia(owner);
 			media_source->setSize(default_width, default_height);
-#if LL_LINUX
-			media_source->setUserDataPath(user_data_path_cache, user_data_path_cookies, user_data_path_cef_log);
-#else
 			media_source->setUserDataPath(user_data_path_cache, gDirUtilp->getUserName(), user_data_path_cef_log);
-#endif
 			media_source->setLanguageCode(LLUI::getLanguage());
 			media_source->setZoomFactor(zoom_factor);
 
@@ -2085,16 +2099,31 @@ void LLViewerMediaImpl::updateVolume()
 
 		if (mProximityCamera > 0)
 		{
-			if (mProximityCamera > gSavedSettings.getF32("MediaRollOffMax"))
+			// <FS:PP> It seems, that updateVolume() is called per frame with mMediaSource as stated in the "TODO: this is updated every frame - is this bad?" comment in this file, in LLViewerMediaImpl::update()... let's place some LLCachedControls here for performance reasons
+			// if (mProximityCamera > gSavedSettings.getF32("MediaRollOffMax"))
+			static LLCachedControl<F32> sMediaRollOffMax(gSavedSettings, "MediaRollOffMax");
+			static LLCachedControl<F32> sMediaRollOffMin(gSavedSettings, "MediaRollOffMin");
+			if (mProximityCamera > sMediaRollOffMax)
+			// </FS:PP>
 			{
 				volume = 0;
 			}
-			else if (mProximityCamera > gSavedSettings.getF32("MediaRollOffMin"))
+			// <FS:PP> Speed up with LLCachedControls
+			// else if (mProximityCamera > gSavedSettings.getF32("MediaRollOffMin"))
+			else if (mProximityCamera > sMediaRollOffMin)
+			// </FS:PP>
 			{
 				// attenuated_volume = 1 / (roll_off_rate * (d - min))^2
 				// the +1 is there so that for distance 0 the volume stays the same
-				F64 adjusted_distance = mProximityCamera - gSavedSettings.getF32("MediaRollOffMin");
-				F64 attenuation = 1.0 + (gSavedSettings.getF32("MediaRollOffRate") * adjusted_distance);
+
+				// <FS:PP> Speed up with LLCachedControls
+				// F64 adjusted_distance = mProximityCamera - gSavedSettings.getF32("MediaRollOffMin");
+				// F64 attenuation = 1.0 + (gSavedSettings.getF32("MediaRollOffRate") * adjusted_distance);
+				static LLCachedControl<F32> sMediaRollOffRate(gSavedSettings, "MediaRollOffRate");
+				F64 adjusted_distance = mProximityCamera - sMediaRollOffMin;
+				F64 attenuation = 1.0 + (sMediaRollOffRate * adjusted_distance);
+				// </FS:PP>
+
 				attenuation = 1.0 / (attenuation * attenuation);
 				// the attenuation multiplier should never be more than one since that would increase volume
 				volume = volume * llmin(1.0, attenuation);
@@ -2354,7 +2383,10 @@ void LLViewerMediaImpl::updateJavascriptObject()
 	if ( mMediaSource )
 	{
 		// flag to expose this information to internal browser or not.
-		bool enable = gSavedSettings.getBOOL("BrowserEnableJSObject");
+		// <FS:Ansariel> Performance improvement
+		//bool enable = gSavedSettings.getBOOL("BrowserEnableJSObject");
+		static LLCachedControl<bool> enable(gSavedSettings, "BrowserEnableJSObject");
+		// </FS:Ansariel>
 
 		if(!enable)
 		{
