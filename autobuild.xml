@@ -920,9 +920,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>bed1c4ac5caa5be101921712c94c5a8f</string>
+              <string>cbe4855d9f7132e265e44ea57884e1d8</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/p64_3p-dullahan-fs/downloads/dullahan-1.1.1320_3.3626.1895.g7001d56-linux64-190981958.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/dullahan/downloads/dullahan-1.12.2.202203281254_91.1.23_g04c8d56_chromium-91.0.4472.164-linux64-220871154.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
