@@ -371,6 +371,9 @@ void LLPluginClassMedia::setSizeInternal(void)
 #if LL_DARWIN
     if (!gHiDPISupport)
 #endif
+//<FS:TS> FIRE-30019: This clamp doesn't make sense on Linux, which can have
+//        huge windows without needing to turn on HiDPI support
+#if !LL_LINUX
     {
         if (mRequestedMediaWidth > 2048)
             mRequestedMediaWidth = 2048;
@@ -378,6 +381,7 @@ void LLPluginClassMedia::setSizeInternal(void)
         if (mRequestedMediaHeight > 2048)
             mRequestedMediaHeight = 2048;
     }
+#endif
 }
 
 void LLPluginClassMedia::setAutoScale(bool auto_scale)
@@ -926,20 +930,12 @@ void LLPluginClassMedia::paste()
 }
 
 void LLPluginClassMedia::setUserDataPath(const std::string &user_data_path_cache,
-#if LL_LINUX
-										 const std::string &user_data_path_cookies,
-#else
 										 const std::string &username,
-#endif
 										 const std::string &user_data_path_cef_log)
 {
 	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA, "set_user_data_path");
     message.setValue("cache_path", user_data_path_cache);
-#if LL_LINUX
-    message.setValue("cookies_path", user_data_path_cookies); // maintain previous behaviour with older version of CEF for Linux
-#else
     message.setValue("username", username); // cef shares cache between users but creates user-based contexts
-#endif
 	message.setValue("cef_log_file", user_data_path_cef_log);
 
 	bool cef_verbose_log = gSavedSettings.getBOOL("CefVerboseLog");

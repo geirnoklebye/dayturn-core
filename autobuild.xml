@@ -718,11 +718,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d260709ee0c1f402efb0dba24c60df82</string>
+              <string>c67627a36353fb37ce8ed49a715ff295</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-curl/downloads/curl-7.47.0.201604111501-linux64-201604111501.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-curl-nd/downloads/curl-7.81.0.220881913-linux64-220881913.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -920,9 +920,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>bed1c4ac5caa5be101921712c94c5a8f</string>
+              <string>cbe4855d9f7132e265e44ea57884e1d8</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/p64_3p-dullahan-fs/downloads/dullahan-1.1.1320_3.3626.1895.g7001d56-linux64-190981958.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/dullahan/downloads/dullahan-1.12.2.202203281254_91.1.23_g04c8d56_chromium-91.0.4472.164-linux64-220871154.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3945,11 +3945,11 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>328c247a063e35657c224973e27eaa19</string>
+              <string>ac6f413707ae327a22f08ab09b428014</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-openssl-ll/downloads/openssl-1.0.1h-linux64-20140815.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-openssl-nd/downloads/openssl-1.1.1l.220881844-linux64-220881844.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>

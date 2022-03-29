@@ -1460,32 +1460,39 @@ class LinuxManifest(ViewerManifest):
             self.path2basename("cef", "libmedia_plugin_cef.so")
             self.path2basename("libvlc", "libmedia_plugin_libvlc.so")
 
-
         # CEF runtime files - not debug (release, relwithdebinfo etc.)
 
         config = 'debug' if self.args['configuration'].lower() == 'debug' else 'release'
-
  
+        with self.prefix(src=os.path.join(pkgdir, 'lib', config), dst="lib"):
+            self.path( "libcef.so" )
+            self.path( "libminigbm.so" )
+            
+        with self.prefix(src=os.path.join(pkgdir, 'lib', config, 'swiftshader'), dst=os.path.join("bin", "swiftshader") ):
+            self.path( "*.so" )
+        with self.prefix(src=os.path.join(pkgdir, 'lib', config, 'swiftshader'), dst=os.path.join("lib", "swiftshader") ):
+            self.path( "*.so" )
+
         with self.prefix(src=os.path.join(pkgdir, 'bin', config), dst="bin"):
             self.path( "chrome-sandbox" )
             self.path( "dullahan_host" )
-            self.path( "natives_blob.bin" )
             self.path( "snapshot_blob.bin" )
             self.path( "v8_context_snapshot.bin" )
-            #self.path( "libffmpegsumo.so" ) 
-            self.end_prefix()
+        with self.prefix(src=os.path.join(pkgdir, 'bin', config), dst="lib"):
+            self.path( "snapshot_blob.bin" )
+            self.path( "v8_context_snapshot.bin" )
 
         # CEF files common to all configurations
         with self.prefix(src=os.path.join(pkgdir, 'resources'), dst="bin"):
-            self.path("cef.pak")
-            self.path("cef_100_percent.pak")
-            self.path("cef_200_percent.pak")
-            self.path("cef_extensions.pak")
-            self.path("devtools_resources.pak")
-            self.path("icudtl.dat")
-
-        with self.prefix(src=os.path.join(relpkgdir, 'swiftshader'), dst=os.path.join('bin', 'swiftshader') ):
-            self.path( "*.so" )
+            self.path( "chrome_100_percent.pak" )
+            self.path( "chrome_200_percent.pak" )
+            self.path( "resources.pak" )
+            self.path( "icudtl.dat" )
+        with self.prefix(src=os.path.join(pkgdir, 'resources'), dst="lib"):
+            self.path( "chrome_100_percent.pak" )
+            self.path( "chrome_200_percent.pak" )
+            self.path( "resources.pak" )
+            self.path( "icudtl.dat" )
 
         with self.prefix(src=os.path.join(pkgdir, 'resources', 'locales'), dst=os.path.join('bin', 'locales')):
             self.path("am.pak")
@@ -1541,13 +1548,6 @@ class LinuxManifest(ViewerManifest):
             self.path("vi.pak")
             self.path("zh-CN.pak")
             self.path("zh-TW.pak")
-
-        with self.prefix(src=os.path.join(pkgdir, 'lib', 'vlc', 'plugins'), dst="bin/llplugin/vlc/plugins"):
-            self.path( "plugins.dat" )
-            self.path( "*/*.so" )
-
-        with self.prefix(src=os.path.join(pkgdir, 'lib' ), dst="lib"):
-            self.path( "libvlc*.so*" )
 
         # llcommon
         #if not self.path("../llcommon/libllcommon.so", "lib/libllcommon.so"):
@@ -1679,7 +1679,8 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libjemalloc.so*")
 
             #cef plugin
-            self.path( "libcef.so" )
+# already pulled this in earlier
+#            self.path( "libcef.so" )
 
             # Vivox runtimes
             with self.prefix(src=relpkgdir, dst="../bin"):
