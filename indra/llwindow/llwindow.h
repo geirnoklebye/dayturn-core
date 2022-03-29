@@ -123,7 +123,7 @@ public:
 
 	virtual void captureMouse() = 0;
 	virtual void releaseMouse() = 0;
-	virtual void setMouseClipping( BOOL b ) = 0;
+	virtual void setMouseClipping( bool b ) = 0;
 
 	virtual BOOL isClipboardTextAvailable() = 0;
 	virtual BOOL pasteTextFromClipboard(LLWString &dst) = 0;

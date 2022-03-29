@@ -1572,7 +1572,7 @@ void LLViewerWindow::handleFocusLost(LLWindow *window)
 
 	// restore mouse cursor
 	showCursor();
-	getWindow()->setMouseClipping(FALSE);
+	getWindow()->setMouseClipping(false);
 
 	// If losing focus while keys are down, handle them as
     // an 'up' to correctly release states, then reset states

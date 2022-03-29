@@ -828,7 +828,7 @@ void LLWindowSDL::close()
 	//	}
 
 	// Make sure cursor is visible and we haven't mangled the clipping state.
-	setMouseClipping(FALSE);
+	setMouseClipping(false);
 	showCursor();
 
 	destroyContext();
@@ -1014,7 +1014,7 @@ BOOL LLWindowSDL::isCursorHidden()
 
 
 // Constrains the mouse to the window.
-void LLWindowSDL::setMouseClipping( BOOL b )
+void LLWindowSDL::setMouseClipping( bool b )
 {
     //SDL_WM_GrabInput(b ? SDL_GRAB_ON : SDL_GRAB_OFF);
 }

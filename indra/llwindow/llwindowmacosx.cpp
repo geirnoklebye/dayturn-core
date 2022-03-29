@@ -751,13 +751,13 @@ void LLWindowMacOSX::show()
 
 void LLWindowMacOSX::hide()
 {
-	setMouseClipping(FALSE);
+	setMouseClipping(false);
 }
 
 //virtual
 void LLWindowMacOSX::minimize()
 {
-	setMouseClipping(FALSE);
+	setMouseClipping(false);
 	showCursor();
 }
 
@@ -779,7 +779,7 @@ void LLWindowMacOSX::close()
 	//	}
 
 	// Make sure cursor is visible and we haven't mangled the clipping state.
-	setMouseClipping(FALSE);
+	setMouseClipping(false);
 	showCursor();
 
 	destroyContext();
@@ -1073,18 +1073,18 @@ BOOL LLWindowMacOSX::isCursorHidden()
 
 
 // Constrains the mouse to the window.
-void LLWindowMacOSX::setMouseClipping( BOOL b )
+void LLWindowMacOSX::setMouseClipping( bool b )
 {
 	// Just stash the requested state.  We'll simulate this when the cursor is hidden by decoupling.
 	mIsMouseClipping = b;
 
 	if(b)
 	{
-		//		LL_INFOS() << "setMouseClipping(TRUE)" << LL_ENDL;
+		//		LL_INFOS() << "setMouseClipping(true)" << LL_ENDL;
 	}
 	else
 	{
-		//		LL_INFOS() << "setMouseClipping(FALSE)" << LL_ENDL;
+		//		LL_INFOS() << "setMouseClipping(false)" << LL_ENDL;
 	}
 
 	adjustCursorDecouple();

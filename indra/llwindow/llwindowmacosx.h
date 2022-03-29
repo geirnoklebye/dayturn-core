@@ -72,7 +72,7 @@ public:
 	ECursorType getCursor() const override;
 	void captureMouse() override;
 	void releaseMouse() override;
-	void setMouseClipping( BOOL b ) override;
+	void setMouseClipping( bool b ) override;
 	BOOL isClipboardTextAvailable() override;
 	BOOL pasteTextFromClipboard(LLWString &dst) override;
 	BOOL copyTextToClipboard(const LLWString & src) override;

@@ -778,14 +778,14 @@ void LLWindowWin32::show()
 
 void LLWindowWin32::hide()
 {
-	setMouseClipping(FALSE);
+	setMouseClipping(false);
 	ShowWindow(mWindowHandle, SW_HIDE);
 }
 
 //virtual
 void LLWindowWin32::minimize()
 {
-	setMouseClipping(FALSE);
+	setMouseClipping(false);
 	showCursor();
 	ShowWindow(mWindowHandle, SW_MINIMIZE);
 }
@@ -842,7 +842,7 @@ void LLWindowWin32::close()
 
 	// Make sure cursor is visible and we haven't mangled the clipping state.
 	showCursor();
-	setMouseClipping(FALSE);
+	setMouseClipping(false);
 	if (gKeyboard)
 	{
 		gKeyboard->resetKeys();
@@ -3284,7 +3284,7 @@ BOOL LLWindowWin32::copyTextToClipboard(const LLWString& wstr)
 }
 
 // Constrains the mouse to the window.
-void LLWindowWin32::setMouseClipping( BOOL b )
+void LLWindowWin32::setMouseClipping( bool b )
 {
     LL_PROFILE_ZONE_SCOPED_CATEGORY_WIN32;
     ASSERT_MAIN_THREAD();

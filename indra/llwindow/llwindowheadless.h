@@ -67,7 +67,7 @@ public:
 	//virtual ECursorType getCursor() { return mCurrentCursor; };
 	/*virtual*/ void captureMouse() {};
 	/*virtual*/ void releaseMouse() {};
-	/*virtual*/ void setMouseClipping( BOOL b ) {};
+	/*virtual*/ void setMouseClipping( bool b ) {};
 	/*virtual*/ BOOL isClipboardTextAvailable() {return FALSE; };
 	/*virtual*/ BOOL pasteTextFromClipboard(LLWString &dst) {return FALSE; };
 	/*virtual*/ BOOL copyTextToClipboard(const LLWString &src) {return FALSE; };

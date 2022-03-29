@@ -79,7 +79,7 @@ public:
 	/*virtual*/ ECursorType getCursor() const;
 	/*virtual*/ void captureMouse();
 	/*virtual*/ void releaseMouse();
-	/*virtual*/ void setMouseClipping( BOOL b );
+	/*virtual*/ void setMouseClipping( bool b );
 	/*virtual*/ BOOL isClipboardTextAvailable();
 	/*virtual*/ BOOL pasteTextFromClipboard(LLWString &dst);
 	/*virtual*/ BOOL copyTextToClipboard(const LLWString &src);
