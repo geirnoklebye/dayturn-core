@@ -718,11 +718,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>02e3fa56a6d10d99dad04f22280e0be6</string>
+              <string>c67627a36353fb37ce8ed49a715ff295</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-curl/downloads/curl-7.54.1.213300132-linux64-213300132.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-curl-nd/downloads/curl-7.81.0.220881913-linux64-220881913.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3945,11 +3945,11 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>782d705a658b4111fc74561602f6348d</string>
+              <string>ac6f413707ae327a22f08ab09b428014</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-openssl-git/downloads/openssl-1.1.1l.213300109-linux64-213300109.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-openssl-nd/downloads/openssl-1.1.1l.220881844-linux64-220881844.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
