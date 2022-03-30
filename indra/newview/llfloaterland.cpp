@@ -3059,7 +3059,8 @@ bool LLPanelLandCovenant::postBuild()
 {
 	mLastRegionID = LLUUID::null;
 	mNextUpdateTime = 0;
-
+    mTextEstateOwner = getChild<LLTextBox>("estate_owner_text");
+    mTextEstateOwner->setIsFriendCallback(LLAvatarActions::isFriend);
 	return true;
 }
 
@@ -3167,8 +3168,7 @@ void LLPanelLandCovenant::updateEstateOwnerName(const std::string& name)
 	LLPanelLandCovenant* self = LLFloaterLand::getCurrentPanelLandCovenant();
 	if (self)
 	{
-		LLTextBox* editor = self->getChild<LLTextBox>("estate_owner_text");
-		if (editor) editor->setText(name);
+		self->mTextEstateOwner->setText(name);
 	}
 }
 
