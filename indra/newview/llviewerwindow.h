@@ -380,7 +380,7 @@ public:
 	void			playSnapshotAnimAndSound();
 	
 	// draws selection boxes around selected objects, must call displayObjects first
-	void			renderSelections( BOOL for_gl_pick, BOOL pick_parcel_walls, BOOL for_hud );
+	void			renderSelections( bool for_gl_pick, bool pick_parcel_walls, bool for_hud );
 	void			performPick();
 	void			returnEmptyPicks();
 

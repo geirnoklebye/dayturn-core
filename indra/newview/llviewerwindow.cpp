@@ -4059,7 +4059,7 @@ void LLViewerWindow::saveLastMouse(const LLCoordGL &point)
 // NOTE: This function gets called 3 times:
 //  render_ui_3d: 			FALSE, FALSE, TRUE
 //  render_hud_elements:	FALSE, FALSE, FALSE
-void LLViewerWindow::renderSelections( BOOL for_gl_pick, BOOL pick_parcel_walls, BOOL for_hud )
+void LLViewerWindow::renderSelections( bool for_gl_pick, bool pick_parcel_walls, bool for_hud )
 {
 	LLObjectSelectionHandle selection = LLSelectMgr::getInstance()->getSelection();
 
@@ -4178,21 +4178,21 @@ void LLViewerWindow::renderSelections( BOOL for_gl_pick, BOOL pick_parcel_walls,
 					// make whole viewer benefit.
 					LLSelectMgr::getInstance()->selectGetEditMoveLinksetPermissions(all_selected_objects_move, all_selected_objects_modify);
 
-					BOOL draw_handles = TRUE;
+					bool draw_handles = true;
 
 					if (tool == LLToolCompTranslate::getInstance() && !all_selected_objects_move && !LLSelectMgr::getInstance()->isMovableAvatarSelected())
 					{
-						draw_handles = FALSE;
+						draw_handles = false;
 					}
 
 					if (tool == LLToolCompRotate::getInstance() && !all_selected_objects_move && !LLSelectMgr::getInstance()->isMovableAvatarSelected())
 					{
-						draw_handles = FALSE;
+						draw_handles = false;
 					}
 
 					if ( !all_selected_objects_modify && tool == LLToolCompScale::getInstance() )
 					{
-						draw_handles = FALSE;
+						draw_handles = false;
 					}
 				
 					if( draw_handles )

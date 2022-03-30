@@ -1068,7 +1068,7 @@ void render_hud_attachments()
 
 	if (LLPipeline::sShowHUDAttachments && !gDisconnected && setup_hud_matrices())
 	{
-		LLPipeline::sRenderingHUDs = TRUE;
+		LLPipeline::sRenderingHUDs = true;
 		LLCamera hud_cam = *LLViewerCamera::getInstance();
 		hud_cam.setOrigin(-1.f,0,0);
 		hud_cam.setAxes(LLVector3(1,0,0), LLVector3(0,1,0), LLVector3(0,0,1));
@@ -1144,7 +1144,7 @@ void render_hud_attachments()
 			gPipeline.toggleRenderDebugFeature(LLPipeline::RENDER_DEBUG_FEATURE_UI);
 		}
 		LLPipeline::sUseOcclusion = use_occlusion;
-		LLPipeline::sRenderingHUDs = FALSE;
+		LLPipeline::sRenderingHUDs = false;
 	}
 	gGL.matrixMode(LLRender::MM_PROJECTION);
 	gGL.popMatrix();
@@ -1433,7 +1433,7 @@ void render_ui_3d()
 		draw_axes();
 	}
 
-	gViewerWindow->renderSelections(FALSE, FALSE, TRUE); // Non HUD call in render_hud_elements
+	gViewerWindow->renderSelections(false, false, true); // Non HUD call in render_hud_elements
 	stop_glerror();
 }
 
