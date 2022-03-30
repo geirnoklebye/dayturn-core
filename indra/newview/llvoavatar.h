@@ -614,9 +614,9 @@ private:
 	//--------------------------------------------------------------------
 public:
 	static void	cullAvatarsByPixelArea();
-	BOOL		isCulled() const { return mCulled; }
+	bool		isCulled() const { return mCulled; }
 private:
-	BOOL		mCulled;
+	bool		mCulled;
 
 	//--------------------------------------------------------------------
 	// Freeze counter
