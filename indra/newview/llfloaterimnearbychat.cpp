@@ -1184,9 +1184,25 @@ public:
 			if ((channel > 0) && (channel < CHAT_CHANNEL_DEBUG))
 			{
 				retval = true;
-		// Send unescaped message, see EXT-6353.
-		std::string unescaped_mesg (LLURI::unescape(tokens[1].asString()));
-		send_chat_from_viewer(unescaped_mesg, CHAT_TYPE_NORMAL, channel);
+//MK by CA RLV-159 Make app/chat obey sendchannel restrictions
+				std::ostringstream stream;
+				stream << "" << channel;
+				if (gRRenabled && 
+					(gAgent.mRRInterface.containsWithoutException("sendchannel", stream.str()) || gAgent.mRRInterface.contains("sendchannel_except:" + stream.str()))
+					)
+				{
+					// if we set to false a unsupported SLurl error gets generated which isn't strictly accurate, so stay true and do nothing
+					//retval = false;
+				}
+				else
+				{
+//mk by ca
+					// Send unescaped message, see EXT-6353.
+					std::string unescaped_mesg (LLURI::unescape(tokens[1].asString()));
+					send_chat_from_viewer(unescaped_mesg, CHAT_TYPE_NORMAL, channel);
+//MK by CA
+				}
+//mk by ca
 			}
 			else
 			{
