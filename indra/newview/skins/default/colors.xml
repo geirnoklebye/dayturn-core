@@ -1145,14 +1145,14 @@
       name="SearchableControlHighlightColor"
       reference="orange4" />
   <color
-      name="GroupHiddenInProfile"
-      reference="orange4" />
+    name="GroupHiddenInProfile"
+    reference="orange4" />
   <color
-      name="MoneyTrackerIncrease"
-      reference="Green" />
+    name="MoneyTrackerIncrease"
+    reference="Green" />
   <color
-      name="MoneyTrackerDecrease"
-      reference="Red" />
+    name="MoneyTrackerDecrease"
+    reference="Red" />
   <color
     name="AddPaymentPanel"
     value="0.27 0.27 0.27 1" />
