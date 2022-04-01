@@ -1549,6 +1549,13 @@ class LinuxManifest(ViewerManifest):
             self.path("zh-CN.pak")
             self.path("zh-TW.pak")
 
+        with self.prefix(src=os.path.join(pkgdir, 'lib', 'vlc', 'plugins'), dst="bin/llplugin/vlc/plugins"):
+            self.path( "plugins.dat" )
+            self.path( "*/*.so" )
+
+        with self.prefix(src=os.path.join(pkgdir, 'lib' ), dst="lib"):
+            self.path( "libvlc*.so*" )
+
         # llcommon
         #if not self.path("../llcommon/libllcommon.so", "lib/libllcommon.so"):
             #print("Skipping llcommon.so (assuming llcommon was linked statically)")
