@@ -183,7 +183,7 @@ public:
     U32 getUUIDValue(U32 expected_length, LLUUID *array);
     U32 getNodeRefValue(U32 expected_length, LLXMLNode **array);
 
-	BOOL hasAttribute(const char* name );
+	bool hasAttribute(const char* name );
 
         // these are designed to be more generic versions of the functions
     // rather than relying on LL-types
@@ -214,8 +214,8 @@ public:
 	std::string getSanitizedValue() const;
 	std::string getTextContents() const;
     const LLStringTableEntry* getName() const { return mName; }
-	BOOL hasName(const char* name) const { return mName == gStringTable.checkStringEntry(name); }
-	BOOL hasName(const std::string& name) const { return mName == gStringTable.checkStringEntry(name.c_str()); }
+	bool hasName(const char* name) const { return mName == gStringTable.checkStringEntry(name); }
+	bool hasName(const std::string& name) const { return mName == gStringTable.checkStringEntry(name.c_str()); }
     const std::string& getID() const { return mID; }
 
     U32 getChildCount() const;

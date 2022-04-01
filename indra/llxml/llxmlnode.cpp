@@ -1266,7 +1266,7 @@ bool LLXMLNode::setAttributeString(const char* attr, const std::string& value)
 	return false;
 }
 
-BOOL LLXMLNode::hasAttribute(const char* name )
+bool LLXMLNode::hasAttribute(const char* name )
 {
 	LLXMLNodePtr node;
 	return getAttribute(name, node);

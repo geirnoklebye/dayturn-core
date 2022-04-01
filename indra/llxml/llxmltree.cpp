@@ -61,13 +61,13 @@ void LLXmlTree::cleanup()
 }
 
 
-BOOL LLXmlTree::parseFile(const std::string &path, BOOL keep_contents)
+bool LLXmlTree::parseFile(const std::string &path, bool keep_contents)
 {
 	delete mRoot;
 	mRoot = NULL;
 
 	LLXmlTreeParser parser(this);
-	BOOL success = parser.parseFile( path, &mRoot, keep_contents );
+	bool success = parser.parseFile( path, &mRoot, keep_contents );
 	if( !success )
 	{
 		S32 line_number = parser.getCurrentLineNumber();
@@ -135,7 +135,7 @@ void LLXmlTreeNode::dump( const std::string& prefix )
 	LL_CONT << LL_ENDL;
 } 
 
-BOOL LLXmlTreeNode::hasAttribute(const std::string& name)
+bool LLXmlTreeNode::hasAttribute(const std::string& name)
 {
 	LLStdStringHandle canonical_name = LLXmlTree::sAttributeKeys.addString( name );
 	attribute_map_t::iterator iter = mAttributes.find(canonical_name);
@@ -506,8 +506,8 @@ LLXmlTreeParser::LLXmlTreeParser(LLXmlTree* tree)
 	: mTree(tree),
 	  mRoot( NULL ),
 	  mCurrent( NULL ),
-	  mDump( FALSE ),
-	  mKeepContents(FALSE)
+	  mDump(false),
+	  mKeepContents(false)
 {
 }
 
@@ -515,14 +515,14 @@ LLXmlTreeParser::~LLXmlTreeParser()
 {
 }
 
-BOOL LLXmlTreeParser::parseFile(const std::string &path, LLXmlTreeNode** root, BOOL keep_contents)
+bool LLXmlTreeParser::parseFile(const std::string &path, LLXmlTreeNode** root, bool keep_contents)
 {
 	llassert( !mRoot );
 	llassert( !mCurrent );
 
 	mKeepContents = keep_contents;
 
-	BOOL success = LLXmlParser::parseFile(path);
+	bool success = LLXmlParser::parseFile(path);
 
 	*root = mRoot;
 	mRoot = NULL;
@@ -685,7 +685,7 @@ void LLXmlTreeParser::unparsedEntityDecl(
 void test_llxmltree()
 {
 	LLXmlTree tree;
-	BOOL success = tree.parseFile( "test.xml" );
+	bool success = tree.parseFile( "test.xml" );
 	if( success )
 	{
 		tree.dump();

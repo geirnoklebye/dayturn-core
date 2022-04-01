@@ -196,7 +196,7 @@ void LLTeleportHistory::updateCurrentLocation(const LLVector3d& new_pos)
     // update Viewer window title with username and region name
     // if we are in "non-interactive mode" (SL-15999) or the debug 
     // setting to allow it is enabled (may be useful in other situations)
-    if (gNonInteractive || gSavedSettings.getBOOL("UpdateAppWindowTitleBar"))
+    if (gNonInteractive || gSavedSettings.getbool("UpdateAppWindowTitleBar"))
     {
 		LLAvatarNameCache::get(gAgent.getID(), boost::bind(&on_avatar_name_update_title, _2));
     }

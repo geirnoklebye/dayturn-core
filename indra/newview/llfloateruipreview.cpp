@@ -713,7 +713,7 @@ void LLFloaterUIPreview::addFloaterEntry(const std::string& path)
 	// Get name of floater:
 	LLXmlTree xml_tree;
 	std::string full_path = getLocalizedDirectory() + path;			// get full path
-	BOOL success = xml_tree.parseFile(full_path.c_str(), TRUE);		// parse xml
+	bool success = xml_tree.parseFile(full_path.c_str(), true);		// parse xml
 	std::string entry_name;
 	std::string entry_title;
 	if(success)
@@ -1112,13 +1112,13 @@ void LLFloaterUIPreview::onClickToggleDiffHighlighting()
 	{
 		// Get the file and make sure it exists
 		std::string path_in_textfield = mDiffPathTextBox->getText();	// get file path
-		BOOL error = FALSE;
+		bool error = false;
 
 		if(std::string("") == path_in_textfield)									// check for blank file
 		{
 			std::string warning = "Unable to highlight differences because no file was provided; fill in the relevant text field";
 			popupAndPrintWarning(warning);
-			error = TRUE;
+			error = true;
 		}
 
 		llstat dummy;
@@ -1126,13 +1126,13 @@ void LLFloaterUIPreview::onClickToggleDiffHighlighting()
 		{
 			std::string warning = std::string("Unable to highlight differences because an invalid path to a difference file was provided:\"") + path_in_textfield + "\"";
 			popupAndPrintWarning(warning);
-			error = TRUE;
+			error = true;
 		}
 
 		// Build a list of changed elements as given by the XML
 		std::list<std::string> changed_element_names;
 		LLXmlTree xml_tree;
-		BOOL success = xml_tree.parseFile(path_in_textfield.c_str(), TRUE);
+		bool success = xml_tree.parseFile(path_in_textfield.c_str(), true);
 
 		if(success && !error)
 		{
@@ -1162,7 +1162,7 @@ void LLFloaterUIPreview::onClickToggleDiffHighlighting()
 					{
 						std::string warning = std::string("Child was neither a file or an error, but rather the following:\"") + std::string(child->getName()) + "\"";
 						popupAndPrintWarning(warning);
-						error = TRUE;
+						error = true;
 						break;
 					}
 				}
@@ -1171,14 +1171,14 @@ void LLFloaterUIPreview::onClickToggleDiffHighlighting()
 			{
 				std::string warning = std::string("Root node not named XuiDelta:\"") + path_in_textfield + "\"";
 				popupAndPrintWarning(warning);
-				error = TRUE;
+				error = true;
 			}
 		}
 		else if(!error)
 		{
 			std::string warning = std::string("Unable to create tree from XML:\"") + path_in_textfield + "\"";
 			popupAndPrintWarning(warning);
-			error = TRUE;
+			error = true;
 		}
 
 		if(error)	// if we encountered an error, reset the button to off

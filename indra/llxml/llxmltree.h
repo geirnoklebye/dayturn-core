@@ -55,7 +55,7 @@ public:
 	virtual ~LLXmlTree();
 	void cleanup();
 
-	virtual BOOL	parseFile(const std::string &path, BOOL keep_contents = TRUE);
+	virtual bool	parseFile(const std::string &path, bool keep_contents = true);
 
 	LLXmlTreeNode*	getRoot() { return mRoot; }
 
@@ -97,12 +97,12 @@ public:
 	{
 		return mName;
 	}
-	BOOL hasName( const std::string& name )
+	bool hasName( const std::string& name )
 	{
 		return mName == name;
 	}
 
-	BOOL hasAttribute( const std::string& name );
+	bool hasAttribute( const std::string& name );
 
 	// Fast versions use cannonical_name handlee to entru in LLXmlTree::sAttributeKeys string table
 	BOOL			getFastAttributeBOOL(		LLStdStringHandle cannonical_name, BOOL& value );
@@ -199,7 +199,7 @@ public:
 	LLXmlTreeParser(LLXmlTree* tree);
 	virtual ~LLXmlTreeParser();
 
-	BOOL parseFile(const std::string &path, LLXmlTreeNode** root, BOOL keep_contents );
+	bool parseFile(const std::string &path, LLXmlTreeNode** root, bool keep_contents );
 
 protected:
 	const std::string& tabs();
@@ -227,8 +227,8 @@ protected:
 	LLXmlTree*		mTree;
 	LLXmlTreeNode*	mRoot;
 	LLXmlTreeNode*  mCurrent;
-	BOOL			mDump;	// Dump parse tree to LL_INFOS() as it is read.
-	BOOL			mKeepContents;
+	bool			mDump;	// Dump parse tree to LL_INFOS() as it is read.
+	bool			mKeepContents;
 };
 
 #endif  // LL_LLXMLTREE_H

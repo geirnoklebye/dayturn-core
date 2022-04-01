@@ -1249,7 +1249,7 @@ bool LLAppViewer::init()
 #if 0 // no updater for Dayturn
 //#if LL_RELEASE_FOR_DOWNLOAD 
     // Skip updater if this is a non-interactive instance
-    if (!gSavedSettings.getBOOL("CmdLineSkipUpdater") && !gNonInteractive)
+    if (!gSavedSettings.getbool("CmdLineSkipUpdater") && !gNonInteractive)
     {
 #if !LL_LINUX
         LLProcess::Params updater;
@@ -2679,7 +2679,7 @@ bool LLAppViewer::initConfiguration()
 	//Load settings files list
 	std::string settings_file_list = gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS, "settings_files.xml");
 	LLXMLNodePtr root;
-	BOOL success  = LLXMLNode::parseFile(settings_file_list, root, NULL);
+	bool success  = LLXMLNode::parseFile(settings_file_list, root, NULL);
 	if (!success)
 	{
         LL_ERRS() << "Cannot load default configuration file " << settings_file_list << LL_ENDL;
@@ -2730,7 +2730,7 @@ bool LLAppViewer::initConfiguration()
 		c->setValue(true, false);
 	}
 
-	gSavedSettings.setBOOL("QAMode", TRUE );
+	gSavedSettings.setbool("QAMode", true );
 	gSavedSettings.setS32("WatchdogEnabled", 0);
 #endif
 	
@@ -2802,19 +2802,19 @@ bool LLAppViewer::initConfiguration()
 	// - load overrides from user_settings
 	loadSettingsFromDirectory("User");
 
-	if (gSavedSettings.getBOOL("FirstRunThisInstall"))
+	if (gSavedSettings.getbool("FirstRunThisInstall"))
 	{
 		// Set firstrun flag to indicate that some further init actiona should be taken 
 		// like determining screen DPI value and so on
 		mIsFirstRun = true;
 
-		gSavedSettings.setBOOL("FirstRunThisInstall", FALSE);
+		gSavedSettings.setbool("FirstRunThisInstall", false);
 	}
 
 	// <FS:CR> Compatibility with old backups
 	// Put gSavedSettings here, gSavedPerAccountSettings in llstartup.cpp
 	// *TODO: Should we keep these around forever or just three release cycles?
-	if (gSavedSettings.getBOOL("FSFirstRunAfterSettingsRestore"))
+	if (gSavedSettings.getbool("FSFirstRunAfterSettingsRestore"))
 	{
 		// Nothing happened...
 	}
@@ -2849,16 +2849,16 @@ bool LLAppViewer::initConfiguration()
 	// Register the core crash option as soon as we can
 	// if we want gdb post-mortem on cores we need to be up and running
 	// ASAP or we might miss init issue etc.
-	if(gSavedSettings.getBOOL("DisableCrashLogger"))
+	if(gSavedSettings.getbool("DisableCrashLogger"))
 	{
 		LL_WARNS() << "Crashes will be handled by system, stack trace logs and crash logger are both disabled" << LL_ENDL;
 		disableCrashlogger();
 	}
 
-	gNonInteractive = gSavedSettings.getBOOL("NonInteractive");
+	gNonInteractive = gSavedSettings.getbool("NonInteractive");
 	// Handle initialization from settings.
 	// Start up the debugging console before handling other options.
-	if (gSavedSettings.getBOOL("ShowConsoleWindow") && !gNonInteractive)
+	if (gSavedSettings.getbool("ShowConsoleWindow") && !gNonInteractive)
 	{
 		initConsole();
 	}
@@ -2912,7 +2912,7 @@ bool LLAppViewer::initConfiguration()
 	// If we have specified crash on startup, set the global so we'll trigger the crash at the right time
 	gCrashOnStartup = gSavedSettings.getBOOL("CrashOnStartup");
 
-	if (gSavedSettings.getBOOL("LogPerformance"))
+	if (gSavedSettings.getbool("LogPerformance"))
 	{
 		LLTrace::BlockTimer::sLog = true;
 		LLTrace::BlockTimer::sLogName = std::string("performance");		
@@ -3373,7 +3373,7 @@ bool LLAppViewer::isUpdaterMissing()
 
 bool LLAppViewer::waitForUpdater()
 {
-    return !gSavedSettings.getBOOL("CmdLineSkipUpdater") && !mUpdaterNotFound && !gNonInteractive;
+    return !gSavedSettings.getbool("CmdLineSkipUpdater") && !mUpdaterNotFound && !gNonInteractive;
 }
 
 void LLAppViewer::writeDebugInfo(bool isStatic)

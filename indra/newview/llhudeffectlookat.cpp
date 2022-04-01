@@ -189,7 +189,7 @@ static BOOL loadAttentions()
 	std::string filename;
 	filename = gDirUtilp->getExpandedFilename(LL_PATH_CHARACTER,"attentions.xml");
 	LLXmlTree xml_tree;
-	BOOL success = xml_tree.parseFile( filename, FALSE );
+	bool success = xml_tree.parseFile( filename, false );
 	if( !success )
 	{
 		return FALSE;
