@@ -1090,16 +1090,16 @@ void LLFloaterPreference::onBtnOK(const LLSD& userdata)
 		}
 
 		LLUIColorTable::instance().saveUserSettings();
-		gSavedSettings.saveToFile(gSavedSettings.getString("ClientSettingsFile"), TRUE);
+		gSavedSettings.saveToFile(gSavedSettings.getString("ClientSettingsFile"), true);
 // [SL:KB] - Patch: Viewer-CrashReporting | Checked: 2011-10-02 (Catznip-2.8.0e) | Added: Catznip-2.8.0e
 		// We need to save all crash settings, even if they're defaults [see LLCrashLogger::loadCrashBehaviorSetting()]
-		gCrashSettings.saveToFile(gSavedSettings.getString("CrashSettingsFile"), FALSE);
+		gCrashSettings.saveToFile(gSavedSettings.getString("CrashSettingsFile"), false);
 // [/SL:KB]
 		
 		//Only save once logged in and loaded per account settings
 		if(mGotPersonalInfo)
 		{
-			gSavedPerAccountSettings.saveToFile(gSavedSettings.getString("PerAccountSettingsFile"), TRUE);
+			gSavedPerAccountSettings.saveToFile(gSavedSettings.getString("PerAccountSettingsFile"), true);
 	}
 	}
 	else
@@ -4159,7 +4159,7 @@ void FSPanelPreferenceBackup::doBackupSettings(const LLSD& notification, const L
 	std::string backup_global_name = gDirUtilp->getExpandedFilename(LL_PATH_NONE, dir_name,
 				LLAppViewer::instance()->getSettingsFilename("Default","Global"));
 	LL_INFOS("SettingsBackup") << "saving backup global settings" << LL_ENDL;
-	backup_global_controls.saveToFile(backup_global_name, FALSE);
+	backup_global_controls.saveToFile(backup_global_name, false);
 
 	// Get scroll list control that holds the list of global files
 	LLScrollListCtrl* globalScrollList = getChild<LLScrollListCtrl>("restore_global_files_list");
@@ -4212,7 +4212,7 @@ void FSPanelPreferenceBackup::doBackupSettings(const LLSD& notification, const L
 			gSavedPerAccountSettings.applyToAll(&func_per_account);
 			// save defaults here as well (FALSE)
 			LL_INFOS("SettingsBackup") << "saving backup per account settings" << LL_ENDL;
-			backup_per_account_controls.saveToFile(backup_per_account_name, FALSE);
+			backup_per_account_controls.saveToFile(backup_per_account_name, false);
 
 			// Get scroll list control that holds the list of per account files
 			LLScrollListCtrl* perAccountScrollList = getChild<LLScrollListCtrl>("restore_per_account_files_list");
@@ -4395,7 +4395,7 @@ void FSPanelPreferenceBackup:: doRestoreSettings(const LLSD& notification, const
 		LL_INFOS("SettingsBackup") << "restoring global settings from backup" << LL_ENDL;
 		gSavedSettings.loadFromFile(backup_global_name);
 		LL_INFOS("SettingsBackup") << "saving global settings" << LL_ENDL;
-		gSavedSettings.saveToFile(global_name, TRUE);
+		gSavedSettings.saveToFile(global_name, true);
 	}
 
 	// Get scroll list control that holds the list of global files
@@ -4442,7 +4442,7 @@ void FSPanelPreferenceBackup:: doRestoreSettings(const LLSD& notification, const
 			LL_INFOS("SettingsBackup") << "restoring per account settings" << LL_ENDL;
 			gSavedPerAccountSettings.loadFromFile(backup_per_account_name);
 			LL_INFOS("SettingsBackup") << "saving per account settings" << LL_ENDL;
-			gSavedPerAccountSettings.saveToFile(per_account_name, TRUE);
+			gSavedPerAccountSettings.saveToFile(per_account_name, true);
 		}
 
 		// Get scroll list control that holds the list of per account files

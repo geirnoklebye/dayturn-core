@@ -1923,11 +1923,11 @@ bool LLAppViewer::cleanup()
 	}
 	else
 	{
-		gSavedPerAccountSettings.saveToFile(per_account_settings_file, TRUE);
+		gSavedPerAccountSettings.saveToFile(per_account_settings_file, true);
 		LL_INFOS() << "First time: Saved per-account settings to " <<
 		        per_account_settings_file << LL_ENDL;
 	}
-	gSavedSettings.saveToFile(gSavedSettings.getString("ClientSettingsFile"), TRUE);
+	gSavedSettings.saveToFile(gSavedSettings.getString("ClientSettingsFile"), true);
 	// /FIRE-4871
 	// <FS:Zi> Backup Settings
 	}
@@ -2124,7 +2124,7 @@ bool LLAppViewer::cleanup()
 	// save their rects on delete.
 	if(mSaveSettingsOnExit)		// <FS:Zi> Backup Settings
 	{
-		gSavedSettings.saveToFile(gSavedSettings.getString("ClientSettingsFile"), TRUE);
+		gSavedSettings.saveToFile(gSavedSettings.getString("ClientSettingsFile"), true);
 
 	LLUIColorTable::instance().saveUserSettings();
 
@@ -2151,7 +2151,7 @@ bool LLAppViewer::cleanup()
 	}
 	else
 	{
-		gSavedPerAccountSettings.saveToFile(per_account_settings_file, TRUE);
+		gSavedPerAccountSettings.saveToFile(per_account_settings_file, true);
 		LL_INFOS() << "Second time: Saved per-account settings to " <<
 		        per_account_settings_file << LL_ENDL;
 		if (LLViewerParcelAskPlay::instanceExists())
@@ -2168,12 +2168,12 @@ bool LLAppViewer::cleanup()
 	// </FS:Zi>
 
 	// We need to save all crash settings, even if they're defaults [see LLCrashLogger::loadCrashBehaviorSetting()]
-	gCrashSettings.saveToFile(gSavedSettings.getString("CrashSettingsFile"),FALSE);
+	gCrashSettings.saveToFile(gSavedSettings.getString("CrashSettingsFile"),false);
 
 	//std::string warnings_settings_filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, getSettingsFilename("Default", "Warnings"));
 	std::string warnings_settings_filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, getSettingsFilename("User", "Warnings"));
 	if(mSaveSettingsOnExit)		// <FS:Zi> Backup Settings
-	gWarningSettings.saveToFile(warnings_settings_filename, TRUE);
+	gWarningSettings.saveToFile(warnings_settings_filename, true);
 
 	// Save URL history file
 	if(mSaveSettingsOnExit)		// <FS:Zi> Backup Settings
@@ -3301,7 +3301,7 @@ bool LLAppViewer::initWindow()
 	}
 #endif
     
-	if (gSavedSettings.getBOOL("WindowMaximized"))
+	if (gSavedSettings.getbool("WindowMaximized"))
 	{
 		gViewerWindow->getWindow()->maximize();
 	}
@@ -3317,8 +3317,8 @@ bool LLAppViewer::initWindow()
 	}
 			
 	// Set this flag in case we crash while initializing GL
-	gSavedSettings.setBOOL("RenderInitError", TRUE);
-	gSavedSettings.saveToFile( gSavedSettings.getString("ClientSettingsFile"), TRUE );
+	gSavedSettings.setbool("RenderInitError", true);
+	gSavedSettings.saveToFile( gSavedSettings.getString("ClientSettingsFile"), true );
 
 	gPipeline.init();
 	LL_INFOS("AppInit") << "gPipeline Initialized" << LL_ENDL;
@@ -3326,8 +3326,8 @@ bool LLAppViewer::initWindow()
 	stop_glerror();
 	gViewerWindow->initGLDefaults();
 
-	gSavedSettings.setBOOL("RenderInitError", FALSE);
-	gSavedSettings.saveToFile( gSavedSettings.getString("ClientSettingsFile"), TRUE );
+	gSavedSettings.setbool("RenderInitError", false);
+	gSavedSettings.saveToFile( gSavedSettings.getString("ClientSettingsFile"), true );
 
 	//If we have a startup crash, it's usually near GL initialization, so simulate that.
 	if(gCrashOnStartup)
@@ -3339,13 +3339,13 @@ bool LLAppViewer::initWindow()
 	// Determine if the window should start maximized on initial run based
 	// on graphics capability
 	//
-	if (gSavedSettings.getBOOL("FirstLoginThisInstall") && meetsRequirementsForMaximizedStart())
+	if (gSavedSettings.getbool("FirstLoginThisInstall") && meetsRequirementsForMaximizedStart())
 	{
 		LL_INFOS("AppInit") << "This client met the requirements for a maximized initial screen." << LL_ENDL;
-		gSavedSettings.setBOOL("WindowMaximized", TRUE);
+		gSavedSettings.setbool("WindowMaximized", true);
 	}
 
-	if (gSavedSettings.getBOOL("WindowMaximized"))
+	if (gSavedSettings.getbool("WindowMaximized"))
 	{
 		gViewerWindow->getWindow()->maximize();
 	}

@@ -2023,7 +2023,7 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	}
 	
 	// If we crashed while initializng GL stuff last time, disable certain features
-	if (gSavedSettings.getBOOL("RenderInitError"))
+	if (gSavedSettings.getbool("RenderInitError"))
 	{
 		mInitAlert = "DisplaySettingsNoShaders";
 		LLFeatureManager::getInstance()->setGraphicsLevel(0, false);
@@ -2594,8 +2594,8 @@ void LLViewerWindow::reshape(S32 width, S32 height)
 		sendShapeToSim();
 
 		// store new settings for the mode we are in, regardless
-		BOOL maximized = mWindow->getMaximized();
-		gSavedSettings.setBOOL("WindowMaximized", maximized);
+		bool maximized = mWindow->getMaximized();
+		gSavedSettings.setbool("WindowMaximized", maximized);
 
 		if (!maximized)
 		{
