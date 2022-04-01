@@ -125,7 +125,7 @@ public:
 
 	BOOL isNull();
 
-	BOOL deleteChild(LLXMLNode* child);
+	bool deleteChild(LLXMLNode* child);
     void addChild(LLXMLNodePtr& new_child); 
     void setParent(LLXMLNodePtr& new_parent); // reparent if necessary
 
@@ -285,24 +285,24 @@ public:
 	// Delete any child nodes that aren't among the tree's children, recursive
 	void scrubToTree(LLXMLNode *tree);
 
-	BOOL deleteChildren(const std::string& name);
-	BOOL deleteChildren(LLStringTableEntry* name);
+	bool deleteChildren(const std::string& name);
+	bool deleteChildren(LLStringTableEntry* name);
 	void setAttributes(ValueType type, U32 precision, Encoding encoding, U32 length);
 // 	void appendValue(const std::string& value); // Unused
 
 	// Unit Testing
 	void createUnitTest(S32 max_num_children);
-	BOOL performUnitTest(std::string &error_buffer);
+	bool performUnitTest(std::string &error_buffer);
 
 protected:
-	BOOL removeChild(LLXMLNode* child);
+	bool removeChild(LLXMLNode* child);
 
 public:
 	std::string mID;				// The ID attribute of this node
 
 	XML_Parser *mParser;		// Temporary pointer while loading
 
-	BOOL mIsAttribute;			// Flag is only used for output formatting
+	bool mIsAttribute;			// Flag is only used for output formatting
 	U32 mVersionMajor;			// Version of this tag to use
 	U32 mVersionMinor;
 	U32 mLength;				// If the length is nonzero, then only return arrays of this length
@@ -317,8 +317,8 @@ public:
 	LLXMLNodePtr mPrev;				// Double-linked list previous node
 	LLXMLNodePtr mNext;				// Double-linked list next node
 
-	static BOOL sStripEscapedStrings;
-	static BOOL sStripWhitespaceValues;
+	static bool sStripEscapedStrings;
+	static bool sStripWhitespaceValues;
 	
 protected:
 	LLStringTableEntry *mName;		// The name of this node
@@ -332,10 +332,10 @@ protected:
 
 	static const char *skipWhitespace(const char *str);
 	static const char *skipNonWhitespace(const char *str);
-	static const char *parseInteger(const char *str, U64 *dest, BOOL *is_negative, U32 precision, Encoding encoding);
+	static const char *parseInteger(const char *str, U64 *dest, bool *is_negative, U32 precision, Encoding encoding);
 	static const char *parseFloat(const char *str, F64 *dest, U32 precision, Encoding encoding);
 
-	BOOL isFullyDefault();
+	bool isFullyDefault();
 };
 
 #endif // LL_LLXMLNODE

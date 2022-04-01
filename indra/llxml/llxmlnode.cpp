@@ -44,13 +44,13 @@
 #include "lldir.h"
 
 // static
-BOOL LLXMLNode::sStripEscapedStrings = TRUE;
-BOOL LLXMLNode::sStripWhitespaceValues = FALSE;
+bool LLXMLNode::sStripEscapedStrings = true;
+bool LLXMLNode::sStripWhitespaceValues = false;
 
 LLXMLNode::LLXMLNode() : 
 	mID(""),
 	mParser(NULL),
-	mIsAttribute(FALSE),
+	mIsAttribute(false),
 	mVersionMajor(0), 
 	mVersionMinor(0), 
 	mLength(0), 
@@ -199,11 +199,11 @@ BOOL LLXMLNode::isNull()
 }
 
 // protected
-BOOL LLXMLNode::removeChild(LLXMLNode *target_child) 
+bool LLXMLNode::removeChild(LLXMLNode *target_child) 
 {
 	if (!target_child)
 	{
-		return FALSE;
+		return false;
 	}
 	if (target_child->mIsAttribute)
 	{
@@ -212,7 +212,7 @@ BOOL LLXMLNode::removeChild(LLXMLNode *target_child)
 		{
 			target_child->mParent = NULL;
 			mAttributes.erase(children_itr);
-			return TRUE;
+			return true;
 		}
 	}
 	else if (mChildren.notNull())
@@ -244,7 +244,7 @@ BOOL LLXMLNode::removeChild(LLXMLNode *target_child)
 				{
 					mChildren = NULL;
 				}
-				return TRUE;
+				return true;
 			}
 			else if (children_itr->first != target_child->mName)
 			{
@@ -256,7 +256,7 @@ BOOL LLXMLNode::removeChild(LLXMLNode *target_child)
 			}
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 void LLXMLNode::addChild(LLXMLNodePtr& new_child)
@@ -317,13 +317,13 @@ LLXMLNodePtr LLXMLNode::createChild(LLStringTableEntry* name, BOOL is_attribute)
 	return ret;
 }
 
-BOOL LLXMLNode::deleteChild(LLXMLNode *child)
+bool LLXMLNode::deleteChild(LLXMLNode *child)
 {
 	if (removeChild(child))
 	{
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 void LLXMLNode::setParent(LLXMLNodePtr& new_parent)
@@ -508,13 +508,13 @@ void XMLCALL EndXMLNode(void *userData,
 	if (LLXMLNode::sStripWhitespaceValues)
 	{
 		std::string value = node->getValue();
-		BOOL is_empty = TRUE;
+		bool is_empty = true;
 		for (std::string::size_type s = 0; s < value.length(); s++)
 		{
 			char c = value[s];
 			if (c != ' ' && c != '\t' && c != '\n')
 			{
-				is_empty = FALSE;
+				is_empty = false;
 				break;
 			}
 		}
@@ -789,18 +789,18 @@ bool LLXMLNode::parseStream(
 }
 
 
-BOOL LLXMLNode::isFullyDefault()
+bool LLXMLNode::isFullyDefault()
 {
 	if (mDefault.isNull())
 	{
-		return FALSE;
+		return false;
 	}
-	BOOL has_default_value = (mValue == mDefault->mValue);
-	BOOL has_default_attribute = (mIsAttribute == mDefault->mIsAttribute);
-	BOOL has_default_type = mIsAttribute || (mType == mDefault->mType);
-	BOOL has_default_encoding = mIsAttribute || (mEncoding == mDefault->mEncoding);
-	BOOL has_default_precision = mIsAttribute || (mPrecision == mDefault->mPrecision);
-	BOOL has_default_length = mIsAttribute || (mLength == mDefault->mLength);
+	bool has_default_value = (mValue == mDefault->mValue);
+	bool has_default_attribute = (mIsAttribute == mDefault->mIsAttribute);
+	bool has_default_type = mIsAttribute || (mType == mDefault->mType);
+	bool has_default_encoding = mIsAttribute || (mEncoding == mDefault->mEncoding);
+	bool has_default_precision = mIsAttribute || (mPrecision == mDefault->mPrecision);
+	bool has_default_length = mIsAttribute || (mLength == mDefault->mLength);
 
 	if (has_default_value 
 		&& has_default_type 
@@ -818,14 +818,14 @@ BOOL LLXMLNode::isFullyDefault()
 				LLXMLNodePtr child = (*children_itr).second;
 				if (!child->isFullyDefault())
 				{
-					return FALSE;
+					return false;
 				}
 			}
 		}
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 // static
@@ -1440,10 +1440,10 @@ const char *LLXMLNode::skipNonWhitespace(const char *str)
 }
 
 /*static */
-const char *LLXMLNode::parseInteger(const char *str, U64 *dest, BOOL *is_negative, U32 precision, Encoding encoding)
+const char *LLXMLNode::parseInteger(const char *str, U64 *dest, bool *is_negative, U32 precision, Encoding encoding)
 {
 	*dest = 0;
-	*is_negative = FALSE;
+	*is_negative = false;
 
 	str = skipWhitespace(str);
 
@@ -1457,7 +1457,7 @@ const char *LLXMLNode::parseInteger(const char *str, U64 *dest, BOOL *is_negativ
 		}
 		if (str[0] == '-')
 		{
-			*is_negative = TRUE;
+			*is_negative = true;
 			++str;
 		}
 
@@ -1658,7 +1658,7 @@ const char *LLXMLNode::parseFloat(const char *str, F64 *dest, U32 precision, Enc
 			// Scientific notation!
 			++str;
 			U64 exp;
-			BOOL is_negative;
+			bool is_negative;
 			str = parseInteger(str, &exp, &is_negative, 64, ENCODING_DECIMAL);
 			if (str == NULL)
 			{
@@ -1682,7 +1682,7 @@ const char *LLXMLNode::parseFloat(const char *str, F64 *dest, U32 precision, Enc
 	if (encoding == ENCODING_HEX)
 	{
 		U64 bytes_dest;
-		BOOL is_negative;
+		bool is_negative;
 		str = parseInteger(str, (U64 *)&bytes_dest, &is_negative, precision, ENCODING_HEX);
 		// Upcast to F64
 		switch (precision)
@@ -1775,7 +1775,7 @@ U32 LLXMLNode::getByteValue(U32 expected_length, U8 *array, Encoding encoding)
 	for (i=0; i<expected_length; ++i)
 	{
 		U64 value;
-		BOOL is_negative;
+		bool is_negative;
 		value_string = parseInteger(value_string, &value, &is_negative, 8, encoding);
 		if (value_string == NULL)
 		{
@@ -1827,7 +1827,7 @@ U32 LLXMLNode::getIntValue(U32 expected_length, S32 *array, Encoding encoding)
 	for (i=0; i<expected_length; ++i)
 	{
 		U64 value;
-		BOOL is_negative;
+		bool is_negative;
 		value_string = parseInteger(value_string, &value, &is_negative, 32, encoding);
 		if (value_string == NULL)
 		{
@@ -1881,7 +1881,7 @@ U32 LLXMLNode::getUnsignedValue(U32 expected_length, U32 *array, Encoding encodi
 	for (i=0; i<expected_length; ++i)
 	{
 		U64 value;
-		BOOL is_negative;
+		bool is_negative;
 		value_string = parseInteger(value_string, &value, &is_negative, 32, encoding);
 		if (value_string == NULL)
 		{
@@ -1935,7 +1935,7 @@ U32 LLXMLNode::getLongValue(U32 expected_length, U64 *array, Encoding encoding)
 	for (i=0; i<expected_length; ++i)
 	{
 		U64 value;
-		BOOL is_negative;
+		bool is_negative;
 		value_string = parseInteger(value_string, &value, &is_negative, 64, encoding);
 		if (value_string == NULL)
 		{
@@ -2619,7 +2619,7 @@ void LLXMLNode::findDefault(LLXMLNode *defaults_list)
 	mDefault = NULL;
 }
 
-BOOL LLXMLNode::deleteChildren(const std::string& name)
+bool LLXMLNode::deleteChildren(const std::string& name)
 {
 	U32 removed_count = 0;
 	LLXMLNodeList node_list;
@@ -2638,10 +2638,10 @@ BOOL LLXMLNode::deleteChildren(const std::string& name)
 			}
 		}
 	}
-	return removed_count > 0 ? TRUE : FALSE;
+	return removed_count > 0 ? true : false;
 }
 
-BOOL LLXMLNode::deleteChildren(LLStringTableEntry* name)
+bool LLXMLNode::deleteChildren(LLStringTableEntry* name)
 {
 	U32 removed_count = 0;
 	LLXMLNodeList node_list;
@@ -2660,7 +2660,7 @@ BOOL LLXMLNode::deleteChildren(LLStringTableEntry* name)
 			}
 		}
 	}
-	return removed_count > 0 ? TRUE : FALSE;
+	return removed_count > 0 ? true : false;
 }
 
 void LLXMLNode::setAttributes(LLXMLNode::ValueType type, U32 precision, LLXMLNode::Encoding encoding, U32 length)
@@ -2926,12 +2926,12 @@ void LLXMLNode::createUnitTest(S32 max_num_children)
 	createChild("float_checksum", TRUE)->setUnsignedValue(1, &float_checksum, LLXMLNode::ENCODING_HEX);
 }
 
-BOOL LLXMLNode::performUnitTest(std::string &error_buffer)
+bool LLXMLNode::performUnitTest(std::string &error_buffer)
 {
 	if (mChildren.isNull())
 	{
 		error_buffer.append(llformat("ERROR Node %s: No children found.\n", mName->mString));
-		return FALSE;
+		return false;
 	}
 
 	// Checksums
@@ -2955,14 +2955,14 @@ BOOL LLXMLNode::performUnitTest(std::string &error_buffer)
 			if (!node->performUnitTest(error_buffer))
 			{
 				error_buffer.append(llformat("Child test failed for %s.\n", mName->mString));
-				//return FALSE;
+				//return false;
 			}
 			continue;
 		}
 		if (node->mLength < 1 || node->mLength > 30)
 		{
 			error_buffer.append(llformat("ERROR Node %s: Invalid array length %d, child %s.\n", mName->mString, node->mLength, node->mName->mString));
-			return FALSE;
+			return false;
 		}
 		switch (node->mType)
 		{
@@ -2975,7 +2975,7 @@ BOOL LLXMLNode::performUnitTest(std::string &error_buffer)
 				if (node->getBoolValue(node->mLength, bool_array) < node->mLength)
 				{
 					error_buffer.append(llformat("ERROR Node %s: Could not read boolean array, child %s.\n", mName->mString, node->mName->mString));
-					return FALSE;
+					return false;
 				}
 				for (U32 pos=0; pos<(U32)node->mLength; ++pos)
 				{
@@ -2994,7 +2994,7 @@ BOOL LLXMLNode::performUnitTest(std::string &error_buffer)
 					if (node->getUnsignedValue(node->mLength, integer_array, node->mEncoding) < node->mLength)
 					{
 						error_buffer.append(llformat("ERROR Node %s: Could not read integer array, child %s.\n", mName->mString, node->mName->mString));
-						return FALSE;
+						return false;
 					}
 					for (U32 pos=0; pos<(U32)node->mLength; ++pos)
 					{
@@ -3007,7 +3007,7 @@ BOOL LLXMLNode::performUnitTest(std::string &error_buffer)
 					if (node->getLongValue(node->mLength, integer_array, node->mEncoding) < node->mLength)
 					{
 						error_buffer.append(llformat("ERROR Node %s: Could not read long integer array, child %s.\n", mName->mString, node->mName->mString));
-						return FALSE;
+						return false;
 					}
 					for (U32 pos=0; pos<(U32)node->mLength; ++pos)
 					{
@@ -3024,7 +3024,7 @@ BOOL LLXMLNode::performUnitTest(std::string &error_buffer)
 					if (node->getFloatValue(node->mLength, float_array, node->mEncoding) < node->mLength)
 					{
 						error_buffer.append(llformat("ERROR Node %s: Could not read float array, child %s.\n", mName->mString, node->mName->mString));
-						return FALSE;
+						return false;
 					}
 					for (U32 pos=0; pos<(U32)node->mLength; ++pos)
 					{
@@ -3038,7 +3038,7 @@ BOOL LLXMLNode::performUnitTest(std::string &error_buffer)
 					if (node->getDoubleValue(node->mLength, float_array, node->mEncoding) < node->mLength)
 					{
 						error_buffer.append(llformat("ERROR Node %s: Could not read float array, child %s.\n", mName->mString, node->mName->mString));
-						return FALSE;
+						return false;
 					}
 					for (U32 pos=0; pos<(U32)node->mLength; ++pos)
 					{
@@ -3056,7 +3056,7 @@ BOOL LLXMLNode::performUnitTest(std::string &error_buffer)
 				if (node->getUUIDValue(node->mLength, uuid_array) < node->mLength)
 				{
 					error_buffer.append(llformat("ERROR Node %s: Could not read uuid array, child %s.\n", mName->mString, node->mName->mString));
-					return FALSE;
+					return false;
 				}
 				for (U32 pos=0; pos<(U32)node->mLength; ++pos)
 				{
@@ -3073,7 +3073,7 @@ BOOL LLXMLNode::performUnitTest(std::string &error_buffer)
 				if (node->getNodeRefValue(node->mLength, node_array) < node->mLength)
 				{
 					error_buffer.append(llformat("ERROR Node %s: Could not read node ref array, child %s.\n", mName->mString, node->mName->mString));
-					return FALSE;
+					return false;
 				}
 				for (U32 pos=0; pos<node->mLength; ++pos)
 				{
