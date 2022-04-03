@@ -253,7 +253,7 @@ void LLFloaterTexturePicker::setActive( BOOL active )
 	mActive = active; 
 }
 
-void LLFloaterTexturePicker::setCanApplyImmediately(BOOL b)
+void LLFloaterTexturePicker::setCanApplyImmediately(bool b)
 {
 	mCanApplyImmediately = b;
 	if (!mCanApplyImmediately)
@@ -1301,7 +1301,7 @@ void LLTextureCtrl::setCaption(const std::string& caption)
 	mCaption->setText( caption );
 }
 
-void LLTextureCtrl::setCanApplyImmediately(BOOL b)
+void LLTextureCtrl::setCanApplyImmediately(bool b)
 {
 	mCanApplyImmediately = b; 
 	LLFloaterTexturePicker* floaterp = (LLFloaterTexturePicker*)mFloaterHandle.get();

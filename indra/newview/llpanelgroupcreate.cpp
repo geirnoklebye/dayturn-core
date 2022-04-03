@@ -85,7 +85,7 @@ bool LLPanelGroupCreate::postBuild()
 
     mInsignia = getChild<LLTextureCtrl>("insignia", TRUE);
     mInsignia->setAllowLocalTexture(FALSE);
-    mInsignia->setCanApplyImmediately(FALSE);
+    mInsignia->setCanApplyImmediately(false);
 
     return true;
 }

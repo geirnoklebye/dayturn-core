@@ -172,7 +172,7 @@ public:
 	void			setOpenTexPreview(bool open_preview) { mOpenTexPreview = open_preview; }
 
 	void			setCaption(const std::string& caption);
-	void			setCanApplyImmediately(BOOL b);
+	void			setCanApplyImmediately(bool b);
 
 	void			setCanApply(bool can_preview, bool can_apply);
 
@@ -307,7 +307,7 @@ public:
 	void updateImageStats();
 	const LLUUID&	getAssetID() { return mImageAssetID; }
 	const LLUUID&	findItemID(const LLUUID& asset_id, BOOL copyable_only, BOOL ignore_library = FALSE);
-	void			setCanApplyImmediately(BOOL b);
+	void			setCanApplyImmediately(bool b);
 
 	void			setActive(BOOL active);
 

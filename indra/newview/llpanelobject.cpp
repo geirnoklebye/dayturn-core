@@ -259,17 +259,17 @@ bool	LLPanelObject::postBuild()
 		LLAggregatePermissions texture_perms;
 		if (LLSelectMgr::getInstance()->selectGetAggregateTexturePermissions(texture_perms))
 		{
-			BOOL can_copy =
+			bool can_copy =
 				texture_perms.getValue(PERM_COPY) == LLAggregatePermissions::AP_EMPTY ||
 				texture_perms.getValue(PERM_COPY) == LLAggregatePermissions::AP_ALL;
-			BOOL can_transfer =
+			bool can_transfer =
 				texture_perms.getValue(PERM_TRANSFER) == LLAggregatePermissions::AP_EMPTY ||
 				texture_perms.getValue(PERM_TRANSFER) == LLAggregatePermissions::AP_ALL;
 			mCtrlSculptTexture->setCanApplyImmediately(can_copy && can_transfer);
 		}
 		else
 		{
-			mCtrlSculptTexture->setCanApplyImmediately(FALSE);
+			mCtrlSculptTexture->setCanApplyImmediately(false);
 		}
 	}
 
@@ -467,7 +467,7 @@ void LLPanelObject::getState( )
 	llassert(!is_permanent || !is_character); // should never have a permanent object that is also a character
 
 	// Lock checkbox - only modifiable if you own the object.
-	BOOL self_owned = (gAgent.getID() == owner_id);
+	bool self_owned = (gAgent.getID() == owner_id);
 	mCheckLock->setEnabled( roots_selected > 0 && self_owned && !is_permanent_enforced);
 
 	// More lock and debit checkbox - get the values

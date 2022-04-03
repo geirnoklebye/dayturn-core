@@ -81,7 +81,7 @@ public:
 	void			setValid(bool valid);
 	void			setLabel(const std::string& label);
 	void			setLabelWidth(S32 label_width) {mLabelWidth =label_width;}
-	void			setCanApplyImmediately(BOOL apply) { mCanApplyImmediately = apply; }
+	void			setCanApplyImmediately(bool apply) { mCanApplyImmediately = apply; }
 	void			setOnCancelCallback(commit_callback_t cb) { mOnCancelCallback = cb; }
 	void			setOnSelectCallback(commit_callback_t cb) { mOnSelectCallback = cb; }
 	void			setPreviewCallback(commit_callback_t cb) { mPreviewCallback = cb; }

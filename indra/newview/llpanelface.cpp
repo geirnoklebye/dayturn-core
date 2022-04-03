@@ -253,7 +253,7 @@ bool	LLPanelFace::postBuild()
 		mColorSwatch->setOnSelectCallback(boost::bind(&LLPanelFace::onSelectColor, this, _2));
 		mColorSwatch->setFollowsTop();
 		mColorSwatch->setFollowsLeft();
-		mColorSwatch->setCanApplyImmediately(TRUE);
+		mColorSwatch->setCanApplyImmediately(true);
 	}
 
 	mShinyColorSwatch = getChild<LLColorSwatchCtrl>("shinycolorswatch");
@@ -264,7 +264,7 @@ bool	LLPanelFace::postBuild()
 		mShinyColorSwatch->setOnSelectCallback(boost::bind(&LLPanelFace::onSelectShinyColor, this, _2));
 		mShinyColorSwatch->setFollowsTop();
 		mShinyColorSwatch->setFollowsLeft();
-		mShinyColorSwatch->setCanApplyImmediately(TRUE);
+		mShinyColorSwatch->setCanApplyImmediately(true);
 	}
 
 	mLabelColorTransp = getChild<LLTextBox>("color trans");
