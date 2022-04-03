@@ -118,14 +118,14 @@ LLAgentCamera::LLAgentCamera() :
 	mHUDTargetZoom(1.f),
 	mHUDCurZoom(1.f),
 
-	mForceMouselook(FALSE),
+	mForceMouselook(false),
 
 	mCameraMode( CAMERA_MODE_THIRD_PERSON ),
 	mLastCameraMode( CAMERA_MODE_THIRD_PERSON ),
 
 	mCameraPreset(CAMERA_PRESET_REAR_VIEW),
 
-	mCameraAnimating( FALSE ),
+	mCameraAnimating(false),
 	mAnimationCameraStartGlobal(),
 	mAnimationFocusStartGlobal(),
 	mAnimationTimer(),
@@ -1418,7 +1418,7 @@ void LLAgentCamera::updateCamera()
 		else
 		{
 			// ...animation complete
-			mCameraAnimating = FALSE;
+			mCameraAnimating = false;
 
 			camera_pos_global = camera_target_global;
 			mFocusGlobal = focus_target_global;
@@ -2236,7 +2236,7 @@ void LLAgentCamera::changeCameraToMouselook(bool animate)
 		}
 		else
 		{
-			mCameraAnimating = FALSE;
+			mCameraAnimating = false;
 			gAgent.endAnimationUpdateUI();
 		}
 	}
@@ -2318,7 +2318,7 @@ void LLAgentCamera::changeCameraToFollow(bool animate)
 		}
 		else
 		{
-			mCameraAnimating = FALSE;
+			mCameraAnimating = false;
 			gAgent.endAnimationUpdateUI();
 		}
 	}
@@ -2390,7 +2390,7 @@ void LLAgentCamera::changeCameraToThirdPerson(bool animate)
 	}
 	else
 	{
-		mCameraAnimating = FALSE;
+		mCameraAnimating = false;
 		gAgent.endAnimationUpdateUI();
 	}
 }
@@ -2508,7 +2508,7 @@ void LLAgentCamera::startCameraAnimation()
 	mAnimationFocusStartGlobal = mFocusGlobal;
 	setAnimationDuration(gSavedSettings.getF32("ZoomTime"));
 	mAnimationTimer.reset();
-	mCameraAnimating = TRUE;
+	mCameraAnimating = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -2516,7 +2516,7 @@ void LLAgentCamera::startCameraAnimation()
 //-----------------------------------------------------------------------------
 void LLAgentCamera::stopCameraAnimation()
 {
-	mCameraAnimating = FALSE;
+	mCameraAnimating = false;
 }
 
 void LLAgentCamera::clearFocusObject()

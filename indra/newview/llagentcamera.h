@@ -197,15 +197,15 @@ private:
 	// Animation
 	//--------------------------------------------------------------------
 public:
-	void			setCameraAnimating(BOOL b)			{ mCameraAnimating = b; }
-	BOOL			getCameraAnimating()				{ return mCameraAnimating; }
+	void			setCameraAnimating(bool b)			{ mCameraAnimating = b; }
+	bool			getCameraAnimating()				{ return mCameraAnimating; }
 	void			setAnimationDuration(F32 seconds);
 	void			startCameraAnimation();
 	void			stopCameraAnimation();
 private:
 	LLFrameTimer	mAnimationTimer; 	// Seconds that transition animation has been active
 	F32				mAnimationDuration;	// In seconds
-	BOOL			mCameraAnimating;					// Camera is transitioning from one mode to another
+	bool			mCameraAnimating;					// Camera is transitioning from one mode to another
 	LLVector3d		mAnimationCameraStartGlobal;		// Camera start position, global coords
 	LLVector3d		mAnimationFocusStartGlobal;			// Camera focus point, global coords
 
@@ -317,10 +317,10 @@ public:
 	// Mouselook
 	//--------------------------------------------------------------------
 public:
-	BOOL			getForceMouselook() const 			{ return mForceMouselook; }
-	void			setForceMouselook(BOOL mouselook) 	{ mForceMouselook = mouselook; }
+	bool			getForceMouselook() const 			{ return mForceMouselook; }
+	void			setForceMouselook(bool mouselook) 	{ mForceMouselook = mouselook; }
 private:
-	BOOL			mForceMouselook;
+	bool			mForceMouselook;
 	
 	//--------------------------------------------------------------------
 	// HUD
