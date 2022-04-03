@@ -204,7 +204,7 @@ void ColladaExportFloater::onClickExport()
 	}
 	mFilename = file_picker.getFirstFile();
 	
-	if (gSavedSettings.getBOOL("DAEExportTextures"))
+	if (gSavedSettings.getbool("DAEExportTextures"))
 	{
 		saveTextures();
 	}
@@ -216,7 +216,7 @@ void ColladaExportFloater::onClickExport()
 
 void ColladaExportFloater::onTextureExportCheck()
 {
-	bool show_tex_panel = (gSavedSettings.getBOOL("DAEExportTextures") && mNumExportableTextures);
+	bool show_tex_panel = (gSavedSettings.getbool("DAEExportTextures") && mNumExportableTextures);
 	
 	getChild<LLPanel>("tex_layout_panel")->setVisible(show_tex_panel);
 	if (show_tex_panel)
@@ -756,7 +756,7 @@ bool DAESaver::saveDAE(std::string filename)
 	scene->setAttribute("id", "Scene");
 	scene->setAttribute("name", "Scene");
 
-	if (gSavedSettings.getBOOL("DAEExportTextures"))
+	if (gSavedSettings.getbool("DAEExportTextures"))
 	{
 		generateImagesSection(images);
 	}
@@ -780,7 +780,7 @@ bool DAESaver::saveDAE(std::string filename)
 		std::vector<F32> position_data;
 		std::vector<F32> normal_data;
 		std::vector<F32> uv_data;
-		bool applyTexCoord = gSavedSettings.getBOOL("DAEExportTextureParams");
+		bool applyTexCoord = gSavedSettings.getbool("DAEExportTextureParams");
 
 		S32 num_faces = obj->getVolume()->getNumVolumeFaces();
 		for (S32 face_num = 0; face_num < num_faces; face_num++)
@@ -852,7 +852,7 @@ bool DAESaver::saveDAE(std::string filename)
 		getMaterials(obj, &objMaterials);
 
 		// Add triangles
-		if (gSavedSettings.getBOOL("DAEExportConsolidateMaterials"))
+		if (gSavedSettings.getbool("DAEExportConsolidateMaterials"))
 		{
 			for (S32 objMaterial = 0; objMaterial < objMaterials.size(); objMaterial++)
 			{
@@ -928,13 +928,13 @@ bool DAESaver::saveDAE(std::string filename)
 
 bool DAESaver::skipFace(LLTextureEntry *te)
 {
-	return (gSavedSettings.getBOOL("DAEExportSkipTransparent")
+	return (gSavedSettings.getbool("DAEExportSkipTransparent")
 		&& (te->getColor().mV[3] < 0.01f || te->getID() == DAEExportUtil::LL_TEXTURE_TRANSPARENT));
 }
 
 DAESaver::MaterialInfo DAESaver::getMaterial(LLTextureEntry* te)
 {
-	if (gSavedSettings.getBOOL("DAEExportConsolidateMaterials"))
+	if (gSavedSettings.getbool("DAEExportConsolidateMaterials"))
 	{
 		for (S32 i=0; i < mAllMaterials.size(); i++)
 		{
@@ -963,7 +963,7 @@ void DAESaver::getMaterials(LLViewerObject* obj, material_list_t* ret)
 		if (skipFace(te)) continue;
 
 		MaterialInfo mat = getMaterial(te);
-		if (!gSavedSettings.getBOOL("DAEExportConsolidateMaterials")
+		if (!gSavedSettings.getbool("DAEExportConsolidateMaterials")
 			|| std::find(ret->begin(), ret->end(), mat) == ret->end())
 		{
 			ret->push_back(mat);
@@ -986,7 +986,7 @@ void DAESaver::getFacesWithMaterial(LLViewerObject* obj, MaterialInfo& mat, int_
 void DAESaver::generateEffects(daeElement *effects)
 {
 	// Effects (face color, alpha)
-	bool export_textures = gSavedSettings.getBOOL("DAEExportTextures");
+	bool export_textures = gSavedSettings.getbool("DAEExportTextures");
 
 	for (S32 mat = 0; mat < mAllMaterials.size(); mat++)
 	{
