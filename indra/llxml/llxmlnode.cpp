@@ -193,7 +193,7 @@ LLXMLNode::~LLXMLNode()
 	mDefault = NULL;
 }
 
-BOOL LLXMLNode::isNull()
+bool LLXMLNode::isNull()
 {	
 	return (mName == NULL);
 }
@@ -1289,19 +1289,19 @@ bool LLXMLNode::getAttribute_bool(const char* name, bool& value )
     return retval;
 }
 
-BOOL LLXMLNode::getAttributeBOOL(const char* name, BOOL& value )
+bool LLXMLNode::getAttributeBOOL(const char* name, BOOL& value )
 {
 	LLXMLNodePtr node;
 	return (getAttribute(name, node) && node->getBoolValue(1, &value));
 }
 
-BOOL LLXMLNode::getAttributeU8(const char* name, U8& value )
+bool LLXMLNode::getAttributeU8(const char* name, U8& value )
 {
 	LLXMLNodePtr node;
 	return (getAttribute(name, node) && node->getByteValue(1, &value));
 }
 
-BOOL LLXMLNode::getAttributeS8(const char* name, S8& value )
+bool LLXMLNode::getAttributeS8(const char* name, S8& value )
 {
 	LLXMLNodePtr node;
 	S32 val;
@@ -1313,7 +1313,7 @@ BOOL LLXMLNode::getAttributeS8(const char* name, S8& value )
 	return true;
 }
 
-BOOL LLXMLNode::getAttributeU16(const char* name, U16& value )
+bool LLXMLNode::getAttributeU16(const char* name, U16& value )
 {
 	LLXMLNodePtr node;
 	U32 val;
@@ -1325,7 +1325,7 @@ BOOL LLXMLNode::getAttributeU16(const char* name, U16& value )
 	return true;
 }
 
-BOOL LLXMLNode::getAttributeS16(const char* name, S16& value )
+bool LLXMLNode::getAttributeS16(const char* name, S16& value )
 {
 	LLXMLNodePtr node;
 	S32 val;
@@ -1337,73 +1337,73 @@ BOOL LLXMLNode::getAttributeS16(const char* name, S16& value )
 	return true;
 }
 
-BOOL LLXMLNode::getAttributeU32(const char* name, U32& value )
+bool LLXMLNode::getAttributeU32(const char* name, U32& value )
 {
 	LLXMLNodePtr node;
 	return (getAttribute(name, node) && node->getUnsignedValue(1, &value));
 }
 
-BOOL LLXMLNode::getAttributeS32(const char* name, S32& value )
+bool LLXMLNode::getAttributeS32(const char* name, S32& value )
 {
 	LLXMLNodePtr node;
 	return (getAttribute(name, node) && node->getIntValue(1, &value));
 }
 
-BOOL LLXMLNode::getAttributeF32(const char* name, F32& value )
+bool LLXMLNode::getAttributeF32(const char* name, F32& value )
 {
 	LLXMLNodePtr node;
 	return (getAttribute(name, node) && node->getFloatValue(1, &value));
 }
 
-BOOL LLXMLNode::getAttributeF64(const char* name, F64& value )
+bool LLXMLNode::getAttributeF64(const char* name, F64& value )
 {
 	LLXMLNodePtr node;
 	return (getAttribute(name, node) && node->getDoubleValue(1, &value));
 }
 
-BOOL LLXMLNode::getAttributeColor(const char* name, LLColor4& value )
+bool LLXMLNode::getAttributeColor(const char* name, LLColor4& value )
 {
 	LLXMLNodePtr node;
 	return (getAttribute(name, node) && node->getFloatValue(4, value.mV));
 }
 
-BOOL LLXMLNode::getAttributeColor4(const char* name, LLColor4& value )
+bool LLXMLNode::getAttributeColor4(const char* name, LLColor4& value )
 {
 	LLXMLNodePtr node;
 	return (getAttribute(name, node) && node->getFloatValue(4, value.mV));
 }
 
-BOOL LLXMLNode::getAttributeColor4U(const char* name, LLColor4U& value )
+bool LLXMLNode::getAttributeColor4U(const char* name, LLColor4U& value )
 {
 	LLXMLNodePtr node;
 	return (getAttribute(name, node) && node->getByteValue(4, value.mV));
 }
 
-BOOL LLXMLNode::getAttributeVector3(const char* name, LLVector3& value )
+bool LLXMLNode::getAttributeVector3(const char* name, LLVector3& value )
 {
 	LLXMLNodePtr node;
 	return (getAttribute(name, node) && node->getFloatValue(3, value.mV));
 }
 
-BOOL LLXMLNode::getAttributeVector3d(const char* name, LLVector3d& value )
+bool LLXMLNode::getAttributeVector3d(const char* name, LLVector3d& value )
 {
 	LLXMLNodePtr node;
 	return (getAttribute(name, node) && node->getDoubleValue(3, value.mdV));
 }
 
-BOOL LLXMLNode::getAttributeQuat(const char* name, LLQuaternion& value )
+bool LLXMLNode::getAttributeQuat(const char* name, LLQuaternion& value )
 {
 	LLXMLNodePtr node;
 	return (getAttribute(name, node) && node->getFloatValue(4, value.mQ));
 }
 
-BOOL LLXMLNode::getAttributeUUID(const char* name, LLUUID& value )
+bool LLXMLNode::getAttributeUUID(const char* name, LLUUID& value )
 {
 	LLXMLNodePtr node;
 	return (getAttribute(name, node) && node->getUUIDValue(1, &value));
 }
 
-BOOL LLXMLNode::getAttributeString(const char* name, std::string& value )
+bool LLXMLNode::getAttributeString(const char* name, std::string& value )
 {
 	LLXMLNodePtr node;
 	if (!getAttribute(name, node))
@@ -3098,12 +3098,12 @@ bool LLXMLNode::performUnitTest(std::string &error_buffer)
 			checksum_node->getUnsignedValue(1, &node_integer_checksum, ENCODING_HEX) != 1)
 		{
 			error_buffer.append(llformat("ERROR Node %s: Integer checksum missing.\n", mName->mString));
-			return FALSE;
+			return false;
 		}
 		if (node_integer_checksum != integer_checksum)
 		{
 			error_buffer.append(llformat("ERROR Node %s: Integer checksum mismatch: read %X / calc %X.\n", mName->mString, node_integer_checksum, integer_checksum));
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -3113,14 +3113,14 @@ bool LLXMLNode::performUnitTest(std::string &error_buffer)
 			checksum_node->getLongValue(1, &node_long_checksum, ENCODING_HEX) != 1)
 		{
 			error_buffer.append(llformat("ERROR Node %s: Long Integer checksum missing.\n", mName->mString));
-			return FALSE;
+			return false;
 		}
 		if (node_long_checksum != long_checksum)
 		{
 			U32 *pp1 = (U32 *)&node_long_checksum;
 			U32 *pp2 = (U32 *)&long_checksum;
 			error_buffer.append(llformat("ERROR Node %s: Long Integer checksum mismatch: read %08X%08X / calc %08X%08X.\n", mName->mString, pp1[1], pp1[0], pp2[1], pp2[0]));
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -3130,12 +3130,12 @@ bool LLXMLNode::performUnitTest(std::string &error_buffer)
 			checksum_node->getUnsignedValue(1, &node_bool_true_count, ENCODING_HEX) != 1)
 		{
 			error_buffer.append(llformat("ERROR Node %s: Boolean checksum missing.\n", mName->mString));
-			return FALSE;
+			return false;
 		}
 		if (node_bool_true_count != bool_true_count)
 		{
 			error_buffer.append(llformat("ERROR Node %s: Boolean checksum mismatch: read %X / calc %X.\n", mName->mString, node_bool_true_count, bool_true_count));
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -3145,12 +3145,12 @@ bool LLXMLNode::performUnitTest(std::string &error_buffer)
 			checksum_node->getUUIDValue(1, &node_uuid_checksum) != 1)
 		{
 			error_buffer.append(llformat("ERROR Node %s: UUID checksum missing.\n", mName->mString));
-			return FALSE;
+			return false;
 		}
 		if (node_uuid_checksum != uuid_checksum)
 		{
 			error_buffer.append(llformat("ERROR Node %s: UUID checksum mismatch: read %s / calc %s.\n", mName->mString, node_uuid_checksum.asString().c_str(), uuid_checksum.asString().c_str()));
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -3160,12 +3160,12 @@ bool LLXMLNode::performUnitTest(std::string &error_buffer)
 			checksum_node->getUnsignedValue(1, &node_noderef_checksum, ENCODING_HEX) != 1)
 		{
 			error_buffer.append(llformat("ERROR Node %s: Node Ref checksum missing.\n", mName->mString));
-			return FALSE;
+			return false;
 		}
 		if (node_noderef_checksum != noderef_checksum)
 		{
 			error_buffer.append(llformat("ERROR Node %s: Node Ref checksum mismatch: read %X / calc %X.\n", mName->mString, node_noderef_checksum, noderef_checksum));
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -3175,16 +3175,16 @@ bool LLXMLNode::performUnitTest(std::string &error_buffer)
 			checksum_node->getUnsignedValue(1, &node_float_checksum, ENCODING_HEX) != 1)
 		{
 			error_buffer.append(llformat("ERROR Node %s: Float checksum missing.\n", mName->mString));
-			return FALSE;
+			return false;
 		}
 		if (node_float_checksum != float_checksum)
 		{
 			error_buffer.append(llformat("ERROR Node %s: Float checksum mismatch: read %X / calc %X.\n", mName->mString, node_float_checksum, float_checksum));
-			return FALSE;
+			return false;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 LLXMLNodePtr LLXMLNode::getFirstChild() const

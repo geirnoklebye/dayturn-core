@@ -123,7 +123,7 @@ public:
 	LLXMLNode(const LLXMLNode& rhs);
 	LLXMLNodePtr deepCopy();
 
-	BOOL isNull();
+	bool isNull();
 
 	bool deleteChild(LLXMLNode* child);
     void addChild(LLXMLNodePtr& new_child); 
@@ -189,23 +189,23 @@ public:
     // rather than relying on LL-types
     bool getAttribute_bool(const char* name, bool& value ); 
 
-	BOOL getAttributeBOOL(const char* name, BOOL& value );
-	BOOL getAttributeU8(const char* name, U8& value );
-	BOOL getAttributeS8(const char* name, S8& value );
-	BOOL getAttributeU16(const char* name, U16& value );
-	BOOL getAttributeS16(const char* name, S16& value );
-	BOOL getAttributeU32(const char* name, U32& value );
-	BOOL getAttributeS32(const char* name, S32& value );
-	BOOL getAttributeF32(const char* name, F32& value );
-	BOOL getAttributeF64(const char* name, F64& value );
-	BOOL getAttributeColor(const char* name, LLColor4& value );
-	BOOL getAttributeColor4(const char* name, LLColor4& value );
-	BOOL getAttributeColor4U(const char* name, LLColor4U& value );
-	BOOL getAttributeVector3(const char* name, LLVector3& value );
-	BOOL getAttributeVector3d(const char* name, LLVector3d& value );
-	BOOL getAttributeQuat(const char* name, LLQuaternion& value );
-	BOOL getAttributeUUID(const char* name, LLUUID& value );
-	BOOL getAttributeString(const char* name, std::string& value );
+	bool getAttributeBOOL(const char* name, BOOL& value );
+	bool getAttributeU8(const char* name, U8& value );
+	bool getAttributeS8(const char* name, S8& value );
+	bool getAttributeU16(const char* name, U16& value );
+	bool getAttributeS16(const char* name, S16& value );
+	bool getAttributeU32(const char* name, U32& value );
+	bool getAttributeS32(const char* name, S32& value );
+	bool getAttributeF32(const char* name, F32& value );
+	bool getAttributeF64(const char* name, F64& value );
+	bool getAttributeColor(const char* name, LLColor4& value );
+	bool getAttributeColor4(const char* name, LLColor4& value );
+	bool getAttributeColor4U(const char* name, LLColor4U& value );
+	bool getAttributeVector3(const char* name, LLVector3& value );
+	bool getAttributeVector3d(const char* name, LLVector3d& value );
+	bool getAttributeQuat(const char* name, LLQuaternion& value );
+	bool getAttributeUUID(const char* name, LLUUID& value );
+	bool getAttributeString(const char* name, std::string& value );
 
     const ValueType& getType() const { return mType; }
     U32 getLength() const { return mLength; }
