@@ -136,7 +136,7 @@ void LLVOGrass::initClass()
 		F32 F32_val;
 		LLUUID id;
 
-		BOOL success = TRUE;
+		bool success = true;
 
 		S32 species;
 		static LLStdStringHandle species_id_string = LLXmlTree::addAttributeString("species_id");
@@ -189,7 +189,7 @@ void LLVOGrass::initClass()
 		}
 	}
 
-	BOOL have_all_grass = TRUE;
+	bool have_all_grass = true;
 	std::string err;
 
 	for (S32 i=0;i<sMaxGrassSpecies;++i)
@@ -197,7 +197,7 @@ void LLVOGrass::initClass()
 		if (!sSpeciesTable.count(i))
 		{
 			err.append(llformat(" %d",i));
-			have_all_grass = FALSE;
+			have_all_grass = false;
 		}
 	}
 

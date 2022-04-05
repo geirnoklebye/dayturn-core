@@ -135,7 +135,7 @@ void LLVOTree::initClass()
 			LLUUID id;
 			S32 S32_val;
 
-			BOOL success = TRUE;
+			bool success = true;
 
 
 
@@ -250,7 +250,7 @@ void LLVOTree::initClass()
 			}
 		}
 		
-		BOOL have_all_trees = TRUE;
+		bool have_all_trees = true;
 		std::string err;
 
 		for (S32 i=0;i<sMaxTreeSpecies;++i)
@@ -258,7 +258,7 @@ void LLVOTree::initClass()
 			if (!sSpeciesTable.count(i))
 			{
 				err.append(llformat(" %d",i));
-				have_all_trees = FALSE;
+				have_all_trees = false;
 			}
 		}
 
