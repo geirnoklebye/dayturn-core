@@ -213,7 +213,7 @@ public:
 	
 	LLAvatarAppearance*			getAvatarAppearance()	const		{ return mAvatarAppearance; }
 	const std::string			getBodyRegionName() const;
-	BOOL						hasComposite() const 		{ return (mComposite.notNull()); }
+	bool						hasComposite() const 		{ return (mComposite.notNull()); }
 	LLAvatarAppearanceDefines::EBakedTextureIndex getBakedTexIndex() const { return mBakedTexIndex; }
 	void						setBakedTexIndex(LLAvatarAppearanceDefines::EBakedTextureIndex index) { mBakedTexIndex = index; }
 	bool						isVisible() const 			{ return mIsVisible; }

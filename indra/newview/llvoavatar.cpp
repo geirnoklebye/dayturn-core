@@ -8080,9 +8080,9 @@ S32 LLVOAvatar::getAttachmentCount()
 	return count;
 }
 
-BOOL LLVOAvatar::isWearingWearableType(LLWearableType::EType type) const
+bool LLVOAvatar::isWearingWearableType(LLWearableType::EType type) const
 {
-	if (mIsDummy) return TRUE;
+	if (mIsDummy) return true;
 
 	if (isSelf())
 	{
@@ -8095,7 +8095,7 @@ BOOL LLVOAvatar::isWearingWearableType(LLWearableType::EType type) const
 		case LLWearableType::WT_SKIN:
 		case LLWearableType::WT_HAIR:
 		case LLWearableType::WT_EYES:
-			return TRUE;  // everyone has all bodyparts
+			return true;  // everyone has all bodyparts
 		default:
 			break; // Do nothing
 	}
@@ -8116,10 +8116,10 @@ BOOL LLVOAvatar::isWearingWearableType(LLWearableType::EType type) const
 				const EBakedTextureIndex baked_index = texture_dict->mBakedTextureIndex;
 				return isTextureDefined(LLAvatarAppearance::getDictionary()->getBakedTexture(baked_index)->mTextureIndex);
 			}
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 LLViewerObject *	LLVOAvatar::findAttachmentByID( const LLUUID & target_id ) const
@@ -9777,7 +9777,7 @@ LLViewerTexture* LLVOAvatar::getBakedTexture(const U8 te)
 		return NULL;
 	}
 
-	BOOL is_layer_baked = isTextureDefined(mBakedTextureDatas[te].mTextureIndex);
+	bool is_layer_baked = isTextureDefined(mBakedTextureDatas[te].mTextureIndex);
 	
 	LLViewerTexLayerSet* layerset = NULL;
 	layerset = getTexLayerSet(te);
@@ -11539,17 +11539,17 @@ F32 calc_bouncy_animation(F32 x)
 }
 
 //virtual
-BOOL LLVOAvatar::isTextureDefined(LLAvatarAppearanceDefines::ETextureIndex te, U32 index ) const
+bool LLVOAvatar::isTextureDefined(LLAvatarAppearanceDefines::ETextureIndex te, U32 index ) const
 {
 	if (isIndexLocalTexture(te)) 
 	{
-		return FALSE;
+		return false;
 	}
 	
 	if( !getImage( te, index ) )
 	{
 		LL_WARNS() << "getImage( " << te << ", " << index << " ) returned 0" << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 
 	// <FS:ND> getImage(te, index) can return 0 in some edge cases. Plus make this faster as it gets called frequently.
@@ -11563,7 +11563,7 @@ BOOL LLVOAvatar::isTextureDefined(LLAvatarAppearanceDefines::ETextureIndex te, U
 	if( !pImage )
 	{
 		LL_WARNS() << "getImage( " << (S32)te << ", " << index << " ) returned invalid ptr" << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 	// </FS:ND>
 

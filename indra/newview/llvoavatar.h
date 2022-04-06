@@ -648,7 +648,7 @@ public:
 	// Loading status
 	//--------------------------------------------------------------------
 public:
-	virtual BOOL    isTextureDefined(LLAvatarAppearanceDefines::ETextureIndex type, U32 index = 0) const;
+	virtual bool    isTextureDefined(LLAvatarAppearanceDefines::ETextureIndex type, U32 index = 0) const;
 	virtual BOOL	isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type, U32 index = 0) const;
 	virtual BOOL	isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type, LLViewerWearable *wearable) const;
 
@@ -865,7 +865,7 @@ public:
 	static bool		    getRiggedMeshID( LLViewerObject* pVO, LLUUID& mesh_id );
 	void				cleanupAttachedMesh( LLViewerObject* pVO );
 	static LLVOAvatar*  findAvatarFromAttachment(LLViewerObject* obj);
-	/*virtual*/ BOOL	isWearingWearableType(LLWearableType::EType type ) const;
+	/*virtual*/ bool	isWearingWearableType(LLWearableType::EType type ) const;
 	LLViewerObject *	findAttachmentByID( const LLUUID & target_id ) const;
 	LLViewerJointAttachment* getTargetAttachmentPoint(LLViewerObject* viewer_object);
 

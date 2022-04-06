@@ -69,7 +69,7 @@ protected:
 	LLTexLayerSet*				mLayerSet;		// ptr to a layer set owned by the avatar
 	U32 						mTestImageName;		// handle to a temporary texture for previewing uploads
 	LLPolyMesh*					mMesh;			// ptr to a global polymesh
-	BOOL						mCullBackFaces;	// true by default
+	bool						mCullBackFaces;	// true by default
 	LLFace*						mFace;			// ptr to a face w/ AGP copy of mesh
 
 	U32							mFaceIndexCount;
@@ -104,14 +104,14 @@ public:
 	// Sets the shape texture
 	void setTexture( LLGLTexture *texture );
 
-	BOOL hasGLTexture() const;
+	bool hasGLTexture() const;
 
 	void setTestTexture( U32 name ) { mTestImageName = name; }
 
 	// Sets layer set responsible for a dynamic shape texture (takes precedence over normal texture)
 	void setLayerSet( LLTexLayerSet* layer_set );
 
-	BOOL hasComposite() const;
+	bool hasComposite() const;
 
 	// Gets the poly mesh
 	LLPolyMesh *getMesh();
@@ -135,7 +135,7 @@ public:
 
 private:
 	// Allocate skin data
-	BOOL allocateSkinData( U32 numSkinJoints );
+	bool allocateSkinData( U32 numSkinJoints );
 
 	// Free skin data
 	void freeSkinData();

@@ -310,8 +310,8 @@ public:
 public:
 	LLWearableData*			getWearableData() { return mWearableData; }
 	const LLWearableData*	getWearableData() const { return mWearableData; }
-	virtual BOOL isTextureDefined(LLAvatarAppearanceDefines::ETextureIndex te, U32 index = 0 ) const = 0;
-	virtual BOOL			isWearingWearableType(LLWearableType::EType type ) const;
+	virtual bool isTextureDefined(LLAvatarAppearanceDefines::ETextureIndex te, U32 index = 0 ) const = 0;
+	virtual bool			isWearingWearableType(LLWearableType::EType type ) const;
 
 private:
 	LLWearableData* mWearableData;

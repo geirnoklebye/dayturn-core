@@ -4902,8 +4902,8 @@ BOOL LLVOVolume::lineSegmentIntersect(const LLVector4a& start, const LLVector4a&
 					}
 				}
 
-                BOOL no_texture = !face->getTexture() || !face->getTexture()->hasGLTexture();
-                BOOL mask       = no_texture ? FALSE : face->getTexture()->getMask(face->surfaceToTexture(tc, p, n));
+                bool no_texture = !face->getTexture() || !face->getTexture()->hasGLTexture();
+                bool mask       = no_texture ? false : face->getTexture()->getMask(face->surfaceToTexture(tc, p, n));
 				if (face &&
 					(ignore_alpha || pick_transparent || no_texture || mask))
 				{

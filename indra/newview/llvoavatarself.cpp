@@ -1516,10 +1516,10 @@ BOOL LLVOAvatarSelf::isAllLocalTextureDataFinal() const
 	return TRUE;
 }
 
-BOOL LLVOAvatarSelf::isTextureDefined(LLAvatarAppearanceDefines::ETextureIndex type, U32 index) const
+bool LLVOAvatarSelf::isTextureDefined(LLAvatarAppearanceDefines::ETextureIndex type, U32 index) const
 {
 	LLUUID id;
-	BOOL isDefined = TRUE;
+	bool isDefined = true;
 	if (isIndexLocalTexture(type))
 	{
 		const LLWearableType::EType wearable_type = sAvatarDictionary->getTEWearableType(type);
@@ -1644,7 +1644,7 @@ void LLVOAvatarSelf::setupComposites()
 	for (U32 i = 0; i < mBakedTextureDatas.size(); i++)
 	{
 		ETextureIndex tex_index = mBakedTextureDatas[i].mTextureIndex;
-		BOOL layer_baked = isTextureDefined(tex_index, gAgentWearables.getWearableCount(tex_index));
+		bool layer_baked = isTextureDefined(tex_index, gAgentWearables.getWearableCount(tex_index));
 		LLViewerTexLayerSet *layerset = getTexLayerSet(i);
 		if (layerset)
 		{

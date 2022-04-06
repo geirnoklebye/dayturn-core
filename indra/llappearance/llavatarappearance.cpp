@@ -1568,7 +1568,7 @@ LLColor4 LLAvatarAppearance::getGlobalColor( const std::string& color_name ) con
 
 // Unlike most wearable functions, this works for both self and other.
 // virtual
-BOOL LLAvatarAppearance::isWearingWearableType(LLWearableType::EType type) const
+bool LLAvatarAppearance::isWearingWearableType(LLWearableType::EType type) const
 {
 	return mWearableData->getWearableCount(type) > 0;
 }
