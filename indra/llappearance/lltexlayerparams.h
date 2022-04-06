@@ -48,7 +48,7 @@ class LLTexLayerParam : public LLViewerVisualParam
 public: 
 	LLTexLayerParam(LLTexLayerInterface *layer);
 	LLTexLayerParam(LLAvatarAppearance *appearance);
-	/*virtual*/ BOOL setInfo(LLViewerVisualParamInfo *info, BOOL add_to_appearance);
+	/*virtual*/ bool setInfo(LLViewerVisualParamInfo *info, bool add_to_appearance);
 	/*virtual*/ LLViewerVisualParam* cloneParam(LLWearable* wearable) const = 0;
 
 protected:
@@ -90,9 +90,9 @@ public:
 
 	// New functions
 	bool					render( S32 x, S32 y, S32 width, S32 height );
-	BOOL					getSkip() const;
+	bool					getSkip() const;
 	void					deleteCaches();
-	BOOL					getMultiplyBlend() const;
+	bool					getMultiplyBlend() const;
 
 private:
 	LLTexLayerParamAlpha(const LLTexLayerParamAlpha& pOther);
@@ -100,8 +100,8 @@ private:
 	LLPointer<LLGLTexture>	mCachedProcessedTexture;
 	LLPointer<LLImageTGA>	mStaticImageTGA;
 	LLPointer<LLImageRaw>	mStaticImageRaw;
-	BOOL					mNeedsCreateTexture;
-	BOOL					mStaticImageInvalid;
+	bool					mNeedsCreateTexture;
+	bool					mStaticImageInvalid;
 	LL_ALIGN_16(LLVector4a				mAvgDistortionVec);
 	F32						mCachedEffectiveWeight;
 

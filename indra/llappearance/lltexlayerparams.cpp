@@ -69,7 +69,7 @@ LLTexLayerParam::LLTexLayerParam(const LLTexLayerParam& pOther)
 {
 }
 
-BOOL LLTexLayerParam::setInfo(LLViewerVisualParamInfo *info, BOOL add_to_appearance)
+bool LLTexLayerParam::setInfo(LLViewerVisualParamInfo *info, bool add_to_appearance)
 {
 	LLViewerVisualParam::setInfo(info);
 
@@ -79,7 +79,7 @@ BOOL LLTexLayerParam::setInfo(LLViewerVisualParamInfo *info, BOOL add_to_appeara
 		this->setParamLocation(mAvatarAppearance->isSelf() ? LOC_AV_SELF : LOC_AV_OTHER);
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -125,8 +125,8 @@ LLTexLayerParamAlpha::LLTexLayerParamAlpha(LLTexLayerInterface* layer)
 	mCachedProcessedTexture(NULL),
 	mStaticImageTGA(),
 	mStaticImageRaw(),
-	mNeedsCreateTexture(FALSE),
-	mStaticImageInvalid(FALSE),
+	mNeedsCreateTexture(false),
+	mStaticImageInvalid(false),
 	mAvgDistortionVec(1.f, 1.f, 1.f),
 	mCachedEffectiveWeight(0.f)
 {
@@ -138,8 +138,8 @@ LLTexLayerParamAlpha::LLTexLayerParamAlpha(LLAvatarAppearance* appearance)
 	mCachedProcessedTexture(NULL),
 	mStaticImageTGA(),
 	mStaticImageRaw(),
-	mNeedsCreateTexture(FALSE),
-	mStaticImageInvalid(FALSE),
+	mNeedsCreateTexture(false),
+	mStaticImageInvalid(false),
 	mAvgDistortionVec(1.f, 1.f, 1.f),
 	mCachedEffectiveWeight(0.f)
 {
@@ -175,10 +175,10 @@ void LLTexLayerParamAlpha::deleteCaches()
 	mStaticImageTGA = NULL; // deletes image
 	mCachedProcessedTexture = NULL;
 	mStaticImageRaw = NULL;
-	mNeedsCreateTexture = FALSE;
+	mNeedsCreateTexture = false;
 }
 
-BOOL LLTexLayerParamAlpha::getMultiplyBlend() const
+bool LLTexLayerParamAlpha::getMultiplyBlend() const
 {
 	return ((LLTexLayerParamAlphaInfo *)getInfo())->mMultiplyBlend; 	
 }
@@ -233,11 +233,11 @@ void LLTexLayerParamAlpha::animate(F32 delta)
 	}
 }
 
-BOOL LLTexLayerParamAlpha::getSkip() const
+bool LLTexLayerParamAlpha::getSkip() const
 {
 	if (!mTexLayer)
 	{
-		return TRUE;
+		return true;
 	}
 
 	const LLAvatarAppearance *appearance = mTexLayer->getTexLayerSet()->getAvatarAppearance();
@@ -247,17 +247,17 @@ BOOL LLTexLayerParamAlpha::getSkip() const
 		F32 effective_weight = (appearance->getSex() & getSex()) ? mCurWeight : getDefaultWeight();
 		if (is_approx_zero(effective_weight)) 
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
 	LLWearableType::EType type = (LLWearableType::EType)getWearableType();
 	if ((type != LLWearableType::WT_INVALID) && !appearance->isWearingWearableType(type))
 	{
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -300,7 +300,7 @@ bool LLTexLayerParamAlpha::render(S32 x, S32 y, S32 width, S32 height)
 			if (mStaticImageTGA.isNull())
 			{
 				LL_WARNS() << "Unable to load static file: " << info->mStaticImageFileName << LL_ENDL;
-				mStaticImageInvalid = TRUE; // don't try again.
+				mStaticImageInvalid = true; // don't try again.
 				return false;
 			}
 		}
@@ -329,7 +329,7 @@ bool LLTexLayerParamAlpha::render(S32 x, S32 y, S32 width, S32 height)
 			mStaticImageRaw = NULL;
 			mStaticImageRaw = new LLImageRaw;
 			mStaticImageTGA->decodeAndProcess(mStaticImageRaw, info->mDomain, effective_weight);
-			mNeedsCreateTexture = TRUE;			
+			mNeedsCreateTexture = true;			
 			LL_DEBUGS() << "Built Cached Alpha: " << info->mStaticImageFileName << ": (" << mStaticImageRaw->getWidth() << ", " << mStaticImageRaw->getHeight() << ") " << "Domain: " << info->mDomain << " Weight: " << effective_weight << LL_ENDL;
 		}
 
@@ -340,7 +340,7 @@ bool LLTexLayerParamAlpha::render(S32 x, S32 y, S32 width, S32 height)
 				if (mNeedsCreateTexture)
 				{
 					mCachedProcessedTexture->createGLTexture(0, mStaticImageRaw);
-					mNeedsCreateTexture = FALSE;
+					mNeedsCreateTexture = false;
 					gGL.getTexUnit(0)->bind(mCachedProcessedTexture);
 					mCachedProcessedTexture->setAddressMode(LLTexUnit::TAM_CLAMP);
 				}

@@ -144,7 +144,7 @@ bool LLTexGlobalColorInfo::parseXml(LLXmlTreeNode* node)
 	if (!node->getFastAttributeString(name_string, mName))
 	{
 		LL_WARNS() << "<global_color> element is missing name attribute." << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 	// <param> sub-element
 	for (LLXmlTreeNode* child = node->getChildByName("param");

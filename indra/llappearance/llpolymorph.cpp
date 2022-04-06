@@ -351,7 +351,7 @@ LLPolyMorphTarget::~LLPolyMorphTarget()
 //-----------------------------------------------------------------------------
 // setInfo()
 //-----------------------------------------------------------------------------
-BOOL LLPolyMorphTarget::setInfo(LLPolyMorphTargetInfo* info)
+bool LLPolyMorphTarget::setInfo(LLPolyMorphTargetInfo* info)
 {
 	llassert(mInfo == NULL);
 	if (info->mID < 0)
@@ -394,9 +394,9 @@ BOOL LLPolyMorphTarget::setInfo(LLPolyMorphTargetInfo* info)
 	if (!mMorphData)
 	{
 		LL_WARNS() << "No morph target named " << morph_param_name << " found in mesh." << LL_ENDL;
-		return FALSE;  // Continue, ignoring this tag
+		return false;  // Continue, ignoring this tag
 	}
-	return TRUE;
+	return true;
 }
 
 /*virtual*/ LLViewerVisualParam* LLPolyMorphTarget::cloneParam(LLWearable* wearable) const

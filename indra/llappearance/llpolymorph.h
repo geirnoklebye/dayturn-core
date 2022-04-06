@@ -154,7 +154,7 @@ public:
 	// Special: These functions are overridden by child classes
 	LLPolyMorphTargetInfo*	getInfo() const { return (LLPolyMorphTargetInfo*)mInfo; }
 	//   This sets mInfo and calls initialization functions
-	BOOL					setInfo(LLPolyMorphTargetInfo *info);
+	bool							setInfo(LLPolyMorphTargetInfo *info);
 
 	/*virtual*/ LLViewerVisualParam* cloneParam(LLWearable* wearable) const;
 

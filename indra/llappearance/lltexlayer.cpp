@@ -79,7 +79,7 @@ private:
 	std::string				mStaticImageFileName;
 	BOOL					mStaticImageIsMask;
 	BOOL					mUseLocalTextureAlphaOnly; // Ignore RGB channels from the input texture.  Use alpha as a mask
-	BOOL					mIsVisibilityMask;
+	bool					mIsVisibilityMask;
 
 	typedef std::vector< std::pair< std::string,BOOL > > morph_name_list_t;
 	morph_name_list_t		    mMorphNameList;
@@ -280,7 +280,7 @@ LLTexLayerSet::~LLTexLayerSet()
 // setInfo
 //-----------------------------------------------------------------------------
 
-BOOL LLTexLayerSet::setInfo(const LLTexLayerSetInfo *info)
+bool LLTexLayerSet::setInfo(const LLTexLayerSetInfo *info)
 {
 	llassert(mInfo == NULL);
 	mInfo = info;
@@ -304,7 +304,7 @@ BOOL LLTexLayerSet::setInfo(const LLTexLayerSetInfo *info)
 		if (!layer->setInfo(*iter, NULL))
 		{
 			mInfo = NULL;
-			return FALSE;
+			return false;
 		}
 		if (!layer->isVisibilityMask())
 		{
@@ -320,7 +320,7 @@ BOOL LLTexLayerSet::setInfo(const LLTexLayerSetInfo *info)
 
 	stop_glerror();
 
-	return TRUE;
+	return true;
 }
 
 #if 0 // obsolete
@@ -547,17 +547,17 @@ void LLTexLayerSet::applyMorphMask(U8* tex_data, S32 width, S32 height, S32 num_
 	mAvatarAppearance->applyMorphMask(tex_data, width, height, num_components, mBakedTexIndex);
 }
 
-BOOL LLTexLayerSet::isMorphValid() const
+bool LLTexLayerSet::isMorphValid() const
 {
 	for(layer_list_t::const_iterator iter = mLayerList.begin(); iter != mLayerList.end(); iter++ )
 	{
 		const LLTexLayerInterface* layer = *iter;
 		if (layer && !layer->isMorphValid())
 		{
-			return FALSE;
+			return false;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 void LLTexLayerSet::invalidateMorphMasks()
@@ -583,7 +583,7 @@ LLTexLayerInfo::LLTexLayerInfo() :
 	mLocalTexture( -1 ),
 	mStaticImageIsMask( FALSE ),
 	mUseLocalTextureAlphaOnly(FALSE),
-	mIsVisibilityMask(FALSE)
+	mIsVisibilityMask(false)
 {
 }
 
@@ -768,9 +768,9 @@ BOOL LLTexLayerInfo::createVisualParams(LLAvatarAppearance *appearance)
 
 LLTexLayerInterface::LLTexLayerInterface(LLTexLayerSet* const layer_set):
 	mTexLayerSet( layer_set ),
-	mMorphMasksValid( FALSE ),
+	mMorphMasksValid( false ),
 	mInfo(NULL),
-	mHasMorph(FALSE)
+	mHasMorph(false)
 {
 }
 
@@ -784,7 +784,7 @@ LLTexLayerInterface::LLTexLayerInterface(const LLTexLayerInterface &layer, LLWea
 	mHasMorph = layer.mHasMorph;
 }
 
-BOOL LLTexLayerInterface::setInfo(const LLTexLayerInfo *info, LLWearable* wearable  ) // This sets mInfo and calls initialization functions
+bool LLTexLayerInterface::setInfo(const LLTexLayerInfo *info, LLWearable* wearable  ) // This sets mInfo and calls initialization functions
 {
 	// setInfo should only be called once. Code is not robust enough to handle redefinition of a texlayer.
 	// Not a critical warning, but could be useful for debugging later issues. -Nyx
@@ -807,7 +807,7 @@ BOOL LLTexLayerInterface::setInfo(const LLTexLayerInfo *info, LLWearable* wearab
 				if (!param_color->setInfo(*iter, TRUE))
 				{
 					mInfo = NULL;
-					return FALSE;
+					return false;
 				}
 			}
 			else
@@ -816,7 +816,7 @@ BOOL LLTexLayerInterface::setInfo(const LLTexLayerInfo *info, LLWearable* wearab
 				if (!param_color)
 				{
 					mInfo = NULL;
-					return FALSE;
+					return false;
 				}
 			}
 			mParamColorList.push_back( param_color );
@@ -834,7 +834,7 @@ BOOL LLTexLayerInterface::setInfo(const LLTexLayerInfo *info, LLWearable* wearab
 				if (!param_alpha->setInfo(*iter, TRUE))
 				{
 					mInfo = NULL;
-					return FALSE;
+					return false;
 				}
 			}
 			else
@@ -843,13 +843,13 @@ BOOL LLTexLayerInterface::setInfo(const LLTexLayerInfo *info, LLWearable* wearab
 				if (!param_alpha)
 				{
 					mInfo = NULL;
-					return FALSE;
+					return false;
 				}
 			}
 			mParamAlphaList.push_back( param_alpha );
 		}
 
-	return TRUE;
+	return true;
 }
 
 /*virtual*/ void LLTexLayerInterface::requestUpdate()
@@ -925,14 +925,14 @@ const std::string& LLTexLayerInterface::getGlobalColor() const
 	return mInfo->mGlobalColor; 
 }
 
-BOOL LLTexLayerInterface::isVisibilityMask() const
+bool LLTexLayerInterface::isVisibilityMask() const
 {
 	return mInfo->mIsVisibilityMask;
 }
 
 void LLTexLayerInterface::invalidateMorphMasks()
 {
-	mMorphMasksValid = FALSE;
+	mMorphMasksValid = false;
 }
 
 LLViewerVisualParam* LLTexLayerInterface::getVisualParamPtr(S32 index) const
@@ -1013,7 +1013,7 @@ void LLTexLayer::asLLSD(LLSD& sd) const
 // setInfo
 //-----------------------------------------------------------------------------
 
-BOOL LLTexLayer::setInfo(const LLTexLayerInfo* info, LLWearable* wearable  )
+bool LLTexLayer::setInfo(const LLTexLayerInfo* info, LLWearable* wearable  )
 {
 	return LLTexLayerInterface::setInfo(info, wearable);
 }
@@ -1240,7 +1240,7 @@ const U8*	LLTexLayer::getAlphaData() const
 	return (iter2 == mAlphaCache.end()) ? 0 : iter2->second;
 }
 
-BOOL LLTexLayer::findNetColor(LLColor4* net_color) const
+bool LLTexLayer::findNetColor(LLColor4* net_color) const
 {
 	// Color is either:
 	//	* one or more color parameters (weighted colors)  (which may make use of a global color or fixed color)
@@ -1264,29 +1264,29 @@ BOOL LLTexLayer::findNetColor(LLColor4* net_color) const
 		}
 		
 		calculateTexLayerColor(mParamColorList, *net_color);
-		return TRUE;
+		return true;
 	}
 
 	if( !getGlobalColor().empty() )
 	{
 		net_color->setVec( mTexLayerSet->getAvatarAppearance()->getGlobalColor( getGlobalColor() ) );
-		return TRUE;
+		return true;
 	}
 
 	if( getInfo()->mFixedColor.mV[VW] )
 	{
 		net_color->setVec( getInfo()->mFixedColor );
-		return TRUE;
+		return true;
 	}
 
 	net_color->setToWhite();
 
-	return FALSE; // No need to draw a separate colored polygon
+	return false; // No need to draw a separate colored polygon
 }
 
-BOOL LLTexLayer::blendAlphaTexture(S32 x, S32 y, S32 width, S32 height)
+bool LLTexLayer::blendAlphaTexture(S32 x, S32 y, S32 width, S32 height)
 {
-	BOOL success = TRUE;
+	bool success = true;
 
 	gGL.flush();
 	
@@ -1304,7 +1304,7 @@ BOOL LLTexLayer::blendAlphaTexture(S32 x, S32 y, S32 width, S32 height)
 		}
 		else
 		{
-			success = FALSE;
+			success = false;
 		}
 	}
 	else
@@ -1522,7 +1522,7 @@ void LLTexLayer::renderMorphMasks(S32 x, S32 y, S32 width, S32 height, const LLC
 		
 		getTexLayerSet()->getAvatarAppearance()->dirtyMesh();
 
-		mMorphMasksValid = TRUE;
+		mMorphMasksValid = true;
 		getTexLayerSet()->applyMorphMask(alpha_data, width, height, 1);
 	}
 }
@@ -1555,17 +1555,17 @@ void LLTexLayer::addAlphaMask(U8 *data, S32 originX, S32 originY, S32 width, S32
 	}
 }
 
-/*virtual*/ BOOL LLTexLayer::isInvisibleAlphaMask() const
+/*virtual*/ bool LLTexLayer::isInvisibleAlphaMask() const
 {
 	if (mLocalTextureObject)
 	{
 		if (mLocalTextureObject->getID() == IMG_INVISIBLE)
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 LLUUID LLTexLayer::getUUID() const
@@ -1624,7 +1624,7 @@ LLTexLayerTemplate::~LLTexLayerTemplate()
 // setInfo
 //-----------------------------------------------------------------------------
 
-/*virtual*/ BOOL LLTexLayerTemplate::setInfo(const LLTexLayerInfo* info, LLWearable* wearable  )
+/*virtual*/ bool LLTexLayerTemplate::setInfo(const LLTexLayerInfo* info, LLWearable* wearable  )
 {
 	return LLTexLayerInterface::setInfo(info, wearable);
 }
@@ -1707,9 +1707,9 @@ LLTexLayer* LLTexLayerTemplate::getLayer(U32 i) const
 	return success;
 }
 
-/*virtual*/ BOOL LLTexLayerTemplate::blendAlphaTexture( S32 x, S32 y, S32 width, S32 height) // Multiplies a single alpha texture against the frame buffer
+/*virtual*/ bool LLTexLayerTemplate::blendAlphaTexture( S32 x, S32 y, S32 width, S32 height) // Multiplies a single alpha texture against the frame buffer
 {
-	BOOL success = TRUE;
+	bool success = true;
 	U32 num_wearables = updateWearableCache();
 	for (U32 i = 0; i < num_wearables; i++)
 	{
@@ -1733,7 +1733,7 @@ LLTexLayer* LLTexLayerTemplate::getLayer(U32 i) const
 	}
 }
 
-/*virtual*/ void LLTexLayerTemplate::setHasMorph(BOOL newval)
+/*virtual*/ void LLTexLayerTemplate::setHasMorph(bool newval)
 { 
 	mHasMorph = newval;
 	U32 num_wearables = updateWearableCache();
@@ -1760,7 +1760,7 @@ LLTexLayer* LLTexLayerTemplate::getLayer(U32 i) const
 	}
 }
 
-/*virtual*/ BOOL LLTexLayerTemplate::isInvisibleAlphaMask() const
+/*virtual*/ bool LLTexLayerTemplate::isInvisibleAlphaMask() const
 {
 	U32 num_wearables = updateWearableCache();
 	for (U32 i = 0; i < num_wearables; i++)
@@ -1770,12 +1770,12 @@ LLTexLayer* LLTexLayerTemplate::getLayer(U32 i) const
 		{
 			 if (layer->isInvisibleAlphaMask())
 			 {
-				 return TRUE;
+				 return true;
 			 }
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 

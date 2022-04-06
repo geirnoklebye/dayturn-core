@@ -1303,7 +1303,7 @@ BOOL LLAvatarAppearance::loadLayersets()
 				LLTexLayerInterface* layer = layer_set->findLayerByName(morph->mLayer);
 				if (layer)
 				{
-					layer->setHasMorph(TRUE);
+					layer->setHasMorph(true);
 				}
 				else
 				{
