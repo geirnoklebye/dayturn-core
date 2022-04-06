@@ -40,7 +40,7 @@ const F32 DEFAULT_AVATAR_JOINT_LOD = 0.0f;
 //-----------------------------------------------------------------------------
 // Static Data
 //-----------------------------------------------------------------------------
-BOOL					LLAvatarJoint::sDisableLOD = FALSE;
+bool	LLAvatarJoint::sDisableLOD = false;
 
 //-----------------------------------------------------------------------------
 // LLAvatarJoint()
@@ -72,7 +72,7 @@ void LLAvatarJoint::init()
 	mPickName = PN_DEFAULT;
 	mVisible = true;
 	mMeshID = 0;
-	mIsTransparent = FALSE;
+	mIsTransparent = false;
 }
 
 
@@ -113,7 +113,7 @@ void LLAvatarJoint::setValid( BOOL valid, BOOL recursive )
 //--------------------------------------------------------------------
 // setSkeletonComponents()
 //--------------------------------------------------------------------
-void LLAvatarJoint::setSkeletonComponents( U32 comp, BOOL recursive )
+void LLAvatarJoint::setSkeletonComponents( U32 comp, bool recursive )
 {
 	mComponents = comp;
 	if (recursive)
@@ -152,7 +152,7 @@ void LLAvatarJoint::updateFaceSizes(U32 &num_vertices, U32& num_indices, F32 pix
 	}
 }
 
-void LLAvatarJoint::updateFaceData(LLFace *face, F32 pixel_area, BOOL damp_wind, bool terse_update)
+void LLAvatarJoint::updateFaceData(LLFace *face, F32 pixel_area, bool damp_wind, bool terse_update)
 {
 	for (joints_t::iterator iter = mChildren.begin();
 		 iter != mChildren.end(); ++iter)
@@ -173,10 +173,10 @@ void LLAvatarJoint::updateJointGeometry()
 }
 
 
-BOOL LLAvatarJoint::updateLOD(F32 pixel_area, BOOL activate)
+bool LLAvatarJoint::updateLOD(F32 pixel_area, bool activate)
 {
-	BOOL lod_changed = FALSE;
-	BOOL found_lod = FALSE;
+	bool lod_changed = false;
+	bool found_lod = false;
 
 	for (joints_t::iterator iter = mChildren.begin();
 		 iter != mChildren.end(); ++iter)
@@ -187,18 +187,18 @@ BOOL LLAvatarJoint::updateLOD(F32 pixel_area, BOOL activate)
 		if (found_lod || jointLOD == DEFAULT_AVATAR_JOINT_LOD)
 		{
 			// we've already found a joint to enable, so enable the rest as alternatives
-			lod_changed |= joint->updateLOD(pixel_area, TRUE);
+			lod_changed |= joint->updateLOD(pixel_area, true);
 		}
 		else
 		{
 			if (pixel_area >= jointLOD || sDisableLOD)
 			{
-				lod_changed |= joint->updateLOD(pixel_area, TRUE);
-				found_lod = TRUE;
+				lod_changed |= joint->updateLOD(pixel_area, true);
+				found_lod = true;
 			}
 			else
 			{
-				lod_changed |= joint->updateLOD(pixel_area, FALSE);
+				lod_changed |= joint->updateLOD(pixel_area, false);
 			}
 		}
 	}
@@ -235,7 +235,7 @@ LLAvatarJointCollisionVolume::LLAvatarJointCollisionVolume()
 }
 
 /*virtual*/
-U32 LLAvatarJointCollisionVolume::render( F32 pixelArea, BOOL first_pass, BOOL is_dummy )
+U32 LLAvatarJointCollisionVolume::render( F32 pixelArea, bool first_pass, bool is_dummy )
 {
 	LL_ERRS() << "Cannot call render() on LLAvatarJointCollisionVolume" << LL_ENDL;
 	return 0;

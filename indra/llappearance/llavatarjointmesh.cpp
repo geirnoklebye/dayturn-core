@@ -129,7 +129,7 @@ BOOL LLSkinJoint::setupSkinJoint( LLAvatarJoint *joint)
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 
-BOOL LLAvatarJointMesh::sPipelineRender = FALSE;
+bool LLAvatarJointMesh::sPipelineRender = false;
 U32 LLAvatarJointMesh::sClothingMaskImageName = 0;
 LLColor4 LLAvatarJointMesh::sClothingInnerColor;
 

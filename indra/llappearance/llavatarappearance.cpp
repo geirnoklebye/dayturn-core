@@ -238,14 +238,14 @@ void LLAvatarAppearance::initInstance()
 			mesh->setName(mesh_name);
 			mesh->setMeshID(mesh_index);
 			mesh->setPickName(mesh_dict->mPickName);
-			mesh->setIsTransparent(FALSE);
+			mesh->setIsTransparent(false);
 			switch((S32)mesh_index)
 			{
 				case MESH_ID_HAIR:
-					mesh->setIsTransparent(TRUE);
+					mesh->setIsTransparent(true);
 					break;
 				case MESH_ID_SKIRT:
-					mesh->setIsTransparent(TRUE);
+					mesh->setIsTransparent(true);
 					break;
 				case MESH_ID_EYEBALL_LEFT:
 				case MESH_ID_EYEBALL_RIGHT:

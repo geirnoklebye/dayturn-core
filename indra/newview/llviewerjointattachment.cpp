@@ -76,15 +76,15 @@ LLViewerJointAttachment::~LLViewerJointAttachment()
 //-----------------------------------------------------------------------------
 // isTransparent()
 //-----------------------------------------------------------------------------
-BOOL LLViewerJointAttachment::isTransparent()
+bool LLViewerJointAttachment::isTransparent()
 {
-	return FALSE;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // drawShape()
 //-----------------------------------------------------------------------------
-U32 LLViewerJointAttachment::drawShape( F32 pixelArea, BOOL first_pass, BOOL is_dummy )
+U32 LLViewerJointAttachment::drawShape( F32 pixelArea, bool first_pass, bool is_dummy )
 {
 	if (LLVOAvatar::sShowAttachmentPoints)
 	{

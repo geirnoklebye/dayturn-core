@@ -79,7 +79,7 @@ protected:
 	S32							mMeshID;
 
 public:
-	static BOOL					sPipelineRender;
+	static bool					sPipelineRender;
 	//RN: this is here for testing purposes
 	static U32					sClothingMaskImageName;
 	static LLColor4				sClothingInnerColor;
@@ -131,7 +131,7 @@ public:
 	// Gets ID for picking
 	S32 getMeshID() { return mMeshID; }	
 
-	void setIsTransparent(BOOL is_transparent) { mIsTransparent = is_transparent; }
+	void setIsTransparent(bool is_transparent) { mIsTransparent = is_transparent; }
 
 private:
 	// Allocate skin data
