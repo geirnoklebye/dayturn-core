@@ -76,8 +76,6 @@ public:
 		Optional<F32>			min,
 								max;
 		Optional<bool>			per_sec;
-		Optional<bool>			last_value; // KKA-821 report based on last value, overrides per_sec if set
-		Optional<bool>			invert_bar; // KKA-821 draw the bar as max-value for cases where a minimal value should get attention
 		Optional<F32>			value;
 		Optional<LLUIColor>		color,
 								background_color,
@@ -92,8 +90,6 @@ public:
 			min("min", 0.f),
 			max("max", 125.f),
 			per_sec("per_sec", true),
-			last_value("last_value", false), // KKA-821
-			invert_bar("invert_bar", false), // KKA-821
 			value("value", 0.f),
 			color("color", LLColor4::white),
 			background_color("background_color", LLColor4::transparent),
@@ -122,8 +118,6 @@ private:
 	LLTrace::StatType<LLTrace::CountAccumulator>*	mNewStatFloatp;
 
 	BOOL mPerSec;
-	BOOL mLastValue; // KKA_821
-	BOOL mInvertBar; // KKA-821
 
 	F32 mValue;
 

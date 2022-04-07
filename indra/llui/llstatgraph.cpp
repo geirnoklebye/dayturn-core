@@ -48,8 +48,6 @@ LLStatGraph::LLStatGraph(const Params& p)
 	mMin(p.min),
 	mMax(p.max),
 	mPerSec(p.per_sec),
-	mLastValue(p.last_value), // KKA-821 use last value, eg for sim performance stats
-	mInvertBar(p.invert_bar), // KKA-821 draw the bar as max-value instead of value so that low values give a full bar
 	mPrecision(p.precision),
 	mValue(p.value),
 	mLabel(p.label),
@@ -77,13 +75,7 @@ void LLStatGraph::draw()
 	{
 		LLTrace::Recording& recording = LLTrace::get_frame_recording().getLastRecording();
 
-		if (mLastValue) // KKA-821
-		{
-		  // KKA-821 Annoyingly this arrived as a SampleAccumulator, but the existing code casts it to a CountAccumulator
-		  // However, we need it back as a SampleAccumulator for getLastValue to work
-			mValue = recording.getLastValue(*(LLTrace::StatType<LLTrace::SampleAccumulator> *)mNewStatFloatp);
-		}
-		else if (mPerSec)
+		if (mPerSec)
 		{
 			mValue = recording.getPerSec(*mNewStatFloatp);
 		}
@@ -96,10 +88,6 @@ void LLStatGraph::draw()
 	frac = (mValue - mMin) / range;
 	frac = llmax(0.f, frac);
 	frac = llmin(1.f, frac);
-	if (mInvertBar) // KKA-821 add inverting so that a minimum value gives a full bar (for situations when minimum should grab attention with a full bar, like zero sim spare time)
-	{
-	  frac = 1.0 - frac;
-	}
 
 	if (mUpdateTimer.getElapsedTimeF32() > 0.5f)
 	{
