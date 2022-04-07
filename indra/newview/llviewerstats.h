@@ -74,9 +74,7 @@ enum ESimStatID
 	LL_SIM_STAT_REGION_IDLE_POSSIBLE  = 37, // dataserver only
 	LL_SIM_STAT_SIMAISTEPTIMEMS       = 38,
 	LL_SIM_STAT_SKIPPEDAISILSTEPS_PS  = 39,
-	// CA: I need to know the size of this at compile time, so...
-	LL_SIM_STAT_PCTSTEPPEDCHARACTERS  = 40,
-	CA_SIM_STAT_MAXIMUM               = 41
+	LL_SIM_STAT_PCTSTEPPEDCHARACTERS  = 40
 };
 
 namespace LLStatViewer

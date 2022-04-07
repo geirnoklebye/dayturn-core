@@ -273,8 +273,6 @@ std::string LLViewerChat::getSenderSLURL(const LLChat& chat, const LLSD& args)
 		return getObjectImSLURL(chat, args);
 
 	case CHAT_SOURCE_AUDIO_STREAM:
-	// CA - stop warnings getting generated from performance messages
-	case CHAT_SOURCE_SYSTEM:
 		return LLStringUtil::null;
 
 	default:

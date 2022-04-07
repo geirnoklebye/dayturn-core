@@ -167,159 +167,8 @@ const U8 AU_FLAGS_NONE      		= 0x00;
 const U8 AU_FLAGS_HIDETITLE      	= 0x01;
 const U8 AU_FLAGS_CLIENT_AUTOPILOT	= 0x02;
 
-// CA: Performance monitoring additions start here
-// Defining static here forces locality to this file rather than creating globals
-static std::map <std::string, F32> ca_previous_thresholds;
-static BOOL ca_region_changed = FALSE;
-static BOOL ca_previous_stats_valid = FALSE;
-static BOOL ca_alarm_raised = FALSE;
-static std::string ca_region_channel;
-static F32 ca_performance_status_previous[CA_SIM_STAT_MAXIMUM] = {};
-static F32 ca_performance_status_now[CA_SIM_STAT_MAXIMUM] = {};
-
 // CA this is the once-per-session flag for RLV command notification
 static bool given_rlv_warning = false;
-
-static void ca_give_message_trans(std::string msg, LLStringUtil::format_map_t args)
-{
-	// we can deliver via chat & chat toast or as chat & notification
-
-	static LLCachedControl<bool> ca_use_notifications(gSavedSettings, "KokuaPerformanceUseNotifications");
-
-	// Don't emit any messages until late in the startup process. Before this they're mostly wrong
-	// since it's us that's arriving in the region, not the agents who were already there
-	if (LLStartUp::getStartupState() >= STATE_CLEANUP)
-	{
-		if (ca_use_notifications)
-		{
-			// all notifications have to be pre-declared, which is a problem for the
-			// region entry message which has a number of dynamic sections. The solution
-			// is we have a single notification where the whole message is passed as
-			// one parameter
-			LLSD nargs;
-			nargs["MESSAGE"] = LLTrans::getString(msg, args);
-			LLNotificationsUtil::add("CA_Performance_Compound", nargs);
-		}
-		else
-		{
-			LLChat chat;
-			chat.mFromID = LLUUID::null;
-			chat.mSourceType = CHAT_SOURCE_SYSTEM;
-			chat.mText = LLTrans::getString(msg, args);
-
-			LLSD none;
-			LLNotificationsUI::LLNotificationManager::instance().onChat(chat, none);
-		}
-	}
-}
-
-
-static void ca_copy_performance_status_to_old()
-{
-	U32 index = 0;
-	for (index = 0; index < CA_SIM_STAT_MAXIMUM; index++)
-	{
-		ca_performance_status_previous[index] = ca_performance_status_now[index];
-	}
-	ca_previous_stats_valid = TRUE;
-}
-
-static void ca_performance_test_threshold(std::string area, std::string testname, U32 stat, const char *value_format, const char *threshold_format, BOOL greater)
-{
-	LLCachedControl<bool> test_active(gSavedSettings, "KokuaPerformance" + area + testname);
-	if (!test_active) return;
-
-	LLCachedControl<F32> threshold(gSavedSettings, "KokuaPerformance" + area + testname + "Threshold");
-	F32 value_now = ca_performance_status_now[stat];
-	F32 value_previous = ca_performance_status_previous[stat];
-	BOOL threshold_changed = (threshold != ca_previous_thresholds[area + testname]);
-	std::string msgname = "CA_" + area + "_" + testname;
-	static const std::string msgfail = LLTrans::getString("CA_Performance_Fail");
-	static const std::string msgrestore = LLTrans::getString("CA_Performance_Restore");
-
-	ca_previous_thresholds[area + testname] = threshold;
-
-	// if we've just changed region sabotage the previous value test so that we react solely on the current value
-
-	// people expect to get a notification if they move the sliders however they typically wouldn't unless they
-	// set the new value inbetween previous and now to trigger an edge transition, so we also sabotage the 
-	// previous value test when we spot that a threshold setting has altered
-
-	if ((greater && (value_now > threshold && (threshold_changed || ca_region_changed || value_previous <= threshold)))
-		|| (!greater && (value_now < threshold && (threshold_changed || ca_region_changed || value_previous >= threshold))))
-	{
-		ca_alarm_raised = TRUE;
-		LLStringUtil::format_map_t args;
-		args["VALUE"] = llformat(value_format, value_now);
-		args["THRESHOLD"] = llformat(threshold_format, (F32)threshold);
-		if (greater) args["ACTION"] = msgfail;
-		else args["ACTION"] = msgrestore;
-			
-		static LLCachedControl<bool> all_with_frame(gSavedSettings, "KokuaPerformanceTimingAllWithFrame");
-		static LLCachedControl<bool> all_with_individual(gSavedSettings, "KokuaPerformanceTimingAllWithIndividual");
-
-		ca_give_message_trans(msgname, args);
-
-		if (area == "Timing")
-		{
-			if ((testname == "FrameExceeds" && all_with_frame)
-				|| (testname != "FrameExceeds" && all_with_individual))
-			{
-				LLStringUtil::format_map_t frame_args;
-				frame_args["FRAME"] = llformat(value_format, ca_performance_status_now[LL_SIM_STAT_FRAMEMS]);
-				frame_args["NET"] = llformat(value_format, ca_performance_status_now[LL_SIM_STAT_NETMS]);
-				frame_args["PHYSICS"] = llformat(value_format, ca_performance_status_now[LL_SIM_STAT_SIMPHYSICSMS]);
-				frame_args["SIMULATION"] = llformat(value_format, ca_performance_status_now[LL_SIM_STAT_SIMOTHERMS]);
-				frame_args["AGENT"] = llformat(value_format, ca_performance_status_now[LL_SIM_STAT_AGENTMS]);
-				frame_args["IMAGES"] = llformat(value_format, ca_performance_status_now[LL_SIM_STAT_IMAGESMS]);
-				frame_args["SCRIPT"] = llformat(value_format, ca_performance_status_now[LL_SIM_STAT_SCRIPTMS]);
-				frame_args["SPARE"] = llformat(value_format, ca_performance_status_now[LL_SIM_STAT_SIMSPARETIME]);
-				ca_give_message_trans("CA_Timing_WholeFrame", frame_args);
-			}
-		}
-	}
-
-	static LLCachedControl<bool> ca_notify_on_restore(gSavedSettings, "KokuaPerformanceNotifyRestore");
-	if (ca_notify_on_restore)
-	{
-		// only give restoration notifications where we do have a previous value and a step change onto the right
-		// side of the threshold has happened to avoid a flurry of now-OK notifications at login or changing to
-		// a better region. However, we should give them when the user is changing the sliders
-
-		if ((greater && (value_now < threshold && (threshold_changed || value_previous >= threshold)))
-			|| (!greater && (value_now > threshold && (threshold_changed || value_previous <= threshold))))
-		{
-			LLStringUtil::format_map_t args;
-			args["VALUE"] = llformat(value_format, value_now);
-			args["THRESHOLD"] = llformat(threshold_format, (F32)threshold);
-			if (greater) args["ACTION"] = msgrestore;
-			else args["ACTION"] = msgfail;
-			ca_give_message_trans(msgname, args);
-		}
-	}
-}
-
-static void ca_performance_test_delta(std::string area, std::string testname, U32 stat, const char* previous_format, const char* now_format, const char* delta_format)
-{
-	if (!LLCachedControl<bool> (gSavedSettings, "KokuaPerformance" + area + testname)) return;
-	
-	F32 value_now = ca_performance_status_now[stat];
-	F32 value_previous = ca_performance_status_previous[stat];
-	F32 value_delta = value_now - value_previous;
-
-	if (llabs(value_delta) >= LLCachedControl<F32> (gSavedSettings, "KokuaPerformance" + area + testname + "Threshold"))
-	{
-		ca_alarm_raised = TRUE;
-		LLStringUtil::format_map_t args;
-		args["PREVIOUS"] = llformat(previous_format, value_previous);
-		args["NOW"] = llformat(now_format, value_now);
-		args["DELTA"] = llformat(delta_format, value_delta);
-		ca_give_message_trans("CA_" + area + "_" + testname, args);
-	}
-}
-
-// CA: Performance monitoring additions end here
-
 void accept_friendship_coro(std::string url, LLSD notification)
 {
     LLCore::HttpRequest::policy_t httpPolicy(LLCore::HttpRequest::DEFAULT_POLICY_ID);
@@ -3447,30 +3296,12 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 	// send walk-vs-run status
 	gAgent.sendWalkRun(gAgent.getRunning() || gAgent.getAlwaysRun());
 
-	// CA: any region change needs to reset the performance alarms, so do this here
-	// before we probably bail out in the next test
-	ca_region_channel = version_channel;
-	ca_region_changed = TRUE;
-
 	// If the server version has changed, display an info box and offer
 	// to display the release notes, unless this is the initial log in.
 	if (gLastVersionChannel == version_channel)
 	{
 		return;
 	}
-	
-	// CA: Bring this in and adapt for Kokua
-	// <FS:Ansariel> Bring back simulator version changed messages after TP
-	static LLCachedControl<bool> region_version_change_notice(gSavedSettings, "KokuaPerformanceRegionVersionChangeNotice");
-
-	if (!gLastVersionChannel.empty() && region_version_change_notice)
-	{
-		LLStringUtil::format_map_t args;
-		args["OLDVERSION"] = gLastVersionChannel;
-		args["NEWVERSION"] = version_channel;
-		ca_give_message_trans("CA_Region_Changed", args);
-	}
-	// </FS:Ansariel>
 
 	gLastVersionChannel = version_channel;
 }
@@ -4355,23 +4186,7 @@ void process_health_message(LLMessageSystem *mesgsys, void **user_data)
 
 void process_sim_stats(LLMessageSystem *msg, void **user_data)
 {	
-	// CA: This function is significantly changed in Kokua. MERGE WITH CARE!
-	// Changes are inspired by Ansariel's script count change reporting but go a lot further
 	S32 count = msg->getNumberOfBlocks("Stat");
-
-	// CA: Move the current set of stats to the previous array since some of the performance tests
-	// need to do comparisons
-	ca_copy_performance_status_to_old();
-	ca_alarm_raised = FALSE;
-	static LLCachedControl<bool> ca_notify_on_restore(gSavedSettings, "KokuaPerformanceNotifyRestore");
-	static LLCachedControl<bool> ca_use_notifications(gSavedSettings, "KokuaPerformanceUseNotifications");
-	
-	// CA: Since some of the possible reports need to reference more than one statistic we first
-	// build a full set of statistics and then get into doing the reporting. Not all statistics defined
-	// are sent, but all statistics in use are sent each time, so going through this for/next loop captures
-	// a full statistics set as well doing the original function of this routine by sending each item
-	// to measurementp->sample()
-
 	for (S32 i = 0; i < count; ++i)
 	{
 		U32 stat_id;
@@ -4383,133 +4198,12 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 		if (measurementp)
 		{
 			measurementp->sample(stat_value);
-			if ((ESimStatID)stat_id < CA_SIM_STAT_MAXIMUM)
-			{
-				// protect ourselves against anything higher than those defined in the header for llviewerstats
-				ca_performance_status_now[stat_id] = stat_value;
-			}
-			else
-			{
-				LL_WARNS() << "Unknown sim stat identifier (CA_SIM_STAT_MAXIMUM probably needs updating - check viewerstats.h): " << stat_id << " CA_SIM_STAT_MAXIMUM: " << CA_SIM_STAT_MAXIMUM << LL_ENDL;
-			}
 		}
 		else
 		{
 			LL_WARNS() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
 		}
 	}
-
-	// CA: It can happen that number of agents isn't an integer. When that happens, round up.
-	ca_performance_status_now[LL_SIM_STAT_NUMAGENTMAIN] = llceil(ca_performance_status_now[LL_SIM_STAT_NUMAGENTMAIN]);
-	ca_performance_status_now[LL_SIM_STAT_NUMAGENTCHILD] = llceil(ca_performance_status_now[LL_SIM_STAT_NUMAGENTCHILD]);
-
-	// don't start doing comparisons until we've got a valid set of previous stats
-	if (ca_previous_stats_valid)
-	{
-		// now the various performance alarm groups
-		static LLCachedControl<bool> kokua_performance_script_enable(gSavedSettings, "KokuaPerformanceScriptEnable");				
-		static LLCachedControl<bool> kokua_performance_agent_enable(gSavedSettings, "KokuaPerformanceAgentEnable");				
-		static LLCachedControl<bool> kokua_performance_timing_enable(gSavedSettings, "KokuaPerformanceTimingEnable");				
-		static LLCachedControl<bool> kokua_performance_basics_enable(gSavedSettings, "KokuaPerformanceBasicsEnable");		
-
-		if (kokua_performance_script_enable)
-		{
-			ca_performance_test_threshold("Script", "ActiveObjectsExceeds", LL_SIM_STAT_NUMTASKSACTIVE, "%.0f", "%.0f", TRUE);
-			ca_performance_test_threshold("Script", "ObjectsExceeds", LL_SIM_STAT_NUMTASKS, "%.0f", "%.0f", TRUE);
-			ca_performance_test_threshold("Script", "RunBelowPerCent", LL_SIM_STAT_PCTSCRIPTSRUN, "%.2f", "%.0f", FALSE);
-			ca_performance_test_threshold("Script", "TimeExceeds", LL_SIM_STAT_SCRIPTMS, "%.3f", "%.0f", TRUE);
-			ca_performance_test_threshold("Script", "Quantity", LL_SIM_STAT_NUMSCRIPTSACTIVE, "%.0f", "%.0f", TRUE);
-			ca_performance_test_delta("Script", "Change", LL_SIM_STAT_NUMSCRIPTSACTIVE, "%.0f", "%.0f", "%+.0f");
-		}
-
-		if (kokua_performance_agent_enable)
-		{
-			ca_performance_test_threshold("Agent", "RegionExceeds", LL_SIM_STAT_NUMAGENTMAIN, "%.0f", "%.0f", TRUE);
-			ca_performance_test_threshold("Agent", "NearbyExceeds", LL_SIM_STAT_NUMAGENTCHILD, "%.0f", "%.0f", TRUE);
-			ca_performance_test_delta("Agent", "RegionChange", LL_SIM_STAT_NUMAGENTMAIN, "%.0f", "%.0f", "%+.0f");
-			ca_performance_test_delta("Agent", "NearbyChange", LL_SIM_STAT_NUMAGENTCHILD, "%.0f", "%.0f", "%+.0f");
-		}
-
-		if (kokua_performance_timing_enable)
-		{
-			ca_performance_test_threshold("Timing", "FrameExceeds", LL_SIM_STAT_FRAMEMS, "%.3f", "%.0f", TRUE);
-			ca_performance_test_threshold("Timing", "NetExceeds", LL_SIM_STAT_NETMS, "%.3f", "%.0f", TRUE);
-			ca_performance_test_threshold("Timing", "PhysicsExceeds", LL_SIM_STAT_SIMPHYSICSMS, "%.3f", "%.0f", TRUE);
-			ca_performance_test_threshold("Timing", "SimulationExceeds", LL_SIM_STAT_SIMOTHERMS, "%.3f", "%.0f", TRUE);
-			ca_performance_test_threshold("Timing", "AgentExceeds", LL_SIM_STAT_AGENTMS, "%.3f", "%.0f", TRUE);
-			ca_performance_test_threshold("Timing", "ImagesExceeds", LL_SIM_STAT_IMAGESMS, "%.3f", "%.0f", TRUE);
-			ca_performance_test_threshold("Timing", "ScriptExceeds", LL_SIM_STAT_SCRIPTMS, "%.3f", "%.0f", TRUE);
-			ca_performance_test_threshold("Timing", "SpareUnder", LL_SIM_STAT_SIMSPARETIME, "%.3f", "%.0f", FALSE);
-		}
-
-		if (kokua_performance_basics_enable)
-		{
-			ca_performance_test_threshold("Basics", "FPSBelow", LL_SIM_STAT_FPS, "%.1f", "%.0f", FALSE);
-			ca_performance_test_threshold("Basics", "TDBelow", LL_SIM_STAT_TIME_DILATION, "%.2f", "%.1f", FALSE);
-		}
-		
-		static LLCachedControl<bool> kokua_performance_region_repeat(gSavedSettings, "KokuaPerformanceRegionRepeat");				
-		static LLCachedControl<bool> kokua_performance_region_enable(gSavedSettings, "KokuaPerformanceRegionEnable");			
-
-		if ((ca_region_changed || (ca_alarm_raised && kokua_performance_region_repeat)) && kokua_performance_region_enable)
-		{
-			// unlike the performance notifications where every one is a separate message, here we build up a single
-			// message to reduce the spam effect
-
-			std::string msg;
-			LLStringUtil::format_map_t nargs;
-			static LLCachedControl<bool> kokua_performance_region_channel(gSavedSettings, "KokuaPerformanceRegionChannel");				
-			static LLCachedControl<bool> kokua_performance_region_script(gSavedSettings, "KokuaPerformanceRegionScript");				
-			static LLCachedControl<bool> kokua_performance_region_timing(gSavedSettings, "KokuaPerformanceRegionTiming");				
-			static LLCachedControl<bool> kokua_performance_region_basics(gSavedSettings, "KokuaPerformanceRegionBasics");							
-			
-			if (ca_region_changed) msg = LLTrans::getString("CA_Region_Prefix");
-			else msg = LLTrans::getString("CA_Region_RepeatPrefix");
-
-			if (kokua_performance_region_channel)
-			{
-				LLStringUtil::format_map_t args;
-				args["CA_REGION_CHANNEL"] = ca_region_channel;
-				msg += LLTrans::getString("CA_Region_Channel", args);
-			}
-			if (kokua_performance_region_script)
-			{
-				LLStringUtil::format_map_t args;
-				args["CA_REGION_SCRIPTS_OBJECTS"] = llformat("%.0f", ca_performance_status_now[LL_SIM_STAT_NUMTASKSACTIVE]);
-				args["CA_REGION_SCRIPTS_ALLOBJECTS"] = llformat("%.0f", ca_performance_status_now[LL_SIM_STAT_NUMTASKS]);
-				args["CA_REGION_SCRIPTS_TOTAL"] = llformat("%.0f", ca_performance_status_now[LL_SIM_STAT_NUMSCRIPTSACTIVE]);
-				args["CA_REGION_SCRIPTS_PERCENT"] = llformat("%.1f", ca_performance_status_now[LL_SIM_STAT_PCTSCRIPTSRUN]);
-				args["CA_REGION_SCRIPTS_TIME"] = llformat("%.1f", ca_performance_status_now[LL_SIM_STAT_SCRIPTMS]);
-				args["CA_REGION_SCRIPTS_AGENTS"] = llformat("%.0f", ca_performance_status_now[LL_SIM_STAT_NUMAGENTMAIN]);
-				msg += LLTrans::getString("CA_Region_Script", args);
-			}
-			if (kokua_performance_region_timing)
-			{
-				LLStringUtil::format_map_t args;
-				args["CA_REGION_TIMING_FRAME"] = llformat("%.1f", ca_performance_status_now[LL_SIM_STAT_FRAMEMS]);
-				args["CA_REGION_TIMING_SCRIPTS"] = llformat("%.1f", ca_performance_status_now[LL_SIM_STAT_SCRIPTMS]);
-				args["CA_REGION_TIMING_AGENTS"] = llformat("%.1f", ca_performance_status_now[LL_SIM_STAT_AGENTMS]);
-				args["CA_REGION_TIMING_SPARE"] = llformat("%.1f", ca_performance_status_now[LL_SIM_STAT_SIMSPARETIME]);
-				msg += LLTrans::getString("CA_Region_Timing", args);
-			}
-			if (kokua_performance_region_basics)
-			{
-				LLStringUtil::format_map_t args;
-				args["CA_REGION_BASICS_FPS"] = llformat("%.1f", ca_performance_status_now[LL_SIM_STAT_FPS]);
-				args["CA_REGION_BASICS_TD"] = llformat("%.2f", ca_performance_status_now[LL_SIM_STAT_TIME_DILATION]);
-				args["CA_REGION_BASICS_PERCENT"] = llformat("%.1f", ca_performance_status_now[LL_SIM_STAT_PCTSCRIPTSRUN]);
-				args["CA_REGION_BASICS_SPARE"] = llformat("%.1f", ca_performance_status_now[LL_SIM_STAT_SIMSPARETIME]);
-				msg += LLTrans::getString("CA_Region_Basics", args);
-			}
-
-			nargs["MESSAGE"] = msg;
-			ca_give_message_trans("CA_Region_Compound", nargs);
-		}
-
-		// clear this here since we'll only do the clause above if reporting is turned on
-		ca_region_changed = FALSE;
-	}
-	// CA end of performance alert code, now back to LL...
 
 	//
 	// Various hacks that aren't statistics, but are being handled here.
