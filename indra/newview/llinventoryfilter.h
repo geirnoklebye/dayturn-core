@@ -275,7 +275,6 @@ public:
 	U32					getDateSearchDirection() const;
 
 	void 				setFilterLinks(U64 filter_link);
-	U64					getFilterLinks() const;
 
 	void 				setFilterWorn(BOOL sl);
 	BOOL 				getFilterWorn() { return mFilterOps.mFilterTypes & FILTERTYPE_WORN; }
@@ -299,11 +298,6 @@ public:
 
 	std::string::size_type getStringMatchOffset(LLFolderViewModelItem* item) const;
 	std::string::size_type getFilterStringSize() const;
-	// ## Zi: Extended Inventory Search
-	void setFilterSubStringTarget(const std::string& targetName);
-	EFilterSubstringTarget getFilterSubStringTarget() const;
-	std::string getSearchableTarget(const LLFolderViewItem* item) const;
-	// ## Zi: Extended Inventory Search
 
 	// +-------------------------------------------------------------------+
 	// + Presentation

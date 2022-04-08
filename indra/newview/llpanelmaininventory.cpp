@@ -134,16 +134,6 @@ LLPanelMainInventory::LLPanelMainInventory(const LLPanel::Params& p)
 	mCommitCallbackRegistrar.add("Inventory.Share",  boost::bind(&LLAvatarActions::shareWithAvatars, this));
     mEnableCallbackRegistrar.add("Inventory.EnvironmentEnabled", [](LLUICtrl *, const LLSD &) { return LLPanelMainInventory::hasSettingsInventory(); });
 
-	// ## Zi: Filter Links Menu
-	mCommitCallbackRegistrar.add("Inventory.FilterLinks.Set", boost::bind(&LLPanelMainInventory::onFilterLinksChecked, this, _2));
-	mEnableCallbackRegistrar.add("Inventory.FilterLinks.Check", boost::bind(&LLPanelMainInventory::isFilterLinksChecked, this, _2));
-	// ## Zi: Filter Links Menu
-
-	// ## Zi: Extended Inventory Search
-	mCommitCallbackRegistrar.add("Inventory.SearchTarget.Set", boost::bind(&LLPanelMainInventory::onSearchTargetChecked, this, _2));
-	mEnableCallbackRegistrar.add("Inventory.SearchTarget.Check", boost::bind(&LLPanelMainInventory::isSearchTargetChecked, this, _2));
-	// ## Zi: Extended Inventory Search
-
 	mSavedFolderState = new LLSaveFolderState();
 	mSavedFolderState->setApply(FALSE);
 }
@@ -1694,90 +1684,6 @@ BOOL LLPanelMainInventory::isActionChecked(const LLSD& userdata)
 	return FALSE;
 }
 
-// ## Zi: Filter Links Menu
-void LLPanelMainInventory::onFilterLinksChecked(const LLSD& userdata)
-{
-	const std::string command_name = userdata.asString();
-	if (command_name == "show_links")
-	{
-		getActivePanel()->setFilterLinks(LLInventoryFilter::FILTERLINK_INCLUDE_LINKS);
-	}
-
-	if (command_name == "only_links")
-	{
-		getActivePanel()->setFilterLinks(LLInventoryFilter::FILTERLINK_ONLY_LINKS);
-	}
-
-	if (command_name == "hide_links")
-	{
-		getActivePanel()->setFilterLinks(LLInventoryFilter::FILTERLINK_EXCLUDE_LINKS);
-	}
-}
-
-BOOL LLPanelMainInventory::isFilterLinksChecked(const LLSD& userdata)
-{
-	const std::string command_name = userdata.asString();
-	if (command_name == "show_links")
-	{
-		return (getActivePanel()->getFilter().getFilterLinks() == LLInventoryFilter::FILTERLINK_INCLUDE_LINKS);
-	}
-
-	if (command_name == "only_links")
-	{
-		return (getActivePanel()->getFilter().getFilterLinks() == LLInventoryFilter::FILTERLINK_ONLY_LINKS);
-	}
-
-	if (command_name == "hide_links")
-	{
-		return (getActivePanel()->getFilter().getFilterLinks() == LLInventoryFilter::FILTERLINK_EXCLUDE_LINKS);
-	}
-
-	return FALSE;
-}
-// ## Zi: Filter Links Menu
-
-// ## Zi: Extended Inventory Search
-void LLPanelMainInventory::onSearchTargetChecked(const LLSD& userdata)
-{
-	getActivePanel()->setFilterSubStringTarget(userdata.asString());
-	resetFilters();
-}
-
-LLInventoryFilter::EFilterSubstringTarget LLPanelMainInventory::getSearchTarget() const
-{
-	return getActivePanel()->getFilterSubStringTarget();
-}
-
-BOOL LLPanelMainInventory::isSearchTargetChecked(const LLSD& userdata)
-{
-	const std::string command_name = userdata.asString();
-	if (command_name == "name")
-	{
-		return (getSearchTarget()==LLInventoryFilter::SUBST_TARGET_NAME);
-	}
-
-	if (command_name == "creator")
-	{
-		return (getSearchTarget()==LLInventoryFilter::SUBST_TARGET_CREATOR);
-	}
-
-	if (command_name == "description")
-	{
-		return (getSearchTarget()==LLInventoryFilter::SUBST_TARGET_DESCRIPTION);
-	}
-
-	if (command_name == "uuid")
-	{
-		return (getSearchTarget()==LLInventoryFilter::SUBST_TARGET_UUID);
-	}
-
-	if (command_name == "all")
-	{
-		return (getSearchTarget()==LLInventoryFilter::SUBST_TARGET_ALL);
-	}
-	return FALSE;
-}
-// ## Zi: Extended Inventory Search
 
 bool LLPanelMainInventory::handleDragAndDropToTrash(BOOL drop, EDragAndDropType cargo_type, EAcceptance* accept)
 {
