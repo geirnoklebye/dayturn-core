@@ -31,10 +31,6 @@
 #include "llpermissionsflags.h"
 #include "llfolderviewmodel.h"
 
-//	Begin Multi-substring inventory search
-#include <vector>
-//	End Multi-substring inventory search
-
 class LLFolderViewItem;
 class LLFolderViewFolder;
 class LLInventoryItem;
@@ -88,17 +84,6 @@ public:
 		SO_SYSTEM_FOLDERS_TO_TOP = 0x1 << 2,// Force system folders to be on top
 		SO_FOLDERS_BY_WEIGHT = 0x1 << 3,    // Force folder sort by weight, usually, amount of some elements in their descendants
 	};
-	// ## Zi: Extended Inventory Search
-	enum EFilterSubstringTarget
-	{
-		SUBST_TARGET_NAME = 0,			// Classic search for item name
-		SUBST_TARGET_CREATOR,			// Search for creator name
-		SUBST_TARGET_DESCRIPTION,		// Search for item description
-		SUBST_TARGET_UUID,				// Search for asset UUID
-		SUBST_TARGET_ALL					// Search in all fields at the same time
-	};
-	// ## Zi: Extended Inventory Search
-
 
 	enum ESearchType
 	{
@@ -373,7 +358,6 @@ private:
 	//	Begin Multi-substring inventory search
 	std::vector<std::string::size_type>	mSubStringMatchOffsets;
 	std::vector<std::string>			mFilterSubStrings;
-	EFilterSubstringTarget mFilterSubStringTarget;		// ## Zi: Extended Inventory Search
 	//	End Multi-substring inventory search
 
 	std::string				mFilterSubStringOrig;
