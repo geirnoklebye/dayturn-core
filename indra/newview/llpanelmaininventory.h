@@ -173,6 +173,11 @@ protected:
 	BOOL isActionChecked(const LLSD& userdata);
 	void onCustomAction(const LLSD& command_name);
 
+	// ## Zi: Filter Links Menu
+	BOOL isFilterLinksChecked(const LLSD& userdata);
+	void onFilterLinksChecked(const LLSD& userdata);
+	// ## Zi: Filter Links Menu
+
 	bool handleDragAndDropToTrash(BOOL drop, EDragAndDropType cargo_type, EAcceptance* accept);
     static bool hasSettingsInventory();
 	/**

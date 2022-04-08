@@ -1125,15 +1125,25 @@ U32 LLInventoryFilter::getDateSearchDirection() const
 
 void LLInventoryFilter::setFilterLinks(U64 filter_links)
 {
+// <FS:Zi> Filter Links Menu
 	if (mFilterOps.mFilterLinks != filter_links)
 	{
-		if (mFilterOps.mFilterLinks == FILTERLINK_EXCLUDE_LINKS ||
-			mFilterOps.mFilterLinks == FILTERLINK_ONLY_LINKS)
-			setModified(FILTER_MORE_RESTRICTIVE);
-		else
-			setModified(FILTER_LESS_RESTRICTIVE);
+		LLInventoryFilter::EFilterModified modifyMode=FILTER_RESTART;
+
+		if(filter_links==FILTERLINK_INCLUDE_LINKS)
+			modifyMode=FILTER_LESS_RESTRICTIVE;
+		else if(mFilterOps.mFilterLinks==FILTERLINK_INCLUDE_LINKS)
+			modifyMode=FILTER_MORE_RESTRICTIVE;
+
+		else if(filter_links==FILTERLINK_EXCLUDE_LINKS && mFilterOps.mFilterLinks==FILTERLINK_INCLUDE_LINKS)
+			modifyMode=FILTER_MORE_RESTRICTIVE;
+		else if(filter_links==FILTERLINK_ONLY_LINKS && mFilterOps.mFilterLinks==FILTERLINK_INCLUDE_LINKS)
+			modifyMode=FILTER_MORE_RESTRICTIVE;
+
+		mFilterOps.mFilterLinks=filter_links;
+		setModified(modifyMode);
 	}
-	mFilterOps.mFilterLinks = filter_links;
+	// </FS:Zi>
 }
 
 void LLInventoryFilter::setShowFolderState(EFolderShow state)
@@ -1539,10 +1549,17 @@ time_t LLInventoryFilter::getMaxDate() const
 { 
 	return mFilterOps.mMaxDate; 
 }
+
 U32 LLInventoryFilter::getHoursAgo() const 
 { 
 	return mFilterOps.mHoursAgo; 
 }
+
+U64 LLInventoryFilter::getFilterLinks() const
+{
+	return mFilterOps.mFilterLinks;
+}
+
 LLInventoryFilter::EFolderShow LLInventoryFilter::getShowFolderState() const
 { 
 	return mFilterOps.mShowFolderState; 
