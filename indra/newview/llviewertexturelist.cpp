@@ -1362,7 +1362,7 @@ S32Megabytes LLViewerTextureList::getMinVideoRamSetting()
     LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	U32Megabytes system_ram = gSysMemory.getPhysicalMemoryKB();
 	//min texture mem sets to 64M if total physical mem is more than 1.5GB
-	return (system_ram > U32Megabytes(1500)) ? S32Megabytes(64) : gMinVideoRam ;
+	return (system_ram > U32Megabytes(1500)) ? S32Megabytes(128) : gMinVideoRam ;
 }
 
 //static
