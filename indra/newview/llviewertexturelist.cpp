@@ -1514,16 +1514,6 @@ void LLViewerTextureList::updateMaxResidentTexMem(S32Megabytes mem)
 	
 // <FS:Ansariel> Texture memory management
 	//mMaxTotalTextureMemInMegaBytes = mMaxResidentTexMemInMegaBytes * 2;
-#if ADDRESS_SIZE == 32
-	// </FS:Ansariel>
-	mMaxTotalTextureMemInMegaBytes = mMaxResidentTexMemInMegaBytes * 2;
-	if (mMaxResidentTexMemInMegaBytes > (S32Megabytes)640)
-	{
-		mMaxTotalTextureMemInMegaBytes -= (mMaxResidentTexMemInMegaBytes / 4);
-	}
-// <FS:Ansariel> Texture memory management
-	mMaxTotalTextureMemInMegaBytes = llclamp(mMaxTotalTextureMemInMegaBytes, (S32Megabytes)0, (S32Megabytes)768);
-#else
 	if (mMaxResidentTexMemInMegaBytes > gMaxVideoRam / 2)
 	{
 		mMaxTotalTextureMemInMegaBytes = gMaxVideoRam + (S32Megabytes)(mMaxResidentTexMemInMegaBytes * 0.25f);
@@ -1532,7 +1522,6 @@ void LLViewerTextureList::updateMaxResidentTexMem(S32Megabytes mem)
 	{
 		mMaxTotalTextureMemInMegaBytes = mMaxResidentTexMemInMegaBytes * 2;
 	}
-#endif
 // </FS:Ansariel>
 
 	//system mem
@@ -1557,11 +1546,7 @@ void LLViewerTextureList::updateMaxResidentTexMem(S32Megabytes mem)
 //static
 bool LLViewerTextureList::canUseDynamicTextureMemory()
 {
-#if ADDRESS_SIZE == 64
 	return (gGLManager.mHasATIMemInfo || gGLManager.mHasNVXMemInfo) && gGLManager.mVRAM >= 512;
-#else
-	return false;
-#endif
 }
 
 void LLViewerTextureList::updateTexMemDynamic()
