@@ -2,7 +2,7 @@
 <panel
  border="true"
  follows="all"
- height="438"
+ height="448"
  label="Sounds"
  layout="topleft"
  left="102"
@@ -21,28 +21,6 @@
      name="button5_mouse">
      Mouse Button 5
     </panel.string>
-  <tab_container
-    follows="all"
-    top="-1"
-    height="430"
-    left="0"
-    mouse_opaque="false"
-    name="tabs"
-    tab_min_width="50"
-    tab_position="top"
-    width="517"
-    bg_opaque_color="0,0,0,0.0">
-    <!--Sound (Main)-->
-    <panel
-        border="true"
-        layout="topleft"
-        follows="all"
-        height="408"
-        label="Sound (Main)"
-        left="1"
-        mouse_opaque="true"
-        name="sound_main"
-        width="517">
     <slider
      control_name="AudioLevelMaster"
      follows="left|top"
@@ -344,24 +322,14 @@
 		name="enable_voice_check"
 		width="110"/>
 	<!-- -->
-	<check_box
-        name="audio_auto_play_btn"
-        control_name="FSParcelMusicAutoPlay"
-        layout="topleft"
-        height="16"
-        width="230"
-        tool_tip="Check this to automatically start audio streams."
-        label="Allow Audio to auto-play"
-        top_pad="5"
-        left="25"/>
     <text
         follows="left|top"
         layout="topleft"
         height="15"
-        left="8"
-        top_pad="5"
-        width="120"
-        halign="right"
+        left="27"
+        top_pad="7"
+        width="105"
+        halign="left"
         name="media_autoplay_label">
          Media auto-play
     </text>
@@ -371,8 +339,8 @@
         follows="left|top"
         layout="topleft"
         height="23"
-        left_pad="7"
-        top_delta="-4"
+        left_pad="0"
+        top_delta="-2"
         name="media_auto_play_combo"
         width="100">
       <item
@@ -392,8 +360,7 @@
 		name="media_show_on_others_btn"
 		control_name="MediaShowOnOthers"
 		value="true"
-    follows="left|top"
-    layout="topleft"
+		follows="left|top|right"
 		height="15"
 		tool_tip="Uncheck this to hide media attached to other avatars nearby"
 		label="Play media attached to other avatars"
@@ -404,91 +371,12 @@
 		control_name="EnableGestureSounds"
         disabled_control="MuteAudio"
 		value="true"
-    follows="left|top"
-    layout="topleft"
+		follows="left|top|right"
 		height="15"
 		tool_tip="Check this to hear sounds from gestures"
 		label="Play sounds from gestures"
-		top_pad="2"
-		width="230"
+		top_pad="1"
 		left="25"/>
-  <check_box
-   control_name="KokuaPlayUISndTeleportOut"
-		height="15"
-   	label="Play sound effect when teleporting"
-    follows="left|top"
-    layout="topleft"
-   	name="KokuaPlayUISndTeleportOut"
-   	width="230"
-		top_pad="2"
-		left="25"/>
-  <panel
-   background_visible="false"
-   border="false"
-   follows="top|left|right"
-   height="100"
-   layout="topleft"
-   left="10"
-   right="-5"
-   name="output_device_settings_panel"
-   top_pad="5">
-      <panel.string
-       name="output_default_text">
-       Default
-      </panel.string>
-      <panel.string
-       name="output_no_device">
-       No device available
-      </panel.string>
-      <panel.string
-       name="output_name_no_device">
-       Unnamed device
-      </panel.string>
-      <panel.string
-       name="output_device_unavailable">
-       Unavailable device
-      </panel.string>
-      <icon
-       height="18"
-       image_name="Parcel_Voice_Light"
-       left_delta="4"
-       name="output_speaker_icon"
-       mouse_opaque="false"
-       top="7"
-       visible="true"
-       width="18" />
-      <text
-       type="string"
-       length="1"
-       follows="left|top"
-       height="16"
-       layout="topleft"
-       left_pad="3"
-       name="output_label"
-       width="90">
-          Output device:
-      </text>
-      <combo_box
-       height="23"
-       layout="topleft"
-       left_pad="0"
-       max_chars="128"
-       name="sound_output_device"
-       top_delta="-5"
-       right="-5" />
-  </panel>
-  </panel>
-  <!--Sound Voice-->
-  <panel
-      border="true"
-      follows="all"
-      layout="topleft"
-      height="408"
-      label="Voice"
-      left="1"
-      mouse_opaque="true"
-      name="sound_voice"
-      width="517">
     <text
      type="string"
      length="1"
@@ -498,7 +386,7 @@
      left="25"
      name="voice_chat_settings"
      width="200"
-     top_pad="16">
+     top_pad="10">
 	  Voice Chat Settings
     </text>
     <text
@@ -569,7 +457,7 @@
      layout="topleft"
      left="44"
      name="ShowVoiceVisualizer"
-     top_pad="5"
+     top_pad="7"
      width="237"/>   
   <check_box
    control_name="LipSyncEnabled"
@@ -584,208 +472,73 @@
  <check_box
   follows="top|left"
   enabled_control="EnableVoiceChat"
-  control_name="KokuaDisableVoiceCallStart"
-  height="15"
-  label="Disable Voice Call menu entries/butons"
-  layout="topleft"
-  left="44"
-  name="disable_voice_call_start"
-  width="237"
-  tool_tip="Disable Voice Call menu entries/buttons to avoid accidental invocation of Voice Calls"
-  top_pad="3"/>
- <check_box
-  follows="top|left"
-  enabled_control="EnableVoiceChat"
   control_name="PushToTalkToggle"
   height="15"
-  label="Toggle speak on/off when I press button in toolbar"
+  label="Toggle speak on/off when I press:"
   layout="topleft"
   left="44"
   name="push_to_talk_toggle_check"
   width="237"
   tool_tip="When in toggle mode, press and release the trigger key ONCE to switch your microphone on or off. When not in toggle mode, the microphone broadcasts your voice only while the trigger is being held down."
   top_pad="3"/>
+  <line_editor
+   follows="top|left"
+   control_name="PushToTalkButton"
+   enabled="false"
+   enabled_control="EnableVoiceChat"
+   height="23"
+   left="80"
+   max_length_bytes="200"
+   name="modifier_combo"
+   label="Push-to-Speak trigger"
+   top_pad="3"
+   width="200" />
+  <button
+   layout="topleft"
+   follows="top|left"
+   enabled_control="EnableVoiceChat"
+   height="23"
+   label="Set Key"
+   left_pad="5"
+   name="set_voice_hotkey_button"
+   width="100">
+    <button.commit_callback
+    function="Pref.VoiceSetKey" />
+  </button>
+  <button
+     enabled_control="EnableVoiceChat"
+     follows="top|left"
+     halign="center"
+     height="23"
+     image_overlay="Refresh_Off"
+     layout="topleft"
+     tool_tip="Reset to Middle Mouse Button"
+     mouse_opaque="true"
+     name="set_voice_middlemouse_button"
+     left_pad="5"
+     width="25">
+    <button.commit_callback
+    function="Pref.VoiceSetMiddleMouse" />
+  </button>
   <button
    control_name="ShowDeviceSettings"
    follows="left|top"
    height="23"
    is_toggle="true"
-   label="Voice Input/Output devices"
+   label="Input/Output devices"
    layout="topleft"
    left="20"
-   top_pad="6"
+   top_pad="10"
    name="device_settings_btn"
-   width="230">
+   width="190">
   </button>
-  <panel
-      background_visible="false"
-      bg_alpha_color="DkGray"
-      visiblity_control="ShowDeviceSettings"
-      border="false"
-      follows="top|left|right"
-      height="100"
-      label="Device Settings"
-      layout="topleft"
-      left="10"
-      right="-5"
-      name="device_settings_panel"
-      class="panel_voice_device_settings"
-      top_pad="5">
-      <panel.string
-          name="default_text">
-          Default
-      </panel.string>
-      <panel.string
-          name="default system device">
-          Default system device
-      </panel.string>
-      <panel.string
-          name="name_default_system_device">
-          Default system device
-      </panel.string>
-      <panel.string
-          name="no device">
-          No device
-      </panel.string>
-      <panel.string
-          name="name_no_device">
-          No device
-      </panel.string>
-      
-      <icon
-      height="18"
-      image_name="Microphone_On"
-      left_delta="4"
-      name="microphone_icon"
-      mouse_opaque="false"
-      top="7"
-      visible="true"
-      width="18" />
-      <text
-          type="string"
-          length="1"
-          font.style="BOLD"
-          follows="left|top"
-          height="16"
-          layout="topleft"
-          left_pad="3"
-          name="Input"
-          width="66">
-          Input
-      </text>
-      <combo_box
-      height="23"
-      control_name="VoiceInputAudioDevice"
-      layout="topleft"
-      left_pad="0"
-      max_chars="128"
-      name="voice_input_device"
-      top_delta="-5"
-      width="144" />
-      <icon
-      height="18"
-      image_name="Parcel_Voice_Light"
-      left="275"
-      name="speaker_icon"
-      mouse_opaque="false"
-      top_pad="-20"
-      visible="true"
-      width="22" />
-      <text
-          font.style="BOLD"
-          type="string"
-          length="1"
-          follows="left|top"
-          height="15"
-          layout="topleft"
-          left_pad="0"
-          name="Output"
-          width="66">
-          Output
-      </text>
-      <combo_box
-      control_name="VoiceOutputAudioDevice"
-      height="23"
-      layout="topleft"
-      left_pad="0"
-      max_chars="128"
-      name="voice_output_device"
-      top_delta="-3"
-      width="144" />
-      <text
-          type="string"
-          length="1"
-          follows="left|top"
-          height="10"
-          layout="topleft"
-          left_delta="-360"
-          name="Volume label"
-          top_pad="4"
-          width="80">
-          Input Volume:
-      </text>
-      <slider_bar
-      control_name="AudioLevelMic"
-      follows="left|top"
-      height="17"
-      increment="0.025"
-      initial_value="1.0"
-      layout="topleft"
-      left_pad="5"
-      max_val="2"
-      name="mic_volume_slider"
-      tool_tip="Change the volume using this slider"
-      top_pad="-8"
-      width="220" />
-      <text
-          type="string"
-          text_color="EmphasisColor"
-          length="1"
-          follows="left|top"
-          height="18"
-          layout="topleft"
-          left_pad="5"
-          name="wait_text"
-          top_delta="-1"
-          width="130">
-          Please wait/Is voice on?
-      </text>
-      <locate
-      height="20"
-      layout="topleft"
-      left_delta="0"
-      name="bar0"
-      top_delta="-2"
-      width="20" />
-      <locate
-      height="20"
-      layout="topleft"
-      left_pad="5"
-      name="bar1"
-      top_delta="0"
-      width="20" />
-      <locate
-      height="20"
-      layout="topleft"
-      left_pad="5"
-      name="bar2"
-      top_delta="0"
-      width="20" />
-      <locate
-      height="20"
-      layout="topleft"
-      left_pad="5"
-      name="bar3"
-      top_delta="0"
-      width="20" />
-      <locate
-      height="20"
-      layout="topleft"
-      left_pad="5"
-      name="bar4"
-      top_delta="0"
-      width="20" />
-  </panel>
+    <panel
+    layout="topleft"
+    filename="panel_sound_devices.xml"
+     visiblity_control="ShowDeviceSettings"
+     name="device_settings_panel"
+    top_pad="0"
+    width="480"
+    left="18"
+    class="panel_voice_device_settings"/>
     </panel>
-  </tab_container>
-</panel>
