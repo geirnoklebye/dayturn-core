@@ -233,7 +233,7 @@ void swap();
 extern BOOL gDebugClicks;
 extern BOOL gDisplaySwapBuffers;
 extern BOOL gDepthDirty;
-extern BOOL gResizeScreenTexture;
+extern bool gResizeScreenTexture;
 
 LLViewerWindow	*gViewerWindow = NULL;
 
@@ -4019,7 +4019,7 @@ void LLViewerWindow::updateWorldViewRect(bool use_full_window)
 	if (mWorldViewRectRaw != new_world_rect)
 	{
 		mWorldViewRectRaw = new_world_rect;
-		gResizeScreenTexture = TRUE;
+		gResizeScreenTexture = true;
 		LLViewerCamera::getInstance()->setViewHeightInPixels( mWorldViewRectRaw.getHeight() );
 		LLViewerCamera::getInstance()->setAspect( getWorldViewAspectRatio() );
 
@@ -5663,7 +5663,7 @@ void LLViewerWindow::restoreGL(const std::string& progress_message)
 		LLVOAvatar::restoreGL();
 		LLVOPartGroup::restoreGL();
 		
-		gResizeScreenTexture = TRUE;
+		gResizeScreenTexture = true;
 		gWindowResized = TRUE;
 
 		if (isAgentAvatarValid() && gAgentAvatarp->isEditingAppearance())
@@ -5745,7 +5745,7 @@ BOOL LLViewerWindow::changeDisplaySettings(LLCoordScreen size, BOOL enable_vsync
 {
 	//BOOL was_maximized = gSavedSettings.getBOOL("WindowMaximized");
 
-	//gResizeScreenTexture = TRUE;
+	//gResizeScreenTexture = true;
 
 
 	//U32 fsaa = gSavedSettings.getU32("RenderFSAASamples");

@@ -95,7 +95,7 @@ const F32		RESTORE_GL_TIME = 5.f;	// Wait this long while reloading textures bef
 BOOL gForceRenderLandFence = FALSE;
 BOOL gDisplaySwapBuffers = FALSE;
 BOOL gDepthDirty = FALSE;
-BOOL gResizeScreenTexture = FALSE;
+bool gResizeScreenTexture = false;
 BOOL gResizeShadowTexture = FALSE;
 BOOL gWindowResized = FALSE;
 BOOL gSnapshot = FALSE;
@@ -271,7 +271,7 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 		gViewerWindow->getWindow()->swapBuffers();
 		LLPipeline::refreshCachedSettings();
 		gPipeline.resizeScreenTexture();
-		gResizeScreenTexture = FALSE;
+		gResizeScreenTexture = false;
 		gWindowResized = FALSE;
 		return;
 	}
@@ -717,7 +717,7 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 			LL_PROFILE_ZONE_NAMED_CATEGORY_DISPLAY("display - 2")
 			if (gResizeScreenTexture)
 			{
-				gResizeScreenTexture = FALSE;
+				gResizeScreenTexture = false;
 				gPipeline.resizeScreenTexture();
 			}
 

@@ -723,7 +723,7 @@ void LLPipeline::destroyGL()
 
 void LLPipeline::requestResizeScreenTexture()
 {
-    gResizeScreenTexture = TRUE;
+    gResizeScreenTexture = true;
 }
 
 void LLPipeline::requestResizeShadowTexture()
@@ -750,7 +750,7 @@ void LLPipeline::resizeScreenTexture()
 			releaseScreenBuffers();
             releaseShadowTargets();
 		    allocateScreenBuffer(resX,resY);
-            gResizeScreenTexture = FALSE;
+            gResizeScreenTexture = false;
 		}
 	}
 }
