@@ -528,13 +528,13 @@ void LLViewerObjectList::processObjectUpdate(LLMessageSystem *mesgsys,
 	{
 		// timer is unused?
 		LLTimer update_timer;
-		BOOL justCreated = FALSE;
+		bool justCreated = false;
 		S32	msg_size = 0;
 		bool update_cache = false; //update object cache if it is a full-update or terse update
 
 		if (compressed)
 		{
-			S32							uncompressed_length = 2048;
+			S32	uncompressed_length = 2048;
 			compressed_dp.reset();
 
 			uncompressed_length = mesgsys->getSizeFast(_PREHASH_ObjectData, i, _PREHASH_Data);
@@ -730,7 +730,7 @@ void LLViewerObjectList::processObjectUpdate(LLMessageSystem *mesgsys,
 				continue;
 			}
 
-			justCreated = TRUE;
+			justCreated = true;
 			mNumNewObjects++;
 		}
 
@@ -772,7 +772,7 @@ void LLViewerObjectList::processObjectUpdate(LLMessageSystem *mesgsys,
 			processUpdateCore(objectp, user_data, i, update_type, NULL, justCreated);
 		}
 		recorder.objectUpdateEvent(local_id, update_type, objectp, msg_size);
-		objectp->setLastUpdateType(update_type);		
+		objectp->setLastUpdateType(update_type);
 	}
 
 	recorder.log(0.2f);
@@ -919,7 +919,7 @@ void LLViewerObjectList::updateApparentAngles(LLAgent &agent)
 	}
 	else
 	{
-	mCurBin = (mCurBin + 1) % NUM_BINS;
+		mCurBin = (mCurBin + 1) % NUM_BINS;
 	}
 
 	LLVOAvatar::cullAvatarsByPixelArea();
@@ -1006,7 +1006,7 @@ void LLViewerObjectList::update(LLAgent &agent)
 
 	std::vector<LLViewerObject*>::iterator idle_end = idle_list.begin()+idle_count;
 
-	if (gSavedSettings.getBOOL("FreezeTime"))
+	if (gSavedSettings.getbool("FreezeTime"))
 	{
 		
 		for (std::vector<LLViewerObject*>::iterator iter = idle_list.begin();
@@ -1162,7 +1162,7 @@ void LLViewerObjectList::fetchObjectCostsCoro(std::string url)
 
     if (diff.empty())
     {
-    		// CA This gets spammy for no obvious reason, so demote it to _ONCE
+    	// CA This gets spammy for no obvious reason, so demote it to _ONCE
         LL_INFOS_ONCE() << "No outstanding object IDs to request. Pending count: " << mPendingObjectCost.size() << LL_ENDL;
         return;
     }
@@ -2267,7 +2267,7 @@ void LLViewerObjectList::orphanize(LLViewerObject *childp, U32 parent_id, U32 ip
 	LL_DEBUGS("ORPHANS") << "Orphaning object " << childp->getID() << " with parent " << parent_id << LL_ENDL;
 
 	// We're an orphan, flag things appropriately.
-	childp->mOrphaned = TRUE;
+	childp->mOrphaned = true;
 	if (childp->mDrawable.notNull())
 	{
 		bool make_invisible = true;
@@ -2340,7 +2340,7 @@ void LLViewerObjectList::findOrphans(LLViewerObject* objectp, U32 ip, U32 port)
 	}
 
 	U64 parent_info = getIndex(objectp->mLocalID, ip, port);
-	BOOL orphans_found = FALSE;
+	bool orphans_found = false;
 	// Iterate through the orphan list, and set parents of matching children.
 
 	for (std::vector<OrphanInfo>::iterator iter = mOrphanChildren.begin(); iter != mOrphanChildren.end(); )
@@ -2371,7 +2371,7 @@ void LLViewerObjectList::findOrphans(LLViewerObject* objectp, U32 ip, U32 port)
 			objectp->setChanged(LLXform::MOVED | LLXform::SILHOUETTE);
 
 			// Flag the object as no longer orphaned
-			childp->mOrphaned = FALSE;
+			childp->mOrphaned = false;
 			if (childp->mDrawable.notNull())
 			{
 				// Make the drawable visible again and set the drawable parent
@@ -2384,7 +2384,7 @@ void LLViewerObjectList::findOrphans(LLViewerObject* objectp, U32 ip, U32 port)
 			childp->hideExtraDisplayItems( FALSE );
 
 			objectp->addChild(childp);
-			orphans_found = TRUE;
+			orphans_found = true;
 			++iter;
 		}
 		else
