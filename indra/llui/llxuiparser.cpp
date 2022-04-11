@@ -1426,7 +1426,7 @@ bool LLSimpleXUIParser::readXUI(const std::string& filename, LLInitParam::BaseBl
 	
 	mEmptyLeafNode.push_back(false);
 
-	if( !XML_ParseBuffer(mParser, bytes_read, TRUE ) )
+	if( !XML_ParseBuffer(mParser, bytes_read, true ) )
 	{
 		LL_WARNS("ReadXUI") << "Error while parsing file  " << filename << LL_ENDL;
 		XML_ParserFree( mParser );

@@ -221,16 +221,16 @@ public:
     U32 getChildCount() const;
     // getChild returns a Null LLXMLNode (not a NULL pointer) if there is no such child.
     // This child has no value so any getTYPEValue() calls on it will return 0.
-    bool getChild(const char* name, LLXMLNodePtr& node, BOOL use_default_if_missing = TRUE);
-    bool getChild(const LLStringTableEntry* name, LLXMLNodePtr& node, BOOL use_default_if_missing = TRUE);
-    void getChildren(const char* name, LLXMLNodeList &children, BOOL use_default_if_missing = TRUE) const;
-    void getChildren(const LLStringTableEntry* name, LLXMLNodeList &children, BOOL use_default_if_missing = TRUE) const;
+    bool getChild(const char* name, LLXMLNodePtr& node, bool use_default_if_missing = true);
+    bool getChild(const LLStringTableEntry* name, LLXMLNodePtr& node, bool use_default_if_missing = true);
+    void getChildren(const char* name, LLXMLNodeList &children, bool use_default_if_missing = true) const;
+    void getChildren(const LLStringTableEntry* name, LLXMLNodeList &children, bool use_default_if_missing = true) const;
 	
 	// recursively finds all children at any level matching name
 	void getDescendants(const LLStringTableEntry* name, LLXMLNodeList &children) const;
 
-	bool getAttribute(const char* name, LLXMLNodePtr& node, BOOL use_default_if_missing = TRUE);
-	bool getAttribute(const LLStringTableEntry* name, LLXMLNodePtr& node, BOOL use_default_if_missing = TRUE);
+	bool getAttribute(const char* name, LLXMLNodePtr& node, bool use_default_if_missing = true);
+	bool getAttribute(const LLStringTableEntry* name, LLXMLNodePtr& node, bool use_default_if_missing = true);
 
 	S32 getLineNumber();
 

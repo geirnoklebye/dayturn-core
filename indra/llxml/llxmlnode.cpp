@@ -1158,12 +1158,12 @@ void LLXMLNode::scrubToTree(LLXMLNode *tree)
 	}
 }
 
-bool LLXMLNode::getChild(const char* name, LLXMLNodePtr& node, BOOL use_default_if_missing)
+bool LLXMLNode::getChild(const char* name, LLXMLNodePtr& node, bool use_default_if_missing)
 {
     return getChild(gStringTable.checkStringEntry(name), node, use_default_if_missing);
 }
 
-bool LLXMLNode::getChild(const LLStringTableEntry* name, LLXMLNodePtr& node, BOOL use_default_if_missing)
+bool LLXMLNode::getChild(const LLStringTableEntry* name, LLXMLNodePtr& node, bool use_default_if_missing)
 {
 	if (mChildren.notNull())
 	{
@@ -1176,18 +1176,18 @@ bool LLXMLNode::getChild(const LLStringTableEntry* name, LLXMLNodePtr& node, BOO
 	}
 	if (use_default_if_missing && !mDefault.isNull())
 	{
-		return mDefault->getChild(name, node, FALSE);
+		return mDefault->getChild(name, node, false);
 	}
 	node = NULL;
 	return false;
 }
 
-void LLXMLNode::getChildren(const char* name, LLXMLNodeList &children, BOOL use_default_if_missing) const
+void LLXMLNode::getChildren(const char* name, LLXMLNodeList &children, bool use_default_if_missing) const
 {
     getChildren(gStringTable.checkStringEntry(name), children, use_default_if_missing);
 }
 
-void LLXMLNode::getChildren(const LLStringTableEntry* name, LLXMLNodeList &children, BOOL use_default_if_missing) const
+void LLXMLNode::getChildren(const LLStringTableEntry* name, LLXMLNodeList &children, bool use_default_if_missing) const
 {
 	if (mChildren.notNull())
 	{
@@ -1209,7 +1209,7 @@ void LLXMLNode::getChildren(const LLStringTableEntry* name, LLXMLNodeList &child
 	}
 	if (children.size() == 0 && use_default_if_missing && !mDefault.isNull())
 	{
-		mDefault->getChildren(name, children, FALSE);
+		mDefault->getChildren(name, children, false);
 	}
 }
 
@@ -1232,12 +1232,12 @@ void LLXMLNode::getDescendants(const LLStringTableEntry* name, LLXMLNodeList &ch
 	}
 }
 
-bool LLXMLNode::getAttribute(const char* name, LLXMLNodePtr& node, BOOL use_default_if_missing)
+bool LLXMLNode::getAttribute(const char* name, LLXMLNodePtr& node, bool use_default_if_missing)
 {
     return getAttribute(gStringTable.checkStringEntry(name), node, use_default_if_missing);
 }
 
-bool LLXMLNode::getAttribute(const LLStringTableEntry* name, LLXMLNodePtr& node, BOOL use_default_if_missing)
+bool LLXMLNode::getAttribute(const LLStringTableEntry* name, LLXMLNodePtr& node, bool use_default_if_missing)
 {
 	LLXMLAttribList::const_iterator child_itr = mAttributes.find(name);
 	if (child_itr != mAttributes.end())
@@ -1247,7 +1247,7 @@ bool LLXMLNode::getAttribute(const LLStringTableEntry* name, LLXMLNodePtr& node,
 	}
 	if (use_default_if_missing && !mDefault.isNull())
 	{
-		return mDefault->getAttribute(name, node, FALSE);
+		return mDefault->getAttribute(name, node, false);
 	}
 	
 	return false;

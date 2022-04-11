@@ -102,7 +102,7 @@ bool LLXmlParser::parseFile(const std::string &path)
 			goto exit_label;
 		}
 		
-		if( !XML_ParseBuffer(mParser, bytes_read, TRUE ) )
+		if( !XML_ParseBuffer(mParser, bytes_read, true ) )
 		{
 			mAuxErrorString = llformat( "Error while parsing file  %s", path.c_str() );
 			success = false;
