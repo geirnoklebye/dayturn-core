@@ -248,7 +248,7 @@ LLViewerObject *LLViewerObject::createObject(const LLUUID &id, const LLPCode pco
 	return res;
 }
 
-LLViewerObject::LLViewerObject(const LLUUID &id, const LLPCode pcode, LLViewerRegion *regionp, BOOL is_global)
+LLViewerObject::LLViewerObject(const LLUUID &id, const LLPCode pcode, LLViewerRegion *regionp, bool is_global)
 :	LLPrimitive(),
 	mChildList(),
 	mID(id),
@@ -1000,20 +1000,20 @@ void LLViewerObject::addThisAndNonJointChildren(std::vector<LLViewerObject*>& ob
 	}
 }
 
-BOOL LLViewerObject::isChild(LLViewerObject *childp) const
+bool LLViewerObject::isChild(LLViewerObject *childp) const
 {
 	for (child_list_t::const_iterator iter = mChildList.begin();
 		 iter != mChildList.end(); iter++)
 	{
 		LLViewerObject* testchild = *iter;
 		if (testchild == childp)
-			return TRUE;
+			return true;
 	}
-	return FALSE;
+	return false;
 }
 
-// returns TRUE if at least one avatar is sitting on this object
-BOOL LLViewerObject::isSeat() const
+// returns true if at least one avatar is sitting on this object
+bool LLViewerObject::isSeat() const
 {
 	return mSeatCount > 0;
 }
@@ -4143,7 +4143,7 @@ void LLViewerObject::addNVPair(const std::string& data)
 	mNameValuePairs[nv->mName] = nv;
 }
 
-BOOL LLViewerObject::removeNVPair(const std::string& name)
+bool LLViewerObject::removeNVPair(const std::string& name)
 {
 	char* canonical_name = gNVNameTable.addString(name);
 
@@ -4169,14 +4169,14 @@ BOOL LLViewerObject::removeNVPair(const std::string& name)
 			// Remove the NV pair from the local list.
 			delete nv;
 			mNameValuePairs.erase(iter);
-			return TRUE;
+			return true;
 		}
 		else
 		{
 			LL_DEBUGS() << "removeNVPair - No region for object" << LL_ENDL;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 

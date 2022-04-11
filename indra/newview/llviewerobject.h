@@ -129,11 +129,11 @@ public:
 
 	typedef const child_list_t const_child_list_t;
 
-	LLViewerObject(const LLUUID &id, const LLPCode pcode, LLViewerRegion *regionp, BOOL is_global = FALSE);
+	LLViewerObject(const LLUUID &id, const LLPCode pcode, LLViewerRegion *regionp, bool is_global = false);
 
 	virtual void markDead();				// Mark this object as dead, and clean up its references
-	BOOL isDead() const									{return mDead;}
-	BOOL isOrphaned() const								{ return mOrphaned; }
+	bool isDead() const									{return mDead;}
+	bool isOrphaned() const								{ return mOrphaned; }
 	BOOL isParticleSource() const;
 
 	virtual LLVOAvatar* asAvatar();
@@ -144,7 +144,7 @@ public:
 	static void cleanupVOClasses();
 
 	void			addNVPair(const std::string& data);
-	BOOL			removeNVPair(const std::string& name);
+	bool			removeNVPair(const std::string& name);
 	LLNameValue*	getNVPair(const std::string& name) const;			// null if no name value pair by that name
 
 	// Object create and update functions
@@ -269,8 +269,8 @@ public:
 	S32 numChildren() const { return mChildList.size(); }
 	void addThisAndAllChildren(std::vector<LLViewerObject*>& objects);
 	void addThisAndNonJointChildren(std::vector<LLViewerObject*>& objects);
-	BOOL isChild(LLViewerObject *childp) const;
-	BOOL isSeat() const;
+	bool isChild(LLViewerObject *childp) const;
+	bool isSeat() const;
 	
 
 	//detect if given line segment (in agent space) intersects with this viewer object.
@@ -969,7 +969,7 @@ public:
 class LLStaticViewerObject : public LLViewerObject
 {
 public:
-	LLStaticViewerObject(const LLUUID& id, const LLPCode pcode, LLViewerRegion* regionp, BOOL is_global = FALSE)
+	LLStaticViewerObject(const LLUUID& id, const LLPCode pcode, LLViewerRegion* regionp, bool is_global = false)
 		: LLViewerObject(id,pcode,regionp, is_global)
 	{ }
 
