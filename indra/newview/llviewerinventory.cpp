@@ -1855,7 +1855,7 @@ void menu_create_inventory_item(LLInventoryPanel* panel, LLFolderBridge *bridge,
 			LL_WARNS(LOG_INV) << "Can't create unrecognized type " << type_name << LL_ENDL;
 		}
 	}
-	panel->getRootFolder()->setNeedsAutoRename(TRUE);	
+	panel->getRootFolder()->setNeedsAutoRename(true);	
 }
 
 LLAssetType::EType LLViewerInventoryItem::getType() const

@@ -38,7 +38,7 @@
 // static
 std::list<LLModalDialog*> LLModalDialog::sModalStack;
 
-LLModalDialog::LLModalDialog( const LLSD& key, BOOL modal )
+LLModalDialog::LLModalDialog( const LLSD& key, bool modal )
 	: LLFloater(key),
 	  mModal( modal )
 {

@@ -1422,7 +1422,7 @@ void LLInventoryPanel::openAllFolders()
 	mFolderRoot.get()->arrangeAll();
 }
 
-void LLInventoryPanel::setSelection(const LLUUID& obj_id, BOOL take_keyboard_focus)
+void LLInventoryPanel::setSelection(const LLUUID& obj_id, bool take_keyboard_focus)
 {
 	// Don't select objects in COF (e.g. to prevent refocus when items are worn).
 	const LLInventoryObject *obj = mInventory->getObject(obj_id);
@@ -1433,7 +1433,7 @@ void LLInventoryPanel::setSelection(const LLUUID& obj_id, BOOL take_keyboard_foc
 	setSelectionByID(obj_id, take_keyboard_focus);
 }
 
-void LLInventoryPanel::setSelectCallback(const boost::function<void (const std::deque<LLFolderViewItem*>& items, BOOL user_action)>& cb) 
+void LLInventoryPanel::setSelectCallback(const boost::function<void (const std::deque<LLFolderViewItem*>& items, bool user_action)>& cb) 
 { 
 	if (mFolderRoot.get())
 	{
@@ -1452,7 +1452,7 @@ LLInventoryPanel::selected_items_t LLInventoryPanel::getSelectedItems() const
     return mFolderRoot.get()->getSelectionList();
 }
 
-void LLInventoryPanel::onSelectionChange(const std::deque<LLFolderViewItem*>& items, BOOL user_action)
+void LLInventoryPanel::onSelectionChange(const std::deque<LLFolderViewItem*>& items, bool user_action)
 {
 	// Schedule updating the folder view context menu when all selected items become complete (STORM-373).
 	mCompletionObserver->reset();
@@ -1480,7 +1480,7 @@ void LLInventoryPanel::onSelectionChange(const std::deque<LLFolderViewItem*>& it
 	LLFolderView* fv = mFolderRoot.get();
 	if (fv->needsAutoRename()) // auto-selecting a new user-created asset and preparing to rename
 	{
-		fv->setNeedsAutoRename(FALSE);
+		fv->setNeedsAutoRename(false);
 		if (items.size()) // new asset is visible and selected
 		{
 			fv->startRenamingSelectedItem();

@@ -1397,31 +1397,31 @@ void LLFastTimerView::drawBorders( S32 y, const S32 x_start, S32 bar_height, S32
 		S32 by = y + 6 + (S32)LLFontGL::getFontMonospace()->getLineHeight();	
 
 		//heading
-		gl_rect_2d(x_start-5, by, getRect().getWidth()-5, y+5, LLColor4::grey, FALSE);
+		gl_rect_2d(x_start-5, by, getRect().getWidth()-5, y+5, LLColor4::grey, false);
 
 		//tree view
-		gl_rect_2d(5, by, x_start-10, 5, LLColor4::grey, FALSE);
+		gl_rect_2d(5, by, x_start-10, 5, LLColor4::grey, false);
 
 		by = y + 5;
 		//average bar
-		gl_rect_2d(x_start-5, by, getRect().getWidth()-5, by-bar_height-dy-5, LLColor4::grey, FALSE);
+		gl_rect_2d(x_start-5, by, getRect().getWidth()-5, by-bar_height-dy-5, LLColor4::grey, false);
 
 		by -= bar_height*2+dy;
 
 		//current frame bar
-		gl_rect_2d(x_start-5, by, getRect().getWidth()-5, by-bar_height-dy-2, LLColor4::grey, FALSE);
+		gl_rect_2d(x_start-5, by, getRect().getWidth()-5, by-bar_height-dy-2, LLColor4::grey, false);
 
 		by -= bar_height+dy+1;
 
 		//history bars
-		gl_rect_2d(x_start-5, by, getRect().getWidth()-5, LINE_GRAPH_HEIGHT-bar_height-dy-2, LLColor4::grey, FALSE);			
+		gl_rect_2d(x_start-5, by, getRect().getWidth()-5, LINE_GRAPH_HEIGHT-bar_height-dy-2, LLColor4::grey, false);			
 
 		by = LINE_GRAPH_HEIGHT-dy;
 
 		//line graph
 		//mGraphRect = LLRect(x_start-5, by, getRect().getWidth()-5, 5);
 
-		gl_rect_2d(mGraphRect, FALSE);
+		gl_rect_2d(mGraphRect, false);
 	}
 }
 

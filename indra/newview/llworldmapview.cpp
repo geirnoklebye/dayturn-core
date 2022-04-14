@@ -485,7 +485,7 @@ void LLWorldMapView::draw()
 					S32_MAX, //max_chars
 					sMapScale, //max_pixels
 					NULL,
-					TRUE); //use ellipses
+					true); //use ellipses
 
 				if (drawAdvancedRegionInfo)
 				{
@@ -516,7 +516,7 @@ void LLWorldMapView::draw()
 						S32_MAX, //max_chars
 						sMapScale, //max_pixels
 						NULL,
-						TRUE); //use ellipses
+						true); //use ellipses
 				}
 			}
 // <FS:CR> Show the grid coordinates (in units of regions)

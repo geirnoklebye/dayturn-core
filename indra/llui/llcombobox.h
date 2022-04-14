@@ -135,10 +135,10 @@ public:
 	void			setTextEntry(const LLStringExplicit& text);
 	void			setKeystrokeOnEsc(bool enable);
 
-	LLScrollListItem*	add(const std::string& name, EAddPosition pos = ADD_BOTTOM, BOOL enabled = TRUE);	// add item "name" to menu
-	LLScrollListItem*	add(const std::string& name, const LLUUID& id, EAddPosition pos = ADD_BOTTOM, BOOL enabled = TRUE);
-	LLScrollListItem*	add(const std::string& name, void* userdata, EAddPosition pos = ADD_BOTTOM, BOOL enabled = TRUE);
-	LLScrollListItem*	add(const std::string& name, LLSD value, EAddPosition pos = ADD_BOTTOM, BOOL enabled = TRUE);
+	LLScrollListItem*	add(const std::string& name, EAddPosition pos = ADD_BOTTOM, bool enabled = true);	// add item "name" to menu
+	LLScrollListItem*	add(const std::string& name, const LLUUID& id, EAddPosition pos = ADD_BOTTOM, bool enabled = true);
+	LLScrollListItem*	add(const std::string& name, void* userdata, EAddPosition pos = ADD_BOTTOM, bool enabled = true);
+	LLScrollListItem*	add(const std::string& name, LLSD value, EAddPosition pos = ADD_BOTTOM, bool enabled = true);
 	LLScrollListItem*	addSeparator(EAddPosition pos = ADD_BOTTOM);
 	bool			remove( S32 index );	// remove item by index, return TRUE if found and removed
 	void			removeall() { clearRows(); }
@@ -240,7 +240,7 @@ private:
 	bool				mAllowTextEntry;
 	bool				mAllowNewValues;
 	S32					mMaxChars;
-	BOOL				mTextEntryTentative;
+	bool				mTextEntryTentative;
 	commit_callback_t	mPrearrangeCallback;
 	commit_callback_t	mTextEntryCallback;
 	commit_callback_t	mTextChangedCallback;

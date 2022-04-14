@@ -109,7 +109,7 @@ protected:
 	void setFilterTextFromFilter();
 	void startSearch();
 	
-	void onSelectionChange(LLInventoryPanel *panel, const std::deque<LLFolderViewItem*>& items, BOOL user_action);
+	void onSelectionChange(LLInventoryPanel *panel, const std::deque<LLFolderViewItem*>& items, bool user_action);
 
 	static BOOL filtersVisible(void* user_data);
 	void onClearSearch();

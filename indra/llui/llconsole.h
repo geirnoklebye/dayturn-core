@@ -65,7 +65,7 @@ protected:
 public:
 	// call once per frame to pull data out of LLFixedBuffer
 	static void updateClass();
-	void enableColor(BOOL enable) { mColorEnabled = enable; }
+	void enableColor(bool enable) { mColorEnabled = enable; }
 
 	//A paragraph color segment defines the color of text in a line 
 	//of text that was received for console display.  It has no 

@@ -260,7 +260,7 @@ private:
 	// <FS:Ansariel> Mask texture if desired
 	BOOL						mIsMasked;    
 	bool						mOpenTexPreview;
-	BOOL						mBakeTextureEnabled;
+	bool						mBakeTextureEnabled;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -340,7 +340,7 @@ public:
 	static void		onBtnTrans( void* userdata );
 	static void		onBtnNone(void* userdata);
 	static void		onBtnClear(void* userdata);
-	void			onSelectionChange(const std::deque<LLFolderViewItem*> &items, BOOL user_action);
+	void			onSelectionChange(const std::deque<LLFolderViewItem*> &items, bool user_action);
 	static void		onShowFolders(LLUICtrl* ctrl, void* userdata);
 	static void		onApplyImmediateCheck(LLUICtrl* ctrl, void* userdata);
 	void			onTextureSelect(const LLTextureEntry& te);

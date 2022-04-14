@@ -39,7 +39,7 @@ class LLModalDialog;
 class LLModalDialog : public LLFloater
 {
 public:
-	LLModalDialog( const LLSD& key, BOOL modal = true );
+	LLModalDialog( const LLSD& key, bool modal = true );
 	virtual		~LLModalDialog();
 	
 	/*virtual*/ bool 	postBuild();
@@ -60,7 +60,7 @@ public:
 	/*virtual*/ void	setVisible(bool visible);
 	/*virtual*/ void	draw();
 
-	BOOL 			isModal() const { return mModal; }
+	bool 			isModal() const { return mModal; }
 	void			stopModal();
 
 	static void		onAppFocusLost();
@@ -75,7 +75,7 @@ protected:
 private:
 	
 	LLFrameTimer 	mVisibleTime;
-	const BOOL		mModal;
+	const bool		mModal;
 
 	static std::list<LLModalDialog*> sModalStack;  // Top of stack is currently being displayed
 };

@@ -120,7 +120,7 @@ public:
     LLFolderViewGroupedItemModel* getFolderViewGroupedItemModel() { return mGroupedItemModel; }
     const LLFolderViewGroupedItemModel* getFolderViewGroupedItemModel() const { return mGroupedItemModel; }
     
-	typedef boost::signals2::signal<void (const std::deque<LLFolderViewItem*>& items, BOOL user_action)> signal_t;
+	typedef boost::signals2::signal<void (const std::deque<LLFolderViewItem*>& items, bool user_action)> signal_t;
 	void setSelectCallback(const signal_t::slot_type& cb) { mSelectSignal.connect(cb); }
 	void setReshapeCallback(const signal_t::slot_type& cb) { mReshapeSignal.connect(cb); }
 	
@@ -226,11 +226,11 @@ public:
 
 	void	update();						// needs to be called periodically (e.g. once per frame)
 
-	BOOL needsAutoSelect() { return mNeedsAutoSelect && !mAutoSelectOverride; }
-	BOOL needsAutoRename() { return mNeedsAutoRename; }
-	void setNeedsAutoRename(BOOL val) { mNeedsAutoRename = val; }
-	void setPinningSelectedItem(BOOL val) { mPinningSelectedItem = val; }
-	void setAutoSelectOverride(BOOL val) { mAutoSelectOverride = val; }
+	bool needsAutoSelect() { return mNeedsAutoSelect && !mAutoSelectOverride; }
+	bool needsAutoRename() { return mNeedsAutoRename; }
+	void setNeedsAutoRename(bool val) { mNeedsAutoRename = val; }
+	void setPinningSelectedItem(bool val) { mPinningSelectedItem = val; }
+	void setAutoSelectOverride(bool val) { mAutoSelectOverride = val; }
 
 	bool showItemLinkOverlays() { return mShowItemLinkOverlays; }
 

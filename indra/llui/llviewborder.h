@@ -87,7 +87,7 @@ public:
 
 	EStyle		getStyle() const { return mStyle; }
 
-	void		setKeyboardFocusHighlight( BOOL b )	{ mHasKeyboardFocus = b; }
+	void		setKeyboardFocusHighlight( bool b )	{ mHasKeyboardFocus = b; }
 
 private:
 	void		drawOnePixelLines();
@@ -103,7 +103,7 @@ private:
 	LLUIColor	mBackgroundColor;
 	S32			mBorderWidth;
 	LLPointer<LLUIImage>	mTexture;
-	BOOL		mHasKeyboardFocus;
+	bool		mHasKeyboardFocus;
 };
 
 #endif // LL_LLVIEWBORDER_H

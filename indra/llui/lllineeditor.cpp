@@ -1708,7 +1708,7 @@ void LLLineEditor::drawBackground()
 	F32 alpha = getCurrentTransparency();
 	if (mUseBgColor)
 	{
-		gl_rect_2d(getLocalRect(), mBgColor % alpha, TRUE);
+		gl_rect_2d(getLocalRect(), mBgColor % alpha, true);
 	}
 	else
 	{
@@ -2086,15 +2086,15 @@ void LLLineEditor::draw()
 							LLFontGL::NO_SHADOW,
 							S32_MAX,
 							mTextRightEdge - ll_round(rendered_pixels_right),
-							&rendered_pixels_right, FALSE);
+							&rendered_pixels_right, false);
 		}
 
 
 		// Draw children (border)
 		//mBorder->setVisible(true);
-		mBorder->setKeyboardFocusHighlight( TRUE );
+		mBorder->setKeyboardFocusHighlight( true );
 		LLView::draw();
-		mBorder->setKeyboardFocusHighlight( FALSE );
+		mBorder->setKeyboardFocusHighlight( false );
 		//mBorder->setVisible(false);
 	}
 	else // does not have keyboard input
@@ -2111,7 +2111,7 @@ void LLLineEditor::draw()
 							LLFontGL::NO_SHADOW,
 							S32_MAX,
 							mTextRightEdge - ll_round(rendered_pixels_right),
-							&rendered_pixels_right, FALSE);
+							&rendered_pixels_right, false);
 		}
 		// Draw children (border)
 		LLView::draw();

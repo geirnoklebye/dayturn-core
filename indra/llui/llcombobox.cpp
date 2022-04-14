@@ -242,7 +242,7 @@ bool LLComboBox::itemExists(const std::string& name)
 }
 
 // add item "name" to menu
-LLScrollListItem* LLComboBox::add(const std::string& name, EAddPosition pos, BOOL enabled)
+LLScrollListItem* LLComboBox::add(const std::string& name, EAddPosition pos, bool enabled)
 {
 	LLScrollListItem* item = mList->addSimpleElement(name, pos);
 	item->setEnabled(enabled);
@@ -261,7 +261,7 @@ LLScrollListItem* LLComboBox::add(const std::string& name, EAddPosition pos, BOO
 }
 
 // add item "name" with a unique id to menu
-LLScrollListItem* LLComboBox::add(const std::string& name, const LLUUID& id, EAddPosition pos, BOOL enabled )
+LLScrollListItem* LLComboBox::add(const std::string& name, const LLUUID& id, EAddPosition pos, bool enabled )
 {
 	LLScrollListItem* item = mList->addSimpleElement(name, pos, id);
 	item->setEnabled(enabled);
@@ -280,7 +280,7 @@ LLScrollListItem* LLComboBox::add(const std::string& name, const LLUUID& id, EAd
 }
 
 // add item "name" with attached userdata
-LLScrollListItem* LLComboBox::add(const std::string& name, void* userdata, EAddPosition pos, BOOL enabled )
+LLScrollListItem* LLComboBox::add(const std::string& name, void* userdata, EAddPosition pos, bool enabled )
 {
 	LLScrollListItem* item = mList->addSimpleElement(name, pos);
 	item->setEnabled(enabled);
@@ -300,7 +300,7 @@ LLScrollListItem* LLComboBox::add(const std::string& name, void* userdata, EAddP
 }
 
 // add item "name" with attached generic data
-LLScrollListItem* LLComboBox::add(const std::string& name, LLSD value, EAddPosition pos, BOOL enabled )
+LLScrollListItem* LLComboBox::add(const std::string& name, LLSD value, EAddPosition pos, bool enabled )
 {
 	LLScrollListItem* item = mList->addSimpleElement(name, pos, value);
 	item->setEnabled(enabled);

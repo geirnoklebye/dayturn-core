@@ -247,11 +247,11 @@ void LLExpandableTextBox::draw()
 {
 	if(mBGVisible && !mExpanded)
 	{
-		gl_rect_2d(getLocalRect(), mBGColor.get(), TRUE);
+		gl_rect_2d(getLocalRect(), mBGColor.get(), true);
 	}
 	if(mExpandedBGVisible && mExpanded)
 	{
-		gl_rect_2d(getLocalRect(), mExpandedBGColor.get(), TRUE);
+		gl_rect_2d(getLocalRect(), mExpandedBGColor.get(), true);
 	}
 
 	collapseIfPosChanged();

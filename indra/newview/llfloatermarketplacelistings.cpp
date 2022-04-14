@@ -186,7 +186,7 @@ void LLPanelMarketplaceListings::draw()
 	LLPanel::draw();
 }
 
-void LLPanelMarketplaceListings::onSelectionChange(LLInventoryPanel *panel, const std::deque<LLFolderViewItem*>& items, BOOL user_action)
+void LLPanelMarketplaceListings::onSelectionChange(LLInventoryPanel *panel, const std::deque<LLFolderViewItem*>& items, bool user_action)
 {
 	panel->onSelectionChange(items, user_action);
 }
@@ -237,7 +237,7 @@ void LLPanelMarketplaceListings::onAddButtonClicked()
         LLUUID category = gInventory.createNewCategory(marketplacelistings_id, preferred_type, LLStringUtil::null);
         gInventory.notifyObservers();
         panel->setSelectionByID(category, TRUE);
-        panel->getRootFolder()->setNeedsAutoRename(TRUE);
+        panel->getRootFolder()->setNeedsAutoRename(true);
     }
 }
 

@@ -63,7 +63,7 @@ LLViewBorder::Params::Params()
 LLViewBorder::LLViewBorder(const LLViewBorder::Params& p)
 :	LLView(p),
 	mTexture( NULL ),
-	mHasKeyboardFocus( FALSE ),
+	mHasKeyboardFocus( false ),
 	mBorderWidth(p.border_thickness),
 	mHighlightLight(p.highlight_light_color()),
 	mHighlightDark(p.highlight_dark_color()),

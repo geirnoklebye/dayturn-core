@@ -1357,7 +1357,7 @@ void LLTextBase::draw()
 							: hasFocus() 
 								? mFocusBgColor.get() 
 								: mWriteableBgColor.get();
-		gl_rect_2d(text_rect, bg_color % alpha, TRUE);
+		gl_rect_2d(text_rect, bg_color % alpha, true);
 	}
 
 	// Draw highlighted if needed
@@ -1368,7 +1368,7 @@ void LLTextBase::draw()
 		if( mScroller )
 			bg_rect.intersectWith( text_rect );
 
-		gl_rect_2d( text_rect, bg_color, TRUE );
+		gl_rect_2d( text_rect, bg_color, true );
 	}
 	
 	bool should_clip = mClip || mScroller != NULL;

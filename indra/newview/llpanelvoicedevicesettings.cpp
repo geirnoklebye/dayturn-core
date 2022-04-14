@@ -123,7 +123,7 @@ void LLPanelVoiceDeviceSettings::draw()
 			LLView* bar_view = getChild<LLView>(view_name);
 			if (bar_view)
 			{
-				gl_rect_2d(bar_view->getRect(), LLColor4::grey, TRUE);
+				gl_rect_2d(bar_view->getRect(), LLColor4::grey, true);
 
 				LLColor4 color;
 				if (power_bar_idx < discrete_power)
@@ -137,7 +137,7 @@ void LLPanelVoiceDeviceSettings::draw()
 
 				LLRect color_rect = bar_view->getRect();
 				color_rect.stretch(-1);
-				gl_rect_2d(color_rect, color, TRUE);
+				gl_rect_2d(color_rect, color, true);
 			}
 		}
 	}

@@ -202,7 +202,7 @@ void LLColorSwatchCtrl::draw()
 	mBorder->setKeyboardFocusHighlight(hasFocus());
 	// Draw border
 	LLRect border( 0, getRect().getHeight(), getRect().getWidth(), mLabelHeight );
-	gl_rect_2d( border, mBorderColor.get(), FALSE );
+	gl_rect_2d( border, mBorderColor.get(), false );
 
 	LLRect interior = border;
 	interior.stretch( -1 );
@@ -217,7 +217,7 @@ void LLColorSwatchCtrl::draw()
 		}
 
 		// Draw the color swatch
-		gl_rect_2d(interior, mColor % alpha, TRUE);
+		gl_rect_2d(interior, mColor % alpha, true);
 
 		if (!mColor.isOpaque())
 		{
@@ -244,7 +244,7 @@ void LLColorSwatchCtrl::draw()
 		else
 		{
 			// Draw grey and an X
-			gl_rect_2d(interior, LLColor4::grey % alpha, TRUE);
+			gl_rect_2d(interior, LLColor4::grey % alpha, true);
 			
 			gl_draw_x(interior, LLColor4::black % alpha);
 		}

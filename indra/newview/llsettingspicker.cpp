@@ -115,7 +115,7 @@ bool LLFloaterSettingsPicker::postBuild()
 
         // Disable auto selecting first filtered item because it takes away
         // selection from the item set by LLTextureCtrl owning this floater.
-        mInventoryPanel->getRootFolder()->setAutoSelectOverride(TRUE);
+        mInventoryPanel->getRootFolder()->setAutoSelectOverride(true);
 
         // don't put keyboard focus on selected item, because the selection callback
         // will assume that this was user input

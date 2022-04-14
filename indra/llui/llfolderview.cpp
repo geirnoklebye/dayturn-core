@@ -1338,7 +1338,7 @@ bool LLFolderView::handleUnicodeCharHere(llwchar uni_char)
 		{
 			mSearchString += uni_char;
 		}
-		search(getCurSelectedItem(), mSearchString, FALSE);
+		search(getCurSelectedItem(), mSearchString, false);
 
 		handled = true;
 	}
@@ -1654,7 +1654,7 @@ void LLFolderView::update()
 
 	if (filter_object.isModified() && filter_object.isNotDefault() && mParentPanel.get()->getVisible())
 	{
-		mNeedsAutoSelect = TRUE;
+		mNeedsAutoSelect = true;
 	}
     
 	// Filter to determine visibility before arranging
@@ -1693,7 +1693,7 @@ void LLFolderView::update()
 		scrollToShowSelection();
 	}
 
-	BOOL filter_finished = mViewModel->contentsReady()
+	bool filter_finished = mViewModel->contentsReady()
 							&& (getViewModelItem()->passedFilter()
 								|| ( getViewModelItem()->getLastFilterGeneration() >= filter_object.getFirstSuccessGeneration()
 									&& !filter_object.isModified()));
@@ -1702,7 +1702,7 @@ void LLFolderView::update()
 		|| gFocusMgr.childHasMouseCapture(mParentPanel.get()))
 	{
 		// finishing the filter process, giving focus to the folder view, or dragging the scrollbar all stop the auto select process
-		mNeedsAutoSelect = FALSE;
+		mNeedsAutoSelect = false;
 	}
 
   BOOL is_visible = isInVisibleChain();

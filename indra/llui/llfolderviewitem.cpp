@@ -819,7 +819,7 @@ void LLFolderViewItem::drawHighlight(const bool showContent, const bool hasKeybo
                 focus_top, 
                 getRect().getWidth() - 2,
                 focus_bottom,
-                focusOutlineColor, FALSE);
+                focusOutlineColor, false);
         }
 
         if (folder_open)
@@ -828,14 +828,14 @@ void LLFolderViewItem::drawHighlight(const bool showContent, const bool hasKeybo
                 focus_bottom + 1, // overlap with bottom edge of above rect
                 getRect().getWidth() - 2,
                 0,
-                focusOutlineColor, FALSE);
+                focusOutlineColor, false);
             if (showContent && !isFlashing())
             {
                 gl_rect_2d(FOCUS_LEFT,
                     focus_bottom + 1,
                     getRect().getWidth() - 2,
                     0,
-                    bgColor, TRUE);
+                    bgColor, true);
             }
         }
     }
@@ -845,7 +845,7 @@ void LLFolderViewItem::drawHighlight(const bool showContent, const bool hasKeybo
             focus_top, 
             getRect().getWidth() - 2,
             focus_bottom,
-            mouseOverColor, FALSE);
+            mouseOverColor, false);
     }
 
     //--------------------------------------------------------------------------------//
@@ -858,14 +858,14 @@ void LLFolderViewItem::drawHighlight(const bool showContent, const bool hasKeybo
             focus_top, 
             getRect().getWidth() - 2,
             focus_bottom,
-            bgColor, FALSE);
+            bgColor, false);
         if (folder_open)
         {
             gl_rect_2d(FOCUS_LEFT,
                 focus_bottom + 1, // overlap with bottom edge of above rect
                 getRect().getWidth() - 2,
                 0,
-                bgColor, FALSE);
+                bgColor, false);
         }
         mDragAndDropTarget = false;
     }
@@ -878,7 +878,7 @@ void LLFolderViewItem::drawLabel(const LLFontGL * font, const F32 x, const F32 y
     //
     font->renderUTF8(mLabel, 0, x, y, color,
         LLFontGL::LEFT, LLFontGL::BOTTOM, LLFontGL::NORMAL, LLFontGL::NO_SHADOW,
-        S32_MAX, getRect().getWidth() - (S32) x - mLabelPaddingRight, &right_x, TRUE);
+        S32_MAX, getRect().getWidth() - (S32) x - mLabelPaddingRight, &right_x, true);
 }
 
 void LLFolderViewItem::draw()
@@ -954,7 +954,7 @@ void LLFolderViewItem::draw()
 		std::string locked_string = " (" + LLTrans::getString("ProtectedFolder") + ") ";
 		font->renderUTF8(locked_string, 0, right_x, y, sProtectedColor,
 						 LLFontGL::LEFT, LLFontGL::BOTTOM, LLFontGL::NORMAL, LLFontGL::NO_SHADOW, 
-						 S32_MAX, S32_MAX, &right_x, FALSE);
+						 S32_MAX, S32_MAX, &right_x, false);
 	}
 	// ## Zi: Animation Overrider
 */
@@ -974,7 +974,7 @@ void LLFolderViewItem::draw()
 	{
 		font->renderUTF8( mLabelSuffix, 0, right_x, y, isFadeItem() ? color : (LLColor4)sSuffixColor,
 						  LLFontGL::LEFT, LLFontGL::BOTTOM, LLFontGL::NORMAL, LLFontGL::NO_SHADOW,
-						  S32_MAX, S32_MAX, &right_x, FALSE );
+						  S32_MAX, S32_MAX, &right_x, false );
 	}
 
 	//--------------------------------------------------------------------------------//
@@ -987,7 +987,7 @@ void LLFolderViewItem::draw()
         F32 yy = (F32)getRect().getHeight() - font->getLineHeight() - (F32)mTextPad - (F32)TOP_PAD;
         font->renderUTF8( combined_string, filter_offset, match_string_left, yy,
             sFilterTextColor, LLFontGL::LEFT, LLFontGL::BOTTOM, LLFontGL::NORMAL, LLFontGL::NO_SHADOW,
-            filter_string_length, S32_MAX, &right_x, FALSE );
+            filter_string_length, S32_MAX, &right_x, false );
     }
 
     //Gilbert Linden 9-20-2012: Although this should be legal, removing it because it causes the mLabelSuffix rendering to

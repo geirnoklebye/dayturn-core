@@ -447,7 +447,7 @@ bool LLFloaterTexturePicker::postBuild()
 
 		// Disable auto selecting first filtered item because it takes away
 		// selection from the item set by LLTextureCtrl owning this floater.
-		mInventoryPanel->getRootFolder()->setAutoSelectOverride(TRUE);
+		mInventoryPanel->getRootFolder()->setAutoSelectOverride(true);
 
 		// Commented out to scroll to currently selected texture. See EXT-5403.
 		// // store this filter as the default one
@@ -562,7 +562,7 @@ void LLFloaterTexturePicker::draw()
 
 		// Border
 		LLRect border = getChildView("preview_widget")->getRect();
-		gl_rect_2d( border, LLColor4::black, FALSE );
+		gl_rect_2d( border, LLColor4::black, false );
 
 
 		// Interior
@@ -589,7 +589,7 @@ void LLFloaterTexturePicker::draw()
 		}
 		else
 		{
-			gl_rect_2d( interior, LLColor4::grey % alpha, TRUE );
+			gl_rect_2d( interior, LLColor4::grey % alpha, true );
 
 			// Draw X
 			gl_draw_x(interior, LLColor4::black );
@@ -788,7 +788,7 @@ void LLFloaterTexturePicker::onBtnPipette()
 	}
 }
 
-void LLFloaterTexturePicker::onSelectionChange(const std::deque<LLFolderViewItem*> &items, BOOL user_action)
+void LLFloaterTexturePicker::onSelectionChange(const std::deque<LLFolderViewItem*> &items, bool user_action)
 {
 	if (items.size())
 	{
@@ -1718,7 +1718,7 @@ void LLTextureCtrl::draw()
 	
 	// Border
 	LLRect border( 0, getRect().getHeight(), getRect().getWidth(), BTN_HEIGHT_SMALL );
-	gl_rect_2d( border, mBorderColor.get(), FALSE );
+	gl_rect_2d( border, mBorderColor.get(), false );
 
 	// Interior
 	LLRect interior = border;
@@ -1742,7 +1742,7 @@ void LLTextureCtrl::draw()
 	}
 	else
 	{
-		gl_rect_2d( interior, LLColor4::grey % alpha, TRUE );
+		gl_rect_2d( interior, LLColor4::grey % alpha, true );
 
 		// Draw X
 		gl_draw_x( interior, LLColor4::black );

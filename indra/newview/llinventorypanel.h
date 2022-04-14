@@ -178,8 +178,8 @@ public:
 
 	// Call this method to set the selection.
 	void openAllFolders();
-	void setSelection(const LLUUID& obj_id, BOOL take_keyboard_focus);
-	void setSelectCallback(const boost::function<void (const std::deque<LLFolderViewItem*>& items, BOOL user_action)>& cb);
+	void setSelection(const LLUUID& obj_id, bool take_keyboard_focus);
+	void setSelectCallback(const boost::function<void (const std::deque<LLFolderViewItem*>& items, bool user_action)>& cb);
 	void clearSelection();
     selected_items_t getSelectedItems() const;
 
@@ -212,7 +212,7 @@ public:
 	LLScrollContainer* getScrollableContainer() { return mScroller; }
     bool getAllowDropOnRoot() { return mParams.allow_drop_on_root; }
 	
-	void onSelectionChange(const std::deque<LLFolderViewItem*> &items, BOOL user_action);
+	void onSelectionChange(const std::deque<LLFolderViewItem*> &items, bool user_action);
 	
 	LLHandle<LLInventoryPanel> getInventoryPanelHandle() const { return getDerivedHandle<LLInventoryPanel>(); }
 

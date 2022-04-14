@@ -903,7 +903,7 @@ void LLPanelMainInventory::setSelectCallback(const LLFolderView::signal_t::slot_
 	}
 }
 
-void LLPanelMainInventory::onSelectionChange(LLInventoryPanel *panel, const std::deque<LLFolderViewItem*>& items, BOOL user_action)
+void LLPanelMainInventory::onSelectionChange(LLInventoryPanel *panel, const std::deque<LLFolderViewItem*>& items, bool user_action)
 {
 	updateListCommands();
 	panel->onSelectionChange(items, user_action);

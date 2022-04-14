@@ -603,7 +603,7 @@ void LLToolBarView::draw()
 
 		for (S32 i = LLToolBarEnums::TOOLBAR_FIRST; i <= LLToolBarEnums::TOOLBAR_LAST; i++)
 		{
-			gl_rect_2d(toolbar_rects[i], drop_color, TRUE);
+			gl_rect_2d(toolbar_rects[i], drop_color, true);
 		}
 	}
 	

@@ -101,10 +101,10 @@ void LLStatGraph::draw()
 	}
 
 	gGL.color4fv(mBackgroundColor.get().mV);
-	gl_rect_2d(0, getRect().getHeight(), getRect().getWidth(), 0, TRUE);
+	gl_rect_2d(0, getRect().getHeight(), getRect().getWidth(), 0, true);
 
 	gGL.color4fv(mBorderColor.get().mV);
-	gl_rect_2d(0, getRect().getHeight(), getRect().getWidth(), 0, FALSE);
+	gl_rect_2d(0, getRect().getHeight(), getRect().getWidth(), 0, false);
 
 	LLColor4 color = mColor.get();
 
@@ -116,7 +116,7 @@ void LLStatGraph::draw()
 	}
 	
 	gGL.color4fv(color.mV);
-	gl_rect_2d(1, ll_round(frac*getRect().getHeight()), getRect().getWidth() - 1, 0, TRUE);
+	gl_rect_2d(1, ll_round(frac*getRect().getHeight()), getRect().getWidth() - 1, 0, true);
 }
 
 void LLStatGraph::setMin(const F32 min)

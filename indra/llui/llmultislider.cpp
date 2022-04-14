@@ -725,23 +725,23 @@ void LLMultiSlider::draw()
 			}
 
 			// the draw command
-			gl_rect_2d(mIt->second, curThumbColor, TRUE);
+			gl_rect_2d(mIt->second, curThumbColor, true);
 		}
 
 		// now draw the current and hover sliders
 		if(curSldrIt != mThumbRects.end())
 		{
-			gl_rect_2d(curSldrIt->second, mThumbCenterSelectedColor.get(), TRUE);
+			gl_rect_2d(curSldrIt->second, mThumbCenterSelectedColor.get(), true);
 		}
 
 		// and draw the drag start
 		if (gFocusMgr.getMouseCapture() == this)
 		{
-			gl_rect_2d(mDragStartThumbRect, mThumbCenterColor.get() % opacity, FALSE);
+			gl_rect_2d(mDragStartThumbRect, mThumbCenterColor.get() % opacity, false);
 		}
 		else if (hoverSldrIt != mThumbRects.end())
 		{
-			gl_rect_2d(hoverSldrIt->second, mThumbCenterSelectedColor.get(), TRUE);
+			gl_rect_2d(hoverSldrIt->second, mThumbCenterSelectedColor.get(), true);
 		}
 	}
 	else

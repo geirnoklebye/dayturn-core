@@ -1477,7 +1477,7 @@ void render_ui_2d()
 		F32 zoom = gAgentCamera.mHUDCurZoom;
 		gGL.scalef(zoom,zoom,1.f);
 		gGL.color4fv(LLColor4::white.mV);
-		gl_rect_2d(-half_width, half_height, half_width, -half_height, FALSE);
+		gl_rect_2d(-half_width, half_height, half_width, -half_height, false);
 		gGL.popMatrix();
 		stop_glerror();
 	}
