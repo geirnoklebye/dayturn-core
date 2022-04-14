@@ -165,7 +165,7 @@ bool LLTextBox::setTextArg( const std::string& key, const LLStringExplicit& text
 }
 
 
-void LLTextBox::reshapeToFitText(BOOL called_from_parent)
+void LLTextBox::reshapeToFitText(bool called_from_parent)
 {
 	reflow();
 

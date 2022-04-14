@@ -159,7 +159,7 @@ void LLContainerView::reshape(S32 width, S32 height, BOOL called_from_parent)
 	}
 }
 
-void LLContainerView::arrange(S32 width, S32 height, BOOL called_from_parent)
+void LLContainerView::arrange(S32 width, S32 height, bool called_from_parent)
 {
 	// Determine the sizes and locations of all contained views
 	S32 total_height = 0;
@@ -288,7 +288,7 @@ void LLContainerView::setLabel(const std::string& label)
 	mLabel = label;
 }
 
-void LLContainerView::setDisplayChildren(const BOOL displayChildren)
+void LLContainerView::setDisplayChildren(const bool displayChildren)
 {
 	mDisplayChildren = displayChildren;
 	for (child_list_const_iter_t child_iter = getChildList()->begin();

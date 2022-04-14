@@ -757,7 +757,7 @@ LLTextureView::LLTextureView(const LLTextureView::Params& p)
 {
 	setVisible(false);
 	
-	setDisplayChildren(TRUE);
+	setDisplayChildren(true);
 	mGLTexMemBar = 0;
 	mAvatarTexBar = 0;
 }

@@ -220,7 +220,7 @@ void LLCheckBoxCtrl::reshape(S32 width, S32 height, BOOL called_from_parent)
     mLabel->setRect(label_rect);
 
 	S32 label_top = label_rect.mTop;
-	mLabel->reshapeToFitText(TRUE);
+	mLabel->reshapeToFitText(true);
 
     label_rect = mLabel->getRect();
 	if (label_top != label_rect.mTop && mWordWrap == WRAP_DOWN)
