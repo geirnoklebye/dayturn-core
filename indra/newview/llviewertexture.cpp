@@ -1093,7 +1093,7 @@ LLViewerFetchedTexture::LLViewerFetchedTexture(const LLUUID& id, FTType f_type, 
 	: LLViewerTexture(id, usemipmaps),
 	mTargetHost(host)
 {
-	init(TRUE);
+	init(true);
 	mFTType = f_type;
 	if (mFTType == FTT_HOST_BAKE)
 	{
@@ -1111,7 +1111,7 @@ LLViewerFetchedTexture::LLViewerFetchedTexture(const LLUUID& id, FTType f_type, 
 LLViewerFetchedTexture::LLViewerFetchedTexture(const LLImageRaw* raw, FTType f_type, BOOL usemipmaps)
 	: LLViewerTexture(raw, usemipmaps)
 {
-	init(TRUE);
+	init(true);
 	mFTType = f_type;
 }
 	
@@ -1119,7 +1119,7 @@ LLViewerFetchedTexture::LLViewerFetchedTexture(const std::string& url, FTType f_
 	: LLViewerTexture(id, usemipmaps),
 	mUrl(url)
 {
-	init(TRUE);
+	init(true);
 	mFTType = f_type;
 	generateGLTexture();
 }
@@ -3371,13 +3371,13 @@ F32 LLViewerFetchedTexture::getElapsedLastReferencedSavedRawImageTime() const
 LLViewerLODTexture::LLViewerLODTexture(const LLUUID& id, FTType f_type, const LLHost& host, BOOL usemipmaps)
 	: LLViewerFetchedTexture(id, f_type, host, usemipmaps)
 {
-	init(TRUE);
+	init(true);
 }
 
 LLViewerLODTexture::LLViewerLODTexture(const std::string& url, FTType f_type, const LLUUID& id, BOOL usemipmaps)
 	: LLViewerFetchedTexture(url, f_type, id, usemipmaps)
 {
-	init(TRUE);
+	init(true);
 }
 
 void LLViewerLODTexture::init(bool firstinit)
