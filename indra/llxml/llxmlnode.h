@@ -167,8 +167,8 @@ public:
     void findID(const std::string& id, LLXMLNodeList &results);
 
 
-    virtual LLXMLNodePtr createChild(const char* name, BOOL is_attribute);
-    virtual LLXMLNodePtr createChild(LLStringTableEntry* name, BOOL is_attribute);
+    virtual LLXMLNodePtr createChild(const char* name, bool is_attribute);
+    virtual LLXMLNodePtr createChild(LLStringTableEntry* name, bool is_attribute);
 
 
     // Getters

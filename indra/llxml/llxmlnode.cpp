@@ -302,13 +302,13 @@ void LLXMLNode::addChild(LLXMLNodePtr& new_child)
 }
 
 // virtual 
-LLXMLNodePtr LLXMLNode::createChild(const char* name, BOOL is_attribute)
+LLXMLNodePtr LLXMLNode::createChild(const char* name, bool is_attribute)
 {
 	return createChild(gStringTable.addStringEntry(name), is_attribute);
 }
 
 // virtual 
-LLXMLNodePtr LLXMLNode::createChild(LLStringTableEntry* name, BOOL is_attribute)
+LLXMLNodePtr LLXMLNode::createChild(LLStringTableEntry* name, bool is_attribute)
 {
 	LLXMLNodePtr ret(new LLXMLNode(name, is_attribute));
 	ret->mID.clear();
@@ -2783,7 +2783,7 @@ void LLXMLNode::createUnitTest(S32 max_num_children)
 			child_name.append(1, c);
 		}
 
-		LLXMLNode *new_child = createChild(child_name.c_str(), FALSE);
+		LLXMLNode *new_child = createChild(child_name.c_str(), false);
 
 		// Random ID
 		std::string child_id;
@@ -2918,12 +2918,12 @@ void LLXMLNode::createUnitTest(S32 max_num_children)
 		}
 	}
 
-	createChild("integer_checksum", TRUE)->setUnsignedValue(1, &integer_checksum, LLXMLNode::ENCODING_HEX);
-	createChild("long_checksum", TRUE)->setLongValue(1, &long_checksum, LLXMLNode::ENCODING_HEX);
-	createChild("bool_true_count", TRUE)->setUnsignedValue(1, &bool_true_count, LLXMLNode::ENCODING_HEX);
-	createChild("uuid_checksum", TRUE)->setUUIDValue(1, &uuid_checksum);
-	createChild("noderef_checksum", TRUE)->setUnsignedValue(1, &noderef_checksum, LLXMLNode::ENCODING_HEX);
-	createChild("float_checksum", TRUE)->setUnsignedValue(1, &float_checksum, LLXMLNode::ENCODING_HEX);
+	createChild("integer_checksum", true)->setUnsignedValue(1, &integer_checksum, LLXMLNode::ENCODING_HEX);
+	createChild("long_checksum", true)->setLongValue(1, &long_checksum, LLXMLNode::ENCODING_HEX);
+	createChild("bool_true_count", true)->setUnsignedValue(1, &bool_true_count, LLXMLNode::ENCODING_HEX);
+	createChild("uuid_checksum", true)->setUUIDValue(1, &uuid_checksum);
+	createChild("noderef_checksum", true)->setUnsignedValue(1, &noderef_checksum, LLXMLNode::ENCODING_HEX);
+	createChild("float_checksum", true)->setUnsignedValue(1, &float_checksum, LLXMLNode::ENCODING_HEX);
 }
 
 bool LLXMLNode::performUnitTest(std::string &error_buffer)

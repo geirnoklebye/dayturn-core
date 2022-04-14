@@ -1285,11 +1285,11 @@ void LLButton::addImageAttributeToXML(LLXMLNodePtr node,
 {
 	if( !image_name.empty() )
 	{
-		node->createChild(xml_tag_name.c_str(), TRUE)->setStringValue(image_name);
+		node->createChild(xml_tag_name.c_str(), true)->setStringValue(image_name);
 	}
 	else if( image_id != LLUUID::null )
 	{
-		node->createChild((xml_tag_name + "_id").c_str(), TRUE)->setUUIDValue(image_id);
+		node->createChild((xml_tag_name + "_id").c_str(), true)->setUUIDValue(image_id);
 	}
 }
 
