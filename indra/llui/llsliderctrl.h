@@ -154,8 +154,8 @@ private:
 
 	const LLFontGL*	mFont;
 	const LLFontGL*	mLabelFont;
-	BOOL			mShowText;
-	BOOL			mCanEditText;
+	bool			mShowText;
+	bool			mCanEditText;
 	
 	S32				mPrecision;
 	LLTextBox*		mLabelBox;

@@ -2237,7 +2237,7 @@ bool LLOutgoingCallDialog::postBuild()
 
 	childSetAction("Cancel", onCancel, this);
 
-	setCanDrag(FALSE);
+	setCanDrag(false);
 
 	return success;
 }
@@ -2371,7 +2371,7 @@ bool LLIncomingCallDialog::postBuild()
 	bool is_avatar = LLVoiceClient::getInstance()->isParticipantAvatar(session_id);
 	getChildView("Start IM")->setVisible( is_avatar && notify_box_type != "VoiceInviteAdHoc" && notify_box_type != "VoiceInviteGroup");
 
-	setCanDrag(FALSE);
+	setCanDrag(false);
 	return true;
 }
 

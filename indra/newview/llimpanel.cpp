@@ -460,7 +460,7 @@ void LLFloaterIMPanel::addHistoryLine(const std::string &utf8msg, const LLColor4
 			&& hostp 
 			&& source != gAgent.getID())
 		{
-			hostp->setFloaterFlashing(this, TRUE);
+			hostp->setFloaterFlashing(this, true);
 		}
 	}
 
@@ -472,7 +472,7 @@ void LLFloaterIMPanel::addHistoryLine(const std::string &utf8msg, const LLColor4
 	// Actually add the line
 	std::string timestring;
 	bool prepend_newline = true;
-	if (gSavedSettings.getBOOL("IMShowTimestamps"))
+	if (gSavedSettings.getbool("IMShowTimestamps"))
 	{
 		timestring = mHistoryEditor->appendTime(prepend_newline);
 		prepend_newline = false;

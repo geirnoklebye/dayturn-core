@@ -128,7 +128,7 @@ bool LLRadioGroup::postBuild()
 	return true;
 }
 
-void LLRadioGroup::setIndexEnabled(S32 index, BOOL enabled)
+void LLRadioGroup::setIndexEnabled(S32 index, bool enabled)
 {
 	S32 count = 0;
 	for (button_list_t::iterator iter = mRadioButtons.begin();
@@ -138,7 +138,7 @@ void LLRadioGroup::setIndexEnabled(S32 index, BOOL enabled)
 		if (count == index)
 		{
 			child->setEnabled(enabled);
-			if (index == mSelectedIndex && enabled == FALSE)
+			if (index == mSelectedIndex && enabled == false)
 			{
 				setSelectedIndex(-1);
 			}
@@ -173,23 +173,23 @@ void LLRadioGroup::setIndexEnabled(S32 index, BOOL enabled)
 	}
 }
 
-BOOL LLRadioGroup::setSelectedIndex(S32 index, BOOL from_event)
+bool LLRadioGroup::setSelectedIndex(S32 index, bool from_event)
 {
 	if ((S32)mRadioButtons.size() <= index )
 	{
-		return FALSE;
+		return false;
 	}
 
     if (index < -1)
     {
         // less then minimum value
-        return FALSE;
+        return false;
     }
 
     if (index < 0 && mSelectedIndex >= 0 && !mAllowDeselect)
     {
         // -1 is "nothing selected"
-        return FALSE;
+        return false;
     }
 
 	if (mSelectedIndex >= 0)
@@ -222,7 +222,7 @@ BOOL LLRadioGroup::setSelectedIndex(S32 index, BOOL from_event)
 		setControlValue(getValue());
 	}
 
-	return TRUE;
+	return true;
 }
 
 void LLRadioGroup::focusSelectedRadioBtn()
@@ -232,12 +232,12 @@ void LLRadioGroup::focusSelectedRadioBtn()
         LLRadioCtrl* radio_item = mRadioButtons[mSelectedIndex];
         if (radio_item->hasTabStop() && radio_item->getEnabled())
         {
-            radio_item->focusFirstItem(FALSE, FALSE);
+            radio_item->focusFirstItem(false, false);
         }
     }
     else if (mRadioButtons[0]->hasTabStop() || hasTabStop())
     {
-        focusFirstItem(FALSE, FALSE);
+        focusFirstItem(false, false);
     }
 }
 
@@ -358,11 +358,11 @@ void LLRadioGroup::setValue( const LLSD& value )
 		// string not found, try integer
 		if (value.isInteger())
 		{
-			setSelectedIndex((S32) value.asInteger(), TRUE);
+			setSelectedIndex((S32) value.asInteger(), true);
 		}
 		else
 		{
-			setSelectedIndex(-1, TRUE);
+			setSelectedIndex(-1, true);
 		}
 	}
 }
@@ -475,7 +475,7 @@ BOOL LLRadioCtrl::handleMouseDown(S32 x, S32 y, MASK mask)
     // Grab focus preemptively, before button takes mousecapture
     if (hasTabStop() && getEnabled())
     {
-        focusFirstItem(FALSE, FALSE);
+        focusFirstItem(false, false);
     }
     else
     {

@@ -219,7 +219,7 @@ void LLMultiSliderCtrl::setValue(const LLSD& value)
 	updateText();
 }
 
-void LLMultiSliderCtrl::setSliderValue(const std::string& name, F32 v, BOOL from_event)
+void LLMultiSliderCtrl::setSliderValue(const std::string& name, F32 v, bool from_event)
 {
 	mMultiSlider->setSliderValue(name, v, from_event );
 	mCurValue = mMultiSlider->getCurSliderValue();
@@ -368,7 +368,7 @@ void LLMultiSliderCtrl::onEditorCommit( LLUICtrl* ctrl, const LLSD& userdata)
 	if (!self) // cast failed - wrong type! :O
 		return;
 	
-	BOOL success = FALSE;
+	bool success = false;
 	F32 val = self->mCurValue;
 	F32 saved_val = self->mCurValue;
 
@@ -382,7 +382,7 @@ void LLMultiSliderCtrl::onEditorCommit( LLUICtrl* ctrl, const LLSD& userdata)
 			self->setCurSliderValue( val );  // set the value temporarily so that the callback can retrieve it.
 			if( !self->mValidateSignal || (*(self->mValidateSignal))( self, val ) )
 			{
-				success = TRUE;
+				success = true;
 			}
 		}
 	}
@@ -409,14 +409,14 @@ void LLMultiSliderCtrl::onSliderCommit(LLUICtrl* ctrl, const LLSD& userdata)
 	if (!self)
 		return;
 	
-	BOOL success = FALSE;
+	bool success = false;
 	F32 saved_val = self->mCurValue;
 	F32 new_val = self->mMultiSlider->getCurSliderValue();
 
 	self->mCurValue = new_val;  // set the value temporarily so that the callback can retrieve it.
 	if( !self->mValidateSignal || (*(self->mValidateSignal))( self, new_val ) )
 	{
-		success = TRUE;
+		success = true;
 	}
 
 	if( success )

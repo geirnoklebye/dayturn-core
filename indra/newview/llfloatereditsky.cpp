@@ -447,7 +447,7 @@ void LLFloaterEditSky::onSunMoved(LLUICtrl* ctrl, void* userdata)
 void LLFloaterEditSky::onTimeChanged()
 {
 	F32 time24 = getChild<LLTimeCtrl>("WLDayTime")->getTime24();
-	getChild<LLMultiSliderCtrl>("WLSunPos")->setCurSliderValue(time24, TRUE);
+	getChild<LLMultiSliderCtrl>("WLSunPos")->setCurSliderValue(time24, true);
     onSunMoved(getChild<LLUICtrl>("WLSunPos"), &(mSkyAdapter->mLightnorm));
 }
 

@@ -40,7 +40,7 @@ LLMultiFloater::LLMultiFloater(const LLSD& key, const LLFloater::Params& params)
 	: LLFloater(key),
 	  mTabContainer(NULL),
 	  mTabPos(LLTabContainer::TOP),
-	  mAutoResize(TRUE),
+	  mAutoResize(true),
 	  mOrigMinWidth(params.min_width),
 	  mOrigMinHeight(params.min_height)
 {
@@ -89,7 +89,7 @@ void LLMultiFloater::draw()
 	}
 }
 
-BOOL LLMultiFloater::closeAllFloaters()
+bool LLMultiFloater::closeAllFloaters()
 {
 	S32	tabToClose = 0;
 	S32	lastTabCount = mTabContainer->getTabCount();
@@ -110,8 +110,8 @@ BOOL LLMultiFloater::closeAllFloaters()
 		}
 	}
 	if( mTabContainer->getTabCount() != 0 )
-		return FALSE; // Couldn't close all the tabs (pending save dialog?) so return FALSE.
-	return TRUE; //else all tabs were successfully closed...
+		return false; // Couldn't close all the tabs (pending save dialog?) so return FALSE.
+	return true; //else all tabs were successfully closed...
 }
 
 void LLMultiFloater::growToFit(S32 content_width, S32 content_height)
@@ -149,7 +149,7 @@ void LLMultiFloater::growToFit(S32 content_width, S32 content_height)
 
   Affects: mTabContainer, floaterp
 **/
-void LLMultiFloater::addFloater(LLFloater* floaterp, BOOL select_added_floater, LLTabContainer::eInsertionPoint insertion_point)
+void LLMultiFloater::addFloater(LLFloater* floaterp, bool select_added_floater, LLTabContainer::eInsertionPoint insertion_point)
 {
 	if (!floaterp)
 	{
@@ -192,7 +192,7 @@ void LLMultiFloater::addFloater(LLFloater* floaterp, BOOL select_added_floater, 
 	// remove minimize and close buttons
 	floaterp->setCanMinimize(false);
 	floaterp->setCanResize(false);
-	floaterp->setCanDrag(FALSE);
+	floaterp->setCanDrag(false);
 	floaterp->mSaveRect = false;
 	floaterp->storeRectControl();
 	// avoid double rendering of floater background (makes it more opaque)
@@ -251,7 +251,7 @@ void LLMultiFloater::updateFloaterTitle(LLFloater* floaterp)
 
 	Affects: mTabContainer
 **/
-BOOL LLMultiFloater::selectFloater(LLFloater* floaterp)
+bool LLMultiFloater::selectFloater(LLFloater* floaterp)
 {
 	return mTabContainer->selectTabPanel(floaterp);
 }
@@ -278,7 +278,7 @@ void LLMultiFloater::showFloater(LLFloater* floaterp, LLTabContainer::eInsertion
 	if (floaterp != mTabContainer->getCurrentPanel() &&
 		!mTabContainer->selectTabPanel(floaterp))
 	{
-		addFloater(floaterp, TRUE, insertion_point);
+		addFloater(floaterp, true, insertion_point);
 	}
 }
 
@@ -303,7 +303,7 @@ void LLMultiFloater::removeFloater(LLFloater* floaterp)
 	}
 	mTabContainer->removeTabPanel(floaterp);
 	floaterp->setBackgroundVisible(true);
-	floaterp->setCanDrag(TRUE);
+	floaterp->setCanDrag(true);
 	floaterp->setHost(NULL);
 	floaterp->applyRectControl();
 
@@ -404,12 +404,12 @@ S32	LLMultiFloater::getFloaterCount()
 
 	Requires: floaterp != NULL
 **/
-BOOL LLMultiFloater::isFloaterFlashing(LLFloater* floaterp)
+bool LLMultiFloater::isFloaterFlashing(LLFloater* floaterp)
 {
 	if ( floaterp && floaterp->getHost() == this )
 		return mTabContainer->getTabPanelFlashing(floaterp);
 
-	return FALSE;
+	return false;
 }
 
 /**
@@ -421,7 +421,7 @@ BOOL LLMultiFloater::isFloaterFlashing(LLFloater* floaterp)
 
 	Requires: floaterp != NULL
 **/
-void LLMultiFloater::setFloaterFlashing(LLFloater* floaterp, BOOL flashing)
+void LLMultiFloater::setFloaterFlashing(LLFloater* floaterp, bool flashing)
 {
 	if ( floaterp && floaterp->getHost() == this )
 		mTabContainer->setTabPanelFlashing(floaterp, flashing);

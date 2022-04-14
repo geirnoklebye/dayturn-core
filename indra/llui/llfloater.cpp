@@ -647,7 +647,7 @@ void LLFloater::onVisibilityChange ( bool new_visibility )
 	if (new_visibility)
 	{
 		if (getHost())
-			getHost()->setFloaterFlashing(this, FALSE);
+			getHost()->setFloaterFlashing(this, false);
 	}
 	LLPanel::onVisibilityChange ( new_visibility );
 }

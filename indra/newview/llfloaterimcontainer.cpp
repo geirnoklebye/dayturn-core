@@ -89,7 +89,7 @@ LLFloaterIMContainer::LLFloaterIMContainer(const LLSD& seed, const Params& param
 	// Firstly add our self to IMSession observers, so we catch session events
     LLIMMgr::getInstance()->addSessionObserver(this);
 
-	mAutoResize = FALSE;
+	mAutoResize = false;
 	LLTransientFloaterMgr::getInstance()->addControlView(LLTransientFloaterMgr::IM, this);
 }
 
@@ -292,7 +292,7 @@ void LLFloaterIMContainer::onOpen(const LLSD& key)
 
 // virtual
 void LLFloaterIMContainer::addFloater(LLFloater* floaterp,
-									  BOOL select_added_floater,
+									  bool select_added_floater,
 									  LLTabContainer::eInsertionPoint insertion_point)
 {
 	if(!floaterp) return;
@@ -367,8 +367,8 @@ void LLFloaterIMContainer::onNewMessageReceived(const LLSD& data)
 	if(floaterp && current_floater && floaterp != current_floater)
 	{
 		if(LLMultiFloater::isFloaterFlashing(floaterp))
-			LLMultiFloater::setFloaterFlashing(floaterp, FALSE);
-		LLMultiFloater::setFloaterFlashing(floaterp, TRUE);
+			LLMultiFloater::setFloaterFlashing(floaterp, false);
+		LLMultiFloater::setFloaterFlashing(floaterp, true);
 	}
 }
 

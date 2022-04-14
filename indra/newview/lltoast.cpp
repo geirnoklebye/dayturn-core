@@ -121,7 +121,7 @@ LLToast::LLToast(const LLToast::Params& p)
 
 	buildFromFile("panel_toast.xml");
 
-	setCanDrag(FALSE);
+	setCanDrag(false);
 
 	mWrapperPanel = getChild<LLPanel>("wrapper_panel");
 

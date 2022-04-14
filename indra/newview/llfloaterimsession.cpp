@@ -610,7 +610,7 @@ LLFloaterIMSession* LLFloaterIMSession::show(const LLUUID& session_id)
 		LLTabContainer::eInsertionPoint i_pt = LLTabContainer::END;
 		if (floater_container)
 		{
-			floater_container->addFloater(floater, TRUE, i_pt);
+			floater_container->addFloater(floater, true, i_pt);
 		}
 	}
 

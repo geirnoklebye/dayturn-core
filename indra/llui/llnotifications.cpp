@@ -216,7 +216,7 @@ LLNotificationForm::LLNotificationForm(const std::string& name, const LLNotifica
 			ui_inst->mSettingGroups["ignores"]->declareLLSD(std::string("Default") + name, "", std::string("Default response for notification " + name));
 		}
 
-		BOOL show_notification = TRUE;
+		bool show_notification = true;
 		if (p.ignore.control.isProvided())
 		{
 			mIgnoreSetting = ui_inst->mSettingGroups["config"]->getControl(p.ignore.control);
@@ -224,7 +224,7 @@ LLNotificationForm::LLNotificationForm(const std::string& name, const LLNotifica
 		}
 		else if (mIgnore > IGNORE_NO)
 		{
-			ui_inst->mSettingGroups["ignores"]->declareBOOL(name, show_notification, "Show notification with this name", LLControlVariable::PERSIST_NONDFT);
+			ui_inst->mSettingGroups["ignores"]->declarebool(name, show_notification, "Show notification with this name", LLControlVariable::PERSIST_NONDFT);
 			mIgnoreSetting = ui_inst->mSettingGroups["ignores"]->getControl(name);
 		}
 	}

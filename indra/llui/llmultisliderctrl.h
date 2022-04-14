@@ -83,7 +83,7 @@ public:
 	virtual ~LLMultiSliderCtrl();
 
     F32				getSliderValue(const std::string& name) const   { return mMultiSlider->getSliderValue(name); }
-	void			setSliderValue(const std::string& name, F32 v, BOOL from_event = FALSE);
+	void			setSliderValue(const std::string& name, F32 v, bool from_event = false);
 
 	virtual void	setValue(const LLSD& value );
 	virtual LLSD	getValue() const		{ return mMultiSlider->getValue(); }
@@ -93,7 +93,7 @@ public:
 	F32				getCurSliderValue() const				{ return mCurValue; }
 	void			setCurSlider(const std::string& name);		
 	void			resetCurSlider();
-	void			setCurSliderValue(F32 val, BOOL from_event = false) { setSliderValue(mMultiSlider->getCurSlider(), val, from_event); }
+	void			setCurSliderValue(F32 val, bool from_event = false) { setSliderValue(mMultiSlider->getCurSlider(), val, from_event); }
 
 	virtual void	setMinValue(const LLSD& min_value)	{ setMinValue((F32)min_value.asReal()); }
 	virtual void	setMaxValue(const LLSD& max_value)	{ setMaxValue((F32)max_value.asReal());  }
@@ -155,8 +155,8 @@ private:
 
 private:
 	const LLFontGL*	mFont;
-	BOOL			mShowText;
-	BOOL			mCanEditText;
+	bool			mShowText;
+	bool			mCanEditText;
 
 	S32				mPrecision;
 	LLTextBox*		mLabelBox;

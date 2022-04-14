@@ -68,11 +68,11 @@ public:
 	
 	virtual bool handleKeyHere(KEY key, MASK mask);
 
-	void setIndexEnabled(S32 index, BOOL enabled);
+	void setIndexEnabled(S32 index, bool enabled);
 	// return the index value of the selected item
 	S32 getSelectedIndex() const { return mSelectedIndex; }
 	// set the index value programatically
-	BOOL setSelectedIndex(S32 index, BOOL from_event = FALSE);
+	bool setSelectedIndex(S32 index, bool from_event = false);
 	// foxus child by index if it can get focus
 	void focusSelectedRadioBtn();
 

@@ -55,7 +55,7 @@ LLFloaterScriptDebug::LLFloaterScriptDebug(const LLSD& key)
 {
 	// avoid resizing of the window to match 
 	// the initial size of the tabbed-childs, whenever a tab is opened or closed
-	mAutoResize = FALSE;
+	mAutoResize = false;
 	// enabled autocous blocks controling focus via  LLFloaterReg::showInstance
 	setAutoFocus(false);
 }

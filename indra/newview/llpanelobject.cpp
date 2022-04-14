@@ -1938,7 +1938,7 @@ void LLPanelObject::onCommitLock(LLUICtrl *ctrl, void *data)
 void LLPanelObject::onCommitPosition( LLUICtrl* ctrl, void* userdata )
 {
 	LLPanelObject* self = (LLPanelObject*) userdata;
-	BOOL btn_down = ((LLSpinCtrl*)ctrl)->isMouseHeldDown() ;
+	bool btn_down = ((LLSpinCtrl*)ctrl)->isMouseHeldDown() ;
 	self->sendPosition(btn_down);
 }
 
@@ -1946,7 +1946,7 @@ void LLPanelObject::onCommitPosition( LLUICtrl* ctrl, void* userdata )
 void LLPanelObject::onCommitScale( LLUICtrl* ctrl, void* userdata )
 {
 	LLPanelObject* self = (LLPanelObject*) userdata;
-	BOOL btn_down = ((LLSpinCtrl*)ctrl)->isMouseHeldDown() ;
+	bool btn_down = ((LLSpinCtrl*)ctrl)->isMouseHeldDown() ;
 	self->sendScale(btn_down);
 }
 
@@ -1954,7 +1954,7 @@ void LLPanelObject::onCommitScale( LLUICtrl* ctrl, void* userdata )
 void LLPanelObject::onCommitRotation( LLUICtrl* ctrl, void* userdata )
 {
 	LLPanelObject* self = (LLPanelObject*) userdata;
-	BOOL btn_down = ((LLSpinCtrl*)ctrl)->isMouseHeldDown() ;
+	bool btn_down = ((LLSpinCtrl*)ctrl)->isMouseHeldDown() ;
 	self->sendRotation(btn_down);
 }
 
