@@ -2721,7 +2721,7 @@ void LLPanelPreference::updateMediaAutoPlayCheckbox(LLUICtrl* ctrl)
 	}
 	else if (name == "enable_music" && (!LLViewerMedia::getInstance()->isParcelAudioPlaying()))
 	{
-		if (gSavedSettings.getBOOL("ParcelMediaAutoPlayEnable"))
+		if (gSavedSettings.getS32("ParcelMediaAutoPlayEnable"))
 		{
 			LLViewerAudio::getInstance()->startInternetStreamWithAutoFade(LLViewerMedia::getInstance()->getParcelAudioURL());
 		}
