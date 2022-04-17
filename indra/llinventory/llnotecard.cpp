@@ -247,7 +247,7 @@ bool LLNotecard::exportEmbeddedItemsStream( std::ostream& out_stream )
 			out_stream << llformat("ext char index %d\n", idx  );
 			if( !item->exportLegacyStream( out_stream ) )
 			{
-				return FALSE;
+				return false;
 			}
 			out_stream << "}\n";
 		}
@@ -256,7 +256,7 @@ bool LLNotecard::exportEmbeddedItemsStream( std::ostream& out_stream )
 
 	out_stream << "}\n";
 	
-	return TRUE;
+	return true;
 }
 
 bool LLNotecard::exportStream( std::ostream& out_stream )
@@ -266,14 +266,14 @@ bool LLNotecard::exportStream( std::ostream& out_stream )
 
 	if( !exportEmbeddedItemsStream( out_stream ) )
 	{
-		return FALSE;
+		return false;
 	}
 
 	out_stream << llformat("Text length %d\n", mText.length() );
 	out_stream << mText;
 	out_stream << "}\n";
 
-	return TRUE;
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////

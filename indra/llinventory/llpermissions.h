@@ -311,8 +311,8 @@ public:
 	void	packMessage(LLMessageSystem* msg) const;
 	void	unpackMessage(LLMessageSystem* msg, const char* block, S32 block_num = 0);
 
-	BOOL	importLegacyStream(std::istream& input_stream);
-	BOOL	exportLegacyStream(std::ostream& output_stream) const;
+	bool	importLegacyStream(std::istream& input_stream);
+	bool	exportLegacyStream(std::ostream& output_stream) const;
 
 	bool operator==(const LLPermissions &rhs) const;
 	bool operator!=(const LLPermissions &rhs) const;

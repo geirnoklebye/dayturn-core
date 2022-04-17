@@ -565,7 +565,7 @@ void LLPermissions::unpackMessage(LLMessageSystem* msg, const char* block, S32 b
 }
 
 
-BOOL LLPermissions::importLegacyStream(std::istream& input_stream)
+bool LLPermissions::importLegacyStream(std::istream& input_stream)
 {
 	init(LLUUID::null, LLUUID::null, LLUUID::null, LLUUID::null);
 	const S32 BUFSIZE = 16384;
@@ -661,11 +661,11 @@ BOOL LLPermissions::importLegacyStream(std::istream& input_stream)
 		}
 	}
 	fix();
-	return TRUE;
+	return true;
 }
 
 
-BOOL LLPermissions::exportLegacyStream(std::ostream& output_stream) const
+bool LLPermissions::exportLegacyStream(std::ostream& output_stream) const
 {
 	std::string uuid_str;
 
@@ -701,7 +701,7 @@ BOOL LLPermissions::exportLegacyStream(std::ostream& output_stream) const
 		output_stream <<  "\t\tgroup_owned\t1\n";
 	}
 	output_stream << "\t}\n";
-	return TRUE;
+	return true;
 }
 
 // Deleted LLPermissions::exportFileXML() and LLPermissions::importXML()

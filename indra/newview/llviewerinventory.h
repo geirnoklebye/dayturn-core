@@ -131,7 +131,7 @@ public:
 	virtual void packMessage(LLMessageSystem* msg) const;
 	virtual BOOL unpackMessage(LLMessageSystem* msg, const char* block, S32 block_num = 0);
 	virtual BOOL unpackMessage(const LLSD& item);
-	virtual BOOL importLegacyStream(std::istream& input_stream);
+	virtual bool importLegacyStream(std::istream& input_stream);
 
 	// new methods
 	BOOL isFinished() const { return mIsComplete; }

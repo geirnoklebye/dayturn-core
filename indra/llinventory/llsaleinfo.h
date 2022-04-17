@@ -84,11 +84,11 @@ public:
 	void setSalePrice(S32 price);
 	//void setNextOwnerPermMask(U32 mask)	{ mNextOwnerPermMask = mask; }
 
-	BOOL exportLegacyStream(std::ostream& output_stream) const;
+	bool exportLegacyStream(std::ostream& output_stream) const;
 	LLSD asLLSD() const;
 	operator LLSD() const { return asLLSD(); }
-	bool fromLLSD(const LLSD& sd, BOOL& has_perm_mask, U32& perm_mask);
-	BOOL importLegacyStream(std::istream& input_stream, BOOL& has_perm_mask, U32& perm_mask);
+	bool fromLLSD(const LLSD& sd, bool& has_perm_mask, U32& perm_mask);
+	bool importLegacyStream(std::istream& input_stream, bool& has_perm_mask, U32& perm_mask);
 
 	LLSD packMessage() const;
 	void unpackMessage(LLSD sales);

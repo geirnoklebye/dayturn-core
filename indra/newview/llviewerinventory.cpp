@@ -522,10 +522,10 @@ void LLViewerInventoryItem::packMessage(LLMessageSystem* msg) const
 }
 
 // virtual
-BOOL LLViewerInventoryItem::importLegacyStream(std::istream& input_stream)
+bool LLViewerInventoryItem::importLegacyStream(std::istream& input_stream)
 {
-	BOOL rv = LLInventoryItem::importLegacyStream(input_stream);
-	mIsComplete = TRUE;
+	bool rv = LLInventoryItem::importLegacyStream(input_stream);
+	mIsComplete = true;
 	return rv;
 }
 
