@@ -1406,7 +1406,8 @@ void LLVOAvatar::calculateSpatialExtents(LLVector4a& newMin, LLVector4a& newMax)
 {
     LL_RECORD_BLOCK_TIME(FTM_AVATAR_EXTENT_UPDATE);
 
-    S32 box_detail = gSavedSettings.getS32("AvatarBoundingBoxComplexity");
+    static LLCachedControl<S32> box_detail_cache(gSavedSettings, "AvatarBoundingBoxComplexity");
+    S32 box_detail = box_detail_cache;
     if (getOverallAppearance() != AOA_NORMAL)
     {
         if (isControlAvatar())
@@ -2641,14 +2642,11 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
 	{
 		LL_INFOS() << "Warning!  Idle on dead avatar" << LL_ENDL;
 		return;
-	}	
+	}
 
-	// <FS:CR> Use LLCachedControl
 	static LLCachedControl<bool> disable_all_render_types(gSavedSettings, "DisableAllRenderTypes");
 	if (!(gPipeline.hasRenderType(mIsControlAvatar ? LLPipeline::RENDER_TYPE_CONTROL_AV : LLPipeline::RENDER_TYPE_AVATAR))
-		//&& !(gSavedSettings.getBOOL("DisableAllRenderTypes")) && !isSelf())
-		&& !(disable_all_render_types) && !isSelf())
-	// </FS:CR>
+		&& !disable_all_render_types && !isSelf())
 	{
 		return;
 	}
@@ -2789,11 +2787,8 @@ void LLVOAvatar::idleUpdateVoiceVisualizer(bool voice_enabled)
 	// Don't render the user's own voice visualizer when in mouselook, or when opening the mic is disabled.
 	if(isSelf())
 	{
-		// <FS:Ansariel> Faster debug settings
-		//if(gAgentCamera.cameraMouselook() || gSavedSettings.getBOOL("VoiceDisableMic"))
-		static LLCachedControl<bool> voiceDisableMic(gSavedSettings, "VoiceDisableMic");
-		if (gAgentCamera.cameraMouselook() || voiceDisableMic)
-		// </FS:Ansariel>
+        static LLCachedControl<bool> voice_disable_mic(gSavedSettings, "VoiceDisableMic");
+		if(gAgentCamera.cameraMouselook() || voice_disable_mic)
 		{
 			render_visualizer = false;
 		}
@@ -3277,9 +3272,9 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 	
 	const F32 time_visible = mTimeVisible.getElapsedTimeF32();
 
-	static LLCachedControl<F32> NAME_SHOW_TIME(gSavedSettings, "RenderNameShowTime", 10.0f);
-	static LLCachedControl<F32> FADE_DURATION(gSavedSettings, "RenderNameFadeDuration", 1.0f);
-	static LLCachedControl<bool> USE_CHAT_BUBBLES(gSavedSettings, "UseChatBubbles", false);
+	const F32 NAME_SHOW_TIME = gSavedSettings.getF32("RenderNameShowTime");	// seconds
+	const F32 FADE_DURATION = gSavedSettings.getF32("RenderNameFadeDuration"); // seconds
+    static LLCachedControl<bool> use_chat_bubbles(gSavedSettings, "UseChatBubbles");
 	static LLCachedControl<bool> NAME_SHOW_SELF(gSavedSettings, "RenderNameShowSelf", true);
 	static LLCachedControl<S32> AVATAR_NAME_TAG_MODE(gSavedSettings, "AvatarNameTagMode", 1);
 	static LLCachedControl<bool> NAME_TAG_SHOW_GROUP_TITLES(gSavedSettings, "NameTagShowGroupTitles", true);
@@ -3288,9 +3283,9 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 
 //	const bool render_group_titles = (NAME_TAG_SHOW_GROUP_TITLES && AVATAR_NAME_TAG_MODE);
 
-	BOOL visible_avatar = isVisible() || mNeedsAnimUpdate;
-	BOOL visible_chat = USE_CHAT_BUBBLES && (mChats.size() || mTyping);
-	BOOL render_name =	visible_chat ||
+	bool visible_avatar = isVisible() || mNeedsAnimUpdate;
+	bool visible_chat = use_chat_bubbles && (mChats.size() || mTyping);
+	bool render_name =	visible_chat ||
 		(visible_avatar &&
 		 ((AVATAR_NAME_TAG_MODE == RENDER_NAME_ALWAYS) ||
 		  (AVATAR_NAME_TAG_MODE == RENDER_NAME_FADE && time_visible < NAME_SHOW_TIME)));
@@ -3298,9 +3293,11 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 	// draw if we're specifically hiding our own name.
 	if (isSelf())
 	{
+        static LLCachedControl<bool> render_name_show_self(gSavedSettings, "RenderNameShowSelf");
+        static LLCachedControl<S32> name_tag_mode(gSavedSettings, "AvatarNameTagMode");
 		render_name = render_name
 			&& !gAgentCamera.cameraMouselook()
-			&& (visible_chat || (NAME_SHOW_SELF && AVATAR_NAME_TAG_MODE));
+			&& (visible_chat || (render_name_show_self && name_tag_mode));
 	}
 
 //MK
@@ -3340,7 +3337,7 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 		return;
 	}
 
-	BOOL new_name = FALSE;
+	bool new_name = FALSE;
 	if (visible_chat != mVisibleChat)
 	{
 		mVisibleChat = visible_chat;
@@ -3405,7 +3402,7 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 	idleUpdateNameTagAlpha(new_name, alpha);
 }
 
-void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
+void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 {
 	LLNameValue *title = getNVPair("Title");
 	LLNameValue* firstname = getNVPair("FirstName");
@@ -3946,7 +3943,7 @@ void LLVOAvatar::idleUpdateNameTagPosition(const LLVector3& root_pos_last)
 	mNameText->setPositionAgent(name_position);				
 }
 
-void LLVOAvatar::idleUpdateNameTagAlpha(BOOL new_name, F32 alpha)
+void LLVOAvatar::idleUpdateNameTagAlpha(bool new_name, F32 alpha)
 {
 	llassert(mNameText);
 
@@ -4098,7 +4095,8 @@ void LLVOAvatar::updateAppearanceMessageDebugText()
 		{
 			debug_line += llformat(" - cof: %d req: %d rcv:%d",
 								   curr_cof_version, last_request_cof_version, last_received_cof_version);
-			if (gSavedSettings.getBOOL("DebugForceAppearanceRequestFailure"))
+			static LLCachedControl<bool> debug_force_failure(gSavedSettings, "DebugForceAppearanceRequestFailure");
+			if (debug_force_failure)
 			{
 				debug_line += " FORCING ERRS";
 			}
@@ -6398,7 +6396,8 @@ BOOL LLVOAvatar::processSingleAnimationStateChange( const LLUUID& anim_id, BOOL 
 					//}
 					//else
 					{
-						LLUUID sound_id = LLUUID(gSavedSettings.getString("UISndTyping"));
+                        static LLCachedControl<std::string> ui_snd_string(gSavedSettings, "UISndTyping");
+						LLUUID sound_id = LLUUID(ui_snd_string);
 						gAudiop->triggerSound(sound_id, getID(), 1.0f, LLAudioEngine::AUDIO_TYPE_SFX, char_pos_global);
 					}
 				}
@@ -6488,7 +6487,7 @@ void LLVOAvatar::resetAnimations()
 // animations.
 LLUUID LLVOAvatar::remapMotionID(const LLUUID& id)
 {
-	BOOL use_new_walk_run = gSavedSettings.getBOOL("UseNewWalkRun");
+    static LLCachedControl<bool> use_new_walk_run(gSavedSettings, "UseNewWalkRun");
 	LLUUID result = id;
 
 	// start special case female walk for female avatars
@@ -8908,11 +8907,8 @@ bool LLVOAvatar::isTooComplex() const
 //mk
 
 	bool too_complex;
-	// <FS:Ansariel> Performance improvement
-	//bool render_friend =  (LLAvatarTracker::instance().isBuddy(getID()) && gSavedSettings.getBOOL("AlwaysRenderFriends"));
-	static LLCachedControl<bool> alwaysRenderFriends(gSavedSettings, "AlwaysRenderFriends");
-	bool render_friend =  (LLAvatarTracker::instance().isBuddy(getID()) && alwaysRenderFriends);
-	// </FS:Ansariel>
+    static LLCachedControl<bool> always_render_friends(gSavedSettings, "AlwaysRenderFriends");
+	bool render_friend =  (LLAvatarTracker::instance().isBuddy(getID()) && always_render_friends);
 
 	if (isSelf() || render_friend || mVisuallyMuteSetting == AV_ALWAYS_RENDER)
 	{
@@ -9776,7 +9772,8 @@ void LLVOAvatar::parseAppearanceMessage(LLMessageSystem* mesgsys, LLAppearanceMe
 	
 	// Parse visual params, if any.
 	S32 num_blocks = mesgsys->getNumberOfBlocksFast(_PREHASH_VisualParam);
-	bool drop_visual_params_debug = gSavedSettings.getBOOL("BlockSomeAvatarAppearanceVisualParams") && (ll_rand(2) == 0); // pretend that ~12% of AvatarAppearance messages arrived without a VisualParam block, for testing
+    static LLCachedControl<bool> block_some_avatars(gSavedSettings, "BlockSomeAvatarAppearanceVisualParams");
+	bool drop_visual_params_debug = block_some_avatars && (ll_rand(2) == 0); // pretend that ~12% of AvatarAppearance messages arrived without a VisualParam block, for testing
 	if( num_blocks > 1 && !drop_visual_params_debug)
 	{
 		//LL_DEBUGS("Avatar") << avString() << " handle visual params, num_blocks " << num_blocks << LL_ENDL;
@@ -9881,10 +9878,12 @@ bool resolve_appearance_version(const LLAppearanceMessageContents& contents, S32
 void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 {
 	LL_DEBUGS("Avatar") << "starts" << LL_ENDL;
-	
-	bool enable_verbose_dumps = gSavedSettings.getBOOL("DebugAvatarAppearanceMessage");
+
+    static LLCachedControl<bool> enable_verbose_dumps(gSavedSettings, "DebugAvatarAppearanceMessage");
+    static LLCachedControl<bool> block_avatar_appearance_messages(gSavedSettings, "BlockAvatarAppearanceMessages");
+
 	std::string dump_prefix = getFullname() + "_" + (isSelf()?"s":"o") + "_";
-	if (gSavedSettings.getBOOL("BlockAvatarAppearanceMessages"))
+	if (block_avatar_appearance_messages)
 	{
 		LL_WARNS() << "Blocking AvatarAppearance message" << LL_ENDL;
 		return;

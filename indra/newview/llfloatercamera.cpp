@@ -464,13 +464,12 @@ void LLFloaterCamera::setMode(ECameraControlMode mode)
 
 void LLFloaterCamera::switchMode(ECameraControlMode mode)
 {
-	setMode(mode);
-
 	switch (mode)
 	{
 	case CAMERA_CTRL_MODE_PRESETS:
 	case CAMERA_CTRL_MODE_PAN:
 		sFreeCamera = false;
+		setMode(mode); // depends onto sFreeCamera
 		clear_camera_tool();
 		break;
 
@@ -479,11 +478,13 @@ void LLFloaterCamera::switchMode(ECameraControlMode mode)
 		if (sFreeCamera)
 		{
 			sFreeCamera = false;
+			setMode(mode);
 			clear_camera_tool();
 		}
 		else
 		{
 			sFreeCamera = true;
+			setMode(mode);
 			activate_camera_tool();
 		}
 		break;
