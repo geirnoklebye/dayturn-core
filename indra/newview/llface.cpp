@@ -252,7 +252,7 @@ void LLFace::setPool(LLFacePool* new_pool, LLViewerTexture *texturep)
 
 			if (mDrawablep)
 			{
-				gPipeline.markRebuild(mDrawablep, LLDrawable::REBUILD_ALL, TRUE);
+				gPipeline.markRebuild(mDrawablep, LLDrawable::REBUILD_ALL, true);
 			}
 		}
 		mGeomIndex = 0;
@@ -334,7 +334,7 @@ void LLFace::dirtyTexture()
 
                     vobj->updateVisualComplexity();
 				}
-				gPipeline.markRebuild(drawablep, LLDrawable::REBUILD_VOLUME, FALSE);
+				gPipeline.markRebuild(drawablep, LLDrawable::REBUILD_VOLUME, false);
 			}
 		}
 	}

@@ -348,7 +348,7 @@ void LLVolumeImplFlexible::doIdleUpdate()
 			if (mRenderRes == -1)
 			{
 				updateRenderRes();
-				gPipeline.markRebuild(drawablep, LLDrawable::REBUILD_POSITION, FALSE);
+				gPipeline.markRebuild(drawablep, LLDrawable::REBUILD_POSITION, false);
 			}
 			else
 			{
@@ -399,7 +399,7 @@ void LLVolumeImplFlexible::doIdleUpdate()
 
 							updateRenderRes();
 
-							gPipeline.markRebuild(drawablep, LLDrawable::REBUILD_POSITION, FALSE);
+							gPipeline.markRebuild(drawablep, LLDrawable::REBUILD_POSITION, false);
 						}
 					}
 				}

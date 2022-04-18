@@ -4115,7 +4115,7 @@ bool LLAgent::teleportCore(bool is_local)
 
 		//release geometry from old location
 		gPipeline.resetVertexBuffers();
-		LLSpatialPartition::sTeleportRequested = TRUE;
+		LLSpatialPartition::sTeleportRequested = true;
 	}
 	make_ui_sound("UISndTeleportOut");
 	

@@ -265,7 +265,7 @@ U32 LLVOGrass::processUpdateMessage(LLMessageSystem *mesgsys,
 
 	if (mDrawable)
 	{
-		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, TRUE);
+		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, true);
 	}
 
 	return retval;
@@ -291,12 +291,12 @@ void LLVOGrass::idleUpdate(LLAgent &agent, const F64 &time)
 	if (!LLVOTree::isTreeRenderingStopped() && !mNumBlades)//restart grass rendering
 	{
 		mNumBlades = GRASS_MAX_BLADES;
-		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, TRUE);
+		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, true);
 		return;
 	}
 	if (mPatch && (mLastPatchUpdateTime != mPatch->getLastUpdateTime()))
 	{
-		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, TRUE);
+		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, true);
 	}
 
 	return;
@@ -349,7 +349,7 @@ bool LLVOGrass::updateLOD()
 		{
 			mNumBlades = 0 ;
             face->setSize(0, 0);
-			gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, TRUE);
+			gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, true);
 		}
 		return true ;
 	}
@@ -374,7 +374,7 @@ bool LLVOGrass::updateLOD()
 		{
 			face->setSize(mNumBlades*8, mNumBlades*12);
 		}
-		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, TRUE);
+		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, true);
 	}
 	else if (num_blades <= (mNumBlades >> 1))
 	{
@@ -387,7 +387,7 @@ bool LLVOGrass::updateLOD()
 		{
 			face->setSize(mNumBlades*8, mNumBlades*12);
 		}
-		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, TRUE);
+		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, true);
 		return true;
 	}
 
@@ -751,8 +751,8 @@ void LLVOGrass::updateDrawable(BOOL force_damped)
 	// Force an immediate rebuild on any update
 	if (mDrawable.notNull())
 	{
-		mDrawable->updateXform(TRUE);
-		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, TRUE);
+		mDrawable->updateXform(true);
+		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, true);
 	}
 	clearChanged(SHIFTED);
 }

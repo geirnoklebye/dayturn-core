@@ -585,7 +585,7 @@ void LLVOSky::restoreGL()
 
 	if (mDrawable)
 	{
-		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, TRUE);
+		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, true);
 	}
 
 }
@@ -767,11 +767,11 @@ bool LLVOSky::updateSky()
         mForceUpdate = FALSE;
 
         mForceUpdateThrottle.setTimerExpirySec(UPDATE_EXPRY);
-        gPipeline.markRebuild(gSky.mVOGroundp->mDrawable, LLDrawable::REBUILD_ALL, TRUE);
+        gPipeline.markRebuild(gSky.mVOGroundp->mDrawable, LLDrawable::REBUILD_ALL, true);
 
         if (mDrawable.notNull() && mDrawable->getFace(0) && !mDrawable->getFace(0)->getVertexBuffer())
         {
-            gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, TRUE);
+            gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, true);
         }
         mCubeMapUpdateStage = -1;
     }

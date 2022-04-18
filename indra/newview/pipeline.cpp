@@ -711,7 +711,7 @@ void LLPipeline::destroyGL()
 
 	if (LLVertexBuffer::sEnableVBOs)
 	{
-		LLVertexBuffer::sEnableVBOs = FALSE;
+		LLVertexBuffer::sEnableVBOs = false;
 	}
 
 	if (mMeshDirtyQueryObject)
@@ -793,7 +793,7 @@ bool LLPipeline::allocateScreenBuffer(U32 resX, U32 resY)
 		// disabled on future sessions
 		if (LLPipeline::sRenderDeferred)
 		{
-			gSavedSettings.setBOOL("RenderDeferred", FALSE);
+			gSavedSettings.setbool("RenderDeferred", false);
 			LLPipeline::refreshCachedSettings();
 		}
 	}
@@ -1350,11 +1350,6 @@ void LLPipeline::createLUTBuffers()
 			}
 			
 			U32 pix_format = GL_R16F;
-#if LL_DARWIN
-			// Need to work around limited precision with 10.6.8 and older drivers
-			//
-			// pix_format = GL_R32F;
-#endif
 			LLImageGL::generateTextures(1, &mLightFunc);
 			gGL.getTexUnit(0)->bindManual(LLTexUnit::TT_TEXTURE, mLightFunc);
 			LLImageGL::setManualImage(LLTexUnit::getInternalType(LLTexUnit::TT_TEXTURE), 0, pix_format, lightResX, lightResY, GL_RED, GL_FLOAT, ls, false);
@@ -1855,7 +1850,7 @@ void LLPipeline::createObject(LLViewerObject* vobj)
 		vobj->setDrawableParent(NULL); // LLPipeline::addObject 2
 	}
 
-	markRebuild(drawablep, LLDrawable::REBUILD_ALL, TRUE);
+	markRebuild(drawablep, LLDrawable::REBUILD_ALL, true);
 
 	if (drawablep->getVOVolume() && RenderAnimateRes)
 	{
@@ -1973,7 +1968,7 @@ void LLPipeline::updateMovedList(LLDrawable::drawable_vector_t& moved_list)
 			{ //will likely not receive any future world matrix updates
 				// -- this keeps attachments from getting stuck in space and falling off your avatar
 				drawablep->clearState(LLDrawable::ANIMATED_CHILD);
-				markRebuild(drawablep, LLDrawable::REBUILD_VOLUME, TRUE);
+				markRebuild(drawablep, LLDrawable::REBUILD_VOLUME, true);
 				if (drawablep->getVObj())
 				{
 					drawablep->getVObj()->dirtySpatialGroup(true);
@@ -2951,7 +2946,7 @@ void LLPipeline::updateGeom(F32 max_dtime)
 				drawablep->clearState(LLDrawable::FOR_UNLOAD);
 			}
 
-			if (updateDrawableGeom(drawablep, TRUE))
+			if (updateDrawableGeom(drawablep, true))
 			{
 				drawablep->clearState(LLDrawable::IN_REBUILD_Q1);
 				mBuildQ1.erase(curiter);
@@ -3001,7 +2996,7 @@ void LLPipeline::updateGeom(F32 max_dtime)
 		bool update_complete = true;
 		if (!drawablep->isDead())
 		{
-			update_complete = updateDrawableGeom(drawablep, FALSE);
+			update_complete = updateDrawableGeom(drawablep, false);
 			count++;
 		}
 		if (update_complete)
@@ -6453,7 +6448,7 @@ void LLPipeline::enableLightsDynamic()
 void LLPipeline::enableLightsAvatar()
 {
 	U32 mask = 0xff; // All lights
-	setupAvatarLights(FALSE);
+	setupAvatarLights(false);
 	enableLights(mask);
 }
 
@@ -6517,7 +6512,7 @@ void LLPipeline::enableLightsPreview()
 void LLPipeline::enableLightsAvatarEdit(const LLColor4& color)
 {
 	U32 mask = 0x2002; // Avatar backlight only, set ambient
-	setupAvatarLights(TRUE);
+	setupAvatarLights(true);
 	enableLights(mask);
 
 	gGL.setAmbientLightColor(color);
@@ -7257,7 +7252,7 @@ void LLPipeline::doResetVertexBuffers(bool forced)
 		else
 		{
 			//teleporting aborted
-			LLSpatialPartition::sTeleportRequested = FALSE;
+			LLSpatialPartition::sTeleportRequested = false;
 			mResetVertexBuffers = false;
 			return;
 		}
@@ -7283,7 +7278,7 @@ void LLPipeline::doResetVertexBuffers(bool forced)
 	}
 	if(LLSpatialPartition::sTeleportRequested)
 	{
-		LLSpatialPartition::sTeleportRequested = FALSE;
+		LLSpatialPartition::sTeleportRequested = false;
 
 		LLWorld::getInstance()->clearAllVisibleObjects();
 		clearRebuildDrawables();
@@ -9436,8 +9431,8 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
         LLPipeline::sUnderWaterRender = false;
         LLPipeline::sReflectionRender = false;
 
-        LLDrawPoolWater::sNeedsReflectionUpdate = FALSE;
-        LLDrawPoolWater::sNeedsDistortionUpdate = FALSE;
+        LLDrawPoolWater::sNeedsReflectionUpdate = false;
+        LLDrawPoolWater::sNeedsDistortionUpdate = false;
 
         if (!LLRenderTarget::sUseFBO)
         {
@@ -11480,7 +11475,7 @@ void LLPipeline::hideObject( const LLUUID& id )
 void LLPipeline::hideDrawable( LLDrawable *pDrawable )
 {
 	pDrawable->setState( LLDrawable::FORCE_INVISIBLE );
-	markRebuild( pDrawable, LLDrawable::REBUILD_ALL, TRUE );
+	markRebuild( pDrawable, LLDrawable::REBUILD_ALL, true );
 	//hide the children
 	LLViewerObject::const_child_list_t& child_list = pDrawable->getVObj()->getChildren();
 	for ( LLViewerObject::child_list_t::const_iterator iter = child_list.begin();
@@ -11491,14 +11486,14 @@ void LLPipeline::hideDrawable( LLDrawable *pDrawable )
 		if ( drawable )
 		{
 			drawable->setState( LLDrawable::FORCE_INVISIBLE );
-			markRebuild( drawable, LLDrawable::REBUILD_ALL, TRUE );
+			markRebuild( drawable, LLDrawable::REBUILD_ALL, true );
 		}
 	}
 }
 void LLPipeline::unhideDrawable( LLDrawable *pDrawable )
 {
 	pDrawable->clearState( LLDrawable::FORCE_INVISIBLE );
-	markRebuild( pDrawable, LLDrawable::REBUILD_ALL, TRUE );
+	markRebuild( pDrawable, LLDrawable::REBUILD_ALL, true );
 	//restore children
 	LLViewerObject::const_child_list_t& child_list = pDrawable->getVObj()->getChildren();
 	for ( LLViewerObject::child_list_t::const_iterator iter = child_list.begin();
@@ -11509,7 +11504,7 @@ void LLPipeline::unhideDrawable( LLDrawable *pDrawable )
 		if ( drawable )
 		{
 			drawable->clearState( LLDrawable::FORCE_INVISIBLE );
-			markRebuild( drawable, LLDrawable::REBUILD_ALL, TRUE );
+			markRebuild( drawable, LLDrawable::REBUILD_ALL, true );
 		}
 	}
 }

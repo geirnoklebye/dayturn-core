@@ -430,7 +430,7 @@ public:
 	F32 mSlopRatio; //percentage distance must change before drawables receive LOD update (default is 0.25);
 	BOOL mDepthMask; //if TRUE, objects in this partition will be written to depth during alpha rendering
 
-	static BOOL sTeleportRequested; //started to issue a teleport request
+	static bool sTeleportRequested; //started to issue a teleport request
 };
 
 // class for creating bridges between spatial partitions

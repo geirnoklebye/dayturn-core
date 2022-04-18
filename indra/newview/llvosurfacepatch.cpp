@@ -805,7 +805,7 @@ void LLVOSurfacePatch::dirtyGeom()
 {
 	if (mDrawable)
 	{
-		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, TRUE);
+		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, true);
 		LLFace* facep = mDrawable->getFace(0);
 		if (facep)
 		{

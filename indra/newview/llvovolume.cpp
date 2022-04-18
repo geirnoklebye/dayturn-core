@@ -922,7 +922,7 @@ void LLVOVolume::updateTextureVirtualSize(bool forced)
 			if ((vsize < MIN_TEX_ANIM_SIZE && old_size > MIN_TEX_ANIM_SIZE) ||
 				(vsize > MIN_TEX_ANIM_SIZE && old_size < MIN_TEX_ANIM_SIZE))
 			{
-				gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_TCOORD, FALSE);
+				gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_TCOORD, false);
 			}
 		}
 				
@@ -988,8 +988,8 @@ void LLVOVolume::updateTextureVirtualSize(bool forced)
 				(texture_discard < current_discard || //texture has more data than last rebuild
 				current_discard < 0)) //no previous rebuild
 			{
-				gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, FALSE);
-				mSculptChanged = TRUE;
+				gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, false);
+				mSculptChanged = true;
 			}
 
 			if (gPipeline.hasRenderDebugMask(LLPipeline::RENDER_DEBUG_SCULPTED))
@@ -1095,7 +1095,7 @@ void LLVOVolume::setScale(const LLVector3 &scale, BOOL damped)
 
 		//since drawable transforms do not include scale, changing volume scale
 		//requires an immediate rebuild of volume verts.
-		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_POSITION, TRUE);
+		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_POSITION, true);
 	}
 }
 
@@ -1320,8 +1320,8 @@ void LLVOVolume::updateVisualComplexity()
 
 void LLVOVolume::notifyMeshLoaded()
 { 
-	mSculptChanged = TRUE;
-	gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_GEOMETRY, TRUE);
+	mSculptChanged = true;
+	gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_GEOMETRY, true);
 
     LLVOAvatar *av = getAvatar();
     if (av && !isAnimatedObject())
@@ -1438,7 +1438,7 @@ void LLVOVolume::sculpt()
 			LLVOVolume* volume = (*(mSculptTexture->getVolumeList(LLRender::SCULPT_TEX)))[i];
 			if (volume != this && volume->getVolume() == getVolume())
 			{
-				gPipeline.markRebuild(volume->mDrawable, LLDrawable::REBUILD_GEOMETRY, FALSE);
+				gPipeline.markRebuild(volume->mDrawable, LLDrawable::REBUILD_GEOMETRY, false);
 			}
 		}
 	}
@@ -1658,7 +1658,7 @@ BOOL LLVOVolume::calcLOD()
 void LLVOVolume::forceLOD(S32 lod)
 {
 	mLOD = lod;
-	gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, FALSE);
+	gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, false);
 	mLODChanged = true;
 }
 //</FS:Beq>
@@ -1697,7 +1697,7 @@ bool LLVOVolume::updateLOD()
             }
         }
 
-		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, FALSE);
+		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, false);
 		mLODChanged = true;
 	}
 	else
@@ -1726,7 +1726,7 @@ BOOL LLVOVolume::setDrawableParent(LLDrawable* parentp)
 	if (!mDrawable->isRoot())
 	{
 		// rebuild vertices in parent relative space
-		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, TRUE);
+		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, true);
 
 		if (mDrawable->isActive() && !parentp->isActive())
 		{
@@ -1778,7 +1778,7 @@ BOOL LLVOVolume::setParent(LLViewerObject* parent)
 		if (ret && mDrawable)
 		{
 			gPipeline.markMoved(mDrawable);
-			gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, TRUE);
+			gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, true);
 		}
         onReparent(old_parent, parent);
 	}
@@ -2376,7 +2376,7 @@ S32 LLVOVolume::setTEColor(const U8 te, const LLColor4& color)
 			gPipeline.markTextured(mDrawable);
 			//treat this alpha change as an LoD update since render batches may need to get rebuilt
 			mLODChanged = true;
-			gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, FALSE);
+			gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, false);
 		}
 		retval = LLPrimitive::setTEColor(te, color);
 		if (mDrawable.notNull() && retval)
@@ -2806,7 +2806,7 @@ void LLVOVolume::updateTEData()
 	/*if (mDrawable.notNull())
 	{
 		mFaceMappingChanged = true;
-		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_MATERIAL, TRUE);
+		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_MATERIAL, true);
 	}*/
 }
 

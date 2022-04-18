@@ -1040,7 +1040,7 @@ BOOL LLViewerObject::setDrawableParent(LLDrawable* parentp)
 		parentp->setState(LLDrawable::ACTIVE_CHILD);
 	}
 
-	gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, TRUE);
+	gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, true);
 	if(	(old_parent != parentp && old_parent)
 		|| (parentp && parentp->isActive()))
 	{
@@ -2485,7 +2485,7 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 		{
 // 			LL_DEBUGS() << "Clearing force invisible: " << mID << ":" << getPCodeString() << ":" << getPositionAgent() << LL_ENDL;
 			mDrawable->clearState(LLDrawable::FORCE_INVISIBLE);
-			gPipeline.markRebuild( mDrawable, LLDrawable::REBUILD_ALL, TRUE );
+			gPipeline.markRebuild( mDrawable, LLDrawable::REBUILD_ALL, true );
 		}
 	}
 
@@ -5078,7 +5078,7 @@ S32 LLViewerObject::setTEBumpmap(const U8 te, const U8 bump)
 		if (mDrawable.notNull() && retval)
 		{
 			gPipeline.markTextured(mDrawable);
-			gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_GEOMETRY, TRUE);
+			gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_GEOMETRY, true);
 		}
 	}
 	return retval;
@@ -5168,7 +5168,7 @@ S32 LLViewerObject::setTEMediaFlags(const U8 te, const U8 media_flags)
 		setChanged(TEXTURE);
 		if (mDrawable.notNull() && retval)
 		{
-			gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_TCOORD, TRUE);
+			gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_TCOORD, true);
 			gPipeline.markTextured(mDrawable);
 			// JC - probably only need this if changes texture coords
 			//gPipeline.markRebuild(mDrawable);
@@ -6715,8 +6715,8 @@ void LLStaticViewerObject::updateDrawable(BOOL force_damped)
 	// Force an immediate rebuild on any update
 	if (mDrawable.notNull())
 	{
-		mDrawable->updateXform(TRUE);
-		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, TRUE);
+		mDrawable->updateXform(true);
+		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, true);
 	}
 	clearChanged(SHIFTED);
 }
