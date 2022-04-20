@@ -72,7 +72,7 @@ public:
 	// Scale and pan are shared across all instances! (i.e. Terrain and Objects maps are always registered)
 	static void		setScale( F32 scale );
 	static void		translatePan( S32 delta_x, S32 delta_y );
-	static void		setPan( S32 x, S32 y, BOOL snap = TRUE );
+	static void		setPan( S32 x, S32 y, bool snap = true );
 	// Return true if the current scale level is above the threshold for accessing region info
 	static bool		showRegionInfo();
 

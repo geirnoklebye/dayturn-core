@@ -265,7 +265,7 @@ void LLWorldMapView::translatePan( S32 delta_x, S32 delta_y )
 
 
 // static
-void LLWorldMapView::setPan( S32 x, S32 y, BOOL snap )
+void LLWorldMapView::setPan( S32 x, S32 y, bool snap )
 {
 	sTargetPanX = (F32)x;
 	sTargetPanY = (F32)y;
