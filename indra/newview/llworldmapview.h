@@ -94,7 +94,7 @@ public:
 
 	// Draw the tracking indicator, doing the right thing if it's outside
 	// the view area.
-	void			drawTracking( const LLVector3d& pos_global, const LLColor4& color, BOOL draw_arrow = TRUE,
+	void			drawTracking( const LLVector3d& pos_global, const LLColor4& color, bool draw_arrow = true,
 								  const std::string& label = std::string(), const std::string& tooltip = std::string(),
 								  S32 vert_offset = 0);
 	static void		drawTrackingArrow(const LLRect& view_rect, S32 x, S32 y, 
@@ -123,7 +123,7 @@ public:
 									const std::string& second_line);
 
 	// Prevents accidental double clicks
-	static void		clearLastClick() { sHandledLastClick = FALSE; }
+	static void		clearLastClick() { sHandledLastClick = false; }
 
 	// if the view changes, download additional sim info as needed
 	void			updateVisibleBlocks();
@@ -185,7 +185,7 @@ public:
 	LLTextBox*		mTextBoxSouthWest;
 	LLTextBox*		mTextBoxScrollHint;
 
-	static BOOL		sHandledLastClick;
+	static bool		sHandledLastClick;
 	S32				mSelectIDStart;
 
 	// Keep the list of regions that are displayed on screen. Avoids iterating through the whole region map after draw().

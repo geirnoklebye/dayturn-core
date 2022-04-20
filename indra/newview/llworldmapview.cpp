@@ -70,7 +70,7 @@ const F32 OCEAN_BLUE  = (F32)(0x5F)/255.f;
 
 const F32 GODLY_TELEPORT_HEIGHT = 200.f;
 const F32 BIG_DOT_RADIUS = 5.f;
-BOOL LLWorldMapView::sHandledLastClick = FALSE;
+bool LLWorldMapView::sHandledLastClick = false;
 
 LLUIImagePtr LLWorldMapView::sAvatarSmallImage = NULL;
 LLUIImagePtr LLWorldMapView::sAvatarYouImage = NULL;
@@ -285,7 +285,7 @@ bool LLWorldMapView::showRegionInfo()
 ///////////////////////////////////////////////////////////////////////////////////
 // HELPERS
 
-BOOL is_agent_in_region(LLViewerRegion* region, LLSimInfo* info)
+bool is_agent_in_region(LLViewerRegion* region, LLSimInfo* info)
 {
 	return (region && info && info->isName(region->getName()));
 }
@@ -574,7 +574,7 @@ void LLWorldMapView::draw()
 	{
 		drawTracking(pos_global,
 					 lerp(LLColor4::yellow, LLColor4::orange, 0.4f),
-					 TRUE,
+					 true,
 					 "You are here",
 					 "",
 					 LLFontGL::getFontSansSerifSmall()->getLineHeight()); // offset vertically by one line, to avoid overlap with target tracking
@@ -594,7 +594,7 @@ void LLWorldMapView::draw()
 	LLTracker::ETrackingStatus tracking_status = LLTracker::getTrackingStatus();
 	if ( LLTracker::TRACKING_AVATAR == tracking_status )
 	{
-		drawTracking( LLAvatarTracker::instance().getGlobalPos(), map_track_color, TRUE, LLTracker::getLabel(), "" );
+		drawTracking( LLAvatarTracker::instance().getGlobalPos(), map_track_color, true, LLTracker::getLabel(), "" );
 	}
 	else if ( LLTracker::TRACKING_LANDMARK == tracking_status
 			  || LLTracker::TRACKING_LOCATION == tracking_status )
@@ -604,7 +604,7 @@ void LLWorldMapView::draw()
 		LLVector3d pos_global = LLTracker::getTrackedPositionGlobal();
 		if (!pos_global.isExactlyZero())
 		{
-			drawTracking( pos_global, map_track_color, TRUE, LLTracker::getLabel(), LLTracker::getToolTip() );
+			drawTracking( pos_global, map_track_color, true, LLTracker::getLabel(), LLTracker::getToolTip() );
 		}
 	}
 	else if (LLWorldMap::getInstance()->isTracking())
@@ -613,7 +613,7 @@ void LLWorldMapView::draw()
 		{
 			// We know this location to be invalid, draw a blue circle
 			LLColor4 loading_color(0.0, 0.5, 1.0, 1.0);
-			drawTracking( LLWorldMap::getInstance()->getTrackedPositionGlobal(), loading_color, TRUE, getString("InvalidLocation"), "");
+			drawTracking( LLWorldMap::getInstance()->getTrackedPositionGlobal(), loading_color, true, getString("InvalidLocation"), "");
 		}
 		else
 		{
@@ -621,7 +621,7 @@ void LLWorldMapView::draw()
 			double value = fmod(current_time, 2);
 			value = 0.5 + 0.5*cos(value * F_PI);
 			LLColor4 loading_color(0.0, F32(value/2), F32(value), 1.0);
-			drawTracking( LLWorldMap::getInstance()->getTrackedPositionGlobal(), loading_color, TRUE, getString("Loading"), "");
+			drawTracking( LLWorldMap::getInstance()->getTrackedPositionGlobal(), loading_color, true, getString("Loading"), "");
 		}
 	}
 
@@ -1038,7 +1038,7 @@ LLVector3 LLWorldMapView::globalPosToView( const LLVector3d& global_pos )
 }
 
 
-void LLWorldMapView::drawTracking(const LLVector3d& pos_global, const LLColor4& color, BOOL draw_arrow,
+void LLWorldMapView::drawTracking(const LLVector3d& pos_global, const LLColor4& color, bool draw_arrow,
 								  const std::string& label, const std::string& tooltip, S32 vert_offset )
 {
 	LLVector3 pos_local = globalPosToView( pos_global );
@@ -1573,7 +1573,7 @@ void LLWorldMapView::handleClick(S32 x, S32 y, MASK mask,
 		bool show_adult = gAgent.canAccessAdult() && gSavedSettings.getBOOL("ShowAdultEvents");
 
 		// Test hits if trackable data are displayed, otherwise, we don't even bother
-		if (gSavedSettings.getBOOL("MapShowEvents") || show_mature || show_adult || gSavedSettings.getBOOL("MapShowLandForSale"))
+		if (gSavedSettings.getbool("MapShowEvents") || show_mature || show_adult || gSavedSettings.getbool("MapShowLandForSale"))
 		{
 			// Iterate through the visible regions
 			for (handle_list_t::iterator iter = mVisibleRegions.begin(); iter != mVisibleRegions.end(); ++iter)
@@ -1585,7 +1585,7 @@ void LLWorldMapView::handleClick(S32 x, S32 y, MASK mask,
 					continue;
 				}
 				// If on screen check hits with the visible item lists
-				if (gSavedSettings.getBOOL("MapShowEvents"))
+				if (gSavedSettings.getbool("MapShowEvents"))
 				{
 					LLSimInfo::item_info_list_t::const_iterator it = siminfo->getPGEvent().begin();
 					while (it != siminfo->getPGEvent().end())
@@ -1633,7 +1633,7 @@ void LLWorldMapView::handleClick(S32 x, S32 y, MASK mask,
 						++it;
 					}
 				}
-				if (gSavedSettings.getBOOL("MapShowLandForSale"))
+				if (gSavedSettings.getbool("MapShowLandForSale"))
 				{
 					LLSimInfo::item_info_list_t::const_iterator it = siminfo->getLandForSale().begin();
 					while (it != siminfo->getLandForSale().end())
@@ -1686,7 +1686,7 @@ BOOL LLWorldMapView::handleMouseDown( S32 x, S32 y, MASK mask )
 	mMouseDownPanY = ll_round(sPanY);
 	mMouseDownX = x;
 	mMouseDownY = y;
-	sHandledLastClick = TRUE;
+	sHandledLastClick = true;
 	return TRUE;
 }
 

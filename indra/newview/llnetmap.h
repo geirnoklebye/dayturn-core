@@ -110,7 +110,7 @@ private:
 	void			drawRing(const F32 radius, LLVector3 pos_map, const LLUIColor& colour);
 	void			drawTracking( const LLVector3d& pos_global, 
 								  const LLColor4& color,
-								  BOOL draw_arrow = TRUE);
+								  bool draw_arrow = true);
 	bool			handleToolTipAgent(const LLUUID& avatar_id);
 	static void		showAvatarInspector(const LLUUID& avatar_id);
 	bool			createImage(LLPointer<LLImageRaw>& rawimagep) const;

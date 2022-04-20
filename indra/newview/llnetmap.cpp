@@ -721,7 +721,7 @@ void LLNetMap::drawRing(const F32 radius, const LLVector3 pos_map, const LLUICol
 }
 
 void LLNetMap::drawTracking(const LLVector3d& pos_global, const LLColor4& color, 
-							BOOL draw_arrow )
+							bool draw_arrow )
 {
 	LLVector3 pos_local = globalPosToView(pos_global);
 	if( (pos_local.mV[VX] < 0) ||
@@ -1137,7 +1137,7 @@ bool LLNetMap::handleDoubleClick(S32 x, S32 y, MASK mask)
 void LLNetMap::handleOverlayToggle(const LLSD& sdParam)
 {
 	const std::string control = sdParam.asString();
-	gSavedSettings.setBOOL(control, !gSavedSettings.getBOOL(control));
+	gSavedSettings.setbool(control, !gSavedSettings.getbool(control));
 	mUpdateParcelImage = true;
 }
 
