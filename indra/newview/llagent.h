@@ -408,7 +408,7 @@ private:
 public:
 	void			setAFK();
 	void			clearAFK();
-	BOOL			getAFK() const;
+	bool			getAFK() const;
 	static const F32 MIN_AFK_TIME;
 	
 	//--------------------------------------------------------------------
@@ -567,12 +567,12 @@ public:
 	// Autopilot
 	//--------------------------------------------------------------------
 public:
-	BOOL			getAutoPilot() const				{ return mAutoPilot; }
+	bool			getAutoPilot() const				{ return mAutoPilot; }
 	LLVector3d		getAutoPilotTargetGlobal() const 	{ return mAutoPilotTargetGlobal; }
 	LLUUID			getAutoPilotLeaderID() const		{ return mLeaderID; }
 	F32				getAutoPilotStopDistance() const	{ return mAutoPilotStopDistance; }
 	F32				getAutoPilotTargetDist() const		{ return mAutoPilotTargetDist; }
-	BOOL			getAutoPilotUseRotation() const		{ return mAutoPilotUseRotation; }
+	bool			getAutoPilotUseRotation() const		{ return mAutoPilotUseRotation; }
 	LLVector3		getAutoPilotTargetFacing() const	{ return mAutoPilotTargetFacing; }
 	F32				getAutoPilotRotationThreshold() const	{ return mAutoPilotRotationThreshold; }
 	std::string		getAutoPilotBehaviorName() const	{ return mAutoPilotBehaviorName; }
@@ -580,27 +580,27 @@ public:
 	void			startAutoPilotGlobal(const LLVector3d &pos_global, 
 										 const std::string& behavior_name = std::string(), 
 										 const LLQuaternion *target_rotation = NULL, 
-										 void (*finish_callback)(BOOL, void *) = NULL, void *callback_data = NULL, 
+										 void (*finish_callback)(bool, void *) = NULL, void *callback_data = NULL, 
 										 F32 stop_distance = 0.f, F32 rotation_threshold = 0.03f,
-										 BOOL allow_flying = TRUE);
-	void 			startFollowPilot(const LLUUID &leader_id, BOOL allow_flying = TRUE, F32 stop_distance = 0.5f);
-	void			stopAutoPilot(BOOL user_cancel = FALSE);
+										 bool allow_flying = true);
+	void 			startFollowPilot(const LLUUID &leader_id, bool allow_flying = true, F32 stop_distance = 0.5f);
+	void			stopAutoPilot(bool user_cancel = false);
 	void 			setAutoPilotTargetGlobal(const LLVector3d &target_global);
 	void			autoPilot(F32 *delta_yaw); 			// Autopilot walking action, angles in radians
 	void			renderAutoPilotTarget();
 private:
-	BOOL			mAutoPilot;
-	BOOL			mAutoPilotFlyOnStop;
-	BOOL			mAutoPilotAllowFlying;
+	bool			mAutoPilot;
+	bool			mAutoPilotFlyOnStop;
+	bool			mAutoPilotAllowFlying;
 	LLVector3d		mAutoPilotTargetGlobal;
 	F32				mAutoPilotStopDistance;
-	BOOL			mAutoPilotUseRotation;
+	bool			mAutoPilotUseRotation;
 	LLVector3		mAutoPilotTargetFacing;
 	F32				mAutoPilotTargetDist;
 	S32				mAutoPilotNoProgressFrameCount;
 	F32				mAutoPilotRotationThreshold;
 	std::string		mAutoPilotBehaviorName;
-	void			(*mAutoPilotFinishedCallback)(BOOL, void *);
+	void			(*mAutoPilotFinishedCallback)(bool, void *);
 	void*			mAutoPilotCallbackData;
 	LLUUID			mLeaderID;
 	bool			mMovementKeysLocked;
@@ -693,7 +693,7 @@ private:
 									const LLVector3& pos_local,				// Go to a named location home
 									bool look_at_from_camera = false);
 	void 			doTeleportViaLandmark(const LLUUID& landmark_id);			// Teleport to a landmark
-	void 			doTeleportViaLure(const LLUUID& lure_id, BOOL godlike);	// To an invited location
+	void 			doTeleportViaLure(const LLUUID& lure_id, bool godlike);	// To an invited location
 	void 			doTeleportViaLocation(const LLVector3d& pos_global);		// To a global location - this will probably need to be deprecated
 	void			doTeleportViaLocationLookAt(const LLVector3d& pos_global);// To a global location, preserving camera rotation
 
@@ -741,14 +741,14 @@ private:
 
 public:
 	// Checks if agent can modify an object based on the permissions and the agent's proxy status.
-	BOOL			isGrantedProxy(const LLPermissions& perm);
-	BOOL			allowOperation(PermissionBit op,
+	bool			isGrantedProxy(const LLPermissions& perm);
+	bool			allowOperation(PermissionBit op,
 								   const LLPermissions& perm,
 								   U64 group_proxy_power = 0,
 								   U8 god_minimum = GOD_MAINTENANCE);
 	const LLAgentAccess& getAgentAccess();
-	BOOL			canManageEstate() const;
-	BOOL			getAdminOverride() const;
+	bool			canManageEstate() const;
+	bool			getAdminOverride() const;
 private:
 	LLAgentAccess * mAgentAccess;
 	
@@ -759,7 +759,7 @@ public:
 	bool			isGodlike() const;
 	bool			isGodlikeWithoutAdminMenuFakery() const;
 	U8				getGodLevel() const;
-	void			setAdminOverride(BOOL b);
+	void			setAdminOverride(bool b);
 	void			setGodLevel(U8 god_level);
 	void			requestEnterGodMode();
 	void			requestLeaveGodMode();

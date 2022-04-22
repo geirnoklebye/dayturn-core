@@ -4335,7 +4335,7 @@ void process_avatar_appearance(LLMessageSystem *mesgsys, void **user_data)
 void process_camera_constraint(LLMessageSystem *mesgsys, void **user_data)
 {
 	//Freeing up the camera movement some more -KC
-	if(gSavedSettings.getBOOL("IgnoreSimulatorCameraConstraints"))
+	if(gSavedSettings.getbool("IgnoreSimulatorCameraConstraints"))
 		return;
 	LLVector4 cameraCollidePlane;
 	mesgsys->getVector4Fast(_PREHASH_CameraCollidePlane, _PREHASH_Plane, cameraCollidePlane);
@@ -4343,7 +4343,7 @@ void process_camera_constraint(LLMessageSystem *mesgsys, void **user_data)
 	gAgentCamera.setCameraCollidePlane(cameraCollidePlane);
 }
 
-void near_sit_object(BOOL success, void *data)
+void near_sit_object(bool success, void *data)
 {
 	if (success)
 	{

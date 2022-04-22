@@ -191,10 +191,10 @@ public:
 	virtual void startTeleport();
 
 protected:
-	inline BOOL isLureGodLike() const {return mIsLureGodLike;};
+	inline bool isLureGodLike() const {return mIsLureGodLike;};
 
 private:
-	BOOL mIsLureGodLike;
+	bool mIsLureGodLike;
 };
 
 class LLTeleportRequestViaLocation : public LLTeleportRequest
@@ -424,12 +424,12 @@ LLAgent::LLAgent() :
 	mbFlagsDirty(false),
 	mbFlagsNeedReset(false),
 
-	mAutoPilot(FALSE),
-	mAutoPilotFlyOnStop(FALSE),
-	mAutoPilotAllowFlying(TRUE),
+	mAutoPilot(false),
+	mAutoPilotFlyOnStop(false),
+	mAutoPilotAllowFlying(true),
 	mAutoPilotTargetGlobal(),
 	mAutoPilotStopDistance(1.f),
-	mAutoPilotUseRotation(FALSE),
+	mAutoPilotUseRotation(false),
 	mAutoPilotTargetFacing(LLVector3::zero),
 	mAutoPilotTargetDist(0.f),
 	mAutoPilotNoProgressFrameCount(0),
@@ -1141,7 +1141,7 @@ std::string LLAgent::getRegionCapability(const std::string &name)
 // canManageEstate()
 //-----------------------------------------------------------------------------
 
-BOOL LLAgent::canManageEstate() const
+bool LLAgent::canManageEstate() const
 {
 	return mRegionp && mRegionp->canManageEstate();
 }
@@ -1603,7 +1603,7 @@ void LLAgent::clearAFK()
 //-----------------------------------------------------------------------------
 // getAFK()
 //-----------------------------------------------------------------------------
-BOOL LLAgent::getAFK() const
+bool LLAgent::getAFK() const
 {
 	return (mControlFlags & AGENT_CONTROL_AWAY) != 0;
 }
@@ -1640,11 +1640,11 @@ void LLAgent::startAutoPilotGlobal(
 	const LLVector3d &target_global,
 	const std::string& behavior_name,
 	const LLQuaternion *target_rotation,
-	void (*finish_callback)(BOOL, void *),
+	void (*finish_callback)(bool, void *),
 	void *callback_data,
 	F32 stop_distance,
 	F32 rot_threshold,
-	BOOL allow_flying)
+	bool allow_flying)
 {
 	if (!isAgentAvatarValid())
 	{
@@ -1701,7 +1701,7 @@ void LLAgent::startAutoPilotGlobal(
 	}
 	else
 	{
-		mAutoPilotFlyOnStop = FALSE;
+		mAutoPilotFlyOnStop = false;
 	}
 
 	if (distance > 30.0 && mAutoPilotAllowFlying)
@@ -1717,22 +1717,22 @@ void LLAgent::startAutoPilotGlobal(
 		// Do not force flying for "Sit" behavior to prevent flying after pressing "Stand"
 		// from an object. See EXT-1655.
 		if ("Sit" != mAutoPilotBehaviorName)
-			mAutoPilotFlyOnStop = TRUE;
+			mAutoPilotFlyOnStop = true;
 	}
 
-	mAutoPilot = TRUE;
+	mAutoPilot = true;
 	setAutoPilotTargetGlobal(target_global);
 
 	if (target_rotation)
 	{
-		mAutoPilotUseRotation = TRUE;
+		mAutoPilotUseRotation = true;
 		mAutoPilotTargetFacing = LLVector3::x_axis * *target_rotation;
 		mAutoPilotTargetFacing.mV[VZ] = 0.f;
 		mAutoPilotTargetFacing.normalize();
 	}
 	else
 	{
-		mAutoPilotUseRotation = FALSE;
+		mAutoPilotUseRotation = false;
 	}
 
 	mAutoPilotNoProgressFrameCount = 0;
@@ -1770,7 +1770,7 @@ void LLAgent::setAutoPilotTargetGlobal(const LLVector3d &target_global)
 //-----------------------------------------------------------------------------
 // startFollowPilot()
 //-----------------------------------------------------------------------------
-void LLAgent::startFollowPilot(const LLUUID &leader_id, BOOL allow_flying, F32 stop_distance)
+void LLAgent::startFollowPilot(const LLUUID &leader_id, bool allow_flying, F32 stop_distance)
 {
 	mLeaderID = leader_id;
 	if ( mLeaderID.isNull() ) return;
@@ -1796,11 +1796,11 @@ void LLAgent::startFollowPilot(const LLUUID &leader_id, BOOL allow_flying, F32 s
 //-----------------------------------------------------------------------------
 // stopAutoPilot()
 //-----------------------------------------------------------------------------
-void LLAgent::stopAutoPilot(BOOL user_cancel)
+void LLAgent::stopAutoPilot(bool user_cancel)
 {
 	if (mAutoPilot)
 	{
-		mAutoPilot = FALSE;
+		mAutoPilot = false;
 		if (mAutoPilotUseRotation && !user_cancel)
 		{
 			resetAxes(mAutoPilotTargetFacing);
@@ -3019,7 +3019,7 @@ bool LLAgent::requestGetCapability(const std::string &capName, httpCallback_t cb
     return true;
 }
 
-BOOL LLAgent::getAdminOverride() const	
+bool LLAgent::getAdminOverride() const	
 { 
 	return mAgentAccess->getAdminOverride(); 
 }
@@ -3029,7 +3029,7 @@ void LLAgent::setMaturity(char text)
 	mAgentAccess->setMaturity(text);
 }
 
-void LLAgent::setAdminOverride(BOOL b)	
+void LLAgent::setAdminOverride(bool b)	
 { 
 	mAgentAccess->setAdminOverride(b);
 }
@@ -3382,20 +3382,20 @@ void LLAgent::friendsChanged()
 	mProxyForAgents = collector.mProxy;
 }
 
-BOOL LLAgent::isGrantedProxy(const LLPermissions& perm)
+bool LLAgent::isGrantedProxy(const LLPermissions& perm)
 {
 	return (mProxyForAgents.count(perm.getOwner()) > 0);
 }
 
-BOOL LLAgent::allowOperation(PermissionBit op,
+bool LLAgent::allowOperation(PermissionBit op,
 							 const LLPermissions& perm,
 							 U64 group_proxy_power,
 							 U8 god_minimum)
 {
 	// Check god level.
-	if (getGodLevel() >= god_minimum) return TRUE;
+	if (getGodLevel() >= god_minimum) return true;
 
-	if (!perm.isOwned()) return FALSE;
+	if (!perm.isOwned()) return false;
 
 	// A group member with group_proxy_power can act as owner.
 	BOOL is_group_owned;
@@ -4405,7 +4405,7 @@ void LLAgent::teleportViaLure(const LLUUID& lure_id, BOOL godlike)
 	startTeleportRequest();
 }
 
-void LLAgent::doTeleportViaLure(const LLUUID& lure_id, BOOL godlike)
+void LLAgent::doTeleportViaLure(const LLUUID& lure_id, bool godlike)
 {
 	LLViewerRegion* regionp = getRegion();
 	if(regionp && teleportCore())

@@ -240,27 +240,27 @@ void LLViewerJoystick::updateEnabled(bool autoenable)
 {
 	if (mDriverState == JDS_UNINITIALIZED)
 	{
-		gSavedSettings.setBOOL("JoystickEnabled", FALSE );
+		gSavedSettings.setbool("JoystickEnabled", false );
 	}
 	else
 	{
 		// autoenable if user specifically chose this device
 		if (autoenable && (isLikeSpaceNavigator() || isDeviceUUIDSet())) 
 		{
-			gSavedSettings.setBOOL("JoystickEnabled", TRUE );
+			gSavedSettings.setbool("JoystickEnabled", true );
 		}
 	}
-	if (!gSavedSettings.getBOOL("JoystickEnabled"))
+	if (!gSavedSettings.getbool("JoystickEnabled"))
 	{
-		mOverrideCamera = FALSE;
+		mOverrideCamera = false;
 	}
 }
 
 void LLViewerJoystick::setOverrideCamera(bool val)
 {
-	if (!gSavedSettings.getBOOL("JoystickEnabled"))
+	if (!gSavedSettings.getbool("JoystickEnabled"))
 	{
-		mOverrideCamera = FALSE;
+		mOverrideCamera = false;
 	}
 	else
 	{
@@ -1322,7 +1322,7 @@ void LLViewerJoystick::scanJoystick()
 		toggle_flycam = 0;
 	}
 	
-	if (!mOverrideCamera && !(LLToolMgr::getInstance()->inBuildMode() && gSavedSettings.getBOOL("JoystickBuildEnabled")))
+	if (!mOverrideCamera && !(LLToolMgr::getInstance()->inBuildMode() && gSavedSettings.getbool("JoystickBuildEnabled")))
 	{
 		moveAvatar();
 	}

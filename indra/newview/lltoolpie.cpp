@@ -642,7 +642,7 @@ bool LLToolPie::walkToClickedLocation()
         mAutoPilotDestination->setDuration(3.f);
 
         LLVector3d pos = LLToolPie::getInstance()->getPick().mPosGlobal;
-        gAgent.startAutoPilotGlobal(pos, std::string(), NULL, NULL, NULL, 0.f, 0.03f, FALSE);
+        gAgent.startAutoPilotGlobal(pos, std::string(), NULL, NULL, NULL, 0.f, 0.03f, false);
         LLFirstUse::notMoving(false);
         showVisualContextMenuEffect();
         return true;

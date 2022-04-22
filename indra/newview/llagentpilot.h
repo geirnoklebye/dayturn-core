@@ -90,14 +90,14 @@ private:
 
 	void setAutopilotTarget(const S32 id);
 
-	BOOL	mRecording;
+	bool	mRecording;
 	F32		mLastRecordTime;
 
-	BOOL	mStarted;
-	BOOL	mPlaying;
+	bool	mStarted;
+	bool	mPlaying;
 	S32		mCurrentAction;
 
-	BOOL	mOverrideCamera;
+	bool	mOverrideCamera;
 
 	class Action
 	{

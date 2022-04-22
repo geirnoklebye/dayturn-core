@@ -468,7 +468,7 @@ void LLAgentListener::setAutoPilotTarget(LLSD const & event_data) const
 
 void LLAgentListener::stopAutoPilot(LLSD const & event_data) const
 {
-	BOOL user_cancel = FALSE;
+	bool user_cancel = false;
 	if (event_data.has("user_cancel"))
 	{
 		user_cancel = event_data["user_cancel"].asBoolean();
