@@ -87,33 +87,33 @@ bool agent_jump( EKeystate s )
     static LLCachedControl<bool> disable_jump(gSavedSettings, "DisableJump", false);
 	if( KEYSTATE_UP == s  || disable_jump) return true;
 
-	static BOOL first_fly_attempt(TRUE);
+	static bool first_fly_attempt(true);
 	if (KEYSTATE_UP == s)
 	{
-		first_fly_attempt = TRUE;
+		first_fly_attempt = true;
 		return true;
 	}
 	F32 time = gKeyboard->getCurKeyElapsedTime();
 	S32 frame_count = ll_round(gKeyboard->getCurKeyElapsedFrameCount());
 
 	// <FS:Ansariel> Chalice Yao's crouch toggle
-	if (gSavedPerAccountSettings.getBOOL("FSCrouchToggleStatus"))
+	if (gSavedPerAccountSettings.getbool("FSCrouchToggleStatus"))
 	{
-		gSavedPerAccountSettings.setBOOL("FSCrouchToggleStatus", FALSE);
+		gSavedPerAccountSettings.setbool("FSCrouchToggleStatus", false);
 	}
 	// </FS:Ansariel>
 
 	if( time < FLY_TIME 
 		|| frame_count <= FLY_FRAMES 
 		|| gAgent.upGrabbed()
-		|| !gSavedSettings.getBOOL("AutomaticFly"))
+		|| !gSavedSettings.getbool("AutomaticFly"))
 	{
 		gAgent.moveUp(1);
 	}
 	else
 	{
-		gAgent.setFlying(TRUE, first_fly_attempt);
-		first_fly_attempt = FALSE;
+		gAgent.setFlying(true, first_fly_attempt);
+		first_fly_attempt = false;
 		gAgent.moveUp(1);
 	}
 	return true;

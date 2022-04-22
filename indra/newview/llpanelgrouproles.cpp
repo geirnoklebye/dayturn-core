@@ -613,7 +613,7 @@ void LLPanelGroupSubTab::buildActionCategory(LLScrollListCtrl* ctrl,
 		std::vector<LLRoleAction*>::iterator ra_end = action_set->mActions.end();
 
 		bool items_match_filter = false;
-		BOOL can_change_actions = (!is_owner_role && gAgent.hasPowerInGroup(mGroupID, GP_ROLE_CHANGE_ACTIONS));
+		bool can_change_actions = (!is_owner_role && gAgent.hasPowerInGroup(mGroupID, GP_ROLE_CHANGE_ACTIONS));
 
 		for ( ; ra_it != ra_end; ++ra_it)
 		{
@@ -947,9 +947,9 @@ void LLPanelGroupMembersSubTab::handleMemberSelect()
 	LLGroupMgrGroupData::role_list_t::iterator iter = gdatap->mRoles.begin();
 	LLGroupMgrGroupData::role_list_t::iterator end  = gdatap->mRoles.end();
 
-	BOOL can_ban_members = gAgent.hasPowerInGroup(mGroupID,	GP_GROUP_BAN_ACCESS);
-	BOOL can_eject_members = gAgent.hasPowerInGroup(mGroupID, GP_MEMBER_EJECT);
-	BOOL member_is_owner = FALSE;
+	bool can_ban_members = gAgent.hasPowerInGroup(mGroupID,	GP_GROUP_BAN_ACCESS);
+	bool can_eject_members = gAgent.hasPowerInGroup(mGroupID, GP_MEMBER_EJECT);
+	bool member_is_owner = false;
 	
 	for( ; iter != end; ++iter)
 	{
@@ -995,7 +995,7 @@ void LLPanelGroupMembersSubTab::handleMemberSelect()
 					{
 						// Can't remove other owners.
 						cb_enable = FALSE;
-						can_ban_members = FALSE;
+						can_ban_members = true;
 						break;
 					}
 				}
@@ -1017,10 +1017,10 @@ void LLPanelGroupMembersSubTab::handleMemberSelect()
 			// If anyone selected is in any role besides 'Everyone' then they can't be ejected.
  			if (role_id.notNull() && (count > 0))
  			{
-				can_eject_members = FALSE;
+				can_eject_members = false;
  				if (role_id == gdatap->mOwnerRole)
  				{
- 					member_is_owner = TRUE;
+ 					member_is_owner = true;
  				}
  			}
 
@@ -1080,8 +1080,8 @@ void LLPanelGroupMembersSubTab::handleMemberSelect()
 
 	if (gAgent.isGodlike())
 	{
-		can_eject_members = TRUE;
-	//	can_ban_members = TRUE;
+		can_eject_members = true;
+	//	can_ban_members = true;
 	}
 
 	if (!can_eject_members && !member_is_owner)
@@ -1094,8 +1094,8 @@ void LLPanelGroupMembersSubTab::handleMemberSelect()
 
 			if ( member_data && member_data->isInRole(gdatap->mOwnerRole) )
 			{
-				can_eject_members = TRUE;
-				//can_ban_members = TRUE;
+				can_eject_members = true;
+				//can_ban_members = true;
 			}
 		}
 
@@ -1107,12 +1107,12 @@ void LLPanelGroupMembersSubTab::handleMemberSelect()
 	{
 		if( gAgent.hasPowerInGroup(mGroupID, GP_MEMBER_EJECT))
 		{
-			can_eject_members = TRUE;
+			can_eject_members = true;
 		}
 		
 		if( gAgent.hasPowerInGroup(mGroupID, GP_GROUP_BAN_ACCESS))
 		{
-			can_ban_members = TRUE;
+			can_ban_members = true;
 		}
 	}
 
@@ -1124,8 +1124,8 @@ void LLPanelGroupMembersSubTab::handleMemberSelect()
 		// Don't count the agent.
 		if ((*member_iter) == gAgent.getID())
 		{
-			can_eject_members = FALSE;
-			can_ban_members = FALSE;
+			can_eject_members = false;
+			can_ban_members = false;
 		}
 	}
 

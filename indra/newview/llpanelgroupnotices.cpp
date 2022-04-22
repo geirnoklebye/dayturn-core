@@ -323,8 +323,8 @@ void LLPanelGroupNotices::activate()
 
 	mPrevSelectedNotice = LLUUID();
 	
-//	BOOL can_send = gAgent.hasPowerInGroup(mGroupID,GP_NOTICES_SEND);
-	BOOL can_receive = gAgent.hasPowerInGroup(mGroupID,GP_NOTICES_RECEIVE);
+//	bool can_send = gAgent.hasPowerInGroup(mGroupID,GP_NOTICES_SEND);
+	bool can_receive = gAgent.hasPowerInGroup(mGroupID,GP_NOTICES_RECEIVE);
 
 	mPanelViewNotice->setEnabled(can_receive);
 //	mPanelCreateNotice->setEnabled(can_send);

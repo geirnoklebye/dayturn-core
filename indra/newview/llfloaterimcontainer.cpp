@@ -312,7 +312,7 @@ void LLFloaterIMContainer::addFloater(LLFloater* floaterp,
 
 	
 	LLIconCtrl* icon = 0;
-	bool is_in_group = gAgent.isInGroup(session_id, TRUE);
+	bool is_in_group = gAgent.isInGroup(session_id, true);
 	LLUUID icon_id;
 
 	if (is_in_group)

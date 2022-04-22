@@ -3251,11 +3251,11 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 	/*
 	if (teleport_flags & TELEPORT_FLAGS_IS_FLYING)
 	{
-		gAgent.setFlying(TRUE);
+		gAgent.setFlying(true);
 	}
 	else
 	{
-		gAgent.setFlying(FALSE);
+		gAgent.setFlying(false);
 	}
 	*/
 
@@ -4126,7 +4126,7 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 	LLViewerRegion* regionp = gAgent.getRegion();
 	if (regionp)
 	{
-		BOOL was_flying = gAgent.getFlying();
+		bool was_flying = gAgent.getFlying();
 		regionp->setRegionFlags(region_flags);
 		regionp->setMaxTasks(max_tasks_per_region);
 		// HACK: This makes agents drop from the sky if the region is 
@@ -4189,7 +4189,7 @@ void process_avatar_animation(LLMessageSystem *mesgsys, void **user_data)
 			// See EXT-2781.
 			if (animation_id == ANIM_AGENT_STANDUP && gAgent.getFlying())
 			{
-				gAgent.setFlying(FALSE);
+				gAgent.setFlying(false);
 			}
 
 			if (i < num_source_blocks)
@@ -4381,7 +4381,7 @@ void process_avatar_sit_response(LLMessageSystem *mesgsys, void **user_data)
 	gAgentCamera.setForceMouselook(force_mouselook);
 	// Forcing turning off flying here to prevent flying after pressing "Stand"
 	// to stand up from an object. See EXT-1655.
-	gAgent.setFlying(FALSE);
+	gAgent.setFlying(false);
 
 	LLViewerObject* object = gObjectList.findObject(sitObjectID);
 	if (object)
@@ -6239,11 +6239,11 @@ void process_teleport_local(LLMessageSystem *msg,void**)
 	// Sim tells us whether the new position is off the ground
 	if (teleport_flags & TELEPORT_FLAGS_IS_FLYING)
 	{
-		gAgent.setFlying(TRUE);
+		gAgent.setFlying(true);
 	}
 	else
 	{
-		gAgent.setFlying(FALSE);
+		gAgent.setFlying(false);
 	}
 
 	gAgent.setPositionAgent(pos);

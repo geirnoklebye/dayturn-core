@@ -64,7 +64,7 @@ void FSFloaterPoseStand::onOpen(const LLSD& key)
 		setLock(true);
 	}
 	gAgent.stopCurrentAnimations(true);
-	gAgent.setCustomAnim(TRUE);
+	gAgent.setCustomAnim(true);
 	gFocusMgr.setKeyboardFocus(NULL);
 	gFocusMgr.setMouseCapture(NULL);
 	std::string last_pose = gSavedSettings.getString("FSPoseStandLastSelectedPose");
@@ -88,7 +88,7 @@ void FSFloaterPoseStand::onClose(bool app_quitting)
 		setLock(false);
 		gAgent.standUp();
 	}
-	gAgent.setCustomAnim(FALSE);
+	gAgent.setCustomAnim(false);
 	FSPose::getInstance()->stopPose();
 	gAgent.stopCurrentAnimations(true);
 	if (mAOPaused && !gSavedPerAccountSettings.getBOOL("UseAO"))

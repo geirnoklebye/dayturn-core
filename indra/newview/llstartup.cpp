@@ -2366,7 +2366,7 @@ bool idle_startup()
 		if (isAgentAvatarValid() && !gAgent.isFirstLogin() && !gAgent.isOutfitChosen())
 		{
 			gAgentWearables.notifyLoadingStarted();
-			gAgent.setOutfitChosen(TRUE);
+			gAgent.setOutfitChosen(true);
 			gAgentWearables.sendDummyAgentWearablesUpdate();
 			callAfterCategoryFetch(LLAppearanceMgr::instance().getCOF(), set_flags_and_update_appearance);
 		}
@@ -3061,7 +3061,7 @@ void LLStartUp::loadInitialOutfit( const std::string& outfit_folder_name,
 		LL_DEBUGS() << "initial outfit category id: " << cat_id << LL_ENDL;
 	}
 
-	gAgent.setOutfitChosen(TRUE);
+	gAgent.setOutfitChosen(true);
 	gAgentWearables.sendDummyAgentWearablesUpdate();
 }
 

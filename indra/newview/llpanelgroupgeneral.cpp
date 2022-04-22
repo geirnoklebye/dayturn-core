@@ -364,7 +364,7 @@ bool LLPanelGroupGeneral::apply(std::string& mesg)
 		mComboActiveTitle->resetDirty();
 	}
 
-	BOOL has_power_in_group = gAgent.hasPowerInGroup(mGroupID,GP_GROUP_CHANGE_IDENTITY);
+	bool has_power_in_group = gAgent.hasPowerInGroup(mGroupID,GP_GROUP_CHANGE_IDENTITY);
 
 	if (has_power_in_group)
 	{
@@ -428,8 +428,8 @@ bool LLPanelGroupGeneral::apply(std::string& mesg)
 		}
 	}
 
-	BOOL receive_notices = false;
-	BOOL list_in_profile = false;
+	bool receive_notices = false;
+	bool list_in_profile = false;
 	if (mCtrlReceiveNotices)
 		receive_notices = mCtrlReceiveNotices->get();
 	if (mCtrlListGroup) 

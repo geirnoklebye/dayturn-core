@@ -412,10 +412,10 @@ LLAgent::LLAgent() :
 	mRenderState(0),
 	mTypingTimer(),
 
-	mViewsPushed(FALSE),
+	mViewsPushed(false),
 
-	mCustomAnim(FALSE),
-	mShowAvatar(TRUE),
+	mCustomAnim(false),
+	mShowAvatar(true),
 	mFrameAgent(),
 
 	mIsDoNotDisturb(false),
@@ -437,7 +437,7 @@ LLAgent::LLAgent() :
 	mAutoPilotFinishedCallback(NULL),
 	mAutoPilotCallbackData(NULL),
 	
-	mMovementKeysLocked(FALSE),
+	mMovementKeysLocked(false),
 
 	mEffectColor(new LLUIColor(LLColor4(0.f, 1.f, 1.f, 1.f))),
 
@@ -447,8 +447,8 @@ LLAgent::LLAgent() :
 
 	mNextFidgetTime(0.f),
 	mCurrentFidget(0),
-	mFirstLogin(FALSE),
-	mOutfitChosen(FALSE),
+	mFirstLogin(false),
+	mOutfitChosen(false),
 
 	mVoiceConnected(false),
 
@@ -485,7 +485,7 @@ void LLAgent::init()
 	
 	// *Note: this is where LLViewerCamera::getInstance() used to be constructed.
 
-	setFlying( gSavedSettings.getBOOL("FlyingAtExit") );
+	setFlying( gSavedSettings.getbool("FlyingAtExit") );
 
 	*mEffectColor = LLUIColorTable::instance().getColor("EffectColor");
 
@@ -769,31 +769,31 @@ void LLAgent::movePitch(F32 mag)
 
 
 // Does this parcel allow you to fly?
-BOOL LLAgent::canFly()
+bool LLAgent::canFly()
 {
-	if (isGodlike()) return TRUE;
+	if (isGodlike()) return true;
 
-	if (gSavedSettings.getBOOL("DisableFly"))
+	if (gSavedSettings.getbool("DisableFly"))
 	{
 		LL_INFOS() << "Flying disbled by:  'Do not let me fly'." << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 	LLViewerRegion* regionp = getRegion();
-	if (regionp && regionp->getBlockFly()) return FALSE;
+	if (regionp && regionp->getBlockFly()) return false;
 	
 	LLParcel* parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
-	if (!parcel) return FALSE;
+	if (!parcel) return false;
 
 	// Allow owners to fly on their own land.
 	if (LLViewerParcelMgr::isParcelOwnedByAgent(parcel, GP_LAND_ALLOW_FLY))
 	{
-		return TRUE;
+		return true;
 	}
 
 	return parcel->getAllowFly();
 }
 
-BOOL LLAgent::getFlying() const
+bool LLAgent::getFlying() const
 { 
 	return mControlFlags & AGENT_CONTROL_FLY; 
 }
@@ -801,7 +801,7 @@ BOOL LLAgent::getFlying() const
 //-----------------------------------------------------------------------------
 // setFlying()
 //-----------------------------------------------------------------------------
-void LLAgent::setFlying(BOOL fly, BOOL fail_sound)
+void LLAgent::setFlying(bool fly, bool fail_sound)
 {
 	if (isAgentAvatarValid())
 	{
@@ -824,7 +824,7 @@ void LLAgent::setFlying(BOOL fly, BOOL fail_sound)
 
 	if (fly)
 	{
-		BOOL was_flying = getFlying();
+		bool was_flying = getFlying();
 		if (!canFly() && !was_flying)
 		{
 			// parcel doesn't let you start fly
@@ -875,11 +875,11 @@ void LLAgent::toggleFlying()
 	}
 	// </FS:Ansariel>
 
-	BOOL fly = !gAgent.getFlying();
+	bool fly = !gAgent.getFlying();
 
 	gAgent.mMoveTimer.reset();
 	LLFirstUse::notMoving(false);
-	if (gSavedSettings.getBOOL("DisableFly"))
+	if (gSavedSettings.getbool("DisableFly"))
 	{
 		LL_INFOS() << "Flying disbled by:  'Do not let me fly'." << LL_ENDL;
 		gAgent.setFlying(false);
@@ -1122,7 +1122,7 @@ void LLAgent::removeRegionChangedCallback(boost::signals2::connection callback)
 //-----------------------------------------------------------------------------
 // inPrelude()
 //-----------------------------------------------------------------------------
-BOOL LLAgent::inPrelude()
+bool LLAgent::inPrelude()
 {
 	return mRegionp && mRegionp->isPrelude();
 }
@@ -1706,14 +1706,14 @@ void LLAgent::startAutoPilotGlobal(
 
 	if (distance > 30.0 && mAutoPilotAllowFlying)
 	{
-		setFlying(TRUE);
+		setFlying(true);
 	}
 
 	if ( distance > 1.f && 
 		mAutoPilotAllowFlying &&
 		heightDelta > (sqrtf(mAutoPilotStopDistance) + 1.f))
 	{
-		setFlying(TRUE);
+		setFlying(true);
 		// Do not force flying for "Sit" behavior to prevent flying after pressing "Stand"
 		// from an object. See EXT-1655.
 		if ("Sit" != mAutoPilotBehaviorName)
@@ -1858,7 +1858,7 @@ void LLAgent::autoPilot(F32 *delta_yaw)
 
 		if (gAgentAvatarp->mInAir && mAutoPilotAllowFlying)
 		{
-			setFlying(TRUE);
+			setFlying(true);
 		}
 	
 		LLVector3 at;
@@ -2053,17 +2053,17 @@ void LLAgent::propagate(const F32 dt)
 	// handle auto-land behavior
 	if (isAgentAvatarValid())
 	{
-		BOOL in_air = gAgentAvatarp->mInAir;
+		bool in_air = gAgentAvatarp->mInAir;
 		LLVector3 land_vel = getVelocity();
 		land_vel.mV[VZ] = 0.f;
 
 		if (!in_air 
 			&& gAgentCamera.getUpKey() < 0 
 			&& land_vel.magVecSquared() < MAX_VELOCITY_AUTO_LAND_SQUARED
-			&& gSavedSettings.getBOOL("AutomaticFly"))
+			&& gSavedSettings.getbool("AutomaticFly"))
 		{
 			// land automatically
-			setFlying(FALSE);
+			setFlying(false);
 		}
 	}
 
@@ -2132,18 +2132,18 @@ std::ostream& operator<<(std::ostream &s, const LLAgent &agent)
 //-----------------------------------------------------------------------------
 // needsRenderAvatar()
 //-----------------------------------------------------------------------------
-BOOL LLAgent::needsRenderAvatar()
+bool LLAgent::needsRenderAvatar()
 {
 	if (gAgentCamera.cameraMouselook() && !LLVOAvatar::sVisibleInFirstPerson)
 	{
-		return FALSE;
+		return false;
 	}
 
 	return mShowAvatar && mOutfitChosen;
 }
 
-// TRUE if we need to render your own avatar's head.
-BOOL LLAgent::needsRenderHead()
+// true if we need to render your own avatar's head.
+bool LLAgent::needsRenderHead()
 {
 	return (LLVOAvatar::sVisibleInFirstPerson && LLPipeline::sReflectionRender) || (mShowAvatar && !gAgentCamera.cameraMouselook());
 }
@@ -2288,7 +2288,7 @@ void LLAgent::endAnimationUpdateUI()
 		}
 
 		// Only pop if we have pushed...
-		if (TRUE == mViewsPushed)
+		if (true == mViewsPushed)
 		{
 #if 0 // Use this once all floaters are registered
 			LLFloaterReg::restoreVisibleInstances();
@@ -2313,7 +2313,7 @@ void LLAgent::endAnimationUpdateUI()
 
 			gFloaterView->popVisibleAll(skip_list);
 #endif
-			mViewsPushed = FALSE;
+			mViewsPushed = false;
 		}
 
 		
@@ -2369,7 +2369,7 @@ void LLAgent::endAnimationUpdateUI()
 				sendAnimationRequest(ANIM_AGENT_CUSTOMIZE, ANIM_REQUEST_STOP);
 				sendAnimationRequest(ANIM_AGENT_CUSTOMIZE_DONE, ANIM_REQUEST_START);
 
-				mCustomAnim = FALSE ;
+				mCustomAnim = false ;
 			}
 			
 		}
@@ -2407,7 +2407,7 @@ void LLAgent::endAnimationUpdateUI()
 
 		LLToolMgr::getInstance()->setCurrentToolset(gMouselookToolset);
 
-		mViewsPushed = TRUE;
+		mViewsPushed = true;
 
 		if (mMouselookModeInSignal)
 		{
@@ -3081,7 +3081,7 @@ void LLAgent::buildFullnameAndTitle(std::string& name) const
 	}
 }
 
-BOOL LLAgent::isInGroup(const LLUUID& group_id, BOOL ignore_god_mode /* FALSE */) const
+bool LLAgent::isInGroup(const LLUUID& group_id, bool ignore_god_mode /* false */) const
 {
 	if (!ignore_god_mode && isGodlike())
 		return true;
@@ -3091,33 +3091,33 @@ BOOL LLAgent::isInGroup(const LLUUID& group_id, BOOL ignore_god_mode /* FALSE */
 	{
 		if(mGroups[i].mID == group_id)
 		{
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 // This implementation should mirror LLAgentInfo::hasPowerInGroup
-BOOL LLAgent::hasPowerInGroup(const LLUUID& group_id, U64 power) const
+bool LLAgent::hasPowerInGroup(const LLUUID& group_id, U64 power) const
 {
 	if (isGodlikeWithoutAdminMenuFakery())
 		return true;
 
 	// GP_NO_POWERS can also mean no power is enough to grant an ability.
-	if (GP_NO_POWERS == power) return FALSE;
+	if (GP_NO_POWERS == power) return false;
 
 	U32 count = mGroups.size();
 	for(U32 i = 0; i < count; ++i)
 	{
 		if(mGroups[i].mID == group_id)
 		{
-			return (BOOL)((mGroups[i].mPowers & power) > 0);
+			return ((mGroups[i].mPowers & power) > 0);
 		}
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL LLAgent::hasPowerInActiveGroup(U64 power) const
+bool LLAgent::hasPowerInActiveGroup(U64 power) const
 {
 	return (mGroupID.notNull() && (hasPowerInGroup(mGroupID, power)));
 }
@@ -3139,7 +3139,7 @@ U64 LLAgent::getPowerInGroup(const LLUUID& group_id) const
 	return GP_NO_POWERS;
 }
 
-BOOL LLAgent::getGroupData(const LLUUID& group_id, LLGroupData& data) const
+bool LLAgent::getGroupData(const LLUUID& group_id, LLGroupData& data) const
 {
 	S32 count = mGroups.size();
 	for(S32 i = 0; i < count; ++i)
@@ -3147,10 +3147,10 @@ BOOL LLAgent::getGroupData(const LLUUID& group_id, LLGroupData& data) const
 		if(mGroups[i].mID == group_id)
 		{
 			data = mGroups[i];
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 S32 LLAgent::getGroupContribution(const LLUUID& group_id) const
@@ -3167,7 +3167,7 @@ S32 LLAgent::getGroupContribution(const LLUUID& group_id) const
 	return 0;
 }
 
-BOOL LLAgent::setGroupContribution(const LLUUID& group_id, S32 contribution)
+bool LLAgent::setGroupContribution(const LLUUID& group_id, S32 contribution)
 {
 	S32 count = mGroups.size();
 	for(S32 i = 0; i < count; ++i)
@@ -3184,13 +3184,13 @@ BOOL LLAgent::setGroupContribution(const LLUUID& group_id, S32 contribution)
 			msg->addUUID("GroupID", group_id);
 			msg->addS32("Contribution", contribution);
 			sendReliableMessage();
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL LLAgent::setUserGroupFlags(const LLUUID& group_id, BOOL accept_notices, BOOL list_in_profile)
+bool LLAgent::setUserGroupFlags(const LLUUID& group_id, bool accept_notices, bool list_in_profile)
 {
 	S32 count = mGroups.size();
 	for(S32 i = 0; i < count; ++i)
@@ -3210,13 +3210,13 @@ BOOL LLAgent::setUserGroupFlags(const LLUUID& group_id, BOOL accept_notices, BOO
 			msg->nextBlock("NewData");
 			msg->addBOOL("ListInProfile", list_in_profile);
 			sendReliableMessage();
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL LLAgent::canJoinGroups() const
+bool LLAgent::canJoinGroups() const
 {
 	return (S32)mGroups.size() < LLAgentBenefitsMgr::current().getGroupMembershipLimit();
 }

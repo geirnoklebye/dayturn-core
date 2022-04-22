@@ -346,10 +346,10 @@ void LLAgentListener::startAutoPilot(LLSD const & event_data)
         rotation_threshold = event_data["rotation_threshold"].asReal();
     }
 	
-	BOOL allow_flying = TRUE;
+	bool allow_flying = true;
 	if (event_data.has("allow_flying"))
 	{
-		allow_flying = (BOOL) event_data["allow_flying"].asBoolean();
+		allow_flying = event_data["allow_flying"].asBoolean();
 		mAgent.setFlying(allow_flying);
 	}
 

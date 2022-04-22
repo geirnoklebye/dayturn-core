@@ -118,14 +118,14 @@ private:
 	//--------------------------------------------------------------------
 public:
 	void			onAppFocusGained();
-	void			setFirstLogin(BOOL b) 	{ mFirstLogin = b; }
-	// Return TRUE if the database reported this login as the first for this particular user.
-	BOOL 			isFirstLogin() const 	{ return mFirstLogin; }
-	BOOL 			isInitialized() const 	{ return mInitialized; }
+	void			setFirstLogin(bool b) 	{ mFirstLogin = b; }
+	// Return true if the database reported this login as the first for this particular user.
+	bool 			isFirstLogin() const 	{ return mFirstLogin; }
+	bool 			isInitialized() const 	{ return mInitialized; }
 public:
 	std::string		mMOTD; 					// Message of the day
 //from HB
-  BOOL      mRebakeNeeded;
+  bool      mRebakeNeeded;
 private:
 	BOOL			mInitialized;
 	BOOL			mFirstLogin;
@@ -167,10 +167,10 @@ public:
 	// On the very first login, outfit needs to be chosen by some
 	// mechanism, usually by loading the requested initial outfit.  We
 	// don't render the avatar until the choice is made.
-	BOOL 			isOutfitChosen() const 	{ return mOutfitChosen; }
-	void			setOutfitChosen(BOOL b)	{ mOutfitChosen = b; }
+	bool 			isOutfitChosen() const 	{ return mOutfitChosen; }
+	void			setOutfitChosen(bool b)	{ mOutfitChosen = b; }
 private:
-	BOOL			mOutfitChosen;
+	bool			mOutfitChosen;
 
 /**                    Identity
  **                                                                            **
@@ -269,7 +269,7 @@ public:
 	void			setRegion(LLViewerRegion *regionp);
 	LLViewerRegion	*getRegion() const;
 	LLHost			getRegionHost() const;
-	BOOL			inPrelude();
+	bool			inPrelude();
 
     // Capability 
     std::string     getRegionCapability(const std::string &name); // short hand for if (getRegion()) { getRegion()->getCapability(name) }
@@ -351,11 +351,11 @@ private:
 	// Fly
 	//--------------------------------------------------------------------
 public:
-	BOOL			getFlying() const;
-	void			setFlying(BOOL fly, BOOL fail_sound = FALSE);
+	bool			getFlying() const;
+	void			setFlying(bool fly, bool fail_sound = false);
 	static void		toggleFlying();
 	static bool		enableFlying();
-	BOOL			canFly(); 			// Does this parcel allow you to fly?
+	bool			canFly(); 			// Does this parcel allow you to fly?
 	static bool		isSitting();
 
 	//--------------------------------------------------------------------
@@ -508,8 +508,8 @@ public:
 
 	void			endAnimationUpdateUI();
 	void			unpauseAnimation() { mPauseRequest = NULL; }
-	BOOL			getCustomAnim() const { return mCustomAnim; }
-	void			setCustomAnim(BOOL anim) { mCustomAnim = anim; }
+	bool			getCustomAnim() const { return mCustomAnim; }
+	void			setCustomAnim(bool anim) { mCustomAnim = anim; }
 	
 	typedef boost::signals2::signal<void ()> camera_signal_t;
 	boost::signals2::connection setMouselookModeInCallback( const camera_signal_t::slot_type& cb );
@@ -518,9 +518,9 @@ public:
 private:
 	camera_signal_t* mMouselookModeInSignal;
 	camera_signal_t* mMouselookModeOutSignal;
-	BOOL            mCustomAnim; 		// Current animation is ANIM_AGENT_CUSTOMIZE ?
+	bool            mCustomAnim; 		// Current animation is ANIM_AGENT_CUSTOMIZE ?
 	LLPointer<LLPauseRequestHandle> mPauseRequest;
-	BOOL			mViewsPushed; 		// Keep track of whether or not we have pushed views
+	bool			mViewsPushed; 		// Keep track of whether or not we have pushed views
 	
 /**                    Animation
  **                                                                            **
@@ -546,8 +546,8 @@ public:
 	void			moveYaw(F32 mag, bool reset_view = true);
 	void			movePitch(F32 mag);
 
-	BOOL			isMovementLocked() const				{ return mMovementKeysLocked; }
-	void			setMovementLocked(BOOL set_locked)	{ mMovementKeysLocked = set_locked; }
+	bool			isMovementLocked() const				{ return mMovementKeysLocked; }
+	void			setMovementLocked(bool set_locked)	{ mMovementKeysLocked = set_locked; }
 
 	//--------------------------------------------------------------------
  	// Move the avatar's frame
@@ -603,7 +603,7 @@ private:
 	void			(*mAutoPilotFinishedCallback)(BOOL, void *);
 	void*			mAutoPilotCallbackData;
 	LLUUID			mLeaderID;
-	BOOL			mMovementKeysLocked;
+	bool			mMovementKeysLocked;
 	
 /**                    Movement
  **                                                                            **
@@ -830,13 +830,13 @@ private:
 
 public:
 	LLQuaternion	getHeadRotation();
-	BOOL			needsRenderAvatar(); // TRUE when camera mode is such that your own avatar should draw
-	BOOL			needsRenderHead();
-	void			setShowAvatar(BOOL show) { mShowAvatar = show; }
-	BOOL			getShowAvatar() const { return mShowAvatar; }
+	bool			needsRenderAvatar(); // true when camera mode is such that your own avatar should draw
+	bool			needsRenderHead();
+	void			setShowAvatar(bool show) { mShowAvatar = show; }
+	bool			getShowAvatar() const { return mShowAvatar; }
 	
 private:
-	BOOL			mShowAvatar; 		// Should we render the avatar?
+	bool			mShowAvatar; 		// Should we render the avatar?
 
 	//--------------------------------------------------------------------
 	// Rendering state bitmap helpers
@@ -869,14 +869,14 @@ private:
 public:
 	const LLUUID	&getGroupID() const			{ return mGroupID; }
 	// Get group information by group_id, or FALSE if not in group.
-	BOOL 			getGroupData(const LLUUID& group_id, LLGroupData& data) const;
+	bool 			getGroupData(const LLUUID& group_id, LLGroupData& data) const;
 	// Get just the agent's contribution to the given group.
 	S32 			getGroupContribution(const LLUUID& group_id) const;
 	// Update internal datastructures and update the server.
-	BOOL 			setGroupContribution(const LLUUID& group_id, S32 contribution);
-	BOOL 			setUserGroupFlags(const LLUUID& group_id, BOOL accept_notices, BOOL list_in_profile);
+	bool 			setGroupContribution(const LLUUID& group_id, S32 contribution);
+	bool 			setUserGroupFlags(const LLUUID& group_id, bool accept_notices, bool list_in_profile);
 	const std::string &getGroupName() const 	{ return mGroupName; }
-	BOOL			canJoinGroups() const;
+	bool			canJoinGroups() const;
 private:
 	std::string		mGroupName;
 	LLUUID			mGroupID;
@@ -886,10 +886,10 @@ private:
 	//--------------------------------------------------------------------
 public:
 	// Checks against all groups in the entire agent group list.
-	BOOL 			isInGroup(const LLUUID& group_id, BOOL ingnore_God_mod = FALSE) const;
+	bool 			isInGroup(const LLUUID& group_id, bool ingnore_God_mod = false) const;
 protected:
 	// Only used for building titles.
-	BOOL			isGroupMember() const 		{ return !mGroupID.isNull(); } 
+	bool			isGroupMember() const 		{ return !mGroupID.isNull(); } 
 public:
 	std::vector<LLGroupData> mGroups;
 
@@ -907,8 +907,8 @@ private:
 	// Group Powers
 	//--------------------------------------------------------------------
 public:
-	BOOL 			hasPowerInGroup(const LLUUID& group_id, U64 power) const;
-	BOOL 			hasPowerInActiveGroup(const U64 power) const;
+	bool 			hasPowerInGroup(const LLUUID& group_id, U64 power) const;
+	bool 			hasPowerInActiveGroup(const U64 power) const;
 	U64  			getPowerInGroup(const LLUUID& group_id) const;
  	U64				mGroupPowers;
 
@@ -1017,7 +1017,7 @@ public:
 	LLAgentQueryManager();
 	virtual ~LLAgentQueryManager();
 	
-	BOOL 			hasNoPendingQueries() const 	{ return getNumPendingQueries() == 0; }
+	bool 			hasNoPendingQueries() const 	{ return getNumPendingQueries() == 0; }
 	S32 			getNumPendingQueries() const 	{ return mNumPendingQueries; }
 private:
 	S32				mNumPendingQueries;

@@ -773,7 +773,7 @@ void LLPanelLandGeneral::refresh()
 
 		// Actually doing the deeding requires you to have GP_LAND_DEED
 		// powers in the group.
-		BOOL can_deed = gAgent.hasPowerInGroup(group_id, GP_LAND_DEED);
+		bool can_deed = gAgent.hasPowerInGroup(group_id, GP_LAND_DEED);
 		mBtnDeedToGroup->setEnabled(   parcel->getAllowDeedToGroup()
 									&& group_id.notNull()
 									&& can_deed
