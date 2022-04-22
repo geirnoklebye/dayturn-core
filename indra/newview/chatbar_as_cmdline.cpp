@@ -71,7 +71,7 @@ void doZdCleanup();
 class JCZdrop : public LLEventTimer
 {
 public:
-    BOOL mRunning;
+    bool mRunning;
     
     JCZdrop(std::stack<LLViewerInventoryItem*> stack, LLUUID dest, std::string sFolder, std::string sUUID, bool package = false) : LLEventTimer(1.0), mRunning(FALSE)
     {
@@ -166,7 +166,7 @@ void doZtCleanup();
 class JCZtake : public LLEventTimer
 {
 public:
-    BOOL mRunning;
+    bool mRunning;
 
     JCZtake(const LLUUID& target, bool package = false, LLUUID destination = LLUUID::null, std::string dtarget = "") : LLEventTimer(0.66f), mTarget(target), mRunning(FALSE), mCountdown(5), mPackage(package), mPackageDest(destination)
     {
@@ -294,7 +294,7 @@ public:
     }
     bool tick()
     {
-        ztake->mRunning = TRUE;
+        ztake->mRunning = true;
         delete ztake;
         ztake = NULL;
         return true;
@@ -309,10 +309,10 @@ void doZtCleanup()
 class TMZtake : public LLEventTimer
 {
 public:
-    BOOL mRunning;
+    bool mRunning;
 
 
-    TMZtake(const LLUUID& target) : LLEventTimer(0.33f), mTarget(target), mRunning(FALSE), mCountdown(5)
+    TMZtake(const LLUUID& target) : LLEventTimer(0.33f), mTarget(target), mRunning(false), mCountdown(5)
     {
         report_to_nearby_chat("Mtake activated. Taking selected in-world objects into inventory in: ");
     }
@@ -473,7 +473,7 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
                 if (from_gesture)
                 {
                     report_to_nearby_chat(LLTrans::getString("DrawDistanceSteppingGestureObsolete"));
-                    gSavedSettings.setBOOL("FSRenderFarClipStepping", TRUE);
+                    gSavedSettings.setbool("FSRenderFarClipStepping", true);
                     return false;
                 }
                 int drawDist;
@@ -841,7 +841,7 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
                         }
                         else
                         {
-                            zdrop ->mRunning = TRUE;
+                            zdrop ->mRunning = true;
                             delete zdrop;
                             zdrop = NULL;
                         }
@@ -908,7 +908,7 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
                         }
                         else
                         {
-                            ztake->mRunning = TRUE;
+                            ztake->mRunning = true;
                             delete ztake;
                             ztake = NULL;
                         }
@@ -1025,7 +1025,7 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
                         }
                         else
                         {
-                            mtake->mRunning = TRUE;
+                            mtake->mRunning = true;
                             delete mtake;
                             mtake = NULL;
                         }
