@@ -802,6 +802,7 @@ set(viewer_SOURCE_FILES
 	NACLfloaterexploresounds.cpp
 	  kokuachatbar.cpp
 	  kokuafloaterbulkrename.cpp
+	  kokuafloaterstreaminfo.cpp
     )
 
 set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING
@@ -1484,6 +1485,7 @@ set(viewer_HEADER_FILES
 	NACLfloaterexploresounds.h
 	  kokuachatbar.h
 	  kokuafloaterbulkrename.h
+	  kokuafloaterstreaminfo.h
     )
     
 # Generate the build version here to avoid rebuilding all of newview each time
