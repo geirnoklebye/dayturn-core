@@ -806,6 +806,7 @@ set(viewer_SOURCE_FILES
     kokuarlvextras.cpp
     kokuachatbar.cpp
     kokuafloaterbulkrename.cpp
+    kokuafloaterstreaminfo.cpp
     rlveffects.cpp
     )
 
@@ -1495,6 +1496,7 @@ set(viewer_HEADER_FILES
     kokuarlvextras.h
     kokuachatbar.h
     kokuafloaterbulkrename.h
+    kokuafloaterstreaminfo.h
     rlveffects.h
     )
     

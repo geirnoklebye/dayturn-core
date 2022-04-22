@@ -68,6 +68,11 @@
 #include "llstreamingaudio.h"
 #include "lltrans.h"
 #include "message.h"
+// KKA-932
+#include "kokuafloaterstreaminfo.h"
+#include "llviewermedia.h"
+
+static bool stream_is_playing = true; // true so a transition to false can trigger
 
 StreamTitleDisplay::StreamTitleDisplay() : LLEventTimer(2.f) { }
 
@@ -82,15 +87,36 @@ void StreamTitleDisplay::checkMetadata()
 	static LLCachedControl<U32> show_stream_metadata(gSavedSettings, "ShowStreamMetadata", 2);
 	static LLCachedControl<bool> stream_metadata_announce(gSavedSettings, "StreamMetadataAnnounceToChat", false);
 
-	if ((!show_stream_metadata && !stream_metadata_announce) || !gAudiop) {
+	if (!gAudiop) {
+		// KKA-932
+		KokuaFloaterStreamInfo::UpdateStreamInfo();		
 		return;
 	}
 
-	LLStreamingAudioInterface *stream = gAudiop->getStreamingAudioImpl();
+	// KKA-932 send a stopped playing signal but only once each time
+	LLViewerMedia* media_inst = LLViewerMedia::getInstance();
 
-	if (stream && stream->hasNewMetadata()) {
+	bool is_playing_now = false;
+	
+	if (media_inst) {
+		is_playing_now = media_inst->isParcelAudioPlaying();
+	}
+
+	LLStreamingAudioInterface *stream = gAudiop->getStreamingAudioImpl();
+	
+	if (!stream || (stream && !is_playing_now)) {
+		// KKA-932 - send a one-time indication when the stream just stopped
+		if (stream_is_playing) {
+			stream_is_playing = false;
+			KokuaFloaterStreamInfo::UpdateStreamInfo();
+		}
+		return;				
+	}
+	else if (stream && stream->hasNewMetadata()) {
 		std::string title = stream->getCurrentTitle();
 		std::string artist_title = stream->getCurrentArtist();
+			
+		stream_is_playing = true;
 
 		if (!title.empty()) {
 			if (!artist_title.empty()) {
@@ -102,6 +128,9 @@ void StreamTitleDisplay::checkMetadata()
 		if (artist_title.empty()) {
 			return;
 		}
+		
+		//KKA-932
+		KokuaFloaterStreamInfo::UpdateStreamInfo(artist_title);
 
 		std::string stream_name = stream->getCurrentStreamName();
 

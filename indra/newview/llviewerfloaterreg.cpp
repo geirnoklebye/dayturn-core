@@ -198,6 +198,7 @@
 #include "kokuachatbar.h"
 #include "kokuarlvfloaters.h"
 #include "kokuafloaterbulkrename.h"
+#include "kokuafloaterstreaminfo.h"
 // NaCl - Sound explorer
 #include "fsfloaterposestand.h"
 #include "llfloatersearchreplace.h"
@@ -394,6 +395,7 @@ void LLViewerFloaterReg::registerFloaters()
 	// NaC - Sound explorer
 	LLFloaterReg::add("sound_explorer", "floater_NACL_explore_sounds.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<NACLFloaterExploreSounds>);
 	// NaCl End
+	LLFloaterReg::add("stream_info", "floater_stream_info.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<KokuaFloaterStreamInfo>);
 	LLFloaterReg::add("telehubs", "floater_telehub.xml",&LLFloaterReg::build<LLFloaterTelehub>);
 	LLFloaterReg::add("test_inspectors", "floater_test_inspectors.xml", &LLFloaterReg::build<LLFloaterTestInspectors>);
 	//LLFloaterReg::add("test_list_view", "floater_test_list_view.xml",&LLFloaterReg::build<LLFloaterTestListView>);
