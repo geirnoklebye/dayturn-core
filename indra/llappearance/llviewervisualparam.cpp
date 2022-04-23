@@ -44,7 +44,7 @@ LLViewerVisualParamInfo::LLViewerVisualParamInfo()
 	mCamAngle( 0.f ),
 	mCamElevation( 0.f ),
 	mEditGroupDisplayOrder( 0 ),
-	mShowSimple(FALSE),
+	mShowSimple(false),
 	mSimpleMin(0.f),
 	mSimpleMax(100.f)
 {
@@ -146,15 +146,15 @@ LLViewerVisualParam::~LLViewerVisualParam()
 // setInfo()
 //-----------------------------------------------------------------------------
 
-BOOL LLViewerVisualParam::setInfo(LLViewerVisualParamInfo *info)
+bool LLViewerVisualParam::setInfo(LLViewerVisualParamInfo *info)
 {
 	llassert(mInfo == NULL);
 	if (info->mID < 0)
-		return FALSE;
+		return false;
 	mInfo = info;
 	mID = info->mID;
 	setWeight(getDefaultWeight());
-	return TRUE;
+	return true;
 }
 
 /*

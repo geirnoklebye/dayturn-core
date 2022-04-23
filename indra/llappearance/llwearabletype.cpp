@@ -112,10 +112,10 @@ LLInventoryType::EIconName LLWearableType::getIconName(LLWearableType::EType typ
 	return entry->mIconName;
 } 
 
-BOOL LLWearableType::getDisableCameraSwitch(LLWearableType::EType type)
+bool LLWearableType::getDisableCameraSwitch(LLWearableType::EType type)
 {
 	const WearableEntry *entry = mDictionary.lookup(type);
-	if (!entry) return FALSE;
+	if (!entry) return false;
 	return entry->mDisableCameraSwitch;
 }
 

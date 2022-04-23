@@ -355,7 +355,7 @@ bool LLPolyMorphTarget::setInfo(LLPolyMorphTargetInfo* info)
 {
 	llassert(mInfo == NULL);
 	if (info->mID < 0)
-		return FALSE;
+		return false;
 	mInfo = info;
 	mID = info->mID;
 	setWeight(getDefaultWeight());

@@ -1067,7 +1067,7 @@ BOOL LLAvatarAppearance::loadSkeletonNode ()
 		 ++iter)
 	{
 		LLAvatarJoint *joint = *iter;
-		joint->mUpdateXform = FALSE;
+		joint->mUpdateXform = false;
 		joint->setMeshesToChildren();
 	}
 

@@ -55,7 +55,7 @@ protected:
 	F32			mCamAngle;		// degrees
 	F32			mCamElevation;
 	F32			mEditGroupDisplayOrder;
-	BOOL		mShowSimple;	// show edit controls when in "simple ui" mode?
+	bool		mShowSimple;	// show edit controls when in "simple ui" mode?
 	F32			mSimpleMin;		// when in simple UI, apply this minimum, range 0.f to 100.f
 	F32			mSimpleMax;		// when in simple UI, apply this maximum, range 0.f to 100.f
 };
@@ -75,7 +75,7 @@ public:
 	// Special: These functions are overridden by child classes
 	LLViewerVisualParamInfo 	*getInfo() const { return (LLViewerVisualParamInfo*)mInfo; };
 	//   This sets mInfo and calls initialization functions
-	BOOL						setInfo(LLViewerVisualParamInfo *info);
+	bool						setInfo(LLViewerVisualParamInfo *info);
 
 	virtual LLViewerVisualParam* cloneParam(LLWearable* wearable) const = 0;
 	
@@ -99,7 +99,7 @@ public:
 	F32					getCameraAngle() const		{ return getInfo()->mCamAngle; }  // degrees
 	F32					getCameraElevation() const	{ return getInfo()->mCamElevation; } 
 	
-	BOOL				getShowSimple() const		{ return getInfo()->mShowSimple; }
+	bool				getShowSimple() const		{ return getInfo()->mShowSimple; }
 	F32					getSimpleMin() const		{ return getInfo()->mSimpleMin; }
 	F32					getSimpleMax() const		{ return getInfo()->mSimpleMax; }
 
