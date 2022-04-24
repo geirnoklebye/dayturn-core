@@ -122,6 +122,8 @@ public:
 	bool			getFastAttributeQuat(		LLStdStringHandle cannonical_name, LLQuaternion& value );
 	bool			getFastAttributeUUID(		LLStdStringHandle cannonical_name, LLUUID& value );
 	bool			getFastAttributeString(		LLStdStringHandle cannonical_name, std::string& value );
+	bool			getFastAttributebool(		LLStdStringHandle cannonical_name, bool& value );
+
 
 	// Normal versions find 'name' in LLXmlTree::sAttributeKeys then call fast versions
 	virtual bool		getAttributeBOOL(		const std::string& name, BOOL& value );
@@ -141,6 +143,7 @@ public:
 	virtual bool		getAttributeQuat(		const std::string& name, LLQuaternion& value );
 	virtual bool		getAttributeUUID(		const std::string& name, LLUUID& value );
 	virtual bool		getAttributeString(		const std::string& name, std::string& value );
+	virtual bool		getAttributebool(		const std::string& name, bool& value );
 
 	const std::string& getContents()
 	{

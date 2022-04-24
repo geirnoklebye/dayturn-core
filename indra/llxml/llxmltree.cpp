@@ -307,6 +307,11 @@ bool LLXmlTreeNode::getFastAttributeString(LLStdStringHandle canonical_name, std
 	return true;
 }
 
+bool LLXmlTreeNode::getFastAttributebool(LLStdStringHandle canonical_name, bool& value)
+{
+	const std::string *s = getAttribute( canonical_name );
+	return s && LLStringUtil::convertTobool( *s, value );
+}
 
 //////////////////////////////////////////////////////////////
 
@@ -410,6 +415,12 @@ bool LLXmlTreeNode::getAttributeString(const std::string& name, std::string& val
 {
 	LLStdStringHandle canonical_name = LLXmlTree::sAttributeKeys.addString( name );
 	return getFastAttributeString(canonical_name, value);
+}
+
+bool LLXmlTreeNode::getAttributebool(const std::string& name, bool& value)
+{
+	LLStdStringHandle canonical_name = LLXmlTree::sAttributeKeys.addString( name );
+	return getFastAttributebool(canonical_name, value);
 }
 
 /*
