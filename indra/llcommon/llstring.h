@@ -390,6 +390,7 @@ public:
 	static bool	convertToS32(const string_type& string, S32& value);
 	static bool	convertToF32(const string_type& string, F32& value);
 	static bool	convertToF64(const string_type& string, F64& value);
+	static bool	convertTobool(const string_type& string, bool& value);
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	// Utility functions for working with char*'s and strings
@@ -1983,6 +1984,44 @@ void LLStringUtilBase<T>::truncate(string_type& string, size_type count)
 {
 	size_type cur_size = string.size();
 	string.resize(count < cur_size ? count : cur_size);
+}
+
+
+template<class T> 
+bool LLStringUtilBase<T>::convertTobool(const string_type& string, bool& value)
+{
+	if( string.empty() )
+	{
+		return false;
+	}
+
+	string_type temp( string );
+	trim(temp);
+	if( 
+		(temp == "1") || 
+		(temp == "T") || 
+		(temp == "t") || 
+		(temp == "TRUE") || 
+		(temp == "true") || 
+		(temp == "True") )
+	{
+		value = true;
+		return true;
+	}
+	else
+	if( 
+		(temp == "0") || 
+		(temp == "F") || 
+		(temp == "f") || 
+		(temp == "FALSE") || 
+		(temp == "false") || 
+		(temp == "False") )
+	{
+		value = false;
+		return true;
+	}
+
+	return false;
 }
 
 // The good thing about *declaration* macros, vs. usage macros, is that now

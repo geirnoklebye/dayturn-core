@@ -252,7 +252,7 @@ namespace tut
 		str_val = "f";
 		ensure("convertToBOOL f failed", LLStringUtil::convertToBOOL(str_val, value) && !value);
 		str_val = "FALSE";
-		ensure("convertToBOOL FASLE failed", LLStringUtil::convertToBOOL(str_val, value) && !value);
+		ensure("convertToBOOL FALSE failed", LLStringUtil::convertToBOOL(str_val, value) && !value);
 		str_val = "False";
 		ensure("convertToBOOL False failed", LLStringUtil::convertToBOOL(str_val, value) && !value);
 		str_val = "false";
@@ -868,4 +868,38 @@ namespace tut
 					  LLStringUtil::getTokens("it's^ up there^", " ", "", "'", "^"),
 					  list_of("it's up")("there^"));
     }
+    
+    template<> template<>
+	void string_index_object_t::test<43>()
+	{
+		bool value;
+		std::string str_val("1");
+		ensure("convertTobool 1 failed", LLStringUtil::convertTobool(str_val, value) && value);
+		str_val = "T";
+		ensure("convertTobool T failed", LLStringUtil::convertTobool(str_val, value) && value);
+		str_val = "t";
+		ensure("convertTobool t failed", LLStringUtil::convertTobool(str_val, value) && value);
+		str_val = "TRUE";
+		ensure("convertTobool TRUE failed", LLStringUtil::convertTobool(str_val, value) && value);
+		str_val = "True";
+		ensure("convertTobool True failed", LLStringUtil::convertTobool(str_val, value) && value);
+		str_val = "true";
+		ensure("convertTobool true failed", LLStringUtil::convertTobool(str_val, value) && value);
+
+		str_val = "0";
+		ensure("convertTobool 0 failed", LLStringUtil::convertTobool(str_val, value) && !value);
+		str_val = "F";
+		ensure("convertTobool F failed", LLStringUtil::convertTobool(str_val, value) && !value);
+		str_val = "f";
+		ensure("convertTobool f failed", LLStringUtil::convertTobool(str_val, value) && !value);
+		str_val = "FALSE";
+		ensure("convertTobool FALSE failed", LLStringUtil::convertTobool(str_val, value) && !value);
+		str_val = "False";
+		ensure("convertTobool False failed", LLStringUtil::convertTobool(str_val, value) && !value);
+		str_val = "false";
+		ensure("convertTobool false failed", LLStringUtil::convertTobool(str_val, value) && !value);
+
+		str_val = "Tblah";
+		ensure("convertTobool false failed", !LLStringUtil::convertTobool(str_val, value));
+	}
 }
