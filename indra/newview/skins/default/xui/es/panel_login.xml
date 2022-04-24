@@ -1,27 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <panel name="panel_login">
-	<panel.string name="forgot_password_url">
-		http://secondlife.com/account/request.php?lang=es
-	</panel.string>
-	<panel.string name="sign_up_url">
-		https://join.secondlife.com/
-	</panel.string>
-	<layout_stack name="ui_stack">
-		<layout_panel name="ui_container">
-			<combo_box label="Nombre de usuario" name="username_combo" tool_tip="El nombre de usuario que elegiste al registrarte, como bobsmith12 o Steller Sunshine"/>
-			<line_editor label="Contraseña" name="password_edit"/>
-			<combo_box label="Mis lugares favoritos" name="start_location_combo">
+	<layout_stack name="login_widgets">
+		<layout_panel name="login">
+			<text name="username_text">
+        Nombre de usuario:
+			</text>
+			<combo_box label="" name="username_combo" tool_tip="El nombre de usuario que elegiste al registrarte, como bobsmith12 o Steller Sunshine"/>
+			<text name="password_text">
+        Contraseña:
+			</text>
+			<line_editor label="" name="password_edit"/>
+			<check_box label="Recuérdame" name="remember_name"/>
+			<check_box label="Contraseña de registro" name="remember_password"/>
+			<button label="Iniciar sesión" name="connect_btn"/>
+			<text name="start_location_text">
+        Mis lugares favoritos:
+			</text>
+			<combo_box label="" name="start_location_combo" tool_tip="">
 				<combo_box.item label="Mi última posición" name="MyLastLocation"/>
 				<combo_box.item label="Mi Base" name="MyHome"/>
+				<combo_box.item label="&lt;Escriba el nombre de la región&gt;" name="Typeregionname"/>
 			</combo_box>
-			<button label="Iniciar sesión" name="connect_btn"/>
-			<check_box label="Recordarme" name="remember_check"/>
-			<text name="forgot_password_text">
-				Contraseña olvidada
-			</text>
-			<combo_box label="Seleccionar cuadrícula" name="server_combo"/>
-			<text name="sign_up_text">
-				Regístrate
+			<combo_box label="" name="server_combo" tool_tip=""/>
+			<button label="" name="add_grid_btn"/>
+			<button label="Gestor de cuadrícula" name="select_grids_btn"/>
+		</layout_panel>
+		<layout_panel name="links">
+			<text name="create_new_account_text">
+        Regístrate
 			</text>
 		</layout_panel>
 	</layout_stack>
