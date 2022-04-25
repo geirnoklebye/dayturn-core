@@ -86,7 +86,7 @@ public:
 
 	void					requestUpdate();
 	virtual void			gatherAlphaMasks(U8 *data, S32 originX, S32 originY, S32 width, S32 height, LLRenderTarget* bound_target) = 0;
-	BOOL					hasAlphaParams() const 		{ return !mParamAlphaList.empty(); }
+	bool					hasAlphaParams() const 		{ return !mParamAlphaList.empty(); }
 
 	ERenderPass				getRenderPass() const;
 	bool					isVisibilityMask() const;
@@ -202,7 +202,7 @@ public:
 	bool						render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target = nullptr);
 	void						renderAlphaMaskTextures(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target = nullptr, bool forceClear = false);
 
-	BOOL						isBodyRegion(const std::string& region) const;
+	bool						isBodyRegion(const std::string& region) const;
 	void						applyMorphMask(U8* tex_data, S32 width, S32 height, S32 num_components);
 	bool						isMorphValid() const;
 	virtual void				requestUpdate() = 0;
@@ -252,7 +252,7 @@ protected:
 	S32						mWidth;
 	S32						mHeight;
 	std::string				mStaticAlphaFileName;
-	BOOL					mClearAlpha; // Set alpha to 1 for this layerset (if there is no mStaticAlphaFileName)
+	bool					mClearAlpha; // Set alpha to 1 for this layerset (if there is no mStaticAlphaFileName)
 	typedef std::vector<LLTexLayerInfo*> layer_info_list_t;
 	layer_info_list_t		mLayerInfoList;
 };
@@ -294,12 +294,12 @@ class LLTexLayerStaticImageList : public LLSingleton<LLTexLayerStaticImageList>
 	LLSINGLETON(LLTexLayerStaticImageList);
 	~LLTexLayerStaticImageList();
 public:
-	LLGLTexture*		getTexture(const std::string& file_name, BOOL is_mask);
+	LLGLTexture*		getTexture(const std::string& file_name, bool is_mask);
 	LLImageTGA*			getImageTGA(const std::string& file_name);
 	void				deleteCachedImages();
 	void				dumpByteCount() const;
 protected:
-	BOOL				loadImageRaw(const std::string& file_name, LLImageRaw* image_raw);
+	bool				loadImageRaw(const std::string& file_name, LLImageRaw* image_raw);
 private:
 	LLStringTable 		mImageNames;
 	typedef std::map<const char*, LLPointer<LLGLTexture> > texture_map_t;
