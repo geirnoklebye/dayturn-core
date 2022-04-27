@@ -434,7 +434,7 @@ void LLGestureMgr::deactivateSimilarGestures(LLMultiGesture* in, const LLUUID& i
 }
 
 
-BOOL LLGestureMgr::isGestureActive(const LLUUID& item_id)
+bool LLGestureMgr::isGestureActive(const LLUUID& item_id)
 {
 	const LLUUID& base_item_id = gInventory.getLinkedItemID(item_id);
 	item_map_t::iterator it = mActive.find(base_item_id);
@@ -442,24 +442,24 @@ BOOL LLGestureMgr::isGestureActive(const LLUUID& item_id)
 }
 
 
-BOOL LLGestureMgr::isGesturePlaying(const LLUUID& item_id)
+bool LLGestureMgr::isGesturePlaying(const LLUUID& item_id)
 {
 	const LLUUID& base_item_id = gInventory.getLinkedItemID(item_id);
 
 	item_map_t::iterator it = mActive.find(base_item_id);
-	if (it == mActive.end()) return FALSE;
+	if (it == mActive.end()) return false;
 
 	LLMultiGesture* gesture = (*it).second;
-	if (!gesture) return FALSE;
+	if (!gesture) return false;
 
 	return gesture->mPlaying;
 }
 
-BOOL LLGestureMgr::isGesturePlaying(LLMultiGesture* gesture)
+bool LLGestureMgr::isGesturePlaying(LLMultiGesture* gesture)
 {
 	if(!gesture)
 	{
-		return FALSE;
+		return false;
 	}
 
 	return gesture->mPlaying;
@@ -1395,7 +1395,7 @@ void LLGestureMgr::notifyObservers()
 	}
 }
 
-BOOL LLGestureMgr::matchPrefix(const std::string& in_str, std::string* out_str)
+bool LLGestureMgr::matchPrefix(const std::string& in_str, std::string* out_str)
 {
 	S32 in_len = in_str.length();
 
@@ -1410,7 +1410,7 @@ BOOL LLGestureMgr::matchPrefix(const std::string& in_str, std::string* out_str)
 			if (!LLStringUtil::compareInsensitive(in_str, trigger))
 			{
 				*out_str = trigger;
-				return TRUE;
+				return true;
 			}
 		}
 	}

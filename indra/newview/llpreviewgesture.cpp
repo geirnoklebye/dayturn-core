@@ -755,7 +755,7 @@ void LLPreviewGesture::refresh()
 	
 	mOptionsText->setText(optionstext);
 
-	BOOL active = LLGestureMgr::instance().isGestureActive(mItemUUID);
+	bool active = LLGestureMgr::instance().isGestureActive(mItemUUID);
 	mActiveCheck->set(active);
 
 	// Can only preview if there are steps
@@ -824,7 +824,7 @@ void LLPreviewGesture::loadAsset()
 	// window if the download gets stalled.
 	LLUUID* item_idp = new LLUUID(mItemUUID);
 
-	const BOOL high_priority = TRUE;
+	const bool high_priority = true;
 	gAssetStorage->getAssetData(asset_id,
 								LLAssetType::AT_GESTURE,
 								onLoadComplete,
@@ -856,7 +856,7 @@ void LLPreviewGesture::onLoadComplete(const LLUUID& asset_uuid,
 			LLMultiGesture* gesture = new LLMultiGesture();
 
 			LLDataPackerAsciiBuffer dp(&buffer[0], size+1);
-			BOOL ok = gesture->deserialize(dp);
+			bool ok = gesture->deserialize(dp);
 
 			if (ok)
 			{

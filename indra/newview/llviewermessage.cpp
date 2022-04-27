@@ -6959,7 +6959,7 @@ void process_covenant_reply(LLMessageSystem* msg, void**)
 	LLFloaterBuyLand::updateLastModified(last_modified);
 
 	// load the actual covenant asset data
-	const BOOL high_priority = TRUE;
+	const bool high_priority = true;
 	if (covenant_id.notNull())
 	{
 		gAssetStorage->getEstateAsset(gAgent.getRegionHost(),
