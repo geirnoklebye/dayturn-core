@@ -540,13 +540,13 @@ void LLFloaterGesture::onActivateBtnClick()
 
 	LLGestureMgr* gm = LLGestureMgr::getInstance();
 	uuid_vec_t::const_iterator it = ids.begin();
-	BOOL first_gesture_state = gm->isGestureActive(*it);
-	BOOL is_mixed = FALSE;
+	bool first_gesture_state = gm->isGestureActive(*it);
+	bool is_mixed = false;
 	while( ++it != ids.end() )
 	{
 		if(first_gesture_state != gm->isGestureActive(*it))
 		{
-			is_mixed = TRUE;
+			is_mixed = true;
 			break;
 		}
 	}
