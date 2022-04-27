@@ -1004,7 +1004,7 @@ void LLGestureMgr::runStep(LLMultiGesture* gesture, LLGestureStep* step)
 			// Don't animate the nodding, as this might not blend with
 			// other playing animations.
 
-			const BOOL animate = FALSE;
+			const bool animate = false;
 
 			(LLFloaterReg::getTypedInstance<LLFloaterIMNearbyChat>("nearby_chat"))->
 					sendChatFromViewer(chat_text, CHAT_TYPE_NORMAL, animate);

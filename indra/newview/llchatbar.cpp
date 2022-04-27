@@ -381,7 +381,7 @@ void LLChatBar::sendChat( EChatType type )
 
 				if (!utf8_revised_text.empty() && cmd_line_chat(utf8_revised_text, type))
 			{
-				sendChatFromViewer(utf8_revised_text, type, gSavedSettings.getBOOL("PlayChatAnim"));
+				sendChatFromViewer(utf8_revised_text, type, gSavedSettings.getbool("PlayChatAnim"));
 			}
 		}
 	}
@@ -557,16 +557,16 @@ void LLChatBar::onClickSay( LLUICtrl* ctrl )
 	sendChat(chat_type);
 }
 
-void LLChatBar::sendChatFromViewer(const std::string &utf8text, EChatType type, BOOL animate)
+void LLChatBar::sendChatFromViewer(const std::string &utf8text, EChatType type, bool animate)
 {
 	sendChatFromViewer(utf8str_to_wstring(utf8text), type, animate);
 }
 
-void LLChatBar::sendChatFromViewer(const LLWString &wtext, EChatType type, BOOL animate)
+void LLChatBar::sendChatFromViewer(const LLWString &wtext, EChatType type, bool animate)
 {
 	// as soon as we say something, we no longer care about teaching the user
 	// how to chat
-	gWarningSettings.setBOOL("FirstOtherChatBeforeUser", FALSE);
+	gWarningSettings.setbool("FirstOtherChatBeforeUser", false);
 
 	LLUIUsage::instance().logCommand("Chat.Send"); // Pseudo-command
 	
@@ -648,7 +648,7 @@ void LLChatBar::onCommitGesture(LLUICtrl* ctrl)
 		if (!revised_text.empty())
 		{
 			// Don't play nodding animation
-			sendChatFromViewer(revised_text, CHAT_TYPE_NORMAL, FALSE);
+			sendChatFromViewer(revised_text, CHAT_TYPE_NORMAL, false);
 		}
 	}
 	mGestureLabelTimer.start();

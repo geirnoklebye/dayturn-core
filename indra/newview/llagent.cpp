@@ -2176,7 +2176,7 @@ void LLAgent::startTyping()
 		sendAnimationRequest(ANIM_AGENT_TYPE, ANIM_REQUEST_START);
 	}
 	(LLFloaterReg::getTypedInstance<LLFloaterIMNearbyChat>("nearby_chat"))->
-			sendChatFromViewer("", CHAT_TYPE_START, FALSE);
+			sendChatFromViewer("", CHAT_TYPE_START, false);
 }
 
 //-----------------------------------------------------------------------------
@@ -2189,7 +2189,7 @@ void LLAgent::stopTyping()
 		clearRenderState(AGENT_STATE_TYPING);
 		sendAnimationRequest(ANIM_AGENT_TYPE, ANIM_REQUEST_STOP);
 		(LLFloaterReg::getTypedInstance<LLFloaterIMNearbyChat>("nearby_chat"))->
-				sendChatFromViewer("", CHAT_TYPE_STOP, FALSE);
+				sendChatFromViewer("", CHAT_TYPE_STOP, false);
 	}
 }
 

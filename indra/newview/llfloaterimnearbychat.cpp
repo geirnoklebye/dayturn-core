@@ -439,7 +439,7 @@ bool LLFloaterIMNearbyChat::handleKeyHere( KEY key, MASK mask )
 	return handled;
 }
 
-BOOL LLFloaterIMNearbyChat::matchChatTypeTrigger(const std::string& in_str, std::string* out_str)
+bool LLFloaterIMNearbyChat::matchChatTypeTrigger(const std::string& in_str, std::string* out_str)
 {
 	U32 in_len = in_str.length();
 	S32 cnt = sizeof(sChatTypeTriggers) / sizeof(*sChatTypeTriggers);
@@ -649,7 +649,7 @@ void LLFloaterIMNearbyChat::sendChatWithText( EChatType type, LLWString text)
 				if (!utf8_revised_text.empty() && cmd_line_chat(utf8_revised_text, type))
 			{
 				// Chat with animation
-				sendChatFromViewer(utf8_revised_text, type, gSavedSettings.getBOOL("PlayChatAnim"));
+				sendChatFromViewer(utf8_revised_text, type, gSavedSettings.getbool("PlayChatAnim"));
 			}
 		}
 }
@@ -716,12 +716,12 @@ void LLFloaterIMNearbyChat::displaySpeakingIndicator()
 	}
 }
 
-void LLFloaterIMNearbyChat::sendChatFromViewer(const std::string &utf8text, EChatType type, BOOL animate)
+void LLFloaterIMNearbyChat::sendChatFromViewer(const std::string &utf8text, EChatType type, bool animate)
 {
 	sendChatFromViewer(utf8str_to_wstring(utf8text), type, animate);
 }
 
-void LLFloaterIMNearbyChat::sendChatFromViewer(const LLWString &wtext, EChatType type, BOOL animate)
+void LLFloaterIMNearbyChat::sendChatFromViewer(const LLWString &wtext, EChatType type, bool animate)
 {
 	LLUIUsage::instance().logCommand("Chat.Send"); // pseuo-command
 	// Look for "/20 foo" channel chats.
