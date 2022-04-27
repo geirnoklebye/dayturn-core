@@ -88,8 +88,8 @@ LLToolBrushLand::LLToolBrushLand()
 	mStartingZ( 0.0f ),
 	mMouseX( 0 ),
 	mMouseY(0),
-	mGotHover(FALSE),
-	mBrushSelected(FALSE)
+	mGotHover(false),
+	mBrushSelected(false)
 {
 	mBrushSize = gSavedSettings.getF32("LandBrushSize");
 }
@@ -410,7 +410,7 @@ bool LLToolBrushLand::handleHover( S32 x, S32 y, MASK mask )
 								<< ")" << LL_ENDL;
 	mMouseX = x;
 	mMouseY = y;
-	mGotHover = TRUE;
+	mGotHover = true;
 	gViewerWindow->setCursor(UI_CURSOR_TOOLLAND);
 
 	LLVector3d spot;
@@ -450,7 +450,7 @@ void LLToolBrushLand::handleSelect()
 	gFloaterTools->setStatusText("modifyland");
 //	if (!mBrushSelected)
 	{
-		mBrushSelected = TRUE;
+		mBrushSelected = true;
 	}
 }
 
@@ -462,7 +462,7 @@ void LLToolBrushLand::handleDeselect()
 		gEditMenuHandler = NULL;
 	}
 	LLViewerParcelMgr::getInstance()->setSelectionVisible(TRUE);
-	mBrushSelected = FALSE;
+	mBrushSelected = false;
 }
 
 // Draw the area that will be affected.
@@ -493,7 +493,7 @@ void LLToolBrushLand::render()
 							  pos_world);
 			}
 		}
-		mGotHover = FALSE;
+		mGotHover = false;
 	}
 }
 

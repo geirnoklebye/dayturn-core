@@ -172,13 +172,13 @@ public:
 
 	virtual void draw( void );
 
-	BOOL getHover() const { return mGotHover; }
+	bool getHover() const { return mGotHover; }
 
 	void setDrawTextDisabled(BOOL disabled) { mDrawTextDisabled = disabled; }
 	BOOL getDrawTextDisabled() const { return mDrawTextDisabled; }
 
 protected:
-	void setHover(BOOL hover) { mGotHover = hover; }
+	void setHover(bool hover) { mGotHover = hover; }
 
 	// This function appends the character string representation of
 	// the current accelerator key and mask to the provided string.

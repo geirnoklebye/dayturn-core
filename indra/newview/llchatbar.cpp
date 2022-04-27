@@ -123,7 +123,7 @@ bool LLChatBar::postBuild()
 	mInputEditor->setRevertOnEsc(false);
 	mInputEditor->setIgnoreTab(true);
 	mInputEditor->setPassDelete(true);
-	mInputEditor->setReplaceNewlinesWithSpaces(FALSE);
+	mInputEditor->setReplaceNewlinesWithSpaces(false);
 
 	mInputEditor->setMaxTextLength(DB_CHAT_MSG_STR_LEN);
 	mInputEditor->setEnableLineHistory(true);

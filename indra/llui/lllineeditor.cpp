@@ -411,7 +411,7 @@ void LLLineEditor::setText(const LLStringExplicit &new_text, bool use_size_limit
 
 	// Check to see if entire field is selected.
 	S32 len = mText.length();
-	BOOL all_selected = (len > 0)
+	bool all_selected = (len > 0)
 		&& (( mSelectionStart == 0 && mSelectionEnd == len ) 
 			|| ( mSelectionStart == len && mSelectionEnd == 0 ));
 
@@ -1197,7 +1197,7 @@ void LLLineEditor::cut()
 		deleteSelection();
 
 		// Validate new string and rollback the if needed.
-		BOOL need_to_rollback = ( mPrevalidateFunc && !mPrevalidateFunc( mText.getWString() ) );
+		bool need_to_rollback = ( mPrevalidateFunc && !mPrevalidateFunc( mText.getWString() ) );
 		if( need_to_rollback )
 		{
 			rollback.doRollback( this );
@@ -1325,7 +1325,7 @@ void LLLineEditor::pasteHelper(bool is_primary)
 			deselect();
 
 			// Validate new string and rollback the if needed.
-			BOOL need_to_rollback = ( mPrevalidateFunc && !mPrevalidateFunc( mText.getWString() ) );
+			bool need_to_rollback = ( mPrevalidateFunc && !mPrevalidateFunc( mText.getWString() ) );
 			if( need_to_rollback )
 			{
 				rollback.doRollback( this );
@@ -1687,7 +1687,7 @@ void LLLineEditor::doDelete()
 		}
 
 		// Validate new string and rollback the if needed.
-		BOOL need_to_rollback = ( mPrevalidateFunc && !mPrevalidateFunc( mText.getWString() ) );
+		bool need_to_rollback = ( mPrevalidateFunc && !mPrevalidateFunc( mText.getWString() ) );
 		if( need_to_rollback )
 		{
 			rollback.doRollback( this );
@@ -2618,7 +2618,7 @@ S32 LLLineEditor::getPreeditFontSize() const
 	return ll_round(mGLFont->getLineHeight() * LLUI::getScaleFactor().mV[VY]);
 }
 
-void LLLineEditor::setReplaceNewlinesWithSpaces(BOOL replace)
+void LLLineEditor::setReplaceNewlinesWithSpaces(bool replace)
 {
 	mReplaceNewlinesWithSpaces = replace;
 }

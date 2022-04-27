@@ -947,7 +947,7 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 	if (mCheckCopyRotates && mCheckCopySelection) mCheckCopyRotates->setEnabled( mCheckCopySelection->get() );
 
 	// Land buttons
-	BOOL land_visible = (tool == LLToolBrushLand::getInstance() || tool == LLToolSelectLand::getInstance() );
+	bool land_visible = (tool == LLToolBrushLand::getInstance() || tool == LLToolSelectLand::getInstance() );
 
 	mCostTextBorder->setVisible(!land_visible);
 

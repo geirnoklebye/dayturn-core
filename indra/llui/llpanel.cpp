@@ -127,9 +127,9 @@ LLPanel::~LLPanel()
 }
 
 // virtual
-BOOL LLPanel::isPanel() const
+bool LLPanel::isPanel() const
 {
-	return TRUE;
+	return true;
 }
 
 void LLPanel::addBorder(LLViewBorder::Params p)
@@ -504,7 +504,7 @@ static LLTrace::BlockTimerStatHandle FTM_PANEL_SETUP("Panel Setup");
 static LLTrace::BlockTimerStatHandle FTM_EXTERNAL_PANEL_LOAD("Load Extern Panel Reference");
 static LLTrace::BlockTimerStatHandle FTM_PANEL_POSTBUILD("Panel PostBuild");
 
-BOOL LLPanel::initPanelXML(LLXMLNodePtr node, LLView *parent, LLXMLNodePtr output_node, const LLPanel::Params& default_params)
+bool LLPanel::initPanelXML(LLXMLNodePtr node, LLView *parent, LLXMLNodePtr output_node, const LLPanel::Params& default_params)
 {
 	Params params(default_params);
 	{
@@ -533,7 +533,7 @@ BOOL LLPanel::initPanelXML(LLXMLNodePtr node, LLView *parent, LLXMLNodePtr outpu
 				setupParamsForExport(output_params, parent);
 				output_node->setName(node->getName()->mString);
 				parser.writeXUI(output_node, output_params, LLInitParam::default_parse_rules(), &default_params);
-				return TRUE;
+				return true;
 			}
 		
 			LLUICtrlFactory::instance().pushFileName(xml_filename);
@@ -543,7 +543,7 @@ BOOL LLPanel::initPanelXML(LLXMLNodePtr node, LLView *parent, LLXMLNodePtr outpu
 			{
 				LL_WARNS() << "Couldn't parse panel from: " << xml_filename << LL_ENDL;
 
-				return FALSE;
+				return false;
 			}
 
 			parser.readXUI(referenced_xml, params, LLUICtrlFactory::getInstance()->getCurFileName());
@@ -590,7 +590,7 @@ BOOL LLPanel::initPanelXML(LLXMLNodePtr node, LLView *parent, LLXMLNodePtr outpu
 			postBuild();
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 bool LLPanel::hasString(const std::string& name)
@@ -658,7 +658,7 @@ void LLPanel::childSetEnabled(const std::string& id, bool enabled)
 	}
 }
 
-void LLPanel::childSetFocus(const std::string& id, BOOL focus)
+void LLPanel::childSetFocus(const std::string& id, bool focus)
 {
 	LLUICtrl* child = findChild<LLUICtrl>(id);
 	if (child)
@@ -667,7 +667,7 @@ void LLPanel::childSetFocus(const std::string& id, BOOL focus)
 	}
 }
 
-BOOL LLPanel::childHasFocus(const std::string& id)
+bool LLPanel::childHasFocus(const std::string& id)
 {
 	LLUICtrl* child = findChild<LLUICtrl>(id);
 	if (child)
@@ -676,7 +676,7 @@ BOOL LLPanel::childHasFocus(const std::string& id)
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 }
 
@@ -752,24 +752,24 @@ LLSD LLPanel::childGetValue(const std::string& id) const
 	return LLSD();
 }
 
-BOOL LLPanel::childSetTextArg(const std::string& id, const std::string& key, const LLStringExplicit& text)
+bool LLPanel::childSetTextArg(const std::string& id, const std::string& key, const LLStringExplicit& text)
 {
 	LLUICtrl* child = findChild<LLUICtrl>(id);
 	if (child)
 	{
 		return child->setTextArg(key, text);
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL LLPanel::childSetLabelArg(const std::string& id, const std::string& key, const LLStringExplicit& text)
+bool LLPanel::childSetLabelArg(const std::string& id, const std::string& key, const LLStringExplicit& text)
 {
 	LLView* child = findChild<LLView>(id);
 	if (child)
 	{
 		return child->setLabelArg(key, text);
 	}
-	return FALSE;
+	return false;
 }
 
 void LLPanel::childSetAction(const std::string& id, const commit_signal_t::slot_type& function)
@@ -803,10 +803,9 @@ boost::signals2::connection LLPanel::setVisibleCallback( const commit_signal_t::
 //-----------------------------------------------------------------------------
 // buildPanel()
 //-----------------------------------------------------------------------------
-BOOL LLPanel::buildFromFile(const std::string& filename, const LLPanel::Params& default_params)
+bool LLPanel::buildFromFile(const std::string& filename, const LLPanel::Params& default_params)
 {
-    LL_PROFILE_ZONE_SCOPED;
-	BOOL didPost = FALSE;
+	bool didPost = false;
 	LLXMLNodePtr root;
 
 	if (!LLUICtrlFactory::getLayeredXMLNode(filename, root))

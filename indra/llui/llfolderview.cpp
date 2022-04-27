@@ -1156,7 +1156,7 @@ bool LLFolderView::handleKeyHere( KEY key, MASK mask )
 		if((mSelectedItems.size() > 0) && mScrollContainer)
 		{
 			LLFolderViewItem* last_selected = getCurSelectedItem();
-			BOOL shift_select = mask & MASK_SHIFT;
+			bool shift_select = mask & MASK_SHIFT;
 			// don't shift select down to children of folders (they are implicitly selected through parent)
 			LLFolderViewItem* next = last_selected->getNextOpenNode(!shift_select);
 
@@ -1219,7 +1219,7 @@ bool LLFolderView::handleKeyHere( KEY key, MASK mask )
 		if((mSelectedItems.size() > 0) && mScrollContainer)
 		{
 			LLFolderViewItem* last_selected = mSelectedItems.back();
-			BOOL shift_select = mask & MASK_SHIFT;
+			bool shift_select = mask & MASK_SHIFT;
 			// don't shift select down to children of folders (they are implicitly selected through parent)
 			LLFolderViewItem* prev = last_selected->getPreviousOpenNode(!shift_select);
 

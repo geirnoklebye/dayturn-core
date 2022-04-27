@@ -216,7 +216,7 @@ public:
 	// if a widget needs to be added as a ctrl
 	virtual BOOL isCtrl() const;
 
-	virtual BOOL isPanel() const;
+	virtual bool isPanel() const;
 	
 	//
 	// MANIPULATORS
@@ -385,7 +385,7 @@ public:
 	void	setShape(const LLRect& new_rect, bool by_user = false);
 	virtual LLView*	findSnapRect(LLRect& new_rect, const LLCoordGL& mouse_dir, LLView::ESnapType snap_type, S32 threshold, S32 padding = 0);
 	virtual LLView*	findSnapEdge(S32& new_edge_val, const LLCoordGL& mouse_dir, ESnapEdge snap_edge, ESnapType snap_type, S32 threshold, S32 padding = 0);
-	virtual BOOL	canSnapTo(const LLView* other_view);
+	virtual bool	canSnapTo(const LLView* other_view);
 	virtual void	setSnappedTo(const LLView* snap_view);
 
 	// inherited from LLFocusableElement

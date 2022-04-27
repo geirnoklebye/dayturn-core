@@ -705,7 +705,7 @@ void LLFlatListView::onItemRightMouseClick(item_pair_t* item_pair, MASK mask)
 
 bool LLFlatListView::handleKeyHere(KEY key, MASK mask)
 {
-	BOOL reset_selection = (mask != MASK_SHIFT);
+	bool reset_selection = (mask != MASK_SHIFT);
 	bool handled = false;
 	switch (key)
 	{

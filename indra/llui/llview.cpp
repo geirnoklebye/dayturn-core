@@ -221,9 +221,9 @@ BOOL LLView::isCtrl() const
 }
 
 // virtual
-BOOL LLView::isPanel() const
+bool LLView::isPanel() const
 {
-	return FALSE;
+	return false;
 }
 
 void LLView::setToolTip(const LLStringExplicit& msg)
@@ -728,7 +728,7 @@ void LLView::translate(S32 x, S32 y)
 }
 
 // virtual
-BOOL LLView::canSnapTo(const LLView* other_view)
+bool LLView::canSnapTo(const LLView* other_view)
 {
 	return other_view != this && other_view->getVisible();
 }

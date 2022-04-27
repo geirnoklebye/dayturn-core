@@ -219,7 +219,7 @@ public:
 	bool initFloaterXML(LLXMLNodePtr node, LLView *parent, const std::string& filename, LLXMLNodePtr output_node = NULL);
 
 	/*virtual*/ void handleReshape(const LLRect& new_rect, bool by_user = false);
-	/*virtual*/ BOOL canSnapTo(const LLView* other_view); 
+	/*virtual*/ bool canSnapTo(const LLView* other_view); 
 	/*virtual*/ void setSnappedTo(const LLView* snap_view);
 	/*virtual*/ void setFocus( bool b );
 	/*virtual*/ void setIsChrome(bool is_chrome);

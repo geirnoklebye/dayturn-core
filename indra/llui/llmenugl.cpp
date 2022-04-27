@@ -167,7 +167,7 @@ LLMenuItemGL::LLMenuItemGL(const LLMenuItemGL::Params& p)
 {
 #ifdef LL_DARWIN
 	// See if this Mac accelerator should really use the ctrl key and not get mapped to cmd
-	BOOL useMacCtrl = p.use_mac_ctrl;
+	bool useMacCtrl = p.use_mac_ctrl;
 #endif // LL_DARWIN
 	
 	std::string shortcut = p.shortcut;
@@ -244,13 +244,13 @@ BOOL LLMenuItemGL::handleRightMouseDown(S32 x, S32 y, MASK mask)
 
 void LLMenuItemGL::onMouseEnter(S32 x, S32 y, MASK mask)
 {
-	setHover(TRUE);
+	setHover(true);
 	LLUICtrl::onMouseEnter(x,y,mask);
 }
 
 void LLMenuItemGL::onMouseLeave(S32 x, S32 y, MASK mask)
 {
-	setHover(FALSE);
+	setHover(false);
 	LLUICtrl::onMouseLeave(x,y,mask);
 }
 

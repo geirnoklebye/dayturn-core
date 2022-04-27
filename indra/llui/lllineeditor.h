@@ -279,7 +279,7 @@ public:
 	void			setEnableLineHistory( bool enabled ) { mHaveHistory = enabled; } // switches line history on or off 
 	void			updateHistory(); // stores current line in history
 
-	void			setReplaceNewlinesWithSpaces(BOOL replace);
+	void			setReplaceNewlinesWithSpaces(bool replace);
 
 	void			resetContextMenu() { setContextMenu(NULL); };
 

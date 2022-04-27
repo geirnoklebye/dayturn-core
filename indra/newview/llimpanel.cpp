@@ -214,7 +214,7 @@ bool LLFloaterIMPanel::postBuild()
 	mInputEditor->setCommitCallback( onCommitChat, this );
 	mInputEditor->setCommitOnFocusLost(false);
 	mInputEditor->setRevertOnEsc(false);
-	mInputEditor->setReplaceNewlinesWithSpaces( FALSE );
+	mInputEditor->setReplaceNewlinesWithSpaces(false);
 
 	childSetAction("profile_callee_btn", onClickProfile, this);
 	childSetAction("group_info_btn", onClickGroupInfo, this);

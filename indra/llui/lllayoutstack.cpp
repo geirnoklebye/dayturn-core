@@ -380,7 +380,7 @@ bool LLLayoutStack::addChild(LLView* child, S32 tab_group)
 		createResizeBar(panelp);
 		mNeedsLayout = true;
 	}
-	BOOL result = LLView::addChild(child, tab_group);
+	bool result = LLView::addChild(child, tab_group);
 
 	updateFractionalSizes();
 	return result;

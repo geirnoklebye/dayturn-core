@@ -40,8 +40,8 @@
 #include <queue>
 
 const S32 LLPANEL_BORDER_WIDTH = 1;
-const BOOL BORDER_YES = TRUE;
-const BOOL BORDER_NO = FALSE;
+const bool BORDER_YES = true;
+const bool BORDER_NO = false;
 
 class LLButton;
 class LLUIImage;
@@ -107,14 +107,14 @@ protected:
 public:
 	typedef std::vector<class LLUICtrl *>				ctrl_list_t;
 
-	BOOL buildFromFile(const std::string &filename, const LLPanel::Params& default_params = getDefaultParams());
+	bool buildFromFile(const std::string &filename, const LLPanel::Params& default_params = getDefaultParams());
 
 	static LLPanel* createFactoryPanel(const std::string& name);
 
 	/*virtual*/ ~LLPanel();
 
 	// LLView interface
-	/*virtual*/ BOOL 	isPanel() const;
+	/*virtual*/ bool 	isPanel() const;
 	/*virtual*/ void	draw();	
 	/*virtual*/ bool	handleKeyHere( KEY key, MASK mask );
 	/*virtual*/ void 	onVisibilityChange ( bool new_visibility );
@@ -130,7 +130,7 @@ public:
 	void addBorder( LLViewBorder::Params p);
 	void addBorder();
 	void			removeBorder();
-	BOOL			hasBorder() const { return mBorder != NULL; }
+	bool			hasBorder() const { return mBorder != NULL; }
 	void			setBorderVisible( bool b );
 
 	void			setBackgroundColor( const LLColor4& color ) { mBgOpaqueColor = color; }
@@ -167,7 +167,7 @@ public:
 	EnableCallbackRegistry::ScopedRegistrar& getEnableCallbackRegistrar() { return mEnableCallbackRegistrar; }
 	
 	void initFromParams(const Params& p);
-	BOOL initPanelXML(	LLXMLNodePtr node, LLView *parent, LLXMLNodePtr output_node, const LLPanel::Params& default_params);
+	bool initPanelXML(	LLXMLNodePtr node, LLView *parent, LLXMLNodePtr output_node, const LLPanel::Params& default_params);
 	
 	bool hasString(const std::string& name);
 	std::string getString(const std::string& name, const LLStringUtil::format_map_t& args) const;
@@ -184,8 +184,8 @@ public:
 	void childDisable(const std::string& name) { childSetEnabled(name, false); };
 
 	// LLUICtrl
-	void childSetFocus(const std::string& id, BOOL focus = TRUE);
-	BOOL childHasFocus(const std::string& id);
+	void childSetFocus(const std::string& id, bool focus = true);
+	bool childHasFocus(const std::string& id);
 	
 	// *TODO: Deprecate; for backwards compatability only:
 	// Prefer getChild<LLUICtrl>("foo")->setCommitCallback(boost:bind(...)),
@@ -204,8 +204,8 @@ public:
 
 	// For setting text / label replacement params, e.g. "Hello [NAME]"
 	// Not implemented for all types, defaults to noop, returns FALSE if not applicaple
-	BOOL childSetTextArg(const std::string& id, const std::string& key, const LLStringExplicit& text);
-	BOOL childSetLabelArg(const std::string& id, const std::string& key, const LLStringExplicit& text);
+	bool childSetTextArg(const std::string& id, const std::string& key, const LLStringExplicit& text);
+	bool childSetLabelArg(const std::string& id, const std::string& key, const LLStringExplicit& text);
 	
 	// LLButton
 	void childSetAction(const std::string& id, boost::function<void(void*)> function, void* value);

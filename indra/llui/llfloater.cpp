@@ -1105,12 +1105,12 @@ std::string LLFloater::getShortTitle() const
 	}
 }
 
-BOOL LLFloater::canSnapTo(const LLView* other_view)
+bool LLFloater::canSnapTo(const LLView* other_view)
 {
 	if (NULL == other_view)
 	{
 		LL_WARNS() << "other_view is NULL" << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 
 	if (other_view != getParent())
@@ -1121,7 +1121,7 @@ BOOL LLFloater::canSnapTo(const LLView* other_view)
 			&& mDependents.find(other_floaterp->getHandle()) != mDependents.end())
 		{
 			// this is a dependent that is already snapped to us, so don't snap back to it
-			return FALSE;
+			return false;
 		}
 	}
 
