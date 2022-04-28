@@ -109,7 +109,7 @@ void LLXORCipher::init(const U8* pad, U32 pad_len)
 
 #ifdef _DEBUG
 // static
-BOOL LLXORCipher::testHarness()
+bool LLXORCipher::testHarness()
 {
 	const U32 PAD_LEN = 3;
 	const U8 PAD[] = "abc";
