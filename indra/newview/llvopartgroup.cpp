@@ -323,7 +323,7 @@ BOOL LLVOPartGroup::updateGeometry(LLDrawable *drawable)
 
 	if (group && group->isVisible())
 	{
-		dirtySpatialGroup(TRUE);
+		dirtySpatialGroup(true);
 	}
 
 	if (!num_parts)

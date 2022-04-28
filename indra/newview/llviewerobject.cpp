@@ -6673,7 +6673,7 @@ U32 LLViewerObject::getPartitionType() const
 	return LLViewerRegion::PARTITION_NONE; 
 }
 
-void LLViewerObject::dirtySpatialGroup(BOOL priority) const
+void LLViewerObject::dirtySpatialGroup(bool priority) const
 {
 	if (mDrawable)
 	{

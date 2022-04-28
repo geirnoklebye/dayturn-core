@@ -170,7 +170,7 @@ BOOL LLVOSurfacePatch::updateGeometry(LLDrawable *drawable)
 {
     LL_PROFILE_ZONE_SCOPED;
 
-	dirtySpatialGroup(TRUE);
+	dirtySpatialGroup(true);
 	
 	S32 min_comp, max_comp, range;
 	min_comp = lltrunc(mPatchp->getMinComposition());
@@ -228,7 +228,7 @@ BOOL LLVOSurfacePatch::updateGeometry(LLDrawable *drawable)
 	mLastNorthStride = north_stride;
 	mLastEastStride = east_stride;
 
-	return TRUE;
+	return true;
 }
 
 void LLVOSurfacePatch::updateFaceSize(S32 idx)

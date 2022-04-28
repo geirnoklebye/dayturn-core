@@ -579,7 +579,7 @@ public:
 
 	virtual S32 getLOD() const { return 3; } 
 	virtual U32 getPartitionType() const;
-	virtual void dirtySpatialGroup(BOOL priority = FALSE) const;
+	virtual void dirtySpatialGroup(bool priority = false) const;
 	virtual void dirtyMesh();
 
 	virtual LLNetworkData* getParameterEntry(U16 param_type) const;

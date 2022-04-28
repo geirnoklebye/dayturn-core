@@ -1976,7 +1976,7 @@ void LLPipeline::updateMovedList(LLDrawable::drawable_vector_t& moved_list)
 				markRebuild(drawablep, LLDrawable::REBUILD_VOLUME, TRUE);
 				if (drawablep->getVObj())
 				{
-					drawablep->getVObj()->dirtySpatialGroup(TRUE);
+					drawablep->getVObj()->dirtySpatialGroup(true);
 				}
 			}
 		// <FS:ND> removing elements in the middle of a vector is a really bad idea. I'll just create a new one and swap it at the end.
