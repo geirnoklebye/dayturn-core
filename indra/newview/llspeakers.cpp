@@ -54,7 +54,7 @@ LLSpeaker::LLSpeaker(const LLUUID& id, const std::string& name, const ESpeakerTy
 	mHasLeftCurrentCall(FALSE),
 	mDotColor(LLColor4::white),
 	mID(id),
-	mTyping(FALSE),
+	mTyping(false),
 	mSortIndex(0),
 	mType(type),
 	mIsModerator(FALSE),

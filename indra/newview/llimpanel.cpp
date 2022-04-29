@@ -111,8 +111,8 @@ LLFloaterIMPanel::LLFloaterIMPanel(const std::string& session_label,
 	mOtherParticipantUUID(other_participant_id),
 	mDialog(dialog),
 	mSessionInitialTargetIDs(ids),
-	mTyping(FALSE),
-	mOtherTyping(FALSE),
+	mTyping(false),
+	mOtherTyping(false),
 	mTypingLineStartIndex(0),
 	mSentTypingState(TRUE),
 	mNumUnreadMessages(0),
@@ -943,7 +943,7 @@ void LLFloaterIMPanel::addTypingIndicator(const std::string &name)
 		typing_start.setArg("[NAME]", name);
 		addHistoryLine(typing_start, LLUIColorTable::instance().getColor("SystemChatColor"), false);
 		mOtherTypingName = name;
-		mOtherTyping = TRUE;
+		mOtherTyping = true;
 	}
 	// MBW -- XXX -- merge from release broke this (argument to this function changed from an LLIMInfo to a name)
 	// Richard will fix.
@@ -956,7 +956,7 @@ void LLFloaterIMPanel::removeTypingIndicator(const LLIMInfo* im_info)
 	if (mOtherTyping)
 	{
 		// Must do this first, otherwise addHistoryLine calls us again.
-		mOtherTyping = FALSE;
+		mOtherTyping = false;
 
 		S32 chars_to_remove = mHistoryEditor->getWText().length() - mTypingLineStartIndex;
 		mHistoryEditor->removeTextFromEnd(chars_to_remove);

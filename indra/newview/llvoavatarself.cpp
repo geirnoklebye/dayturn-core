@@ -1549,7 +1549,7 @@ bool LLVOAvatarSelf::isTextureDefined(LLAvatarAppearanceDefines::ETextureIndex t
 }
 
 //virtual
-BOOL LLVOAvatarSelf::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type, U32 index) const
+bool LLVOAvatarSelf::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type, U32 index) const
 {
 	if (isIndexBakedTexture(type))
 	{
@@ -1562,7 +1562,7 @@ BOOL LLVOAvatarSelf::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex t
 }
 
 //virtual
-BOOL LLVOAvatarSelf::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type, LLViewerWearable *wearable) const
+bool LLVOAvatarSelf::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type, LLViewerWearable *wearable) const
 {
 	if (isIndexBakedTexture(type))
 	{
@@ -1577,7 +1577,7 @@ BOOL LLVOAvatarSelf::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex t
 	else
 	{
 		LL_WARNS() << "Wearable not found" << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 }
 
@@ -2487,14 +2487,14 @@ void LLVOAvatarSelf::addLocalTextureStats( ETextureIndex type, LLViewerFetchedTe
 				imagep->forceUpdateBindStats() ;
 				if (imagep->getDiscardLevel() < 0)
 				{
-					mHasGrey = TRUE; // for statistics gathering
+					mHasGrey = true; // for statistics gathering
 				}
 			}
 		}
 		else
 		{
 			// texture asset is missing
-			mHasGrey = TRUE; // for statistics gathering
+			mHasGrey = true; // for statistics gathering
 		}
 	}
 }

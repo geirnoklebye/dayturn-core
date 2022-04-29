@@ -74,7 +74,7 @@ public:
 	BOOL			mHasLeftCurrentCall;	// has this speaker left the current voice call?
 	LLColor4		mDotColor;
 	LLUUID			mID;
-	BOOL			mTyping;
+	bool			mTyping;
 	S32				mSortIndex;
 	ESpeakerType	mType;
 	BOOL			mIsModerator;

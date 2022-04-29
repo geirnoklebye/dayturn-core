@@ -585,7 +585,7 @@ private:
 	LLVector2	mImpostorDim;
     // This becomes true in the constructor and false after the first
     // idleUpdateMisc(). Not clear it serves any purpose.
-	BOOL		mNeedsAnimUpdate;
+	bool		mNeedsAnimUpdate;
     bool		mNeedsExtentUpdate;
 	LLVector3	mImpostorAngle;
 	F32			mImpostorDistance;
@@ -649,11 +649,11 @@ public:
 	//--------------------------------------------------------------------
 public:
 	virtual bool    isTextureDefined(LLAvatarAppearanceDefines::ETextureIndex type, U32 index = 0) const;
-	virtual BOOL	isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type, U32 index = 0) const;
-	virtual BOOL	isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type, LLViewerWearable *wearable) const;
+	virtual bool	isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type, U32 index = 0) const;
+	virtual bool	isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type, LLViewerWearable *wearable) const;
 
-	BOOL			isFullyBaked();
-	static BOOL		areAllNearbyInstancesBaked(S32& grey_avatars);
+	bool			isFullyBaked();
+	static bool		areAllNearbyInstancesBaked(S32& grey_avatars);
 	static void		getNearbyRezzedStats(std::vector<S32>& counts);
 	static std::string rezStatusToString(S32 status);
 
@@ -910,10 +910,10 @@ protected:
 	// Animations
 	//--------------------------------------------------------------------
 public:
-	BOOL 			isAnyAnimationSignaled(const LLUUID *anim_array, const S32 num_anims) const;
+	bool 			isAnyAnimationSignaled(const LLUUID *anim_array, const S32 num_anims) const;
 	void 			processAnimationStateChanges();
 protected:
-	BOOL 			processSingleAnimationStateChange(const LLUUID &anim_id, BOOL start);
+	bool 			processSingleAnimationStateChange(const LLUUID &anim_id, bool start);
 	void 			resetAnimations();
 private:
 	LLTimer			mAnimTimer;
@@ -937,10 +937,10 @@ public:
 public:
 	void			addChat(const LLChat& chat);
 	void	   		clearChat();
-	void	   		startTyping() { mTyping = TRUE; mTypingTimer.reset(); }
-	void			stopTyping() { mTyping = FALSE; }
+	void	   		startTyping() { mTyping = true; mTypingTimer.reset(); }
+	void			stopTyping() { mTyping = false; }
 //MK
-	BOOL			getTyping() { return mTyping; }
+	bool			getTyping() { return mTyping; }
 //mk
 private:
 	bool			mVisibleChat;
@@ -971,7 +971,7 @@ public:
 
 private:
 	F32 		mSpeedAccum; // measures speed (for diagnostics mostly).
-	BOOL 		mTurning; // controls hysteresis on avatar rotation
+	bool 		mTurning; // controls hysteresis on avatar rotation
 	F32			mSpeed; // misc. animation repeated state
 
 	//--------------------------------------------------------------------
@@ -989,7 +989,7 @@ protected:
 	// Material being stepped on
 	//--------------------------------------------------------------------
 private:
-	BOOL		mStepOnLand;
+	bool		mStepOnLand;
 	U8			mStepMaterial;
 	LLVector3	mStepObjectVelocity;
 
@@ -1011,14 +1011,14 @@ public:
 	// Sitting
 	//--------------------------------------------------------------------
 public:
-	void			sitDown(BOOL bSitting);
-	BOOL			isSitting(){return mIsSitting;}
+	void			sitDown(bool bSitting);
+	bool			isSitting(){return mIsSitting;}
 	void 			sitOnObject(LLViewerObject *sit_object);
 	void 			getOffObject();
 	void 			revokePermissionsOnObject(LLViewerObject *sit_object);	
 private:
 	// set this property only with LLVOAvatar::sitDown method
-	BOOL 			mIsSitting;
+	bool 			mIsSitting;
 	// position backup in case of missing data
 	LLVector3		mLastRootPos;
 
@@ -1067,7 +1067,7 @@ public:
 private:
 	LLFrameTimer	mTimeVisible;
 	std::deque<LLChat> mChats;
-	BOOL			mTyping;
+	bool			mTyping;
 	LLFrameTimer	mTypingTimer;
 
 /**                    Name
@@ -1105,8 +1105,8 @@ public:
 	void 				setFootPlane(const LLVector4 &plane) { mFootPlane = plane; }
 	LLVector4			mFootPlane;
 private:
-	BOOL				mWasOnGroundLeft;
-	BOOL				mWasOnGroundRight;
+	bool				mWasOnGroundLeft;
+	bool				mWasOnGroundRight;
 
 /**                    Sounds
  **                                                                            **
@@ -1135,7 +1135,7 @@ public:
 	static F32 			sGreyUpdateTime; // Last time stats were updated (to prevent multiple updates per frame) 
 protected:
 	S32					getUnbakedPixelAreaRank();
-	BOOL				mHasGrey;
+	bool				mHasGrey;
 private:
 	F32					mMinPixelArea;
 	F32					mMaxPixelArea;

@@ -691,11 +691,11 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mAttachmentVisibleTriangleCount(0),
 	mAttachmentEstTriangleCount(0.f),
 	mReportedVisualComplexity(VISUAL_COMPLEXITY_UNKNOWN),
-	mTurning(FALSE),
+	mTurning(false),
 	mLastSkeletonSerialNum( 0 ),
-	mIsSitting(FALSE),
+	mIsSitting(false),
 	mTimeVisible(),
-	mTyping(FALSE),
+	mTyping(false),
 	mMeshValid(false),
 	mVisible(false),
 	mLastImpostorUpdateFrameTime(0.f),
@@ -775,7 +775,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 
 	mNeedsImpostorUpdate = TRUE;
 	mLastImpostorUpdateReason = 0;
-	mNeedsAnimUpdate = TRUE;
+	mNeedsAnimUpdate = true;
 
 	mNeedsExtentUpdate = true;
 
@@ -789,8 +789,8 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mSignaledAnimations.clear();
 	mPlayingAnimations.clear();
 
-	mWasOnGroundLeft = FALSE;
-	mWasOnGroundRight = FALSE;
+	mWasOnGroundLeft = false;
+	mWasOnGroundRight = false;
 
 	mTimeLast = 0.0f;
 	mSpeedAccum = 0.0f;
@@ -799,7 +799,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 
 	mInAir = false;
 
-	mStepOnLand = TRUE;
+	mStepOnLand = true;
 	mStepMaterial = 0;
 
 	mLipSyncActive = false;
@@ -921,10 +921,10 @@ void LLVOAvatar::markDead()
 }
 
 
-BOOL LLVOAvatar::isFullyBaked()
+bool LLVOAvatar::isFullyBaked()
 {
-	if (mIsDummy) return TRUE;
-	if (getNumTEs() == 0) return FALSE;
+	if (mIsDummy) return true;
+	if (getNumTEs() == 0) return false;
 
 	for (U32 i = 0; i < mBakedTextureDatas.size(); i++)
 	{
@@ -932,10 +932,10 @@ BOOL LLVOAvatar::isFullyBaked()
 			&& ((i != BAKED_SKIRT) || isWearingWearableType(LLWearableType::WT_SKIRT))
 			&& (i != BAKED_LEFT_ARM) && (i != BAKED_LEFT_LEG) && (i != BAKED_AUX1) && (i != BAKED_AUX2) && (i != BAKED_AUX3))
 		{
-			return FALSE;
+			return false;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 bool LLVOAvatar::isFullyTextured() const
@@ -1011,9 +1011,9 @@ void LLVOAvatar::deleteLayerSetCaches(bool clearAll)
 }
 
 // static 
-BOOL LLVOAvatar::areAllNearbyInstancesBaked(S32& grey_avatars)
+bool LLVOAvatar::areAllNearbyInstancesBaked(S32& grey_avatars)
 {
-	BOOL res = TRUE;
+	bool res = true;
 	grey_avatars = 0;
 	for (std::vector<LLCharacter*>::iterator iter = LLCharacter::sInstances.begin();
 		 iter != LLCharacter::sInstances.end(); ++iter)
@@ -1025,7 +1025,7 @@ BOOL LLVOAvatar::areAllNearbyInstancesBaked(S32& grey_avatars)
 		}
 		else if( !inst->isFullyBaked() )
 		{
-			res = FALSE;
+			res = false;
 			if (inst->mHasGrey)
 			{
 				++grey_avatars;
@@ -2916,7 +2916,7 @@ void LLVOAvatar::idleUpdateMisc(bool detailed_update)
 	LLJoint::sNumUpdates = 0;
 	LLJoint::sNumTouches = 0;
 
-	BOOL visible = isVisible() || mNeedsAnimUpdate;
+	bool visible = isVisible() || mNeedsAnimUpdate;
 
 	// update attachments positions
 	if (detailed_update)
@@ -3011,7 +3011,7 @@ void LLVOAvatar::idleUpdateMisc(bool detailed_update)
 		}
 	}
 
-	mNeedsAnimUpdate = FALSE;
+	mNeedsAnimUpdate = false;
 
 	if (isImpostor() && !mNeedsImpostorUpdate)
 	{
@@ -4438,7 +4438,7 @@ void LLVOAvatar::updateOrientation(LLAgent& agent, F32 speed, F32 delta_time)
 			// When moving very slow, the pelvis is allowed to deviate from the
     // forward direction to allow it to hold its position while the torso
 			// and head turn.  Once in motion, it must conform however.
-			BOOL self_in_mouselook = isSelf() && gAgentCamera.cameraMouselook();
+			bool self_in_mouselook = isSelf() && gAgentCamera.cameraMouselook();
 
 			LLVector3 pelvisDir( mRoot->getWorldMatrix().getFwdRow4().mV );
 
@@ -4464,7 +4464,7 @@ void LLVOAvatar::updateOrientation(LLAgent& agent, F32 speed, F32 delta_time)
 				// smaller correction vector means pelvis follows prim direction more closely
 				if (!mTurning && angle > pelvis_rot_threshold*0.75f)
 				{
-					mTurning = TRUE;
+					mTurning = true;
 				}
 
 				// use tighter threshold when turning
@@ -4476,7 +4476,7 @@ void LLVOAvatar::updateOrientation(LLAgent& agent, F32 speed, F32 delta_time)
 				// am I done turning?
 				if (angle < pelvis_rot_threshold)
 				{
-					mTurning = FALSE;
+					mTurning = false;
 				}
 
 				LLVector3 correction_vector = (pelvisDir - fwdDir) * clamp_rescale(angle, pelvis_rot_threshold*0.75f, pelvis_rot_threshold, 1.0f, 0.0f);
@@ -4484,7 +4484,7 @@ void LLVOAvatar::updateOrientation(LLAgent& agent, F32 speed, F32 delta_time)
 			}
 			else
 			{
-				mTurning = FALSE;
+				mTurning = false;
 			}
 
 			// Now compute the full world space rotation for the whole body (wQv)
@@ -5754,7 +5754,7 @@ void LLVOAvatar::updateTextures()
 
 	mMaxPixelArea = 0.f;
 	mMinPixelArea = 99999999.f;
-	mHasGrey = FALSE; // debug
+	mHasGrey = false; // debug
 	for (U32 texture_index = 0; texture_index < getNumTEs(); texture_index++)
 	{
 		LLWearableType::EType wearable_type = LLAvatarAppearance::getDictionary()->getTEWearableType((ETextureIndex)texture_index);
@@ -5993,13 +5993,13 @@ void LLVOAvatar::resolveHeightGlobal(const LLVector3d &inPos, LLVector3d &outPos
 	LLWorld::getInstance()->resolveStepHeightGlobal(this, p0, p1, outPos, outNorm, &obj);
 	if (!obj)
 	{
-		mStepOnLand = TRUE;
+		mStepOnLand = true;
 		mStepMaterial = 0;
 		mStepObjectVelocity.setVec(0.0f, 0.0f, 0.0f);
 	}
 	else
 	{
-		mStepOnLand = FALSE;
+		mStepOnLand = false;
 		mStepMaterial = obj->getMaterial();
 
 		// We want the primitive velocity, not our velocity... (which actually subtracts the
@@ -6078,7 +6078,7 @@ void LLVOAvatar::processAnimationStateChanges()
 		// playing, but not signaled, so stop
 		if (found_anim == mSignaledAnimations.end())
 		{
-			processSingleAnimationStateChange(anim_it->first, FALSE);
+			processSingleAnimationStateChange(anim_it->first, false);
 			mPlayingAnimations.erase(anim_it++);
 			continue;
 		}
@@ -6102,7 +6102,7 @@ void LLVOAvatar::processAnimationStateChanges()
 			// signaled but not playing, or different sequence id, start motion
 			if (found_anim == mPlayingAnimations.end() || found_anim->second != anim_it->second)
 			{
-				if (processSingleAnimationStateChange(anim_it->first, TRUE))
+				if (processSingleAnimationStateChange(anim_it->first, true))
 				{
 					mPlayingAnimations[anim_it->first] = anim_it->second;
 					++anim_it;
@@ -6139,7 +6139,7 @@ void LLVOAvatar::processAnimationStateChanges()
 //-----------------------------------------------------------------------------
 // processSingleAnimationStateChange();
 //-----------------------------------------------------------------------------
-BOOL LLVOAvatar::processSingleAnimationStateChange( const LLUUID& anim_id, BOOL start )
+bool LLVOAvatar::processSingleAnimationStateChange( const LLUUID& anim_id, bool start )
 {
     // SL-402, SL-427 - we need to update body size often enough to
     // keep appearances in sync, but not so often that animations
@@ -6147,7 +6147,7 @@ BOOL LLVOAvatar::processSingleAnimationStateChange( const LLUUID& anim_id, BOOL 
     // compromise is to do it on animation changes:
     computeBodySize();
     
-	BOOL result = FALSE;
+	bool result = false;
 
 	if ( start ) // start animation
 	{
@@ -6176,13 +6176,13 @@ BOOL LLVOAvatar::processSingleAnimationStateChange( const LLUUID& anim_id, BOOL 
 		}
 		else if (anim_id == ANIM_AGENT_SIT_GROUND_CONSTRAINED)
 		{
-			sitDown(TRUE);
+			sitDown(true);
 		}
 
 
 		if (startMotion(anim_id))
 		{
-			result = TRUE;
+			result = true;
 		}
 		else
 		{
@@ -6193,7 +6193,7 @@ BOOL LLVOAvatar::processSingleAnimationStateChange( const LLUUID& anim_id, BOOL 
 	{
 		if (anim_id == ANIM_AGENT_SIT_GROUND_CONSTRAINED)
 		{
-			sitDown(FALSE);
+			sitDown(false);
 		}
 		if ((anim_id == ANIM_AGENT_DO_NOT_DISTURB) && gAgent.isDoNotDisturb())
 		{
@@ -6202,7 +6202,7 @@ BOOL LLVOAvatar::processSingleAnimationStateChange( const LLUUID& anim_id, BOOL 
 			return result;
 		}
 		stopMotion(anim_id);
-		result = TRUE;
+		result = true;
 	}
 
 	return result;
@@ -6211,16 +6211,16 @@ BOOL LLVOAvatar::processSingleAnimationStateChange( const LLUUID& anim_id, BOOL 
 //-----------------------------------------------------------------------------
 // isAnyAnimationSignaled()
 //-----------------------------------------------------------------------------
-BOOL LLVOAvatar::isAnyAnimationSignaled(const LLUUID *anim_array, const S32 num_anims) const
+bool LLVOAvatar::isAnyAnimationSignaled(const LLUUID *anim_array, const S32 num_anims) const
 {
 	for (S32 i = 0; i < num_anims; i++)
 	{
 		if(mSignaledAnimations.find(anim_array[i]) != mSignaledAnimations.end())
 		{
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -7910,7 +7910,7 @@ BOOL LLVOAvatar::detachObject(LLViewerObject *viewer_object)
 //-----------------------------------------------------------------------------
 // sitDown()
 //-----------------------------------------------------------------------------
-void LLVOAvatar::sitDown(BOOL bSitting)
+void LLVOAvatar::sitDown(bool bSitting)
 {
 	mIsSitting = bSitting;
 	if (isSelf())
@@ -7972,7 +7972,7 @@ void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 	gPipeline.markMoved(mDrawable, TRUE);
 	// Notice that removing sitDown() from here causes avatars sitting on
 	// objects to be not rendered for new arrivals. See EXT-6835 and EXT-1655.
-	sitDown(TRUE);
+	sitDown(true);
 	mRoot->getXform()->setParent(&sit_object->mDrawable->mXform); // LLVOAvatar::sitOnObject
 	// SL-315
 	mRoot->setPosition(getPosition());
@@ -8031,7 +8031,7 @@ void LLVOAvatar::getOffObject()
 	
 	gPipeline.markMoved(mDrawable, TRUE);
 
-	sitDown(FALSE);
+	sitDown(false);
 
 	mRoot->getXform()->setParent(NULL); // LLVOAvatar::getOffObject
 	// SL-315
@@ -11579,7 +11579,7 @@ bool LLVOAvatar::isTextureDefined(LLAvatarAppearanceDefines::ETextureIndex te, U
 }
 
 //virtual
-BOOL LLVOAvatar::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type, U32 index) const
+bool LLVOAvatar::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type, U32 index) const
 {
 	if (isIndexLocalTexture(type))
 	{
@@ -11595,10 +11595,10 @@ BOOL LLVOAvatar::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type,
 }
 
 //virtual
-BOOL LLVOAvatar::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type, LLViewerWearable *wearable) const
+bool LLVOAvatar::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type, LLViewerWearable *wearable) const
 {
 	// non-self avatars don't have wearables
-	return FALSE;
+	return false;
 }
 
 //

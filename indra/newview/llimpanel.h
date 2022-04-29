@@ -171,10 +171,10 @@ private:
 	EInstantMessage mDialog;
 
 	// Are you currently typing?
-	BOOL mTyping;
+	bool mTyping;
 
 	// Is other user currently typing?
-	BOOL mOtherTyping;
+	bool mOtherTyping;
 
 	// name of other user who is currently typing
 	std::string mOtherTypingName;
