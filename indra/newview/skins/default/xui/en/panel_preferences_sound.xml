@@ -422,6 +422,17 @@
    	width="230"
 		top_pad="2"
 		left="25"/>
+  <check_box
+   control_name="KokuaKeepUnpackedDSFFiles"
+		height="15"
+   	label="Don't delete unpacked sound cache files on exit"
+    follows="left|top"
+    layout="topleft"
+   	name="KokuaKeepUnpackedDSFFiles"
+   	tool_tip="Do not delete sound cache files on exit which may avoid pauses for re-fetching. However this will not be limited by the max cache value and will increase disk space usage"
+   	width="230"
+		top_pad="2"
+		left="25"/>
   <panel
    background_visible="false"
    border="false"

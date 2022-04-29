@@ -2118,7 +2118,11 @@ bool LLAppViewer::cleanup()
 	removeCacheFiles("*.tmp");
 	removeCacheFiles("*.lso");
 	removeCacheFiles("*.out");
-	removeCacheFiles("*.dsf");
+	// KKA-933
+	if (!gSavedSettings.getBOOL("KokuaKeepUnpackedDSFFiles"))
+	{
+		removeCacheFiles("*.dsf");
+	}
 	removeCacheFiles("*.bodypart");
 	removeCacheFiles("*.clothing");
 
