@@ -915,6 +915,9 @@ public:
 	void	   		clearChat();
 	void	   		startTyping() { mTyping = TRUE; mTypingTimer.reset(); }
 	void			stopTyping() { mTyping = FALSE; }
+//MK
+	BOOL			getTyping() { return mTyping; }
+//mk
 private:
 	bool			mVisibleChat;
 
@@ -1017,6 +1020,9 @@ private:
 	std::string  	mTitle;
 	bool	  		mNameAway;
 	bool	  		mNameDoNotDisturb;
+//MK
+	bool	  		mNameTyping;
+//mk
 	bool	  		mNameMute;
 	bool      		mNameAppearance;
 	bool			mNameFriend;

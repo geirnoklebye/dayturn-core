@@ -705,6 +705,9 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	// </FS:Ansariel>
 	mNameAway(false),
 	mNameDoNotDisturb(false),
+//MK
+	mNameTyping(false),
+//mk
 	mNameMute(false),
 	mNameAppearance(false),
 	mNameFriend(false),
@@ -3378,6 +3381,15 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 
 	bool is_away = mSignaledAnimations.find(ANIM_AGENT_AWAY)  != mSignaledAnimations.end();
 	bool is_do_not_disturb = mSignaledAnimations.find(ANIM_AGENT_DO_NOT_DISTURB) != mSignaledAnimations.end();
+//MK
+	bool is_typing = getTyping();
+//mk
+	static LLCachedControl<bool> show_nearby_avatars_typing(gSavedSettings, "ShowNearbyAvatarsTyping", true);
+	if (!show_nearby_avatars_typing)
+	{
+		is_typing = false;
+	}
+
 	bool is_appearance = mSignaledAnimations.find(ANIM_AGENT_CUSTOMIZE) != mSignaledAnimations.end();
 	bool is_muted;
 	if (isSelf())
@@ -3494,6 +3506,9 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 		|| (title && mTitle != title->getString())
 		|| is_away != mNameAway 
 		|| is_do_not_disturb != mNameDoNotDisturb 
+//MK
+		|| is_typing != mNameTyping 
+//mk
 		|| is_muted != mNameMute
 		|| is_appearance != mNameAppearance 
 		|| is_friend != mNameFriend
@@ -3508,8 +3523,11 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 
 		clearNameTag();
 
-		if (is_away || is_muted || is_do_not_disturb || is_appearance)
-		{
+//MK
+////		if (is_away || is_muted || is_do_not_disturb || is_appearance)
+		if (is_away || is_muted || is_do_not_disturb || is_appearance || is_typing)
+//mk
+				{
 			std::string line;
 			if (is_away)
 			{
@@ -3521,6 +3539,13 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 				line += LLTrans::getString("AvatarDoNotDisturb");
 				line += ", ";
 			}
+//MK
+			if (is_typing)
+			{
+				line += LLTrans::getString("AvatarTyping");
+				line += ", ";
+			}
+//mk
 			if (is_muted)
 			{
 				line += LLTrans::getString("AvatarMuted");
@@ -3665,6 +3690,9 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 				// </FS:Ansariel>
 		mNameAway = is_away;
 		mNameDoNotDisturb = is_do_not_disturb;
+//MK
+				mNameTyping = is_typing;
+//mk
 		mNameMute = is_muted;
 		mNameAppearance = is_appearance;
 		mNameFriend = is_friend;
