@@ -1052,6 +1052,13 @@ BOOL AOEngine::findForeignItems(const LLUUID& uuid) const
 	LLInventoryModel::cat_array_t* cats;
 
 	gInventory.getDirectDescendentsOf(uuid, cats, items);
+	
+	// KKA-934 crash avoidance
+	if (!cats || !items)
+	{
+		return FALSE;
+	}
+
 	for (S32 index = 0; index < cats->size(); ++index)
 	{
 		// recurse into subfolders
