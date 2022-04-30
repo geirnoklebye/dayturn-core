@@ -343,7 +343,11 @@ U32 LLVOVolume::processUpdateMessage(LLMessageSystem *mesgsys,
 										  U32 block_num, EObjectUpdateType update_type,
 										  LLDataPacker *dp)
 {
-	 	
+	// <FS:Ansariel> Improved bad object handling
+	static LLCachedControl<bool> fsEnforceStrictObjectCheck(gSavedSettings, "FSEnforceStrictObjectCheck");
+	bool enfore_strict_object_check = fsEnforceStrictObjectCheck;
+	// </FS:Ansariel>
+
 	LLColor4U color;
 	const S32 teDirtyBits = (TEM_CHANGE_TEXTURE|TEM_CHANGE_COLOR|TEM_CHANGE_MEDIA);
 
@@ -415,7 +419,33 @@ U32 LLVOVolume::processUpdateMessage(LLMessageSystem *mesgsys,
 
 			// Unpack volume data
 			LLVolumeParams volume_params;
-			LLVolumeMessage::unpackVolumeParams(&volume_params, mesgsys, _PREHASH_ObjectData, block_num);
+			// <FS:Beq> Extend the bogus volume error handling to the other code path
+			//LLVolumeMessage::unpackVolumeParams(&volume_params, mesgsys, _PREHASH_ObjectData, block_num);
+			BOOL res = LLVolumeMessage::unpackVolumeParams(&volume_params, mesgsys, _PREHASH_ObjectData, block_num);
+			if (!res)
+			{
+				//<FS:Beq> Improved bad object handling courtesy of Drake.
+				std::string region_name = "unknown region";
+				if (getRegion())
+				{
+					region_name = getRegion()->getName();
+					if (enfore_strict_object_check)
+					{
+						LL_WARNS() << "An invalid object (" << getID() << ") has been removed (FSEnforceStrictObjectCheck)" << LL_ENDL;
+						getRegion()->addCacheMissFull(getLocalID()); // force cache skip the object
+					}
+				}
+				LL_WARNS() << "Bogus volume parameters in object " << getID() << " @ " << getPositionRegion()
+					<< " in " << region_name << LL_ENDL;
+				
+				if (enfore_strict_object_check)
+				{
+					gObjectList.killObject(this);
+					return (INVALID_UPDATE);
+				}
+				// </FS:Beq>
+			}
+
 			volume_params.setSculptID(sculpt_id, sculpt_type);
 
 			if (setVolume(volume_params, 0))
@@ -431,6 +461,30 @@ U32 LLVOVolume::processUpdateMessage(LLMessageSystem *mesgsys,
 		//
 
 		S32 result = unpackTEMessage(mesgsys, _PREHASH_ObjectData, (S32) block_num);
+		//<FS:Beq> Improved bad object handling courtesy of Drake.
+		if (TEM_INVALID == result)
+		{
+			// There's something bogus in the data that we're unpacking.
+			std::string region_name = "unknown region";
+			if (getRegion())
+			{
+				region_name = getRegion()->getName();
+				if (enfore_strict_object_check)
+				{
+					LL_WARNS() << "An invalid object (" << getID() << ") has been removed (FSEnforceStrictObjectCheck)" << LL_ENDL;
+					getRegion()->addCacheMissFull(getLocalID()); // force cache skip
+				}
+			}
+
+			LL_WARNS() << "Bogus TE data in object " << getID() << " @ " << getPositionRegion()
+				<< " in " << region_name << LL_ENDL;
+			if (enfore_strict_object_check)
+			{
+				gObjectList.killObject(this);
+				return (INVALID_UPDATE);
+			}
+		}
+		// </FS:Beq>
 		if (result & teDirtyBits)
 		{
 			updateTEData();
@@ -448,8 +502,34 @@ U32 LLVOVolume::processUpdateMessage(LLMessageSystem *mesgsys,
 			BOOL res = LLVolumeMessage::unpackVolumeParams(&volume_params, *dp);
 			if (!res)
 			{
-				LL_WARNS() << "Bogus volume parameters in object " << getID() << LL_ENDL;
-				LL_WARNS() << getRegion()->getOriginGlobal() << LL_ENDL;
+				//<FS:Beq> Improved bad object handling courtesy of Drake.
+				//LL_WARNS() << "Bogus volume parameters in object " << getID() << LL_ENDL;
+				//LL_WARNS() << getRegion()->getOriginGlobal() << LL_ENDL;
+				std::string region_name = "unknown region";
+				if (getRegion())
+				{
+					region_name = getRegion()->getName();
+					if (enfore_strict_object_check)
+					{
+						LL_WARNS() << "An invalid object (" << getID() << ") has been removed (FSEnforceStrictObjectCheck)" << LL_ENDL;
+						getRegion()->addCacheMissFull(getLocalID()); // force cache skip the object
+					}
+				}
+				LL_WARNS() << "Bogus volume parameters in object " << getID() << " @ " << getPositionRegion() 
+							<< " in " << region_name << LL_ENDL;
+				// <FS:Beq> [FIRE-16995] [CRASH] Continuous crashing upon entering 3 adjacent sims incl. Hathian, D8, Devil's Pocket
+				// A bad object entry in a .slc simobject cache can result in an unreadable/unusable volume 
+				// This leaves the volume in an uncertain state and can result in a crash when later code access an uninitialised pointer
+				// return an INVALID_UPDATE instead
+				// <FS:Beq> July 2017 Change backed out due to side effects. FIRE-16995 still an exposure. 
+				// return(INVALID_UPDATE);
+				// NOTE: An option here would be to correctly return the media status using "retval |= INVALID_UPDATE"
+				if (enfore_strict_object_check)
+				{
+					gObjectList.killObject(this);
+					return (INVALID_UPDATE);
+				}
+				// </FS:Beq>
 			}
 
 			volume_params.setSculptID(sculpt_id, sculpt_type);
@@ -463,14 +543,34 @@ U32 LLVOVolume::processUpdateMessage(LLMessageSystem *mesgsys,
 			{
 				// There's something bogus in the data that we're unpacking.
 				dp->dumpBufferToLog();
-				LL_WARNS() << "Flushing cache files" << LL_ENDL;
+				//<FS:Beq> Improved bad object handling courtesy of Drake.
+				//LL_WARNS() << "Flushing cache files" << LL_ENDL;
 
-				if(LLVOCache::instanceExists() && getRegion())
+				//if(LLVOCache::instanceExists() && getRegion())
+				//{
+				//	LLVOCache::getInstance()->removeEntry(getRegion()->getHandle()) ;
+				//}
+				//
+				//LL_WARNS() << "Bogus TE data in " << getID() << LL_ENDL;
+				std::string region_name = "unknown region";
+				if (getRegion())
 				{
-					LLVOCache::getInstance()->removeEntry(getRegion()->getHandle()) ;
+					region_name = getRegion()->getName();
+					if (enfore_strict_object_check)
+					{
+						LL_WARNS() << "An invalid object (" << getID() << ") has been removed (FSEnforceStrictObjectCheck)" << LL_ENDL;
+						getRegion()->addCacheMissFull(getLocalID()); // force cache skip
+					}
 				}
-				
-				LL_WARNS() << "Bogus TE data in " << getID() << LL_ENDL;
+						
+				LL_WARNS() << "Bogus TE data in object " << getID() << " @ " << getPositionRegion()
+					<< " in " << region_name << LL_ENDL;
+				if (enfore_strict_object_check)
+				{
+					gObjectList.killObject(this);
+					return (INVALID_UPDATE);
+				}
+				// </FS:Beq>
 			}
 			else 
 			{
@@ -5245,13 +5345,15 @@ static LLTrace::BlockTimerStatHandle FTM_REGISTER_FACE("Register Face");
 void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep, U32 type)
 {
 	LL_RECORD_BLOCK_TIME(FTM_REGISTER_FACE);
-	if (   type == LLRenderPass::PASS_ALPHA 
-		&& facep->getTextureEntry()->getMaterialParams().notNull() 
-		&& !facep->getVertexBuffer()->hasDataType(LLVertexBuffer::TYPE_TANGENT)
-		&& LLViewerShaderMgr::instance()->getShaderLevel(LLViewerShaderMgr::SHADER_OBJECT) > 1)
-	{
-		LL_WARNS_ONCE("RenderMaterials") << "Oh no! No binormals for this alpha blended face!" << LL_ENDL;
-	}
+	// <FS:Ansariel> Can't do anything about it anyway - stop spamming the log
+	//if (   type == LLRenderPass::PASS_ALPHA 
+	//	&& facep->getTextureEntry()->getMaterialParams().notNull() 
+	//	&& !facep->getVertexBuffer()->hasDataType(LLVertexBuffer::TYPE_TANGENT)
+	//	&& LLViewerShaderMgr::instance()->getShaderLevel(LLViewerShaderMgr::SHADER_OBJECT) > 1)
+	//{
+	//	LL_WARNS_ONCE("RenderMaterials") << "Oh no! No binormals for this alpha blended face!" << LL_ENDL;
+	//}
+	// </FS:Ansariel>
 
 	bool selected = facep->getViewerObject()->isSelected();
 
