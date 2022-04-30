@@ -1827,7 +1827,10 @@ void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 	}
 }
 
-void LLDrawPoolAvatar::getRiggedGeometry(
+// <FS> Fix bogus rigged mesh crash
+//void LLDrawPoolAvatar::getRiggedGeometry(
+bool LLDrawPoolAvatar::getRiggedGeometry(
+// </FS>
     LLFace* face,
     LLPointer<LLVertexBuffer>& buffer,
     U32 data_mask,
@@ -1835,6 +1838,17 @@ void LLDrawPoolAvatar::getRiggedGeometry(
     LLVolume* volume,
     const LLVolumeFace& vol_face)
 {
+	// <FS:ND> FIRE-14261 try to skip broken or out of bounds faces
+	if (vol_face.mNumVertices > 65536 || vol_face.mNumVertices < 0 || vol_face.mNumIndices < 0)
+	{
+		LL_WARNS_ONCE() << "Skipping face - "
+						<< " vertices " << vol_face.mNumVertices << " indices " << vol_face.mNumIndices
+						<< " face is possibly corrupted"
+						<< LL_ENDL;
+		return false;
+	}
+	// </FS:ND>
+
     face->setGeomIndex(0);
     face->setIndicesIndex(0);
 
@@ -1926,6 +1940,9 @@ void LLDrawPoolAvatar::getRiggedGeometry(
 	face->getGeometryVolume(*volume, face->getTEOffset(), mat_vert, mat_normal, offset, true);
 
 	buffer->flush();
+
+	// <FS> Fix bogus rigged mesh crash
+	return true;
 }
 
 void LLDrawPoolAvatar::updateRiggedFaceVertexBuffer(
@@ -1940,6 +1957,14 @@ void LLDrawPoolAvatar::updateRiggedFaceVertexBuffer(
 	{
 		return;
 	}
+
+	// <FS> Fix bogus rigged mesh crash
+	if (vol_face.mNumVertices > 65536 || vol_face.mNumVertices < 0 || vol_face.mNumIndices < 0)
+	{
+		return;
+	}
+	// </FS>
+
 
 	LLPointer<LLVertexBuffer> buffer = face->getVertexBuffer();
 	LLDrawable* drawable = face->getDrawable();
@@ -2016,7 +2041,13 @@ void LLDrawPoolAvatar::updateRiggedFaceVertexBuffer(
 				{
 					LLPointer<LLVertexBuffer> cur_buffer = facep->getVertexBuffer();
 					const LLVolumeFace& cur_vol_face = volume->getVolumeFace(i);
-					getRiggedGeometry(facep, cur_buffer, face_data_mask, skin, volume, cur_vol_face);
+					// <FS> Fix bogus rigged mesh crash
+					//getRiggedGeometry(facep, cur_buffer, face_data_mask, skin, volume, cur_vol_face);
+					if (!getRiggedGeometry(facep, cur_buffer, face_data_mask, skin, volume, cur_vol_face))
+					{
+						return;
+					}
+					// </FS>
 				}
 			}
 			drawable->clearState(LLDrawable::REBUILD_ALL);
@@ -2026,7 +2057,13 @@ void LLDrawPoolAvatar::updateRiggedFaceVertexBuffer(
 		else
 		{
 			//just rebuild this face
-			getRiggedGeometry(face, buffer, data_mask, skin, volume, vol_face);
+			// <FS> Fix bogus rigged mesh crash
+			//getRiggedGeometry(face, buffer, data_mask, skin, volume, vol_face);
+			if (!getRiggedGeometry(face, buffer, data_mask, skin, volume, vol_face))
+			{
+				return;
+			}
+			// </FS>
 		}
 	}
 
