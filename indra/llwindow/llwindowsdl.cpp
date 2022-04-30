@@ -563,7 +563,7 @@ BOOL LLWindowSDL::createContext(int x, int y, int width, int height, int bits, B
 
 		if (mWindow)
 		{
-			mFullscreen = TRUE;
+			mFullscreen = true;
 			mFullscreenWidth   = mWindow->w;
 			mFullscreenHeight  = mWindow->h;
 			mFullscreenBits    = mWindow->format->BitsPerPixel;
@@ -579,7 +579,7 @@ BOOL LLWindowSDL::createContext(int x, int y, int width, int height, int bits, B
 		{
 			LL_WARNS() << "createContext: fullscreen creation failure. SDL: " << SDL_GetError() << LL_ENDL;
 			// No fullscreen support
-			mFullscreen = FALSE;
+			mFullscreen = false;
 			mFullscreenWidth   = -1;
 			mFullscreenHeight  = -1;
 			mFullscreenBits    = -1;
@@ -853,20 +853,20 @@ bool LLWindowSDL::getVisible()
 	return(result);
 }
 
-BOOL LLWindowSDL::getMinimized()
+bool LLWindowSDL::getMinimized()
 {
-	BOOL result = FALSE;
+	bool result = false;
 
 	if (mWindow && (1 == mIsMinimized))
 	{
-		result = TRUE;
+		result = true;
 	}
 	return(result);
 }
 
-BOOL LLWindowSDL::getMaximized()
+bool LLWindowSDL::getMaximized()
 {
-	BOOL result = FALSE;
+	bool result = false;
 
 	if (mWindow)
 	{
@@ -876,13 +876,13 @@ BOOL LLWindowSDL::getMaximized()
 	return(result);
 }
 
-BOOL LLWindowSDL::maximize()
+bool LLWindowSDL::maximize()
 {
 	// TODO
-	return FALSE;
+	return false;
 }
 
-BOOL LLWindowSDL::getFullscreen()
+bool LLWindowSDL::getFullscreen()
 {
 	return mFullscreen;
 }
@@ -930,7 +930,7 @@ BOOL LLWindowSDL::setPosition(const LLCoordScreen position)
 	return TRUE;
 }
 
-BOOL LLWindowSDL::setSizeImpl(const LLCoordScreen size)
+bool LLWindowSDL::setSizeImpl(const LLCoordScreen size)
 {
 	if(mWindow)
 	{
@@ -942,13 +942,13 @@ BOOL LLWindowSDL::setSizeImpl(const LLCoordScreen size)
 		event.resize.h = size.mY;
 		SDL_PushEvent(&event); // copied into queue
 
-		return TRUE;
+		return true;
 	}
 		
-	return FALSE;
+	return false;
 }
 
-BOOL LLWindowSDL::setSizeImpl(const LLCoordWindow size)
+bool LLWindowSDL::setSizeImpl(const LLCoordWindow size)
 {
 	if(mWindow)
 	{
@@ -960,10 +960,10 @@ BOOL LLWindowSDL::setSizeImpl(const LLCoordWindow size)
 		event.resize.h = size.mY;
 		SDL_PushEvent(&event); // copied into queue
 
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -1006,7 +1006,7 @@ BOOL LLWindowSDL::setGamma(const F32 gamma)
 	return true;
 }
 
-BOOL LLWindowSDL::isCursorHidden()
+bool LLWindowSDL::isCursorHidden()
 {
 	return mCursorHidden;
 }
@@ -1038,14 +1038,14 @@ void LLWindowSDL::setMinSize(U32 min_width, U32 min_height, bool enforce_immedia
 #endif
 }
 
-BOOL LLWindowSDL::setCursorPosition(const LLCoordWindow position)
+bool LLWindowSDL::setCursorPosition(const LLCoordWindow position)
 {
-	BOOL result = TRUE;
+	bool result = true;
 	LLCoordScreen screen_pos;
 
 	if (!convertCoords(position, &screen_pos))
 	{
-		return FALSE;
+		return false;
 	}
 
 	//LL_INFOS() << "setCursorPosition(" << screen_pos.mX << ", " << screen_pos.mY << ")" << LL_ENDL;
@@ -1058,7 +1058,7 @@ BOOL LLWindowSDL::setCursorPosition(const LLCoordWindow position)
 	return result;
 }
 
-BOOL LLWindowSDL::getCursorPosition(LLCoordWindow *position)
+bool LLWindowSDL::getCursorPosition(LLCoordWindow *position)
 {
 	//Point cursor_point;
 	LLCoordScreen screen_pos;
@@ -1245,19 +1245,19 @@ void LLWindowSDL::flashIcon(F32 seconds)
 
 
 #if LL_GTK
-BOOL LLWindowSDL::isClipboardTextAvailable()
+bool LLWindowSDL::isClipboardTextAvailable()
 {
 	if (ll_try_gtk_init())
 	{
 		GtkClipboard * const clipboard =
 			gtk_clipboard_get(GDK_NONE);
 		return gtk_clipboard_wait_is_text_available(clipboard) ?
-			TRUE : FALSE;
+			true : false;
 	}
-	return FALSE; // failure
+	return false; // failure
 }
 
-BOOL LLWindowSDL::pasteTextFromClipboard(LLWString &text)
+bool LLWindowSDL::pasteTextFromClipboard(LLWString &text)
 {
 	if (ll_try_gtk_init())
 	{
@@ -1268,13 +1268,13 @@ BOOL LLWindowSDL::pasteTextFromClipboard(LLWString &text)
 		{
 			text = LLWString(utf8str_to_wstring(data));
 			g_free(data);
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE; // failure
+	return false; // failure
 }
 
-BOOL LLWindowSDL::copyTextToClipboard(const LLWString &text)
+bool LLWindowSDL::copyTextToClipboard(const LLWString &text)
 {
 	if (ll_try_gtk_init())
 	{
@@ -1282,25 +1282,25 @@ BOOL LLWindowSDL::copyTextToClipboard(const LLWString &text)
 		GtkClipboard * const clipboard =
 			gtk_clipboard_get(GDK_NONE);
 		gtk_clipboard_set_text(clipboard, utf8.c_str(), utf8.length());
-		return TRUE;
+		return true;
 	}
-	return FALSE; // failure
+	return false; // failure
 }
 
 
-BOOL LLWindowSDL::isPrimaryTextAvailable()
+bool LLWindowSDL::isPrimaryTextAvailable()
 {
 	if (ll_try_gtk_init())
 	{
 		GtkClipboard * const clipboard =
 			gtk_clipboard_get(GDK_SELECTION_PRIMARY);
 		return gtk_clipboard_wait_is_text_available(clipboard) ?
-			TRUE : FALSE;
+			true : false;
 	}
-	return FALSE; // failure
+	return false; // failure
 }
 
-BOOL LLWindowSDL::pasteTextFromPrimary(LLWString &text)
+bool LLWindowSDL::pasteTextFromPrimary(LLWString &text)
 {
 	if (ll_try_gtk_init())
 	{
@@ -1311,13 +1311,13 @@ BOOL LLWindowSDL::pasteTextFromPrimary(LLWString &text)
 		{
 			text = LLWString(utf8str_to_wstring(data));
 			g_free(data);
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE; // failure
+	return false; // failure
 }
 
-BOOL LLWindowSDL::copyTextToPrimary(const LLWString &text)
+bool LLWindowSDL::copyTextToPrimary(const LLWString &text)
 {
 	if (ll_try_gtk_init())
 	{
@@ -1325,41 +1325,41 @@ BOOL LLWindowSDL::copyTextToPrimary(const LLWString &text)
 		GtkClipboard * const clipboard =
 			gtk_clipboard_get(GDK_SELECTION_PRIMARY);
 		gtk_clipboard_set_text(clipboard, utf8.c_str(), utf8.length());
-		return TRUE;
+		return true;
 	}
-	return FALSE; // failure
+	return false; // failure
 }
 
 #else
 
-BOOL LLWindowSDL::isClipboardTextAvailable()
+bool LLWindowSDL::isClipboardTextAvailable()
 {
-	return FALSE; // unsupported
+	return false; // unsupported
 }
 
-BOOL LLWindowSDL::pasteTextFromClipboard(LLWString &dst)
+bool LLWindowSDL::pasteTextFromClipboard(LLWString &dst)
 {
-	return FALSE; // unsupported
+	return false; // unsupported
 }
 
-BOOL LLWindowSDL::copyTextToClipboard(const LLWString &s)
+bool LLWindowSDL::copyTextToClipboard(const LLWString &s)
 {
-	return FALSE;  // unsupported
+	return false;  // unsupported
 }
 
-BOOL LLWindowSDL::isPrimaryTextAvailable()
+bool LLWindowSDL::isPrimaryTextAvailable()
 {
-	return FALSE; // unsupported
+	return false; // unsupported
 }
 
-BOOL LLWindowSDL::pasteTextFromPrimary(LLWString &dst)
+bool LLWindowSDL::pasteTextFromPrimary(LLWString &dst)
 {
-	return FALSE; // unsupported
+	return false; // unsupported
 }
 
-BOOL LLWindowSDL::copyTextToPrimary(const LLWString &s)
+bool LLWindowSDL::copyTextToPrimary(const LLWString &s)
 {
-	return FALSE;  // unsupported
+	return false;  // unsupported
 }
 
 #endif // LL_GTK
@@ -2168,8 +2168,8 @@ void LLWindowSDL::hideCursor()
 	if(!mCursorHidden)
 	{
 		// LL_INFOS() << "hideCursor: hiding" << LL_ENDL;
-		mCursorHidden = TRUE;
-		mHideCursorPermanent = TRUE;
+		mCursorHidden = true;
+		mHideCursorPermanent = true;
 		SDL_ShowCursor(0);
 	}
 	else
@@ -2183,8 +2183,8 @@ void LLWindowSDL::showCursor()
 	if(mCursorHidden)
 	{
 		// LL_INFOS() << "showCursor: showing" << LL_ENDL;
-		mCursorHidden = FALSE;
-		mHideCursorPermanent = FALSE;
+		mCursorHidden = false;
+		mHideCursorPermanent = false;
 		SDL_ShowCursor(1);
 	}
 	else
@@ -2206,7 +2206,7 @@ void LLWindowSDL::hideCursorUntilMouseMove()
 	if (!mHideCursorPermanent)
 	{
 		hideCursor();
-		mHideCursorPermanent = FALSE;
+		mHideCursorPermanent = false;
 	}
 }
 

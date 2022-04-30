@@ -118,13 +118,13 @@ LLWindow::LLWindow(LLWindowCallbacks* callbacks, BOOL fullscreen, U32 flags)
 	  mNumSupportedResolutions(0),
 	  mCurrentCursor(UI_CURSOR_ARROW),
 	  mNextCursor(UI_CURSOR_ARROW),
-	  mCursorHidden(FALSE),
+	  mCursorHidden(false),
 	  mBusyCount(0),
 	  mIsMouseClipping(false),
 	  mMinWindowWidth(0),
 	  mMinWindowHeight(0),
 	  mSwapMethod(SWAP_METHOD_UNDEFINED),
-	  mHideCursorPermanent(FALSE),
+	  mHideCursorPermanent(false),
 	  mFlags(flags),
 	  mHighSurrogate(0)
 {
@@ -249,19 +249,19 @@ void LLWindow::processMiscNativeEvents()
 }
 
 //virtual
-BOOL LLWindow::isPrimaryTextAvailable()
+bool LLWindow::isPrimaryTextAvailable()
 {
-	return FALSE; // no
+	return false; // no
 }
 //virtual
-BOOL LLWindow::pasteTextFromPrimary(LLWString &dst)
+bool LLWindow::pasteTextFromPrimary(LLWString &dst)
 {
-	return FALSE; // fail
+	return false; // fail
 }
 // virtual
-BOOL LLWindow::copyTextToPrimary(const LLWString &src)
+bool LLWindow::copyTextToPrimary(const LLWString &src)
 {
-	return FALSE; // fail
+	return false; // fail
 }
 
 // static

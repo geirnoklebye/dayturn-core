@@ -53,26 +53,26 @@ public:
 	/*virtual*/ void hide();
 	/*virtual*/ void close();
 	/*virtual*/ bool getVisible();
-	/*virtual*/ BOOL getMinimized();
-	/*virtual*/ BOOL getMaximized();
-	/*virtual*/ BOOL maximize();
+	/*virtual*/ bool getMinimized();
+	/*virtual*/ bool getMaximized();
+	/*virtual*/ bool maximize();
 	/*virtual*/ void minimize();
 	/*virtual*/ void restore();
-	/*virtual*/ BOOL getFullscreen();
+	/*virtual*/ bool getFullscreen();
 	/*virtual*/ BOOL getPosition(LLCoordScreen *position);
 	/*virtual*/ BOOL getSize(LLCoordScreen *size);
 	/*virtual*/ BOOL getSize(LLCoordWindow *size);
 	/*virtual*/ BOOL setPosition(LLCoordScreen position);
-	/*virtual*/ BOOL setSizeImpl(LLCoordScreen size);
-	/*virtual*/ BOOL setSizeImpl(LLCoordWindow size);
+	/*virtual*/ bool setSizeImpl(LLCoordScreen size);
+	/*virtual*/ bool setSizeImpl(LLCoordWindow size);
 	/*virtual*/ BOOL switchContext(BOOL fullscreen, const LLCoordScreen &size, BOOL disable_vsync, const LLCoordScreen * const posp = NULL);
-	/*virtual*/ BOOL setCursorPosition(LLCoordWindow position);
-	/*virtual*/ BOOL getCursorPosition(LLCoordWindow *position);
+	/*virtual*/ bool setCursorPosition(LLCoordWindow position);
+	/*virtual*/ bool getCursorPosition(LLCoordWindow *position);
 	/*virtual*/ void showCursor();
 	/*virtual*/ void hideCursor();
 	/*virtual*/ void showCursorFromMouseMove();
 	/*virtual*/ void hideCursorUntilMouseMove();
-	/*virtual*/ BOOL isCursorHidden();
+	/*virtual*/ bool isCursorHidden();
 	/*virtual*/ void updateCursor();
 	/*virtual*/ void captureMouse();
 	/*virtual*/ void releaseMouse();
@@ -80,13 +80,13 @@ public:
 	/*virtual*/	void setMinSize(U32 min_width, U32 min_height, bool enforce_immediately = true);
 
 
-	/*virtual*/ BOOL isClipboardTextAvailable();
-	/*virtual*/ BOOL pasteTextFromClipboard(LLWString &dst);
-	/*virtual*/ BOOL copyTextToClipboard(const LLWString & src);
+	/*virtual*/ bool isClipboardTextAvailable();
+	/*virtual*/ bool pasteTextFromClipboard(LLWString &dst);
+	/*virtual*/ bool copyTextToClipboard(const LLWString & src);
 
-	/*virtual*/ BOOL isPrimaryTextAvailable();
-	/*virtual*/ BOOL pasteTextFromPrimary(LLWString &dst);
-	/*virtual*/ BOOL copyTextToPrimary(const LLWString & src);
+	/*virtual*/ bool isPrimaryTextAvailable();
+	/*virtual*/ bool pasteTextFromPrimary(LLWString &dst);
+	/*virtual*/ bool copyTextToPrimary(const LLWString & src);
  
 	/*virtual*/ void flashIcon(F32 seconds);
 	/*virtual*/ F32 getGamma();

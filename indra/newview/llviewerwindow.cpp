@@ -1875,8 +1875,8 @@ LLViewerWindow::LLViewerWindow(const Params& p)
     mMouseDownTimer(),
 	mLastMask( MASK_NONE ),
 	mToolStored( NULL ),
-	mHideCursorPermanent( FALSE ),
-	mCursorHidden(FALSE),
+	mHideCursorPermanent(false),
+	mCursorHidden(false),
 	mIgnoreActivate(false),
 	mResDirty(false),
 	mStatesDirty(false),
@@ -2499,7 +2499,7 @@ void LLViewerWindow::showCursor()
 {
 	mWindow->showCursor();
 	
-	mCursorHidden = FALSE;
+	mCursorHidden = false;
 }
 
 void LLViewerWindow::hideCursor()
@@ -2507,7 +2507,7 @@ void LLViewerWindow::hideCursor()
 	// And hide the cursor
 	mWindow->hideCursor();
 
-	mCursorHidden = TRUE;
+	mCursorHidden = true;
 }
 
 void LLViewerWindow::sendShapeToSim()

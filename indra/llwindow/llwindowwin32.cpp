@@ -653,7 +653,7 @@ LLWindowWin32::LLWindowWin32(LLWindowCallbacks* callbacks,
 		// If it failed, we don't want to run fullscreen
 		if (success)
 		{
-			mFullscreen = TRUE;
+			mFullscreen = true;
 			mFullscreenWidth   = dev_mode.dmPelsWidth;
 			mFullscreenHeight  = dev_mode.dmPelsHeight;
 			mFullscreenBits    = dev_mode.dmBitsPerPel;
@@ -667,7 +667,7 @@ LLWindowWin32::LLWindowWin32(LLWindowCallbacks* callbacks,
 		}
 		else
 		{
-			mFullscreen = FALSE;
+			mFullscreen = false;
 			mFullscreenWidth   = -1;
 			mFullscreenHeight  = -1;
 			mFullscreenBits    = -1;
@@ -928,19 +928,19 @@ bool LLWindowWin32::getVisible()
 	return (mWindowHandle && IsWindowVisible(mWindowHandle));
 }
 
-BOOL LLWindowWin32::getMinimized()
+bool LLWindowWin32::getMinimized()
 {
 	return (mWindowHandle && IsIconic(mWindowHandle));
 }
 
-BOOL LLWindowWin32::getMaximized()
+bool LLWindowWin32::getMaximized()
 {
 	return (mWindowHandle && IsZoomed(mWindowHandle));
 }
 
-BOOL LLWindowWin32::maximize()
+bool LLWindowWin32::maximize()
 {
-	BOOL success = FALSE;
+	bool success = false;
 	if (!mWindowHandle) return success;
 
 	WINDOWPLACEMENT placement;
@@ -955,7 +955,7 @@ BOOL LLWindowWin32::maximize()
 	return success;
 }
 
-BOOL LLWindowWin32::getFullscreen()
+bool LLWindowWin32::getFullscreen()
 {
 	return mFullscreen;
 }
@@ -994,14 +994,14 @@ BOOL LLWindowWin32::setPosition(const LLCoordScreen position)
 	return TRUE;
 }
 
-BOOL LLWindowWin32::setSizeImpl(const LLCoordScreen size)
+bool LLWindowWin32::setSizeImpl(const LLCoordScreen size)
 {
 	LLCoordScreen position;
 
 	getPosition(&position);
 	if (!mWindowHandle)
 	{
-		return FALSE;
+		return false;
 	}
 
     mWindowThread->post([=]()
@@ -1017,10 +1017,10 @@ BOOL LLWindowWin32::setSizeImpl(const LLCoordScreen size)
         });
 
 	moveWindow(position, size);
-	return TRUE;
+	return true;
 }
 
-BOOL LLWindowWin32::setSizeImpl(const LLCoordWindow size)
+bool LLWindowWin32::setSizeImpl(const LLCoordWindow size)
 {
 	RECT window_rect = {0, 0, size.mX, size.mY };
 	DWORD dw_ex_style = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
@@ -1081,7 +1081,7 @@ BOOL LLWindowWin32::switchContext(BOOL fullscreen, const LLCoordScreen& size, BO
 
     if (fullscreen)
     {
-        mFullscreen = TRUE;
+        mFullscreen = true;
         BOOL success = FALSE;
         DWORD closest_refresh = 0;
 
@@ -1123,7 +1123,7 @@ BOOL LLWindowWin32::switchContext(BOOL fullscreen, const LLCoordScreen& size, BO
 
         if (success)
         {
-            mFullscreen = TRUE;
+            mFullscreen = true;
             mFullscreenWidth = dev_mode.dmPelsWidth;
             mFullscreenHeight = dev_mode.dmPelsHeight;
             mFullscreenBits = dev_mode.dmBitsPerPel;
@@ -1149,7 +1149,7 @@ BOOL LLWindowWin32::switchContext(BOOL fullscreen, const LLCoordScreen& size, BO
         // If it failed, we don't want to run fullscreen
         else
         {
-            mFullscreen = FALSE;
+            mFullscreen = false;
             mFullscreenWidth = -1;
             mFullscreenHeight = -1;
             mFullscreenBits = -1;
@@ -1161,7 +1161,7 @@ BOOL LLWindowWin32::switchContext(BOOL fullscreen, const LLCoordScreen& size, BO
     }
     else
     {
-        mFullscreen = FALSE;
+        mFullscreen = false;
         window_rect.left = (long)(posp ? posp->mX : 0);
         window_rect.right = (long)width + window_rect.left;			// Windows GDI rects don't include rightmost pixel
         window_rect.top = (long)(posp ? posp->mY : 0);
@@ -1873,7 +1873,7 @@ void LLWindowWin32::setTitle(const std::string title)
         });
 }
 
-BOOL LLWindowWin32::setCursorPosition(const LLCoordWindow position)
+bool LLWindowWin32::setCursorPosition(const LLCoordWindow position)
 {
     ASSERT_MAIN_THREAD();
 
@@ -1902,16 +1902,16 @@ BOOL LLWindowWin32::setCursorPosition(const LLCoordWindow position)
     return TRUE;
 }
 
-BOOL LLWindowWin32::getCursorPosition(LLCoordWindow *position)
+bool LLWindowWin32::getCursorPosition(LLCoordWindow *position)
 {
     ASSERT_MAIN_THREAD();
     if (!position)
     {
-        return FALSE;
+        return false;
     }
 
     *position = mCursorPosition;
-	return TRUE;
+	return true;
 }
 
 BOOL LLWindowWin32::getCursorDelta(LLCoordCommon* delta)
@@ -1938,8 +1938,8 @@ void LLWindowWin32::hideCursor()
             }
         });
 
-	mCursorHidden = TRUE;
-	mHideCursorPermanent = TRUE;
+	mCursorHidden = true;
+	mHideCursorPermanent = true;
 }
 
 void LLWindowWin32::showCursor()
@@ -1955,8 +1955,8 @@ void LLWindowWin32::showCursor()
             }
         });
 
-	mCursorHidden = FALSE;
-	mHideCursorPermanent = FALSE;
+	mCursorHidden = false;
+	mHideCursorPermanent = false;
 }
 
 void LLWindowWin32::showCursorFromMouseMove()
@@ -1972,11 +1972,11 @@ void LLWindowWin32::hideCursorUntilMouseMove()
 	if (!mHideCursorPermanent && mMouseVanish)
 	{
 		hideCursor();
-		mHideCursorPermanent = FALSE;
+		mHideCursorPermanent = false;
 	}
 }
 
-BOOL LLWindowWin32::isCursorHidden()
+bool LLWindowWin32::isCursorHidden()
 {
 	return mCursorHidden;
 }
@@ -2337,7 +2337,7 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
                     // Can be one of WA_ACTIVE, WA_CLICKACTIVE, or WA_INACTIVE
                     BOOL activating = (LOWORD(w_param) != WA_INACTIVE);
 
-                    BOOL minimized = BOOL(HIWORD(w_param));
+                    bool minimized = HIWORD(w_param);
 
                     if (!activating && LLWinImm::isAvailable() && window_imp->mPreeditor)
                     {
@@ -2677,6 +2677,15 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
         }
         break;
 
+	// Note: custom cursors that are not found make LoadCursor() return NULL.
+	for( S32 i = 0; i < UI_CURSOR_COUNT; i++ )
+	{
+		if( !mCursor[i] )
+		{
+			mCursor[i] = LoadCursor(NULL, IDC_ARROW);
+		}
+	}
+}
         case WM_MBUTTONDOWN:
             //		case WM_MBUTTONDBLCLK:
         {
@@ -2741,17 +2750,38 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
         }
         break;
 
+void LLWindowWin32::updateCursor()
+{
+	if (mNextCursor == UI_CURSOR_ARROW
+		&& mBusyCount > 0)
+	{
+		mNextCursor = UI_CURSOR_WORKING;
+	}
         case WM_MOUSEWHEEL:
         {
             static short z_delta = 0;
 
+	if( mCurrentCursor != mNextCursor )
+	{
+		mCurrentCursor = mNextCursor;
+		SetCursor( mCursor[mNextCursor] );
+	}
+}
             RECT	client_rect;
 
+ECursorType LLWindowWin32::getCursor() const
+{
+	return mCurrentCursor;
+}
             // eat scroll events that occur outside our window, since we use mouse position to direct scroll
             // instead of keyboard focus
             // NOTE: mouse_coord is in *window* coordinates for scroll events
             POINT mouse_coord = { (S32)(S16)LOWORD(l_param), (S32)(S16)HIWORD(l_param) };
 
+void LLWindowWin32::captureMouse()
+{
+	SetCapture(mWindowHandle);
+}
             if (ScreenToClient(window_imp->mWindowHandle, &mouse_coord)
                 && GetClientRect(window_imp->mWindowHandle, &client_rect))
             {
@@ -2764,6 +2794,16 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
                 }
             }
 
+void LLWindowWin32::releaseMouse()
+{
+	// *NOTE:Mani ReleaseCapture will spawn new windows messages...
+	// which will in turn call our MainWindowProc. It therefore requires
+	// pausing *and more importantly resumption* of the mainlooptimeout...
+	// just like DispatchMessage below.
+	mCallbacks->handlePauseWatchdog(this);
+	ReleaseCapture();
+	mCallbacks->handleResumeWatchdog(this);
+}
             S16 incoming_z_delta = HIWORD(w_param);
             z_delta += incoming_z_delta;
             // cout << "z_delta " << z_delta << endl;
@@ -2803,11 +2843,19 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
 
             RECT	client_rect;
 
+void LLWindowWin32::delayInputProcessing()
+{
+	mInputProcessingPaused = true;
+}
             // eat scroll events that occur outside our window, since we use mouse position to direct scroll
             // instead of keyboard focus
             // NOTE: mouse_coord is in *window* coordinates for scroll events
             POINT mouse_coord = { (S32)(S16)LOWORD(l_param), (S32)(S16)HIWORD(l_param) };
 
+void LLWindowWin32::gatherInput()
+{
+	MSG		msg;
+	int		msg_count = 0;
             if (ScreenToClient(window_imp->mWindowHandle, &mouse_coord)
                 && GetClientRect(window_imp->mWindowHandle, &client_rect))
             {
@@ -2820,9 +2868,18 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
                 }
             }
 
+	while ((msg_count < MAX_MESSAGE_PER_UPDATE) && PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+	{
+		mCallbacks->handlePingWatchdog(this, "Main:TranslateGatherInput");
+		TranslateMessage(&msg);
             S16 incoming_h_delta = HIWORD(w_param);
             h_delta += incoming_h_delta;
 
+		// turn watchdog off in here to not fail if windows is doing something wacky
+		mCallbacks->handlePauseWatchdog(this);
+		DispatchMessage(&msg);
+		mCallbacks->handleResumeWatchdog(this);
+		msg_count++;
             // If the user rapidly spins the wheel, we can get messages with
             // large deltas, like 480 or so.  Thus we need to scroll more quickly.
             if (h_delta <= -WHEEL_DELTA || WHEEL_DELTA <= h_delta)
@@ -2839,8 +2896,6 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
             // when button events are handled
             WINDOW_IMP_POST(
                 {
-                    LL_PROFILE_ZONE_NAMED_CATEGORY_WIN32("mwp - WM_MOUSEMOVE lambda");
-
                     MASK mask = gKeyboard->currentMask(TRUE);
                     window_imp->mMouseMask = mask;
                     window_imp->mCursorPosition = window_coord;
@@ -2848,6 +2903,12 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
             return 0;
         }
 
+		if ( mInputProcessingPaused )
+		{
+			break;
+		}
+		/* Attempted workaround for problem where typing fast and hitting
+		   return would result in only part of the text being sent. JC
         case WM_GETMINMAXINFO:
         {
             LPMINMAXINFO min_max = (LPMINMAXINFO)l_param;
@@ -2856,6 +2917,9 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
             return 0;
         }
 
+		BOOL key_posted = TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		msg_count++;
         case WM_MOVE:
         {
             window_imp->updateWindowRect();
@@ -2881,6 +2945,25 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
                     << LL_ENDL;
             }
 
+		// If a key was translated, a WM_CHAR might have been posted to the end
+		// of the event queue.  We need it immediately.
+		if (key_posted && msg.message == WM_KEYDOWN)
+		{
+			if (PeekMessage(&msg, NULL, WM_CHAR, WM_CHAR, PM_REMOVE))
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+				msg_count++;
+			}
+		}
+		*/
+		mCallbacks->handlePingWatchdog(this, "Main:AsyncCallbackGatherInput");
+		// For async host by name support.  Really hacky.
+		if (gAsyncMsgCallback && (LL_WM_HOST_RESOLVED == msg.message))
+		{
+			gAsyncMsgCallback(msg);
+		}
+	}
             // There's an odd behavior with WM_SIZE that I would call a bug. If 
             // the window is maximized, and you call MoveWindow() with a size smaller
             // than a maximized window, it ends up sending WM_SIZE with w_param set 
@@ -2888,6 +2971,7 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
             // (SL-44655). Fixed it by calling ShowWindow(SW_RESTORE) first (see 
             // LLWindowWin32::moveWindow in this file). 
 
+	mInputProcessingPaused = false;
             // If we are now restored, but we weren't before, this
             // means that the window was un-minimized.
             if (w_param == SIZE_RESTORED && window_imp->mLastSizeWParam != SIZE_RESTORED)
@@ -2895,18 +2979,25 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
                 WINDOW_IMP_POST(window_imp->mCallbacks->handleActivate(window_imp, TRUE));
             }
 
+	updateCursor();
             // handle case of window being maximized from fully minimized state
             if (w_param == SIZE_MAXIMIZED && window_imp->mLastSizeWParam != SIZE_MAXIMIZED)
             {
                 WINDOW_IMP_POST(window_imp->mCallbacks->handleActivate(window_imp, TRUE));
             }
 
+	// clear this once we've processed all mouse messages that might have occurred after
+	// we slammed the mouse position
+	mMousePositionModified = false;
+}
             // Also handle the minimization case
             if (w_param == SIZE_MINIMIZED && window_imp->mLastSizeWParam != SIZE_MINIMIZED)
             {
                 WINDOW_IMP_POST(window_imp->mCallbacks->handleActivate(window_imp, FALSE));
             }
 
+static LLTrace::BlockTimerStatHandle FTM_KEYHANDLER("Handle Keyboard");
+static LLTrace::BlockTimerStatHandle FTM_MOUSEHANDLER("Handle Mouse");
             // Actually resize all of our views
             if (w_param != SIZE_MINIMIZED)
             {
@@ -2916,6 +3007,8 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
                     HIWORD(l_param)));
             }
 
+LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_param, LPARAM l_param)
+{
             window_imp->mLastSizeWParam = w_param;
 
             return 0;
@@ -3160,15 +3253,15 @@ BOOL LLWindowWin32::convertCoords(LLCoordGL from, LLCoordScreen *to)
 }
 
 
-BOOL LLWindowWin32::isClipboardTextAvailable()
+bool LLWindowWin32::isClipboardTextAvailable()
 {
 	return IsClipboardFormatAvailable(CF_UNICODETEXT);
 }
 
 
-BOOL LLWindowWin32::pasteTextFromClipboard(LLWString &dst)
+bool LLWindowWin32::pasteTextFromClipboard(LLWString &dst)
 {
-	BOOL success = FALSE;
+	bool success = false;
 
 	if (IsClipboardFormatAvailable(CF_UNICODETEXT))
 	{
@@ -3183,7 +3276,7 @@ BOOL LLWindowWin32::pasteTextFromClipboard(LLWString &dst)
 					dst = utf16str_to_wstring(utf16str);
 					LLWStringUtil::removeWindowsCR(dst);
 					GlobalUnlock(h_data);
-					success = TRUE;
+					success = true;
 				}
 			}
 			CloseClipboard();
@@ -3194,9 +3287,9 @@ BOOL LLWindowWin32::pasteTextFromClipboard(LLWString &dst)
 }
 
 
-BOOL LLWindowWin32::copyTextToClipboard(const LLWString& wstr)
+bool LLWindowWin32::copyTextToClipboard(const LLWString& wstr)
 {
-	BOOL success = FALSE;
+	bool success = false;
 
 	if (OpenClipboard(mWindowHandle))
 	{
@@ -3220,7 +3313,7 @@ BOOL LLWindowWin32::copyTextToClipboard(const LLWString& wstr)
 
 				if (SetClipboardData(CF_UNICODETEXT, hglobal_copy_utf16))
 				{
-					success = TRUE;
+					success = true;
 				}
 			}
 		}

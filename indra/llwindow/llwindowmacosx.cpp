@@ -782,17 +782,17 @@ bool LLWindowMacOSX::getVisible()
 	return(result);
 }
 
-BOOL LLWindowMacOSX::getMinimized()
+bool LLWindowMacOSX::getMinimized()
 {
 	return mMinimized;
 }
 
-BOOL LLWindowMacOSX::getMaximized()
+bool LLWindowMacOSX::getMaximized()
 {
 	return mMaximized;
 }
 
-BOOL LLWindowMacOSX::maximize()
+bool LLWindowMacOSX::maximize()
 {
 	if (mWindow && !mMaximized)
 	{
@@ -801,7 +801,7 @@ BOOL LLWindowMacOSX::maximize()
 	return mMaximized;
 }
 
-BOOL LLWindowMacOSX::getFullscreen()
+bool LLWindowMacOSX::getFullscreen()
 {
 	return mFullscreen;
 }
@@ -903,29 +903,29 @@ BOOL LLWindowMacOSX::setPosition(const LLCoordScreen position)
 	return TRUE;
 }
 
-BOOL LLWindowMacOSX::setSizeImpl(const LLCoordScreen size)
+bool LLWindowMacOSX::setSizeImpl(const LLCoordScreen size)
 {
 	if(mWindow)
 	{
         LLCoordWindow to;
         convertCoords(size, &to);
 		setWindowSize(mWindow, to.mX, to.mY);
-        return TRUE;
+        return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
-BOOL LLWindowMacOSX::setSizeImpl(const LLCoordWindow size)
+bool LLWindowMacOSX::setSizeImpl(const LLCoordWindow size)
 {
 	if (mWindow)
 	{
         const int titlePadding = 22;
         setWindowSize(mWindow, size.mX, size.mY + titlePadding);
-        return TRUE;
+        return true;
 	}
     
-	return FALSE;
+	return false;
 }
 
 void LLWindowMacOSX::swapBuffers()
@@ -1037,7 +1037,7 @@ BOOL LLWindowMacOSX::setGamma(const F32 gamma)
 	return true;
 }
 
-BOOL LLWindowMacOSX::isCursorHidden()
+bool LLWindowMacOSX::isCursorHidden()
 {
 	return mCursorHidden;
 }
@@ -1062,14 +1062,14 @@ void LLWindowMacOSX::setMouseClipping( bool b )
 	adjustCursorDecouple();
 }
 
-BOOL LLWindowMacOSX::setCursorPosition(const LLCoordWindow position)
+bool LLWindowMacOSX::setCursorPosition(const LLCoordWindow position)
 {
-	BOOL result = FALSE;
+	bool result = false;
 	LLCoordScreen screen_pos;
 
 	if (!convertCoords(position, &screen_pos))
 	{
-		return FALSE;
+		return false;
 	}
 
 	CGPoint newPosition;
@@ -1082,7 +1082,7 @@ BOOL LLWindowMacOSX::setCursorPosition(const LLCoordWindow position)
 	CGSetLocalEventsSuppressionInterval(0.0);
 	if(CGWarpMouseCursorPosition(newPosition) == noErr)
 	{
-		result = TRUE;
+		result = true;
 	}
 
 	// Under certain circumstances, this will trigger us to decouple the cursor.
@@ -1099,13 +1099,13 @@ BOOL LLWindowMacOSX::setCursorPosition(const LLCoordWindow position)
 	return result;
 }
 
-BOOL LLWindowMacOSX::getCursorPosition(LLCoordWindow *position)
+bool LLWindowMacOSX::getCursorPosition(LLCoordWindow *position)
 {
 	float cursor_point[2];
 	LLCoordScreen screen_pos;
 
 	if(mWindow == NULL)
-		return FALSE;
+		return false;
 	
 	getCursorPos(mWindow, cursor_point);
 
@@ -1128,7 +1128,7 @@ BOOL LLWindowMacOSX::getCursorPosition(LLCoordWindow *position)
 	position->mX = cursor_point[0] * scale;
 	position->mY = cursor_point[1] * scale;
 
-	return TRUE;
+	return true;
 }
 
 void LLWindowMacOSX::adjustCursorDecouple(bool warpingMouse)
@@ -1208,26 +1208,28 @@ void LLWindowMacOSX::flashIcon(F32 seconds)
 	requestUserAttention();
 }
 
-BOOL LLWindowMacOSX::isClipboardTextAvailable()
+bool LLWindowMacOSX::isClipboardTextAvailable()
 {
 	return pasteBoardAvailable();
 }
 
-BOOL LLWindowMacOSX::pasteTextFromClipboard(LLWString &dst)
+bool LLWindowMacOSX::pasteTextFromClipboard(LLWString &dst)
 {	
 	llutf16string str(copyFromPBoard());
 	dst = utf16str_to_wstring(str);
 	if (dst != L"")
 	{
 		return true;
-	} else {
+	} 
+	else 
+	{
 		return false;
 	}
 }
 
-BOOL LLWindowMacOSX::copyTextToClipboard(const LLWString &s)
+bool LLWindowMacOSX::copyTextToClipboard(const LLWString &s)
 {
-	BOOL result = false;
+	bool result = false;
 	llutf16string utf16str = wstring_to_utf16str(s);
 	
 	result = copyToPBoard(utf16str.data(), utf16str.length());
@@ -1616,8 +1618,8 @@ void LLWindowMacOSX::hideCursor()
 	if(!mCursorHidden)
 	{
 		//		LL_INFOS() << "hideCursor: hiding" << LL_ENDL;
-		mCursorHidden = TRUE;
-		mHideCursorPermanent = TRUE;
+		mCursorHidden = true;
+		mHideCursorPermanent = true;
 		hideNSCursor();
 	}
 	else
@@ -1633,8 +1635,8 @@ void LLWindowMacOSX::showCursor()
 	if(mCursorHidden || !isCGCursorVisible())
 	{
 		//		LL_INFOS() << "showCursor: showing" << LL_ENDL;
-		mCursorHidden = FALSE;
-		mHideCursorPermanent = FALSE;
+		mCursorHidden = false;
+		mHideCursorPermanent = false;
 		showNSCursor();
 	}
 	else
@@ -1658,7 +1660,7 @@ void LLWindowMacOSX::hideCursorUntilMouseMove()
 	if (!mHideCursorPermanent)
 	{
 		hideCursor();
-		mHideCursorPermanent = FALSE;
+		mHideCursorPermanent = false;
 	}
 }
 

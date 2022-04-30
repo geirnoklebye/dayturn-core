@@ -64,12 +64,12 @@ public:
 	virtual void hide() = 0;
 	virtual void close() = 0;
 	virtual bool getVisible() = 0;
-	virtual BOOL getMinimized() = 0;
-	virtual BOOL getMaximized() = 0;
-	virtual BOOL maximize() = 0;
+	virtual bool getMinimized() = 0;
+	virtual bool getMaximized() = 0;
+	virtual bool maximize() = 0;
 	virtual void minimize() = 0;
 	virtual void restore() = 0;
-	BOOL getFullscreen()	{ return mFullscreen; };
+	bool getFullscreen()	{ return mFullscreen; };
 	virtual BOOL getPosition(LLCoordScreen *position) = 0;
 	virtual BOOL getSize(LLCoordScreen *size) = 0;
 	virtual BOOL getSize(LLCoordWindow *size) = 0;
@@ -90,14 +90,14 @@ public:
 
     virtual void toggleVSync(bool enable_vsync) = 0;
 
-    virtual BOOL setCursorPosition(LLCoordWindow position) = 0;
-	virtual BOOL getCursorPosition(LLCoordWindow *position) = 0;
+    virtual bool setCursorPosition(LLCoordWindow position) = 0;
+	virtual bool getCursorPosition(LLCoordWindow *position) = 0;
 #if LL_WINDOWS
     virtual BOOL getCursorDelta(LLCoordCommon* delta) = 0;
 #endif
 	virtual void showCursor() = 0;
 	virtual void hideCursor() = 0;
-	virtual BOOL isCursorHidden() = 0;
+	virtual bool isCursorHidden() = 0;
 	virtual void showCursorFromMouseMove() = 0;
 	virtual void hideCursorUntilMouseMove() = 0;
 
@@ -125,13 +125,13 @@ public:
 	virtual void releaseMouse() = 0;
 	virtual void setMouseClipping( bool b ) = 0;
 
-	virtual BOOL isClipboardTextAvailable() = 0;
-	virtual BOOL pasteTextFromClipboard(LLWString &dst) = 0;
-	virtual BOOL copyTextToClipboard(const LLWString &src) = 0;
+	virtual bool isClipboardTextAvailable() = 0;
+	virtual bool pasteTextFromClipboard(LLWString &dst) = 0;
+	virtual bool copyTextToClipboard(const LLWString &src) = 0;
 
-	virtual BOOL isPrimaryTextAvailable();
-	virtual BOOL pasteTextFromPrimary(LLWString &dst);
-	virtual BOOL copyTextToPrimary(const LLWString &src);
+	virtual bool isPrimaryTextAvailable();
+	virtual bool pasteTextFromPrimary(LLWString &dst);
+	virtual bool copyTextToPrimary(const LLWString &src);
  
 	virtual void flashIcon(F32 seconds) = 0;
 	virtual F32 getGamma() = 0;
@@ -205,14 +205,14 @@ protected:
 	// Defaults to true
 	virtual BOOL canDelete();
 
-	virtual BOOL setSizeImpl(LLCoordScreen size) = 0;
-	virtual BOOL setSizeImpl(LLCoordWindow size) = 0;
+	virtual bool setSizeImpl(LLCoordScreen size) = 0;
+	virtual bool setSizeImpl(LLCoordWindow size) = 0;
 
 protected:
 	LLWindowCallbacks*	mCallbacks;
 
 	BOOL		mPostQuit;		// should this window post a quit message when destroyed?
-	BOOL		mFullscreen;
+	bool		mFullscreen;
 	S32			mFullscreenWidth;
 	S32			mFullscreenHeight;
 	S32			mFullscreenBits;
@@ -221,11 +221,11 @@ protected:
 	S32			mNumSupportedResolutions;
 	ECursorType	mCurrentCursor;
 	ECursorType	mNextCursor;
-	BOOL		mCursorHidden;
+	bool		mCursorHidden;
 	S32			mBusyCount;	// how deep is the "cursor busy" stack?
 	bool		mIsMouseClipping;  // Is this window currently clipping the mouse
 	ESwapMethod mSwapMethod;
-	BOOL		mHideCursorPermanent;
+	bool		mHideCursorPermanent;
 	U32			mFlags;
 	U16			mHighSurrogate;
 	S32			mMinWindowWidth;

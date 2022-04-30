@@ -36,25 +36,25 @@ public:
 	/*virtual*/ void hide() {};
 	/*virtual*/ void close() {};
 	/*virtual*/ bool getVisible() {return false;};
-	/*virtual*/ BOOL getMinimized() {return FALSE;};
-	/*virtual*/ BOOL getMaximized() {return FALSE;};
-	/*virtual*/ BOOL maximize() {return FALSE;};
+	/*virtual*/ bool getMinimized() {return false;};
+	/*virtual*/ bool getMaximized() {return false;};
+	/*virtual*/ bool maximize() {return false;};
 	/*virtual*/ void minimize() {};
 	/*virtual*/ void restore() {};
-	/*virtual*/ BOOL getFullscreen() {return FALSE;};
+	/*virtual*/ bool getFullscreen() {return false;};
 	/*virtual*/ BOOL getPosition(LLCoordScreen *position) {return FALSE;};
 	/*virtual*/ BOOL getSize(LLCoordScreen *size) {return FALSE;};
 	/*virtual*/ BOOL getSize(LLCoordWindow *size) {return FALSE;};
 	/*virtual*/ BOOL setPosition(LLCoordScreen position) {return FALSE;};
-	/*virtual*/ BOOL setSizeImpl(LLCoordScreen size) {return FALSE;};
-	/*virtual*/ BOOL setSizeImpl(LLCoordWindow size) {return FALSE;};
+	/*virtual*/ bool setSizeImpl(LLCoordScreen size) {return false;};
+	/*virtual*/ bool setSizeImpl(LLCoordWindow size) {return false;};
 	/*virtual*/ BOOL switchContext(BOOL fullscreen, const LLCoordScreen &size, BOOL enable_vsync, const LLCoordScreen * const posp = NULL) {return FALSE;};
     void* createSharedContext()  { return nullptr; }
     void makeContextCurrent(void*)  {}
     void destroySharedContext(void*)  {}
     /*virtual*/ void toggleVSync(bool enable_vsync) { }
-    /*virtual*/ BOOL setCursorPosition(LLCoordWindow position) {return FALSE;};
-    /*virtual*/ BOOL getCursorPosition(LLCoordWindow *position) {return FALSE;};
+    /*virtual*/ bool setCursorPosition(LLCoordWindow position) {return false;};
+    /*virtual*/ bool getCursorPosition(LLCoordWindow *position) {return false;};
 #if LL_WINDOWS
     /*virtual*/ BOOL getCursorDelta(LLCoordCommon* delta) { return FALSE; }
 #endif
@@ -62,15 +62,15 @@ public:
 	/*virtual*/ void hideCursor() {};
 	/*virtual*/ void showCursorFromMouseMove() {};
 	/*virtual*/ void hideCursorUntilMouseMove() {};
-	/*virtual*/ BOOL isCursorHidden() {return FALSE;};
+	/*virtual*/ bool isCursorHidden() {return false;};
 	/*virtual*/ void updateCursor() {};
 	//virtual ECursorType getCursor() { return mCurrentCursor; };
 	/*virtual*/ void captureMouse() {};
 	/*virtual*/ void releaseMouse() {};
 	/*virtual*/ void setMouseClipping( bool b ) {};
-	/*virtual*/ BOOL isClipboardTextAvailable() {return FALSE; };
-	/*virtual*/ BOOL pasteTextFromClipboard(LLWString &dst) {return FALSE; };
-	/*virtual*/ BOOL copyTextToClipboard(const LLWString &src) {return FALSE; };
+	/*virtual*/ bool isClipboardTextAvailable() {return false; };
+	/*virtual*/ bool pasteTextFromClipboard(LLWString &dst) {return false; };
+	/*virtual*/ bool copyTextToClipboard(const LLWString &src) {return false; };
 	/*virtual*/ void flashIcon(F32 seconds) {};
 	/*virtual*/ F32 getGamma() {return 1.0f; };
 	/*virtual*/ BOOL setGamma(const F32 gamma) {return FALSE; }; // Set the gamma
