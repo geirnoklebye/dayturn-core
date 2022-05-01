@@ -108,7 +108,7 @@ S32 OSMessageBox(const std::string& text, const std::string& caption, U32 type)
 
 LLWindow::LLWindow(LLWindowCallbacks* callbacks, BOOL fullscreen, U32 flags)
 	: mCallbacks(callbacks),
-	  mPostQuit(TRUE),
+	  mPostQuit(true),
 	  mFullscreen(fullscreen),
 	  mFullscreenWidth(0),
 	  mFullscreenHeight(0),

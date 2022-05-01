@@ -811,7 +811,7 @@ void LLWindowMacOSX::gatherInput()
 	updateCursor();
 }
 
-BOOL LLWindowMacOSX::getPosition(LLCoordScreen *position)
+bool LLWindowMacOSX::getPosition(LLCoordScreen *position)
 {
 	S32 err = -1;
 
@@ -838,7 +838,7 @@ BOOL LLWindowMacOSX::getPosition(LLCoordScreen *position)
 	return (err == noErr);
 }
 
-BOOL LLWindowMacOSX::getSize(LLCoordScreen *size)
+bool LLWindowMacOSX::getSize(LLCoordScreen *size)
 {
 	S32 err = -1;
 
@@ -864,7 +864,7 @@ BOOL LLWindowMacOSX::getSize(LLCoordScreen *size)
 	return (err == noErr);
 }
 
-BOOL LLWindowMacOSX::getSize(LLCoordWindow *size)
+bool LLWindowMacOSX::getSize(LLCoordWindow *size)
 {
 	S32 err = -1;
 	
@@ -892,7 +892,7 @@ BOOL LLWindowMacOSX::getSize(LLCoordWindow *size)
 	return (err == noErr);
 }
 
-BOOL LLWindowMacOSX::setPosition(const LLCoordScreen position)
+bool LLWindowMacOSX::setPosition(const LLCoordScreen position)
 {
 	if(mWindow)
 	{
@@ -900,7 +900,7 @@ BOOL LLWindowMacOSX::setPosition(const LLCoordScreen position)
 		setWindowPos(mWindow, pos);
 	}
 
-	return TRUE;
+	return true;
 }
 
 bool LLWindowMacOSX::setSizeImpl(const LLCoordScreen size)
@@ -1239,7 +1239,7 @@ bool LLWindowMacOSX::copyTextToClipboard(const LLWString &s)
 
 
 // protected
-BOOL LLWindowMacOSX::resetDisplayResolution()
+bool LLWindowMacOSX::resetDisplayResolution()
 {
 	// This is only called from elsewhere in this class, and it's not used by the Mac implementation.
 	return true;
@@ -1297,21 +1297,21 @@ LLWindow::LLWindowResolution* LLWindowMacOSX::getSupportedResolutions(S32 &num_r
 	return mSupportedResolutions;
 }
 
-BOOL LLWindowMacOSX::convertCoords(LLCoordGL from, LLCoordWindow *to)
+bool LLWindowMacOSX::convertCoords(LLCoordGL from, LLCoordWindow *to)
 {
 	to->mX = from.mX;
 	to->mY = from.mY;
-	return TRUE;
+	return true;
 }
 
-BOOL LLWindowMacOSX::convertCoords(LLCoordWindow from, LLCoordGL* to)
+bool LLWindowMacOSX::convertCoords(LLCoordWindow from, LLCoordGL* to)
 {
 	to->mX = from.mX;
 	to->mY = from.mY;
-	return TRUE;
+	return true;
 }
 
-BOOL LLWindowMacOSX::convertCoords(LLCoordScreen from, LLCoordWindow* to)
+bool LLWindowMacOSX::convertCoords(LLCoordScreen from, LLCoordWindow* to)
 {
 	if(mWindow)
 	{
@@ -1325,12 +1325,12 @@ BOOL LLWindowMacOSX::convertCoords(LLCoordScreen from, LLCoordWindow* to)
 		to->mX = mouse_point[0];
 		to->mY = mouse_point[1];
 
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL LLWindowMacOSX::convertCoords(LLCoordWindow from, LLCoordScreen *to)
+bool LLWindowMacOSX::convertCoords(LLCoordWindow from, LLCoordScreen *to)
 {
 	if(mWindow)
 	{
@@ -1344,19 +1344,19 @@ BOOL LLWindowMacOSX::convertCoords(LLCoordWindow from, LLCoordScreen *to)
 		to->mX = mouse_point[0];
 		to->mY = mouse_point[1];
 
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL LLWindowMacOSX::convertCoords(LLCoordScreen from, LLCoordGL *to)
+bool LLWindowMacOSX::convertCoords(LLCoordScreen from, LLCoordGL *to)
 {
 	LLCoordWindow window_coord;
 
 	return(convertCoords(from, &window_coord) && convertCoords(window_coord, to));
 }
 
-BOOL LLWindowMacOSX::convertCoords(LLCoordGL from, LLCoordScreen *to)
+bool LLWindowMacOSX::convertCoords(LLCoordGL from, LLCoordScreen *to)
 {
 	LLCoordWindow window_coord;
 

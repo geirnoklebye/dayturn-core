@@ -425,7 +425,7 @@ LLWindowWin32::LLWindowWin32(LLWindowCallbacks* callbacks,
 	mhRC = NULL;
 	memset(mCurrentGammaRamp, 0, sizeof(mCurrentGammaRamp));
 	memset(mPrevGammaRamp, 0, sizeof(mPrevGammaRamp));
-	mCustomGammaSet = FALSE;
+	mCustomGammaSet = false;
 	mWindowHandle = NULL;
 
     mRect = {0, 0, 0, 0};
@@ -960,38 +960,38 @@ bool LLWindowWin32::getFullscreen()
 	return mFullscreen;
 }
 
-BOOL LLWindowWin32::getPosition(LLCoordScreen *position)
+bool LLWindowWin32::getPosition(LLCoordScreen *position)
 {
     position->mX = mRect.left;
 	position->mY = mRect.top;
-	return TRUE;
+	return true;
 }
 
-BOOL LLWindowWin32::getSize(LLCoordScreen *size)
+bool LLWindowWin32::getSize(LLCoordScreen *size)
 {
 	size->mX = mRect.right - mRect.left;
 	size->mY = mRect.bottom - mRect.top;
-	return TRUE;
+	return true;
 }
 
-BOOL LLWindowWin32::getSize(LLCoordWindow *size)
+bool LLWindowWin32::getSize(LLCoordWindow *size)
 {
 	size->mX = mClientRect.right - mClientRect.left;
 	size->mY = mClientRect.bottom - mClientRect.top;
-	return TRUE;
+	return true;
 }
 
-BOOL LLWindowWin32::setPosition(const LLCoordScreen position)
+bool LLWindowWin32::setPosition(const LLCoordScreen position)
 {
 	LLCoordScreen size;
 
 	if (!mWindowHandle)
 	{
-		return FALSE;
+		return false;
 	}
 	getSize(&size);
 	moveWindow(position, size);
-	return TRUE;
+	return true;
 }
 
 bool LLWindowWin32::setSizeImpl(const LLCoordScreen size)
@@ -1173,7 +1173,7 @@ BOOL LLWindowWin32::switchContext(BOOL fullscreen, const LLCoordScreen& size, BO
 
 
     // don't post quit messages when destroying old windows
-    mPostQuit = FALSE;
+    mPostQuit = false;
 
 
     // create window
@@ -1644,7 +1644,7 @@ const	S32   max_format  = (S32)num_formats - 1;
 	SetTimer( mWindowHandle, 0, 1000 / 30, NULL ); // 30 fps timer
 
 	// ok to post quit messages now
-	mPostQuit = TRUE;
+	mPostQuit = true;
 
 	if (auto_show)
 	{
@@ -1914,16 +1914,16 @@ bool LLWindowWin32::getCursorPosition(LLCoordWindow *position)
 	return true;
 }
 
-BOOL LLWindowWin32::getCursorDelta(LLCoordCommon* delta)
+bool LLWindowWin32::getCursorDelta(LLCoordCommon* delta)
 {
     if (delta == nullptr)
     {
-        return FALSE;
+        return false;
     }
 
     *delta = mMouseFrameDelta;
 
-    return TRUE;
+    return true;
 }
 
 void LLWindowWin32::hideCursor()
@@ -3056,7 +3056,7 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
     return ret;
 }
 
-BOOL LLWindowWin32::convertCoords(LLCoordGL from, LLCoordWindow *to)
+bool LLWindowWin32::convertCoords(LLCoordGL from, LLCoordWindow *to)
 {
 	S32		client_height;
 	RECT	client_rect;
@@ -3066,17 +3066,17 @@ BOOL LLWindowWin32::convertCoords(LLCoordGL from, LLCoordWindow *to)
 		!GetClientRect(mWindowHandle, &client_rect) ||
 		NULL == to)
 	{
-		return FALSE;
+		return false;
 	}
 
 	to->mX = from.mX;
 	client_height = client_rect.bottom - client_rect.top;
 	to->mY = client_height - from.mY - 1;
 
-	return TRUE;
+	return true;
 }
 
-BOOL LLWindowWin32::convertCoords(LLCoordWindow from, LLCoordGL* to)
+bool LLWindowWin32::convertCoords(LLCoordWindow from, LLCoordGL* to)
 {
 	S32		client_height;
 	RECT	client_rect;
@@ -3085,23 +3085,23 @@ BOOL LLWindowWin32::convertCoords(LLCoordWindow from, LLCoordGL* to)
 		!GetClientRect(mWindowHandle, &client_rect) ||
 		NULL == to)
 	{
-		return FALSE;
+		return false;
 	}
 
 	to->mX = from.mX;
 	client_height = client_rect.bottom - client_rect.top;
 	to->mY = client_height - from.mY - 1;
 
-	return TRUE;
+	return true;
 }
 
-BOOL LLWindowWin32::convertCoords(LLCoordScreen from, LLCoordWindow* to)
+bool LLWindowWin32::convertCoords(LLCoordScreen from, LLCoordWindow* to)
 {	
 	POINT mouse_point;
 
 	mouse_point.x = from.mX;
 	mouse_point.y = from.mY;
-	BOOL result = ScreenToClient(mWindowHandle, &mouse_point);
+	bool result = ScreenToClient(mWindowHandle, &mouse_point);
 
 	if (result)
 	{
@@ -3112,13 +3112,13 @@ BOOL LLWindowWin32::convertCoords(LLCoordScreen from, LLCoordWindow* to)
 	return result;
 }
 
-BOOL LLWindowWin32::convertCoords(LLCoordWindow from, LLCoordScreen *to)
+bool LLWindowWin32::convertCoords(LLCoordWindow from, LLCoordScreen *to)
 {
 	POINT mouse_point;
 
 	mouse_point.x = from.mX;
 	mouse_point.y = from.mY;
-	BOOL result = ClientToScreen(mWindowHandle, &mouse_point);
+	bool result = ClientToScreen(mWindowHandle, &mouse_point);
 
 	if (result)
 	{
@@ -3129,32 +3129,32 @@ BOOL LLWindowWin32::convertCoords(LLCoordWindow from, LLCoordScreen *to)
 	return result;
 }
 
-BOOL LLWindowWin32::convertCoords(LLCoordScreen from, LLCoordGL *to)
+bool LLWindowWin32::convertCoords(LLCoordScreen from, LLCoordGL *to)
 {
 	LLCoordWindow window_coord;
 
 	if (!mWindowHandle || (NULL == to))
 	{
-		return FALSE;
+		return false;
 	}
 
 	convertCoords(from, &window_coord);
 	convertCoords(window_coord, to);
-	return TRUE;
+	return true;
 }
 
-BOOL LLWindowWin32::convertCoords(LLCoordGL from, LLCoordScreen *to)
+bool LLWindowWin32::convertCoords(LLCoordGL from, LLCoordScreen *to)
 {
 	LLCoordWindow window_coord;
 
 	if (!mWindowHandle || (NULL == to))
 	{
-		return FALSE;
+		return false;
 	}
 
 	convertCoords(from, &window_coord);
 	convertCoords(window_coord, to);
-	return TRUE;
+	return true;
 }
 
 
@@ -3313,10 +3313,10 @@ F32 LLWindowWin32::getGamma()
 bool LLWindowWin32::restoreGamma()
 {
     ASSERT_MAIN_THREAD();
-	if (mCustomGammaSet != FALSE)
+	if (mCustomGammaSet != false)
 	{
         LL_DEBUGS("Window") << "Restoring gamma" << LL_ENDL;
-		mCustomGammaSet = FALSE;
+		mCustomGammaSet = false;
 		return SetDeviceGammaRamp(mhDC, mPrevGammaRamp);
 	}
 	return true;
@@ -3328,7 +3328,7 @@ bool LLWindowWin32::setGamma(const F32 gamma)
 	mCurrentGamma = gamma;
 
 	//Get the previous gamma ramp to restore later.
-	if (mCustomGammaSet == FALSE)
+	if (mCustomGammaSet == false)
 	{
         if (!gGLManager.mIsIntel) // skip for Intel GPUs (see SL-11341)
         {
@@ -3339,7 +3339,7 @@ bool LLWindowWin32::setGamma(const F32 gamma)
                 return false;
             }
         }
-		mCustomGammaSet = TRUE;
+		mCustomGammaSet = true;
 	}
 
 	LL_DEBUGS("Window") << "Setting gamma to " << gamma << LL_ENDL;
@@ -3453,12 +3453,12 @@ F32 LLWindowWin32::getPixelAspectRatio()
 
 // Change display resolution.  Returns true if successful.
 // protected
-BOOL LLWindowWin32::setDisplayResolution(S32 width, S32 height, S32 bits, S32 refresh)
+bool LLWindowWin32::setDisplayResolution(S32 width, S32 height, S32 bits, S32 refresh)
 {
 	DEVMODE dev_mode;
 	::ZeroMemory(&dev_mode, sizeof(DEVMODE));
 	dev_mode.dmSize = sizeof(DEVMODE);
-	BOOL success = FALSE;
+	bool success = false;
 
 	// Don't change anything if we don't have to
 	if (EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &dev_mode))
@@ -3469,7 +3469,7 @@ BOOL LLWindowWin32::setDisplayResolution(S32 width, S32 height, S32 bits, S32 re
 			dev_mode.dmDisplayFrequency == refresh )
 		{
 			// ...display mode identical, do nothing
-			return TRUE;
+			return true;
 		}
 	}
 
@@ -3496,7 +3496,7 @@ BOOL LLWindowWin32::setDisplayResolution(S32 width, S32 height, S32 bits, S32 re
 }
 
 // protected
-BOOL LLWindowWin32::setFullscreenResolution()
+bool LLWindowWin32::setFullscreenResolution()
 {
 	if (mFullscreen)
 	{
@@ -3504,18 +3504,18 @@ BOOL LLWindowWin32::setFullscreenResolution()
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 }
 
 // protected
-BOOL LLWindowWin32::resetDisplayResolution()
+bool LLWindowWin32::resetDisplayResolution()
 {
 	LL_DEBUGS("Window") << "resetDisplayResolution START" << LL_ENDL;
 
 	LONG cds_result = ChangeDisplaySettings(NULL, 0);
 
-	BOOL success = (DISP_CHANGE_SUCCESSFUL == cds_result);
+	bool success = (DISP_CHANGE_SUCCESSFUL == cds_result);
 
 	if (!success)
 	{

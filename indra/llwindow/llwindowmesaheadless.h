@@ -46,10 +46,10 @@ public:
 	/*virtual*/ void minimize() {};
 	/*virtual*/ void restore() {};
 	/*virtual*/ bool getFullscreen() {return false;};
-	/*virtual*/ BOOL getPosition(LLCoordScreen *position) {return FALSE;};
-	/*virtual*/ BOOL getSize(LLCoordScreen *size) {return FALSE;};
-	/*virtual*/ BOOL getSize(LLCoordWindow *size) {return FALSE;};
-	/*virtual*/ BOOL setPosition(LLCoordScreen position) {return FALSE;};
+	/*virtual*/ bool getPosition(LLCoordScreen *position) {return false;};
+	/*virtual*/ bool getSize(LLCoordScreen *size) {return false;};
+	/*virtual*/ bool getSize(LLCoordWindow *size) {return false;};
+	/*virtual*/ bool setPosition(LLCoordScreen position) {return false;};
 	/*virtual*/ bool setSizeImpl(LLCoordScreen size) {return false;};
 	/*virtual*/ BOOL switchContext(BOOL fullscreen, const LLCoordScreen &size, BOOL disable_vsync, const LLCoordScreen * const posp = NULL) {return FALSE;};
 	/*virtual*/ bool setCursorPosition(LLCoordWindow position) {return false;};
@@ -80,12 +80,12 @@ public:
 	/*virtual*/ void restoreGLContext() {};
 
 	// handy coordinate space conversion routines
-	/*virtual*/ BOOL convertCoords(LLCoordScreen from, LLCoordWindow *to) { return FALSE; };
-	/*virtual*/ BOOL convertCoords(LLCoordWindow from, LLCoordScreen *to) { return FALSE; };
-	/*virtual*/ BOOL convertCoords(LLCoordWindow from, LLCoordGL *to) { return FALSE; };
-	/*virtual*/ BOOL convertCoords(LLCoordGL from, LLCoordWindow *to) { return FALSE; };
-	/*virtual*/ BOOL convertCoords(LLCoordScreen from, LLCoordGL *to) { return FALSE; };
-	/*virtual*/ BOOL convertCoords(LLCoordGL from, LLCoordScreen *to) { return FALSE; };
+	/*virtual*/ bool convertCoords(LLCoordScreen from, LLCoordWindow *to) { return false; };
+	/*virtual*/ bool convertCoords(LLCoordWindow from, LLCoordScreen *to) { return false; };
+	/*virtual*/ bool convertCoords(LLCoordWindow from, LLCoordGL *to) { return false; };
+	/*virtual*/ bool convertCoords(LLCoordGL from, LLCoordWindow *to) { return false; };
+	/*virtual*/ bool convertCoords(LLCoordScreen from, LLCoordGL *to) { return false; };
+	/*virtual*/ bool convertCoords(LLCoordGL from, LLCoordScreen *to) { return false; };
 
 	/*virtual*/ LLWindowResolution* getSupportedResolutions(S32 &num_resolutions) { return NULL; };
 	/*virtual*/ F32	getNativeAspectRatio() { return 1.0f; };

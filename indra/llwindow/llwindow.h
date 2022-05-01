@@ -70,10 +70,10 @@ public:
 	virtual void minimize() = 0;
 	virtual void restore() = 0;
 	bool getFullscreen()	{ return mFullscreen; };
-	virtual BOOL getPosition(LLCoordScreen *position) = 0;
-	virtual BOOL getSize(LLCoordScreen *size) = 0;
-	virtual BOOL getSize(LLCoordWindow *size) = 0;
-	virtual BOOL setPosition(LLCoordScreen position) = 0;
+	virtual bool getPosition(LLCoordScreen *position) = 0;
+	virtual bool getSize(LLCoordScreen *size) = 0;
+	virtual bool getSize(LLCoordWindow *size) = 0;
+	virtual bool setPosition(LLCoordScreen position) = 0;
 	bool setSize(LLCoordScreen size);
 	bool setSize(LLCoordWindow size);
 	virtual void setMinSize(U32 min_width, U32 min_height, bool enforce_immediately = true);
@@ -93,7 +93,7 @@ public:
     virtual bool setCursorPosition(LLCoordWindow position) = 0;
 	virtual bool getCursorPosition(LLCoordWindow *position) = 0;
 #if LL_WINDOWS
-    virtual BOOL getCursorDelta(LLCoordCommon* delta) = 0;
+    virtual bool getCursorDelta(LLCoordCommon* delta) = 0;
 #endif
 	virtual void showCursor() = 0;
 	virtual void hideCursor() = 0;
@@ -150,12 +150,12 @@ public:
 	// handy coordinate space conversion routines
 	// NB: screen to window and vice verse won't work on width/height coordinate pairs,
 	// as the conversion must take into account left AND right border widths, etc.
-	virtual BOOL convertCoords( LLCoordScreen from, LLCoordWindow *to) = 0;
-	virtual BOOL convertCoords( LLCoordWindow from, LLCoordScreen *to) = 0;
-	virtual BOOL convertCoords( LLCoordWindow from, LLCoordGL *to) = 0;
-	virtual BOOL convertCoords( LLCoordGL from, LLCoordWindow *to) = 0;
-	virtual BOOL convertCoords( LLCoordScreen from, LLCoordGL *to) = 0;
-	virtual BOOL convertCoords( LLCoordGL from, LLCoordScreen *to) = 0;
+	virtual bool convertCoords( LLCoordScreen from, LLCoordWindow *to) = 0;
+	virtual bool convertCoords( LLCoordWindow from, LLCoordScreen *to) = 0;
+	virtual bool convertCoords( LLCoordWindow from, LLCoordGL *to) = 0;
+	virtual bool convertCoords( LLCoordGL from, LLCoordWindow *to) = 0;
+	virtual bool convertCoords( LLCoordScreen from, LLCoordGL *to) = 0;
+	virtual bool convertCoords( LLCoordGL from, LLCoordScreen *to) = 0;
 
 	// query supported resolutions
 	virtual LLWindowResolution* getSupportedResolutions(S32 &num_resolutions) = 0;
@@ -211,7 +211,7 @@ protected:
 protected:
 	LLWindowCallbacks*	mCallbacks;
 
-	BOOL		mPostQuit;		// should this window post a quit message when destroyed?
+	bool		mPostQuit;		// should this window post a quit message when destroyed?
 	bool		mFullscreen;
 	S32			mFullscreenWidth;
 	S32			mFullscreenHeight;

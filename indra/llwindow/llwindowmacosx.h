@@ -54,10 +54,10 @@ public:
 	void minimize() override;
 	void restore() override;
 	bool getFullscreen();
-	BOOL getPosition(LLCoordScreen *position) override;
-	BOOL getSize(LLCoordScreen *size) override;
-	BOOL getSize(LLCoordWindow *size) override;
-	BOOL setPosition(LLCoordScreen position) override;
+	bool getPosition(LLCoordScreen *position) override;
+	bool getSize(LLCoordScreen *size) override;
+	bool getSize(LLCoordWindow *size) override;
+	bool setPosition(LLCoordScreen position) override;
 	bool setSizeImpl(LLCoordScreen size) override;
 	bool setSizeImpl(LLCoordWindow size) override;
 	BOOL switchContext(BOOL fullscreen, const LLCoordScreen &size, BOOL enable_vsync, const LLCoordScreen * const posp = NULL) override;
@@ -88,12 +88,12 @@ public:
 	void swapBuffers() override;
 	
 	// handy coordinate space conversion routines
-	BOOL convertCoords(LLCoordScreen from, LLCoordWindow *to) override;
-	BOOL convertCoords(LLCoordWindow from, LLCoordScreen *to) override;
-	BOOL convertCoords(LLCoordWindow from, LLCoordGL *to) override;
-	BOOL convertCoords(LLCoordGL from, LLCoordWindow *to) override;
-	BOOL convertCoords(LLCoordScreen from, LLCoordGL *to) override;
-	BOOL convertCoords(LLCoordGL from, LLCoordScreen *to) override;
+	bool convertCoords(LLCoordScreen from, LLCoordWindow *to) override;
+	bool convertCoords(LLCoordWindow from, LLCoordScreen *to) override;
+	bool convertCoords(LLCoordWindow from, LLCoordGL *to) override;
+	bool convertCoords(LLCoordGL from, LLCoordWindow *to) override;
+	bool convertCoords(LLCoordScreen from, LLCoordGL *to) override;
+	bool convertCoords(LLCoordGL from, LLCoordScreen *to) override;
 
 	LLWindowResolution* getSupportedResolutions(S32 &num_resolutions) override;
 	F32	getNativeAspectRatio() override;
@@ -158,15 +158,15 @@ protected:
 
 
 	// Changes display resolution. Returns true if successful
-	BOOL	setDisplayResolution(S32 width, S32 height, S32 bits, S32 refresh);
+	bool	setDisplayResolution(S32 width, S32 height, S32 bits, S32 refresh);
 
 	// Go back to last fullscreen display resolution.
-	BOOL	setFullscreenResolution();
+	bool	setFullscreenResolution();
 
 	// Restore the display resolution to its value before we ran the app.
-	BOOL	resetDisplayResolution();
+	bool	resetDisplayResolution();
 
-	BOOL	shouldPostQuit() { return mPostQuit; }
+	bool	shouldPostQuit() { return mPostQuit; }
     
     //Satisfy MAINT-3135 and MAINT-3288 with a flag.
     /*virtual */ void setOldResize(bool oldresize) override {setResizeMode(oldresize, mGLView); }

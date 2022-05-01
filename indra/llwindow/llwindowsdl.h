@@ -59,10 +59,10 @@ public:
 	/*virtual*/ void minimize();
 	/*virtual*/ void restore();
 	/*virtual*/ bool getFullscreen();
-	/*virtual*/ BOOL getPosition(LLCoordScreen *position);
-	/*virtual*/ BOOL getSize(LLCoordScreen *size);
-	/*virtual*/ BOOL getSize(LLCoordWindow *size);
-	/*virtual*/ BOOL setPosition(LLCoordScreen position);
+	/*virtual*/ bool getPosition(LLCoordScreen *position);
+	/*virtual*/ bool getSize(LLCoordScreen *size);
+	/*virtual*/ bool getSize(LLCoordWindow *size);
+	/*virtual*/ bool setPosition(LLCoordScreen position);
 	/*virtual*/ bool setSizeImpl(LLCoordScreen size);
 	/*virtual*/ bool setSizeImpl(LLCoordWindow size);
 	/*virtual*/ BOOL switchContext(BOOL fullscreen, const LLCoordScreen &size, BOOL disable_vsync, const LLCoordScreen * const posp = NULL);
@@ -103,12 +103,12 @@ public:
 	/*virtual*/ void delayInputProcessing() { };
 
 	// handy coordinate space conversion routines
-	/*virtual*/ BOOL convertCoords(LLCoordScreen from, LLCoordWindow *to);
-	/*virtual*/ BOOL convertCoords(LLCoordWindow from, LLCoordScreen *to);
-	/*virtual*/ BOOL convertCoords(LLCoordWindow from, LLCoordGL *to);
-	/*virtual*/ BOOL convertCoords(LLCoordGL from, LLCoordWindow *to);
-	/*virtual*/ BOOL convertCoords(LLCoordScreen from, LLCoordGL *to);
-	/*virtual*/ BOOL convertCoords(LLCoordGL from, LLCoordScreen *to);
+	/*virtual*/ bool convertCoords(LLCoordScreen from, LLCoordWindow *to);
+	/*virtual*/ bool convertCoords(LLCoordWindow from, LLCoordScreen *to);
+	/*virtual*/ bool convertCoords(LLCoordWindow from, LLCoordGL *to);
+	/*virtual*/ bool convertCoords(LLCoordGL from, LLCoordWindow *to);
+	/*virtual*/ bool convertCoords(LLCoordScreen from, LLCoordGL *to);
+	/*virtual*/ bool convertCoords(LLCoordGL from, LLCoordScreen *to);
 
 	/*virtual*/ LLWindowResolution* getSupportedResolutions(S32 &num_resolutions);
 	/*virtual*/ F32	getNativeAspectRatio();
@@ -163,12 +163,12 @@ protected:
 	void	moveWindow(const LLCoordScreen& position,const LLCoordScreen& size);
 
 	// Changes display resolution. Returns true if successful
-	BOOL	setDisplayResolution(S32 width, S32 height, S32 bits, S32 refresh);
+	bool	setDisplayResolution(S32 width, S32 height, S32 bits, S32 refresh);
 
 	// Go back to last fullscreen display resolution.
-	BOOL	setFullscreenResolution();
+	bool	setFullscreenResolution();
 
-	BOOL	shouldPostQuit() { return mPostQuit; }
+	bool	shouldPostQuit() { return mPostQuit; }
 
 protected:
 	//
