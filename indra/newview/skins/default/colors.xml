@@ -154,6 +154,9 @@
       name="Orange"
       value="1 .82 .46 1" />
   <color
+      name="Orange1"
+      value="1 .5 0 1" />
+  <color
       name="Green1"
       value="0 1 0 1" />
   <color
@@ -700,6 +703,9 @@
   <color
      name="NameTagWhisperDistanceColor"
      reference="Green1" />
+  <color
+     name="KokuaNameTagTypingColor"
+     reference="Orange1" />
     <color
      name="NameTagFriend"
      value="0.447 0.784 0.663 1" />

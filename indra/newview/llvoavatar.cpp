@@ -3437,6 +3437,11 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 	static LLUIColor tag_chat_color = LLUIColorTable::instance().getColor("NameTagChatDistanceColor", LLColor4::green);
 	static LLUIColor tag_shout_color = LLUIColorTable::instance().getColor("NameTagShoutDistanceColor", LLColor4::yellow);
 	static LLUIColor tag_beyond_shout_color = LLUIColorTable::instance().getColor("NameTagBeyondShoutDistanceColor", LLColor4::red);
+	// KKA-936 add some options around the typing indication
+	static LLUIColor tag_typing_color = LLUIColorTable::instance().getColor("KokuaNameTagTypingColor", LLColor4::orange);
+	static LLUICachedControl<bool> show_typing_in_bold("KokuaNameTagBoldTyping");
+	static LLUICachedControl<bool> show_typing_in_color("KokuaNameTagColorTyping");
+	static LLUICachedControl<bool> show_whole_tag_in_typing_color("KokuaNameTagTypingColorsWholeTag");
 
 	if (!isSelf() && (show_distance_color_tag || show_distance_in_tag))
 	{
@@ -3473,6 +3478,11 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 		}
 	}
 	// </FS:Ansariel>
+	// KKA_936
+	if (is_typing && show_whole_tag_in_typing_color)
+	{
+		name_tag_color = tag_typing_color;
+	}
 
 	// <FS:Ansariel> Show ARW in nametag options (for Jelly Dolls)
 	static LLCachedControl<bool> show_arw_tag(gSavedSettings, "FSTagShowARW");
@@ -3563,7 +3573,7 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 			}
 			// trim last ", "
 			line.resize( line.length() - 2 );
-			addNameTagLine(line, name_tag_color, LLFontGL::NORMAL,
+			addNameTagLine(line, ((is_typing && show_typing_in_color) ? tag_typing_color : name_tag_color), ((is_typing && show_typing_in_bold) ? LLFontGL::BOLD : LLFontGL::NORMAL),
 				LLFontGL::getFontSansSerifSmall());
 		}
 

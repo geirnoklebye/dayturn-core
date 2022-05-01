@@ -200,6 +200,39 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
+    <key>KokuaNameTagColorTyping</key>
+    <map>
+      <key>Comment</key>
+      <string>Show the name tag typing indicator in color</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>KokuaNameTagTypingColorsWholeTag</key>
+    <map>
+      <key>Comment</key>
+      <string>Change the colour of the whole name tag while typing</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>KokuaNameTagBoldTyping</key>
+    <map>
+      <key>Comment</key>
+      <string>Show the typing line in bold in the name tag</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
     <key>KokuaClassicMainMenu</key>
     <map>
       <key>Comment</key>
