@@ -208,26 +208,26 @@ protected:
 	LLRect		mOldMouseClip;  // Screen rect to which the mouse cursor was globally constrained before we changed it in clipMouse()
 	std::string mWindowTitle;
 	double		mOriginalAspectRatio;
-	BOOL		mSimulatedRightClick;
+	bool		mSimulatedRightClick;
 	U32			mLastModifiers;
-	BOOL		mHandsOffEvents;	// When true, temporarially disable CarbonEvent processing.
+	bool		mHandsOffEvents;	// When true, temporarially disable CarbonEvent processing.
 	// Used to allow event processing when putting up dialogs in fullscreen mode.
-	BOOL		mCursorDecoupled;
+	bool		mCursorDecoupled;
 	S32			mCursorLastEventDeltaX;
 	S32			mCursorLastEventDeltaY;
-	BOOL		mCursorIgnoreNextDelta;
-	BOOL		mNeedsResize;		// Constructor figured out the window is too big, it needs a resize.
+	bool		mCursorIgnoreNextDelta;
+	bool		mNeedsResize;		// Constructor figured out the window is too big, it needs a resize.
 	LLCoordScreen   mNeedsResizeSize;
 	F32			mOverrideAspectRatio;
-	BOOL		mMaximized;
+	bool		mMaximized;
 	bool		mMinimized;
 	U32			mFSAASamples;
-	BOOL		mForceRebuild;
+	bool		mForceRebuild;
 	
 	S32	mDragOverrideCursor;
 
 	// Input method management through Text Service Manager.
-	BOOL		mLanguageTextInputAllowed;
+	bool		mLanguageTextInputAllowed;
 	LLPreeditor*	mPreeditor;
 	
 	static BOOL	sUseMultGL;

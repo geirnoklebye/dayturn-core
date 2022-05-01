@@ -61,36 +61,32 @@ BOOL LLWindowMacOSX::sUseMultGL = FALSE;
 
 // Cross-platform bits:
 
-BOOL check_for_card(const char* RENDERER, const char* bad_card)
+bool check_for_card(const char* RENDERER, const char* bad_card)
 {
 	if (!strnicmp(RENDERER, bad_card, strlen(bad_card)))
 	{
 		std::string buffer = llformat(
-			"Your video card appears to be a %s, which Second Life does not support.\n"
+			"Your video card appears to be a %s, which Dayturn does not support.\n"
 			"\n"
-			"Second Life requires a video card with 32 Mb of memory or more, as well as\n"
+			"Dayturn requires a video card with 32 Mb of memory or more, as well as\n"
 			"multitexture support.  We explicitly support nVidia GeForce 2 or better, \n"
 			"and ATI Radeon 8500 or better.\n"
 			"\n"
-			"If you own a supported card and continue to receive this message, try \n"
-			"updating to the latest video card drivers. Otherwise look in the\n"
-			"secondlife.com support section or e-mail technical support\n"
-			"\n"
-			"You can try to run Second Life, but it will probably crash or run\n"
+			"You can try to run Dayturn, but it will probably crash or run\n"
 			"very slowly.  Try anyway?",
 			bad_card);
 		S32 button = OSMessageBox(buffer.c_str(), "Unsupported video card", OSMB_YESNO);
 		if (OSBTN_YES == button)
 		{
-			return FALSE;
+			return false;
 		}
 		else
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 // Switch to determine whether we capture all displays, or just the main one.
@@ -134,21 +130,21 @@ LLWindowMacOSX::LLWindowMacOSX(LLWindowCallbacks* callbacks,
 	mContext = NULL;
 	mPixelFormat = NULL;
 	mDisplay = CGMainDisplayID();
-	mSimulatedRightClick = FALSE;
+	mSimulatedRightClick = false;
 	mLastModifiers = 0;
-	mHandsOffEvents = FALSE;
-	mCursorDecoupled = FALSE;
+	mHandsOffEvents = false;
+	mCursorDecoupled = false;
 	mCursorLastEventDeltaX = 0;
 	mCursorLastEventDeltaY = 0;
-	mCursorIgnoreNextDelta = FALSE;
-	mNeedsResize = FALSE;
+	mCursorIgnoreNextDelta = false;
+	mNeedsResize = false;
 	mOverrideAspectRatio = 0.f;
-	mMaximized = FALSE;
+	mMaximized = false;
 	mMinimized = false;
-	mLanguageTextInputAllowed = FALSE;
+	mLanguageTextInputAllowed = false;
 	mPreeditor = NULL;
 	mFSAASamples = fsaa_samples;
-	mForceRebuild = FALSE;
+	mForceRebuild = false;
 
 	// Get the original aspect ratio of the main device.
 	mOriginalAspectRatio = (double)CGDisplayPixelsWide(mDisplay) / (double)CGDisplayPixelsHigh(mDisplay);
@@ -596,7 +592,7 @@ void LLWindowMacOSX::updateMouseDeltas(float* deltas)
 		{
 			mCursorLastEventDeltaX = 0;
 			mCursorLastEventDeltaY = 0;
-			mCursorIgnoreNextDelta = FALSE;
+			mCursorIgnoreNextDelta = false;
 		}
 	} else {
 		mCursorLastEventDeltaX = 0;
@@ -1008,7 +1004,7 @@ U32 LLWindowMacOSX::getFSAASamples()
 void LLWindowMacOSX::setFSAASamples(const U32 samples)
 {
 	mFSAASamples = samples;
-	mForceRebuild = TRUE;
+	mForceRebuild = true;
 }
 
 BOOL LLWindowMacOSX::restoreGamma()
@@ -1171,7 +1167,7 @@ void LLWindowMacOSX::adjustCursorDecouple(bool warpingMouse)
 				//			LL_INFOS() << "adjustCursorDecouple: decoupling cursor" << LL_ENDL;
 				CGAssociateMouseAndMouseCursorPosition(false);
 				mCursorDecoupled = true;
-				mCursorIgnoreNextDelta = TRUE;
+				mCursorIgnoreNextDelta = true;
 			}
 		}
 	}
