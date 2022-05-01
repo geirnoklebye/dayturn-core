@@ -65,7 +65,7 @@ public:
 	/*virtual*/ bool setPosition(LLCoordScreen position);
 	/*virtual*/ bool setSizeImpl(LLCoordScreen size);
 	/*virtual*/ bool setSizeImpl(LLCoordWindow size);
-	/*virtual*/ BOOL switchContext(BOOL fullscreen, const LLCoordScreen &size, BOOL disable_vsync, const LLCoordScreen * const posp = NULL);
+	/*virtual*/ bool switchContext(bool fullscreen, const LLCoordScreen &size, bool disable_vsync, const LLCoordScreen * const posp = NULL);
 	/*virtual*/ bool setCursorPosition(LLCoordWindow position);
 	/*virtual*/ bool getCursorPosition(LLCoordWindow *position);
 	/*virtual*/ void showCursor();
@@ -151,8 +151,8 @@ public:
 protected:
 	LLWindowSDL(LLWindowCallbacks* callbacks,
 		const std::string& title, int x, int y, int width, int height, U32 flags,
-		BOOL fullscreen, BOOL clearBg, BOOL disable_vsync, BOOL use_gl,
-		BOOL ignore_pixel_depth, U32 fsaa_samples);
+		bool fullscreen, bool clearBg, bool disable_vsync, bool use_gl,
+		bool ignore_pixel_depth, U32 fsaa_samples);
 	~LLWindowSDL();
 
 	/*virtual*/ bool	isValid();
@@ -176,7 +176,7 @@ protected:
 	//
 
 	// create or re-create the GL context/window.  Called from the constructor and switchContext().
-	BOOL createContext(int x, int y, int width, int height, int bits, BOOL fullscreen, BOOL disable_vsync);
+	bool createContext(int x, int y, int width, int height, int bits, bool fullscreen, bool disable_vsync);
 	void destroyContext();
 	void setupFailure(const std::string& text, const std::string& caption, U32 type);
 	void fixWindowSize(void);

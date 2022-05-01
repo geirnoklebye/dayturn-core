@@ -61,7 +61,7 @@ public:
 	/*virtual*/ bool setPosition(LLCoordScreen position);
 	/*virtual*/ bool setSizeImpl(LLCoordScreen size);
 	/*virtual*/ bool setSizeImpl(LLCoordWindow size);
-	/*virtual*/ BOOL switchContext(BOOL fullscreen, const LLCoordScreen &size, BOOL enable_vsync, const LLCoordScreen * const posp = NULL);
+	/*virtual*/ bool switchContext(bool fullscreen, const LLCoordScreen &size, bool enable_vsync, const LLCoordScreen * const posp = NULL);
     /*virtual*/ void setTitle(const std::string title);
     void* createSharedContext() override;
     void makeContextCurrent(void* context) override;
@@ -141,7 +141,7 @@ public:
 protected:
 	LLWindowWin32(LLWindowCallbacks* callbacks,
 		const std::string& title, const std::string& name, int x, int y, int width, int height, U32 flags, 
-		BOOL fullscreen, BOOL clearBg, BOOL enable_vsync, BOOL use_gl,
+		bool fullscreen, bool clearBg, bool enable_vsync, bool use_gl,
 		BOOL ignore_pixel_depth, U32 fsaa_samples);
 	~LLWindowWin32();
 

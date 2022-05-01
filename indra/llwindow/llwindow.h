@@ -77,7 +77,7 @@ public:
 	bool setSize(LLCoordScreen size);
 	bool setSize(LLCoordWindow size);
 	virtual void setMinSize(U32 min_width, U32 min_height, bool enforce_immediately = true);
-	virtual BOOL switchContext(BOOL fullscreen, const LLCoordScreen &size, BOOL enable_vsync, const LLCoordScreen * const posp = NULL) = 0;
+	virtual bool switchContext(bool fullscreen, const LLCoordScreen &size, bool enable_vsync, const LLCoordScreen * const posp = NULL) = 0;
 
     //create a new GL context that shares a namespace with this Window's main GL context and make it current on the current thread
     // returns a pointer to be handed back to destroySharedConext/makeContextCurrent
@@ -198,7 +198,7 @@ public:
     virtual void* getDirectInput8() { return NULL; };
     virtual bool getInputDevices(U32 device_type_filter, void * devices_callback, void* userdata) { return false; };
 protected:
-	LLWindow(LLWindowCallbacks* callbacks, BOOL fullscreen, U32 flags);
+	LLWindow(LLWindowCallbacks* callbacks, bool fullscreen, U32 flags);
 	virtual ~LLWindow();
 	// Defaults to true
 	virtual bool isValid();
@@ -295,11 +295,11 @@ public:
 		LLWindowCallbacks* callbacks,
 		const std::string& title, const std::string& name, S32 x, S32 y, S32 width, S32 height,
 		U32 flags = 0,
-		BOOL fullscreen = FALSE,
-		BOOL clearBg = FALSE,
-		BOOL enable_vsync = FALSE,
-		BOOL use_gl = TRUE,
-		BOOL ignore_pixel_depth = FALSE,
+		bool fullscreen = false,
+		bool clearBg = false,
+		bool enable_vsync = false,
+		bool use_gl = true,
+		bool ignore_pixel_depth = false,
 		U32 fsaa_samples = 0);
 	static bool destroyWindow(LLWindow* window);
 	static bool isWindowValid(LLWindow *window);

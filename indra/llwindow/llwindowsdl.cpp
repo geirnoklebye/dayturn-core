@@ -188,9 +188,9 @@ Display* LLWindowSDL::get_SDL_Display(void)
 LLWindowSDL::LLWindowSDL(LLWindowCallbacks* callbacks,
 			 const std::string& title, S32 x, S32 y, S32 width,
 			 S32 height, U32 flags,
-			 BOOL fullscreen, BOOL clearBg,
-			 BOOL disable_vsync, BOOL use_gl,
-			 BOOL ignore_pixel_depth, U32 fsaa_samples)
+			 bool fullscreen, bool clearBg,
+			 bool disable_vsync, bool use_gl,
+			 bool ignore_pixel_depth, U32 fsaa_samples)
 	: LLWindow(callbacks, fullscreen, flags),
 	  Lock_Display(NULL),
 	  Unlock_Display(NULL), mGamma(1.0f)
@@ -409,7 +409,7 @@ static int x11_detect_VRAM_kb()
 }
 #endif // LL_X11
 
-BOOL LLWindowSDL::createContext(int x, int y, int width, int height, int bits, BOOL fullscreen, BOOL disable_vsync)
+bool LLWindowSDL::createContext(int x, int y, int width, int height, int bits, bool fullscreen, BOOL disable_vsync)
 {
 	//bool			glneedsinit = false;
 
@@ -445,7 +445,7 @@ BOOL LLWindowSDL::createContext(int x, int y, int width, int height, int bits, B
 	{
 		LL_INFOS() << "SDL_GetVideoInfo() failed! " << SDL_GetError() << LL_ENDL;
 		setupFailure("SDL_GetVideoInfo() failed, Window creation error", "Error", OSMB_OK);
-		return FALSE;
+		return false;
 	}
 
 	if (video_info->current_h > 0)
@@ -609,7 +609,7 @@ BOOL LLWindowSDL::createContext(int x, int y, int width, int height, int bits, B
 		{
 			LL_WARNS() << "createContext: window creation failure. SDL: " << SDL_GetError() << LL_ENDL;
 			setupFailure("Window creation error", "Error", OSMB_OK);
-			return FALSE;
+			return false;
 		}
 	} else if (!mFullscreen && (mWindow != NULL))
 	{
@@ -672,7 +672,7 @@ BOOL LLWindowSDL::createContext(int x, int y, int width, int height, int bits, B
 			"will automatically adjust the screen each time it runs.",
 			"Error",
 			OSMB_OK);
-		return FALSE;
+		return false;
 	}
 
 #if 0  // *FIX: we're going to brave it for now...
@@ -688,7 +688,7 @@ BOOL LLWindowSDL::createContext(int x, int y, int width, int height, int bits, B
 			"If you continue to receive this message, contact customer service.",
 			"Error",
 			OSMB_OK);
-		return FALSE;
+		return false;
 	}
 #endif
 
@@ -729,15 +729,15 @@ BOOL LLWindowSDL::createContext(int x, int y, int width, int height, int bits, B
 	    LL_WARNS() << "Couldn't enable key-repeat: " << SDL_GetError() <<LL_ENDL;
 
 	// Don't need to get the current gamma, since there's a call that restores it to the system defaults.
-	return TRUE;
+	return true;
 }
 
 
 // changing fullscreen resolution, or switching between windowed and fullscreen mode.
-BOOL LLWindowSDL::switchContext(BOOL fullscreen, const LLCoordScreen &size, BOOL disable_vsync, const LLCoordScreen * const posp)
+bool LLWindowSDL::switchContext(bool fullscreen, const LLCoordScreen &size, bool disable_vsync, const LLCoordScreen * const posp)
 {
-	const BOOL needsRebuild = TRUE;  // Just nuke the context and start over.
-	BOOL result = true;
+	const bool needsRebuild = true;  // Just nuke the context and start over.
+	bool result = true;
 
 	LL_INFOS() << "switchContext, fullscreen=" << fullscreen << LL_ENDL;
 	stop_glerror();

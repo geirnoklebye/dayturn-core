@@ -104,9 +104,9 @@ static LLWindowMacOSX *gWindowImplementation = NULL;
 LLWindowMacOSX::LLWindowMacOSX(LLWindowCallbacks* callbacks,
 							   const std::string& title, const std::string& name, S32 x, S32 y, S32 width,
 							   S32 height, U32 flags,
-							   BOOL fullscreen, BOOL clearBg,
-							   BOOL enable_vsync, BOOL use_gl,
-							   BOOL ignore_pixel_depth,
+							   bool fullscreen, bool clearBg,
+							   bool enable_vsync, bool use_gl,
+							   bool ignore_pixel_depth,
 							   U32 fsaa_samples)
 	: LLWindow(NULL, fullscreen, flags)
 {
@@ -604,7 +604,7 @@ void LLWindowMacOSX::getMouseDeltas(float* delta)
 	delta[1] = mCursorLastEventDeltaY;
 }
 
-BOOL LLWindowMacOSX::createContext(int x, int y, int width, int height, int bits, BOOL fullscreen, BOOL enable_vsync)
+bool LLWindowMacOSX::createContext(int x, int y, int width, int height, int bits, bool fullscreen, bool enable_vsync)
 {
 	mFullscreen = fullscreen;
 	
@@ -636,7 +636,7 @@ BOOL LLWindowMacOSX::createContext(int x, int y, int width, int height, int bits
 		if (err != kCGLNoError)
 		{
 			setupFailure("Can't activate GL rendering context", "Error", OSMB_OK);
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -645,15 +645,15 @@ BOOL LLWindowMacOSX::createContext(int x, int y, int width, int height, int bits
 
 	makeFirstResponder(mWindow, mGLView);
     
-	return TRUE;
+	return true;
 }
 
 
 // We only support OS X 10.7's fullscreen app mode which is literally a full screen window that fills a virtual desktop.
 // This makes this method obsolete.
-BOOL LLWindowMacOSX::switchContext(BOOL fullscreen, const LLCoordScreen &size, BOOL enable_vsync, const LLCoordScreen * const posp)
+bool LLWindowMacOSX::switchContext(bool fullscreen, const LLCoordScreen &size, bool enable_vsync, const LLCoordScreen * const posp)
 {
-	return FALSE;
+	return false;
 }
 
 void LLWindowMacOSX::destroyContext()
@@ -1859,7 +1859,7 @@ void LLWindowMacOSX::allowLanguageTextInput(LLPreeditor *preeditor, bool b)
 	if (preeditor != mPreeditor && !b)
 	{
 		// This condition may occur by a call to
-		// setEnabled(BOOL) against LLTextEditor or LLLineEditor
+		// setEnabled(bool) against LLTextEditor or LLLineEditor
 		// when the control is not focused.
 		// We need to silently ignore the case so that
 		// the language input status of the focused control

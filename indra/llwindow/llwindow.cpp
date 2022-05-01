@@ -72,10 +72,10 @@ const std::string gURLProtocolWhitelist[] = { "secondlife:", "http:", "https:", 
 S32 OSMessageBox(const std::string& text, const std::string& caption, U32 type)
 {
 	// Properly hide the splash screen when displaying the message box
-	BOOL was_visible = FALSE;
+	bool was_visible = false;
 	if (LLSplashScreen::isVisible())
 	{
-		was_visible = TRUE;
+		was_visible = true;
 		LLSplashScreen::hide();
 	}
 
@@ -106,7 +106,7 @@ S32 OSMessageBox(const std::string& text, const std::string& caption, U32 type)
 // LLWindow
 //
 
-LLWindow::LLWindow(LLWindowCallbacks* callbacks, BOOL fullscreen, U32 flags)
+LLWindow::LLWindow(LLWindowCallbacks* callbacks, bool fullscreen, U32 flags)
 	: mCallbacks(callbacks),
 	  mPostQuit(true),
 	  mFullscreen(fullscreen),
@@ -410,11 +410,11 @@ static std::set<LLWindow*> sWindowList;
 LLWindow* LLWindowManager::createWindow(
 	LLWindowCallbacks* callbacks,
 	const std::string& title, const std::string& name, S32 x, S32 y, S32 width, S32 height, U32 flags,
-	BOOL fullscreen, 
-	BOOL clearBg,
-	BOOL enable_vsync,
-	BOOL use_gl,
-	BOOL ignore_pixel_depth,
+	bool fullscreen, 
+	bool clearBg,
+	bool enable_vsync,
+	bool use_gl,
+	bool ignore_pixel_depth,
 	U32 fsaa_samples)
 {
 	LLWindow* new_window;

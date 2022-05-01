@@ -48,7 +48,7 @@ public:
 	/*virtual*/ bool setPosition(LLCoordScreen position) {return false;};
 	/*virtual*/ bool setSizeImpl(LLCoordScreen size) {return false;};
 	/*virtual*/ bool setSizeImpl(LLCoordWindow size) {return false;};
-	/*virtual*/ BOOL switchContext(BOOL fullscreen, const LLCoordScreen &size, BOOL enable_vsync, const LLCoordScreen * const posp = NULL) {return FALSE;};
+	/*virtual*/ bool switchContext(bool fullscreen, const LLCoordScreen &size, bool enable_vsync, const LLCoordScreen * const posp = NULL) {return false;};
     void* createSharedContext()  { return nullptr; }
     void makeContextCurrent(void*)  {}
     void destroySharedContext(void*)  {}
@@ -103,8 +103,8 @@ public:
 		const std::string& title, const std::string& name,
 		S32 x, S32 y, 
 		S32 width, S32 height,
-		U32 flags,  BOOL fullscreen, BOOL clear_background,
-		BOOL enable_vsync, BOOL use_gl, BOOL ignore_pixel_depth);
+		U32 flags,  bool fullscreen, bool clear_background,
+		bool enable_vsync, bool use_gl, bool ignore_pixel_depth);
 	virtual ~LLWindowHeadless();
 
 private:
