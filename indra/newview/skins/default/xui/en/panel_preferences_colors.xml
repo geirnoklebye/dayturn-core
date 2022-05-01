@@ -976,6 +976,87 @@
          width="200">
          Beyond Shout Range
        </text>
+			</panel>
+     <check_box
+      control_name="ShowNearbyAvatarsTyping"
+      follows="left|top"
+      layout="topleft"
+      top_pad="10"
+      left="30"
+      height="12"
+      name="show_nearby_typing"
+      width="200"
+      label="Show typing indicator in name tag" />
+     <check_box
+      control_name="KokuaNameTagBoldTyping"
+      follows="left|top"
+      layout="topleft"
+      top_pad="-10"
+      left="240"
+      height="12"
+      name="nametag_bold_typing"
+      width="250"
+      enabled_control="ShowNearbyAvatarsTyping"
+      label="Show typing indicator using bold" />
+     <check_box
+      control_name="KokuaNameTagColorTyping"
+      follows="left|top"
+      layout="topleft"
+      left="240"
+      height="12"
+      name="nametag_typing_status_only"
+      width="250"
+      enabled_control="ShowNearbyAvatarsTyping"
+      label="Show typing indicator in color" />
+     <check_box
+      control_name="KokuaNameTagTypingColorsWholeTag"
+      follows="left|top"
+      layout="topleft"
+      left="240"
+      height="12"
+      name="nametag_typing_whole_tag"
+      width="250"
+      enabled_control="ShowNearbyAvatarsTyping"
+      label="Typing indicator colors whole tag" />
+     <panel
+     	 left="30"
+       top_pad="-44"
+       height="75"
+       width="200"
+       follows="left|top"
+       label=""
+       name="typing_panel" >
+     <color_swatch
+       color="KokuaNameTagTypingColor"
+       can_apply_immediately="true"
+       follows="left|top"
+       height="24"
+       label_height="0"
+       layout="topleft"
+       left="10"
+       name="typing_tag"
+       top_pad="18"
+       width="44" >
+       <color_swatch.init_callback
+       function="Pref.getUIColor"
+       parameter="KokuaNameTagTypingColor" />
+       <color_swatch.commit_callback
+       function="Pref.applyUIColor"
+       parameter="KokuaNameTagTypingColor" />
+     </color_swatch>
+     <text
+       type="string"
+       length="1"
+       follows="left|top"
+       height="10"
+       layout="topleft"
+       left_pad="5"
+       mouse_opaque="false"
+       name="typing_tag_label"
+       top_delta="5"
+       width="60">
+       Is Typing
+     </text>
     </panel>
    </panel>
    <panel

@@ -146,14 +146,21 @@
          width="270"
          control_name="WorldmapFilterDuplicateLandmarks"
          tool_tip="Filters duplicate Landmark entries in the Landmark list on the World Map."/>
+        <check_box
+         follows="left|top"
+         height="16"
+         initial_value="true"
+         label="Show typing indicator in name tag"
+         name="PrefKokuaGeneralShowNearbyAvatarsTyping"
+         width="270"
+         control_name="ShowNearbyAvatarsTyping"
+         tool_tip="Filters duplicate Landmark entries in the Landmark list on the World Map."/>
             <check_box
             control_name="NameTagShowAge"
             name="NameTagShowAge"
             label="Show each avatar's age in their name tag"
             layout="topleft"
-            top_pad="10"
-            left="15"
-            height="20"
+            height="16"
             width="400"
             tool_tip="Show each avatar's age in their name tag." />
             <text
