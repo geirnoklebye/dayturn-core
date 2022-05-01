@@ -202,7 +202,7 @@ LLWindowSDL::LLWindowSDL(LLWindowCallbacks* callbacks,
 
 	// Ignore use_gl for now, only used for drones on PC
 	mWindow = NULL;
-	mNeedsResize = FALSE;
+	mNeedsResize = false;
 	mOverrideAspectRatio = 0.f;
 	mGrabbyKeyFlags = 0;
 	mReallyCapturedCount = 0;
@@ -246,7 +246,7 @@ LLWindowSDL::LLWindowSDL(LLWindowCallbacks* callbacks,
 	gWindowImplementation = this;
 
 #if LL_X11
-	mFlashing = FALSE;
+	mFlashing = false;
 #endif // LL_X11
 
 	mKeyScanCode = 0;
@@ -1199,7 +1199,7 @@ void LLWindowSDL::afterDialog()
 
 #if LL_X11
 // set/reset the XWMHints flag for 'urgency' that usually makes the icon flash
-void LLWindowSDL::x11_set_urgent(BOOL urgent)
+void LLWindowSDL::x11_set_urgent(bool urgent)
 {
 	if (mSDL_Display && !mFullscreen)
 	{
@@ -1238,8 +1238,8 @@ void LLWindowSDL::flashIcon(F32 seconds)
 	mFlashTimer.reset();
 	mFlashTimer.setTimerExpirySec(remaining_time);
 
-	x11_set_urgent(TRUE);
-	mFlashing = TRUE;
+	x11_set_urgent(true);
+	mFlashing = true;
 #endif // LL_X11
 }
 
@@ -1475,7 +1475,7 @@ void LLWindowSDL::setupFailure(const std::string& text, const std::string& capti
 	OSMessageBox(text, caption, type);
 }
 
-BOOL LLWindowSDL::SDLReallyCaptureInput(BOOL capture)
+bool LLWindowSDL::SDLReallyCaptureInput(bool capture)
 {
 	// note: this used to be safe to call nestedly, but in the
 	// end that's not really a wise usage pattern, so don't.
@@ -1557,7 +1557,7 @@ BOOL LLWindowSDL::SDLReallyCaptureInput(BOOL capture)
 		(!capture && SDL_GRAB_OFF==newmode);
 }
 
-U32 LLWindowSDL::SDLCheckGrabbyKeys(SDLKey keysym, BOOL gain)
+U32 LLWindowSDL::SDLCheckGrabbyKeys(SDLKey keysym, bool gain)
 {
 	/* part of the fix for SL-13243: Some popular window managers like
 	   to totally eat alt-drag for the purposes of moving windows.  We
@@ -1763,8 +1763,8 @@ void LLWindowSDL::gatherInput()
 
 		    gKeyboard->handleKeyDown(event.key.keysym.sym, event.key.keysym.mod);
 		    // part of the fix for SL-13243
-		    if (SDLCheckGrabbyKeys(event.key.keysym.sym, TRUE) != 0)
-			    SDLReallyCaptureInput(TRUE);
+		    if (SDLCheckGrabbyKeys(event.key.keysym.sym, true) != 0)
+			    SDLReallyCaptureInput(true);
 
 		    if (event.key.keysym.unicode)
 		    {
@@ -1778,8 +1778,8 @@ void LLWindowSDL::gatherInput()
 		    mKeyVirtualKey = event.key.keysym.unicode;
 		    mKeyModifiers = event.key.keysym.mod;
 
-		    if (SDLCheckGrabbyKeys(event.key.keysym.sym, FALSE) == 0)
-			    SDLReallyCaptureInput(FALSE); // part of the fix for SL-13243
+		    if (SDLCheckGrabbyKeys(event.key.keysym.sym, false) == 0)
+			    SDLReallyCaptureInput(false); // part of the fix for SL-13243
 
 		    gKeyboard->handleKeyUp(event.key.keysym.sym, event.key.keysym.mod);
 		    break;
@@ -1954,8 +1954,8 @@ void LLWindowSDL::gatherInput()
     // expired.
     if (mFlashing && mFlashTimer.hasExpired())
     {
-	    x11_set_urgent(FALSE);
-	    mFlashing = FALSE;
+	    x11_set_urgent(false);
+	    mFlashing = false;
     }
 #endif // LL_X11
 }

@@ -180,8 +180,8 @@ protected:
 	void destroyContext();
 	void setupFailure(const std::string& text, const std::string& caption, U32 type);
 	void fixWindowSize(void);
-	U32 SDLCheckGrabbyKeys(SDLKey keysym, BOOL gain);
-	BOOL SDLReallyCaptureInput(BOOL capture);
+	U32 SDLCheckGrabbyKeys(SDLKey keysym, bool gain);
+	bool SDLReallyCaptureInput(bool capture);
 
 	//
 	// Platform specific variables
@@ -191,7 +191,7 @@ protected:
 	SDL_Surface *	mWindow;
 	std::string mWindowTitle;
 	double		mOriginalAspectRatio;
-	BOOL		mNeedsResize;		// Constructor figured out the window is too big, it needs a resize.
+	bool		mNeedsResize;		// Constructor figured out the window is too big, it needs a resize.
 	LLCoordScreen   mNeedsResizeSize;
 	F32			mOverrideAspectRatio;
 	F32		mGamma;
@@ -207,8 +207,8 @@ protected:
 
 private:
 #if LL_X11
-	void x11_set_urgent(BOOL urgent);
-	BOOL mFlashing;
+	void x11_set_urgent(bool urgent);
+	bool mFlashing;
 	LLTimer mFlashTimer;
 #endif //LL_X11
 	
