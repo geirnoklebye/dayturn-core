@@ -74,8 +74,8 @@ public:
 	virtual BOOL getSize(LLCoordScreen *size) = 0;
 	virtual BOOL getSize(LLCoordWindow *size) = 0;
 	virtual BOOL setPosition(LLCoordScreen position) = 0;
-	BOOL setSize(LLCoordScreen size);
-	BOOL setSize(LLCoordWindow size);
+	bool setSize(LLCoordScreen size);
+	bool setSize(LLCoordWindow size);
 	virtual void setMinSize(U32 min_width, U32 min_height, bool enforce_immediately = true);
 	virtual BOOL switchContext(BOOL fullscreen, const LLCoordScreen &size, BOOL enable_vsync, const LLCoordScreen * const posp = NULL) = 0;
 
@@ -135,10 +135,10 @@ public:
  
 	virtual void flashIcon(F32 seconds) = 0;
 	virtual F32 getGamma() = 0;
-	virtual BOOL setGamma(const F32 gamma) = 0; // Set the gamma
+	virtual bool setGamma(const F32 gamma) = 0; // Set the gamma
 	virtual void setFSAASamples(const U32 fsaa_samples) = 0; //set number of FSAA samples
 	virtual U32	 getFSAASamples() = 0;
-	virtual BOOL restoreGamma() = 0;			// Restore original gamma table (before updating gamma)
+	virtual bool restoreGamma() = 0;			// Restore original gamma table (before updating gamma)
 	virtual ESwapMethod getSwapMethod() { return mSwapMethod; }
 	virtual void processMiscNativeEvents();
 	virtual void gatherInput() = 0;
@@ -167,8 +167,8 @@ public:
 	virtual void afterDialog() {};	// undo whatever was done in beforeDialog()
 
 	// opens system default color picker, modally
-	// Returns TRUE if valid color selected
-	virtual BOOL dialogColorPicker(F32 *r, F32 *g, F32 *b);
+	// Returns true if valid color selected
+	virtual bool dialogColorPicker(F32 *r, F32 *g, F32 *b);
 
 // return a platform-specific window reference (HWND on Windows, WindowRef on the Mac, Gtk window on Linux)
 	virtual void *getPlatformWindow() = 0;
@@ -203,7 +203,7 @@ protected:
 	// Defaults to true
 	virtual bool isValid();
 	// Defaults to true
-	virtual BOOL canDelete();
+	virtual bool canDelete();
 
 	virtual bool setSizeImpl(LLCoordScreen size) = 0;
 	virtual bool setSizeImpl(LLCoordWindow size) = 0;
@@ -269,7 +269,7 @@ protected:
 	virtual void updateImpl(const std::string& string) = 0;
 	virtual void hideImpl() = 0;
 
-	static BOOL sVisible;
+	static bool sVisible;
 
 };
 
@@ -301,8 +301,8 @@ public:
 		BOOL use_gl = TRUE,
 		BOOL ignore_pixel_depth = FALSE,
 		U32 fsaa_samples = 0);
-	static BOOL destroyWindow(LLWindow* window);
-	static BOOL isWindowValid(LLWindow *window);
+	static bool destroyWindow(LLWindow* window);
+	static bool isWindowValid(LLWindow *window);
 };
 
 //

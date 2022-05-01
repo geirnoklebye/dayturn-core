@@ -141,9 +141,9 @@ bool LLWindow::isValid()
 }
 
 //virtual
-BOOL LLWindow::canDelete()
+bool LLWindow::canDelete()
 {
-	return TRUE;
+	return true;
 }
 
 //virtual
@@ -186,9 +186,9 @@ ECursorType LLWindow::getCursor() const
 }
 
 //virtual
-BOOL LLWindow::dialogColorPicker(F32 *r, F32 *g, F32 *b)
+bool LLWindow::dialogColorPicker(F32 *r, F32 *g, F32 *b)
 {
-	return FALSE;
+	return false;
 }
 
 void *LLWindow::getMediaWindow()
@@ -197,7 +197,7 @@ void *LLWindow::getMediaWindow()
 	return getPlatformWindow();
 }
 
-BOOL LLWindow::setSize(LLCoordScreen size)
+bool LLWindow::setSize(LLCoordScreen size)
 {
 	if (!getMaximized())
 	{
@@ -207,7 +207,7 @@ BOOL LLWindow::setSize(LLCoordScreen size)
 	return setSizeImpl(size);
 }
 
-BOOL LLWindow::setSize(LLCoordWindow size)
+bool LLWindow::setSize(LLCoordWindow size)
 {
 	//HACK: we are inconsistently using minimum window dimensions
 	// in this case, we are constraining the inner "client" rect and other times
@@ -456,13 +456,14 @@ LLWindow* LLWindowManager::createWindow(
 	return new_window;
 }
 
-BOOL LLWindowManager::destroyWindow(LLWindow* window)
+
+bool LLWindowManager::destroyWindow(LLWindow* window)
 {
 	if (sWindowList.find(window) == sWindowList.end())
 	{
 		LL_ERRS() << "LLWindowManager::destroyWindow() : Window pointer not valid, this window doesn't exist!" 
 			<< LL_ENDL;
-		return FALSE;
+		return false;
 	}
 
 	window->close();
@@ -471,10 +472,10 @@ BOOL LLWindowManager::destroyWindow(LLWindow* window)
 
 	delete window;
 
-	return TRUE;
+	return true;
 }
 
-BOOL LLWindowManager::isWindowValid(LLWindow *window)
+bool LLWindowManager::isWindowValid(LLWindow *window)
 {
 	return sWindowList.find(window) != sWindowList.end();
 }

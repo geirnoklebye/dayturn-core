@@ -3310,7 +3310,7 @@ F32 LLWindowWin32::getGamma()
 	return mCurrentGamma;
 }
 
-BOOL LLWindowWin32::restoreGamma()
+bool LLWindowWin32::restoreGamma()
 {
     ASSERT_MAIN_THREAD();
 	if (mCustomGammaSet != FALSE)
@@ -3319,10 +3319,10 @@ BOOL LLWindowWin32::restoreGamma()
 		mCustomGammaSet = FALSE;
 		return SetDeviceGammaRamp(mhDC, mPrevGammaRamp);
 	}
-	return TRUE;
+	return true;
 }
 
-BOOL LLWindowWin32::setGamma(const F32 gamma)
+bool LLWindowWin32::setGamma(const F32 gamma)
 {
     ASSERT_MAIN_THREAD();
 	mCurrentGamma = gamma;
@@ -3336,7 +3336,7 @@ BOOL LLWindowWin32::setGamma(const F32 gamma)
             if(GetDeviceGammaRamp(mhDC, mPrevGammaRamp) == FALSE)
             {
                 LL_WARNS("Window") << "Failed to get the previous gamma ramp" << LL_ENDL;
-                return FALSE;
+                return false;
             }
         }
 		mCustomGammaSet = TRUE;
@@ -3742,9 +3742,9 @@ LLSD LLWindowWin32::getNativeKeyData()
 	return result;
 }
 
-BOOL LLWindowWin32::dialogColorPicker( F32 *r, F32 *g, F32 *b )
+bool LLWindowWin32::dialogColorPicker( F32 *r, F32 *g, F32 *b )
 {
-	BOOL retval = FALSE;
+	bool retval = false;
 
 	static CHOOSECOLOR cc;
 	static COLORREF crCustColors[16];

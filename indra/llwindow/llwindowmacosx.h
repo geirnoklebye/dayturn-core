@@ -78,10 +78,10 @@ public:
 	bool copyTextToClipboard(const LLWString & src) override;
 	void flashIcon(F32 seconds) override;
 	F32 getGamma() override;
-	BOOL setGamma(const F32 gamma) override; // Set the gamma
+	bool setGamma(const F32 gamma) override; // Set the gamma
 	U32 getFSAASamples() override;
 	void setFSAASamples(const U32 fsaa_samples) override;
-	BOOL restoreGamma() override;			// Restore original gamma table (before updating gamma)
+	bool restoreGamma() override;			// Restore original gamma table (before updating gamma)
 	ESwapMethod getSwapMethod() override { return mSwapMethod; }
 	void gatherInput() override;
 	void delayInputProcessing() override {};
@@ -103,7 +103,7 @@ public:
 	void beforeDialog() override;
 	void afterDialog() override;
 
-	BOOL dialogColorPicker(F32 *r, F32 *g, F32 *b) override;
+	bool dialogColorPicker(F32 *r, F32 *g, F32 *b) override;
 
 	void *getPlatformWindow() override;
 	void bringToFront() override {};

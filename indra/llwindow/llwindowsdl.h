@@ -90,10 +90,10 @@ public:
  
 	/*virtual*/ void flashIcon(F32 seconds);
 	/*virtual*/ F32 getGamma();
-	/*virtual*/ BOOL setGamma(const F32 gamma); // Set the gamma
+	/*virtual*/ bool setGamma(const F32 gamma); // Set the gamma
 	/*virtual*/ U32 getFSAASamples();
 	/*virtual*/ void setFSAASamples(const U32 samples);
-	/*virtual*/ BOOL restoreGamma();			// Restore original gamma table (before updating gamma)
+	/*virtual*/ bool restoreGamma();			// Restore original gamma table (before updating gamma)
 	/*virtual*/ ESwapMethod getSwapMethod() { return mSwapMethod; }
 	/*virtual*/ void processMiscNativeEvents();
 	/*virtual*/ void gatherInput();
@@ -118,7 +118,7 @@ public:
 	/*virtual*/ void beforeDialog();
 	/*virtual*/ void afterDialog();
 
-	/*virtual*/ BOOL dialogColorPicker(F32 *r, F32 *g, F32 *b);
+	/*virtual*/ bool dialogColorPicker(F32 *r, F32 *g, F32 *b);
 
 	/*virtual*/ void *getPlatformWindow();
 	/*virtual*/ void bringToFront();

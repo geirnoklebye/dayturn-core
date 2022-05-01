@@ -85,10 +85,10 @@ public:
 	/*virtual*/ bool copyTextToClipboard(const LLWString &src);
 	/*virtual*/ void flashIcon(F32 seconds);
 	/*virtual*/ F32 getGamma();
-	/*virtual*/ BOOL setGamma(const F32 gamma); // Set the gamma
+	/*virtual*/ bool setGamma(const F32 gamma); // Set the gamma
 	/*virtual*/ void setFSAASamples(const U32 fsaa_samples);
 	/*virtual*/ U32 getFSAASamples();
-	/*virtual*/ BOOL restoreGamma();			// Restore original gamma table (before updating gamma)
+	/*virtual*/ bool restoreGamma();			// Restore original gamma table (before updating gamma)
 	/*virtual*/ ESwapMethod getSwapMethod() { return mSwapMethod; }
 	/*virtual*/ void gatherInput();
 	/*virtual*/ void delayInputProcessing();
@@ -108,7 +108,7 @@ public:
 	/*virtual*/ F32 getPixelAspectRatio();
 	/*virtual*/ void setNativeAspectRatio(F32 ratio) { mOverrideAspectRatio = ratio; }
 
-	/*virtual*/	BOOL dialogColorPicker(F32 *r, F32 *g, F32 *b );
+	/*virtual*/	bool dialogColorPicker(F32 *r, F32 *g, F32 *b );
 
 	/*virtual*/ void *getPlatformWindow();
 	/*virtual*/ void bringToFront();

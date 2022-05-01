@@ -990,14 +990,14 @@ F32 LLWindowSDL::getGamma()
 	return 1/mGamma;
 }
 
-BOOL LLWindowSDL::restoreGamma()
+bool LLWindowSDL::restoreGamma()
 {
 	//CGDisplayRestoreColorSyncSettings();
     SDL_SetGamma(1.0f, 1.0f, 1.0f);
 	return true;
 }
 
-BOOL LLWindowSDL::setGamma(const F32 gamma)
+bool LLWindowSDL::setGamma(const F32 gamma)
 {
 	mGamma = gamma;
 	if (mGamma == 0) mGamma = 0.1f;
@@ -2393,9 +2393,9 @@ LLSD LLWindowSDL::getNativeKeyData()
 }
 
 
-BOOL LLWindowSDL::dialogColorPicker( F32 *r, F32 *g, F32 *b)
+bool LLWindowSDL::dialogColorPicker( F32 *r, F32 *g, F32 *b)
 {
-	BOOL rtn = FALSE;
+	bool rtn = false;
 
 	beforeDialog();
 
@@ -2456,7 +2456,7 @@ BOOL LLWindowSDL::dialogColorPicker( F32 *r, F32 *g, F32 *b)
 			*r = color.red / 65535.0f;
 			*g = color.green / 65535.0f;
 			*b = color.blue / 65535.0f;
-			rtn = TRUE;
+			rtn = true;
 		}
 	}
 
@@ -2471,9 +2471,9 @@ S32 OSMessageBoxSDL(const std::string& text, const std::string& caption, U32 typ
 	return 0;
 }
 
-BOOL LLWindowSDL::dialogColorPicker( F32 *r, F32 *g, F32 *b)
+bool LLWindowSDL::dialogColorPicker( F32 *r, F32 *g, F32 *b)
 {
-	return (FALSE);
+	return (false);
 }
 #endif // LL_GTK
 

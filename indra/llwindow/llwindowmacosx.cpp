@@ -983,13 +983,13 @@ void LLWindowMacOSX::setFSAASamples(const U32 samples)
 	mForceRebuild = true;
 }
 
-BOOL LLWindowMacOSX::restoreGamma()
+bool LLWindowMacOSX::restoreGamma()
 {
 	CGDisplayRestoreColorSyncSettings();
 	return true;
 }
 
-BOOL LLWindowMacOSX::setGamma(const F32 gamma)
+bool LLWindowMacOSX::setGamma(const F32 gamma)
 {
 	CGGammaValue redMin;
 	CGGammaValue redMax;
@@ -1795,9 +1795,9 @@ LLSD LLWindowMacOSX::getNativeKeyData()
 	return result;
 }
 
-BOOL LLWindowMacOSX::dialogColorPicker( F32 *r, F32 *g, F32 *b)
+bool LLWindowMacOSX::dialogColorPicker( F32 *r, F32 *g, F32 *b)
 {
-	BOOL	retval = FALSE;
+	bool	retval = false;
 	OSErr	error = noErr;
 	NColorPickerInfo	info;
 	
