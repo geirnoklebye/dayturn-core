@@ -3330,6 +3330,11 @@ bool LLAppViewer::initWindow()
 	return true;
 }
 
+bool LLAppViewer::isUpdaterMissing()
+{
+    return mUpdaterNotFound;
+}
+
 void LLAppViewer::writeDebugInfo(bool isStatic)
 {
 #if LL_WINDOWS && LL_BUGSPLAT
