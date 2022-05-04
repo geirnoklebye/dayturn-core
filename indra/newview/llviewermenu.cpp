@@ -575,14 +575,14 @@ void init_menus()
 	gMenuHolder->childSetLabelArg("Upload Sound", "[COST]", sound_upload_cost_str);
 	gMenuHolder->childSetLabelArg("Upload Animation", "[COST]", animation_upload_cost_str);
 	
-	gAttachSubMenu = gMenuBarView->findChildMenuByName("Attach Object", TRUE);
-	gDetachSubMenu = gMenuBarView->findChildMenuByName("Detach Object", TRUE);
+	gAttachSubMenu = gMenuBarView->findChildMenuByName("Attach Object", true);
+	gDetachSubMenu = gMenuBarView->findChildMenuByName("Detach Object", true);
 
 	gDetachAvatarMenu = gMenuHolder->getChild<LLMenuGL>("Avatar Detach", true);
 	gDetachHUDAvatarMenu = gMenuHolder->getChild<LLMenuGL>("Avatar Detach HUD", true);
 
 	// Don't display the Memory console menu if the feature is turned off
-	LLMenuItemCheckGL *memoryMenu = gMenuBarView->getChild<LLMenuItemCheckGL>("Memory", TRUE);
+	LLMenuItemCheckGL *memoryMenu = gMenuBarView->getChild<LLMenuItemCheckGL>("Memory", true);
 	if (memoryMenu)
 	{
 		memoryMenu->setVisible(false);
@@ -979,7 +979,7 @@ class LLAdvancedSetDisplayTextureDensity : public view_listener_t
 		std::string mode = userdata.asString();
 		if (mode == "none")
 		{
-			if (gPipeline.hasRenderDebugMask(LLPipeline::RENDER_DEBUG_TEXEL_DENSITY) == TRUE) 
+			if (gPipeline.hasRenderDebugMask(LLPipeline::RENDER_DEBUG_TEXEL_DENSITY) == true) 
 			{
 				gPipeline.toggleRenderDebug(LLPipeline::RENDER_DEBUG_TEXEL_DENSITY);
 			}
@@ -987,7 +987,7 @@ class LLAdvancedSetDisplayTextureDensity : public view_listener_t
 		}
 		else if (mode == "current")
 		{
-			if (gPipeline.hasRenderDebugMask(LLPipeline::RENDER_DEBUG_TEXEL_DENSITY) == FALSE) 
+			if (gPipeline.hasRenderDebugMask(LLPipeline::RENDER_DEBUG_TEXEL_DENSITY) == false) 
 			{
 				gPipeline.toggleRenderDebug(LLPipeline::RENDER_DEBUG_TEXEL_DENSITY);
 			}
@@ -995,7 +995,7 @@ class LLAdvancedSetDisplayTextureDensity : public view_listener_t
 		}
 		else if (mode == "desired")
 		{
-			if (gPipeline.hasRenderDebugMask(LLPipeline::RENDER_DEBUG_TEXEL_DENSITY) == FALSE) 
+			if (gPipeline.hasRenderDebugMask(LLPipeline::RENDER_DEBUG_TEXEL_DENSITY) == false) 
 			{
 				gPipeline.toggleRenderDebug(LLPipeline::RENDER_DEBUG_TEXEL_DENSITY);
 			}
@@ -1004,7 +1004,7 @@ class LLAdvancedSetDisplayTextureDensity : public view_listener_t
 		}
 		else if (mode == "full")
 		{
-			if (gPipeline.hasRenderDebugMask(LLPipeline::RENDER_DEBUG_TEXEL_DENSITY) == FALSE) 
+			if (gPipeline.hasRenderDebugMask(LLPipeline::RENDER_DEBUG_TEXEL_DENSITY) == false) 
 			{
 				gPipeline.toggleRenderDebug(LLPipeline::RENDER_DEBUG_TEXEL_DENSITY);
 			}

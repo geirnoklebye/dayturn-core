@@ -137,7 +137,7 @@ void LLPanelLandInfo::refresh()
 		const LLUUID& owner_id = parcel->getOwnerID();
 		const LLUUID& auth_buyer_id = parcel->getAuthorizedBuyerID();
 
-		BOOL is_public = parcel->isPublic();
+		bool is_public = parcel->isPublic();
 		BOOL is_for_sale = parcel->getForSale()
 			&& ((parcel->getSalePrice() > 0) || (auth_buyer_id.notNull()));
 		BOOL can_buy = (is_for_sale
@@ -197,7 +197,7 @@ void LLPanelLandInfo::refresh()
 		S32 area;
 		S32 claim_price;
 		S32 rent_price;
-		BOOL for_sale;
+		bool for_sale;
 		F32 dwell;
 		LLViewerParcelMgr::getInstance()->getDisplayInfo(&area,
 								   &claim_price,

@@ -6773,7 +6773,7 @@ void LLVivoxVoiceClient::updateVoiceMorphingMenu()
 			const voice_effect_list_t& effect_list = effect_interfacep->getVoiceEffectList();
 			if (!effect_list.empty())
 			{
-				LLMenuGL * voice_morphing_menup = gMenuBarView->findChildMenuByName("VoiceMorphing", TRUE);
+				LLMenuGL * voice_morphing_menup = gMenuBarView->findChildMenuByName("VoiceMorphing", true);
 
 				if (NULL != voice_morphing_menup)
 				{

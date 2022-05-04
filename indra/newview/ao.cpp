@@ -859,7 +859,7 @@ void FloaterAO::onAnimationChanged(const LLUUID& animation, const std::string st
 
 	// we have to do our own de-dupe check because we can't rely on the bold item - it's possible that the
 	// anim concerned isn't from the group being displayed so there's no match in the currently displayed scroll list
-	if (gSavedPerAccountSettings.getBOOL("AOChatNotifications") && animation != LLUUID::null && animation != mLastUUID)
+	if (gSavedPerAccountSettings.getbool("AOChatNotifications") && animation != LLUUID::null && animation != mLastUUID)
 	{
 		LLChat chat;
 		chat.mFromID = LLUUID::null;

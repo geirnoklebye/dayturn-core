@@ -6821,8 +6821,8 @@ void LLObjectBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 					disabled_items.push_back(std::string("Attach To"));
 					disabled_items.push_back(std::string("Attach To HUD"));
 				}
-				LLMenuGL* attach_menu = menu.findChildMenuByName("Attach To", TRUE);
-				LLMenuGL* attach_hud_menu = menu.findChildMenuByName("Attach To HUD", TRUE);
+				LLMenuGL* attach_menu = menu.findChildMenuByName("Attach To", true);
+				LLMenuGL* attach_hud_menu = menu.findChildMenuByName("Attach To HUD", true);
 				if (attach_menu
 					&& (attach_menu->getChildCount() == 0)
 					&& attach_hud_menu

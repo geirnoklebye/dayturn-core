@@ -93,7 +93,7 @@ public:
 	LLViewerRegion* getSelectionRegion();
 	F32		getDwelling() const { return mSelectedDwell;}
 
-	void	getDisplayInfo(S32* area, S32* claim, S32* rent, BOOL* for_sale, F32* dwell);
+	void	getDisplayInfo(S32* area, S32* claim, S32* rent, bool* for_sale, F32* dwell);
 
 	// Returns selected area
 	S32 getSelectedArea() const;

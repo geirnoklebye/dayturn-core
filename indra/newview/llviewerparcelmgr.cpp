@@ -232,13 +232,13 @@ LLViewerRegion* LLViewerParcelMgr::getSelectionRegion()
 
 void LLViewerParcelMgr::getDisplayInfo(S32* area_out, S32* claim_out,
 									   S32* rent_out,
-									   BOOL* for_sale_out,
+									   bool* for_sale_out,
 									   F32* dwell_out)
 {
 	S32 area = 0;
 	S32 price = 0;
 	S32 rent = 0;
-	BOOL for_sale = FALSE;
+	bool for_sale = false;
 	F32 dwell = DWELL_NAN;
 
 	if (mSelected)
@@ -255,12 +255,12 @@ void LLViewerParcelMgr::getDisplayInfo(S32* area_out, S32* claim_out,
 		if (mCurrentParcel->getForSale())
 		{
 			price = mCurrentParcel->getSalePrice();
-			for_sale = TRUE;
+			for_sale = true;
 		}
 		else
 		{
 			price = area * mCurrentParcel->getClaimPricePerMeter();
-			for_sale = FALSE;
+			for_sale = false;
 		}
 
 		rent = mCurrentParcel->getTotalRent();
