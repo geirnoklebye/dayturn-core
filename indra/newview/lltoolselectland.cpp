@@ -129,7 +129,7 @@ BOOL LLToolSelectLand::handleMouseUp(S32 x, S32 y, MASK mask)
 			roundXY(mEastNorthTop);
 
 			// Don't auto-select entire parcel.
-			mSelection = LLViewerParcelMgr::getInstance()->selectLand( mWestSouthBottom, mEastNorthTop, FALSE );
+			mSelection = LLViewerParcelMgr::getInstance()->selectLand( mWestSouthBottom, mEastNorthTop, false );
 		}
 
 		mMouseOutsideSlop = FALSE;

@@ -154,8 +154,8 @@ void LLPanelLandInfo::refresh()
 			getChildView("button buy land")->setEnabled(can_buy);
 		}
 
-		BOOL owner_release = LLViewerParcelMgr::isParcelOwnedByAgent(parcel, GP_LAND_RELEASE);
-		BOOL owner_divide =  LLViewerParcelMgr::isParcelOwnedByAgent(parcel, GP_LAND_DIVIDE_JOIN);
+		bool owner_release = LLViewerParcelMgr::isParcelOwnedByAgent(parcel, GP_LAND_RELEASE);
+		bool owner_divide =  LLViewerParcelMgr::isParcelOwnedByAgent(parcel, GP_LAND_DIVIDE_JOIN);
 
 		BOOL manager_releaseable = ( gAgent.canManageEstate()
 								  && (parcel->getOwnerID() == regionp->getOwner()) );

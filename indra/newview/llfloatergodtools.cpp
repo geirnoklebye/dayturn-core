@@ -824,7 +824,7 @@ void LLPanelRegionTools::onSelectRegion()
 
 	LLVector3d north_east(REGION_WIDTH_METERS, REGION_WIDTH_METERS, 0);
 	LLViewerParcelMgr::getInstance()->selectLand(regionp->getOriginGlobal(), 
-						   regionp->getOriginGlobal() + north_east, FALSE);
+						   regionp->getOriginGlobal() + north_east, false);
 	
 }
 

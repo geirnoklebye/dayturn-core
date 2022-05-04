@@ -62,7 +62,7 @@ public:
 	bool encroachesOnUnowned(const std::vector<LLBBox>& boxes) const;
 	bool encroachesOnNearbyParcel(const std::vector<LLBBox>& boxes) const;
 	
-	BOOL			isSoundLocal(const LLVector3& pos) const;
+	bool			isSoundLocal(const LLVector3& pos) const;
 
 	BOOL			isBuildCameraAllowed(const LLVector3& pos) const;
 	F32				getOwnedRatio() const;

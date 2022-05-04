@@ -318,7 +318,7 @@ void LLToolBrushLand::modifyLandInSelectionGlobal()
 		msg->addF32Fast(_PREHASH_Seconds, seconds);
 		msg->addF32Fast(_PREHASH_Height, mStartingZ);
 
-		BOOL parcel_selected = LLViewerParcelMgr::getInstance()->getParcelSelection()->getWholeParcelSelected();
+		bool parcel_selected = LLViewerParcelMgr::getInstance()->getParcelSelection()->getWholeParcelSelected();
 		LLParcel* selected_parcel = LLViewerParcelMgr::getInstance()->getParcelSelection()->getParcel();
 
 		if (parcel_selected && selected_parcel)
@@ -396,7 +396,7 @@ BOOL LLToolBrushLand::handleMouseDown(S32 x, S32 y, MASK mask)
 		gIdleCallbacks.addFunction( &LLToolBrushLand::onIdle, (void*)this );
 		setMouseCapture( true );
 
-		LLViewerParcelMgr::getInstance()->setSelectionVisible(FALSE);
+		LLViewerParcelMgr::getInstance()->setSelectionVisible(false);
 		handled = TRUE;
 	}
 
@@ -434,7 +434,7 @@ BOOL LLToolBrushLand::handleMouseUp(S32 x, S32 y, MASK mask)
 		// Release the mouse
 		setMouseCapture( false );
 
-		LLViewerParcelMgr::getInstance()->setSelectionVisible(TRUE);
+		LLViewerParcelMgr::getInstance()->setSelectionVisible(true);
 
 		gIdleCallbacks.deleteFunction( &LLToolBrushLand::onIdle, (void*)this );
 		handled = TRUE;
@@ -461,7 +461,7 @@ void LLToolBrushLand::handleDeselect()
 	{
 		gEditMenuHandler = NULL;
 	}
-	LLViewerParcelMgr::getInstance()->setSelectionVisible(TRUE);
+	LLViewerParcelMgr::getInstance()->setSelectionVisible(true);
 	mBrushSelected = false;
 }
 
@@ -681,7 +681,7 @@ bool LLToolBrushLand::canTerraformParcel(LLViewerRegion* regionp) const
 	bool is_terraform_allowed = false;
 	if (selected_parcel)
 	{
-		BOOL owner_release = LLViewerParcelMgr::isParcelOwnedByAgent(selected_parcel, GP_LAND_ALLOW_EDIT_LAND);
+		bool owner_release = LLViewerParcelMgr::isParcelOwnedByAgent(selected_parcel, GP_LAND_ALLOW_EDIT_LAND);
 		is_terraform_allowed = ( gAgent.canManageEstate() || (selected_parcel->getOwnerID() == regionp->getOwner()) || owner_release);
 	}
 

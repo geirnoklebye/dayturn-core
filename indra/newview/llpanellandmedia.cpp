@@ -131,7 +131,7 @@ void LLPanelLandMedia::refresh()
 		// something selected, hooray!
 
 		// Display options
-		BOOL can_change_media = LLViewerParcelMgr::isParcelModifiableByAgent(parcel, GP_LAND_CHANGE_MEDIA);
+		bool can_change_media = LLViewerParcelMgr::isParcelModifiableByAgent(parcel, GP_LAND_CHANGE_MEDIA);
 
 		mMediaURLEdit->setText(parcel->getMediaURL());
 		mMediaURLEdit->setEnabled(false);

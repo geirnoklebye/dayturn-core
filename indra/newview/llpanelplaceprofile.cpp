@@ -689,7 +689,7 @@ void LLPanelPlaceProfile::updateYouAreHereBanner(void* userdata)
 	{
 		static F32 radius = gSavedSettings.getF32("YouAreHereDistance");
 
-		BOOL display_banner = gAgent.getRegion()->getRegionID() == self->mLastSelectedRegionID &&
+		bool display_banner = gAgent.getRegion()->getRegionID() == self->mLastSelectedRegionID &&
 										LLAgentUI::checkAgentDistance(self->mPosRegion, radius);
 
 		self->mYouAreHerePanel->setVisible(display_banner);

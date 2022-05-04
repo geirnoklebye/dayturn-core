@@ -261,7 +261,7 @@ bool LLViewerParcelOverlay::encroachesOnNearbyParcel(const std::vector<LLBBox>& 
 	return false;
 }
 
-BOOL LLViewerParcelOverlay::isSoundLocal(const LLVector3& pos) const
+bool LLViewerParcelOverlay::isSoundLocal(const LLVector3& pos) const
 {
 	S32 row =    S32(pos.mV[VY] / PARCEL_GRID_STEP_METERS);
 	S32 column = S32(pos.mV[VX] / PARCEL_GRID_STEP_METERS);

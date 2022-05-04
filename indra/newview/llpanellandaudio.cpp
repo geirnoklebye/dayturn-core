@@ -134,7 +134,7 @@ void LLPanelLandAudio::refresh()
 		// something selected, hooray!
 
 		// Display options
-		BOOL can_change_media = LLViewerParcelMgr::isParcelModifiableByAgent(parcel, GP_LAND_CHANGE_MEDIA);
+		bool can_change_media = LLViewerParcelMgr::isParcelModifiableByAgent(parcel, GP_LAND_CHANGE_MEDIA);
 
 		mCheckSoundLocal->set( parcel->getSoundLocal() );
 		mCheckSoundLocal->setEnabled( can_change_media );
@@ -209,7 +209,7 @@ void LLPanelLandAudio::refresh()
 		}
 		// </FS:Testy>
 
-		BOOL can_change_av_sounds = LLViewerParcelMgr::isParcelModifiableByAgent(parcel, GP_LAND_OPTIONS) && parcel->getHaveNewParcelLimitData();
+		bool can_change_av_sounds = LLViewerParcelMgr::isParcelModifiableByAgent(parcel, GP_LAND_OPTIONS) && parcel->getHaveNewParcelLimitData();
 		mCheckAVSoundAny->set(parcel->getAllowAnyAVSounds());
 		mCheckAVSoundAny->setEnabled(can_change_av_sounds);
 

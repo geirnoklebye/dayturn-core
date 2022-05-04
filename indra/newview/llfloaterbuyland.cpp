@@ -733,7 +733,7 @@ void LLFloaterBuyLandUI::runWebSitePrep(const std::string& password)
 		return;
 	}
 	
-	BOOL remove_contribution = getChild<LLUICtrl>("remove_contribution")->getValue().asBoolean();
+	bool remove_contribution = getChild<LLUICtrl>("remove_contribution")->getValue().asBoolean();
 	mParcelBuyInfo = LLViewerParcelMgr::getInstance()->setupParcelBuy(gAgent.getID(), gAgent.getSessionID(),
 						gAgent.getGroupID(), mIsForGroup, mIsClaim, remove_contribution);
 

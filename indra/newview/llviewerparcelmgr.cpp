@@ -112,7 +112,7 @@ struct LLGodForceOwnerData
 // Methods
 //
 LLViewerParcelMgr::LLViewerParcelMgr()
-:	mSelected(FALSE),
+:	mSelected(false),
 	mRequestResult(0),
 	mWestSouth(),
 	mEastNorth(),
@@ -122,8 +122,8 @@ LLViewerParcelMgr::LLViewerParcelMgr()
 	mHoverWestSouth(),
 	mHoverEastNorth(),
 	mTeleportInProgressPosition(),
-	mRenderCollision(FALSE),
-	mRenderSelection(TRUE),
+	mRenderCollision(false),
+	mRenderSelection(true),
 	mCollisionBanned(0),
 	mCollisionTimer(),
 	mCollisionRegionHandle(0),
@@ -162,7 +162,7 @@ LLViewerParcelMgr::LLViewerParcelMgr()
 		mAgentParcelOverlay[i] = 0;
 	}
 
-	mTeleportInProgress = TRUE; // the initial parcel update is treated like teleport
+	mTeleportInProgress = true; // the initial parcel update is treated like teleport
 }
 
 
@@ -205,7 +205,7 @@ LLViewerParcelMgr::~LLViewerParcelMgr()
 void LLViewerParcelMgr::dump()
 {
 	LL_INFOS() << "Parcel Manager Dump" << LL_ENDL;
-	LL_INFOS() << "mSelected " << S32(mSelected) << LL_ENDL;
+	LL_INFOS() << "mSelected " << mSelected << LL_ENDL;
 	LL_INFOS() << "Selected parcel: " << LL_ENDL;
 	LL_INFOS() << mWestSouth << " to " << mEastNorth << LL_ENDL;
 	mCurrentParcel->dump();
@@ -430,14 +430,14 @@ LLParcelSelectionHandle LLViewerParcelMgr::selectParcelAt(const LLVector3d& pos_
 	northeast.mdV[VY] = ll_round( northeast.mdV[VY], (F64)PARCEL_GRID_STEP_METERS );
 
 	// Snap to parcel
-	return selectLand( southwest, northeast, TRUE );
+	return selectLand( southwest, northeast, true );
 }
 
 
 // Tries to select the parcel inside the rectangle
 LLParcelSelectionHandle LLViewerParcelMgr::selectParcelInRectangle()
 {
-	return selectLand(mWestSouth, mEastNorth, TRUE);
+	return selectLand(mWestSouth, mEastNorth, true);
 }
 
 
@@ -474,8 +474,8 @@ void LLViewerParcelMgr::selectCollisionParcel()
 	mCurrentParcelSelection->setParcel(NULL);
 	mCurrentParcelSelection = new LLParcelSelection(mCurrentParcel);
 
-	mSelected = TRUE;
-	mCurrentParcelSelection->mWholeParcelSelected = TRUE;
+	mSelected = true;
+	mCurrentParcelSelection->mWholeParcelSelected = true;
 	notifyObservers();
 	return;
 }
@@ -483,7 +483,7 @@ void LLViewerParcelMgr::selectCollisionParcel()
 
 // snap_selection = auto-select the hit parcel, if there is exactly one
 LLParcelSelectionHandle LLViewerParcelMgr::selectLand(const LLVector3d &corner1, const LLVector3d &corner2,
-								   BOOL snap_selection)
+								   bool snap_selection)
 {
 	sanitize_corners( corner1, corner2, mWestSouth, mEastNorth );
 
@@ -491,7 +491,7 @@ LLParcelSelectionHandle LLViewerParcelMgr::selectLand(const LLVector3d &corner1,
 	F32 delta_x = getSelectionWidth();
 	if (delta_x * delta_x <= 1.f * 1.f)
 	{
-		mSelected = FALSE;
+		mSelected = false;
 		notifyObservers();
 		return NULL;
 	}
@@ -500,7 +500,7 @@ LLParcelSelectionHandle LLViewerParcelMgr::selectLand(const LLVector3d &corner1,
 	F32 delta_y = getSelectionHeight();
 	if (delta_y * delta_y <= 1.f * 1.f)
 	{
-		mSelected = FALSE;
+		mSelected = false;
 		notifyObservers();
 		return NULL;
 	}
@@ -518,14 +518,14 @@ LLParcelSelectionHandle LLViewerParcelMgr::selectLand(const LLVector3d &corner1,
 	if(!region)
 	{
 		// just in case they somehow selected no land.
-		mSelected = FALSE;
+		mSelected = false;
 		return NULL;
 	}
 
 	if (region != region_other)
 	{
 		LLNotificationsUtil::add("CantSelectLandFromMultipleRegions");
-		mSelected = FALSE;
+		mSelected = false;
 		notifyObservers();
 		return NULL;
 	}
@@ -555,7 +555,7 @@ LLParcelSelectionHandle LLViewerParcelMgr::selectLand(const LLVector3d &corner1,
 	mCurrentParcelSelection->setParcel(NULL);
 	mCurrentParcelSelection = new LLParcelSelection(mCurrentParcel);
 
-	mSelected = TRUE;
+	mSelected = true;
 	mCurrentParcelSelection->mWholeParcelSelected = snap_selection;
 	notifyObservers();
 	return mCurrentParcelSelection;
@@ -574,7 +574,7 @@ void LLViewerParcelMgr::deselectLand()
 {
 	if (mSelected)
 	{
-		mSelected = FALSE;
+		mSelected = false;
 
 		// Invalidate the selected parcel
 		mCurrentParcel->setLocalID(-1);
@@ -629,7 +629,7 @@ void LLViewerParcelMgr::notifyObservers()
 //
 // ACCESSORS
 //
-BOOL LLViewerParcelMgr::selectionEmpty() const
+bool LLViewerParcelMgr::selectionEmpty() const
 {
 	return !mSelected;
 }
@@ -741,99 +741,99 @@ bool LLViewerParcelMgr::allowAgentDamage(const LLViewerRegion* region, const LLP
 		|| (parcel && parcel->getAllowDamage());
 }
 
-BOOL LLViewerParcelMgr::isOwnedAt(const LLVector3d& pos_global) const
+bool LLViewerParcelMgr::isOwnedAt(const LLVector3d& pos_global) const
 {
 	LLViewerRegion* region = LLWorld::getInstance()->getRegionFromPosGlobal( pos_global );
-	if (!region) return FALSE;
+	if (!region) return false;
 
 	LLViewerParcelOverlay* overlay = region->getParcelOverlay();
-	if (!overlay) return FALSE;
+	if (!overlay) return false;
 
 	LLVector3 pos_region = region->getPosRegionFromGlobal( pos_global );
 
 	return overlay->isOwned( pos_region );
 }
 
-BOOL LLViewerParcelMgr::isOwnedSelfAt(const LLVector3d& pos_global) const
+bool LLViewerParcelMgr::isOwnedSelfAt(const LLVector3d& pos_global) const
 {
 	LLViewerRegion* region = LLWorld::getInstance()->getRegionFromPosGlobal( pos_global );
-	if (!region) return FALSE;
+	if (!region) return false;
 
 	LLViewerParcelOverlay* overlay = region->getParcelOverlay();
-	if (!overlay) return FALSE;
+	if (!overlay) return false;
 
 	LLVector3 pos_region = region->getPosRegionFromGlobal( pos_global );
 
 	return overlay->isOwnedSelf( pos_region );
 }
 
-BOOL LLViewerParcelMgr::isOwnedOtherAt(const LLVector3d& pos_global) const
+bool LLViewerParcelMgr::isOwnedOtherAt(const LLVector3d& pos_global) const
 {
 	LLViewerRegion* region = LLWorld::getInstance()->getRegionFromPosGlobal( pos_global );
-	if (!region) return FALSE;
+	if (!region) return false;
 
 	LLViewerParcelOverlay* overlay = region->getParcelOverlay();
-	if (!overlay) return FALSE;
+	if (!overlay) return false;
 
 	LLVector3 pos_region = region->getPosRegionFromGlobal( pos_global );
 
 	return overlay->isOwnedOther( pos_region );
 }
 
-BOOL LLViewerParcelMgr::isSoundLocal(const LLVector3d& pos_global) const
+bool LLViewerParcelMgr::isSoundLocal(const LLVector3d& pos_global) const
 {
 	LLViewerRegion* region = LLWorld::getInstance()->getRegionFromPosGlobal( pos_global );
-	if (!region) return FALSE;
+	if (!region) return false;
 
 	LLViewerParcelOverlay* overlay = region->getParcelOverlay();
-	if (!overlay) return FALSE;
+	if (!overlay) return false;
 
 	LLVector3 pos_region = region->getPosRegionFromGlobal( pos_global );
 
 	return overlay->isSoundLocal( pos_region );
 }
 
-BOOL LLViewerParcelMgr::canHearSound(const LLVector3d &pos_global) const
+bool LLViewerParcelMgr::canHearSound(const LLVector3d &pos_global) const
 {
-	BOOL in_agent_parcel = inAgentParcel(pos_global);
+	bool in_agent_parcel = inAgentParcel(pos_global);
 
 	if (in_agent_parcel)
 	{
 		// In same parcel as the agent
-		return TRUE;
+		return true;
 	}
 	else
 	{
 		if (LLViewerParcelMgr::getInstance()->getAgentParcel()->getSoundLocal())
 		{
 			// Not in same parcel, and agent parcel only has local sound
-			return FALSE;
+			return false;
 		}
 		else if (LLViewerParcelMgr::getInstance()->isSoundLocal(pos_global))
 		{
 			// Not in same parcel, and target parcel only has local sound
-			return FALSE;
+			return false;
 		}
 		else
 		{
 			// Not in same parcel, but neither are local sound
-			return TRUE;
+			return true;
 		}
 	}
 }
 
 
-BOOL LLViewerParcelMgr::inAgentParcel(const LLVector3d &pos_global) const
+bool LLViewerParcelMgr::inAgentParcel(const LLVector3d &pos_global) const
 {
 	LLViewerRegion* region = LLWorld::getInstance()->getRegionFromPosGlobal(pos_global);
 	LLViewerRegion* agent_region = gAgent.getRegion();
 	if (!region || !agent_region)
-		return FALSE;
+		return false;
 
 	if (region != agent_region)
 	{
 		// Can't be in the agent parcel if you're not in the same region.
-		return FALSE;
+		return false;
 	}
 
 	LLVector3 pos_region = agent_region->getPosRegionFromGlobal(pos_global);
@@ -842,11 +842,11 @@ BOOL LLViewerParcelMgr::inAgentParcel(const LLVector3d &pos_global) const
 
 	if (mAgentParcelOverlay[row*mParcelsPerEdge + column])
 	{
-		return TRUE;
+		return true;
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 }
 
@@ -882,7 +882,7 @@ LLParcel* LLViewerParcelMgr::getCollisionParcel() const
 
 void LLViewerParcelMgr::render()
 {
-	if (mSelected && mRenderSelection && gSavedSettings.getBOOL("RenderParcelSelection") && !gDisconnected)
+	if (mSelected && mRenderSelection && gSavedSettings.getbool("RenderParcelSelection") && !gDisconnected)
 	{
 		// Rendering is done in agent-coordinates, so need to supply
 		// an appropriate offset to the render code.
@@ -899,15 +899,15 @@ void LLViewerParcelMgr::renderParcelCollision()
 	// check for expiration
 	if (mCollisionTimer.getElapsedTimeF32() > PARCEL_COLLISION_DRAW_SECS)
 	{
-		mRenderCollision = FALSE;
+		mRenderCollision = false;
 	}
 
-	if (mRenderCollision && gSavedSettings.getBOOL("ShowBanLines"))
+	if (mRenderCollision && gSavedSettings.getbool("ShowBanLines"))
 	{
 		LLViewerRegion* regionp = gAgent.getRegion();
 		if (regionp)
 		{
-			BOOL use_pass = mCollisionParcel->getParcelFlag(PF_USE_PASS_LIST);
+			bool use_pass = mCollisionParcel->getParcelFlag(PF_USE_PASS_LIST);
 			renderCollisionSegments(mCollisionSegments, use_pass, regionp);
 		}
 	}
@@ -1134,8 +1134,8 @@ LLViewerParcelMgr::ParcelBuyInfo* LLViewerParcelMgr::setupParcelBuy(
 	const LLUUID& session_id,
 	const LLUUID& group_id,
 	bool is_group_owned,
-	BOOL is_claim,
-	BOOL remove_contribution)
+	bool is_claim,
+	bool remove_contribution)
 {
 	if (!mSelected || !mCurrentParcel)
 	{
@@ -1523,7 +1523,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 {
     S32		request_result;
     S32		sequence_id;
-    BOOL	snap_selection = FALSE;
+    bool	snap_selection = false;
     S32		self_count = 0;
     S32		other_count = 0;
     S32		public_count = 0;
@@ -1548,15 +1548,15 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
     S32		other_prims = 0;
     S32		selected_prims = 0;
     F32		parcel_prim_bonus = 1.f;
-    BOOL	region_push_override = false;
-    BOOL	region_deny_anonymous_override = false;
-    BOOL	region_deny_identified_override = false; // Deprecated
-    BOOL	region_deny_transacted_override = false; // Deprecated
-    BOOL	region_deny_age_unverified_override = false;
-    BOOL    region_allow_access_override = true;
-    BOOL    region_allow_environment_override = true;
+    bool	region_push_override = false;
+    bool	region_deny_anonymous_override = false;
+    bool	region_deny_identified_override = false; // Deprecated
+    bool	region_deny_transacted_override = false; // Deprecated
+    bool	region_deny_age_unverified_override = false;
+    bool    region_allow_access_override = true;
+    bool    region_allow_environment_override = true;
     S32     parcel_environment_version = 0;
-    BOOL	agent_parcel_update = false; // updating previous(existing) agent parcel
+    bool	agent_parcel_update = false; // updating previous(existing) agent parcel
     U32     extended_flags = 0; //obscure MOAP
 
     S32		other_clean_time = 0;
@@ -1607,7 +1607,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
         return;
     }
 
-    msg->getBOOL("ParcelData", "SnapSelection", snap_selection);
+    msg->getbool("ParcelData", "SnapSelection", snap_selection);
     msg->getS32Fast(_PREHASH_ParcelData, _PREHASH_SelfCount, self_count);
     msg->getS32Fast(_PREHASH_ParcelData, _PREHASH_OtherCount, other_count);
     msg->getS32Fast(_PREHASH_ParcelData, _PREHASH_PublicCount, public_count);
@@ -1632,19 +1632,19 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
     msg->getS32Fast(_PREHASH_ParcelData, _PREHASH_OtherPrims, other_prims);
     msg->getS32Fast(_PREHASH_ParcelData, _PREHASH_SelectedPrims, selected_prims);
     msg->getF32Fast(_PREHASH_ParcelData, _PREHASH_ParcelPrimBonus, parcel_prim_bonus);
-    msg->getBOOLFast(_PREHASH_ParcelData, _PREHASH_RegionPushOverride, region_push_override);
-    msg->getBOOLFast(_PREHASH_ParcelData, _PREHASH_RegionDenyAnonymous, region_deny_anonymous_override);
-    msg->getBOOLFast(_PREHASH_ParcelData, _PREHASH_RegionDenyIdentified, region_deny_identified_override); // Deprecated
-    msg->getBOOLFast(_PREHASH_ParcelData, _PREHASH_RegionDenyTransacted, region_deny_transacted_override); // Deprecated
+    msg->getboolFast(_PREHASH_ParcelData, _PREHASH_RegionPushOverride, region_push_override);
+    msg->getboolFast(_PREHASH_ParcelData, _PREHASH_RegionDenyAnonymous, region_deny_anonymous_override);
+    msg->getboolFast(_PREHASH_ParcelData, _PREHASH_RegionDenyIdentified, region_deny_identified_override); // Deprecated
+    msg->getboolFast(_PREHASH_ParcelData, _PREHASH_RegionDenyTransacted, region_deny_transacted_override); // Deprecated
     if (msg->getNumberOfBlocksFast(_PREHASH_AgeVerificationBlock))
     {
         // this block was added later and may not be on older sims, so we have to test its existence first
-        msg->getBOOLFast(_PREHASH_AgeVerificationBlock, _PREHASH_RegionDenyAgeUnverified, region_deny_age_unverified_override);
+        msg->getboolFast(_PREHASH_AgeVerificationBlock, _PREHASH_RegionDenyAgeUnverified, region_deny_age_unverified_override);
     }
 
     if (msg->getNumberOfBlocks(_PREHASH_RegionAllowAccessBlock))
     {
-        msg->getBOOLFast(_PREHASH_RegionAllowAccessBlock, _PREHASH_RegionAllowAccessOverride, region_allow_access_override);
+        msg->getboolFast(_PREHASH_RegionAllowAccessBlock, _PREHASH_RegionAllowAccessOverride, region_allow_access_override);
     }
 
     if (msg->getNumberOfBlocks(_PREHASH_ParcelExtendedFlags))
@@ -1655,7 +1655,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
     if (msg->getNumberOfBlocks(_PREHASH_ParcelEnvironmentBlock))
     {
         msg->getS32Fast(_PREHASH_ParcelEnvironmentBlock, _PREHASH_ParcelEnvironmentVersion, parcel_environment_version);
-        msg->getBOOLFast(_PREHASH_ParcelEnvironmentBlock, _PREHASH_RegionAllowEnvironmentOverride, region_allow_environment_override);
+        msg->getboolFast(_PREHASH_ParcelEnvironmentBlock, _PREHASH_RegionAllowEnvironmentOverride, region_allow_environment_override);
     }
 
 	msg->getS32("ParcelData", "OtherCleanTime", other_clean_time );
@@ -1681,7 +1681,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
         bool environment_changed = (cur_parcel_environment_version != parcel_environment_version);
 
 		parcel->init(owner_id,
-			FALSE, FALSE, FALSE,
+			false, false, false,
 			claim_date, claim_price_per_meter, rent_price_per_meter,
 			area, other_prims, parcel_prim_bonus, is_group_owned);
 		parcel->setLocalID(local_id);
@@ -1729,7 +1729,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 
 			if (instance->mTeleportInProgress)
 			{
-				instance->mTeleportInProgress = FALSE;
+				instance->mTeleportInProgress = false;
 				if(instance->mTeleportInProgressPosition.isNull())
 				{
 					//initial update
@@ -1745,7 +1745,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 
             // Notify anything that wants to know when the agent changes parcels
             gAgent.changeParcels();
-            instance->mTeleportInProgress = FALSE;
+            instance->mTeleportInProgress = false;
         }
         else if (agent_parcel_update)
         {
@@ -1788,7 +1788,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 								west_south.mV[VY],
 								east_north.mV[VX],
 								east_north.mV[VY] );
-				parcel_mgr.mCurrentParcelSelection->mWholeParcelSelected = FALSE;
+				parcel_mgr.mCurrentParcelSelection->mWholeParcelSelected = false;
 			}
 			else if (0 == local_id)
 			{
@@ -1802,7 +1802,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 								aabb_min.mV[VY],
 								aabb_max.mV[VX],
 								aabb_max.mV[VY] );
-				parcel_mgr.mCurrentParcelSelection->mWholeParcelSelected = TRUE;
+				parcel_mgr.mCurrentParcelSelection->mWholeParcelSelected = true;
 			}
 			else
 			{
@@ -1822,7 +1822,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 				delete[] bitmap;
 				bitmap = NULL;
 
-				parcel_mgr.mCurrentParcelSelection->mWholeParcelSelected = TRUE;
+				parcel_mgr.mCurrentParcelSelection->mWholeParcelSelected = true;
 			}
 
 			// Request access list information for this land
@@ -1835,7 +1835,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 				parcel_mgr.sendParcelDwellRequest();
 			}
 
-			parcel_mgr.mSelected = TRUE;
+			parcel_mgr.mSelected = true;
 			parcel_mgr.notifyObservers();
 		}
 	}
@@ -1844,7 +1844,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 			 sequence_id == COLLISION_BANNED_PARCEL_SEQ_ID)
 	{
 		// We're about to collide with this parcel
-		parcel_mgr.mRenderCollision = TRUE;
+		parcel_mgr.mRenderCollision = true;
 		parcel_mgr.mCollisionTimer.reset();
 
 		// Differentiate this parcel if we are banned from it.
@@ -2356,9 +2356,9 @@ bool LLViewerParcelMgr::canAgentBuyParcel(LLParcel* parcel, bool forGroup) const
 }
 
 
-void LLViewerParcelMgr::startBuyLand(BOOL is_for_group)
+void LLViewerParcelMgr::startBuyLand(bool is_for_group)
 {
-	LLFloaterBuyLand::buyLand(getSelectionRegion(), mCurrentParcelSelection, is_for_group == TRUE);
+	LLFloaterBuyLand::buyLand(getSelectionRegion(), mCurrentParcelSelection, is_for_group == true);
 }
 
 void LLViewerParcelMgr::startSellLand()
@@ -2580,39 +2580,39 @@ void LLViewerParcelMgr::buyPass()
 }
 
 //Tells whether we are allowed to buy a pass or not
-BOOL LLViewerParcelMgr::isCollisionBanned()	
+bool LLViewerParcelMgr::isCollisionBanned()
 { 
 	if ((mCollisionBanned == BA_ALLOWED) || (mCollisionBanned == BA_NOT_ON_LIST) || (mCollisionBanned == BA_NOT_IN_GROUP))
-		return FALSE;
+		return false;
 	else 
-		return TRUE;
+		return true;
 }
 
 // This implementation should mirror LLSimParcelMgr::isParcelOwnedBy
 // static
-BOOL LLViewerParcelMgr::isParcelOwnedByAgent(const LLParcel* parcelp, U64 group_proxy_power)
+bool LLViewerParcelMgr::isParcelOwnedByAgent(const LLParcel* parcelp, U64 group_proxy_power)
 {
 	if (!parcelp)
 	{
-		return FALSE;
+		return false;
 	}
 
 	// Gods can always assume ownership.
 	if (gAgent.isGodlike())
 	{
-		return TRUE;
+		return true;
 	}
 
 	// The owner of a parcel automatically gets all powersr.
 	if (parcelp->getOwnerID() == gAgent.getID())
 	{
-		return TRUE;
+		return true;
 	}
 
 	// Only gods can assume 'ownership' of public land.
 	if (parcelp->isPublic())
 	{
-		return FALSE;
+		return false;
 	}
 
 	// Return whether or not the agent has group_proxy_power powers in the
@@ -2622,10 +2622,10 @@ BOOL LLViewerParcelMgr::isParcelOwnedByAgent(const LLParcel* parcelp, U64 group_
 
 // This implementation should mirror llSimParcelMgr::isParcelModifiableBy
 // static
-BOOL LLViewerParcelMgr::isParcelModifiableByAgent(const LLParcel* parcelp, U64 group_proxy_power)
+bool LLViewerParcelMgr::isParcelModifiableByAgent(const LLParcel* parcelp, U64 group_proxy_power)
 {
 	// If the agent can assume ownership, it is probably modifiable.
-	BOOL rv = FALSE;
+	bool rv = false;
 	if (parcelp)
 	{
 		// *NOTE: This should only work for leased parcels, but group owned
@@ -2637,7 +2637,7 @@ BOOL LLViewerParcelMgr::isParcelModifiableByAgent(const LLParcel* parcelp, U64 g
 			&& !gAgent.isGodlike()
 			&& (parcelp->getOwnershipStatus() != LLParcel::OS_LEASED) )
 		{
-			rv = FALSE;
+			rv = false;
 		}
 	}
 	return rv;
@@ -2709,7 +2709,7 @@ void LLViewerParcelMgr::onTeleportFinished(bool local, const LLVector3d& new_pos
 		// The agent parcel data has not been updated yet.
 		// Let's wait for the update and then emit the signal.
 		mTeleportInProgressPosition = new_pos;
-		mTeleportInProgress = TRUE;
+		mTeleportInProgress = true;
 	}
 }
 
