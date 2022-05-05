@@ -155,8 +155,6 @@ protected:
 	void populateFontSelectionCombo();
 	void loadFontPresetsFromDir(const std::string& dir, LLComboBox* font_selection_combo);
 	//</FS:Kadah>
-	// <FS:Ansariel> Properly disable avatar tag setting
-	void onAvatarTagSettingsChanged();
 
 	// <FS:Ansariel> Dynamic texture memory calculation
 	void handleDynamicTextureMemoryChanged();

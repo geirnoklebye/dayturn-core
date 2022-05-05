@@ -4403,52 +4403,6 @@ name="Command_360_Capture_Label">360 snapshot</string>
       The physics shape does not have correct version. Set the correct version for the physics model.
   </string>
   <string name="GroupChatMuteNotice">Muting group chat from [NAME].</string>
-    <!-- CA Kokua region/script/performance notifications -->
-  <string name="CA_Region_Prefix">Entered new region</string>
-  <string name="CA_Region_RepeatPrefix">Region information</string>
-  <string name="CA_Region_Channel">.
-      Running on [CA_REGION_CHANNEL]</string>
-  <string name="CA_Region_Script">.
-      Active objects: [CA_REGION_SCRIPTS_OBJECTS] ([CA_REGION_SCRIPTS_ALLOBJECTS] total), Agents: [CA_REGION_SCRIPTS_AGENTS] Scripts: [CA_REGION_SCRIPTS_TOTAL] running at [CA_REGION_SCRIPTS_PERCENT]% taking [CA_REGION_SCRIPTS_TIME] ms</string>
-  <string name="CA_Region_Timing">.
-      Last frame: [CA_REGION_TIMING_FRAME] ms Agents: [CA_REGION_TIMING_AGENTS] ms Scripts: [CA_REGION_TIMING_SCRIPTS] ms Spare: [CA_REGION_TIMING_SPARE] ms</string>
-  <string name="CA_Region_Basics">.
-      FPS: [CA_REGION_BASICS_FPS] TD: [CA_REGION_BASICS_TD] Scripts: [CA_REGION_BASICS_PERCENT]% Spare: [CA_REGION_BASICS_SPARE] ms</string>
-  <string name="CA_Region_Changed">The region you have entered is running a different simulator version
-      Current simulator: [NEWVERSION]
-      Previous simulator: [OLDVERSION]</string>
-  <string name="CA_Region_Compound">[MESSAGE]</string>
-  <string name="CA_Script_ActiveObjectsExceeds">Active objects total of [VALUE] [ACTION] threshold setting of [THRESHOLD]</string>
-  <string name="CA_Script_ObjectsExceeds">Objects total of [VALUE] [ACTION] threshold setting of [THRESHOLD]</string>
-  <string name="CA_Script_RunBelowPerCent">Script execution rate of [VALUE]% [ACTION] threshold setting of [THRESHOLD]%</string>
-  <string name="CA_Script_TimeExceeds">Script execution time of [VALUE] ms [ACTION] threshold setting of [THRESHOLD] ms</string>
-  <string name="CA_Script_Quantity">Active script total of [VALUE] [ACTION] threshold setting of [THRESHOLD]</string>
-  <string name="CA_Script_Change">Active scripts in the region changed from [PREVIOUS] to [NOW] ([DELTA])</string>
-  <string name="CA_Agent_RegionExceeds">Region agent count of [VALUE] [ACTION] threshold setting of [THRESHOLD]</string>
-  <string name="CA_Agent_NearbyExceeds">Nearby agent count of [VALUE] [ACTION] threshold setting of [THRESHOLD]</string>
-  <string name="CA_Agent_RegionChange">Region agent count changed from [PREVIOUS] to [NOW] ([DELTA])</string>
-  <string name="CA_Agent_NearbyChange">Nearby region agent count changed from [PREVIOUS] to [NOW] ([DELTA])</string>
-  <string name="CA_Timing_FrameExceeds">Overall frame time of [VALUE] ms [ACTION] threshold setting of [THRESHOLD] ms</string>
-  <string name="CA_Timing_NetExceeds">Network frame time of [VALUE] ms [ACTION] threshold setting of [THRESHOLD] ms</string>
-  <string name="CA_Timing_PhysicsExceeds">Physics frame time of [VALUE] ms [ACTION] threshold setting of [THRESHOLD] ms</string>
-  <string name="CA_Timing_SimulationExceeds">Simulation frame time of [VALUE] ms [ACTION] threshold setting of [THRESHOLD] ms</string>
-  <string name="CA_Timing_AgentExceeds">Agent frame time of [VALUE] ms [ACTION] threshold setting of [THRESHOLD] ms</string>
-  <string name="CA_Timing_ImagesExceeds">Images frame time of [VALUE] ms [ACTION] threshold setting of [THRESHOLD] ms</string>
-  <string name="CA_Timing_ScriptExceeds">Script frame time of [VALUE] ms [ACTION] threshold setting of [THRESHOLD] ms</string>
-  <string name="CA_Timing_SpareUnder">Spare time of [VALUE] ms [ACTION] threshold setting of [THRESHOLD] ms</string>
-  <string name="CA_Basics_FPSBelow">Frames Per Second rate of [VALUE] [ACTION] threshold of [THRESHOLD]</string>
-  <string name="CA_Basics_TDBelow">Time Dilation of [VALUE] [ACTION] threshold of [THRESHOLD]</string>
-  <string name="CA_Performance_Fail">is above</string>
-  <string name="CA_Performance_Restore">is below</string>
-  <string name="CA_Timing_WholeFrame">[FRAME] ms Frame Time
-      [NET] ms Net
-      [PHYSICS] ms Physics
-      [SIMULATION] ms Simulation
-      [AGENT] ms Agent
-      [IMAGES] ms Images
-      [SCRIPT] ms Script
-      [SPARE] ms Spare</string>
-  <string name="Nametag_Complexity_Label">Complexity: [COMPLEXITY]</string>
   <string name="SLGridStatusInvalidMsg">SL Grid Status error: Invalid message format. Try again later.</string>
   <string name="SLGridStatusTimedOut">SL Grid Status error: Request timed out.</string>
   <string name="SLGridStatusOtherError">SL Grid Status error: [STATUS] ( https://en.wikipedia.org/wiki/List_of_HTTP_status_codes ).</string>

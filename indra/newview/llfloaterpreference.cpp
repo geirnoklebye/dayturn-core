@@ -475,12 +475,9 @@ bool LLFloaterPreference::postBuild()
 	getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
 	
 
-	// <FS:Ansariel> Properly disable avatar tag setting
-	gSavedSettings.getControl("NameTagShowUsernames")->getCommitSignal()->connect(boost::bind(&LLFloaterPreference::onAvatarTagSettingsChanged, this));
-	gSavedSettings.getControl("AvatarNameTagMode")->getCommitSignal()->connect(boost::bind(&LLFloaterPreference::onAvatarTagSettingsChanged, this));
-	gSavedSettings.getControl("FSTagShowARW")->getCommitSignal()->connect(boost::bind(&LLFloaterPreference::onAvatarTagSettingsChanged, this));
-	onAvatarTagSettingsChanged();
-	// </FS:Ansariel>
+	gSavedSettings.getControl("NameTagShowUsernames")->getCommitSignal()->connect(boost::bind(&handleNameTagOptionChanged,  _2));	
+	gSavedSettings.getControl("NameTagShowFriends")->getCommitSignal()->connect(boost::bind(&handleNameTagOptionChanged,  _2));	
+	gSavedSettings.getControl("UseDisplayNames")->getCommitSignal()->connect(boost::bind(&handleDisplayNamesOptionChanged,  _2));
 	
 	gSavedSettings.getControl("StreamMetadataAnnounceToChat")->getSignal()->connect(boost::bind(&LLFloaterPreference::onStreamMetadataAnnounceChanged, this));
 	gSavedSettings.getControl("MiniMapChatRing")->getSignal()->connect(boost::bind(&LLFloaterPreference::onMiniMapChatRingChanged, this));
@@ -2404,15 +2401,6 @@ void LLFloaterPreference::saveGraphicsPreset(std::string& preset)
 {
 	mSavedGraphicsPreset = preset;
 }
-
-// <FS:Ansariel> Properly disable avatar tag setting
-void LLFloaterPreference::onAvatarTagSettingsChanged()
-{
-	bool arw_options_enabled = gSavedSettings.getBOOL("FSTagShowARW") && gSavedSettings.getS32("AvatarNameTagMode") > 0;
-	childSetEnabled("FSTagShowTooComplexOnlyARW", arw_options_enabled);
-	childSetEnabled("FSTagShowOwnARW", arw_options_enabled);
-}
-// </FS:Ansariel>
 
 //------------------------------Updater---------------------------------------
 
