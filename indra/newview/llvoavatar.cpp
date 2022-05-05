@@ -3473,7 +3473,7 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 	static LLUIColor tag_shout_color = LLUIColorTable::instance().getColor("NameTagShoutDistanceColor", LLColor4::yellow);
 	static LLUIColor tag_beyond_shout_color = LLUIColorTable::instance().getColor("NameTagBeyondShoutDistanceColor", LLColor4::red);
 	// KKA-936 add some options around the typing indication
-	static LLUIColor tag_typing_color = LLUIColorTable::instance().getColor("KokuaNameTagTypingColor", LLColor4::orange);
+	static LLColor4 tag_typing_color = LLUIColorTable::instance().getColor("KokuaNameTagTypingColor", LLColor4::orange);
 	static LLUICachedControl<bool> show_typing_in_bold("KokuaNameTagBoldTyping");
 	static LLUICachedControl<bool> show_typing_in_color("KokuaNameTagColorTyping");
 	static LLUICachedControl<bool> show_whole_tag_in_typing_color("KokuaNameTagTypingColorsWholeTag");
