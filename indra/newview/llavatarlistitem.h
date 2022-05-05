@@ -132,15 +132,6 @@ public:
 
 	void onInfoBtnClick();
 	void onProfileBtnClick();
-
-	//Radar state-specific
-	// [Ansariel: Colorful radar]
-	void setUseRangeColors(bool UseRangeColors);
-	void setShoutRangeColor(const LLUIColor& shoutRangeColor);
-	void setBeyondShoutRangeColor(const LLUIColor& beyondShoutRangeColor);
-	void setChatRangeColor(const LLUIColor& chatRangeColor);
-	void setWhisperRangeColor(const LLUIColor& whisperRangeColor);
-	// [/Ansariel: Colorful radar]
 	
 	//colouring based on contact sets
 	void setUseContactColors(bool use) { mUseContactColors = use;};
@@ -172,14 +163,6 @@ protected:
 	
 	//name colouring based on contactsets
 	bool mUseContactColors;
-	
-	// [Ansariel: Colorful radar]
-	bool mUseRangeColors;
-	LLUIColor mShoutRangeColor;
-	LLUIColor mBeyondShoutRangeColor;
-	LLUIColor mChatRangeColor;
-	LLUIColor mWhisperRangeColor;
-	// [/Ansariel: Colorful radar]
 
 private:
 

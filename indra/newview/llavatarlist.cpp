@@ -71,7 +71,7 @@ void LLAvatarList::toggleIcons()
 {
 	// Save the new value for new items to use.
 	mShowIcons = !mShowIcons;
-	gSavedSettings.setBOOL(mIconParamName, mShowIcons);
+	gSavedSettings.setbool(mIconParamName, mShowIcons);
 	
 	// Show/hide icons for all existing items.
 	std::vector<LLPanel*> items;
@@ -282,21 +282,8 @@ LLAvatarList::~LLAvatarList()
 void LLAvatarList::setShowIcons(std::string param_name)
 {
 	mIconParamName= param_name;
-	mShowIcons = gSavedSettings.getBOOL(mIconParamName);
+	mShowIcons = gSavedSettings.getbool(mIconParamName);
 }
-// [Ansariel: Colorful radar]
-void LLAvatarList::setUseRangeColors(bool UseRangeColors)
-{
-	mUseRangeColors = UseRangeColors;
-
-	std::vector<LLPanel*> items;
-	getItems(items);
-	for( std::vector<LLPanel*>::const_iterator it = items.begin(); it != items.end(); it++)
-	{
-		static_cast<LLAvatarListItem*>(*it)->setUseRangeColors(mUseRangeColors);
-	}
-}
-// [Ansariel: Colorful radar]
 
 //colouring based on contact sets
 void LLAvatarList::setUseContactColors(bool UseContactColors)
@@ -603,15 +590,7 @@ void LLAvatarList::addNewItem(const LLUUID& id, const std::string& name, BOOL is
 	item->showStatusFlags(mShowStatusFlags);
 	item->showPaymentStatus(mShowPaymentStatus);
 	item->showAvatarAge(mShowAge);
-	
-	// [Ansariel: Colorful radar]
-	item->setUseRangeColors(mUseRangeColors);
-	LLUIColorTable* colorTable = &LLUIColorTable::instance();
-	item->setShoutRangeColor(colorTable->getColor("AvatarListItemShoutRange", LLColor4::yellow));
-	item->setBeyondShoutRangeColor(colorTable->getColor("AvatarListItemBeyondShoutRange", LLColor4::red));
-	item->setChatRangeColor(colorTable->getColor("AvatarListItemChatRange", LLColor4::green5));
-	item->setWhisperRangeColor(colorTable->getColor("AvatarListItemWhisperRange", LLColor4::green1));
-	// [/Ansariel: Colorful radar]
+
 	//colouring based on contact sets
 	item->setUseContactColors(mUseContactColors);
 	item->setDoubleClickCallback(boost::bind(&LLAvatarList::onItemDoubleClicked, this, _1, _2, _3, _4));

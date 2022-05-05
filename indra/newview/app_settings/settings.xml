@@ -68,39 +68,6 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
-    <key>KokuaPreventChatShout</key>
-    <map>
-      <key>Comment</key>
-      <string>Enabling this option disables shouting by pressing CTRL-Return in chat entry</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>0</integer>
-    </map>
-    <key>KokuaColorFriendNamesInConversationsFloater</key>
-    <map>
-      <key>Comment</key>
-      <string>Enable coloring of Friend names in left column of Conversations floater (may be overriden by KokuaColorFriendNamesInConversationsFloaterAsNameTags if enabled)</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>0</integer>
-    </map>
-    <key>KokuaColorFriendNamesInConversationsFloaterAsNameTags</key>
-    <map>
-      <key>Comment</key>
-      <string>Enable coloring of Friend names in left column of Conversations floater using the same coloring rules as name tags</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>1</integer>
-    </map>
     <key>KokuaDisableVoiceCallStart</key>
     <map>
       <key>Comment</key>
@@ -193,72 +160,6 @@
     <map>
       <key>Comment</key>
       <string>Highlight the names of your friends in the Nearby list</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>0</integer>
-    </map>
-    <key>KokuaRadarColorDistance</key>
-    <map>
-      <key>Comment</key>
-      <string>Color the distances in the Nearby list</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>1</integer>
-    </map>
-    <key>KokuaTagColorDistance</key>
-    <map>
-      <key>Comment</key>
-      <string>Color the distance in the name tag</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>1</integer>
-    </map>
-    <key>KokuaNameTagColorTyping</key>
-    <map>
-      <key>Comment</key>
-      <string>Show the name tag typing indicator in color</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>0</integer>
-    </map>
-    <key>KokuaNameTagLabelTyping</key>
-    <map>
-      <key>Comment</key>
-      <string>Show the name tag typing indicator as a label</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>0</integer>
-    </map>
-    <key>KokuaNameTagTypingColorsWholeTag</key>
-    <map>
-      <key>Comment</key>
-      <string>Change the colour of the whole name tag while typing</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>0</integer>
-    </map>
-    <key>KokuaNameTagBoldTyping</key>
-    <map>
-      <key>Comment</key>
-      <string>Show the typing line in bold in the name tag</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>

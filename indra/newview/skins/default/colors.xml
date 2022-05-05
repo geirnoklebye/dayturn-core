@@ -185,12 +185,6 @@
      name="AudioStreamTitle"
      reference="Kokua" />
     <color
-     name="AvatarListItemBeyondShoutRange"
-     reference="Red" />
-    <color
-     name="AvatarListItemChatRange"
-     reference="Green5" />
-    <color
      name="AvatarListItemIconDefaultColor"
      reference="White" />
     <color
@@ -208,12 +202,6 @@
     <color
      name="AvatarListItemIconVoiceLeftColor"
      reference="AvatarListItemIconOfflineColor" />
-    <color
-     name="AvatarListItemShoutRange"
-     reference="Yellow" />
-    <color
-     name="AvatarListItemWhisperRange"
-     reference="Green1" />
     <color
      name="BadgeImageColor"
      value="1.0 0.40 0.0 1.0" />
@@ -669,21 +657,6 @@
     <color
      name="NameTagChat"
      reference="White" />
-  <color
-     name="NameTagChatDistanceColor"
-     reference="Green5" />
-  <color
-     name="NameTagShoutDistanceColor"
-     reference="Yellow" />
-  <color
-     name="NameTagBeyondShoutDistanceColor"
-     reference="Red" />
-  <color
-     name="NameTagWhisperDistanceColor"
-     reference="Green1" />
-  <color
-     name="KokuaNameTagTypingColor"
-     reference="Orange1" />
     <color
      name="NameTagFriend"
      value="0.447 0.784 0.663 1" />

@@ -135,7 +135,7 @@ void LLGroupList::enableForAgent(bool show_icons)
 {
     mForAgent = true;
 
-    mShowIcons = mForAgent && gSavedSettings.getBOOL("GroupListShowIcons") && show_icons;
+	mShowIcons = mForAgent && gSavedSettings.getbool("GroupListShowIcons") && show_icons;
 
     // Listen for agent group changes.
     gAgent.addListener(this, "new group");
@@ -272,7 +272,7 @@ void LLGroupList::toggleIcons()
 {
 	// Save the new value for new items to use.
 	mShowIcons = !mShowIcons;
-	gSavedSettings.setBOOL("GroupListShowIcons", mShowIcons);
+	gSavedSettings.setbool("GroupListShowIcons", mShowIcons);
 
 	// Show/hide icons for all existing items.
 	std::vector<LLPanel*> items;

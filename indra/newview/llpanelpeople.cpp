@@ -704,9 +704,6 @@ bool LLPanelPeople::postBuild()
 	mNearbyList->showUsername(false);
 	mNearbyList->showPaymentStatus(true);
 	mNearbyList->showPermissions(false);
-	// [Ansariel: Colorful radar]
-	mNearbyList->setUseRangeColors(true);
-	// [/Ansariel: Colorful radar]
 	//nearby_tab->setVisibleCallback(boost::bind(&Updater::setActive, mNearbyListUpdater, _2));
 	mNearbyListUpdater->setActive(true); // AO: always keep radar active, for chat and channel integration
 //mk

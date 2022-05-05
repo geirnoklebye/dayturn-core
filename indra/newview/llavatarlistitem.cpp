@@ -99,9 +99,6 @@ LLAvatarListItem::LLAvatarListItem(bool not_from_ui_factory/* = true*/)
 	mShowPaymentStatus(false),
 	mPaymentStatus(NULL),
 	mAvatarAge(0),
-	// [Ansariel: Colorful radar]
-	mUseRangeColors(false),
-	// [Ansariel: Colorful radar]
  	//colouring based on contact sets
 	mUseContactColors(false),
 	mDistance(99999.9f) // arbitary large number to insure new avatars are considered outside close range until we know for sure.
@@ -422,36 +419,6 @@ void LLAvatarListItem::updateFirstSeen(int nb /* = 5 */)
 void LLAvatarListItem::setRange(F32 distance)
 {
 	mDistance = distance;
-	
-	// [Ansariel: Colorful radar]
-	// Get default style params
-	static LLCachedControl<bool> color_distance(gSavedSettings, "KokuaRadarColorDistance");	
-	LLStyle::Params rangeHighlight = LLStyle::Params();
-
-	if (color_distance && mUseRangeColors)
-	{
-		if (mDistance > CHAT_NORMAL_RADIUS)
-		{
-			if (mDistance < CHAT_SHOUT_RADIUS)
-			{
-				rangeHighlight.color = mShoutRangeColor;
-			}
-			else
-			{
-				rangeHighlight.color = mBeyondShoutRangeColor;
-			}
-		}
-		else if (mDistance > CHAT_WHISPER_RADIUS)
-		{
-			rangeHighlight.color = mChatRangeColor;
-		}
-		else
-		{
-			rangeHighlight.color = mWhisperRangeColor;
-		}
-	}
-	mNearbyRange->setText(llformat("%3.2f", mDistance), rangeHighlight);
-	// [Ansariel: Colorful radar]
 }
 
 F32 LLAvatarListItem::getRange()
@@ -513,33 +480,6 @@ void LLAvatarListItem::showUsername(bool show)
 	mShowUsername = show;
 	updateAvatarName();
 }
-
-// [Ansariel: Colorful radar]
-void LLAvatarListItem::setShoutRangeColor(const LLUIColor& shoutRangeColor)
-{
-	mShoutRangeColor = shoutRangeColor;
-}
-
-void LLAvatarListItem::setBeyondShoutRangeColor(const LLUIColor& beyondShoutRangeColor)
-{
-	mBeyondShoutRangeColor = beyondShoutRangeColor;
-}
-
-void LLAvatarListItem::setChatRangeColor(const LLUIColor& chatRangeColor)
-{
-	mChatRangeColor = chatRangeColor;
-}
-
-void LLAvatarListItem::setWhisperRangeColor(const LLUIColor& whisperRangeColor)
-{
-	mWhisperRangeColor =whisperRangeColor;
-}
-
-void LLAvatarListItem::setUseRangeColors(bool UseRangeColors)
-{
-	mUseRangeColors = UseRangeColors;
-}
-// [Ansariel: Colorful radar]
 
 void LLAvatarListItem::onInfoBtnClick()
 {

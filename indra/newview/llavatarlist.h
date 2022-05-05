@@ -97,9 +97,6 @@ public:
 	/*virtual*/ BOOL handleMouseUp(S32 x, S32 y, MASK mask);
 	/*virtual*/ bool handleHover(S32 x, S32 y, MASK mask);
 
-	// [Ansariel: Colorful radar]
-	void setUseRangeColors(bool UseRangeColors);
-	// [/Ansariel: Colorful radar]
 	//colouring based on contact sets
 	void setUseContactColors(bool UseContactColors);
 

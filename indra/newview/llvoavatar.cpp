@@ -3470,77 +3470,6 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 			debugAvatarRezTime("AvatarRezLeftAppearanceNotification","left appearance mode");
 		}
 	}
-	// <FS:CR> Colorize name tags
-	//LLColor4 name_tag_color = getNameTagColor(is_friend);
-	LLColor4 name_tag_color = getNameTagColor();
-	// </FS:CR>
-	LLColor4 distance_color = name_tag_color;
-	std::string distance_string;
-
-	// Wolfspirit: If we don't need to display a friend,
-	// if we aren't self, if we use colored Clienttags and if we have a color
-	// then use that color as name_tag_color
-	static LLUICachedControl<bool> show_friends("NameTagShowFriends");
-	bool special_color_override = (show_friends && (is_friend || LGGContactSets::getInstance()->hasFriendColorThatShouldShow(getID(), LGG_CS_TAG))) ||
-									LLNetMap::hasAvatarMarkColor(getID());
-	// <FS:Ansariel> Color name tags based on distance
-	static LLCachedControl<bool> show_distance_color_tag(gSavedSettings, "FSTagShowDistanceColors");
-	static LLCachedControl<bool> show_distance_in_tag(gSavedSettings, "FSTagShowDistance");
-	static LLCachedControl<bool> color_distance_in_tag(gSavedSettings, "KokuaTagColorDistance");
-	// <FS:CR> FIRE-6664: Add whisper range to color tags
-	static LLUIColor tag_whisper_color = LLUIColorTable::instance().getColor("NameTagWhisperDistanceColor", LLColor4::green);
-	// </FS:CR> FIRE-6664: Add whisper range to color tags
-	static LLUIColor tag_chat_color = LLUIColorTable::instance().getColor("NameTagChatDistanceColor", LLColor4::green);
-	static LLUIColor tag_shout_color = LLUIColorTable::instance().getColor("NameTagShoutDistanceColor", LLColor4::yellow);
-	static LLUIColor tag_beyond_shout_color = LLUIColorTable::instance().getColor("NameTagBeyondShoutDistanceColor", LLColor4::red);
-	// KKA-936 add some options around the typing indication
-	// don't make this static otherwise we miss out on UI colour changes
-	LLColor4 tag_typing_color = LLUIColorTable::instance().getColor("KokuaNameTagTypingColor", LLColor4::orange);
-	static LLUICachedControl<bool> show_typing_in_bold("KokuaNameTagBoldTyping");
-	static LLUICachedControl<bool> show_typing_in_color("KokuaNameTagColorTyping");
-	static LLUICachedControl<bool> show_whole_tag_in_typing_color("KokuaNameTagTypingColorsWholeTag");
-	static LLUICachedControl<bool> show_typing_as_label("KokuaNameTagLabelTyping");
-
-	if (!isSelf() && (show_distance_color_tag || show_distance_in_tag))
-	{
-		F64 distance_squared = dist_vec_squared(getPositionGlobal(), gAgent.getPositionGlobal());
-		// <FS:CR> FIRE-6664: Add whisper range color tag
-		if (distance_squared <= CHAT_WHISPER_RADIUS_SQUARED)
-		{
-			distance_color = tag_whisper_color;
-		}
-		else if (distance_squared <= CHAT_NORMAL_RADIUS_SQUARED)
-		// </FS:CR> FIRE-6664: Add whisper range color tag
-		{
-			distance_color = tag_chat_color;
-		}
-		else if (distance_squared <= CHAT_SHOUT_RADIUS_SQUARED)
-		{
-			distance_color = tag_shout_color;
-		}
-		else
-		{
-			distance_color = tag_beyond_shout_color;
-		}
-
-		if (show_distance_in_tag)
-		{
-			distance_string = llformat("%.02f m", sqrt(distance_squared));
-		}
-
-		// Override nametag color only if friend color is disabled
-		// or avatar is not a friend nor has a contact set color
-		if (show_distance_color_tag && !special_color_override)
-		{
-			name_tag_color = distance_color;
-		}
-	}
-	// </FS:Ansariel>
-	// KKA_936
-	if (is_typing && show_whole_tag_in_typing_color)
-	{
-		name_tag_color = tag_typing_color;
-	}
 
 	// <FS:Ansariel> Show ARW in nametag options (for Jelly Dolls)
 	static LLCachedControl<bool> show_arw_tag(gSavedSettings, "FSTagShowARW");
@@ -3581,13 +3510,11 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 		|| is_appearance != mNameAppearance 
 		|| is_friend != mNameFriend
 		|| is_cloud != mNameCloud
-		|| name_tag_color != mNameColor
-		|| distance_string != mDistanceString
-		|| color_distance_in_tag != mColorDistanceInTag
 		// <FS:Ansariel> Show Arc in nametag (for Jelly Dolls)
 		|| complexity != mNameArc
 		|| complexity_color != mNameArcColor)
 	{
+		LLColor4 name_tag_color = getNameTagColor(is_friend);
 
 		clearNameTag();
 
@@ -3631,16 +3558,8 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 			}
 			// trim last ", "
 			line.resize( line.length() - 2 );
-			// More on KKA-936, option to show typing in inverse like a bubble chat header
-			if (is_typing && show_typing_as_label && !mVisibleChat)
-			{
-				addNameTagLineAsLabelWithColorAndEmphasis(line, tag_typing_color, show_typing_in_bold);
-			}
-			else
-			{
-				addNameTagLine(line, ((is_typing && show_typing_in_color) ? tag_typing_color : name_tag_color), ((is_typing && show_typing_in_bold) ? LLFontGL::BOLD : LLFontGL::NORMAL),
-				LLFontGL::getFontSansSerifSmall());				
-			}
+			addNameTagLine(line, name_tag_color, LLFontGL::NORMAL,
+				LLFontGL::getFontSansSerifSmall());
 		}
 
 		if (sRenderGroupTitles
@@ -3655,7 +3574,7 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 		static LLUICachedControl<bool> show_display_names("NameTagShowDisplayNames", true);
 		static LLUICachedControl<bool> show_usernames("NameTagShowUsernames", true);
 
-		bool have_name = FALSE;
+		bool have_name = false;
 
 
 		if (LLAvatarName::useDisplayNames())
@@ -3738,32 +3657,26 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 				mAvatarBirthdateRequest = new FetchAvatarBirthdate(getID(), this);
 			}
 		}
-		// <FS:Ansariel> Show distance in tag
-		if (show_distance_in_tag)
+
+		// <FS:Ansariel> Show ARW in nametag options (for Jelly Dolls)
+		static const std::string complexity_label = LLTrans::getString("Nametag_Complexity_Label");
+		if (show_arw_tag &&
+		   ((isSelf() && show_own_arw_tag) ||
+		   (!isSelf() && (!show_too_complex_only_arw_tag || isTooComplex()))))
 		{
-			// apply the option to not colour the distance text with the distance; instead it takes the name tag colour
-			// (which could still be the distance colour if colouring of the whole tag is turned on)
-			addNameTagLine(distance_string, (color_distance_in_tag ? distance_color : name_tag_color), LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
+			std::string complexity_string;
+			LLLocale locale("");
+			LLResMgr::getInstance()->getIntegerString(complexity_string, complexity);
+
+			LLStringUtil::format_map_t label_args;
+			label_args["COMPLEXITY"] = complexity_string;
+
+			static LLCachedControl<F32> max_attachment_area(gSavedSettings, "RenderAutoMuteSurfaceAreaLimit", 1000.0f);
+			bool surface_limit_exceeded = max_attachment_area > 0.f && mAttachmentSurfaceArea > max_attachment_area;
+			addNameTagLine(format_string(complexity_label, label_args) + (surface_limit_exceeded ? " \xE2\x96\xA0" : ""), complexity_color, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
 		}
-		// <FS:Ansariel> Show distance in tag
-        		// <FS:Ansariel> Show ARW in nametag options (for Jelly Dolls)
-        		static const std::string complexity_label = LLTrans::getString("Nametag_Complexity_Label");
-        		if (show_arw_tag &&
-        		   ((isSelf() && show_own_arw_tag) ||
-        		   (!isSelf() && (!show_too_complex_only_arw_tag || isTooComplex()))))
-        		{
-        			std::string complexity_string;
-        			LLLocale locale("");
-        			LLResMgr::getInstance()->getIntegerString(complexity_string, complexity);
+		// </FS:Ansariel>
 
-        			LLStringUtil::format_map_t label_args;
-        			label_args["COMPLEXITY"] = complexity_string;
-
-        			static LLCachedControl<F32> max_attachment_area(gSavedSettings, "RenderAutoMuteSurfaceAreaLimit", 1000.0f);
-        			bool surface_limit_exceeded = max_attachment_area > 0.f && mAttachmentSurfaceArea > max_attachment_area;
-        			addNameTagLine(format_string(complexity_label, label_args) + (surface_limit_exceeded ? " \xE2\x96\xA0" : ""), complexity_color, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
-        		}
-				// </FS:Ansariel>
 		mNameAway = is_away;
 		mNameDoNotDisturb = is_do_not_disturb;
 //MK
@@ -3773,16 +3686,13 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 		mNameAppearance = is_appearance;
 		mNameFriend = is_friend;
 		mNameCloud = is_cloud;
-		mNameColor=name_tag_color;
-		mDistanceString = distance_string;
-		mColorDistanceInTag = color_distance_in_tag;
 		mTitle = title ? title->getString() : "";
 				// <FS:Ansariel> Show Arc in nametag (for Jelly Dolls)
 				mNameArc = complexity;
 				mNameArcColor = complexity_color;
 				// </FS:Ansariel>
 		LLStringFn::replace_ascii_controlchars(mTitle,LL_UNKNOWN_CHAR);
-		new_name = TRUE;
+		new_name = true;
 	}
 
 	if (mVisibleChat)
@@ -3884,13 +3794,6 @@ void LLVOAvatar::addNameTagLine(const std::string& line, const LLColor4& color, 
     mNameIsSet |= !line.empty();
 }
 
-void LLVOAvatar::addNameTagLineAsLabelWithColorAndEmphasis(const std::string& line, const LLColor4& color, bool useBold)
-{
-	llassert(mNameText);
-	mNameText->addLabelWithColorAndEmphasis(line, color, useBold);
-  mNameIsSet |= !line.empty();
-}
-
 void LLVOAvatar::clearNameTag()
 {
     mNameIsSet = false;
@@ -3980,36 +3883,33 @@ void LLVOAvatar::idleUpdateNameTagAlpha(bool new_name, F32 alpha)
 	}
 }
 
-// <FS:CR> Colorize tags
-//LLColor4 LLVOAvatar::getNameTagColor(bool is_friend)
-LLColor4 LLVOAvatar::getNameTagColor()
-// </FS:CR>
+LLColor4 LLVOAvatar::getNameTagColor(bool is_friend)
 {
-	// ...not using display names
-	LLColor4 color = LLUIColorTable::getInstance()->getColor("NameTagLegacy");
-	if (LLAvatarName::useDisplayNames())
+	static LLUICachedControl<bool> show_friends("NameTagShowFriends", false);
+	const char* color_name;
+	if (show_friends && is_friend)
+	{
+		color_name = "NameTagFriend";
+	}
+	else if (LLAvatarName::useDisplayNames())
 	{
 		// ...color based on whether username "matches" a computed display name
 		LLAvatarName av_name;
 		if (LLAvatarNameCache::get(getID(), &av_name) && av_name.isDisplayNameDefault())
 		{
-			color = LLUIColorTable::getInstance()->getColor("NameTagMatch");
+			color_name = "NameTagMatch";
 		}
 		else
 		{
-			color = LLUIColorTable::getInstance()->getColor("NameTagMismatch");
+			color_name = "NameTagMismatch";
 		}
 	}
-	
-	// <FS:CR> FIRE-1061 - Color friends, lindens, muted, etc
-	color = LGGContactSets::getInstance()->colorize(getID(), color, LGG_CS_TAG);
-	// </FS:CR>
-	
-	LGGContactSets::getInstance()->hasFriendColorThatShouldShow(getID(), LGG_CS_TAG, color);
-
-	LLNetMap::getAvatarMarkColor(getID(), color);
-
-	return color;
+	else
+	{
+		// ...not using display names
+		color_name = "NameTagLegacy";
+	}
+	return LLUIColorTable::getInstance()->getColor( color_name );
 }
 
 void LLVOAvatar::idleUpdateBelowWater()
@@ -9141,9 +9041,6 @@ void LLVOAvatar::updateMeshTextures()
 			}
 		}
 	}
-
-	
-
 }
 
 // virtual

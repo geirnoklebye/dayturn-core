@@ -286,16 +286,13 @@ public:
 	void			idleUpdateNameTagText(bool new_name);
 	void			idleUpdateNameTagPosition(const LLVector3& root_pos_last);
 	void			idleUpdateNameTagAlpha(bool new_name, F32 alpha);
-	// <FS:CR> Colorize tags
-	//LLColor4		getNameTagColor(bool is_friend);
-	LLColor4		getNameTagColor();
-	// </FS:CR>
+	LLColor4		getNameTagColor(bool is_friend);
+
 	void			clearNameTag();
 	static void		invalidateNameTag(const LLUUID& agent_id);
 	// force all name tags to rebuild, useful when display names turned on/off
 	static void		invalidateNameTags();
 	void			addNameTagLine(const std::string& line, const LLColor4& color, S32 style, const LLFontGL* font, const bool use_ellipses = false);
-	void			addNameTagLineAsLabelWithColorAndEmphasis(const std::string& line, const LLColor4& color, bool useBold);
 	void 			idleUpdateRenderComplexity();
 	void 			idleUpdateDebugInfo();
     void 			accountRenderComplexityForObject(const LLViewerObject *attached_object,
@@ -1058,7 +1055,6 @@ private:
 	LLColor4		mNameColor;
 	BOOL      		mRenderGroupTitles;
 	std::string		mDistanceString;
-	bool					mColorDistanceInTag;
 	FetchAvatarBirthdate	*mAvatarBirthdateRequest;
 	LLDate			mAvatarBirthdate;
 	// <FS:Ansariel> Show Arc in nametag (for Jelly Dolls)
