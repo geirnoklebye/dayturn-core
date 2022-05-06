@@ -760,7 +760,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	setHoverOffset(LLVector3(0.0, 0.0, 0.0));
 
 	// mVoiceVisualizer is created by the hud effects manager and uses the HUD Effects pipeline
-	const BOOL needsSendToSim = false; // currently, this HUD effect doesn't need to pack and unpack data to do its job
+	const bool needsSendToSim = false; // currently, this HUD effect doesn't need to pack and unpack data to do its job
 	mVoiceVisualizer = ( LLVoiceVisualizer *)LLHUDManager::getInstance()->createViewerEffect( LLHUDObject::LL_HUD_EFFECT_VOICE_VISUALIZER, needsSendToSim );
 
 	LL_DEBUGS("Avatar","Message") << "LLVOAvatar Constructor (0x" << this << ") id:" << mID << LL_ENDL;
@@ -3410,7 +3410,7 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 		//mNameText->setMass(10.f);
 		mNameText->setSourceObject(this);
 		mNameText->setVertAlignment(LLHUDNameTag::ALIGN_VERT_TOP);
-		mNameText->setVisibleOffScreen(TRUE);
+		mNameText->setVisibleOffScreen(true);
 		mNameText->setMaxLines(11);
 		mNameText->setFadeDistance(CHAT_NORMAL_RADIUS, 5.f);
 		sNumVisibleChatBubbles++;
@@ -3694,7 +3694,7 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 				mNameText->addLine(chat_iter->mText, old_chat, style);
 			}
 		}
-		mNameText->setVisibleOffScreen(TRUE);
+		mNameText->setVisibleOffScreen(true);
 
 		if (mTyping)
 		{
@@ -3719,7 +3719,7 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 		// ...not using chat bubbles, just names
 		mNameText->setTextAlignment(LLHUDNameTag::ALIGN_TEXT_CENTER);
 		mNameText->setFadeDistance(CHAT_NORMAL_RADIUS, 5.f);
-		mNameText->setVisibleOffScreen(FALSE);
+		mNameText->setVisibleOffScreen(false);
 	}
 }
 

@@ -1222,7 +1222,7 @@ void LLToolDragAndDrop::dropScript(LLViewerObject* hit_obj,
 		gFloaterTools->dirty();
 
 		// VEFFECT: SetScript
-		LLHUDEffectSpiral *effectp = (LLHUDEffectSpiral *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_BEAM, TRUE);
+		LLHUDEffectSpiral *effectp = (LLHUDEffectSpiral *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_BEAM, true);
 		effectp->setSourceObject(gAgentAvatarp);
 		effectp->setTargetObject(hit_obj);
 		effectp->setDuration(LL_HUD_DUR_SHORT);
@@ -1402,7 +1402,7 @@ void LLToolDragAndDrop::dropObject(LLViewerObject* raycast_target,
 	}
 
 	// VEFFECT: DropObject
-	LLHUDEffectSpiral *effectp = (LLHUDEffectSpiral *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_BEAM, TRUE);
+	LLHUDEffectSpiral *effectp = (LLHUDEffectSpiral *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_BEAM, true);
 	effectp->setSourceObject(gAgentAvatarp);
 	effectp->setPositionGlobal(mLastHitPos);
 	effectp->setDuration(LL_HUD_DUR_SHORT);
@@ -1465,7 +1465,7 @@ void LLToolDragAndDrop::dropInventory(LLViewerObject* hit_obj,
 	}
 
 	// VEFFECT: AddToInventory
-	LLHUDEffectSpiral *effectp = (LLHUDEffectSpiral *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_BEAM, TRUE);
+	LLHUDEffectSpiral *effectp = (LLHUDEffectSpiral *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_BEAM, true);
 	effectp->setSourceObject(gAgentAvatarp);
 	effectp->setTargetObject(hit_obj);
 	effectp->setDuration(LL_HUD_DUR_SHORT);
@@ -2029,7 +2029,7 @@ EAcceptance LLToolDragAndDrop::dad3dApplyToObject(
 		}
 		
 		// VEFFECT: SetTexture
-		LLHUDEffectSpiral *effectp = (LLHUDEffectSpiral *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_BEAM, TRUE);
+		LLHUDEffectSpiral *effectp = (LLHUDEffectSpiral *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_BEAM, true);
 		effectp->setSourceObject(gAgentAvatarp);
 		effectp->setTargetObject(obj);
 		effectp->setDuration(LL_HUD_DUR_SHORT);

@@ -1025,7 +1025,7 @@ void LLVOAvatarSelf::idleUpdateTractorBeam()
 		if (mBeamTimer.getElapsedTimeF32() > 0.25f)
 		{
 			mBeam->setColor(LLColor4U(gAgent.getEffectColor()));
-			mBeam->setNeedsSendToSim(TRUE);
+			mBeam->setNeedsSendToSim(true);
 			mBeamTimer.reset();
 		}
 	}

@@ -68,8 +68,8 @@ bool lltextobject_further_away::operator()(const LLPointer<LLHUDText>& lhs, cons
 
 LLHUDText::LLHUDText(const U8 type) :
 			LLHUDObject(type),
-			mOnHUDAttachment(FALSE),
-//			mVisibleOffScreen(FALSE),
+			mOnHUDAttachment(false),
+//			mVisibleOffScreen(false),
 			mWidth(0.f),
 			mHeight(0.f),
 			mFontp(LLFontGL::getFontSansSerifSmall()),
@@ -80,14 +80,14 @@ LLHUDText::LLHUDText(const U8 type) :
 			mTextAlignment(ALIGN_TEXT_CENTER),
 			mVertAlignment(ALIGN_VERT_CENTER),
 //			mLOD(0),
-			mHidden(FALSE)
+			mHidden(false)
 {
 	mColor = LLColor4(1.f, 1.f, 1.f, 1.f);
-	mDoFade = TRUE;
+	mDoFade = true;
 	mFadeDistance = 8.f;
 	mFadeRange = 4.f;
-	mZCompare = TRUE;
-	mOffscreen = FALSE;
+	mZCompare = true;
+	mOffscreen = false;
 	mRadius = 0.1f;
 	LLPointer<LLHUDText> ptr(this);
 	sTextObjects.insert(ptr);
@@ -418,7 +418,7 @@ void LLHUDText::updateVisibility()
 			(x_pixel_vec * mPositionOffset.mV[VX]) +
 			(y_pixel_vec * mPositionOffset.mV[VY]);
 
-	mOffscreen = FALSE;
+	mOffscreen = false;
 	if (!LLViewerCamera::getInstance()->sphereInFrustum(render_position, mRadius))
 	{
 //		if (!mVisibleOffScreen)
@@ -428,7 +428,7 @@ void LLHUDText::updateVisibility()
 //		}
 //		else
 //		{
-//			mOffscreen = TRUE;
+//			mOffscreen = true;
 //		}
 	}
 

@@ -64,7 +64,7 @@ public:
 	static void cleanupDeadIcons();
 	static S32 getNumInstances();
 
-	static BOOL iconsNearby();
+	static bool iconsNearby();
 
 	BOOL getHidden() const { return mHidden; }
 	void setHidden( BOOL hide ) { mHidden = hide; }

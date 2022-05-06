@@ -76,13 +76,13 @@ bool llhudnametag_further_away::operator()(const LLPointer<LLHUDNameTag>& lhs, c
 
 LLHUDNameTag::LLHUDNameTag(const U8 type)
 :	LLHUDObject(type),
-	mDoFade(TRUE),
+	mDoFade(true),
 	mFadeDistance(8.f),
 	mFadeRange(4.f),
 	mLastDistance(0.f),
-	mZCompare(TRUE),
-	mVisibleOffScreen(FALSE),
-	mOffscreen(FALSE),
+	mZCompare(true),
+	mVisibleOffScreen(false),
+	mOffscreen(false),
 	mColor(1.f, 1.f, 1.f, 1.f),
 //	mScale(),
 	mWidth(0.f),
@@ -140,7 +140,7 @@ BOOL LLHUDNameTag::lineSegmentIntersect(const LLVector4a& start, const LLVector4
 	}
 	if (text_color.mV[3] < 0.01f)
 	{
-		return FALSE;
+		return false;
 	}
 
 	mOffsetY = lltrunc(mHeight * ((mVertAlignment == ALIGN_VERT_CENTER) ? 0.5f : 1.f));
@@ -215,11 +215,11 @@ BOOL LLHUDNameTag::lineSegmentIntersect(const LLVector4a& start, const LLVector4
 		{
 			dir.mul(t);
 			intersection.setAdd(start, dir);
-			return TRUE;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void LLHUDNameTag::render()
@@ -344,7 +344,7 @@ void LLHUDNameTag::renderText(BOOL for_select)
 
 			LLColor4 label_color(0.f, 0.f, 0.f, 1.f);
 			label_color.mV[VALPHA] = alpha_factor;
-			hud_render_text(segment_iter->getText(), render_position, *fontp, segment_iter->mStyle, LLFontGL::NO_SHADOW, x_offset, y_offset, label_color, FALSE);
+			hud_render_text(segment_iter->getText(), render_position, *fontp, segment_iter->mStyle, LLFontGL::NO_SHADOW, x_offset, y_offset, label_color, false);
 		}
 	}
 
@@ -389,7 +389,7 @@ void LLHUDNameTag::renderText(BOOL for_select)
 			text_color = segment_iter->mColor;
 			text_color.mV[VALPHA] *= alpha_factor;
 
-			hud_render_text(segment_iter->getText(), render_position, *fontp, style, shadow, x_offset, y_offset, text_color, FALSE);
+			hud_render_text(segment_iter->getText(), render_position, *fontp, style, shadow, x_offset, y_offset, text_color, false);
 		}
 	}
 	/// Reset the default color to white.  The renderer expects this to be the default. 
@@ -625,7 +625,7 @@ void LLHUDNameTag::updateVisibility()
 			(x_pixel_vec * mPositionOffset.mV[VX]) +
 			(y_pixel_vec * mPositionOffset.mV[VY]);
 
-	mOffscreen = FALSE;
+	mOffscreen = false;
 	if (!LLViewerCamera::getInstance()->sphereInFrustum(render_position, mRadius))
 	{
 		if (!mVisibleOffScreen)
@@ -635,7 +635,7 @@ void LLHUDNameTag::updateVisibility()
 		}
 		else
 		{
-			mOffscreen = TRUE;
+			mOffscreen = true;
 		}
 	}
 

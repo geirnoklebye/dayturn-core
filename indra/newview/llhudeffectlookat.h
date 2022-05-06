@@ -57,7 +57,7 @@ public:
 	/*virtual*/ void markDead();
 	/*virtual*/ void setSourceObject(LLViewerObject* objectp);
 
-	BOOL setLookAt(ELookAtType target_type, LLViewerObject *object, LLVector3 position);
+	bool setLookAt(ELookAtType target_type, LLViewerObject *object, LLVector3 position);
 	void clearLookAtTarget();
 
 	ELookAtType getLookAtType() { return mTargetType; }

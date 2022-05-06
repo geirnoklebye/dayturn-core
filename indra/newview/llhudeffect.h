@@ -40,10 +40,10 @@ class LLMessageSystem;
 class LLHUDEffect : public LLHUDObject
 {
 public:
-	void setNeedsSendToSim(const BOOL send_to_sim);
-	BOOL getNeedsSendToSim() const;
-	void setOriginatedHere(const BOOL orig_here);
-	BOOL getOriginatedHere() const;
+	void setNeedsSendToSim(const bool send_to_sim);
+	bool getNeedsSendToSim() const;
+	void setOriginatedHere(const bool orig_here);
+	bool getOriginatedHere() const;
 
 	void setDuration(const F32 duration);
 	void setColor(const LLColor4U &color);
@@ -70,8 +70,8 @@ protected:
 	F32			mDuration;
 	LLColor4U	mColor;
 
-	BOOL		mNeedsSendToSim;
-	BOOL		mOriginatedHere;
+	bool		mNeedsSendToSim;
+	bool		mOriginatedHere;
 };
 
 #endif // LL_LLHUDEFFECT_H

@@ -2975,7 +2975,7 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 
 	// Do teleport effect for where you're leaving
 	// VEFFECT: TeleportStart
-	LLHUDEffectSpiral *effectp = (LLHUDEffectSpiral *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_POINT, TRUE);
+	LLHUDEffectSpiral *effectp = (LLHUDEffectSpiral *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_POINT, true);
 	effectp->setPositionGlobal(gAgent.getPositionGlobal());
 	effectp->setColor(LLColor4U(gAgent.getEffectColor()));
 	LLHUDManager::getInstance()->sendEffects();
@@ -3070,7 +3070,7 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 
 	// Now do teleport effect for where you're going.
 	// VEFFECT: TeleportEnd
-	effectp = (LLHUDEffectSpiral *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_POINT, TRUE);
+	effectp = (LLHUDEffectSpiral *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_POINT, true);
 	effectp->setPositionGlobal(gAgent.getPositionGlobal());
 
 	effectp->setColor(LLColor4U(gAgent.getEffectColor()));

@@ -635,7 +635,7 @@ bool LLToolPie::walkToClickedLocation()
         gAgentCamera.setFocusOnAvatar(TRUE, TRUE);
 
         if (mAutoPilotDestination) { mAutoPilotDestination->markDead(); }
-        mAutoPilotDestination = (LLHUDEffectBlob *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_BLOB, FALSE);
+        mAutoPilotDestination = (LLHUDEffectBlob *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_BLOB, false);
         mAutoPilotDestination->setPositionGlobal(mPick.mPosGlobal);
         mAutoPilotDestination->setPixelSize(5);
         mAutoPilotDestination->setColor(LLColor4U(170, 210, 190));
@@ -2077,7 +2077,7 @@ BOOL LLToolPie::handleRightClickPick()
 void LLToolPie::showVisualContextMenuEffect()
 {
 	// VEFFECT: ShowPie
-	LLHUDEffectSpiral *effectp = (LLHUDEffectSpiral *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_SPHERE, TRUE);
+	LLHUDEffectSpiral *effectp = (LLHUDEffectSpiral *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_SPHERE, true);
 	effectp->setPositionGlobal(mPick.mPosGlobal);
 	effectp->setColor(LLColor4U(gAgent.getEffectColor()));
 	effectp->setDuration(0.25f);
@@ -2158,7 +2158,7 @@ void LLToolPie::startCameraSteering()
 
 		mClockwise = camera_to_rotation_center * rotation_center_to_pick < 0.f;
 		if (mMouseSteerGrabPoint) { mMouseSteerGrabPoint->markDead(); }
-		mMouseSteerGrabPoint = (LLHUDEffectBlob *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_BLOB, FALSE);
+		mMouseSteerGrabPoint = (LLHUDEffectBlob *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_BLOB, false);
 		mMouseSteerGrabPoint->setPositionGlobal(mSteerPick.mPosGlobal);
 		mMouseSteerGrabPoint->setColor(LLColor4U(170, 210, 190));
 		mMouseSteerGrabPoint->setPixelSize(5);

@@ -200,7 +200,7 @@ void LLHUDIcon::markDead()
 
 void LLHUDIcon::render()
 {
-	renderIcon(FALSE);
+	renderIcon(false);
 }
 
 BOOL LLHUDIcon::lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end, LLVector4a* intersection)
@@ -360,7 +360,7 @@ void LLHUDIcon::updateAll()
 }
 
 //static
-BOOL LLHUDIcon::iconsNearby()
+bool LLHUDIcon::iconsNearby()
 {
 	return !sIconInstances.empty();
 }
