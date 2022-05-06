@@ -84,7 +84,7 @@ void LLToolSelectRect::handlePick(const LLPickInfo& pick)
 	mPick = pick;
 
 	// start dragging rectangle
-	setMouseCapture( TRUE );
+	setMouseCapture( true );
 
 	mDragStartX = pick.mMousePt.mX;
 	mDragStartY = pick.mMousePt.mY;
@@ -97,7 +97,7 @@ void LLToolSelectRect::handlePick(const LLPickInfo& pick)
 
 BOOL LLToolSelectRect::handleMouseUp(S32 x, S32 y, MASK mask)
 {
-	setMouseCapture( FALSE );
+	setMouseCapture( false );
 
 	if(	mMouseOutsideSlop )
 	{

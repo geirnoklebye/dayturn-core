@@ -301,7 +301,7 @@ void LLToolMgr::toggleBuildMode(const LLSD& sdname)
 			if (gAgentCamera.getFocusOnAvatar())
 			{
 				// zoom in if we're looking at the avatar
-				gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
+				gAgentCamera.setFocusOnAvatar(false, ANIMATE);
 				gAgentCamera.setFocusGlobal(gAgent.getPositionGlobal() + 2.0 * LLVector3d(gAgent.getAtAxis()));
 				gAgentCamera.cameraZoomIn(0.666f);
 				gAgentCamera.cameraOrbitOver( 30.f * DEG_TO_RAD );

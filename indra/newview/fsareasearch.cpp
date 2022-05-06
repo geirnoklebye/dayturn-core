@@ -1664,7 +1664,7 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 
 					LLViewerJoystick::getInstance()->setCameraNeedsUpdate(true); // Fixes an edge case where if the user has JUST disabled flycam themselves, the camera gets stuck waiting for input.
 
-					gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
+					gAgentCamera.setFocusOnAvatar(false, ANIMATE);
 
 					gAgentCamera.setLookAt(LOOKAT_TARGET_SELECT, objectp);
 

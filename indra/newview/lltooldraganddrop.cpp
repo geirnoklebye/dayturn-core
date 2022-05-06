@@ -327,7 +327,7 @@ void LLToolDragAndDrop::beginDrag(EDragAndDropType type,
 	mSourceID = source_id;
 	mObjectID = object_id;
 
-	setMouseCapture( TRUE );
+	setMouseCapture( true );
 	LLToolMgr::getInstance()->setTransientTool( this );
 	mCursor = UI_CURSOR_NO;
 	if ((mCargoTypes[0] == DAD_CATEGORY)
@@ -397,7 +397,7 @@ void LLToolDragAndDrop::beginMultiDrag(
 	mSource = source;
 	mSourceID = source_id;
 
-	setMouseCapture( TRUE );
+	setMouseCapture( true );
 	LLToolMgr::getInstance()->setTransientTool( this );
 	mCursor = UI_CURSOR_NO;
 	if ((mSource == SOURCE_AGENT) || (mSource == SOURCE_LIBRARY))
@@ -446,7 +446,7 @@ void LLToolDragAndDrop::endDrag()
 {
 	mEndDragSignal();
 	LLSelectMgr::getInstance()->unhighlightAll();
-	setMouseCapture(FALSE);
+	setMouseCapture(false);
 }
 
 void LLToolDragAndDrop::onMouseCaptureLost()

@@ -440,7 +440,7 @@ BOOL LLManipRotate::handleMouseDownOnPart( S32 x, S32 y, MASK mask )
 	mAgentSelfAtAxis = gAgent.getAtAxis(); // no point checking if avatar was selected, just save the value
 
 	// Route future Mouse messages here preemptively.  (Release on mouse up.)
-	setMouseCapture( TRUE );
+	setMouseCapture( true );
 	LLSelectMgr::getInstance()->enableSilhouette(false);
 
 	mHelpTextTimer.reset();
@@ -505,7 +505,7 @@ bool LLManipRotate::handleHover(S32 x, S32 y, MASK mask)
 		if( mObjectSelection->isEmpty() )
 		{
 			// Somehow the object got deselected while we were dragging it.
-			setMouseCapture( FALSE );
+			setMouseCapture( false );
 		}
 		else
 		{

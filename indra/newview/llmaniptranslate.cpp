@@ -1,4 +1,4 @@
-﻿/** 
+/** 
  * @file llmaniptranslate.cpp
  * @brief LLManipTranslate class implementation
  *
@@ -387,7 +387,7 @@ BOOL LLManipTranslate::handleMouseDownOnPart( S32 x, S32 y, MASK mask )
 			// mouse_pos may be nonsense
 			LL_WARNS() << "Failed to project object center to screen" << LL_ENDL;
 		}
-		else if (gSavedSettings.getBOOL("SnapToMouseCursor"))
+		else if (gSavedSettings.getbool("SnapToMouseCursor"))
 		{
 			LLUI::getInstance()->setMousePositionScreen(mouse_pos.mX, mouse_pos.mY);
 			x = mouse_pos.mX;
@@ -402,7 +402,7 @@ BOOL LLManipTranslate::handleMouseDownOnPart( S32 x, S32 y, MASK mask )
 	mCopyMadeThisDrag = FALSE;
 
 	// Route future Mouse messages here preemptively.  (Release on mouse up.)
-	setMouseCapture( TRUE );
+	setMouseCapture( true );
 
 	return TRUE;
 }

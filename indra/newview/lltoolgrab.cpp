@@ -222,7 +222,7 @@ BOOL LLToolGrabBase::handleObjectHit(const LLPickInfo& info)
 		return TRUE;
 	}
 
-	setMouseCapture( TRUE );
+	setMouseCapture( true );
 
 	// Grabs always start from the root
 	// objectp = (LLViewerObject *)objectp->getRoot();
@@ -441,7 +441,7 @@ bool LLToolGrabBase::handleHover(S32 x, S32 y, MASK mask)
 	if (!gViewerWindow->getLeftMouseDown())
 	{
 		gViewerWindow->setCursor(UI_CURSOR_TOOLGRAB);
-		setMouseCapture(FALSE);
+		setMouseCapture(false);
 		return true;
 	}
 
@@ -487,7 +487,7 @@ void LLToolGrabBase::handleHoverActive(S32 x, S32 y, MASK mask)
 	if (objectp->isDead())
 	{
 		// Bail out of drag because object has been killed
-		setMouseCapture(FALSE);
+		setMouseCapture(false);
 		return;
 	}
 
@@ -741,7 +741,7 @@ void LLToolGrabBase::handleHoverActive(S32 x, S32 y, MASK mask)
 				// force focus to point in space where we were looking previously
 				// Example of use: follow cam scripts shouldn't affect you when movng objects arouns
 				gAgentCamera.setFocusGlobal(gAgentCamera.calcFocusPositionTargetGlobal(), LLUUID::null);
-				gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
+				gAgentCamera.setFocusOnAvatar(false, ANIMATE);
 			}
 		}
 		else
@@ -764,7 +764,7 @@ void LLToolGrabBase::handleHoverNonPhysical(S32 x, S32 y, MASK mask)
 	if (objectp->isDead())
 	{
 		// Bail out of drag because object has been killed
-		setMouseCapture(FALSE);
+		setMouseCapture(false);
 		return;
 	}
 
@@ -980,7 +980,7 @@ BOOL LLToolGrabBase::handleMouseUp(S32 x, S32 y, MASK mask)
 
 	if( hasMouseCapture() )
 	{
-		setMouseCapture( FALSE );
+		setMouseCapture( false );
 	}
 
 	mMode = GRAB_INACTIVE;
@@ -1008,7 +1008,7 @@ void LLToolGrabBase::stopEditing()
 {
 	if( hasMouseCapture() )
 	{
-		setMouseCapture( FALSE );
+		setMouseCapture( false );
 	}
 }
 

@@ -601,7 +601,7 @@ void LLAgent::moveAt(S32 direction, bool reset)
 	{
 // <FS:CR> FIRE-8798: Option to prevent camera reset on movement
 		//gAgentCamera.resetView();
-		gAgentCamera.resetView(TRUE, FALSE, TRUE);
+		gAgentCamera.resetView(true, false, true);
 // </FS:CR>
 	}
 }
@@ -628,7 +628,7 @@ void LLAgent::moveAtNudge(S32 direction)
 		setControlFlags(AGENT_CONTROL_NUDGE_AT_NEG);
 	}
 
-	gAgentCamera.resetView(TRUE, FALSE, TRUE);
+	gAgentCamera.resetView(true, false, true);
 }
 
 //-----------------------------------------------------------------------------
@@ -655,7 +655,7 @@ void LLAgent::moveLeft(S32 direction)
 
 // <FS:CR> FIRE-8798: Option to prevent camera reset on movement
 	//gAgentCamera.resetView();
-	gAgentCamera.resetView(TRUE, FALSE, TRUE);
+	gAgentCamera.resetView(true, false, true);
 // </FS:CR>
 }
 
@@ -682,7 +682,7 @@ void LLAgent::moveLeftNudge(S32 direction)
 	}
 // <FS:CR> FIRE-8798: Option to prevent camera reset on movement
 	//gAgentCamera.resetView();
-	gAgentCamera.resetView(TRUE, FALSE, TRUE);
+	gAgentCamera.resetView(true, false, true);
 // </FS:CR>
 }
 
@@ -703,16 +703,16 @@ void LLAgent::moveUp(S32 direction)
 	{
 		setControlFlags(AGENT_CONTROL_UP_POS | AGENT_CONTROL_FAST_UP);
 		// <FS:Ansariel> Chalice Yao's crouch toggle
-		gAgentCamera.resetView(TRUE, FALSE, TRUE);
+		gAgentCamera.resetView(true, false, true);
 		// </FS:Ansariel>
 	}
 	else if (direction < 0)
 	{
 		setControlFlags(AGENT_CONTROL_UP_NEG | AGENT_CONTROL_FAST_UP);
 		// <FS:Ansariel> Chalice Yao's crouch toggle
-		if (!gSavedPerAccountSettings.getBOOL("FSCrouchToggleStatus") || !gSavedPerAccountSettings.getBOOL("FSCrouchToggle"))
+		if (!gSavedPerAccountSettings.getbool("FSCrouchToggleStatus") || !gSavedPerAccountSettings.getbool("FSCrouchToggle"))
 		{
-			gAgentCamera.resetView(TRUE, FALSE, TRUE);
+			gAgentCamera.resetView(true, false, true);
 		}
 		// </FS:Ansariel>
 	}
@@ -746,7 +746,7 @@ void LLAgent::moveYaw(F32 mag, bool reset_view)
 
     if (reset_view)
 	{
-    	gAgentCamera.resetView(TRUE, FALSE, TRUE);
+    	gAgentCamera.resetView(true, false, true);
 	}
 }
 
@@ -888,7 +888,7 @@ void LLAgent::toggleFlying()
 	{
 		gAgent.setFlying(fly);
 	}
-	gAgentCamera.resetView(TRUE, FALSE, TRUE);
+	gAgentCamera.resetView(true, false, true);
 }
 
 // static
@@ -3456,7 +3456,7 @@ void LLAgent::initOriginGlobal(const LLVector3d &origin_global)
 
 bool LLAgent::leftButtonGrabbed() const
 { 
-	const BOOL camera_mouse_look = gAgentCamera.cameraMouselook();
+	const bool camera_mouse_look = gAgentCamera.cameraMouselook();
 	return (!camera_mouse_look && mControlsTakenCount[CONTROL_LBUTTON_DOWN_INDEX] > 0) 
 		|| (camera_mouse_look && mControlsTakenCount[CONTROL_ML_LBUTTON_DOWN_INDEX] > 0)
 		|| (!camera_mouse_look && mControlsTakenPassedOnCount[CONTROL_LBUTTON_DOWN_INDEX] > 0)
@@ -4098,7 +4098,7 @@ bool LLAgent::teleportCore(bool is_local)
 
 	// Close all pie menus, deselect land, etc.
 	// Don't change the camera until we know teleport succeeded. JC
-	gAgentCamera.resetView(FALSE);
+	gAgentCamera.resetView(false);
 
 	// local logic
 	add(LLStatViewer::TELEPORT, 1);
@@ -4551,7 +4551,7 @@ void LLAgent::doTeleportViaLocationLookAt(const LLVector3d& pos_global)
 
 	if(!gAgentCamera.isfollowCamLocked())
 	{
-		gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);	// detach camera form avatar, so it keeps direction
+		gAgentCamera.setFocusOnAvatar(false, ANIMATE);	// detach camera form avatar, so it keeps direction
 	}
 
 	U64 region_handle = to_region_handle(pos_global);
@@ -4581,7 +4581,7 @@ void LLAgent::setTeleportState(ETeleportState state)
 						  << teleportStateName(mTeleportState) << "(" << mTeleportState << ")"
 						  << LL_ENDL;
 	mTeleportState = state;
-	if (mTeleportState > TELEPORT_NONE && gSavedSettings.getBOOL("FreezeTime"))
+	if (mTeleportState > TELEPORT_NONE && gSavedSettings.getbool("FreezeTime"))
 	{
 		LLFloaterReg::hideInstance("snapshot");
 	}

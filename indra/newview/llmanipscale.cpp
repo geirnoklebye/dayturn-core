@@ -366,7 +366,7 @@ BOOL LLManipScale::handleMouseDownOnPart( S32 x, S32 y, MASK mask )
 	// we just started a drag, so save initial object positions, orientations, and scales
 	LLSelectMgr::getInstance()->saveSelectedObjectTransform(SELECT_ACTION_TYPE_SCALE);
 	// Route future Mouse messages here preemptively.  (Release on mouse up.)
-	setMouseCapture( TRUE );
+	setMouseCapture( true );
 
 	mHelpTextTimer.reset();
 	sNumTimesHelpTextShown++;
@@ -416,7 +416,7 @@ bool LLManipScale::handleHover(S32 x, S32 y, MASK mask)
 		if( mObjectSelection->isEmpty() )
 		{
 			// Somehow the object got deselected while we were dragging it.
-			setMouseCapture( FALSE );
+			setMouseCapture( false );
 		}
 		else
 		{

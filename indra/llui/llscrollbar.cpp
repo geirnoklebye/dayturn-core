@@ -499,8 +499,8 @@ void LLScrollbar::draw()
 	S32 local_mouse_x;
 	S32 local_mouse_y;
 	LLUI::getInstance()->getMousePositionLocal(this, &local_mouse_x, &local_mouse_y);
-	BOOL other_captor = gFocusMgr.getMouseCapture() && gFocusMgr.getMouseCapture() != this;
-	BOOL hovered = getEnabled() && !other_captor && (hasMouseCapture() || mThumbRect.pointInRect(local_mouse_x, local_mouse_y));
+	bool other_captor = gFocusMgr.getMouseCapture() && gFocusMgr.getMouseCapture() != this;
+	bool hovered = getEnabled() && !other_captor && (hasMouseCapture() || mThumbRect.pointInRect(local_mouse_x, local_mouse_y));
 	if (hovered)
 	{
 		mCurGlowStrength = lerp(mCurGlowStrength, mHoverGlowStrength, LLSmoothInterpolation::getInterpolant(0.05f));

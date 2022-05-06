@@ -483,8 +483,8 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 			gAgent.setTeleportMessage(
 				LLAgent::sTeleportProgressMessages["arriving"]);
 			gAgent.sheduleTeleportIM();
-			gTextureList.mForceResetTextureStats = TRUE;
-			gAgentCamera.resetView(TRUE, TRUE);
+			gTextureList.mForceResetTextureStats = true;
+			gAgentCamera.resetView(true, true);
 			
 			break;
 

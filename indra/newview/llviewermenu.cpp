@@ -3040,16 +3040,16 @@ class LLObjectBuild : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		if (gAgentCamera.getFocusOnAvatar() && !LLToolMgr::getInstance()->inEdit() && gSavedSettings.getBOOL("EditCameraMovement") )
+		if (gAgentCamera.getFocusOnAvatar() && !LLToolMgr::getInstance()->inEdit() && gSavedSettings.getbool("EditCameraMovement") )
 		{
 			// zoom in if we're looking at the avatar
-			gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
+			gAgentCamera.setFocusOnAvatar(false, ANIMATE);
 			gAgentCamera.setFocusGlobal(LLToolPie::getInstance()->getPick());
 			gAgentCamera.cameraZoomIn(0.666f);
 			gAgentCamera.cameraOrbitOver( 30.f * DEG_TO_RAD );
 			gViewerWindow->moveCursorToCenter();
 		}
-		else if ( gSavedSettings.getBOOL("EditCameraMovement") )
+		else if ( gSavedSettings.getbool("EditCameraMovement") )
 		{
 			gAgentCamera.setFocusGlobal(LLToolPie::getInstance()->getPick());
 			gViewerWindow->moveCursorToCenter();
@@ -3078,11 +3078,11 @@ void handle_object_edit()
 			// always freeze camera in space, even if camera doesn't move
 			// so, for example, follow cam scripts can't affect you when in build mode
 			gAgentCamera.setFocusGlobal(gAgentCamera.calcFocusPositionTargetGlobal(), LLUUID::null);
-			gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
+			gAgentCamera.setFocusOnAvatar(false, ANIMATE);
 		}
 		else
 		{
-			gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
+			gAgentCamera.setFocusOnAvatar(false, ANIMATE);
 			LLViewerObject* selected_objectp = selection->getFirstRootObject();
 			if (selected_objectp)
 			{
@@ -3197,16 +3197,16 @@ class LLLandBuild : public view_listener_t
 	{
 		LLViewerParcelMgr::getInstance()->deselectLand();
 
-		if (gAgentCamera.getFocusOnAvatar() && !LLToolMgr::getInstance()->inEdit() && gSavedSettings.getBOOL("EditCameraMovement") )
+		if (gAgentCamera.getFocusOnAvatar() && !LLToolMgr::getInstance()->inEdit() && gSavedSettings.getbool("EditCameraMovement") )
 		{
 			// zoom in if we're looking at the avatar
-			gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
+			gAgentCamera.setFocusOnAvatar(false, ANIMATE);
 			gAgentCamera.setFocusGlobal(LLToolPie::getInstance()->getPick());
 			gAgentCamera.cameraZoomIn(0.666f);
 			gAgentCamera.cameraOrbitOver( 30.f * DEG_TO_RAD );
 			gViewerWindow->moveCursorToCenter();
 		}
-		else if ( gSavedSettings.getBOOL("EditCameraMovement")  )
+		else if ( gSavedSettings.getbool("EditCameraMovement")  )
 		{
 			// otherwise just move focus
 			gAgentCamera.setFocusGlobal(LLToolPie::getInstance()->getPick());
@@ -3576,7 +3576,7 @@ bool handle_go_to()
 	else 
 	{
 		// Snap camera back to behind avatar
-		gAgentCamera.setFocusOnAvatar(TRUE, ANIMATE);
+		gAgentCamera.setFocusOnAvatar(true, ANIMATE);
 	}
 
 	// Could be first use
@@ -4586,7 +4586,7 @@ void handle_reset_view()
 		gAgentCamera.resetView();
 	// </FS:Zi>
 	// KKA-720, better version of fix based on recommendation from FS:Ansariel in BUG-228864
-	gAgentCamera.setFocusOnAvatar(TRUE, FALSE, FALSE); 
+	gAgentCamera.setFocusOnAvatar(true, false, false);
 	reset_view_final( TRUE );
 	LLFloaterCamera::resetCameraMode();
 }
@@ -4629,7 +4629,7 @@ void reset_view_final( BOOL proceed )
 		return;
 	}
 
-	gAgentCamera.resetView(TRUE, TRUE);
+	gAgentCamera.resetView(true, true);
 	gAgentCamera.setLookAt(LOOKAT_TARGET_CLEAR);
 }
 
@@ -6570,7 +6570,7 @@ void handle_look_at_selection(const LLSD& param)
 	BOOL zoom = (param.asString() == "zoom");
 	if (!LLSelectMgr::getInstance()->getSelection()->isEmpty())
 	{
-		gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
+		gAgentCamera.setFocusOnAvatar(false, ANIMATE);
 
 		LLBBox selection_bbox = LLSelectMgr::getInstance()->getBBoxOfSelection();
 		F32 angle_of_view = llmax(0.1f, LLViewerCamera::getInstance()->getAspect() > 1.f ? LLViewerCamera::getInstance()->getView() * LLViewerCamera::getInstance()->getAspect() : LLViewerCamera::getInstance()->getView());
@@ -6610,7 +6610,7 @@ void handle_zoom_to_object(LLUUID object_id)
 
 	if (object)
 	{
-		gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
+		gAgentCamera.setFocusOnAvatar(false, ANIMATE);
 
 		LLBBox bbox = object->getBoundingBoxAgent() ;
 		F32 angle_of_view = llmax(0.1f, LLViewerCamera::getInstance()->getAspect() > 1.f ? LLViewerCamera::getInstance()->getView() * LLViewerCamera::getInstance()->getAspect() : LLViewerCamera::getInstance()->getView());
@@ -7385,16 +7385,16 @@ class LLLandEdit : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		if (gAgentCamera.getFocusOnAvatar() && gSavedSettings.getBOOL("EditCameraMovement") )
+		if (gAgentCamera.getFocusOnAvatar() && gSavedSettings.getbool("EditCameraMovement") )
 		{
 			// zoom in if we're looking at the avatar
-			gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
+			gAgentCamera.setFocusOnAvatar(false, ANIMATE);
 			gAgentCamera.setFocusGlobal(LLToolPie::getInstance()->getPick());
 
 			gAgentCamera.cameraOrbitOver( F_PI * 0.25f );
 			gViewerWindow->moveCursorToCenter();
 		}
-		else if ( gSavedSettings.getBOOL("EditCameraMovement") )
+		else if ( gSavedSettings.getbool("EditCameraMovement") )
 		{
 			gAgentCamera.setFocusGlobal(LLToolPie::getInstance()->getPick());
 			gViewerWindow->moveCursorToCenter();
@@ -8742,7 +8742,7 @@ class LLViewEnableMouselook : public view_listener_t
 	{
 		// You can't go directly from customize avatar to mouselook.
 		// TODO: write code with appropriate dialogs to handle this transition.
-		bool new_value = (CAMERA_MODE_CUSTOMIZE_AVATAR != gAgentCamera.getCameraMode() && !gSavedSettings.getBOOL("FreezeTime"));
+		bool new_value = (CAMERA_MODE_CUSTOMIZE_AVATAR != gAgentCamera.getCameraMode() && !gSavedSettings.getbool("FreezeTime"));
 		return new_value;
 	}
 };

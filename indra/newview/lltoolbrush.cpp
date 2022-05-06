@@ -394,7 +394,7 @@ BOOL LLToolBrushLand::handleMouseDown(S32 x, S32 y, MASK mask)
 		mMouseX = x;
 		mMouseY = y;
 		gIdleCallbacks.addFunction( &LLToolBrushLand::onIdle, (void*)this );
-		setMouseCapture( TRUE );
+		setMouseCapture( true );
 
 		LLViewerParcelMgr::getInstance()->setSelectionVisible(FALSE);
 		handled = TRUE;
@@ -432,7 +432,7 @@ BOOL LLToolBrushLand::handleMouseUp(S32 x, S32 y, MASK mask)
 	if( hasMouseCapture() )
 	{
 		// Release the mouse
-		setMouseCapture( FALSE );
+		setMouseCapture( false );
 
 		LLViewerParcelMgr::getInstance()->setSelectionVisible(TRUE);
 

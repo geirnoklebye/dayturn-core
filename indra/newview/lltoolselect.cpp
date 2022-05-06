@@ -184,7 +184,7 @@ LLObjectSelectionHandle LLToolSelect::handleObjectSelection(const LLPickInfo& pi
 		if (!gAgentCamera.getFocusOnAvatar() &&						// if camera not glued to avatar
 			LLVOAvatar::findAvatarFromAttachment(object) != gAgentAvatarp &&	// and it's not one of your attachments
 			object != gAgentAvatarp &&						// and it's not you
-			!gSavedSettings.getBOOL("PreventAvatarTurnToSelected"))			// and this setting is not true
+			!gSavedSettings.getbool("PreventAvatarTurnToSelected"))			// and this setting is not true
 		{
 			// have avatar turn to face the selected object(s)
 			LLVector3d selection_center = LLSelectMgr::getInstance()->getSelectionCenterGlobal();
@@ -261,7 +261,7 @@ void LLToolSelect::handleDeselect()
 {
 	if(	hasMouseCapture() )
 	{
-		setMouseCapture( FALSE );  // Calls onMouseCaptureLost() indirectly
+		setMouseCapture( false );  // Calls onMouseCaptureLost() indirectly
 	}
 }
 
@@ -270,7 +270,7 @@ void LLToolSelect::stopEditing()
 {
 	if(	hasMouseCapture() )
 	{
-		setMouseCapture( FALSE );  // Calls onMouseCaptureLost() indirectly
+		setMouseCapture( false );  // Calls onMouseCaptureLost() indirectly
 	}
 }
 

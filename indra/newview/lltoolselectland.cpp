@@ -67,7 +67,7 @@ BOOL LLToolSelectLand::handleMouseDown(S32 x, S32 y, MASK mask)
 	BOOL hit_land = gViewerWindow->mousePointOnLandGlobal(x, y, &mDragStartGlobal);
 	if (hit_land)
 	{
-		setMouseCapture( TRUE );
+		setMouseCapture( true );
 
 		mDragStartX = x;
 		mDragStartY = y;
@@ -112,7 +112,7 @@ BOOL LLToolSelectLand::handleMouseUp(S32 x, S32 y, MASK mask)
 {
 	if(	hasMouseCapture() )
 	{
-		setMouseCapture( FALSE );
+		setMouseCapture( false );
 
 		if (mMouseOutsideSlop && mDragEndValid)
 		{

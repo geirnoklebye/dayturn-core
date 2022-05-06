@@ -88,7 +88,7 @@ LLTextureKey::LLTextureKey(LLUUID id, ETexListType tex_type)
 ///////////////////////////////////////////////////////////////////////////////
 
 LLViewerTextureList::LLViewerTextureList() 
-	: mForceResetTextureStats(FALSE),
+	: mForceResetTextureStats(false),
 	mMaxResidentTexMemInMegaBytes(0),
 	mMaxTotalTextureMemInMegaBytes(0),
 	mInitialized(FALSE)
@@ -1170,7 +1170,6 @@ F32 LLViewerTextureList::updateImagesFetchTextures(F32 max_time)
 
 void LLViewerTextureList::updateImagesUpdateStats()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if (mForceResetTextureStats)
 	{
 		for (image_priority_list_t::iterator iter = mImageList.begin();
@@ -1179,7 +1178,7 @@ void LLViewerTextureList::updateImagesUpdateStats()
 			LLViewerFetchedTexture* imagep = *iter++;
 			imagep->resetTextureStats();
 		}
-		mForceResetTextureStats = FALSE;
+		mForceResetTextureStats = false;
 	}
 }
 

@@ -72,7 +72,7 @@ BOOL LLToolObjPicker::handleMouseDown(S32 x, S32 y, MASK mask)
 	{
 		if (hasMouseCapture())
 		{
-			setMouseCapture(FALSE);
+			setMouseCapture(false);
 		}
 		else
 		{
@@ -105,7 +105,7 @@ BOOL LLToolObjPicker::handleMouseUp(S32 x, S32 y, MASK mask)
 	LLTool::handleMouseUp(x, y, mask);
 	if (hasMouseCapture())
 	{
-		setMouseCapture(FALSE);
+		setMouseCapture(false);
 	}
 	else
 	{
@@ -157,7 +157,7 @@ void LLToolObjPicker::setExitCallback(void (*callback)(void *), void *callback_d
 void LLToolObjPicker::handleSelect()
 {
 	LLTool::handleSelect();
-	setMouseCapture(TRUE);
+	setMouseCapture(true);
 }
 
 // virtual
@@ -166,7 +166,7 @@ void LLToolObjPicker::handleDeselect()
 	if (hasMouseCapture())
 	{
 		LLTool::handleDeselect();
-		setMouseCapture(FALSE);
+		setMouseCapture(false);
 	}
 }
 

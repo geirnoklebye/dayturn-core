@@ -735,7 +735,7 @@ bool LLToolCompGun::handleHover(S32 x, S32 y, MASK mask)
 		else if ( mCur == mGrab && !(mask & MASK_ALT) )
 		{
 			setCurrentTool( (LLTool*) mGun );
-			setMouseCapture(TRUE);
+			setMouseCapture(true);
 		}
 	}
 
@@ -821,13 +821,13 @@ void LLToolCompGun::onMouseCaptureLost()
 void	LLToolCompGun::handleSelect()
 {
 	LLToolComposite::handleSelect();
-	setMouseCapture(TRUE);
+	setMouseCapture(true);
 }
 
 void	LLToolCompGun::handleDeselect()
 {
 	LLToolComposite::handleDeselect();
-	setMouseCapture(FALSE);
+	setMouseCapture(false);
 }
 
 

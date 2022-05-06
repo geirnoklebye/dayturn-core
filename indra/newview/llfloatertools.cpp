@@ -1073,7 +1073,7 @@ void LLFloaterTools::onClose(bool app_quitting)
 
     // Different from handle_reset_view in that it doesn't actually 
 	//   move the camera if EditCameraMovement is not set.
-	gAgentCamera.resetView(gSavedSettings.getBOOL("EditCameraMovement"));
+	gAgentCamera.resetView(gSavedSettings.getbool("EditCameraMovement"));
 	
 	// exit component selection mode
 	LLSelectMgr::getInstance()->promoteSelectionToRoot();
@@ -1104,7 +1104,7 @@ void LLFloaterTools::onClose(bool app_quitting)
 	if(sPreviousFocusOnAvatar)
 	{
 		sPreviousFocusOnAvatar = false;
-		gAgentCamera.setAllowChangeToFollow(TRUE);
+		gAgentCamera.setAllowChangeToFollow(true);
 	}
 }
 

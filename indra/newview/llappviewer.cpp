@@ -4779,7 +4779,7 @@ void LLAppViewer::saveFinalSnapshot()
 		gSavedSettings.setVector3d("FocusPosOnLogout", gAgentCamera.calcFocusPositionTargetGlobal());
 		gSavedSettings.setVector3d("CameraPosOnLogout", gAgentCamera.calcCameraPositionTargetGlobal());
 		gViewerWindow->setCursor(UI_CURSOR_WAIT);
-		gAgentCamera.changeCameraToThirdPerson( FALSE );	// don't animate, need immediate switch
+		gAgentCamera.changeCameraToThirdPerson(false);	// don't animate, need immediate switch
 		gSavedSettings.setBOOL("ShowParcelOwners", FALSE);
 		idle();
 

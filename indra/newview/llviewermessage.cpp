@@ -3027,7 +3027,7 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 	gAgentCamera.updateCamera();
 
 	// likewise make sure the camera is behind the avatar
-	gAgentCamera.resetView(TRUE);
+	gAgentCamera.resetView(true);
 	LLVector3 shift_vector = regionp->getPosRegionFromGlobal(gAgent.getRegion()->getOriginGlobal());
 	gAgent.setRegion(regionp);
 	gObjectList.shiftObjects(shift_vector);
@@ -3191,7 +3191,7 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 			look_at = LLViewerCamera::getInstance()->getAtAxis();
 		}
 		// Force the camera back onto the agent, don't animate.
-		gAgentCamera.setFocusOnAvatar(TRUE, FALSE);
+		gAgentCamera.setFocusOnAvatar(true, false);
 		gAgentCamera.slamLookAt(look_at);
 		gAgentCamera.updateCamera();
 
@@ -6251,7 +6251,7 @@ void process_teleport_local(LLMessageSystem *msg,void**)
 
 	if ( !(gAgent.getTeleportKeepsLookAt() && LLViewerJoystick::getInstance()->getOverrideCamera()) )
 	{
-		gAgentCamera.resetView(TRUE, TRUE);
+		gAgentCamera.resetView(true, true);
 	}
 
 	// send camera update to new region

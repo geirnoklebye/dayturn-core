@@ -381,7 +381,7 @@ BOOL LLToolPie::handleLeftClickPick()
 				
 				if (object)
 				{
-					gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
+					gAgentCamera.setFocusOnAvatar(false, ANIMATE);
 					
 					LLBBox bbox = object->getBoundingBoxAgent() ;
 					F32 angle_of_view = llmax(0.1f, LLViewerCamera::getInstance()->getAspect() > 1.f ? LLViewerCamera::getInstance()->getView() * LLViewerCamera::getInstance()->getAspect() : LLViewerCamera::getInstance()->getView());
@@ -460,8 +460,8 @@ BOOL LLToolPie::handleLeftClickPick()
 		gViewerWindow->hideCursor();
 		LLToolCamera::getInstance()->setMouseCapture(TRUE);
 		LLToolCamera::getInstance()->pickCallback(mPick);
-		if(!gSavedSettings.getBOOL("ClickOnAvatarKeepsCamera")) // <FS:Zi> keep camera in place when clicking on ourselves
-			gAgentCamera.setFocusOnAvatar(TRUE, TRUE);
+		if(!gSavedSettings.getbool("ClickOnAvatarKeepsCamera")) // <FS:Zi> keep camera in place when clicking on ourselves
+			gAgentCamera.setFocusOnAvatar(true, true);
 
 		return TRUE;
 	}
@@ -632,7 +632,7 @@ bool LLToolPie::walkToClickedLocation()
     if ((mPick.mPickType == LLPickInfo::PICK_LAND && !mPick.mPosGlobal.isExactlyZero()) ||
         (mPick.mObjectID.notNull() && !mPick.mPosGlobal.isExactlyZero()))
     {
-        gAgentCamera.setFocusOnAvatar(TRUE, TRUE);
+        gAgentCamera.setFocusOnAvatar(true, true);
 
         if (mAutoPilotDestination) { mAutoPilotDestination->markDead(); }
         mAutoPilotDestination = (LLHUDEffectBlob *)LLHUDManager::getInstance()->createViewerEffect(LLHUDObject::LL_HUD_EFFECT_BLOB, false);
@@ -868,7 +868,7 @@ BOOL LLToolPie::handleMouseUp(S32 x, S32 y, MASK mask)
 	gViewerWindow->setCursor(UI_CURSOR_ARROW);
 	if (hasMouseCapture())
 	{
-		setMouseCapture(FALSE);
+		setMouseCapture(false);
 	}
 
 	LLToolMgr::getInstance()->clearTransientTool();
@@ -1613,7 +1613,7 @@ void LLToolPie::handleDeselect()
 {
 	if(	hasMouseCapture() )
 	{
-		setMouseCapture( FALSE );  // Calls onMouseCaptureLost() indirectly
+		setMouseCapture( false );  // Calls onMouseCaptureLost() indirectly
 	}
 	// remove temporary selection for pie menu
 	LLSelectMgr::getInstance()->setHoverObject(NULL);
@@ -1653,7 +1653,7 @@ void LLToolPie::stopEditing()
 {
 	if(	hasMouseCapture() )
 	{
-		setMouseCapture( FALSE );  // Calls onMouseCaptureLost() indirectly
+		setMouseCapture( false );  // Calls onMouseCaptureLost() indirectly
 	}
 }
 
@@ -1754,7 +1754,7 @@ bool LLToolPie::handleMediaClick(const LLPickInfo& pick, int button)
 
             media_impl->mouseDown(pick.mUVCoords, gKeyboard->currentMask(TRUE));
             mMediaMouseCaptureID = mep->getMediaID();
-            setMouseCapture(TRUE);  // This object will send a mouse-up to the media when it loses capture.
+            setMouseCapture(true);  // This object will send a mouse-up to the media when it loses capture.
         }
 
         return true;
@@ -1808,7 +1808,7 @@ bool LLToolPie::handleMediaDblClick(const LLPickInfo& pick)
 
             media_impl->mouseDoubleClick(pick.mUVCoords, gKeyboard->currentMask(TRUE));
             mMediaMouseCaptureID = mep->getMediaID();
-            setMouseCapture(TRUE);  // This object will send a mouse-up to the media when it loses capture.
+            setMouseCapture(true);  // This object will send a mouse-up to the media when it loses capture.
         }
 
         return true;
@@ -2149,7 +2149,7 @@ void LLToolPie::startCameraSteering()
 				LLViewerCamera::instance().getOrigin() + gViewerWindow->mouseDirectionGlobal(mSteerPick.mMousePt.mX, mSteerPick.mMousePt.mY) * 100.f);
 		}
 
-		setMouseCapture(TRUE);
+		setMouseCapture(true);
 		
 		mMouseSteerX = mMouseDownX;
 		mMouseSteerY = mMouseDownY;

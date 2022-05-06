@@ -230,7 +230,7 @@ void LLSidepanelAppearance::updateToVisibility(const LLSD &new_visibility)
 	}
 	else
 	{
-		if (gAgentCamera.cameraCustomizeAvatar() && gSavedSettings.getBOOL("AppearanceCameraMovement"))
+		if (gAgentCamera.cameraCustomizeAvatar() && gSavedSettings.getbool("AppearanceCameraMovement"))
 		{
 			gAgentCamera.changeCameraToDefault();
 			gAgentCamera.resetView();

@@ -114,7 +114,7 @@ void LLToolCamera::handleDeselect()
 BOOL LLToolCamera::handleMouseDown(S32 x, S32 y, MASK mask)
 {
 	// Ensure a mouseup
-	setMouseCapture(TRUE);
+	setMouseCapture(true);
 
 	// call the base class to propogate info to sim
 	LLTool::handleMouseDown(x, y, mask);
@@ -211,14 +211,14 @@ void LLToolCamera::pickCallback(const LLPickInfo& pick_info)
 			// ...clicked on a world object, so focus at its position
 			if (!hit_obj->isHUDAttachment())
 			{
-				gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
+				gAgentCamera.setFocusOnAvatar(false, ANIMATE);
 				gAgentCamera.setFocusGlobal(pick_info);
 			}
 		}
 		else if (!pick_info.mPosGlobal.isExactlyZero())
 		{
 			// Hit the ground
-			gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
+			gAgentCamera.setFocusOnAvatar(false, ANIMATE);
 			gAgentCamera.setFocusGlobal(pick_info);
 		}
 
@@ -241,7 +241,7 @@ void LLToolCamera::pickCallback(const LLPickInfo& pick_info)
 
 	if( CAMERA_MODE_CUSTOMIZE_AVATAR == gAgentCamera.getCameraMode() )
 	{
-		gAgentCamera.setFocusOnAvatar(FALSE, FALSE);
+		gAgentCamera.setFocusOnAvatar(false, false);
 		
 		LLVector3d cam_pos = gAgentCamera.getCameraPositionGlobal();
 
@@ -312,7 +312,7 @@ BOOL LLToolCamera::handleMouseUp(S32 x, S32 y, MASK mask)
 		}
 
 		// calls releaseMouse() internally
-		setMouseCapture(FALSE);
+		setMouseCapture(false);
 	}
 	else
 	{

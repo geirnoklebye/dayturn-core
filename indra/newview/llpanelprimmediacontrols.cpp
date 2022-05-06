@@ -1119,7 +1119,7 @@ void LLPanelPrimMediaControls::updateZoom()
 	{
 	case ZOOM_NONE:
 		{
-			gAgentCamera.setFocusOnAvatar(TRUE, ANIMATE);
+			gAgentCamera.setFocusOnAvatar(true, ANIMATE);
 			break;
 		}
 	case ZOOM_FAR:
@@ -1139,7 +1139,7 @@ void LLPanelPrimMediaControls::updateZoom()
 		}
 	default:
 		{
-			gAgentCamera.setFocusOnAvatar(TRUE, ANIMATE);
+			gAgentCamera.setFocusOnAvatar(true, ANIMATE);
 			break;
 		}
 	}

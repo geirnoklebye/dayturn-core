@@ -216,7 +216,7 @@ void LLFloaterSnapshotBase::ImplBase::updateLayout(LLFloaterSnapshotBase* floate
 		}
 
 		// freeze everything else
-		gSavedSettings.setBOOL("FreezeTime", TRUE);
+		gSavedSettings.setbool("FreezeTime", true);
 
 		if (LLToolMgr::getInstance()->getCurrentToolset() != gCameraToolset)
 		{
@@ -239,7 +239,7 @@ void LLFloaterSnapshotBase::ImplBase::updateLayout(LLFloaterSnapshotBase* floate
 		floaterp->impl->mAvatarPauseHandles.clear();
 
 		// thaw everything else
-		gSavedSettings.setBOOL("FreezeTime", FALSE);
+		gSavedSettings.setbool("FreezeTime", false);
 
 		// restore last tool (e.g. pie menu, etc)
 		if (floaterp->impl->mLastToolset)
@@ -941,7 +941,7 @@ LLFloaterSnapshotBase::~LLFloaterSnapshotBase()
 	if (impl->mPreviewHandle.get()) impl->mPreviewHandle.get()->die();
 
 	//unfreeze everything else
-	gSavedSettings.setBOOL("FreezeTime", FALSE);
+	gSavedSettings.setbool("FreezeTime", false);
 
 	if (impl->mLastToolset)
 	{
@@ -1146,7 +1146,7 @@ void LLFloaterSnapshotBase::onClose(bool app_quitting)
 		previewp->setEnabled(false);
 	}
 
-	gSavedSettings.setBOOL("FreezeTime", FALSE);
+	gSavedSettings.setbool("FreezeTime", false);
 	impl->mAvatarPauseHandles.clear();
 
 	if (impl->mLastToolset)
@@ -1431,7 +1431,7 @@ bool LLSnapshotFloaterView::handleKey(KEY key, MASK mask, bool called_from_paren
 BOOL LLSnapshotFloaterView::handleMouseDown(S32 x, S32 y, MASK mask)
 {
 	// use default handler when not in freeze-frame mode
-	if(!gSavedSettings.getBOOL("FreezeTime"))
+	if(!gSavedSettings.getbool("FreezeTime"))
 	{
 		return LLFloaterView::handleMouseDown(x, y, mask);
 	}
@@ -1447,7 +1447,7 @@ BOOL LLSnapshotFloaterView::handleMouseDown(S32 x, S32 y, MASK mask)
 BOOL LLSnapshotFloaterView::handleMouseUp(S32 x, S32 y, MASK mask)
 {
 	// use default handler when not in freeze-frame mode
-	if(!gSavedSettings.getBOOL("FreezeTime"))
+	if(!gSavedSettings.getbool("FreezeTime"))
 	{
 		return LLFloaterView::handleMouseUp(x, y, mask);
 	}
@@ -1463,7 +1463,7 @@ BOOL LLSnapshotFloaterView::handleMouseUp(S32 x, S32 y, MASK mask)
 bool LLSnapshotFloaterView::handleHover(S32 x, S32 y, MASK mask)
 {
 	// use default handler when not in freeze-frame mode
-	if(!gSavedSettings.getBOOL("FreezeTime"))
+	if(!gSavedSettings.getbool("FreezeTime"))
 	{
 		return LLFloaterView::handleHover(x, y, mask);
 	}	

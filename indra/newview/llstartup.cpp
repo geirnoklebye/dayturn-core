@@ -2297,13 +2297,13 @@ bool idle_startup()
 					&& gSavedSettings.getBOOL("RestoreCameraPosOnLogin"))
 				{
 					// restore old camera pos
-					gAgentCamera.setFocusOnAvatar(FALSE, FALSE);
+					gAgentCamera.setFocusOnAvatar(false, false);
 					gAgentCamera.setCameraPosAndFocusGlobal(gSavedSettings.getVector3d("CameraPosOnLogout"), gSavedSettings.getVector3d("FocusPosOnLogout"), LLUUID::null);
-					BOOL limit_hit = FALSE;
+					bool limit_hit = false;
 					gAgentCamera.calcCameraPositionTargetGlobal(&limit_hit);
 					if (limit_hit)
 					{
-						gAgentCamera.setFocusOnAvatar(TRUE, FALSE);
+						gAgentCamera.setFocusOnAvatar(true, false);
 					}
 					gAgentCamera.stopCameraAnimation();
 				}

@@ -3810,7 +3810,7 @@ void LLViewerWindow::updateLayout()
 		&& tool != gToolNull  
 		&& tool != LLToolCompInspect::getInstance() 
 		&& tool != LLToolDragAndDrop::getInstance() 
-		&& !gSavedSettings.getBOOL("FreezeTime"))
+		&& !gSavedSettings.getbool("FreezeTime"))
 	{ 
 		// Suppress the toolbox view if our source tool was the pie tool,
 		// and we've overridden to something else.
@@ -5937,7 +5937,7 @@ void LLViewerWindow::setUIVisibility(bool visible)
 
 	if (!visible)
 	{
-		gAgentCamera.changeCameraToThirdPerson(FALSE);
+		gAgentCamera.changeCameraToThirdPerson(false);
 		gFloaterView->hideAllFloaters();
 	}
 	else

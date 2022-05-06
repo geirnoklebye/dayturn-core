@@ -219,7 +219,7 @@ public:
 	// Note: just raw pointers because they are never referenced, just compared against
 	std::set<LLViewerFetchedTexture*> mDirtyTextureList;
 	
-	BOOL mForceResetTextureStats;
+	bool mForceResetTextureStats;
 
 private:
     typedef std::map< LLTextureKey, LLPointer<LLViewerFetchedTexture> > uuid_map_t;

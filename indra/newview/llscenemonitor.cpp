@@ -233,7 +233,7 @@ void LLSceneMonitor::freezeScene()
 	}
 
 	// freeze everything else
-	gSavedSettings.setBOOL("FreezeTime", TRUE);
+	gSavedSettings.setbool("FreezeTime", true);
 
 	//disable sky, water and clouds
 	gPipeline.clearRenderTypeMask(LLPipeline::RENDER_TYPE_SKY, LLPipeline::RENDER_TYPE_WL_SKY, 
@@ -254,7 +254,7 @@ void LLSceneMonitor::unfreezeScene()
 	}
 
 	// thaw everything else
-	gSavedSettings.setBOOL("FreezeTime", FALSE);
+	gSavedSettings.setbool("FreezeTime", false);
 
 	//enable sky, water and clouds
 	gPipeline.setRenderTypeMask(LLPipeline::RENDER_TYPE_SKY, LLPipeline::RENDER_TYPE_WL_SKY, 

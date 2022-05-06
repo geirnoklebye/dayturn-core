@@ -224,7 +224,7 @@ bool LLManip::handleHover(S32 x, S32 y, MASK mask)
 		{
 			// Somehow the object got deselected while we were dragging it.
 			// Release the mouse
-			setMouseCapture( FALSE );
+			setMouseCapture( false );
 		}
 
 		LL_DEBUGS("UserInput") << "hover handled by LLManip (active)" << LL_ENDL;
@@ -244,7 +244,7 @@ BOOL LLManip::handleMouseUp(S32 x, S32 y, MASK mask)
 	if( hasMouseCapture() )
 	{
 		handled = TRUE;
-		setMouseCapture( FALSE );
+		setMouseCapture( false );
 	}
 	return handled;
 }

@@ -210,7 +210,7 @@ LLVector3d LLViewerMediaFocus::setCameraZoom(LLViewerObject* object, LLVector3 n
 	LLVector3d camera_pos;
 	if (object)
 	{
-		gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);
+		gAgentCamera.setFocusOnAvatar(false, ANIMATE);
 
 		LLBBox bbox = object->getBoundingBoxAgent();
 		LLVector3d center = gAgent.getPosGlobalFromAgent(bbox.getCenterAgent());
@@ -297,7 +297,7 @@ LLVector3d LLViewerMediaFocus::setCameraZoom(LLViewerObject* object, LLVector3 n
 	else
 	{
 		// If we have no object, focus back on the avatar.
-		gAgentCamera.setFocusOnAvatar(TRUE, ANIMATE);
+		gAgentCamera.setFocusOnAvatar(true, ANIMATE);
 	}
 	return camera_pos;
 }
