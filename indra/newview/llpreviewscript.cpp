@@ -375,7 +375,7 @@ LLScriptEdCore::LLScriptEdCore(
 	mSaveDialogShown(false)
 {
 	setFollowsAll();
-	setBorderVisible(FALSE);
+	setBorderVisible(false);
 
 	setXMLFilename("panel_script_ed.xml");
 	llassert_always(mContainer != NULL);
@@ -690,7 +690,7 @@ bool LLScriptEdCore::hasChanged()
 
 void LLScriptEdCore::draw()
 {
-	BOOL script_changed	= hasChanged();
+	bool script_changed	= hasChanged();
 	getChildView("Save_btn")->setEnabled(script_changed && !mScriptRemoved);
 
 	if( mEditor->hasFocus() )
@@ -715,7 +715,7 @@ void LLScriptEdCore::draw()
 	LLPanel::draw();
 }
 
-void LLScriptEdCore::updateDynamicHelp(BOOL immediate)
+void LLScriptEdCore::updateDynamicHelp(bool immediate)
 {
 	LLFloater* help_floater = mLiveHelpHandle.get();
 	if (!help_floater) return;
@@ -727,7 +727,7 @@ void LLScriptEdCore::updateDynamicHelp(BOOL immediate)
 	back_button->setEnabled(browser->canNavigateBack());
 	fwd_button->setEnabled(browser->canNavigateForward());
 
-	if (!immediate && !gSavedSettings.getBOOL("ScriptHelpFollowsCursor"))
+	if (!immediate && !gSavedSettings.getbool("ScriptHelpFollowsCursor"))
 	{
 		return;
 	}
@@ -955,12 +955,12 @@ void LLScriptEdCore::onBtnDynamicHelp()
 		mLiveHelpHistorySize = 0;
 	}
 
-	BOOL visible = TRUE;
+	bool visible = true;
 	bool take_focus = true;
 	live_help_floater->setVisible(visible);
 	live_help_floater->setFrontmost(take_focus);
 
-	updateDynamicHelp(TRUE);
+	updateDynamicHelp(true);
 }
 
 //static 
@@ -1344,7 +1344,7 @@ void LLLiveLSLEditor::updateExperiencePanel()
 {
 	if(mScriptEd->getAssociatedExperience().isNull())
 	{
-		mExperienceEnabled->set(FALSE);
+		mExperienceEnabled->set(false);
 		mExperiences->setVisible(false);
 		if(mExperienceIds.size()>0)
 		{
@@ -1363,7 +1363,7 @@ void LLLiveLSLEditor::updateExperiencePanel()
 		mExperienceEnabled->setToolTip(getString("experience_enabled"));
 		mExperienceEnabled->setEnabled(getIsModifiable());
 		mExperiences->setVisible(true);
-		mExperienceEnabled->set(TRUE);
+		mExperienceEnabled->set(true);
 		getChild<LLButton>("view_profile")->setToolTip(getString("show_experience_profile"));
 		buildExperienceList();
 	}
@@ -1647,9 +1647,9 @@ void LLPreviewLSL::loadAsset()
 	}
 	if(item)
 	{
-		BOOL is_copyable = gAgent.allowOperation(PERM_COPY, 
+		bool is_copyable = gAgent.allowOperation(PERM_COPY,
 								item->getPermissions(), GP_OBJECT_MANIPULATE);
-		BOOL is_modifiable = gAgent.allowOperation(PERM_MODIFY,
+		bool is_modifiable = gAgent.allowOperation(PERM_MODIFY,
 								item->getPermissions(), GP_OBJECT_MANIPULATE);
 		if (gAgent.isGodlike() || (is_copyable && (is_modifiable || is_library)))
 		{
@@ -1821,7 +1821,7 @@ void LLPreviewLSL::uploadAssetViaCaps(const std::string& url,
 	LL_INFOS() << "Update Agent Inventory via capability" << LL_ENDL;
 	LLSD body;
 	body["item_id"] = item_id;
-    body["target"] = gSavedSettings.getBOOL("SaveInventoryScriptsAsMono") ? "mono" : "lsl2";
+    body["target"] = gSavedSettings.getbool("SaveInventoryScriptsAsMono") ? "mono" : "lsl2";
     std::string buffer(mScriptEd->mEditor->getText());
     LLBufferedAssetUploadInfo::invnUploadFinish_f proc = boost::bind(&LLPreviewLSL::finishedLSLUpload, _1, _4);
 
@@ -1944,7 +1944,7 @@ void LLPreviewLSL::onLoadComplete(const LLUUID& asset_uuid, LLAssetType::EType t
 
 			std::string script_name = DEFAULT_SCRIPT_NAME;
 			LLInventoryItem* item = gInventory.getItem(*item_uuid);
-			BOOL is_modifiable = FALSE;
+			bool is_modifiable = false;
 			if (item)
 			{
 				if (!item->getName().empty())
@@ -1953,7 +1953,7 @@ void LLPreviewLSL::onLoadComplete(const LLUUID& asset_uuid, LLAssetType::EType t
 				}
 				if (gAgent.allowOperation(PERM_MODIFY, item->getPermissions(), GP_OBJECT_MANIPULATE))
 				{
-					is_modifiable = TRUE;
+					is_modifiable = true;
 				}
 			}
 			preview->mScriptEd->setScriptName(script_name);
@@ -2270,7 +2270,7 @@ void LLLiveLSLEditor::onRunningCheckboxClicked( LLUICtrl*, void* userdata )
 	LLLiveLSLEditor* self = (LLLiveLSLEditor*) userdata;
 	LLViewerObject* object = gObjectList.findObject( self->mObjectUUID );
 	LLCheckBoxCtrl* runningCheckbox = self->getChild<LLCheckBoxCtrl>("running");
-	BOOL running =  runningCheckbox->get();
+	bool running =  runningCheckbox->get();
 	//self->mRunningCheckbox->get();
 	if( object )
 	{
@@ -2339,8 +2339,8 @@ void LLLiveLSLEditor::draw()
 				// a box that is released to public. It could be
 				// incorrect after a release/claim cycle, but will be
 				// correct after clicking on it.
-				runningCheckbox->set(FALSE);
-				mMonoCheckbox->set(FALSE);
+				runningCheckbox->set(false);
+				mMonoCheckbox->set(false);
 			}
 		}
 		else
@@ -2352,8 +2352,8 @@ void LLLiveLSLEditor::draw()
 			// a box that is released to public. It could be
 			// incorrect after a release/claim cycle, but will be
 			// correct after clicking on it.
-			runningCheckbox->set(FALSE);
-			mMonoCheckbox->set(FALSE);
+			runningCheckbox->set(false);
+			mMonoCheckbox->set(false);
 		}
 	}
 	else if(!object)
@@ -2385,15 +2385,15 @@ void LLLiveLSLEditor::onSearchReplace(void* userdata)
 
 struct LLLiveLSLSaveData
 {
-	LLLiveLSLSaveData(const LLUUID& id, const LLViewerInventoryItem* item, BOOL active);
+	LLLiveLSLSaveData(const LLUUID& id, const LLViewerInventoryItem* item, bool active);
 	LLUUID mSaveObjectID;
 	LLPointer<LLViewerInventoryItem> mItem;
-	BOOL mActive;
+	bool mActive;
 };
 
 LLLiveLSLSaveData::LLLiveLSLSaveData(const LLUUID& id,
 									 const LLViewerInventoryItem* item,
-									 BOOL active) :
+									 bool active) :
 	mSaveObjectID(id),
 	mActive(active)
 {
@@ -2492,7 +2492,7 @@ void LLLiveLSLEditor::saveIfNeeded(bool sync /*= true*/)
 	std::string url = object->getRegion()->getCapability("UpdateScriptTask");
     getWindow()->incBusyCount();
     mPendingUploads++;
-	BOOL is_running = getChild<LLCheckBoxCtrl>( "running")->get();
+	bool is_running = getChild<LLCheckBoxCtrl>( "running")->get();
 	mIsSaving = true;
 	if (!url.empty())
 	{
@@ -2504,7 +2504,7 @@ void LLLiveLSLEditor::uploadAssetViaCaps(const std::string& url,
 										 const std::string& filename,
 										 const LLUUID& task_id,
 										 const LLUUID& item_id,
-										 BOOL is_running,
+										 bool is_running,
 										 const LLUUID& experience_public_id )
 {
 	LL_INFOS() << "Update Task Inventory via capability " << url << LL_ENDL;
@@ -2659,12 +2659,12 @@ void LLLiveLSLEditor::processScriptRunningReply(LLMessageSystem* msg, void**)
 	if(instance)
 	{
 		instance->mHaveRunningInfo = true;
-		BOOL running;
-		msg->getBOOLFast(_PREHASH_Script, _PREHASH_Running, running);
+		bool running;
+		msg->getboolFast(_PREHASH_Script, _PREHASH_Running, running);
 		LLCheckBoxCtrl* runningCheckbox = instance->getChild<LLCheckBoxCtrl>("running");
 		runningCheckbox->set(running);
-		BOOL mono;
-		msg->getBOOLFast(_PREHASH_Script, "Mono", mono);
+		bool mono;
+		msg->getboolFast(_PREHASH_Script, "Mono", mono);
 		LLCheckBoxCtrl* monoCheckbox = instance->getChild<LLCheckBoxCtrl>("mono");
 		monoCheckbox->setEnabled(instance->getIsModifiable() && have_script_upload_cap(object_id));
 		monoCheckbox->set(mono);

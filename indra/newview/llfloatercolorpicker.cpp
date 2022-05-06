@@ -114,7 +114,7 @@ LLFloaterColorPicker::LLFloaterColorPicker (LLColorSwatchCtrl* swatch, BOOL show
 	if (!mCanApplyImmediately)
 	{
 		mApplyImmediateCheck->setEnabled(false);
-		mApplyImmediateCheck->set(FALSE);
+		mApplyImmediateCheck->set(false);
 	}
 
     mContextConeInAlpha = gSavedSettings.getF32("ContextConeInAlpha");

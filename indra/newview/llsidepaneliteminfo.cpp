@@ -651,7 +651,7 @@ void LLSidepanelItemInfo::refreshFromItem(LLViewerInventoryItem* item)
 		if(ctl)
 		{
 			ctl->setTentative(!ctl->getEnabled());
-			ctl->set(TRUE);
+			ctl->set(true);
 		}
 	}
 	

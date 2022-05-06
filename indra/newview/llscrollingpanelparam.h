@@ -46,7 +46,7 @@ public:
 
 	virtual void		draw();
 	virtual void		setVisible(bool visible);
-	virtual void		updatePanel(BOOL allow_modify);
+	virtual void		updatePanel(bool allow_modify);
 
 	static void			onSliderMouseDown(LLUICtrl* ctrl, void* userdata);
 	static void			onSliderMouseUp(LLUICtrl* ctrl, void* userdata);

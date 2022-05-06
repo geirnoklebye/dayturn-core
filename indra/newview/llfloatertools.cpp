@@ -306,7 +306,7 @@ bool	LLFloaterTools::postBuild()
 	if(mTab)
 	{
 		mTab->setFollows(FOLLOWS_TOP | FOLLOWS_LEFT);
-		mTab->setBorderVisible(FALSE);
+		mTab->setBorderVisible(false);
 		mTab->selectFirstTab();
 	}
 
@@ -319,7 +319,7 @@ bool	LLFloaterTools::postBuild()
 	mStatusText["place"] = getString("status_place");
 	mStatusText["selectland"] = getString("status_selectland");
 
-	sShowObjectCost = gSavedSettings.getBOOL("ShowObjectRenderingCost");
+	sShowObjectCost = gSavedSettings.getbool("ShowObjectRenderingCost");
 	
 	return true;
 }

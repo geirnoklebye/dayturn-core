@@ -1324,7 +1324,7 @@ void main()
 
 	// ...invalid data type
 	getfoo = (F32_CONTROL) gGlobals.resolveName("gFoo");
-	getfoo->set(TRUE);
+	getfoo->set(true);
 	getfoo->dump();
 
 	// ...out of range data

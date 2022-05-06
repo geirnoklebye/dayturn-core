@@ -727,16 +727,16 @@ void LLPanelGroupSubTab::buildActionCategory(LLScrollListCtrl* ctrl,
 					check->setTentative(false);
 					if (allowed_by_some & (*ra_it)->mPowerBit)
 					{
-						check->set(TRUE);
+						check->set(true);
 					}
 					else
 					{
-						check->set(FALSE);
+						check->set(false);
 					}
 				}
 				else
 				{
-					check->set(TRUE);
+					check->set(true);
 					if (show_full_strength)
 					{
 						check->setTentative(false);
@@ -2443,7 +2443,7 @@ void LLPanelGroupRolesSubTab::handleActionCheck(LLUICtrl* ctrl, bool force)
 	{
 		// Uncheck the item, for now.  It will be
 		// checked if they click 'Yes', below.
-		check->set(FALSE);
+		check->set(false);
 
 		LLRoleData rd;
 		LLSD args;
@@ -2558,7 +2558,7 @@ bool LLPanelGroupRolesSubTab::addActionCB(const LLSD& notification, const LLSD& 
 	if (0 == option)
 	{
 		// User clicked "Yes"
-		check->set(TRUE);
+		check->set(true);
 		const bool force_add = true;
 		handleActionCheck(check, force_add);
 	}

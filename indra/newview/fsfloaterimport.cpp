@@ -131,7 +131,7 @@ bool FSFloaterImport::postBuild()
 		|| gAgent.getRegion()->getCentralBakeVersion() > 0)
 	{
 		getChild<LLCheckBoxCtrl>("temp_asset")->setVisible(false);   
-		getChild<LLCheckBoxCtrl>("temp_asset")->set(FALSE);
+		getChild<LLCheckBoxCtrl>("temp_asset")->set(false);
 	}
 	getChild<LLButton>("import_btn")->setCommitCallback(boost::bind(&FSFloaterImport::onClickBtnImport, this));
 	loadFile();

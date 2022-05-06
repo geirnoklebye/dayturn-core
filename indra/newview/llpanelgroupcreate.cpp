@@ -97,8 +97,8 @@ void LLPanelGroupCreate::onOpen(const LLSD& key)
     mGroupNameEditor->clear();
     mEditCharter->clear();
     mSpinEnrollmentFee->set(0.f);
-    mCtrlEnrollmentFee->set(FALSE);
-    mCtrlOpenEnrollment->set(FALSE);
+    mCtrlEnrollmentFee->set(false);
+    mCtrlOpenEnrollment->set(false);
     mMembershipList->clearRows();
 
     // populate list

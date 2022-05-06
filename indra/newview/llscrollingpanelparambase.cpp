@@ -59,14 +59,14 @@ LLScrollingPanelParamBase::LLScrollingPanelParamBase( const LLPanel::Params& pan
 	childSetCommitCallback("param slider", LLScrollingPanelParamBase::onSliderMoved, this);
 
 	setVisible(false);
-	setBorderVisible( FALSE );
+	setBorderVisible( false );
 }
 
 LLScrollingPanelParamBase::~LLScrollingPanelParamBase()
 {
 }
 
-void LLScrollingPanelParamBase::updatePanel(BOOL allow_modify)
+void LLScrollingPanelParamBase::updatePanel(bool allow_modify)
 {
 	LLViewerVisualParam* param = mParam;
 

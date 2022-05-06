@@ -45,7 +45,7 @@ public:
 				   LLViewerJointMesh* mesh, LLViewerVisualParam* param, BOOL allow_modify, LLWearable* wearable, LLJoint* jointp, BOOL use_hints = FALSE );
 	virtual ~LLScrollingPanelParamBase();
 
-	virtual void		updatePanel(BOOL allow_modify);
+	virtual void		updatePanel(bool allow_modify);
 
 	static void			onSliderMoved(LLUICtrl* ctrl, void* userdata);
 

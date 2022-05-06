@@ -1179,7 +1179,7 @@ void LLFloaterInventoryFinder::onCreatorSelfFilterCommit()
 	else if(!show_creator_self || !show_creator_other)
 	{
 		mFilter->setFilterCreator(LLInventoryFilter::FILTERCREATOR_OTHERS);
-		mCreatorOthers->set(TRUE);
+		mCreatorOthers->set(true);
 	}
 }
 
@@ -1199,7 +1199,7 @@ void LLFloaterInventoryFinder::onCreatorOtherFilterCommit()
 	else if(!show_creator_other || !show_creator_self)
 	{
 		mFilter->setFilterCreator(LLInventoryFilter::FILTERCREATOR_SELF);
-		mCreatorSelf->set(TRUE);
+		mCreatorSelf->set(true);
 	}
 }
 

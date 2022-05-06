@@ -2057,23 +2057,23 @@ bool FSPanelAreaSearchFilter::postBuild()
 	mComboClickAction->setCommitCallback(boost::bind(&FSPanelAreaSearchFilter::onCommitCombo, this));
 	
 	mCheckboxExcludeAttachment = getChild<LLCheckBoxCtrl>("exclude_attachment");
-	mCheckboxExcludeAttachment->set(TRUE);
+	mCheckboxExcludeAttachment->set(true);
 	mCheckboxExcludeAttachment->setCommitCallback(boost::bind(&FSPanelAreaSearchFilter::onCommitCheckbox, this));
 	
 	mCheckboxExcludePhysics = getChild<LLCheckBoxCtrl>("exclude_physical");
-	mCheckboxExcludePhysics->set(TRUE);
+	mCheckboxExcludePhysics->set(true);
 	mCheckboxExcludePhysics->setCommitCallback(boost::bind(&FSPanelAreaSearchFilter::onCommitCheckbox, this));
 	
 	mCheckboxExcludetemporary = getChild<LLCheckBoxCtrl>("exclude_temporary");
-	mCheckboxExcludetemporary->set(TRUE);
+	mCheckboxExcludetemporary->set(true);
 	mCheckboxExcludetemporary->setCommitCallback(boost::bind(&FSPanelAreaSearchFilter::onCommitCheckbox, this));
 	
 	mCheckboxExcludeChildPrim = getChild<LLCheckBoxCtrl>("exclude_childprim");
-	mCheckboxExcludeChildPrim->set(TRUE);
+	mCheckboxExcludeChildPrim->set(true);
 	mCheckboxExcludeChildPrim->setCommitCallback(boost::bind(&FSPanelAreaSearchFilter::onCommitCheckbox, this));
 	
 	mCheckboxExcludeNeighborRegions = getChild<LLCheckBoxCtrl>("exclude_neighbor_region");
-	mCheckboxExcludeNeighborRegions->set(TRUE);
+	mCheckboxExcludeNeighborRegions->set(true);
 	mCheckboxExcludeNeighborRegions->setCommitCallback(boost::bind(&FSPanelAreaSearchFilter::onCommitCheckbox, this));
 
 	mButtonApply = getChild<LLButton>("apply");
@@ -2121,7 +2121,7 @@ void FSPanelAreaSearchFilter::onCommitCheckbox()
 	if (mCheckboxExcludePhysics->get())
 	{
 		mFSAreaSearch->setFilterPhysical(false);
-		mCheckboxPhysical->set(FALSE);
+		mCheckboxPhysical->set(false);
 		mCheckboxPhysical->setEnabled(false);
 		mFSAreaSearch->setExcludePhysics(true);
 	}
@@ -2135,7 +2135,7 @@ void FSPanelAreaSearchFilter::onCommitCheckbox()
 	if (mCheckboxExcludetemporary->get())
 	{
 		mFSAreaSearch->setFilterTemporary(false);
-		mCheckboxTemporary->set(FALSE);
+		mCheckboxTemporary->set(false);
 		mCheckboxTemporary->setEnabled(false);
 		mFSAreaSearch->setExcludetemporary(true);
 	}
@@ -2149,7 +2149,7 @@ void FSPanelAreaSearchFilter::onCommitCheckbox()
 	if (mCheckboxExcludeAttachment->get())
 	{
 		mFSAreaSearch->setFilterAttachment(false);
-		mCheckboxAttachment->set(FALSE);
+		mCheckboxAttachment->set(false);
 		mCheckboxAttachment->setEnabled(false);
 		mFSAreaSearch->setExcludeAttachment(true);
 	}

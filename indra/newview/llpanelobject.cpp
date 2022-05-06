@@ -481,19 +481,19 @@ void LLPanelObject::getState( )
 		if(owner_mask_on & PERM_MOVE)
 		{
 			// owner can move, so not locked
-			mCheckLock->set(FALSE);
+			mCheckLock->set(false);
 			mCheckLock->setTentative(false);
 		}
 		else if(owner_mask_off & PERM_MOVE)
 		{
 			// owner can't move, so locked
-			mCheckLock->set(TRUE);
+			mCheckLock->set(true);
 			mCheckLock->setTentative(false);
 		}
 		else
 		{
 			// some locked, some not locked
-			mCheckLock->set(FALSE);
+			mCheckLock->set(false);
 			mCheckLock->setTentative(true);
 		}
 	}
@@ -1891,13 +1891,13 @@ void LLPanelObject::clearCtrls()
 {
 	LLPanel::clearCtrls();
 
-	mCheckLock		->set(FALSE);
+	mCheckLock		->set(false);
 	mCheckLock		->setEnabled(false);
-	mCheckPhysics	->set(FALSE);
+	mCheckPhysics	->set(false);
 	mCheckPhysics	->setEnabled(false);
-	mCheckTemporary	->set(FALSE);
+	mCheckTemporary	->set(false);
 	mCheckTemporary	->setEnabled(false);
-	mCheckPhantom	->set(FALSE);
+	mCheckPhantom	->set(false);
 	mCheckPhantom	->setEnabled(false);
 	
 	// Disable text labels
@@ -1918,7 +1918,7 @@ void LLPanelObject::clearCtrls()
 	getChildView("scale_taper")->setEnabled(false);
 	getChildView("advanced_cut")->setEnabled(false);
 	getChildView("advanced_dimple")->setEnabled(false);
-	getChildView("advanced_slice")->setVisible( FALSE);
+	getChildView("advanced_slice")->setVisible(false);
 }
 
 //

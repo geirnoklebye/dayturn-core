@@ -471,7 +471,7 @@ void LLFloaterProperties::refreshFromItem(LLInventoryItem* item)
 		if(ctl)
 		{
 			ctl->setTentative(true);
-			ctl->set(TRUE);
+			ctl->set(true);
 		}
 	}
 	

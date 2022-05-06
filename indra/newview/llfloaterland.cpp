@@ -594,9 +594,9 @@ void LLPanelLandGeneral::refresh()
 	mBtnSetGroup->setEnabled(false);
 	mBtnStartAuction->setEnabled(false);
 
-	mCheckDeedToGroup	->set(FALSE);
+	mCheckDeedToGroup	->set(false);
 	mCheckDeedToGroup	->setEnabled(false);
-	mCheckContributeWithDeed->set(FALSE);
+	mCheckContributeWithDeed->set(false);
 	mCheckContributeWithDeed->setEnabled(false);
 
 	mTextOwner->setText(LLStringUtil::null);
@@ -2045,34 +2045,34 @@ void LLPanelLandOptions::refresh()
 	LLParcel *parcel = mParcel->getParcel();
 	if (!parcel || gDisconnected)
 	{
-		mCheckEditObjects	->set(FALSE);
+		mCheckEditObjects	->set(false);
 		mCheckEditObjects	->setEnabled(false);
 
-		mCheckEditGroupObjects	->set(FALSE);
+		mCheckEditGroupObjects	->set(false);
 		mCheckEditGroupObjects	->setEnabled(false);
 
-		mCheckAllObjectEntry	->set(FALSE);
+		mCheckAllObjectEntry	->set(false);
 		mCheckAllObjectEntry	->setEnabled(false);
 
-		mCheckGroupObjectEntry	->set(FALSE);
+		mCheckGroupObjectEntry	->set(false);
 		mCheckGroupObjectEntry	->setEnabled(false);
 
-		mCheckSafe			->set(FALSE);
+		mCheckSafe			->set(false);
 		mCheckSafe			->setEnabled(false);
 
-		mCheckFly			->set(FALSE);
+		mCheckFly			->set(false);
 		mCheckFly			->setEnabled(false);
 
-		mCheckGroupScripts	->set(FALSE);
+		mCheckGroupScripts	->set(false);
 		mCheckGroupScripts	->setEnabled(false);
 
-		mCheckOtherScripts	->set(FALSE);
+		mCheckOtherScripts	->set(false);
 		mCheckOtherScripts	->setEnabled(false);
 
-		mPushRestrictionCtrl->set(FALSE);
+		mPushRestrictionCtrl->set(false);
 		mPushRestrictionCtrl->setEnabled(false);
 
-		mSeeAvatarsCtrl->set(TRUE);
+		mSeeAvatarsCtrl->set(true);
 		mSeeAvatarsCtrl->setEnabled(false);
 		mSeeAvatarsText->setEnabled(false);
 
@@ -2123,7 +2123,7 @@ void LLPanelLandOptions::refresh()
 		{
 			mPushRestrictionCtrl->setLabel(getString("push_restrict_region_text"));
 			mPushRestrictionCtrl->setEnabled(false);
-			mPushRestrictionCtrl->set(TRUE);
+			mPushRestrictionCtrl->set(true);
 		}
 		else
 		{
@@ -2194,7 +2194,7 @@ void LLPanelLandOptions::refresh()
 				if (regionp->getSimAccess() == SIM_ACCESS_PG)
 				{
 					mMatureCtrl->setEnabled(false);
-					mMatureCtrl->set(FALSE);
+					mMatureCtrl->set(false);
 				}
 				else if (regionp->getSimAccess() == SIM_ACCESS_MATURE)
 				{
@@ -2204,7 +2204,7 @@ void LLPanelLandOptions::refresh()
 				else if (regionp->getSimAccess() == SIM_ACCESS_ADULT)
 				{
 					mMatureCtrl->setEnabled(false);
-					mMatureCtrl->set(TRUE);
+					mMatureCtrl->set(true);
 					mMatureCtrl->setLabel(getString("mature_check_adult"));
 					mMatureCtrl->setToolTip(getString("mature_check_adult_tooltip"));
 				}
@@ -2226,7 +2226,7 @@ void LLPanelLandOptions::refreshSearch()
 	LLParcel *parcel = mParcel->getParcel();
 	if (!parcel || gDisconnected)
 	{
-		mCheckShowDirectory->set(FALSE);
+		mCheckShowDirectory->set(false);
 		mCheckShowDirectory->setEnabled(false);
 
 		const std::string& none_string = LLParcel::getCategoryString(LLParcel::C_NONE);

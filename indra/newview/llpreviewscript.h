@@ -166,7 +166,7 @@ private:
 protected:
 	void deleteBridges();
 	void setHelpPage(const std::string& help_string);
-	void updateDynamicHelp(BOOL immediate = FALSE);
+	void updateDynamicHelp(bool immediate = false);
 	bool isKeyword(LLKeywordToken* token);
 	void addHelpItemToHistory(const std::string& help_string);
 	static void onErrorList(LLUICtrl*, void* user_data);
@@ -311,13 +311,13 @@ private:
 	virtual void draw();
 
 	virtual void loadAsset();
-	void loadAsset(BOOL is_new);
+	void loadAsset(bool is_new);
 	/*virtual*/ void saveIfNeeded(bool sync = true);
 	void uploadAssetViaCaps(const std::string& url,
 							const std::string& filename,
 							const LLUUID& task_id,
 							const LLUUID& item_id,
-							BOOL is_running,
+							bool is_running,
 							const LLUUID& experience_public_id);
 	bool monoChecked() const;
 

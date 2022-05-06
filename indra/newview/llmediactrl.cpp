@@ -160,7 +160,7 @@ LLMediaCtrl::~LLMediaCtrl()
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-void LLMediaCtrl::setBorderVisible( BOOL border_visible )
+void LLMediaCtrl::setBorderVisible( bool border_visible )
 {
 	if ( mBorder )
 	{

@@ -40,7 +40,7 @@ class LLScrollingPanel : public LLPanel
 {
 public:
 	LLScrollingPanel(const LLPanel::Params& params) : LLPanel(params) {}
-	virtual void updatePanel(BOOL allow_modify) = 0;
+	virtual void updatePanel(bool allow_modify) = 0;
 };
 
 

@@ -1549,7 +1549,7 @@ void LLPreviewGesture::onCommitWaitTime(LLUICtrl* ctrl, void* data)
 	LLGestureStep* step = (LLGestureStep*)step_item->getUserdata();
 	if (step->getType() != STEP_WAIT) return;
 
-	self->mWaitTimeCheck->set(TRUE);
+	self->mWaitTimeCheck->set(true);
 	onCommitWait(ctrl, data);
 }
 
