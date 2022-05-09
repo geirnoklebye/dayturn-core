@@ -2130,7 +2130,7 @@ bool lure_callback(const LLSD& notification, const LLSD& response)
 	
 	LLUUID from_id = notification["payload"]["from_id"].asUUID();
 	LLUUID lure_id = notification["payload"]["lure_id"].asUUID();
-	BOOL godlike = notification["payload"]["godlike"].asBoolean();
+	bool godlike = notification["payload"]["godlike"].asBoolean();
 
 	switch(option)
 	{

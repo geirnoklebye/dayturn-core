@@ -44,7 +44,7 @@
 #include <boost/function.hpp>
 #include <boost/signals2.hpp>
 
-extern const BOOL 	ANIMATE;
+extern const bool 	ANIMATE;
 extern const U8 	AGENT_STATE_TYPING;  // Typing indication
 extern const U8 	AGENT_STATE_EDITING; // Set when agent has objects selected
 
@@ -647,7 +647,7 @@ private:
 public:
 	void 			teleportViaLandmark(const LLUUID& landmark_id);			// Teleport to a landmark
 	void 			teleportHome()	{ teleportViaLandmark(LLUUID::null); }	// Go home
-	void 			teleportViaLure(const LLUUID& lure_id, BOOL godlike);	// To an invited location
+	void 			teleportViaLure(const LLUUID& lure_id, bool godlike);	// To an invited location
 	void 			teleportViaLocation(const LLVector3d& pos_global);		// To a global location - this will probably need to be deprecated
 	void			teleportViaLocationLookAt(const LLVector3d& pos_global);// To a global location, preserving camera rotation
 	void 			teleportCancel();										// May or may not be allowed by server

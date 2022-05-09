@@ -4663,7 +4663,7 @@ class LLViewDefaultUISize : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		gSavedSettings.setF32("UIScaleFactor", 1.0f);
-		gSavedSettings.setBOOL("UIAutoScale", FALSE);	
+		gSavedSettings.setbool("UIAutoScale", false);
 		gViewerWindow->reshape(gViewerWindow->getWindowWidthRaw(), gViewerWindow->getWindowHeightRaw());
 		return true;
 	}
@@ -4673,8 +4673,8 @@ class LLToolsEnableCommandlineChat : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		BOOL cur_val = gSavedSettings.getBOOL("FSCmdLine");
-		gSavedSettings.setBOOL("FSCmdLine", ! cur_val );
+		bool cur_val = gSavedSettings.getbool("FSCmdLine");
+		gSavedSettings.setbool("FSCmdLine", ! cur_val );
 		return true;
 	}
 };
@@ -4712,9 +4712,9 @@ class LLViewToggleUI : public view_listener_t
 
 		if (option == 0) // OK
 		{
-			gViewerWindow->setUIVisibility(gSavedSettings.getBOOL("HideUIControls"));
-			LLPanelStandStopFlying::getInstance()->setVisible(gSavedSettings.getBOOL("HideUIControls"));
-			gSavedSettings.setBOOL("HideUIControls",!gSavedSettings.getBOOL("HideUIControls"));
+			gViewerWindow->setUIVisibility(gSavedSettings.getbool("HideUIControls"));
+			LLPanelStandStopFlying::getInstance()->setVisible(gSavedSettings.getbool("HideUIControls"));
+			gSavedSettings.setbool("HideUIControls",!gSavedSettings.getbool("HideUIControls"));
 		}
 	}
 };
@@ -5209,8 +5209,8 @@ void handle_take()
 		return;
 	}
 	
-	BOOL you_own_everything = TRUE;
-	BOOL locked_but_takeable_object = FALSE;
+	bool you_own_everything = true;
+	bool locked_but_takeable_object = false;
 	LLUUID category_id;
 	
 	for (LLObjectSelection::root_iterator iter = LLSelectMgr::getInstance()->getSelection()->root_begin();
@@ -5222,12 +5222,12 @@ void handle_take()
 		{
 			if(!object->permYouOwner())
 			{
-				you_own_everything = FALSE;
+				you_own_everything = false;
 			}
 
 			if(!object->permMove())
 			{
-				locked_but_takeable_object = TRUE;
+				locked_but_takeable_object = true;
 			}
 		}
 		if(node->mFolderID.notNull())
@@ -5318,7 +5318,7 @@ void handle_take()
 void handle_object_show_inspector()
 {
 	LLObjectSelectionHandle selection = LLSelectMgr::getInstance()->getSelection();
-	LLViewerObject* objectp = selection->getFirstRootObject(TRUE);
+	LLViewerObject* objectp = selection->getFirstRootObject(true);
  	if (!objectp)
  	{
  		return;
@@ -5719,7 +5719,7 @@ class LLToolsEnableSelectNextPart : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
         bool new_value = (!LLSelectMgr::getInstance()->getSelection()->isEmpty()
-                          && (gSavedSettings.getBOOL("EditLinkedParts")
+                          && (gSavedSettings.getbool("EditLinkedParts")
                               || LLToolFace::getInstance() == LLToolMgr::getInstance()->getCurrentTool()));
 		return new_value;
 	}
@@ -6212,7 +6212,7 @@ class LLViewEnableJoystickFlycam : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		bool new_value = (gSavedSettings.getBOOL("JoystickEnabled") && gSavedSettings.getBOOL("JoystickFlycamEnabled"));
+		bool new_value = (gSavedSettings.getbool("JoystickEnabled") && gSavedSettings.getbool("JoystickFlycamEnabled"));
 		return new_value;
 	}
 };
@@ -6381,8 +6381,8 @@ void show_debug_menus()
 
 void toggle_debug_menus(void*)
 {
-	BOOL visible = ! gSavedSettings.getBOOL("UseDebugMenus");
-	gSavedSettings.setBOOL("UseDebugMenus", visible);
+	bool visible = ! gSavedSettings.getbool("UseDebugMenus");
+	gSavedSettings.setbool("UseDebugMenus", visible);
 	show_debug_menus();
 }
 
@@ -7932,7 +7932,7 @@ BOOL object_is_wearable()
 	}
     if (!gAgentAvatarp->canAttachMoreObjects())
     {
-        return FALSE;
+        return false;
     }
 	LLObjectSelectionHandle selection = LLSelectMgr::getInstance()->getSelection();
 	for (LLObjectSelection::valid_root_iterator iter = LLSelectMgr::getInstance()->getSelection()->valid_root_begin();
@@ -7941,10 +7941,10 @@ BOOL object_is_wearable()
 		LLSelectNode* node = *iter;		
 		if (node->mPermissions->getOwner() == gAgent.getID())
 		{
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -8866,9 +8866,9 @@ class LLToolsSelectOnlyMovableObjects : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		BOOL cur_val = gSavedSettings.getBOOL("SelectMovableOnly");
+		bool cur_val = gSavedSettings.getbool("SelectMovableOnly");
 
-		gSavedSettings.setBOOL("SelectMovableOnly", ! cur_val );
+		gSavedSettings.setbool("SelectMovableOnly", ! cur_val );
 
 		return true;
 	}
@@ -8912,9 +8912,10 @@ class LLToolsShowSelectionLightRadius : public view_listener_t
 class LLToolsEditLinkedParts : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
+    
 	{
-		BOOL select_individuals = !gSavedSettings.getBOOL("EditLinkedParts");
-		gSavedSettings.setBOOL( "EditLinkedParts", select_individuals );
+		bool select_individuals = !gSavedSettings.getbool("EditLinkedParts");
+		gSavedSettings.setbool( "EditLinkedParts", select_individuals );
 		if (select_individuals)
 		{
 			LLSelectMgr::getInstance()->demoteSelectionToIndividuals();

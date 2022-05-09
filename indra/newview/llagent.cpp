@@ -101,7 +101,7 @@ using namespace LLAvatarAppearanceDefines;
 
 extern LLMenuBarGL* gMenuBarView;
 
-const BOOL ANIMATE = TRUE;
+const bool ANIMATE = true;
 const U8 AGENT_STATE_TYPING =	0x04;
 const U8 AGENT_STATE_EDITING =  0x10;
 
@@ -181,7 +181,7 @@ private:
 class LLTeleportRequestViaLure : public LLTeleportRequestViaLandmark
 {
 public:
-	LLTeleportRequestViaLure(const LLUUID &pLureId, BOOL pIsLureGodLike);
+	LLTeleportRequestViaLure(const LLUUID &pLureId, bool pIsLureGodLike);
 	virtual ~LLTeleportRequestViaLure();
 
 	virtual void toOstream(std::ostream& os) const;
@@ -869,9 +869,9 @@ void LLAgent::toggleFlying()
 	}
 
 	// <FS:Ansariel> Chalice Yao's crouch toggle
-	if (gSavedPerAccountSettings.getBOOL("FSCrouchToggleStatus"))
+	if (gSavedPerAccountSettings.getbool("FSCrouchToggleStatus"))
 	{
-		gSavedPerAccountSettings.setBOOL("FSCrouchToggleStatus", FALSE);
+		gSavedPerAccountSettings.setbool("FSCrouchToggleStatus", false);
 	}
 	// </FS:Ansariel>
 
@@ -894,7 +894,7 @@ void LLAgent::toggleFlying()
 // static
 bool LLAgent::enableFlying()
 {
-	BOOL sitting = FALSE;
+	bool sitting = false;
 	if (isAgentAvatarValid())
 	{
 		sitting = gAgentAvatarp->isSitting();
@@ -905,7 +905,7 @@ bool LLAgent::enableFlying()
 // static
 bool LLAgent::isSitting()
 {
-    BOOL sitting = FALSE;
+    bool sitting = false;
     if (isAgentAvatarValid())
     {
         sitting = gAgentAvatarp->isSitting();
@@ -2171,7 +2171,7 @@ void LLAgent::startTyping()
 		}
 	}
 
-	if (gSavedSettings.getBOOL("PlayTypingAnim"))
+	if (gSavedSettings.getbool("PlayTypingAnim"))
 	{
 		sendAnimationRequest(ANIM_AGENT_TYPE, ANIM_REQUEST_START);
 	}
@@ -2265,7 +2265,7 @@ void LLAgent::endAnimationUpdateUI()
 		gViewerWindow->showCursor();
 		// show menus
 		gMenuBarView->setVisible(true);
-		LLNavigationBar::getInstance()->setVisible(TRUE && gSavedSettings.getBOOL("ShowNavbarNavigationPanel"));
+		LLNavigationBar::getInstance()->setVisible(true && gSavedSettings.getbool("ShowNavbarNavigationPanel"));
 		gStatusBar->setVisibleForMouselook(true);
 
         static LLCachedControl<bool> show_mini_location_panel(gSavedSettings, "ShowMiniLocationPanel");
@@ -4399,7 +4399,7 @@ void LLAgent::doTeleportViaLandmark(const LLUUID& landmark_asset_id)
 	}
 }
 
-void LLAgent::teleportViaLure(const LLUUID& lure_id, BOOL godlike)
+void LLAgent::teleportViaLure(const LLUUID& lure_id, bool godlike)
 {
 	mTeleportRequest = LLTeleportRequestPtr(new LLTeleportRequestViaLure(lure_id, godlike));
 	startTeleportRequest();
@@ -5135,7 +5135,7 @@ void LLTeleportRequestViaLandmark::restartTeleport()
 // LLTeleportRequestViaLure
 //-----------------------------------------------------------------------------
 
-LLTeleportRequestViaLure::LLTeleportRequestViaLure(const LLUUID &pLureId, BOOL pIsLureGodLike)
+LLTeleportRequestViaLure::LLTeleportRequestViaLure(const LLUUID &pLureId, bool pIsLureGodLike)
 	: LLTeleportRequestViaLandmark(pLureId),
 	mIsLureGodLike(pIsLureGodLike)
 {

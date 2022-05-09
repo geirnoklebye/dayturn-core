@@ -60,7 +60,7 @@ bool LLAgentLanguage::update()
 	std::string language = LLUI::getLanguage();
 		
 	body["language"] = language;
-	body["language_is_public"] = gSavedSettings.getBOOL("LanguageIsPublic");
+	body["language_is_public"] = gSavedSettings.getbool("LanguageIsPublic");
 		
     if (!gAgent.requestPostCapability("UpdateAgentLanguage", body))
     {
