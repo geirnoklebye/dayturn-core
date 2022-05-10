@@ -306,7 +306,7 @@ class LLIMSessionObserver
 {
 public:
 	virtual ~LLIMSessionObserver() {}
-	virtual void sessionAdded(const LLUUID& session_id, const std::string& name, const LLUUID& other_participant_id, BOOL has_offline_msg) = 0;
+	virtual void sessionAdded(const LLUUID& session_id, const std::string& name, const LLUUID& other_participant_id, bool has_offline_msg) = 0;
     virtual void sessionActivated(const LLUUID& session_id, const std::string& name, const LLUUID& other_participant_id) = 0;
 	virtual void sessionVoiceOrIMStarted(const LLUUID& session_id) = 0;
 	virtual void sessionRemoved(const LLUUID& session_id) = 0;

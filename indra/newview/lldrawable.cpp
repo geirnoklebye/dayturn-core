@@ -716,7 +716,7 @@ F32 LLDrawable::updateXform(bool undamped)
 
 	if (mSpatialBridge)
 	{
-		gPipeline.markMoved(mSpatialBridge, FALSE);
+		gPipeline.markMoved(mSpatialBridge, false);
 	}
 	return dist_squared;
 }
@@ -799,7 +799,7 @@ void LLDrawable::updatePartition()
 	}
 	else if (mSpatialBridge)
 	{
-		gPipeline.markMoved(mSpatialBridge, FALSE);
+		gPipeline.markMoved(mSpatialBridge, false);
 	}
 	else
 	{
@@ -1610,7 +1610,7 @@ void LLSpatialBridge::makeActive()
 void LLSpatialBridge::move(LLDrawable *drawablep, LLSpatialGroup *curp, bool immediate)
 {
 	LLSpatialPartition::move(drawablep, curp, immediate);
-	gPipeline.markMoved(this, FALSE);
+	gPipeline.markMoved(this, false);
 }
 
 bool LLSpatialBridge::updateMove()

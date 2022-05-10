@@ -64,7 +64,7 @@ LLConversationLogList::LLConversationLogList(const Params& p)
 		mContextMenu = context_menu->getHandle();
 	}
 
-	mIsFriendsOnTop = gSavedSettings.getBOOL("SortFriendsFirst");
+	mIsFriendsOnTop = gSavedSettings.getbool("SortFriendsFirst");
 }
 
 LLConversationLogList::~LLConversationLogList()
@@ -133,7 +133,7 @@ void LLConversationLogList::sortByDate()
 void LLConversationLogList::toggleSortFriendsOnTop()
 {
 	mIsFriendsOnTop = !mIsFriendsOnTop;
-	gSavedSettings.setBOOL("SortFriendsFirst", mIsFriendsOnTop);
+	gSavedSettings.setbool("SortFriendsFirst", mIsFriendsOnTop);
 	sort();
 }
 

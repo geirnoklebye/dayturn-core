@@ -423,12 +423,12 @@ public:
 							// use a pointer instead of making "isBridge" and "asBridge" virtual so it's safe
 							// to call asBridge() from the destructor
 	
-	bool mInfiniteFarClip; // if TRUE, frustum culling ignores far clip plane
+	bool mInfiniteFarClip; // if true, frustum culling ignores far clip plane
 	U32 mBufferUsage;
 	const bool mRenderByGroup;
 	U32 mVertexDataMask;
 	F32 mSlopRatio; //percentage distance must change before drawables receive LOD update (default is 0.25);
-	bool mDepthMask; //if TRUE, objects in this partition will be written to depth during alpha rendering
+	bool mDepthMask; //if true, objects in this partition will be written to depth during alpha rendering
 
 	static bool sTeleportRequested; //started to issue a teleport request
 };

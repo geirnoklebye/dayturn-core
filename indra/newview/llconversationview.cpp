@@ -465,7 +465,7 @@ void LLConversationViewSession::toggleCollapsedMode(bool is_collapsed)
 	mItemPanel->translate(mCollapsedMode ? -h_pad : h_pad, 0);
 }
 
-void LLConversationViewSession::setVisibleIfDetached(BOOL visible)
+void LLConversationViewSession::setVisibleIfDetached(bool visible)
 {
 	// Do this only if the conversation floater has been torn off (i.e. no multi floater host) and is not minimized
 	// Note: minimized dockable floaters are brought to front hence unminimized when made visible and we don't want that here
@@ -660,7 +660,7 @@ bool LLConversationViewParticipant::postBuild()
         LLFolderViewItem::postBuild();
         refresh();
     }
-    return TRUE;
+    return true;
 }
 
 void LLConversationViewParticipant::draw()

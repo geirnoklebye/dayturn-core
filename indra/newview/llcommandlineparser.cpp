@@ -571,8 +571,8 @@ void setControlValueCB(const LLCommandLineParser::token_vector_t& value,
                 std::string token(onevalue(option, value));
             
                 // There's a token. check the string for true/false/1/0 etc.
-                BOOL result = FALSE;
-                bool gotSet = LLStringUtil::convertToBOOL(token, result);
+                bool result = false;
+                bool gotSet = LLStringUtil::convertTobool(token, result);
                 if (gotSet)
                 {
                     ctrl->setValue(LLSD(result), false);

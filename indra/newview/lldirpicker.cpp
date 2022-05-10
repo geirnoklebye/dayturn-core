@@ -60,7 +60,7 @@ LLDirPicker LLDirPicker::sInstance;
 bool LLDirPicker::check_local_file_access_enabled()
 {
 	// if local file browsing is turned off, return without opening dialog
-	bool local_file_system_browsing_enabled = gSavedSettings.getBOOL("LocalFileSystemBrowsingEnabled");
+	bool local_file_system_browsing_enabled = gSavedSettings.getbool("LocalFileSystemBrowsingEnabled");
 	if ( ! local_file_system_browsing_enabled )
 	{
 		mDir.clear();	// Windows
@@ -92,20 +92,20 @@ LLDirPicker::~LLDirPicker()
 	// nothing
 }
 
-BOOL LLDirPicker::getDir(std::string* filename, bool blocking)
+bool LLDirPicker::getDir(std::string* filename, bool blocking)
 {
 	if( mLocked )
 	{
-		return FALSE;
+		return false;
 	}
 
 	// if local file browsing is turned off, return without opening dialog
 	if ( check_local_file_access_enabled() == false )
 	{
-		return FALSE;
+		return false;
 	}
 
-	BOOL success = FALSE;
+	bool success = false;
 
 	
 	if (blocking)
@@ -128,7 +128,7 @@ BOOL LLDirPicker::getDir(std::string* filename, bool blocking)
 			// Set the string value.
 
 			mDir = utf16str_to_utf8str(llutf16string(buffer));
-			success = TRUE;
+			success = true;
 		}
 		// free the item id list
 		CoTaskMemFree(pIDL);
@@ -175,7 +175,7 @@ void LLDirPicker::reset()
 
 
 //static
-BOOL LLDirPicker::getDir(std::string* filename, bool blocking)
+bool LLDirPicker::getDir(std::string* filename, bool blocking)
 {
     LLFilePicker::ELoadFilter filter=LLFilePicker::FFLOAD_DIRECTORY;
     
@@ -209,14 +209,14 @@ void LLDirPicker::reset()
 		mFilePicker->reset();
 }
 
-BOOL LLDirPicker::getDir(std::string* filename, bool blocking)
+bool LLDirPicker::getDir(std::string* filename, bool blocking)
 {
 	reset();
 
 	// if local file browsing is turned off, return without opening dialog
 	if ( check_local_file_access_enabled() == false )
 	{
-		return FALSE;
+		return false;
 	}
 
 #if !LL_MESA_HEADLESS
@@ -264,9 +264,9 @@ void LLDirPicker::reset()
 {
 }
 
-BOOL LLDirPicker::getDir(std::string* filename, bool blocking)
+bool LLDirPicker::getDir(std::string* filename, bool blocking)
 {
-	return FALSE;
+	return false;
 }
 
 std::string LLDirPicker::getDirName()

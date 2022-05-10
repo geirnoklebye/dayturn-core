@@ -69,7 +69,7 @@ public:
 	// start() returns TRUE if queue started or notification raised,
 	// FALSE only if starting a non-notification action failed
 	// (previously it passed back the return from startQueue() directly)
-	BOOL start();
+	bool start();
 	
     void addProcessingMessage(const std::string &message, const LLSD &args);
     void addStringMessage(const std::string &message);
@@ -92,14 +92,14 @@ protected:
 
 	// this does the actual starting immediately for informational operations or
 	// after confirmation for modifying/destructive operations
-	BOOL confirmedStart();
+	bool confirmedStart();
 
 	bool onScriptQueueConfirmation(const LLSD& notification, const LLSD& response);
 
   void onClickCopyToClipboard();
 	
 	// returns true if this is done
-	BOOL isDone() const;
+	bool isDone() const;
 
 	virtual bool startQueue() = 0;
 
@@ -159,7 +159,7 @@ class LLFloaterCompileQueue : public LLFloaterScriptQueue
 public:
 	
 	void experienceIdsReceived( const LLSD& content );
-	BOOL hasExperience(const LLUUID& id)const;
+	bool hasExperience(const LLUUID& id)const;
 
 protected:
 	LLFloaterCompileQueue(const LLSD& key);

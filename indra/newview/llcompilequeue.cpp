@@ -251,7 +251,7 @@ void LLFloaterScriptQueue::addObject(const LLUUID& id, std::string name)
     mObjectList.push_back(obj);
 }
 
-BOOL LLFloaterScriptQueue::start()
+bool LLFloaterScriptQueue::start()
 {
 	// Locate and Locate Full aka Status do not modify, so no need for a notification
 	// Delete is dangerous and needs a stern notification
@@ -280,7 +280,7 @@ BOOL LLFloaterScriptQueue::start()
 		LLNotificationsUtil::add("ConfirmScriptQueueModify", LLSD(), LLSD(), boost::bind(&LLFloaterScriptQueue::onScriptQueueConfirmation, this, _1, _2));
 	}	
 	// this is fibbing a bit; we may actually decide to abort via notification response
-	return TRUE;
+	return true;
 }
 
 bool LLFloaterScriptQueue::onScriptQueueConfirmation(const LLSD& notification, const LLSD& response)
@@ -296,7 +296,7 @@ bool LLFloaterScriptQueue::onScriptQueueConfirmation(const LLSD& notification, c
 }
 
 // actually start, either after a confirmation or directly depending on the operation
-BOOL LLFloaterScriptQueue::confirmedStart()
+bool LLFloaterScriptQueue::confirmedStart()
 {	
 	std::string buffer;
 
@@ -329,7 +329,7 @@ void LLFloaterScriptQueue::addStringMessage(const std::string &message)
     // <FS:Ansariel> Improve log output
     //getChild<LLScrollListCtrl>("queue output")->addSimpleElement(message, ADD_BOTTOM);
     LLScrollListCtrl* ctrl = getChild<LLScrollListCtrl>("queue output");
-    BOOL is_at_end = ctrl->getScrollbar()->isAtEnd();
+    bool is_at_end = ctrl->getScrollbar()->isAtEnd();
     ctrl->addSimpleElement(message, ADD_BOTTOM);
     if (is_at_end)
     {
@@ -339,7 +339,7 @@ void LLFloaterScriptQueue::addStringMessage(const std::string &message)
 }
 
 
-BOOL LLFloaterScriptQueue::isDone() const
+bool LLFloaterScriptQueue::isDone() const
 {
 	return (mCurrentObjectID.isNull() && (mObjectList.size() == 0));
 }
@@ -367,7 +367,7 @@ void LLFloaterCompileQueue::experienceIdsReceived( const LLSD& content )
 	}
 }
 
-BOOL LLFloaterCompileQueue::hasExperience( const LLUUID& id ) const
+bool LLFloaterCompileQueue::hasExperience( const LLUUID& id ) const
 {
 	return mExperienceIds.find(id) != mExperienceIds.end();
 }
