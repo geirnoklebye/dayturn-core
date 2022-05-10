@@ -214,6 +214,7 @@
     top_delta="4"
     enabled="true"
     follows="left|top"
+    layout="topleft"
     height="14"
     control_name="UpdaterShowReleaseNotes"
     label="Show Release Notes after update"
