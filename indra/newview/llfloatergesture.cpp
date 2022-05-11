@@ -229,7 +229,7 @@ bool LLFloaterGesture::postBuild()
 	
 		mGestureList->setFocus(true);
 
-		const BOOL ascending = TRUE;
+		const bool ascending = true;
 		mGestureList->sortByColumn(std::string("name"), ascending);
 		mGestureList->selectFirstItem();
 	}

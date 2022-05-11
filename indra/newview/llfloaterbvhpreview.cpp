@@ -433,7 +433,7 @@ void LLFloaterBvhPreview::resetMotion()
 		return;
 
 	LLVOAvatar* avatarp = mAnimPreview->getDummyAvatar();
-	BOOL paused = avatarp->areAnimationsPaused();
+	bool paused = avatarp->areAnimationsPaused();
 
 	LLKeyframeMotion* motionp = dynamic_cast<LLKeyframeMotion*>(avatarp->findMotion(mMotionID));
 	if( motionp )
@@ -672,7 +672,7 @@ void LLFloaterBvhPreview::onCommitBaseAnim()
 	{
 		LLVOAvatar* avatarp = mAnimPreview->getDummyAvatar();
 
-		BOOL paused = avatarp->areAnimationsPaused();
+		bool paused = avatarp->areAnimationsPaused();
 
 		// stop all other possible base motions
 		avatarp->stopMotion(mIDList["Standing"], true);
@@ -1036,7 +1036,7 @@ void LLFloaterBvhPreview::onBtnOK(void* userdata)
 //-----------------------------------------------------------------------------
 // LLPreviewAnimation
 //-----------------------------------------------------------------------------
-LLPreviewAnimation::LLPreviewAnimation(S32 width, S32 height) : LLViewerDynamicTexture(width, height, 3, ORDER_MIDDLE, FALSE)
+LLPreviewAnimation::LLPreviewAnimation(S32 width, S32 height) : LLViewerDynamicTexture(width, height, 3, ORDER_MIDDLE, false)
 {
 	mNeedsUpdate = true;
 	mCameraDistance = PREVIEW_CAMERA_DISTANCE;

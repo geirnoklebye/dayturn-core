@@ -1012,7 +1012,7 @@ void LLFloaterIMSession::setTyping(bool typing)
 	}
 }
 
-void LLFloaterIMSession::processIMTyping(const LLUUID& from_id, BOOL typing)
+void LLFloaterIMSession::processIMTyping(const LLUUID& from_id, bool typing)
 {
 	LL_DEBUGS("TypingMsgs") << "typing=" << typing << LL_ENDL;
 	if ( typing )
@@ -1194,7 +1194,7 @@ bool LLFloaterIMSession::isInviteAllowed() const
 			 || mIsP2PChat);
 }
 
-BOOL LLFloaterIMSession::inviteToSession(const uuid_vec_t& ids)
+bool LLFloaterIMSession::inviteToSession(const uuid_vec_t& ids)
 {
 	LLViewerRegion* region = gAgent.getRegion();
 	bool is_region_exist = region != NULL;

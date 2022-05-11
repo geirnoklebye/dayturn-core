@@ -2932,8 +2932,8 @@ bool LLAppViewer::initConfiguration()
         mForceGraphicsLevel = gSavedSettings.getU32("RenderQualityPerformance");
 	}
 
-	LLFastTimerView::sAnalyzePerformance = gSavedSettings.getBOOL("AnalyzePerformance");
-	gAgentPilot.setReplaySession(gSavedSettings.getBOOL("ReplaySession"));
+	LLFastTimerView::sAnalyzePerformance = gSavedSettings.getbool("AnalyzePerformance");
+	gAgentPilot.setReplaySession(gSavedSettings.getbool("ReplaySession"));
 
 	if (gSavedSettings.getbool("DebugSession"))
 	{

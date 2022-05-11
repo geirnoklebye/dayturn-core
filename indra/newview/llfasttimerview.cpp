@@ -67,7 +67,7 @@ static const S32 NUM_FRAMES_HISTORY = 200;
 
 std::vector<BlockTimerStatHandle*> ft_display_idx; // line of table entry for display purposes (for collapse)
 
-BOOL LLFastTimerView::sAnalyzePerformance = FALSE;
+bool LLFastTimerView::sAnalyzePerformance = false;
 
 S32 get_depth(const BlockTimerStatHandle* blockp)
 {
@@ -1288,7 +1288,7 @@ void LLFastTimerView::drawLegend()
 			}
 
 			x += dx;
-			BOOL is_child_of_hover_item = (idp == mHoverID);
+			bool is_child_of_hover_item = (idp == mHoverID);
 			BlockTimerStatHandle* next_parent = idp->getParent();
 			while(!is_child_of_hover_item && next_parent)
 			{
