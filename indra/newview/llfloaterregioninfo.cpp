@@ -1371,6 +1371,7 @@ BOOL LLPanelRegionTerrainInfo::validateTextureSizes()
 			LLSD args;
 			args["TEXTURE_NUM"] = i+1;
 			args["TEXTURE_BIT_DEPTH"] = llformat("%d",components * 8);
+            args["MAX_SIZE"] = MAX_TERRAIN_TEXTURE_SIZE;
 			LLNotificationsUtil::add("InvalidTerrainBitDepth", args);
 			return FALSE;
 		}
@@ -1382,6 +1383,7 @@ BOOL LLPanelRegionTerrainInfo::validateTextureSizes()
 			args["TEXTURE_NUM"] = i+1;
 			args["TEXTURE_SIZE_X"] = width;
 			args["TEXTURE_SIZE_Y"] = height;
+            args["MAX_SIZE"] = MAX_TERRAIN_TEXTURE_SIZE;
 			LLNotificationsUtil::add("InvalidTerrainSize", args);
 			return FALSE;
 			
