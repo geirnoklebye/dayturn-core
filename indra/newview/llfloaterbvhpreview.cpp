@@ -1047,6 +1047,7 @@ LLPreviewAnimation::LLPreviewAnimation(S32 width, S32 height) : LLViewerDynamicT
 	mDummyAvatar = (LLVOAvatar*)gObjectList.createObjectViewer(LL_PCODE_LEGACY_AVATAR, gAgent.getRegion(), LLViewerObject::CO_FLAG_UI_AVATAR);
 	mDummyAvatar->mSpecialRenderMode = 1;
 	mDummyAvatar->startMotion(ANIM_AGENT_STAND, BASE_ANIM_TIME_OFFSET);
+    mDummyAvatar->hideHair();
 	mDummyAvatar->hideSkirt();
 
 	// stop extraneous animations
@@ -1135,6 +1136,7 @@ BOOL	LLPreviewAnimation::render()
 		{
 			LLDrawPoolAvatar *avatarPoolp = (LLDrawPoolAvatar *)face->getPool();
 			avatarp->dirtyMesh();
+            gPipeline.enableLightsPreview();
 			avatarPoolp->renderAvatars(avatarp);  // renders only one avatar
 		}
 	}

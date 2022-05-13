@@ -7471,11 +7471,19 @@ LLViewerJoint*	LLVOAvatar::getViewerJoint(S32 idx)
 }
 
 //-----------------------------------------------------------------------------
+// hideHair()
+//-----------------------------------------------------------------------------
+void LLVOAvatar::hideHair()
+{
+    mMeshLOD[MESH_ID_HAIR]->setVisible(false, true);
+}
+
+//-----------------------------------------------------------------------------
 // hideSkirt()
 //-----------------------------------------------------------------------------
 void LLVOAvatar::hideSkirt()
 {
-	mMeshLOD[MESH_ID_SKIRT]->setVisible(FALSE, TRUE);
+	mMeshLOD[MESH_ID_SKIRT]->setVisible(false, true);
 }
 
 BOOL LLVOAvatar::setParent(LLViewerObject* parent)

@@ -809,6 +809,7 @@ public:
 	void 			parseAppearanceMessage(LLMessageSystem* mesgsys, LLAppearanceMessageContents& msg);
 	void 			processAvatarAppearance(LLMessageSystem* mesgsys);
     void            applyParsedAppearanceMessage(LLAppearanceMessageContents& contents, bool slam_params);
+    void 			hideHair();
 	void 			hideSkirt();
 	void			startAppearanceAnimation();
 	
