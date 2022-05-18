@@ -118,7 +118,7 @@ protected:
 	// TomY: Provide for a list of extra parameter structures, mapped by structure name
 	struct ExtraParameter
 	{
-		BOOL in_use;
+		bool in_use;
 		LLNetworkData *data;
 	};
 	std::map<U16, ExtraParameter*> mExtraParameterList;
