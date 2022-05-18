@@ -179,7 +179,7 @@ public:
 	/*virtual*/ void	onShift(const LLVector4a &shift_vector); // Called when the drawable shifts
 
 	/*virtual*/ void	parameterChanged(U16 param_type, bool local_origin);
-	/*virtual*/ void	parameterChanged(U16 param_type, LLNetworkData* data, BOOL in_use, bool local_origin);
+	/*virtual*/ void	parameterChanged(U16 param_type, LLNetworkData* data, bool in_use, bool local_origin);
 
 	/*virtual*/ U32		processUpdateMessage(LLMessageSystem *mesgsys,
 											void **user_data,

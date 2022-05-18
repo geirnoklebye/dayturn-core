@@ -71,7 +71,7 @@
 /*=======================================*/ 
 
 static const F32 LL_LOCAL_TIMER_HEARTBEAT   = 3.0;
-static const BOOL LL_LOCAL_USE_MIPMAPS      = true;
+static const bool LL_LOCAL_USE_MIPMAPS      = true;
 static const S32 LL_LOCAL_DISCARD_LEVEL     = 0;
 static const bool LL_LOCAL_SLAM_FOR_DEBUG   = true;
 static const bool LL_LOCAL_REPLACE_ON_DEL   = true;
@@ -531,7 +531,7 @@ void LLLocalBitmap::updateUserVolumes(LLUUID old_id, LLUUID new_id, U32 channel)
 				LLSculptParams* old_params = (LLSculptParams*)object->getParameterEntry(LLNetworkData::PARAMS_SCULPT);
 				LLSculptParams new_params(*old_params);
 				new_params.setSculptTexture(new_id, (*old_params).getSculptType());
-				object->setParameterEntry(LLNetworkData::PARAMS_SCULPT, new_params, TRUE);
+				object->setParameterEntry(LLNetworkData::PARAMS_SCULPT, new_params, true);
 			}
 		}
 	}

@@ -584,11 +584,11 @@ public:
 
 	virtual LLNetworkData* getParameterEntry(U16 param_type) const;
 	virtual bool setParameterEntry(U16 param_type, const LLNetworkData& new_value, bool local_origin);
-	virtual BOOL getParameterEntryInUse(U16 param_type) const;
-	virtual bool setParameterEntryInUse(U16 param_type, BOOL in_use, bool local_origin);
+	virtual bool getParameterEntryInUse(U16 param_type) const;
+	virtual bool setParameterEntryInUse(U16 param_type, bool in_use, bool local_origin);
 	// Called when a parameter is changed
 	virtual void parameterChanged(U16 param_type, bool local_origin);
-	virtual void parameterChanged(U16 param_type, LLNetworkData* data, BOOL in_use, bool local_origin);
+	virtual void parameterChanged(U16 param_type, LLNetworkData* data, bool in_use, bool local_origin);
 	
 	friend class LLViewerObjectList;
 	friend class LLViewerMediaList;

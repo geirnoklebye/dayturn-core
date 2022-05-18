@@ -93,7 +93,7 @@ const F32 FORCE_SIMPLE_RENDER_AREA = 512.f;
 const F32 FORCE_CULL_AREA = 8.f;
 U32 JOINT_COUNT_REQUIRED_FOR_FULLRIG = 1;
 
-BOOL gAnimateTextures = TRUE;
+bool gAnimateTextures = true;
 //extern BOOL gHideSelectedObjects;
 
 F32 LLVOVolume::sLODFactor = 1.f;
@@ -298,7 +298,7 @@ void LLVOVolume::markDead()
 void LLVOVolume::initClass()
 {
 	// gSavedSettings better be around
-	if (gSavedSettings.getBOOL("PrimMediaMasterEnabled"))
+	if (gSavedSettings.getbool("PrimMediaMasterEnabled"))
 	{
 		const F32 queue_timer_delay = gSavedSettings.getF32("PrimMediaRequestQueueDelay");
 		const F32 retry_timer_delay = gSavedSettings.getF32("PrimMediaRetryTimerDelay");
@@ -1173,7 +1173,7 @@ bool LLVOVolume::setVolume(const LLVolumeParams &params_in, const S32 detail, bo
 	bool is_flexible = (volume_params.getPathParams().getCurveType() == LL_PCODE_PATH_FLEXIBLE);
 	if (is_flexible)
 	{
-		setParameterEntryInUse(LLNetworkData::PARAMS_FLEXIBLE, TRUE, false);
+		setParameterEntryInUse(LLNetworkData::PARAMS_FLEXIBLE, true, false);
 		if (!mVolumeImpl)
 		{
 			LLFlexibleObjectData* data = (LLFlexibleObjectData*)getParameterEntry(LLNetworkData::PARAMS_FLEXIBLE);
@@ -1183,7 +1183,7 @@ bool LLVOVolume::setVolume(const LLVolumeParams &params_in, const S32 detail, bo
 	else
 	{
 		// Mark the parameter not in use
-		setParameterEntryInUse(LLNetworkData::PARAMS_FLEXIBLE, FALSE, false);
+		setParameterEntryInUse(LLNetworkData::PARAMS_FLEXIBLE, false, false);
 		if (mVolumeImpl)
 		{
 			delete mVolumeImpl;
@@ -3327,7 +3327,7 @@ void LLVOVolume::setLightTextureID(LLUUID id)
 	{
 		if (!hasLightTexture())
 		{
-			setParameterEntryInUse(LLNetworkData::PARAMS_LIGHT_IMAGE, TRUE, true);
+			setParameterEntryInUse(LLNetworkData::PARAMS_LIGHT_IMAGE, true, true);
 		}
 		else if (old_texturep)
 		{	
@@ -3355,7 +3355,7 @@ void LLVOVolume::setLightTextureID(LLUUID id)
 		{
 			old_texturep->removeVolume(LLRender::LIGHT_TEX, this);
 		}
-		setParameterEntryInUse(LLNetworkData::PARAMS_LIGHT_IMAGE, FALSE, true);
+		setParameterEntryInUse(LLNetworkData::PARAMS_LIGHT_IMAGE, false, true);
 		parameterChanged(LLNetworkData::PARAMS_LIGHT_IMAGE, true);
 		mLightTexture = NULL;
 	}		
@@ -3378,11 +3378,11 @@ void LLVOVolume::setIsLight(bool is_light)
 	{
 		if (is_light)
 		{
-			setParameterEntryInUse(LLNetworkData::PARAMS_LIGHT, TRUE, true);
+			setParameterEntryInUse(LLNetworkData::PARAMS_LIGHT, true, true);
 		}
 		else
 		{
-			setParameterEntryInUse(LLNetworkData::PARAMS_LIGHT, FALSE, true);
+			setParameterEntryInUse(LLNetworkData::PARAMS_LIGHT, false, true);
 		}
 
 		if (is_light)
@@ -3754,7 +3754,7 @@ bool LLVOVolume::setIsFlexible(bool is_flexible)
 			res = true;
 			setFlags(FLAGS_USE_PHYSICS, FALSE);
 			setFlags(FLAGS_PHANTOM, TRUE);
-			setParameterEntryInUse(LLNetworkData::PARAMS_FLEXIBLE, TRUE, true);
+			setParameterEntryInUse(LLNetworkData::PARAMS_FLEXIBLE, true, true);
 			if (mDrawable)
 			{
 				mDrawable->makeActive();
@@ -3770,7 +3770,7 @@ bool LLVOVolume::setIsFlexible(bool is_flexible)
 			volume_params.setType(profile_and_hole, LL_PCODE_PATH_LINE);
 			res = true;
 			setFlags(FLAGS_PHANTOM, FALSE);
-			setParameterEntryInUse(LLNetworkData::PARAMS_FLEXIBLE, FALSE, true);
+			setParameterEntryInUse(LLNetworkData::PARAMS_FLEXIBLE, false, true);
 		}
 	}
 	if (res)
@@ -4545,7 +4545,7 @@ void LLVOVolume::parameterChanged(U16 param_type, bool local_origin)
 	LLViewerObject::parameterChanged(param_type, local_origin);
 }
 
-void LLVOVolume::parameterChanged(U16 param_type, LLNetworkData* data, BOOL in_use, bool local_origin)
+void LLVOVolume::parameterChanged(U16 param_type, LLNetworkData* data, bool in_use, bool local_origin)
 {
 	LLViewerObject::parameterChanged(param_type, data, in_use, local_origin);
 	if (mVolumeImpl)

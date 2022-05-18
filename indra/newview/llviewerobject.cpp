@@ -1579,7 +1579,7 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 					if (!iter->second->in_use)
 					{
 						// Send an update message in case it was formerly in use
-						parameterChanged(iter->first, iter->second->data, FALSE, false);
+						parameterChanged(iter->first, iter->second->data, false, false);
 					}
 				}
 
@@ -1962,7 +1962,7 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 					if (!iter->second->in_use)
 					{
 						// Send an update message in case it was formerly in use
-						parameterChanged(iter->first, iter->second->data, FALSE, false);
+						parameterChanged(iter->first, iter->second->data, false, false);
 					}
 				}
 
@@ -5984,8 +5984,8 @@ bool LLViewerObject::unpackParameterEntry(U16 param_type, LLDataPacker *dp)
 	if (param)
 	{
 		param->data->unpack(*dp);
-		param->in_use = TRUE;
-		parameterChanged(param_type, param->data, TRUE, false);
+		param->in_use = true;
+		parameterChanged(param_type, param->data, true, false);
 		return true;
 	}
 	else
@@ -6075,7 +6075,7 @@ LLNetworkData* LLViewerObject::getParameterEntry(U16 param_type) const
 	}
 }
 
-BOOL LLViewerObject::getParameterEntryInUse(U16 param_type) const
+bool LLViewerObject::getParameterEntryInUse(U16 param_type) const
 {
 	ExtraParameter* param = getExtraParameterEntry(param_type);
 	if (param)
@@ -6084,7 +6084,7 @@ BOOL LLViewerObject::getParameterEntryInUse(U16 param_type) const
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 }
 
@@ -6099,7 +6099,7 @@ bool LLViewerObject::setParameterEntry(U16 param_type, const LLNetworkData& new_
 		}
 		param->in_use = true;
 		param->data->copy(new_value);
-		parameterChanged(param_type, param->data, TRUE, local_origin);
+		parameterChanged(param_type, param->data, true, local_origin);
 		return true;
 	}
 	else
@@ -6111,7 +6111,7 @@ bool LLViewerObject::setParameterEntry(U16 param_type, const LLNetworkData& new_
 // Assumed to be called locally
 // If in_use is TRUE, will crate a new extra parameter if none exists.
 // Should always return true.
-bool LLViewerObject::setParameterEntryInUse(U16 param_type, BOOL in_use, bool local_origin)
+bool LLViewerObject::setParameterEntryInUse(U16 param_type, bool in_use, bool local_origin)
 {
 	ExtraParameter* param = getExtraParameterEntryCreate(param_type);
 	if (param && param->in_use != in_use)
@@ -6132,7 +6132,7 @@ void LLViewerObject::parameterChanged(U16 param_type, bool local_origin)
 	}
 }
 
-void LLViewerObject::parameterChanged(U16 param_type, LLNetworkData* data, BOOL in_use, bool local_origin)
+void LLViewerObject::parameterChanged(U16 param_type, LLNetworkData* data, bool in_use, bool local_origin)
 {
 	if (local_origin)
 	{

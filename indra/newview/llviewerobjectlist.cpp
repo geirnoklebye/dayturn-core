@@ -94,7 +94,7 @@
 #include "llavataractions.h"
 
 extern F32 gMinObjectDistance;
-extern BOOL gAnimateTextures;
+extern bool gAnimateTextures;
 
 #define MAX_CONCURRENT_PHYSICS_REQUESTS 256
 
@@ -948,7 +948,7 @@ void LLViewerObjectList::update(LLAgent &agent)
 	LLViewerObject::setMaxUpdateInterpolationTime( phase_out_time );
 	LLViewerObject::setMaxRegionCrossingInterpolationTime(region_interp_time);
 
-	gAnimateTextures = gSavedSettings.getBOOL("AnimateTextures");
+	gAnimateTextures = gSavedSettings.getbool("AnimateTextures");
 
 	// update global timer
 	F32 last_time = gFrameTimeSeconds;

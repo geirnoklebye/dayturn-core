@@ -1249,7 +1249,7 @@ void LLPanelObject::onCommitParametric( LLUICtrl* ctrl, void* userdata )
 
 	if (selected_type == MI_SCULPT)
 	{
-		self->mObject->setParameterEntryInUse(LLNetworkData::PARAMS_SCULPT, TRUE, TRUE);
+		self->mObject->setParameterEntryInUse(LLNetworkData::PARAMS_SCULPT, true, true);
 		LLSculptParams *sculpt_params = (LLSculptParams *)self->mObject->getParameterEntry(LLNetworkData::PARAMS_SCULPT);
 		if (sculpt_params)
 			volume_params.setSculptID(sculpt_params->getSculptTexture(), sculpt_params->getSculptType());
@@ -1258,7 +1258,7 @@ void LLPanelObject::onCommitParametric( LLUICtrl* ctrl, void* userdata )
 	{
 		LLSculptParams *sculpt_params = (LLSculptParams *)self->mObject->getParameterEntry(LLNetworkData::PARAMS_SCULPT);
 		if (sculpt_params)
-			self->mObject->setParameterEntryInUse(LLNetworkData::PARAMS_SCULPT, FALSE, TRUE);
+			self->mObject->setParameterEntryInUse(LLNetworkData::PARAMS_SCULPT, false, true);
 	}
 
 	// Update the volume, if necessary.
@@ -1788,7 +1788,7 @@ void LLPanelObject::sendSculpt()
 		sculpt_type |= LL_SCULPT_FLAG_INVERT;
 	
 	sculpt_params.setSculptTexture(sculpt_id, sculpt_type);
-	mObject->setParameterEntry(LLNetworkData::PARAMS_SCULPT, sculpt_params, TRUE);
+	mObject->setParameterEntry(LLNetworkData::PARAMS_SCULPT, sculpt_params, true);
 }
 
 void LLPanelObject::refresh()
