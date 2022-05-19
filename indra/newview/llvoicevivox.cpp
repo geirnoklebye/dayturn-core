@@ -4803,7 +4803,7 @@ void LLVivoxVoiceClient::sessionState::VerifySessions()
         if ((*it).expired())
         {
             LL_WARNS("Voice") << "Expired session found! removing" << LL_ENDL;
-            mSession.erase(it++);
+            it = mSession.erase(it);
         }
         else
             ++it;
