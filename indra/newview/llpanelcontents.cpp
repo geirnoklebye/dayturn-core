@@ -187,7 +187,7 @@ void LLPanelContents::onClickNewScript(void *userdata)
 				LLSaleInfo::DEFAULT,
 				LLInventoryItemFlags::II_FLAGS_NONE,
 				time_corrected());
-		object->saveScript(new_item, TRUE, true);
+		object->saveScript(new_item, true, true);
 
 		std::string name = new_item->getName();
 

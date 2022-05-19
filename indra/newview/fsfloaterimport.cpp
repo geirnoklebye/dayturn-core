@@ -195,7 +195,7 @@ void FSFloaterImport::onIdle()
 		LL_DEBUGS("import") << "Dropping " << item_queue.item->getName() << " " << item_queue.item->getUUID() << " into " << item_queue.prim_name << " " << item_queue.object->getID() << LL_ENDL;
 		if (item_queue.item->getType() == LLAssetType::AT_LSL_TEXT)
 		{
-			LLToolDragAndDrop::dropScript(item_queue.object, item_queue.item, TRUE,
+			LLToolDragAndDrop::dropScript(item_queue.object, item_queue.item, true,
 						      LLToolDragAndDrop::SOURCE_AGENT,
 						      gAgentID);
 		}

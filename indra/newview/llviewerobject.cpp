@@ -2858,7 +2858,7 @@ void LLViewerObject::doUpdateInventory(
 // of the new and old script AFTER the bytecode has been saved.
 void LLViewerObject::saveScript(
 	const LLViewerInventoryItem* item,
-	BOOL active,
+	bool active,
 	bool is_new)
 {
 	/*

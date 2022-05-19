@@ -286,7 +286,7 @@ LLToolDragAndDrop::LLToolDragAndDrop()
 	mSource(SOURCE_AGENT),
 	mCursor(UI_CURSOR_NO),
 	mLastAccept(ACCEPT_NO),
-	mDrop(FALSE),
+	mDrop(false),
 	mCurItemIndex(0)
 {
 
@@ -298,7 +298,7 @@ void LLToolDragAndDrop::setDragStart(S32 x, S32 y)
 	mDragStartY = y;
 }
 
-BOOL LLToolDragAndDrop::isOverThreshold(S32 x,S32 y)
+bool LLToolDragAndDrop::isOverThreshold(S32 x,S32 y)
 {
 	static LLCachedControl<S32> drag_and_drop_threshold(gSavedSettings,"DragAndDropDistanceThreshold", 3);
 	
@@ -466,7 +466,7 @@ BOOL LLToolDragAndDrop::handleMouseUp( S32 x, S32 y, MASK mask )
 	if (hasMouseCapture())
 	{
 		EAcceptance acceptance = ACCEPT_NO;
-		dragOrDrop( x, y, mask, TRUE, &acceptance );
+		dragOrDrop( x, y, mask, true, &acceptance );
 		endDrag();
 	}
 	return TRUE;
@@ -545,7 +545,7 @@ ECursorType LLToolDragAndDrop::acceptanceToCursor( EAcceptance acceptance )
 bool LLToolDragAndDrop::handleHover( S32 x, S32 y, MASK mask )
 {
 	EAcceptance acceptance = ACCEPT_NO;
-	dragOrDrop( x, y, mask, FALSE, &acceptance );
+	dragOrDrop( x, y, mask, false, &acceptance );
 
 	ECursorType cursor = acceptanceToCursor(acceptance);
 	gViewerWindow->getWindow()->setCursor( cursor );
@@ -588,12 +588,12 @@ void LLToolDragAndDrop::handleDeselect()
 }
 
 // protected
-void LLToolDragAndDrop::dragOrDrop( S32 x, S32 y, MASK mask, BOOL drop, 
+void LLToolDragAndDrop::dragOrDrop( S32 x, S32 y, MASK mask, bool drop, 
 								   EAcceptance* acceptance)
 {
 	*acceptance = ACCEPT_YES_MULTI;
 
-	BOOL handled = FALSE;
+	bool handled = false;
 
 	LLView* top_view = gFocusMgr.getTopCtrl();
 	LLViewerInventoryItem* item;
@@ -613,7 +613,7 @@ void LLToolDragAndDrop::dragOrDrop( S32 x, S32 y, MASK mask, BOOL drop,
 
 	if (top_view)
 	{
-		handled = TRUE;
+		handled = true;
 
 		for (mCurItemIndex = 0; mCurItemIndex < (S32)mCargoIDs.size(); mCurItemIndex++)
 		{
@@ -689,7 +689,7 @@ void LLToolDragAndDrop::dragOrDrop( S32 x, S32 y, MASK mask, BOOL drop,
 
 	if (!handled)
 	{
-		handled = TRUE;
+		handled = true;
 
 		LLRootView* root_view = gViewerWindow->getRootView();
 
@@ -784,7 +784,7 @@ void LLToolDragAndDrop::dragOrDrop( S32 x, S32 y, MASK mask, BOOL drop,
 	}
 }
 
-void LLToolDragAndDrop::dragOrDrop3D( S32 x, S32 y, MASK mask, BOOL drop, EAcceptance* acceptance )
+void LLToolDragAndDrop::dragOrDrop3D( S32 x, S32 y, MASK mask, bool drop, EAcceptance* acceptance )
 {
 	mDrop = drop;
 	if (mDrop)
@@ -924,7 +924,7 @@ void LLToolDragAndDrop::pick(const LLPickInfo& pick_info)
 }
 
 // static
-BOOL LLToolDragAndDrop::handleDropTextureProtections(LLViewerObject* hit_obj,
+bool LLToolDragAndDrop::handleDropTextureProtections(LLViewerObject* hit_obj,
 													 LLInventoryItem* item,
 													 LLToolDragAndDrop::ESource source,
 													 const LLUUID& src_id)
@@ -935,7 +935,7 @@ BOOL LLToolDragAndDrop::handleDropTextureProtections(LLViewerObject* hit_obj,
 	if (SOURCE_LIBRARY == source)
 	{
 		// dropping a texture from the library always just works.
-		return TRUE;
+		return true;
 	}
 
 	// In case the inventory has not been loaded (e.g. due to some recent operation
@@ -957,10 +957,10 @@ BOOL LLToolDragAndDrop::handleDropTextureProtections(LLViewerObject* hit_obj,
 		// then it can always be added to a side.
 		// This saves some work if the task's inventory is already loaded
 		// and ensures that the texture item is only added once.
-		return TRUE;
+		return true;
 	}
 
-	if (!item) return FALSE;
+	if (!item) return false;
 	
 	LLPointer<LLViewerInventoryItem> new_item = new LLViewerInventoryItem(item);
 	if (!item->getPermissions().allowOperationBy(PERM_COPY, gAgent.getID()))
@@ -968,7 +968,7 @@ BOOL LLToolDragAndDrop::handleDropTextureProtections(LLViewerObject* hit_obj,
 		// Check that we can add the texture as inventory to the object
 		if (willObjectAcceptInventory(hit_obj,item) < ACCEPT_YES_COPY_SINGLE )
 		{
-			return FALSE;
+			return false;
 		}
 		// make sure the object has the texture in it's inventory.
 		if (SOURCE_AGENT == source)
@@ -991,7 +991,7 @@ BOOL LLToolDragAndDrop::handleDropTextureProtections(LLViewerObject* hit_obj,
 			else
 			{
 				LL_WARNS() << "Unable to find source object." << LL_ENDL;
-				return FALSE;
+				return false;
 			}
 		}
 		// Add the texture item to the target object's inventory.
@@ -1012,7 +1012,7 @@ BOOL LLToolDragAndDrop::handleDropTextureProtections(LLViewerObject* hit_obj,
 		// Check that we can add the texture as inventory to the object
 		if (willObjectAcceptInventory(hit_obj,item) < ACCEPT_YES_COPY_SINGLE )
 		{
-			return FALSE;
+			return false;
 		}
 		// *FIX: may want to make sure agent can paint hit_obj.
 
@@ -1032,7 +1032,7 @@ BOOL LLToolDragAndDrop::handleDropTextureProtections(LLViewerObject* hit_obj,
 		// we should return false here. This will requre a separate listener
 		// since without listener, we have no way to receive update
 	}
-	return TRUE;
+	return true;
 }
 
 void LLToolDragAndDrop::dropTextureAllFaces(LLViewerObject* hit_obj,
@@ -1046,7 +1046,7 @@ void LLToolDragAndDrop::dropTextureAllFaces(LLViewerObject* hit_obj,
 		return;
 	}
 	LLUUID asset_id = item->getAssetUUID();
-	BOOL success = handleDropTextureProtections(hit_obj, item, source, src_id);
+	bool success = handleDropTextureProtections(hit_obj, item, source, src_id);
 	if (!success)
 	{
 		return;
@@ -1076,7 +1076,7 @@ void LLToolDragAndDrop::dropMesh(LLViewerObject* hit_obj,
 		return;
 	}
 	LLUUID asset_id = item->getAssetUUID();
-	BOOL success = handleDropTextureProtections(hit_obj, item, source, src_id);
+	bool success = handleDropTextureProtections(hit_obj, item, source, src_id);
 	if(!success)
 	{
 		return;
@@ -1113,7 +1113,7 @@ void LLToolDragAndDrop::dropTextureOneFace(LLViewerObject* hit_obj,
 		return;
 	}
 	LLUUID asset_id = item->getAssetUUID();
-	BOOL success = handleDropTextureProtections(hit_obj, item, source, src_id);
+	bool success = handleDropTextureProtections(hit_obj, item, source, src_id);
 	if (!success)
 	{
 		return;
@@ -1176,7 +1176,7 @@ void LLToolDragAndDrop::dropTextureOneFace(LLViewerObject* hit_obj,
 
 void LLToolDragAndDrop::dropScript(LLViewerObject* hit_obj,
 								   LLInventoryItem* item,
-								   BOOL active,
+								   bool active,
 								   ESource source,
 								   const LLUUID& src_id)
 {
@@ -1231,9 +1231,9 @@ void LLToolDragAndDrop::dropScript(LLViewerObject* hit_obj,
 }
 
 void LLToolDragAndDrop::dropObject(LLViewerObject* raycast_target,
-				   BOOL bypass_sim_raycast,
-				   BOOL from_task_inventory,
-				   BOOL remove_from_inventory)
+				   bool bypass_sim_raycast,
+				   bool from_task_inventory,
+				   bool remove_from_inventory)
 {
 	LLViewerRegion* regionp = LLWorld::getInstance()->getRegionFromPosGlobal(mLastHitPos);
 	if (!regionp)
@@ -1261,7 +1261,7 @@ void LLToolDragAndDrop::dropObject(LLViewerObject* raycast_target,
 	if (!remove_from_inventory
 		&& !item->getPermissions().allowCopyBy(gAgent.getID()))
 	{
-		remove_from_inventory = TRUE;
+		remove_from_inventory = true;
 	}
 
 	// Limit raycast to a single object.  
@@ -1289,7 +1289,7 @@ void LLToolDragAndDrop::dropObject(LLViewerObject* raycast_target,
 	LLUUID source_id = from_task_inventory ? mSourceID : LLUUID::null;
 
 	// Select the object only if we're editing.
-	BOOL rez_selected = LLToolMgr::getInstance()->inEdit();
+	bool rez_selected = LLToolMgr::getInstance()->inEdit();
 
 
 	LLVector3 ray_start = regionp->getPosRegionFromGlobal(mLastCameraPos);
@@ -1297,7 +1297,7 @@ void LLToolDragAndDrop::dropObject(LLViewerObject* raycast_target,
 	// currently the ray's end point is an approximation,
 	// and is sometimes too short (causing failure.)  so we
 	// double the ray's length:
-	if (bypass_sim_raycast == FALSE)
+	if (bypass_sim_raycast == false)
 	{
 		LLVector3 ray_direction = ray_start - ray_end;
 		ray_end = ray_end - ray_direction;
@@ -1815,7 +1815,7 @@ EAcceptance LLToolDragAndDrop::dad3dRezObjectOnLand(
 	}
 
 	EAcceptance accept;
-	BOOL remove_inventory;
+	bool remove_inventory;
 
 	// Get initial settings based on shift key
 	if (mask & MASK_SHIFT)
@@ -1824,12 +1824,12 @@ EAcceptance LLToolDragAndDrop::dad3dRezObjectOnLand(
 		//accept = ACCEPT_YES_SINGLE;
 		//remove_inventory = TRUE;
 		accept = ACCEPT_YES_COPY_SINGLE;
-		remove_inventory = FALSE;
+		remove_inventory = false;
 	}
 	else
 	{
 		accept = ACCEPT_YES_COPY_SINGLE;
-		remove_inventory = FALSE;
+		remove_inventory = false;
 	}
 
 	// check if the item can be copied. If not, send that to the sim
@@ -1837,7 +1837,7 @@ EAcceptance LLToolDragAndDrop::dad3dRezObjectOnLand(
 	if(!item->getPermissions().allowCopyBy(gAgent.getID()))
 	{
 		accept = ACCEPT_YES_SINGLE;
-		remove_inventory = TRUE;
+		remove_inventory = true;
 	}
 
 	// Check if it's in the trash.
@@ -1849,7 +1849,7 @@ EAcceptance LLToolDragAndDrop::dad3dRezObjectOnLand(
 
 	if(drop)
 	{
-		dropObject(obj, TRUE, FALSE, remove_inventory);
+		dropObject(obj, true, false, remove_inventory);
 	}
 
 	return accept;
@@ -1893,7 +1893,7 @@ EAcceptance LLToolDragAndDrop::dad3dRezObjectOnObject(
 	}
 	
 	EAcceptance accept;
-	BOOL remove_inventory;
+	bool remove_inventory;
 
 	if (mask & MASK_SHIFT)
 	{
@@ -1901,12 +1901,12 @@ EAcceptance LLToolDragAndDrop::dad3dRezObjectOnObject(
 		//accept = ACCEPT_YES_SINGLE;
 		//remove_inventory = TRUE;
 		accept = ACCEPT_YES_COPY_SINGLE;
-		remove_inventory = FALSE;
+		remove_inventory = false;
 	}
 	else
 	{
 		accept = ACCEPT_YES_COPY_SINGLE;
-		remove_inventory = FALSE;
+		remove_inventory = false;
 	}
 	
 	// check if the item can be copied. If not, send that to the sim
@@ -1914,7 +1914,7 @@ EAcceptance LLToolDragAndDrop::dad3dRezObjectOnObject(
 	if(!item->getPermissions().allowCopyBy(gAgent.getID()))
 	{
 		accept = ACCEPT_YES_SINGLE;
-		remove_inventory = TRUE;
+		remove_inventory = true;
 	}
 
 	// Check if it's in the trash.
@@ -1922,12 +1922,12 @@ EAcceptance LLToolDragAndDrop::dad3dRezObjectOnObject(
 	if(gInventory.isObjectDescendentOf(item->getUUID(), trash_id))
 	{
 		accept = ACCEPT_YES_SINGLE;
-		remove_inventory = TRUE;
+		remove_inventory = true;
 	}
 
 	if(drop)
 	{
-		dropObject(obj, FALSE, FALSE, remove_inventory);
+		dropObject(obj, false, false, remove_inventory);
 	}
 
 	return accept;
@@ -1954,7 +1954,7 @@ EAcceptance LLToolDragAndDrop::dad3dRezScript(
 	{
 		// rez in the script active by default, rez in inactive if the
 		// control key is being held down.
-		BOOL active = ((mask & MASK_CONTROL) == 0);
+		bool active = ((mask & MASK_CONTROL) == 0);
 	
 		LLViewerObject* root_object = obj;
 		if (obj && obj->getParent())
@@ -2255,7 +2255,7 @@ EAcceptance LLToolDragAndDrop::dad3dUpdateInventory(
 	return rv;
 }
 
-BOOL LLToolDragAndDrop::dadUpdateInventory(LLViewerObject* obj, BOOL drop)
+bool LLToolDragAndDrop::dadUpdateInventory(LLViewerObject* obj, bool drop)
 {
 	EAcceptance rv = dad3dUpdateInventory(obj, -1, MASK_NONE, drop);
 	return (rv >= ACCEPT_YES_COPY_SINGLE);
@@ -2391,8 +2391,8 @@ EAcceptance LLToolDragAndDrop::dad3dRezCategoryOnObject(
 }
 
 
-BOOL LLToolDragAndDrop::dadUpdateInventoryCategory(LLViewerObject* obj,
-												   BOOL drop)
+bool LLToolDragAndDrop::dadUpdateInventoryCategory(LLViewerObject* obj,
+												   bool drop)
 {
 	EAcceptance rv = dad3dUpdateInventoryCategory(obj, -1, MASK_NONE, drop);
 	return (rv >= ACCEPT_YES_COPY_SINGLE);
@@ -2493,7 +2493,7 @@ EAcceptance LLToolDragAndDrop::dad3dRezFromObjectOnLand(
 	}
 	if(drop)
 	{
-		dropObject(obj, TRUE, TRUE, FALSE);
+		dropObject(obj, true, true, false);
 	}
 	return ACCEPT_YES_SINGLE;
 }
@@ -2528,7 +2528,7 @@ EAcceptance LLToolDragAndDrop::dad3dRezFromObjectOnObject(
 	}
 	if(drop)
 	{
-		dropObject(obj, FALSE, TRUE, FALSE);
+		dropObject(obj, false, true, false);
 	}
 	return ACCEPT_YES_SINGLE;
 }

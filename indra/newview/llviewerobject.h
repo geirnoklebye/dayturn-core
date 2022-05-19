@@ -495,7 +495,7 @@ public:
 	// save a script, which involves removing the old one, and rezzing
 	// in the new one. This method should be called with the asset id
 	// of the new and old script AFTER the bytecode has been saved.
-	void saveScript(const LLViewerInventoryItem* item, BOOL active, bool is_new);
+	void saveScript(const LLViewerInventoryItem* item, bool active, bool is_new);
 
 	// move an inventory item out of the task and into agent
 	// inventory. This operation is based on messaging. No permissions

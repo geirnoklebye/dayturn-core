@@ -208,7 +208,7 @@ void FSCommon::applyDefaultBuildPreferences(LLViewerObject* object)
 			if (item->getType() == LLAssetType::AT_LSL_TEXT)
 			{
 				
-				LLToolDragAndDrop::dropScript(object, item, TRUE,
+				LLToolDragAndDrop::dropScript(object, item, true,
 							      LLToolDragAndDrop::SOURCE_AGENT,
 							      gAgentID);
 			}

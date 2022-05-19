@@ -141,7 +141,7 @@ protected:
     void            updateCopyTexButton();
 
 	// this function is to return TRUE if the drag should succeed.
-	static BOOL onDragTexture(LLUICtrl* ctrl, LLInventoryItem* item);
+	static bool onDragTexture(LLUICtrl* ctrl, LLInventoryItem* item);
 
 	void 	onCommitTexture(const LLSD& data);
 	void 	onCancelTexture(const LLSD& data);

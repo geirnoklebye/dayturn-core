@@ -56,7 +56,7 @@ public:
 	virtual void	handleDeselect();
 
 	void			setDragStart( S32 x, S32 y );			// In screen space
-	BOOL			isOverThreshold( S32 x, S32 y );		// In screen space
+	bool			isOverThreshold( S32 x, S32 y );		// In screen space
 
 	enum ESource
 	{
@@ -94,7 +94,7 @@ public:
 
 	// deal with permissions of object, etc. returns TRUE if drop can
 	// proceed, otherwise FALSE.
-	static BOOL handleDropTextureProtections(LLViewerObject* hit_obj,
+	static bool handleDropTextureProtections(LLViewerObject* hit_obj,
 						 LLInventoryItem* item,
 						 LLToolDragAndDrop::ESource source,
 						 const LLUUID& src_id);
@@ -117,9 +117,9 @@ protected:
 	typedef EAcceptance (LLToolDragAndDrop::*dragOrDrop3dImpl)
 		(LLViewerObject*, S32, MASK, BOOL);
 
-	void dragOrDrop(S32 x, S32 y, MASK mask, BOOL drop,
+	void dragOrDrop(S32 x, S32 y, MASK mask, bool drop,
 					EAcceptance* acceptance);
-	void dragOrDrop3D(S32 x, S32 y, MASK mask, BOOL drop,
+	void dragOrDrop3D(S32 x, S32 y, MASK mask, bool drop,
 					  EAcceptance* acceptance);
 	
 	static void pickCallback(const LLPickInfo& pick_info);
@@ -146,7 +146,7 @@ protected:
 
 	ECursorType		mCursor;
 	EAcceptance		mLastAccept;
-	BOOL			mDrop;
+	bool			mDrop;
 	S32				mCurItemIndex;
 	std::string		mToolTipMsg;
 	std::string		mCustomMsg;
@@ -220,9 +220,9 @@ protected:
 	//	LLViewerInventoryItem::item_array_t& items);
 
 	void dropObject(LLViewerObject* raycast_target,
-			BOOL bypass_sim_raycast,
-			BOOL from_task_inventory,
-			BOOL remove_from_inventory);
+			bool bypass_sim_raycast,
+			bool from_task_inventory,
+			bool remove_from_inventory);
 	
 	// accessor that looks at permissions, copyability, and names of
 	// inventory items to determine if a drop would be ok.
@@ -230,15 +230,15 @@ protected:
 
 public:
 	// helper functions
-	static BOOL isInventoryDropAcceptable(LLViewerObject* obj, LLInventoryItem* item) { return (ACCEPT_YES_COPY_SINGLE <= willObjectAcceptInventory(obj, item)); }
+	static bool isInventoryDropAcceptable(LLViewerObject* obj, LLInventoryItem* item) { return (ACCEPT_YES_COPY_SINGLE <= willObjectAcceptInventory(obj, item)); }
 
-	BOOL dadUpdateInventory(LLViewerObject* obj, BOOL drop);
-	BOOL dadUpdateInventoryCategory(LLViewerObject* obj, BOOL drop);
+	bool dadUpdateInventory(LLViewerObject* obj, bool drop);
+	bool dadUpdateInventoryCategory(LLViewerObject* obj, bool drop);
 
 	// methods that act on the simulator state.
 	static void dropScript(LLViewerObject* hit_obj,
 						   LLInventoryItem* item,
-						   BOOL active,
+						   bool active,
 						   ESource source,
 						   const LLUUID& src_id);
 	static void dropTextureOneFace(LLViewerObject* hit_obj, S32 hit_face,

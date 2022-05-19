@@ -2818,9 +2818,9 @@ void LLPanelFace::onCommitGlow(LLUICtrl* ctrl, void* userdata)
 }
 
 // static
-BOOL LLPanelFace::onDragTexture(LLUICtrl*, LLInventoryItem* item)
+bool LLPanelFace::onDragTexture(LLUICtrl*, LLInventoryItem* item)
 {
-	BOOL accept = TRUE;
+	bool accept = true;
 	for (LLObjectSelection::root_iterator iter = LLSelectMgr::getInstance()->getSelection()->root_begin();
 		 iter != LLSelectMgr::getInstance()->getSelection()->root_end(); iter++)
 	{
@@ -2828,7 +2828,7 @@ BOOL LLPanelFace::onDragTexture(LLUICtrl*, LLInventoryItem* item)
 		LLViewerObject* obj = node->getObject();
 		if(!LLToolDragAndDrop::isInventoryDropAcceptable(obj, item))
 		{
-			accept = FALSE;
+			accept = false;
 			break;
 		}
 	}

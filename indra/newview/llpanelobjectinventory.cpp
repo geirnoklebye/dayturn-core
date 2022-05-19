@@ -743,7 +743,7 @@ bool LLTaskCategoryBridge::dragOrDrop(MASK mask, bool drop,
 				LLViewerInventoryItem* item = (LLViewerInventoryItem*)cargo_data;
 				// rez in the script active by default, rez in
 				// inactive if the control key is being held down.
-				BOOL active = ((mask & MASK_CONTROL) == 0);
+				bool active = ((mask & MASK_CONTROL) == 0);
 				LLToolDragAndDrop::dropScript(object, item, active,
 											  LLToolDragAndDrop::getInstance()->getSource(),
 											  LLToolDragAndDrop::getInstance()->getSourceID());
