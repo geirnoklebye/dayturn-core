@@ -697,7 +697,7 @@ void LLLocationInputCtrl::onLocationPrearrange(const LLSD& data)
 	//Let's add landmarks to the top of the list if any
 	if(!filter.empty() )
 	{
-		LLInventoryModel::item_array_t landmark_items = LLLandmarkActions::fetchLandmarksByName(filter, TRUE);
+		LLInventoryModel::item_array_t landmark_items = LLLandmarkActions::fetchLandmarksByName(filter, true);
 
 		for(U32 i=0; i < landmark_items.size(); i++)
 		{

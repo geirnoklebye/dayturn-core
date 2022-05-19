@@ -460,7 +460,7 @@ void LLNavigationBar::onLocationSelection()
 			{
 				LLInventoryModel::item_array_t landmark_items =
 						LLLandmarkActions::fetchLandmarksByName(typed_location,
-								FALSE);
+								false);
 				if (!landmark_items.empty())
 				{
 					gAgent.teleportViaLandmark( landmark_items[0]->getAssetUUID());

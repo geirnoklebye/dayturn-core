@@ -49,7 +49,7 @@ public:
 	//const LLLandmark*	getFirst()	{ return mList.getFirstData(); }
 	//const LLLandmark*	getNext()	{ return mList.getNextData(); }
 
-	BOOL assetExists(const LLUUID& asset_uuid);
+	bool assetExists(const LLUUID& asset_uuid);
 	LLLandmark* getAsset(const LLUUID& asset_uuid, loaded_callback_t cb = NULL);
 	static void processGetAssetReply(
 		const LLUUID& uuid,
@@ -60,7 +60,7 @@ public:
 
 	// Returns TRUE if loading the landmark with given asset_uuid has been requested
 	// but is not complete yet.
-	BOOL isAssetInLoadedCallbackMap(const LLUUID& asset_uuid);
+	bool isAssetInLoadedCallbackMap(const LLUUID& asset_uuid);
 
 protected:
 	void onRegionHandle(const LLUUID& landmark_id);
