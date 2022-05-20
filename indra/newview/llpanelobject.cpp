@@ -156,7 +156,7 @@ bool	LLPanelObject::postBuild()
 	childSetCommitCallback("Rot Y",onCommitRotation,this);
 	mCtrlRotZ = getChild<LLSpinCtrl>("Rot Z");
 	childSetCommitCallback("Rot Z",onCommitRotation,this);
-	
+
 	//--------------------------------------------------------
 		
 	// Base Type
@@ -451,7 +451,7 @@ void LLPanelObject::getState( )
 	mCtrlRotX->setEnabled( enable_rotate );
 	mCtrlRotY->setEnabled( enable_rotate );
 	mCtrlRotZ->setEnabled( enable_rotate );
-	
+
 	LLUUID owner_id;
 	std::string owner_name;
 	LLSelectMgr::getInstance()->selectGetOwner(owner_id, owner_name);
@@ -1650,10 +1650,11 @@ void LLPanelObject::sendScale(BOOL btn_down)
 		}
 
 		LLSelectMgr::getInstance()->adjustTexturesByScale(true, !dont_stretch_textures);
+//		LL_INFOS() << "scale sent" << LL_ENDL;
 	}
 	else
 	{
-
+//		LL_INFOS() << "scale not changed" << LL_ENDL;
 	}
 }
 
@@ -1664,42 +1665,37 @@ void LLPanelObject::sendPosition(BOOL btn_down)
 
 	LLVector3 newpos(mCtrlPosX->get(), mCtrlPosY->get(), mCtrlPosZ->get());
 	LLViewerRegion* regionp = mObject->getRegion();
-	// Make sure new position is in a valid region, so the object
-	// won't get dumped by the simulator.
-	LLVector3d new_pos_global = regionp->getPosGlobalFromRegion(newpos);
 
 	if (!regionp) return;
-	if (mObject->isAttachment())
-	{
-		newpos.clamp(LLVector3(-MAX_ATTACHMENT_DIST,-MAX_ATTACHMENT_DIST,-MAX_ATTACHMENT_DIST),LLVector3(MAX_ATTACHMENT_DIST,MAX_ATTACHMENT_DIST,MAX_ATTACHMENT_DIST));
-	}
-	else
-	{
-		// Clamp the Z height
-		const F32 height = newpos.mV[VZ];
-		const F32 min_height = LLWorld::getInstance()->getMinAllowedZ(mObject, mObject->getPositionGlobal());
-		const F32 max_height = LLWorld::getInstance()->getRegionMaxHeight();
-		if (!mObject->isAttachment())
-		{
-			if ( height < min_height)
-			{
-				newpos.mV[VZ] = min_height;
-				mCtrlPosZ->set( min_height );
-			}
-			else if ( height > max_height )
-			{
-				newpos.mV[VZ] = max_height;
-				mCtrlPosZ->set( max_height );
-			}
 
-			// Grass is always drawn on the ground, so clamp its position to the ground
-			if (mObject->getPCode() == LL_PCODE_LEGACY_GRASS)
-			{
-				mCtrlPosZ->set(LLWorld::getInstance()->resolveLandHeightAgent(newpos) + 1.f);
-			}
+	if (!mObject->isAttachment())
+	{
+        // Clamp the Z height
+        const F32 height = newpos.mV[VZ];
+        const F32 min_height = LLWorld::getInstance()->getMinAllowedZ(mObject, mObject->getPositionGlobal());
+        const F32 max_height = LLWorld::getInstance()->getRegionMaxHeight();
+
+		if ( height < min_height)
+		{
+			newpos.mV[VZ] = min_height;
+			mCtrlPosZ->set( min_height );
+		}
+		else if ( height > max_height )
+		{
+			newpos.mV[VZ] = max_height;
+			mCtrlPosZ->set( max_height );
+		}
+
+		// Grass is always drawn on the ground, so clamp its position to the ground
+		if (mObject->getPCode() == LL_PCODE_LEGACY_GRASS)
+		{
+			mCtrlPosZ->set(LLWorld::getInstance()->resolveLandHeightAgent(newpos) + 1.f);
 		}
 	}
 
+	// Make sure new position is in a valid region, so the object
+	// won't get dumped by the simulator.
+	LLVector3d new_pos_global = regionp->getPosGlobalFromRegion(newpos);
     bool is_valid_pos = true;
     if (mObject->isAttachment())
     {
@@ -1717,8 +1713,8 @@ void LLPanelObject::sendPosition(BOOL btn_down)
 		// send only if the position is changed, that is, the delta vector is not zero
 		LLVector3d old_pos_global = mObject->getPositionGlobal();
 		LLVector3d delta = new_pos_global - old_pos_global;
-		// moved more than 1/20 millimeter
-		if (delta.magVec() >= 0.00005f)
+		// moved more than 1/2 millimeter
+		if (delta.magVec() >= 0.0005f)
 		{			
 			if (mRootObject != mObject)
 			{
@@ -1778,11 +1774,11 @@ void LLPanelObject::sendSculpt()
 
 	if (mCtrlSculptMirror)
 	{
-		mCtrlSculptMirror->setEnabled(enabled ? TRUE : FALSE);
+		mCtrlSculptMirror->setEnabled(enabled ? true : false);
 	}
 	if (mCtrlSculptInvert)
 	{
-		mCtrlSculptInvert->setEnabled(enabled ? TRUE : FALSE);
+		mCtrlSculptInvert->setEnabled(enabled ? true : false);
 	}
 	
 	if ((mCtrlSculptMirror) && (mCtrlSculptMirror->get()))
