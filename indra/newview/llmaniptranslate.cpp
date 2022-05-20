@@ -111,8 +111,8 @@ LLManipTranslate::LLManipTranslate( LLToolComposite* composite )
 :	LLManip( std::string("Move"), composite ),
 	mLastHoverMouseX(-1),
 	mLastHoverMouseY(-1),
-	mMouseOutsideSlop(FALSE),
-	mCopyMadeThisDrag(FALSE),
+	mMouseOutsideSlop(false),
+	mCopyMadeThisDrag(false),
 	mMouseDownX(-1),
 	mMouseDownY(-1),
 	mAxisArrowLength(50),
@@ -347,7 +347,7 @@ BOOL LLManipTranslate::handleMouseDownOnPart( S32 x, S32 y, MASK mask )
 	mManipPart = (EManipPart)hit_part;
 	mMouseDownX = x;
 	mMouseDownY = y;
-	mMouseOutsideSlop = FALSE;
+	mMouseOutsideSlop = false;
 
 	LLVector3		axis;
 
@@ -399,7 +399,7 @@ BOOL LLManipTranslate::handleMouseDownOnPart( S32 x, S32 y, MASK mask )
 	LLVector3d object_start_global = gAgent.getPosGlobalFromAgent(getPivotPoint());
 	getMousePointOnPlaneGlobal(mDragCursorStartGlobal, x, y, object_start_global, mManipNormal);
 	mDragSelectionStartGlobal = object_start_global;
-	mCopyMadeThisDrag = FALSE;
+	mCopyMadeThisDrag = false;
 
 	// Route future Mouse messages here preemptively.  (Release on mouse up.)
 	setMouseCapture( true );
@@ -469,7 +469,7 @@ bool LLManipTranslate::handleHover(S32 x, S32 y, MASK mask)
 		else
 		{
 			// ...just went outside the slop region
-			mMouseOutsideSlop = TRUE;
+			mMouseOutsideSlop = true;
 			// If holding down shift, leave behind a copy.
 			if (mask == MASK_COPY)
 			{
