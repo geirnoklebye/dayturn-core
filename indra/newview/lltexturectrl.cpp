@@ -1188,7 +1188,7 @@ void LLFloaterTexturePicker::onTextureSelect( const LLTextureEntry& te )
 	LLUUID inventory_item_id = findItemID(te.getID(), TRUE);
 	if (inventory_item_id.notNull())
 	{
-		LLToolPipette::getInstance()->setResult(TRUE, "");
+		LLToolPipette::getInstance()->setResult(true, "");
 		setImageID(te.getID());
 
 		mNoCopyTextureSelected = FALSE;
@@ -1204,7 +1204,7 @@ void LLFloaterTexturePicker::onTextureSelect( const LLTextureEntry& te )
 	}
 	else
 	{
-		LLToolPipette::getInstance()->setResult(FALSE, LLTrans::getString("InventoryNoTexture"));
+		LLToolPipette::getInstance()->setResult(false, LLTrans::getString("InventoryNoTexture"));
 	}
 }
 

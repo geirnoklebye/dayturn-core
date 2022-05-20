@@ -62,8 +62,8 @@
 const S32 SLOP_DIST_SQ = 4;
 
 // Override modifier key behavior with these buttons
-BOOL gGrabBtnVertical = FALSE;
-BOOL gGrabBtnSpin = FALSE;
+bool gGrabBtnVertical = false;
+bool gGrabBtnSpin = false;
 LLTool* gGrabTransientTool = NULL;
 extern BOOL gDebugClicks;
 
@@ -103,8 +103,8 @@ void LLToolGrabBase::handleSelect()
 		// in case we start from tools floater, we count any selection as valid
 		mValidSelection = gFloaterTools->getVisible();
 	}
-	gGrabBtnVertical = FALSE;
-	gGrabBtnSpin = FALSE;
+	gGrabBtnVertical = false;
+	gGrabBtnSpin = false;
 }
 
 void LLToolGrabBase::handleDeselect()
@@ -499,12 +499,12 @@ void LLToolGrabBase::handleHoverActive(S32 x, S32 y, MASK mask)
 	if ((mask == MASK_VERTICAL)
 		|| (gGrabBtnVertical && (mask != MASK_SPIN)))
 	{
-		vertical_dragging = TRUE;
+		vertical_dragging = true;
 	}
 	else if ((mask == MASK_SPIN)
 			|| (gGrabBtnSpin && (mask != MASK_VERTICAL)))
 	{
-		spin_grabbing = TRUE;
+		spin_grabbing = true;
 	}
 
 	//--------------------------------------------------
@@ -782,7 +782,7 @@ void LLToolGrabBase::handleHoverNonPhysical(S32 x, S32 y, MASK mask)
 
 	LLVector3 grab_pos_region(0,0,0);
 	
-	const BOOL SUPPORT_LLDETECTED_GRAB = TRUE;
+	const bool SUPPORT_LLDETECTED_GRAB = true;
 	if (SUPPORT_LLDETECTED_GRAB)
 	{
 		//--------------------------------------------------
@@ -853,7 +853,7 @@ void LLToolGrabBase::handleHoverNonPhysical(S32 x, S32 y, MASK mask)
 
 	// only send message if something has changed since last message
 	
-	BOOL changed_since_last_update = FALSE;
+	bool changed_since_last_update = false;
 
 	// test if touch data needs to be updated
 	if ((pick.mObjectFace != mLastFace) ||
@@ -864,7 +864,7 @@ void LLToolGrabBase::handleHoverNonPhysical(S32 x, S32 y, MASK mask)
 		(pick.mBinormal != mLastBinormal) ||
 		(grab_pos_region != mLastGrabPos))
 	{
-		changed_since_last_update = TRUE;
+		changed_since_last_update = true;
 	}
 
 	if (changed_since_last_update)

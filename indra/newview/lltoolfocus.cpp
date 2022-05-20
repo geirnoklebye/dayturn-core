@@ -56,9 +56,9 @@
 #include "llmenugl.h"
 
 // Globals
-BOOL gCameraBtnZoom = TRUE;
-BOOL gCameraBtnOrbit = FALSE;
-BOOL gCameraBtnPan = FALSE;
+bool gCameraBtnZoom = true;
+bool gCameraBtnOrbit = false;
+bool gCameraBtnPan = false;
 
 const S32 SLOP_RANGE = 4;
 
@@ -175,18 +175,18 @@ void LLToolCamera::pickCallback(const LLPickInfo& pick_info)
 
 	if( CAMERA_MODE_CUSTOMIZE_AVATAR == gAgentCamera.getCameraMode() )
 	{
-		BOOL good_customize_avatar_hit = FALSE;
+		bool good_customize_avatar_hit = false;
 		if( hit_obj )
 		{
 			if (isAgentAvatarValid() && (hit_obj == gAgentAvatarp))
 			{
 				// It's you
-				good_customize_avatar_hit = TRUE;
+				good_customize_avatar_hit = true;
 			}
 			else if (hit_obj->isAttachment() && hit_obj->permYouOwner())
 			{
 				// It's an attachment that you're wearing
-				good_customize_avatar_hit = TRUE;
+				good_customize_avatar_hit = true;
 			}
 		}
 
@@ -198,7 +198,7 @@ void LLToolCamera::pickCallback(const LLPickInfo& pick_info)
 
 		if( gMorphView )
 		{
-			gMorphView->setCameraDrivenByKeys( FALSE );
+			gMorphView->setCameraDrivenByKeys( false );
 		}
 	}
 	//RN: check to see if this is mouse-driving as opposed to ALT-zoom or Focus tool

@@ -595,7 +595,7 @@ bool camera_move_backward_fast( EKeystate s )
 bool edit_avatar_spin_ccw( EKeystate s )
 {
 	if( KEYSTATE_UP == s  ) return true;
-	gMorphView->setCameraDrivenByKeys( TRUE );
+	gMorphView->setCameraDrivenByKeys( true );
 	gAgentCamera.setOrbitLeftKey( get_orbit_rate() );
 	//gMorphView->orbitLeft( get_orbit_rate() );
 	return true;
@@ -605,7 +605,7 @@ bool edit_avatar_spin_ccw( EKeystate s )
 bool edit_avatar_spin_cw( EKeystate s )
 {
 	if( KEYSTATE_UP == s  ) return true;
-	gMorphView->setCameraDrivenByKeys( TRUE );
+	gMorphView->setCameraDrivenByKeys( true );
 	gAgentCamera.setOrbitRightKey( get_orbit_rate() );
 	//gMorphView->orbitRight( get_orbit_rate() );
 	return true;
@@ -614,7 +614,7 @@ bool edit_avatar_spin_cw( EKeystate s )
 bool edit_avatar_spin_over( EKeystate s )
 {
 	if( KEYSTATE_UP == s  ) return true;
-	gMorphView->setCameraDrivenByKeys( TRUE );
+	gMorphView->setCameraDrivenByKeys( true );
 	gAgentCamera.setOrbitUpKey( get_orbit_rate() );
 	//gMorphView->orbitUp( get_orbit_rate() );
 	return true;
@@ -624,7 +624,7 @@ bool edit_avatar_spin_over( EKeystate s )
 bool edit_avatar_spin_under( EKeystate s )
 {
 	if( KEYSTATE_UP == s  ) return true;
-	gMorphView->setCameraDrivenByKeys( TRUE );
+	gMorphView->setCameraDrivenByKeys( true );
 	gAgentCamera.setOrbitDownKey( get_orbit_rate() );
 	//gMorphView->orbitDown( get_orbit_rate() );
 	return true;
@@ -633,7 +633,7 @@ bool edit_avatar_spin_under( EKeystate s )
 bool edit_avatar_move_forward( EKeystate s )
 {
 	if( KEYSTATE_UP == s  ) return true;
-	gMorphView->setCameraDrivenByKeys( TRUE );
+	gMorphView->setCameraDrivenByKeys( true );
 	gAgentCamera.setOrbitInKey( get_orbit_rate() );
 	//gMorphView->orbitIn();
 	return true;
@@ -643,7 +643,7 @@ bool edit_avatar_move_forward( EKeystate s )
 bool edit_avatar_move_backward( EKeystate s )
 {
 	if( KEYSTATE_UP == s  ) return true;
-	gMorphView->setCameraDrivenByKeys( TRUE );
+	gMorphView->setCameraDrivenByKeys( true );
 	gAgentCamera.setOrbitOutKey( get_orbit_rate() );
 	//gMorphView->orbitOut();
 	return true;

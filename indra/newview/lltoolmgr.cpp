@@ -290,7 +290,7 @@ void LLToolMgr::toggleBuildMode(const LLSD& sdname)
 			handle_reset_view();
 		}
 
-		if (gSavedSettings.getBOOL("EditCameraMovement"))
+		if (gSavedSettings.getbool("EditCameraMovement"))
 		{
 			// camera should be set
 			if (LLViewerJoystick::getInstance()->getOverrideCamera())

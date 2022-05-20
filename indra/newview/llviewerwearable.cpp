@@ -74,7 +74,7 @@ static std::string asset_id_to_filename(const LLUUID &asset_id, const ELLPath di
 
 LLViewerWearable::LLViewerWearable(const LLTransactionID& transaction_id) :
 	LLWearable(),
-	mVolatile(FALSE)
+	mVolatile(false)
 {
 	mTransactionID = transaction_id;
 	mAssetID = mTransactionID.makeAssetID(gAgent.getSecureSessionID());
@@ -82,7 +82,7 @@ LLViewerWearable::LLViewerWearable(const LLTransactionID& transaction_id) :
 
 LLViewerWearable::LLViewerWearable(const LLAssetID& asset_id) :
 	LLWearable(),
-	mVolatile(FALSE)
+	mVolatile(false)
 {
 	mAssetID = asset_id;
 	mTransactionID.setNull();
