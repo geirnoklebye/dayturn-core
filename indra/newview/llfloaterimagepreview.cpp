@@ -612,11 +612,11 @@ void LLImagePreviewAvatar::setPreviewTarget(const std::string& joint_name, const
 		mDummyAvatar->updateVisualParams();
 		mDummyAvatar->updateGeometry(mDummyAvatar->mDrawable);
 	}
-	mDummyAvatar->mRoot->setVisible(FALSE, TRUE);
+	mDummyAvatar->mRoot->setVisible(false, true);
 
 	mTargetMesh = dynamic_cast<LLViewerJointMesh*>(mDummyAvatar->mRoot->findJoint(mesh_name));
 	mTargetMesh->setTestTexture(mTextureName);
-	mTargetMesh->setVisible(TRUE, FALSE);
+	mTargetMesh->setVisible(true, false);
 	mCameraDistance = distance;
 	mCameraZoom = 1.f;
 	mCameraPitch = 0.f;
