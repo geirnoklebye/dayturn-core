@@ -59,9 +59,7 @@ public:
 	void onClickCreatorProfile();
 	void onClickOwnerProfile();
 	void onSelectObject();
-	// PoundLife - Improved Object Inspect
-	U64 mStatsMemoryTotal;
-	// PoundLife - End
+
 	LLScrollListCtrl* mObjectList;
 protected:
 	// protected members
@@ -75,13 +73,6 @@ protected:
 // [/RLVa:KB]
 
 private:
-	// PoundLife - Improved Object Inspect
-	void getObjectTextureMemory(LLViewerObject* object, U32& object_texture_memory, U32& object_vram_memory);
-	void calculateTextureMemory(LLViewerTexture* texture, uuid_vec_t& object_texture_list, U32& object_texture_memory, U32& object_vram_memory);
-	uuid_vec_t mTextureList;
-	U32 mTextureMemory;
-	U32 mTextureVRAMMemory;
-	// PoundLife - End
 	void onGetOwnerNameCallback();
 	void onGetCreatorNameCallback();
 	
@@ -91,6 +82,14 @@ private:
 	LLSafeHandle<LLObjectSelection> mObjectSelection;
 	boost::signals2::connection mOwnerNameCacheConnection;
 	boost::signals2::connection mCreatorNameCacheConnection;
+
+	// PoundLife - Improved Object Inspect
+	void getObjectTextureMemory(LLViewerObject* object, U32& object_texture_memory, U32& object_vram_memory);
+	void calculateTextureMemory(LLViewerTexture* texture, uuid_vec_t& object_texture_list, U32& object_texture_memory, U32& object_vram_memory);
+	uuid_vec_t mTextureList;
+	U32 mTextureMemory;
+	U32 mTextureVRAMMemory;
+	// PoundLife - End
 
 	// <FS:Ansariel> FIRE-22292: Configurable columns
 	void						onColumnDisplayModeChanged();

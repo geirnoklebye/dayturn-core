@@ -314,14 +314,9 @@ void LLFloaterInspect::refresh()
 	S32 vcount = 0;
 	S32 objcount = 0;
 	S32 primcount = 0;
-	U32 complexity = 0;
 	mTextureList.clear();
 	mTextureMemory = 0;
 	mTextureVRAMMemory = 0;
-	std::string format_res_string;
-	static LLCachedControl<F32> max_complexity_setting(gSavedSettings, "MaxAttachmentComplexity");
-	F32 max_attachment_complexity = max_complexity_setting;
-	max_attachment_complexity = llmax(max_attachment_complexity, 1.0e6f);
 	// PoundLife - End
 	getChildView("button owner")->setEnabled(false);
 	getChildView("button creator")->setEnabled(false);
@@ -456,56 +451,31 @@ void LLFloaterInspect::refresh()
 		row["columns"][5]["type"] = "text";
 		row["columns"][5]["value"] = llformat("%d", timestamp);
 		// </FS:Ansariel>
+
 		// PoundLife - Improved Object Inspect
-		res_mgr.getIntegerString(format_res_string, obj->getObject()->getNumFaces());
-		row["columns"][6]["column"] = "facecount";
+		
+	    std::string fcount_string;
+		res_mgr.getIntegerString(fcount_string, obj->getObject()->getNumFaces());
+		row["columns"][4]["column"] = "facecount";
+		row["columns"][4]["type"] = "text";
+		row["columns"][4]["value"] = fcount_string;
+
+	    std::string vcount_string;
+		res_mgr.getIntegerString(vcount_string, obj->getObject()->getNumVertices());
+		row["columns"][5]["column"] = "vertexcount";
+		row["columns"][5]["type"] = "text";
+		row["columns"][5]["value"] = vcount_string;
+
+	    std::string tcount_string;
+		res_mgr.getIntegerString(tcount_string, obj->getObject()->getNumIndices() / 3);
+		row["columns"][6]["column"] = "trianglecount";
 		row["columns"][6]["type"] = "text";
-		row["columns"][6]["value"] = format_res_string;
-
-		res_mgr.getIntegerString(format_res_string, obj->getObject()->getNumVertices());
-		row["columns"][7]["column"] = "vertexcount";
-		row["columns"][7]["type"] = "text";
-		row["columns"][7]["value"] = format_res_string;
-
-		res_mgr.getIntegerString(format_res_string, obj->getObject()->getNumIndices() / 3);
-		row["columns"][8]["column"] = "trianglecount";
-		row["columns"][8]["type"] = "text";
-		row["columns"][8]["value"] = format_res_string;
+		row["columns"][6]["value"] = tcount_string;
 
 		// Poundlife - Get VRAM
 		U32 texture_memory = 0;
 		U32 vram_memory = 0;
 		getObjectTextureMemory(obj->getObject(), texture_memory, vram_memory);
-		res_mgr.getIntegerString(format_res_string, texture_memory / 1024);
-		row["columns"][9]["column"] = "tramcount";
-		row["columns"][9]["type"] = "text";
-		row["columns"][9]["value"] = format_res_string;
-
-		res_mgr.getIntegerString(format_res_string, vram_memory / 1024);
-		row["columns"][10]["column"] = "vramcount";
-		row["columns"][10]["type"] = "text";
-		row["columns"][10]["value"] = format_res_string;
-
-		row["columns"][11]["column"] = "facecount_sort";
-		row["columns"][11]["type"] = "text";
-		row["columns"][11]["value"] = LLSD::Integer(obj->getObject()->getNumFaces());
-
-		row["columns"][12]["column"] = "vertexcount_sort";
-		row["columns"][12]["type"] = "text";
-		row["columns"][12]["value"] = LLSD::Integer(obj->getObject()->getNumVertices());
-
-		row["columns"][13]["column"] = "trianglecount_sort";
-		row["columns"][13]["type"] = "text";
-		row["columns"][13]["value"] = LLSD::Integer(obj->getObject()->getNumIndices() / 3);
-
-		row["columns"][14]["column"] = "tramcount_sort";
-		row["columns"][14]["type"] = "text";
-		row["columns"][14]["value"] = LLSD::Integer(texture_memory / 1024);
-
-		row["columns"][15]["column"] = "vramcount_sort";
-		row["columns"][15]["type"] = "text";
-		row["columns"][15]["value"] = LLSD::Integer(vram_memory / 1024);
-
 		primcount = sel_mgr.getSelection()->getObjectCount();
 		objcount = sel_mgr.getSelection()->getRootObjectCount();
 		fcount += obj->getObject()->getNumFaces();
@@ -514,49 +484,6 @@ void LLFloaterInspect::refresh()
 		// PoundLife - END
 		mObjectList->addElement(row, ADD_TOP);
 	}
-
-	// <FS:Ansariel> Show complexity in inspect window
-	for (LLObjectSelection::valid_root_iterator root_it = mObjectSelection->valid_root_begin(); root_it != mObjectSelection->valid_root_end(); ++root_it)
-	{
-		LLSelectNode* obj = *root_it;
-		LLVOVolume* volume = dynamic_cast<LLVOVolume*>(obj->getObject());
-		if (volume)
-		{
-			LLVOVolume::texture_cost_t textures;
-			F32 attachment_total_cost = 0;
-			F32 attachment_volume_cost = 0;
-			F32 attachment_texture_cost = 0;
-			F32 attachment_children_cost = 0;
-
-			attachment_volume_cost += volume->getRenderCost(textures);
-
-			LLViewerObject::const_child_list_t children = volume->getChildren();
-			for (LLViewerObject::const_child_list_t::const_iterator child_iter = children.begin();
-				child_iter != children.end();
-				++child_iter)
-			{
-				LLViewerObject* child_obj = *child_iter;
-				LLVOVolume *child = dynamic_cast<LLVOVolume*>(child_obj);
-				if (child)
-				{
-					attachment_children_cost += child->getRenderCost(textures);
-				}
-			}
-
-			for (LLVOVolume::texture_cost_t::iterator volume_texture = textures.begin();
-				volume_texture != textures.end();
-				++volume_texture)
-			{
-				// add the cost of each individual texture in the linkset
-				attachment_texture_cost += volume_texture->second;
-			}
-			attachment_total_cost = attachment_volume_cost + attachment_texture_cost + attachment_children_cost;
-
-			// Limit attachment complexity to avoid signed integer flipping of the wearer's ACI
-			complexity += (U32)llclamp(attachment_total_cost, 0.f, max_attachment_complexity);
-		}
-	}
-	// </FS:Ansariel>
 
 	if(selected_index > -1 && mObjectList->getItemIndex(selected_uuid) == selected_index)
 	{
@@ -569,26 +496,33 @@ void LLFloaterInspect::refresh()
 	onSelectObject();
 	mObjectList->setScrollPos(pos);
 
+
 	// PoundLife - Total linkset stats.
 	LLStringUtil::format_map_t args;
-	res_mgr.getIntegerString(format_res_string, objcount);
-	args["NUM_OBJECTS"] = format_res_string;
-	res_mgr.getIntegerString(format_res_string, primcount);
-	args["NUM_PRIMS"] = format_res_string;
-	res_mgr.getIntegerString(format_res_string, fcount);
-	args["NUM_FACES"] = format_res_string;
-	res_mgr.getIntegerString(format_res_string, vcount);
-	args["NUM_VERTICES"] = format_res_string;
-	res_mgr.getIntegerString(format_res_string, tcount);
-	args["NUM_TRIANGLES"] = format_res_string;
-	res_mgr.getIntegerString(format_res_string, mTextureList.size());
-	args["NUM_TEXTURES"] = format_res_string;
-	res_mgr.getIntegerString(format_res_string, mTextureMemory / 1024);
-	args["TEXTURE_MEMORY"] = format_res_string;
-	res_mgr.getIntegerString(format_res_string, mTextureVRAMMemory / 1024);
-	args["VRAM_USAGE"] = format_res_string;
-	res_mgr.getIntegerString(format_res_string, complexity);
-	args["COMPLEXITY"] = format_res_string;
+	std::string objcount_string;
+	res_mgr.getIntegerString(objcount_string, objcount);
+	args["NUM_OBJECTS"] = objcount_string;
+	std::string primcount_string;
+	res_mgr.getIntegerString(primcount_string, primcount);
+	args["NUM_PRIMS"] = primcount_string;
+	std::string ftotcount_string;
+	res_mgr.getIntegerString(ftotcount_string, fcount);
+	args["NUM_FACES"] = ftotcount_string;
+	std::string vtotcount_string;
+	res_mgr.getIntegerString(vtotcount_string, vcount);
+	args["NUM_VERTICES"] = vtotcount_string;
+	std::string ttotcount_string;
+	res_mgr.getIntegerString(ttotcount_string, tcount);
+	args["NUM_TRIANGLES"] = ttotcount_string;
+	std::string texcount_string;
+	res_mgr.getIntegerString(texcount_string, mTextureList.size());
+	args["NUM_TEXTURES"] = texcount_string;
+	std::string texmem_string;
+	res_mgr.getIntegerString(texmem_string, mTextureMemory / 1024);
+	args["TEXTURE_MEMORY"] = texmem_string;
+	std::string vram_string;
+	res_mgr.getIntegerString(vram_string, mTextureVRAMMemory / 1024);
+	args["VRAM_USAGE"] = vram_string;
 	getChild<LLTextBase>("linksetstats_text")->setText(getString("stats_list", args));
 	// PoundLife - End
 }

@@ -172,7 +172,7 @@ public: 	// PoundLife - Improved Object Inspect
 									 LLGLenum primary_format = 0,
 									 LLHost request_from_host = LLHost()
 									 );
-	
+
 private:	// PoundLife - Improved Object Inspect
 	LLViewerFetchedTexture * getImageFromFile(const std::string& filename,									 
 									 FTType f_type = FTT_LOCAL_FILE,
@@ -183,7 +183,7 @@ private:	// PoundLife - Improved Object Inspect
 									 LLGLenum primary_format = 0,
 									 const LLUUID& force_id = LLUUID::null
 									 );
-	
+
 	LLViewerFetchedTexture* getImageFromUrl(const std::string& url,
 									 FTType f_type,
 									 BOOL usemipmap = TRUE,
@@ -203,7 +203,7 @@ private:	// PoundLife - Improved Object Inspect
 									 LLGLenum primary_format = 0,
 									 LLHost request_from_host = LLHost()
 									 );
-	
+
 	// Request image from a specific host, used for baked avatar textures.
 	// Implemented in header in case someone changes default params above. JC
 	LLViewerFetchedTexture* getImageFromHost(const LLUUID& image_id, FTType f_type, LLHost host)
