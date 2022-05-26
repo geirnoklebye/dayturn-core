@@ -676,7 +676,6 @@ LLAppViewer::LLAppViewer()
 	mFastTimerLogThread(NULL),
 	mSettingsLocationList(NULL),
 	mIsFirstRun(false),
-	mMinMicroSecPerFrame(0.f),
 	mSaveSettingsOnExit(true),		// <FS:Zi> Backup Settings
 	mPurgeTextures(false) // <FS:Ansariel> FIRE-13066
 {
@@ -1399,10 +1398,7 @@ bool LLAppViewer::init()
 
 	joystick = LLViewerJoystick::getInstance();
 	joystick->setNeedsReset(true);
-	/*----------------------------------------------------------------------*/
 
-	gSavedSettings.getControl("FramePerSecondLimit")->getSignal()->connect(boost::bind(&LLAppViewer::onChangeFrameLimit, this, _2));
-	onChangeFrameLimit(gSavedSettings.getLLSD("FramePerSecondLimit"));
 	// Load User's bindings
 	loadKeyBindings();
 
@@ -1610,7 +1606,7 @@ bool LLAppViewer::doFrame()
 				if (fsCrouchToggle && fsCrouchToggleStatus)
 				{
 					gAgent.moveUp(-1);
-			}
+				}
 				// </FS:Ansariel>
 			}
 
@@ -1656,29 +1652,13 @@ bool LLAppViewer::doFrame()
 
 				display();
 
-				static U64 last_call = 0;
-				if (!gTeleportDisplay)
-				{
-					// Frame/draw throttling, controlled by FramePerSecondLimit
-					U64 elapsed_time = LLTimer::getTotalTime() - last_call;
-					if (elapsed_time < mMinMicroSecPerFrame)
-					{
-						// llclamp for when time function gets funky
-						U64 sleep_time = llclamp(mMinMicroSecPerFrame - elapsed_time, (U64)1, (U64)1e6);
-						micro_sleep(sleep_time, 0);
-					}
-				}
-				last_call = LLTimer::getTotalTime();
-			{
-				LL_PROFILE_ZONE_NAMED_CATEGORY_APP( "df Snapshot" )
-
 				pingMainloopTimeout("Main:Snapshot");
 				LLFloaterSnapshot::update(); // take snapshots
 					LLFloaterOutfitSnapshot::update();
 				gGLActive = FALSE;
 			}
 		}
-		}
+
 
 		{
 			LL_PROFILE_ZONE_NAMED_CATEGORY_APP( "df pauseMainloopTimeout" )
@@ -5813,19 +5793,6 @@ void LLAppViewer::disconnectViewer()
 	// Pass the connection state to LLUrlEntryParcel not to attempt
 	// parcel info requests while disconnected.
 	LLUrlEntryParcel::setDisconnected(gDisconnected);
-}
-
-bool LLAppViewer::onChangeFrameLimit(LLSD const & evt)
-{
-	if (evt.asInteger() > 0)
-	{
-		mMinMicroSecPerFrame = (U64)(1000000.0f / F32(evt.asInteger()));
-	}
-	else
-	{
-		mMinMicroSecPerFrame = 0;
-	}
-	return false;
 }
 
 void LLAppViewer::forceErrorLLError()
