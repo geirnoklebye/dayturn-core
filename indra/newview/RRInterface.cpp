@@ -6483,9 +6483,7 @@ void RRInterface::drawRenderLimit (BOOL force_opaque /*= FALSE*/)
 	}
 
 	gGL.setColorMask(true, false);
-	if (LLGLSLShader::sNoFixedFunction) {
-		gUIProgram.bind();
-	}
+	gUIProgram.bind();
 
 	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 	gGL.matrixMode(LLRender::MM_MODELVIEW);
@@ -6540,9 +6538,7 @@ void RRInterface::drawRenderLimit (BOOL force_opaque /*= FALSE*/)
 	gGL.flush();
 	gGL.setColorMask(true, false);
 
-	if (LLGLSLShader::sNoFixedFunction) {
-		gUIProgram.unbind();
-	}
+	gUIProgram.unbind();
 
 	sRenderLimitRenderedThisFrame = TRUE;
 }

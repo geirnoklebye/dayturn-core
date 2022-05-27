@@ -49,9 +49,7 @@
 #include "lltrans.h"
 
 #include "llinventoryfunctions.h" // needed to query worn status
-LLTrace::BlockTimerStatHandle FT_FILTER_CLIPBOARD("Filter Clipboard");
 #include "llappearancemgr.h" // needed to query whether we are in COF
-
 LLInventoryFilter::FilterOps::FilterOps(const Params& p)
 :	mFilterObjectTypes(p.object_types),
 	mFilterCategoryTypes(p.category_types),
@@ -578,7 +576,7 @@ bool LLInventoryFilter::checkAgainstClipboard(const LLUUID& object_id) const
 {
 	if (LLClipboard::instance().isCutMode())
 	{
-		LL_RECORD_BLOCK_TIME(FT_FILTER_CLIPBOARD);
+        LL_PROFILE_ZONE_SCOPED;
 		LLUUID current_id = object_id;
 		LLInventoryObject *current_object = gInventory.getObject(object_id);
 		while (current_id.notNull() && current_object)

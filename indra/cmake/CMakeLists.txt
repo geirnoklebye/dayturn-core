@@ -30,7 +30,6 @@ set(cmake_SOURCE_FILES
     FindFMODSTUDIO.cmake
     FindFMODEX.cmake
     FindGLH.cmake
-    FindGLOD.cmake
     FindGooglePerfTools.cmake
     FindHUNSPELL.cmake
     FindJsonCpp.cmake
@@ -44,7 +43,6 @@ set(cmake_SOURCE_FILES
     FreeType.cmake
     GLEXT.cmake
     GLH.cmake
-    GLOD.cmake
     GetPrerequisites_2_8.cmake
     Glui.cmake
     Glut.cmake
@@ -65,6 +63,7 @@ set(cmake_SOURCE_FILES
     LLKDU.cmake
     LLLogin.cmake
     LLMath.cmake
+    LLMeshOptimizer.cmake
     LLMessage.cmake
     LLPhysicsExtensions.cmake
     LLPlugin.cmake
@@ -78,6 +77,7 @@ set(cmake_SOURCE_FILES
     LLXML.cmake
     Linking.cmake
     MediaPluginBase.cmake
+    MESHOPTIMIZER.cmake
     NDOF.cmake
     OPENAL.cmake
     OpenGL.cmake
@@ -139,7 +139,6 @@ set(cmake_SOURCE_FILES
     FreeType.cmake
     GLEXT.cmake
     GLH.cmake
-    GLOD.cmake
     GoogleMock.cmake
     Havok.cmake
     Hunspell.cmake

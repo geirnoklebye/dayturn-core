@@ -56,6 +56,7 @@
 #include "llviewertexture.h"
 #include "llvoavatar.h"
 #include "llsculptidsize.h"
+#include "llmeshrepository.h"
 
 //MK
 #include "llagent.h"
@@ -74,6 +75,7 @@ static LLStaticHashedString sTextureIndexIn("texture_index_in");
 static LLStaticHashedString sColorIn("color_in");
 
 BOOL LLFace::sSafeRenderSelect = TRUE; // FALSE
+
 
 #define DOTVEC(a,b) (a.mV[0]*b.mV[0] + a.mV[1]*b.mV[1] + a.mV[2]*b.mV[2])
 
@@ -131,6 +133,7 @@ void planarProjection(LLVector2 &tc, const LLVector4a& normal,
 
 void LLFace::init(LLDrawable* drawablep, LLViewerObject* objp)
 {
+    LL_PROFILE_ZONE_SCOPED_CATEGORY_FACE;
 	mLastUpdateTime = gFrameTimeSeconds;
 	mLastMoveTime = 0.f;
 	mLastSkinTime = gFrameTimeSeconds;
@@ -200,14 +203,7 @@ void LLFace::destroy()
 
 	if (mDrawPoolp)
 	{
-		if (this->isState(LLFace::RIGGED) && (mDrawPoolp->getType() == LLDrawPool::POOL_CONTROL_AV || mDrawPoolp->getType() == LLDrawPool::POOL_AVATAR))
-		{
-			((LLDrawPoolAvatar*) mDrawPoolp)->removeRiggedFace(this);
-		}
-		else
-		{
-			mDrawPoolp->removeFace(this);
-		}
+		mDrawPoolp->removeFace(this);
 		mDrawPoolp = NULL;
 	}
 
@@ -245,6 +241,8 @@ void LLFace::setPool(LLFacePool* pool)
 
 void LLFace::setPool(LLFacePool* new_pool, LLViewerTexture *texturep)
 {
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_FACE
+
 	if (!new_pool)
 	{
 		LL_ERRS() << "Setting pool to null!" << LL_ENDL;
@@ -324,6 +322,8 @@ void LLFace::setSpecularMap(LLViewerTexture* tex)
 
 void LLFace::dirtyTexture()
 {
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_FACE
+
 	LLDrawable* drawablep = getDrawable();
 
 	if (mVObjp.notNull() && mVObjp->getVolume())
@@ -490,10 +490,7 @@ U16 LLFace::getGeometryAvatar(
 						LLStrider<LLVector3> &normals,
 						LLStrider<LLVector2> &tex_coords,
 						LLStrider<F32>		 &vertex_weights,
-						// <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
-						//LLStrider<LLVector4> &clothing_weights)
-						LLStrider<LLVector4a> &clothing_weights)
-						// </FS:Ansariel>
+						LLStrider<LLVector4> &clothing_weights)
 {
 	if (mVertexBuffer.notNull())
 	{
@@ -542,6 +539,8 @@ void LLFace::updateCenterAgent()
 
 void LLFace::renderSelected(LLViewerTexture *imagep, const LLColor4& color)
 {
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_FACE
+
 	if (mDrawablep == NULL || mDrawablep->getSpatialGroup() == NULL)
 	{
 		return;
@@ -584,27 +583,17 @@ void LLFace::renderSelected(LLViewerTexture *imagep, const LLColor4& color)
 					glPolygonOffset(-1.f, -1.f);
 					gGL.multMatrix((F32*) volume->getRelativeXform().mMatrix);
 					const LLVolumeFace& vol_face = rigged->getVolumeFace(getTEOffset());
-					// <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
-					if (LLGLSLShader::sNoFixedFunction)
+					LLVertexBuffer::unbind();
+					glVertexPointer(3, GL_FLOAT, 16, vol_face.mPositions);
+					if (vol_face.mTexCoords)
 					{
-						LLVertexBuffer::drawElements(LLRender::TRIANGLES, vol_face.mNumVertices, vol_face.mPositions, vol_face.mTexCoords, vol_face.mNumIndices, vol_face.mIndices);
+						glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+						glTexCoordPointer(2, GL_FLOAT, 8, vol_face.mTexCoords);
 					}
-					else
-					{
-					// </FS:Ansariel>
-						LLVertexBuffer::unbind();
-						glVertexPointer(3, GL_FLOAT, 16, vol_face.mPositions);
-						if (vol_face.mTexCoords)
-						{
-							glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-							glTexCoordPointer(2, GL_FLOAT, 8, vol_face.mTexCoords);
-						}
-						gGL.syncMatrices();
-						glDrawElements(GL_TRIANGLES, vol_face.mNumIndices, GL_UNSIGNED_SHORT, vol_face.mIndices);
-						glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-					// <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
-					}
-					// </FS:Ansariel>
+					gGL.syncMatrices();
+					LL_PROFILER_GPU_ZONEC( "gl.DrawElements", 0x00FF00 );
+					glDrawElements(GL_TRIANGLES, vol_face.mNumIndices, GL_UNSIGNED_SHORT, vol_face.mIndices);
+					glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 				}
 			}
 		}
@@ -623,6 +612,8 @@ void LLFace::renderSelected(LLViewerTexture *imagep, const LLColor4& color)
 
 void renderFace(LLDrawable* drawable, LLFace *face)
 {
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_FACE
+
     LLVOVolume* vobj = drawable->getVOVolume();
     if (vobj)
     {
@@ -640,9 +631,7 @@ void renderFace(LLDrawable* drawable, LLFace *face)
         if (volume)
         {
             const LLVolumeFace& vol_face = volume->getVolumeFace(face->getTEOffset());
-            // <FS:Ansariel> Use a vbo for the static LLVertexBuffer::drawArray/Element functions; by Drake Arconis/Shyotl Kuhr
-            //LLVertexBuffer::drawElements(LLRender::TRIANGLES, vol_face.mPositions, NULL, vol_face.mNumIndices, vol_face.mIndices);
-            LLVertexBuffer::drawElements(LLRender::TRIANGLES, vol_face.mNumVertices, vol_face.mPositions, NULL, vol_face.mNumIndices, vol_face.mIndices);
+            LLVertexBuffer::drawElements(LLRender::TRIANGLES, vol_face.mPositions, NULL, vol_face.mNumIndices, vol_face.mIndices);
         }
     }
 }
@@ -660,10 +649,6 @@ void LLFace::renderOneWireframe(const LLColor4 &color, F32 fogCfx, bool wirefram
         }
         else
         {
-            // <FS:Ansariel> Don't use fixed functions when using shader renderer; found by Drake Arconis
-            if (!LLGLSLShader::sNoFixedFunction)
-            {
-            // </FS:Ansariel>
             LLGLEnable fog(GL_FOG);
             glFogi(GL_FOG_MODE, GL_LINEAR);
             float d = (LLViewerCamera::getInstance()->getPointOfInterest() - LLViewerCamera::getInstance()->getOrigin()).magVec();
@@ -671,11 +656,8 @@ void LLFace::renderOneWireframe(const LLColor4 &color, F32 fogCfx, bool wirefram
             glFogf(GL_FOG_START, d);
             glFogf(GL_FOG_END, d*(1 + (LLViewerCamera::getInstance()->getView() / LLViewerCamera::getInstance()->getDefaultFOV())));
             glFogfv(GL_FOG_COLOR, fogCol.mV);
-            // <FS:Ansariel> Don't use fixed functions when using shader renderer; found by Drake Arconis
-            }
-            // </FS:Ansariel>
 
-            gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);
+            gGL.flush();
             {
                 gGL.diffuseColor4f(color.mV[VRED], color.mV[VGREEN], color.mV[VBLUE], 0.4f);
                 renderFace(mDrawablep, this);
@@ -918,6 +900,8 @@ bool less_than_max_mag(const LLVector4a& vec)
 BOOL LLFace::genVolumeBBoxes(const LLVolume &volume, S32 f,
                              const LLMatrix4& mat_vert_in, BOOL global_volume)
 {
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_FACE
+
 	//get bounding box
 	if (mDrawablep->isState(LLDrawable::REBUILD_VOLUME | LLDrawable::REBUILD_POSITION | LLDrawable::REBUILD_RIGGED))
 	{
@@ -1202,6 +1186,11 @@ bool LLFace::canRenderAsMask()
 		return true;
 	}
 
+    if (isState(LLFace::RIGGED))
+    { // never auto alpha-mask rigged faces
+        return false;
+    }
+
 	const LLTextureEntry* te = getTextureEntry();
 	if( !te || !getViewerObject() || !getTexture() )
 	{
@@ -1214,16 +1203,14 @@ bool LLFace::canRenderAsMask()
 		return false;
 	}
 	
-	if ((te->getColor().mV[3] == 1.0f) &&			// can't treat as mask if we have face alpha
-		(te->getGlow() == 0.f) &&					// glowing masks are hard to implement - don't mask
-		!getViewerObject()->isHUDAttachment() &&	// Fix from CoolVL: hud attachments are NOT maskable (else they would get affected by day light)
-		getTexture()->getIsAlphaMask())				// texture actually qualifies for masking (lazily recalculated but expensive)
+	if ((te->getColor().mV[3] == 1.0f) && // can't treat as mask if we have face alpha
+		(te->getGlow() == 0.f) && // glowing masks are hard to implement - don't mask
+		getTexture()->getIsAlphaMask()) // texture actually qualifies for masking (lazily recalculated but expensive)
 	{
 		if (LLPipeline::sRenderDeferred)
 		{
-			// Fix from CoolVL: hud attachments are NOT maskable at all - see above
-			if (/*!getViewerObject()->isHUDAttachment() &&*/ te->getFullbright())
-			{ //fullbright objects are NOT subject to the deferred rendering pipe
+			if (getViewerObject()->isHUDAttachment() || te->getFullbright())
+			{ //hud attachments and fullbright objects are NOT subject to the deferred rendering pipe
 				return LLPipeline::sAutoMaskAlphaNonDeferred;
 			}
 			else
@@ -1241,12 +1228,10 @@ bool LLFace::canRenderAsMask()
 }
 
 
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_VOLUME("Volume VB Cache");
-
 //static 
 void LLFace::cacheFaceInVRAM(const LLVolumeFace& vf)
 {
-	LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_VOLUME);
+    LL_PROFILE_ZONE_SCOPED_CATEGORY_FACE;
 	U32 mask = LLVertexBuffer::MAP_VERTEX | LLVertexBuffer::MAP_TEXCOORD0 |
 				LLVertexBuffer::MAP_TANGENT | LLVertexBuffer::MAP_NORMAL;
 	
@@ -1280,15 +1265,11 @@ void LLFace::cacheFaceInVRAM(const LLVolumeFace& vf)
 
 	if (vf.mWeights)
 	{
-		// <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
-		//LLStrider<LLVector4> f_wght;
-		LLStrider<LLVector4a> f_wght;
+		LLStrider<LLVector4> f_wght;
 		buff->getWeight4Strider(f_wght);
 		for (U32 i = 0; i < vf.mNumVertices; ++i)
 		{
-			// <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
-			//(*f_wght++).set(vf.mWeights[i].getF32ptr());
-			(*f_wght++) = vf.mWeights[i];
+			(*f_wght++).set(vf.mWeights[i].getF32ptr());
 		}
 	}
 
@@ -1312,41 +1293,13 @@ void push_for_transform(LLVertexBuffer* buff, U32 source_count, U32 dest_count)
 	}
 }
 
-static LLTrace::BlockTimerStatHandle FTM_FACE_GET_GEOM("Face Geom");
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_POSITION("Position");
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_NORMAL("Normal");
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_TEXTURE("Texture");
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_COLOR("Color");
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_EMISSIVE("Emissive");
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_WEIGHTS("Weights");
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_TANGENT("Binormal");
-
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_FEEDBACK("Face Feedback");
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_FEEDBACK_POSITION("Feedback Position");
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_FEEDBACK_NORMAL("Feedback  Normal");
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_FEEDBACK_TEXTURE("Feedback  Texture");
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_FEEDBACK_COLOR("Feedback  Color");
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_FEEDBACK_EMISSIVE("Feedback  Emissive");
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_FEEDBACK_BINORMAL("Feedback Binormal");
-
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_INDEX("Index");
-static LLTrace::BlockTimerStatHandle FTM_FACE_GEOM_INDEX_TAIL("Tail");
-static LLTrace::BlockTimerStatHandle FTM_FACE_POSITION_STORE("Pos");
-static LLTrace::BlockTimerStatHandle FTM_FACE_TEXTURE_INDEX_STORE("TexIdx");
-static LLTrace::BlockTimerStatHandle FTM_FACE_POSITION_PAD("Pad");
-static LLTrace::BlockTimerStatHandle FTM_FACE_TEX_DEFAULT("Default");
-static LLTrace::BlockTimerStatHandle FTM_FACE_TEX_QUICK("Quick");
-static LLTrace::BlockTimerStatHandle FTM_FACE_TEX_QUICK_NO_XFORM("No Xform");
-static LLTrace::BlockTimerStatHandle FTM_FACE_TEX_QUICK_XFORM("Xform");
-static LLTrace::BlockTimerStatHandle FTM_FACE_TEX_QUICK_PLANAR("Quick Planar");
-
 BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 							   const S32 &f,
 								const LLMatrix4& mat_vert_in, const LLMatrix3& mat_norm_in,
 								const U16 &index_offset,
 								bool force_rebuild)
 {
-	LL_RECORD_BLOCK_TIME(FTM_FACE_GET_GEOM);
+    LL_PROFILE_ZONE_SCOPED_CATEGORY_FACE;
 	llassert(verify());
 
 	if (volume.getNumVolumeFaces() <= f) {
@@ -1354,7 +1307,9 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 		return FALSE;
 	}
 
-	const LLVolumeFace &vf = volume.getVolumeFace(f);
+    bool rigged = isState(RIGGED);
+
+    const LLVolumeFace &vf = volume.getVolumeFace(f);
 	S32 num_vertices = (S32)vf.mNumVertices;
 	S32 num_indices = (S32) vf.mNumIndices;
 	
@@ -1402,9 +1357,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 	LLStrider<LLColor4U> colors;
 	LLStrider<LLVector3> tangent;
 	LLStrider<U16> indicesp;
-	// <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
-	//LLStrider<LLVector4> wght;
-	LLStrider<LLVector4a> wght;
+	LLStrider<LLVector4> wght;
 
 	BOOL full_rebuild = force_rebuild || mDrawablep->isState(LLDrawable::REBUILD_VOLUME);
 	
@@ -1498,7 +1451,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 	// INDICES
 	if (full_rebuild)
 	{
-		LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_INDEX);
+        LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - indices");
 		mVertexBuffer->getIndexStrider(indicesp, mIndicesIndex, mIndicesCount, map_range);
 
 		volatile __m128i* dst = (__m128i*) indicesp.get();
@@ -1514,7 +1467,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 		}
 
 		{
-			LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_INDEX_TAIL);
+            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - indices tail");
 			U16* idx = (U16*) dst;
 
 			for (S32 i = end*8; i < num_indices; ++i)
@@ -1528,9 +1481,6 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 			mVertexBuffer->flush();
 		}
 	}
-	
-	LLMatrix4a mat_normal;
-	mat_normal.loadu(mat_norm_in);
 	
 	F32 r = 0, os = 0, ot = 0, ms = 0, mt = 0, cos_ang = 0, sin_ang = 0;
 	bool do_xform = false;
@@ -1566,6 +1516,45 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 		}
 	}
 	
+    const LLMeshSkinInfo* skin = nullptr;
+    LLMatrix4a mat_vert;
+    LLMatrix4a mat_normal;
+
+    // prepare mat_vert
+    if (rebuild_pos)
+    {
+        if (rigged)
+        { //override with bind shape matrix if rigged
+            skin = mSkinInfo;
+            mat_vert = skin->mBindShapeMatrix;
+        }
+        else
+        {
+            mat_vert.loadu(mat_vert_in);
+        }
+    }
+
+    if (rebuild_normal || rebuild_tangent)
+    { //override mat_normal with inverse of skin->mBindShapeMatrix
+        LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - norm mat override");
+        if (rigged)
+        {
+            if (skin == nullptr)
+            {
+                skin = mSkinInfo;
+            }
+
+            //TODO -- cache this (check profile marker above)?
+            glh::matrix4f m((F32*) skin->mBindShapeMatrix.getF32ptr());
+            m = m.inverse().transpose();
+            mat_normal.loadu(m.m);
+        }
+        else
+        {
+            mat_normal.loadu(mat_norm_in);
+        }
+    }
+
 	static LLCachedControl<bool> use_transform_feedback(gSavedSettings, "RenderUseTransformFeedback", false);
 
 #ifdef GL_TRANSFORM_FEEDBACK_BUFFER
@@ -1577,7 +1566,8 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 		!volume.isUnique()) //source volume is NOT flexi
 	{ //use transform feedback to pack vertex buffer
 		//gGLDebugLoggingEnabled = TRUE;
-		LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_FEEDBACK);
+
+        LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - transform feedback");
 		LLGLEnable discard(GL_RASTERIZER_DISCARD);
 		LLVertexBuffer* buff = (LLVertexBuffer*) vf.mVertexBuffer.get();
 
@@ -1595,7 +1585,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 		if (rebuild_pos)
 		{
-			LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_FEEDBACK_POSITION);
+            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - tf position");
 			gTransformPositionProgram.bind();
 
 			mVertexBuffer->bindForFeedback(0, LLVertexBuffer::TYPE_VERTEX, mGeomIndex, mGeomCount);
@@ -1620,7 +1610,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 		if (rebuild_color)
 		{
-			LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_FEEDBACK_COLOR);
+            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - tf color");
 			gTransformColorProgram.bind();
 			
 			mVertexBuffer->bindForFeedback(0, LLVertexBuffer::TYPE_COLOR, mGeomIndex, mGeomCount);
@@ -1636,7 +1626,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 		if (rebuild_emissive)
 		{
-			LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_FEEDBACK_EMISSIVE);
+            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - tf emissive");
 			gTransformColorProgram.bind();
 			
 			mVertexBuffer->bindForFeedback(0, LLVertexBuffer::TYPE_EMISSIVE, mGeomIndex, mGeomCount);
@@ -1657,7 +1647,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 		if (rebuild_normal)
 		{
-			LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_FEEDBACK_NORMAL);
+            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - tf normal");
 			gTransformNormalProgram.bind();
 			
 			mVertexBuffer->bindForFeedback(0, LLVertexBuffer::TYPE_NORMAL, mGeomIndex, mGeomCount);
@@ -1670,7 +1660,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 		if (rebuild_tangent)
 		{
-			LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_TANGENT);
+            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - tf tangent");
 			gTransformTangentProgram.bind();
 			
 			mVertexBuffer->bindForFeedback(0, LLVertexBuffer::TYPE_TANGENT, mGeomIndex, mGeomCount);
@@ -1683,7 +1673,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 		if (rebuild_tcoord)
 		{
-			LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_FEEDBACK_TEXTURE);
+            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - tf tcoord");
 			gTransformTexCoordProgram.bind();
 			
 			mVertexBuffer->bindForFeedback(0, LLVertexBuffer::TYPE_TEXCOORD0, mGeomIndex, mGeomCount);
@@ -1722,7 +1712,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 		if (rebuild_tcoord)
 		{
-			LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_TEXTURE);
+            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - tcoord");
 									
 			//bump setup
 			LLVector4a binormal_dir( -sin_ang, cos_ang, 0.f );
@@ -1822,7 +1812,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 					do_xform = false;
 				}
 
-				if (getVirtualSize() >= MIN_TEX_ANIM_SIZE || isState(LLFace::RIGGED))
+				if (getVirtualSize() >= MIN_TEX_ANIM_SIZE) // || isState(LLFace::RIGGED))
 				{ //don't override texture transform during tc bake
 					tex_mode = 0;
 				}
@@ -1852,12 +1842,12 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 				if (texgen != LLTextureEntry::TEX_GEN_PLANAR)
 				{
-					LL_RECORD_BLOCK_TIME(FTM_FACE_TEX_QUICK);
+                    LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - texgen");
 					if (!do_tex_mat)
 					{
 						if (!do_xform)
 						{
-							LL_RECORD_BLOCK_TIME(FTM_FACE_TEX_QUICK_NO_XFORM);
+                            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("ggv - texgen 1");
 
 							// <FS:ND> Don't round up, or there's high risk to write past buffer
 
@@ -1870,7 +1860,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 						}
 						else
 						{
-							LL_RECORD_BLOCK_TIME(FTM_FACE_TEX_QUICK_XFORM);
+                            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("ggv - texgen 2");
 							F32* dst = (F32*) tex_coords0.get();
 							LLVector4a* src = (LLVector4a*) vf.mTexCoords;
 
@@ -1910,9 +1900,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 						for (S32 i = 0; i < num_vertices; i++)
 						{	
 							LLVector2 tc(vf.mTexCoords[i]);
-							//LLVector4a& norm = vf.mNormals[i];
-							//LLVector4a& center = *(vf.mCenter);
-
+							
 							LLVector3 tmp(tc.mV[0], tc.mV[1], 0.f);
 							tmp = tmp * *mTextureMatrix;
 							tc.mV[0] = tmp.mV[0];
@@ -1923,7 +1911,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 				}
 				else
 				{ //no bump, tex gen planar
-					LL_RECORD_BLOCK_TIME(FTM_FACE_TEX_QUICK_PLANAR);
+                    LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - texgen planar");
 					if (do_tex_mat)
 					{
 						for (S32 i = 0; i < num_vertices; i++)
@@ -1968,7 +1956,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 			}
 			else
 			{ //bump mapped or has material, just do the whole expensive loop
-				LL_RECORD_BLOCK_TIME(FTM_FACE_TEX_DEFAULT);
+                LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - texgen default");
 
 				std::vector<LLVector2> bump_tc;
 		
@@ -2126,14 +2114,11 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 			LLVector4a* end = src+num_vertices;
 			//LLVector4a* end_64 = end-4;
 
-			//LL_RECORD_TIME_BLOCK(FTM_FACE_GEOM_POSITION);
 			llassert(num_vertices > 0);
 		
 			mVertexBuffer->getVertexStrider(vert, mGeomIndex, mGeomCount, map_range);
 			
-			LLMatrix4a mat_vert;
-			mat_vert.loadu(mat_vert_in);
-
+			
 			F32* dst = (F32*) vert.get();
 			F32* end_f32 = dst+mGeomCount*4;
 
@@ -2163,53 +2148,19 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 			LLVector4a tmp;
 
-			{
-				//LL_RECORD_TIME_BLOCK(FTM_FACE_POSITION_STORE);
-
-				/*if (num_vertices > 4)
-				{ //more than 64 bytes
-					while (src < end_64)
-					{	
-						_mm_prefetch((char*)src + 64, _MM_HINT_T0);
-						_mm_prefetch((char*)dst + 64, _MM_HINT_T0);
-
-						mat_vert.affineTransform(*src, res0);
-						tmp.setSelectWithMask(mask, texIdx, res0);
-						tmp.store4a((F32*) dst);
-
-						mat_vert.affineTransform(*(src+1), res1);
-						tmp.setSelectWithMask(mask, texIdx, res1);
-						tmp.store4a((F32*) dst+4);
-
-						mat_vert.affineTransform(*(src+2), res2);
-						tmp.setSelectWithMask(mask, texIdx, res2);
-						tmp.store4a((F32*) dst+8);
-
-						mat_vert.affineTransform(*(src+3), res3);
-						tmp.setSelectWithMask(mask, texIdx, res3);
-						tmp.store4a((F32*) dst+12);
-
-						dst += 16;
-						src += 4;
-					}
-				}*/
-
-				while (src < end)
-				{	
-					mat_vert.affineTransform(*src++, res0);
-					tmp.setSelectWithMask(mask, texIdx, res0);
-					tmp.store4a((F32*) dst);
-					dst += 4;
-				}
+			
+			while (src < end)
+			{	
+				mat_vert.affineTransform(*src++, res0);
+				tmp.setSelectWithMask(mask, texIdx, res0);
+				tmp.store4a((F32*) dst);
+				dst += 4;
 			}
-
+			
+			while (dst < end_f32)
 			{
-				//LL_RECORD_TIME_BLOCK(FTM_FACE_POSITION_PAD);
-				while (dst < end_f32)
-				{
-					res0.store4a((F32*) dst);
-					dst += 4;
-				}
+				res0.store4a((F32*) dst);
+				dst += 4;
 			}
 
 			if (map_range)
@@ -2218,10 +2169,10 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 			}
 		}
 
-		
 		if (rebuild_normal)
 		{
-			//LL_RECORD_TIME_BLOCK(FTM_FACE_GEOM_NORMAL);
+            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - normal");
+
 			mVertexBuffer->getNormalStrider(norm, mGeomIndex, mGeomCount, map_range);
 			F32* normals = (F32*) norm.get();
 			LLVector4a* src = vf.mNormals;
@@ -2243,7 +2194,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 		
 		if (rebuild_tangent)
 		{
-			LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_TANGENT);
+            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - tangent");
 			mVertexBuffer->getTangentStrider(tangent, mGeomIndex, mGeomCount, map_range);
 			F32* tangents = (F32*) tangent.get();
 			
@@ -2276,16 +2227,10 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 	
 		if (rebuild_weights && vf.mWeights)
 		{
-			LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_WEIGHTS);
+            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - weight");
 			mVertexBuffer->getWeight4Strider(wght, mGeomIndex, mGeomCount, map_range);
-			// <FS:Ansariel> Vectorized Weight4Strider and ClothWeightStrider by Drake Arconis
-			//F32* weights = (F32*) wght.get();
-			//LLVector4a::memcpyNonAliased16(weights, (F32*) vf.mWeights, num_vertices*4*sizeof(F32));
-			for (S32 i = 0; i < num_vertices; ++i)
-			{
-				*(wght++) = vf.mWeights[i];
-			}
-			// </FS:Ansariel>
+			F32* weights = (F32*) wght.get();
+			LLVector4a::memcpyNonAliased16(weights, (F32*) vf.mWeights, num_vertices*4*sizeof(F32));
 			if (map_range)
 			{
 				mVertexBuffer->flush();
@@ -2294,7 +2239,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 		if (rebuild_color && mVertexBuffer->hasDataType(LLVertexBuffer::TYPE_COLOR) )
 		{
-			LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_COLOR);
+            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - color");
 			mVertexBuffer->getColorStrider(colors, mGeomIndex, mGeomCount, map_range);
 
 			LLVector4a src;
@@ -2325,7 +2270,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 		if (rebuild_emissive)
 		{
-			LL_RECORD_BLOCK_TIME(FTM_FACE_GEOM_EMISSIVE);
+            LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("getGeometryVolume - emissive");
 			LLStrider<LLColor4U> emissive;
 			mVertexBuffer->getEmissiveStrider(emissive, mGeomIndex, mGeomCount, map_range);
 
@@ -2456,12 +2401,35 @@ F32 LLFace::getTextureVirtualSize()
 
 BOOL LLFace::calcPixelArea(F32& cos_angle_to_view_dir, F32& radius)
 {
+    LL_PROFILE_ZONE_SCOPED_CATEGORY_FACE;
+
 	//VECTORIZE THIS
 	//get area of circle around face
-	LLVector4a center;
-	center.load3(getPositionAgent().mV);
-	LLVector4a size;
-	size.setSub(mExtents[1], mExtents[0]);
+
+    LLVector4a center;
+    LLVector4a size;
+
+
+    if (isState(LLFace::RIGGED))
+    {
+        //override with avatar bounding box
+        LLVOAvatar* avatar = mVObjp->getAvatar();
+        if (avatar && avatar->mDrawable)
+        {
+            center.load3(avatar->getPositionAgent().mV);
+            const LLVector4a* exts = avatar->mDrawable->getSpatialExtents();
+            size.setSub(exts[1], exts[0]);
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        center.load3(getPositionAgent().mV);
+        size.setSub(mExtents[1], mExtents[0]);
+    }
 	size.mul(0.5f);
 
 	LLViewerCamera* camera = LLViewerCamera::getInstance();
@@ -2735,6 +2703,8 @@ const LLMatrix4& LLFace::getRenderMatrix() const
 
 S32 LLFace::renderElements(const U16 *index_array) const
 {
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_FACE
+
 	S32 ret = 0;
 	
 	if (isState(GLOBAL))
@@ -2754,6 +2724,8 @@ S32 LLFace::renderElements(const U16 *index_array) const
 
 S32 LLFace::renderIndexed()
 {
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_FACE
+
 	if(mDrawablep == NULL || mDrawPoolp == NULL)
 	{
 		return 0;
@@ -2764,6 +2736,8 @@ S32 LLFace::renderIndexed()
 
 S32 LLFace::renderIndexed(U32 mask)
 {
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_FACE
+
 	if (mVertexBuffer.isNull())
 	{
 		return 0;
@@ -2841,56 +2815,6 @@ void LLFace::clearVertexBuffer()
 	mVertexBuffer = NULL;
 }
 
-//static
-U32 LLFace::getRiggedDataMask(U32 type)
-{
-	static const U32 rigged_data_mask[] = {
-		LLDrawPoolAvatar::RIGGED_MATERIAL_MASK,
-		LLDrawPoolAvatar::RIGGED_MATERIAL_ALPHA_VMASK,
-		LLDrawPoolAvatar::RIGGED_MATERIAL_ALPHA_MASK_MASK,
-		LLDrawPoolAvatar::RIGGED_MATERIAL_ALPHA_EMISSIVE_MASK,
-		LLDrawPoolAvatar::RIGGED_SPECMAP_VMASK,
-		LLDrawPoolAvatar::RIGGED_SPECMAP_BLEND_MASK,
-		LLDrawPoolAvatar::RIGGED_SPECMAP_MASK_MASK,
-		LLDrawPoolAvatar::RIGGED_SPECMAP_EMISSIVE_MASK,
-		LLDrawPoolAvatar::RIGGED_NORMMAP_VMASK,
-		LLDrawPoolAvatar::RIGGED_NORMMAP_BLEND_MASK,
-		LLDrawPoolAvatar::RIGGED_NORMMAP_MASK_MASK,
-		LLDrawPoolAvatar::RIGGED_NORMMAP_EMISSIVE_MASK,
-		LLDrawPoolAvatar::RIGGED_NORMSPEC_VMASK,
-		LLDrawPoolAvatar::RIGGED_NORMSPEC_BLEND_MASK,
-		LLDrawPoolAvatar::RIGGED_NORMSPEC_MASK_MASK,
-		LLDrawPoolAvatar::RIGGED_NORMSPEC_EMISSIVE_MASK,
-		LLDrawPoolAvatar::RIGGED_SIMPLE_MASK,
-		LLDrawPoolAvatar::RIGGED_FULLBRIGHT_MASK,
-		LLDrawPoolAvatar::RIGGED_SHINY_MASK,
-		LLDrawPoolAvatar::RIGGED_FULLBRIGHT_SHINY_MASK,
-		LLDrawPoolAvatar::RIGGED_GLOW_MASK,
-		LLDrawPoolAvatar::RIGGED_ALPHA_MASK,
-		LLDrawPoolAvatar::RIGGED_FULLBRIGHT_ALPHA_MASK,
-		LLDrawPoolAvatar::RIGGED_DEFERRED_BUMP_MASK,						 
-		LLDrawPoolAvatar::RIGGED_DEFERRED_SIMPLE_MASK,
-	};
-
-	llassert(type < sizeof(rigged_data_mask)/sizeof(U32));
-
-	return rigged_data_mask[type];
-}
-
-U32 LLFace::getRiggedVertexBufferDataMask() const
-{
-	U32 data_mask = 0;
-	for (U32 i = 0; i < mRiggedIndex.size(); ++i)
-	{
-		if (mRiggedIndex[i] > -1)
-		{
-			data_mask |= LLFace::getRiggedDataMask(i);
-		}
-	}
-
-	return data_mask;
-}
-
 S32 LLFace::getRiggedIndex(U32 type) const
 {
 	if (mRiggedIndex.empty())
@@ -2903,19 +2827,7 @@ S32 LLFace::getRiggedIndex(U32 type) const
 	return mRiggedIndex[type];
 }
 
-void LLFace::setRiggedIndex(U32 type, S32 index)
+U64 LLFace::getSkinHash()
 {
-	if (mRiggedIndex.empty())
-	{
-		mRiggedIndex.resize(LLDrawPoolAvatar::NUM_RIGGED_PASSES);
-		for (U32 i = 0; i < mRiggedIndex.size(); ++i)
-		{
-			mRiggedIndex[i] = -1;
-		}
-	}
-
-	llassert(type < mRiggedIndex.size());
-
-	mRiggedIndex[type] = index;
+    return mSkinInfo ? mSkinInfo->mHash : 0;
 }
-

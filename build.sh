@@ -155,7 +155,11 @@ pre_build()
     fi
     set -x
 
-    if ! "$autobuild" configure --quiet -c $variant -- \
+    # honor autobuild_configure_parameters same as sling-buildscripts
+    eval_autobuild_configure_parameters=$(eval $(echo echo $autobuild_configure_parameters))
+
+    "$autobuild" configure --quiet -c $variant \
+     ${eval_autobuild_configure_parameters:---} \
      -DPACKAGE:BOOL=ON \
      -DHAVOK:BOOL="$HAVOK" \
      -DRELEASE_CRASH_REPORTING:BOOL="$RELEASE_CRASH_REPORTING" \
@@ -165,12 +169,7 @@ pre_build()
      -DGRID:STRING="\"$viewer_grid\"" \
      -DTEMPLATE_VERIFIER_OPTIONS:STRING="$template_verifier_options" $template_verifier_master_url \
      "${SIGNING[@]}" \
-       ;
-    then
-        echo "autobuild configure failed; saving CMakeOutput.log as an output" 1>&2
-        python_cmd "$helpers/codeticket.py" addoutput "CMakeOutput.log" "$build_dir/CMakeFiles/CMakeOutput.log" --mimetype text/plain
-        fatal "$variant configuration failed"
-    fi
+    || fatal "$variant configuration failed"
 
   end_section "Configure $variant"
 }
@@ -210,7 +209,11 @@ build()
   if $build_viewer
   then
     begin_section "autobuild $variant"
-    "$autobuild" build --no-configure -c $variant || fatal "failed building $variant"
+    # honor autobuild_build_parameters same as sling-buildscripts
+    eval_autobuild_build_parameters=$(eval $(echo echo $autobuild_build_parameters))
+    "$autobuild" build --no-configure -c $variant \
+         $eval_autobuild_build_parameters \
+    || fatal "failed building $variant"
     echo true >"$build_dir"/build_ok
     end_section "autobuild $variant"
     

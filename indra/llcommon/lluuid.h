@@ -166,12 +166,8 @@ public:
 };
 
 // Generate a hash of an LLUUID object using the boost hash templates. 
-
-// <FS:ND> GCC 4.9 does not like the specialization in form of boost::hash but rather wants a namespace
-// template <>
-// struct boost::hash<LLUUID>
-namespace boost { template <> struct hash<LLUUID>
-// </FS:ND>
+template <>
+struct boost::hash<LLUUID>
 {
     typedef LLUUID argument_type;
     typedef std::size_t result_type;
@@ -187,7 +183,18 @@ namespace boost { template <> struct hash<LLUUID>
         return seed;
     }
 };
-} // <FS:ND/> close namespace
+
+// Adapt boost hash to std hash
+namespace std
+{
+    template<> struct hash<LLUUID>
+    {
+        std::size_t operator()(LLUUID const& s) const noexcept
+        {
+            return boost::hash<LLUUID>()(s);
+        }
+    };
+}
 
 // <FS:Ansariel> UUID hash calculation
 struct FSUUIDHash

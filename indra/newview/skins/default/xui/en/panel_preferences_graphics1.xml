@@ -543,7 +543,35 @@ width="120">
     width="65">
        Low
   </text>
-
+  <check_box
+    control_name="RenderVSyncEnable"
+    height="16"
+    initial_value="true"
+    label="Enable VSync (Viewer tries to match monitor refresh rate)"
+    layout="topleft"
+    left="26"
+    top_delta="18"
+    name="vsync"
+    tool_tip="Synchronizes the frame rate to the refresh rate of the monitor, which results in smooth performance."
+    width="315" />
+  <slider
+    control_name="FramePerSecondLimit"
+    decimal_digits="0"
+    follows="left|top"
+    height="16"
+    increment="1"
+    initial_value="0"
+    label="Legacy FPS limiter (0 disables):"
+    label_width="185"
+    layout="topleft"
+    left="30"
+    min_val="0"
+    max_val="120"
+    name="FramePerSecondLimit"
+    show_text="true"
+    top_delta="18"
+    width="430">
+  </slider>
   <text
     type="string"
     length="1"

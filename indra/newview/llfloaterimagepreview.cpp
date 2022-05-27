@@ -702,10 +702,7 @@ BOOL LLImagePreviewAvatar::render()
 	LLGLSUIDefault def;
 	gGL.color4f(0.15f, 0.2f, 0.3f, 1.f);
 
-	if (LLGLSLShader::sNoFixedFunction)
-	{
-		gUIProgram.bind();
-	}
+	gUIProgram.bind();
 
 	gl_rect_2d_simple( mFullWidth, mFullHeight );
 
@@ -904,10 +901,7 @@ BOOL LLImagePreviewSculpted::render()
 		
 	gGL.color4f(0.15f, 0.2f, 0.3f, 1.f);
 
-	if (LLGLSLShader::sNoFixedFunction)
-	{
-		gUIProgram.bind();
-	}
+	gUIProgram.bind();
 
 	gl_rect_2d_simple( mFullWidth, mFullHeight );
 	
@@ -941,10 +935,7 @@ BOOL LLImagePreviewSculpted::render()
 	
 	gPipeline.enableLightsAvatar();
 
-	if (LLGLSLShader::sNoFixedFunction)
-	{
-		gObjectPreviewProgram.bind();
-	}
+	gObjectPreviewProgram.bind();
 	gPipeline.enableLightsPreview();
 
 	gGL.pushMatrix();
@@ -958,10 +949,7 @@ BOOL LLImagePreviewSculpted::render()
 
 	gGL.popMatrix();
 
-	if (LLGLSLShader::sNoFixedFunction)
-	{
-		gObjectPreviewProgram.unbind();
-	}
+	gObjectPreviewProgram.unbind();
 
 	return TRUE;
 }

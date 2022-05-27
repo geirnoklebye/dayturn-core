@@ -115,7 +115,7 @@ void LLDrawPoolTerrain::prerender()
 
 void LLDrawPoolTerrain::beginRenderPass( S32 pass )
 {
-	LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
 	LLFacePool::beginRenderPass(pass);
 
 	sShader = LLPipeline::sUnderWaterRender ? 
@@ -130,7 +130,7 @@ void LLDrawPoolTerrain::beginRenderPass( S32 pass )
 
 void LLDrawPoolTerrain::endRenderPass( S32 pass )
 {
-	LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
 	//LLFacePool::endRenderPass(pass);
 
 	if (mShaderLevel > 1 && sShader->mShaderLevel > 0) {
@@ -158,7 +158,7 @@ void LLDrawPoolTerrain::boostTerrainDetailTextures()
 
 void LLDrawPoolTerrain::render(S32 pass)
 {
-	LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
 	
 	if (mDrawFace.empty())
 	{
@@ -221,7 +221,7 @@ void LLDrawPoolTerrain::render(S32 pass)
 
 void LLDrawPoolTerrain::beginDeferredPass(S32 pass)
 {
-	LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
 	LLFacePool::beginRenderPass(pass);
 
 	sShader = LLPipeline::sUnderWaterRender ? &gDeferredTerrainWaterProgram : &gDeferredTerrainProgram;
@@ -231,14 +231,14 @@ void LLDrawPoolTerrain::beginDeferredPass(S32 pass)
 
 void LLDrawPoolTerrain::endDeferredPass(S32 pass)
 {
-	LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
 	LLFacePool::endRenderPass(pass);
 	sShader->unbind();
 }
 
 void LLDrawPoolTerrain::renderDeferred(S32 pass)
 {
-	LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
 	if (mDrawFace.empty())
 	{
 		return;
@@ -258,7 +258,7 @@ void LLDrawPoolTerrain::renderDeferred(S32 pass)
 
 void LLDrawPoolTerrain::beginShadowPass(S32 pass)
 {
-	LL_RECORD_BLOCK_TIME(FTM_SHADOW_TERRAIN);
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_SHADOW_TERRAIN);
 	LLFacePool::beginRenderPass(pass);
 	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 	gDeferredShadowProgram.bind();
@@ -269,14 +269,14 @@ void LLDrawPoolTerrain::beginShadowPass(S32 pass)
 
 void LLDrawPoolTerrain::endShadowPass(S32 pass)
 {
-	LL_RECORD_BLOCK_TIME(FTM_SHADOW_TERRAIN);
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_SHADOW_TERRAIN);
 	LLFacePool::endRenderPass(pass);
 	gDeferredShadowProgram.unbind();
 }
 
 void LLDrawPoolTerrain::renderShadow(S32 pass)
 {
-	LL_RECORD_BLOCK_TIME(FTM_SHADOW_TERRAIN);
+	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_SHADOW_TERRAIN);
 	if (mDrawFace.empty())
 	{
 		return;
@@ -357,8 +357,6 @@ void LLDrawPoolTerrain::renderFullShader()
 	shader->uniform4fv(LLShaderMgr::OBJECT_PLANE_T, 1, tp1.mV);
 
     LLSettingsWater::ptr_t pwater = LLEnvironment::instance().getCurrentWater();
-
-    ((LLSettingsVOWater*)pwater.get())->updateShader(shader);
 
 	//
 	// detail texture 1
@@ -491,8 +489,6 @@ void LLDrawPoolTerrain::renderFull4TU()
 	glTexGenfv(GL_S, GL_OBJECT_PLANE, tp0.mV);
 	glTexGenfv(GL_T, GL_OBJECT_PLANE, tp1.mV);
 
-	gGL.getTexUnit(0)->setTextureColorBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_TEX_COLOR);
-
 	//
 	// Stage 1: Generate alpha ramp for detail0/detail1 transition
 	//
@@ -501,10 +497,6 @@ void LLDrawPoolTerrain::renderFull4TU()
 	gGL.getTexUnit(1)->enable(LLTexUnit::TT_TEXTURE);
 	gGL.getTexUnit(1)->activate();
 	
-	// Care about alpha only
-	gGL.getTexUnit(1)->setTextureColorBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_PREV_COLOR);
-	gGL.getTexUnit(1)->setTextureAlphaBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_TEX_ALPHA);
-
 	//
 	// Stage 2: Interpolate detail1 with existing based on ramp
 	//
@@ -519,8 +511,6 @@ void LLDrawPoolTerrain::renderFull4TU()
 	glTexGenfv(GL_S, GL_OBJECT_PLANE, tp0.mV);
 	glTexGenfv(GL_T, GL_OBJECT_PLANE, tp1.mV);
 
-	gGL.getTexUnit(2)->setTextureColorBlend(LLTexUnit::TBO_LERP_PREV_ALPHA, LLTexUnit::TBS_PREV_COLOR, LLTexUnit::TBS_TEX_COLOR);
-
 	//
 	// Stage 3: Modulate with primary (vertex) color for lighting
 	//
@@ -528,9 +518,6 @@ void LLDrawPoolTerrain::renderFull4TU()
 	gGL.getTexUnit(3)->enable(LLTexUnit::TT_TEXTURE);
 	gGL.getTexUnit(3)->activate();
 	
-	// Set alpha texture and do lighting modulation
-	gGL.getTexUnit(3)->setTextureColorBlend(LLTexUnit::TBO_MULT, LLTexUnit::TBS_PREV_COLOR, LLTexUnit::TBS_VERT_COLOR);
-
 	gGL.getTexUnit(0)->activate();
 	
 	// GL_BLEND disabled by default
@@ -551,8 +538,6 @@ void LLDrawPoolTerrain::renderFull4TU()
 	glTexGenfv(GL_S, GL_OBJECT_PLANE, tp0.mV);
 	glTexGenfv(GL_T, GL_OBJECT_PLANE, tp1.mV);
 
-	gGL.getTexUnit(0)->setTextureColorBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_TEX_COLOR);
-
 	//
 	// Stage 1: Generate alpha ramp for detail2/detail3 transition
 	//
@@ -564,10 +549,6 @@ void LLDrawPoolTerrain::renderFull4TU()
 	gGL.matrixMode(LLRender::MM_TEXTURE);
 	gGL.loadIdentity();
 	gGL.translatef(-2.f, 0.f, 0.f);
-
-	// Care about alpha only
-	gGL.getTexUnit(1)->setTextureColorBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_PREV_COLOR);
-	gGL.getTexUnit(1)->setTextureAlphaBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_TEX_ALPHA);
 
 	//
 	// Stage 2: Interpolate detail2 with existing based on ramp
@@ -583,8 +564,6 @@ void LLDrawPoolTerrain::renderFull4TU()
 	glTexGenfv(GL_S, GL_OBJECT_PLANE, tp0.mV);
 	glTexGenfv(GL_T, GL_OBJECT_PLANE, tp1.mV);
 
-	gGL.getTexUnit(2)->setTextureColorBlend(LLTexUnit::TBO_LERP_PREV_ALPHA, LLTexUnit::TBS_TEX_COLOR, LLTexUnit::TBS_PREV_COLOR);	
-
 	//
 	// Stage 3: Generate alpha ramp for detail1/detail2 transition
 	//
@@ -597,10 +576,6 @@ void LLDrawPoolTerrain::renderFull4TU()
 	gGL.loadIdentity();
 	gGL.translatef(-1.f, 0.f, 0.f);
 	gGL.matrixMode(LLRender::MM_MODELVIEW);
-
-	// Set alpha texture and do lighting modulation
-	gGL.getTexUnit(3)->setTextureColorBlend(LLTexUnit::TBO_MULT, LLTexUnit::TBS_PREV_COLOR, LLTexUnit::TBS_VERT_COLOR);
-	gGL.getTexUnit(3)->setTextureAlphaBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_TEX_ALPHA);
 
 	gGL.getTexUnit(0)->activate();
 	{
@@ -651,8 +626,6 @@ void LLDrawPoolTerrain::renderFull4TU()
 	gGL.matrixMode(LLRender::MM_TEXTURE);
 	gGL.loadIdentity();
 	gGL.matrixMode(LLRender::MM_MODELVIEW);
-
-	gGL.getTexUnit(0)->setTextureBlendType(LLTexUnit::TB_MULT);
 }
 
 void LLDrawPoolTerrain::renderFull2TU()
@@ -698,8 +671,6 @@ void LLDrawPoolTerrain::renderFull2TU()
 	glTexGenfv(GL_S, GL_OBJECT_PLANE, tp0.mV);
 	glTexGenfv(GL_T, GL_OBJECT_PLANE, tp1.mV);
 
-	gGL.getTexUnit(0)->setTextureColorBlend(LLTexUnit::TBO_MULT, LLTexUnit::TBS_TEX_COLOR, LLTexUnit::TBS_VERT_COLOR);
-
 	drawLoop();
 
 	//----------------------------------------------------------------------------
@@ -713,11 +684,6 @@ void LLDrawPoolTerrain::renderFull2TU()
 	glDisable(GL_TEXTURE_GEN_S);
 	glDisable(GL_TEXTURE_GEN_T);
 	
-	// Care about alpha only
-	gGL.getTexUnit(0)->setTextureColorBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_PREV_COLOR);
-	gGL.getTexUnit(0)->setTextureAlphaBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_TEX_ALPHA);
-
-
 	//
 	// Stage 1: Write detail1
 	//
@@ -731,9 +697,6 @@ void LLDrawPoolTerrain::renderFull2TU()
 	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 	glTexGenfv(GL_S, GL_OBJECT_PLANE, tp0.mV);
 	glTexGenfv(GL_T, GL_OBJECT_PLANE, tp1.mV);
-
-	gGL.getTexUnit(1)->setTextureColorBlend(LLTexUnit::TBO_MULT, LLTexUnit::TBS_TEX_COLOR, LLTexUnit::TBS_VERT_COLOR);
-	gGL.getTexUnit(1)->setTextureAlphaBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_PREV_ALPHA);
 
 	gGL.getTexUnit(0)->activate();
 	{
@@ -754,10 +717,6 @@ void LLDrawPoolTerrain::renderFull2TU()
 	gGL.translatef(-1.f, 0.f, 0.f);
 	gGL.matrixMode(LLRender::MM_MODELVIEW);
 
-	// Care about alpha only
-	gGL.getTexUnit(0)->setTextureColorBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_PREV_COLOR);
-	gGL.getTexUnit(0)->setTextureAlphaBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_TEX_ALPHA);
-
 	//
 	// Stage 1: Write detail2
 	//
@@ -771,9 +730,6 @@ void LLDrawPoolTerrain::renderFull2TU()
 	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 	glTexGenfv(GL_S, GL_OBJECT_PLANE, tp0.mV);
 	glTexGenfv(GL_T, GL_OBJECT_PLANE, tp1.mV);
-
-	gGL.getTexUnit(1)->setTextureColorBlend(LLTexUnit::TBO_MULT, LLTexUnit::TBS_TEX_COLOR, LLTexUnit::TBS_VERT_COLOR);
-	gGL.getTexUnit(1)->setTextureAlphaBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_PREV_ALPHA);
 
 	{
 		LLGLEnable blend(GL_BLEND);
@@ -794,10 +750,6 @@ void LLDrawPoolTerrain::renderFull2TU()
 	gGL.translatef(-2.f, 0.f, 0.f);
 	gGL.matrixMode(LLRender::MM_MODELVIEW);
 
-	// Care about alpha only
-	gGL.getTexUnit(0)->setTextureColorBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_PREV_COLOR);
-	gGL.getTexUnit(0)->setTextureAlphaBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_TEX_ALPHA);
-
 	// Stage 1: Write detail3
 	gGL.getTexUnit(1)->bind(detail_texture3p);
 	gGL.getTexUnit(1)->enable(LLTexUnit::TT_TEXTURE);
@@ -809,9 +761,6 @@ void LLDrawPoolTerrain::renderFull2TU()
 	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 	glTexGenfv(GL_S, GL_OBJECT_PLANE, tp0.mV);
 	glTexGenfv(GL_T, GL_OBJECT_PLANE, tp1.mV);
-
-	gGL.getTexUnit(1)->setTextureColorBlend(LLTexUnit::TBO_MULT, LLTexUnit::TBS_TEX_COLOR, LLTexUnit::TBS_VERT_COLOR);
-	gGL.getTexUnit(1)->setTextureAlphaBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_PREV_ALPHA);
 
 	gGL.getTexUnit(0)->activate();
 	{
@@ -845,7 +794,6 @@ void LLDrawPoolTerrain::renderFull2TU()
 	gGL.matrixMode(LLRender::MM_TEXTURE);
 	gGL.loadIdentity();
 	gGL.matrixMode(LLRender::MM_MODELVIEW);
-	gGL.getTexUnit(0)->setTextureBlendType(LLTexUnit::TB_MULT);
 }
 
 
@@ -882,22 +830,8 @@ void LLDrawPoolTerrain::renderSimple()
 	tp0.setVec(tscale, 0.f, 0.0f, -1.f*(origin_agent.mV[0]/256.f));
 	tp1.setVec(0.f, tscale, 0.0f, -1.f*(origin_agent.mV[1]/256.f));
 	
-	if (LLGLSLShader::sNoFixedFunction)
-	{
-		sShader->uniform4fv(LLShaderMgr::OBJECT_PLANE_S, 1, tp0.mV);
-		sShader->uniform4fv(LLShaderMgr::OBJECT_PLANE_T, 1, tp1.mV);
-	}
-	else
-	{
-		glEnable(GL_TEXTURE_GEN_S);
-		glEnable(GL_TEXTURE_GEN_T);
-		glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-		glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-		glTexGenfv(GL_S, GL_OBJECT_PLANE, tp0.mV);
-		glTexGenfv(GL_T, GL_OBJECT_PLANE, tp1.mV);
-	}
-
-	gGL.getTexUnit(0)->setTextureColorBlend(LLTexUnit::TBO_MULT, LLTexUnit::TBS_TEX_COLOR, LLTexUnit::TBS_VERT_COLOR);
+	sShader->uniform4fv(LLShaderMgr::OBJECT_PLANE_S, 1, tp0.mV);
+	sShader->uniform4fv(LLShaderMgr::OBJECT_PLANE_T, 1, tp1.mV);
 
 	drawLoop();
 
@@ -906,15 +840,9 @@ void LLDrawPoolTerrain::renderSimple()
 	
 	gGL.getTexUnit(0)->activate();
 	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
-	if (!LLGLSLShader::sNoFixedFunction)
-	{
-		glDisable(GL_TEXTURE_GEN_S);
-		glDisable(GL_TEXTURE_GEN_T);
-	}
 	gGL.matrixMode(LLRender::MM_TEXTURE);
 	gGL.loadIdentity();
 	gGL.matrixMode(LLRender::MM_MODELVIEW);
-	gGL.getTexUnit(0)->setTextureBlendType(LLTexUnit::TB_MULT);
 }
 
 //============================================================================
@@ -965,6 +893,7 @@ void LLDrawPoolTerrain::renderOwnership()
 
 void LLDrawPoolTerrain::dirtyTextures(const std::set<LLViewerFetchedTexture*>& textures)
 {
+    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
 	LLViewerFetchedTexture* tex = LLViewerTextureManager::staticCastToFetchedTexture(mTexturep) ;
 	if (tex && textures.find(tex) != textures.end())
 	{

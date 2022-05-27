@@ -31,6 +31,7 @@
 #include "llconvexdecomposition.h"
 #include "llsdserialize.h"
 #include "llvector4a.h"
+#include "llmd5.h"
 
 #ifdef LL_USESYSTEMLIBS
 # include <zlib.h>
@@ -1130,7 +1131,7 @@ bool LLModel::loadModel(std::istream& is)
 
 	const S32 MODEL_LODS = 5;
 
-	S32 lod = llclamp((S32) mDetail, 0, MODEL_LODS-1);
+	S32 lod = llclamp((S32) mDetail, 0, MODEL_LODS);
 
 	if (header[lod_name[lod]]["offset"].asInteger() == -1 || 
 		header[lod_name[lod]]["size"].asInteger() == 0 )
@@ -1389,10 +1390,7 @@ void LLMeshSkinInfo::fromLLSD(LLSD& skin)
 	{
 		for (U32 i = 0; i < skin["joint_names"].size(); ++i)
 		{
-//<FS:ND> Query by JointKey rather than just a string, the key can be a U32 index for faster lookup
-//			mJointNames.push_back( skin[ "joint_names" ][ i ] );
-			mJointNames.push_back( JointKey::construct( skin[ "joint_names" ][ i ] ) );
-// </FS>ND>
+			mJointNames.push_back(skin["joint_names"][i]);
             mJointNums.push_back(-1);
 		}
 	}
@@ -1410,7 +1408,7 @@ void LLMeshSkinInfo::fromLLSD(LLSD& skin)
 				}
 			}
 
-			mInvBindMatrix.push_back(mat);
+			mInvBindMatrix.push_back(LLMatrix4a(mat));
 		}
 
         if (mJointNames.size() != mInvBindMatrix.size())
@@ -1424,13 +1422,15 @@ void LLMeshSkinInfo::fromLLSD(LLSD& skin)
 
 	if (skin.has("bind_shape_matrix"))
 	{
+        LLMatrix4 mat;
 		for (U32 j = 0; j < 4; j++)
 		{
 			for (U32 k = 0; k < 4; k++)
 			{
-				mBindShapeMatrix.mMatrix[j][k] = skin["bind_shape_matrix"][j*4+k].asReal();
+				mat.mMatrix[j][k] = skin["bind_shape_matrix"][j*4+k].asReal();
 			}
 		}
+        mBindShapeMatrix.loadu(mat);
 	}
 
 	if (skin.has("alt_inverse_bind_matrix"))
@@ -1446,7 +1446,7 @@ void LLMeshSkinInfo::fromLLSD(LLSD& skin)
 				}
 			}
 			
-			mAlternateBindMatrix.push_back(mat);
+			mAlternateBindMatrix.push_back(LLMatrix4a(mat));
 		}
 	}
 
@@ -1463,6 +1463,8 @@ void LLMeshSkinInfo::fromLLSD(LLSD& skin)
 	{
 		mLockScaleIfJointPosition = false;
 	}
+
+    updateHash();
 }
 
 LLSD LLMeshSkinInfo::asLLSD(bool include_joints, bool lock_scale_if_joint_position) const
@@ -1471,10 +1473,7 @@ LLSD LLMeshSkinInfo::asLLSD(bool include_joints, bool lock_scale_if_joint_positi
 
 	for (U32 i = 0; i < mJointNames.size(); ++i)
 	{
-//<FS:ND> Query by JointKey rather than just a string, the key can be a U32 index for faster lookup
-//		ret[ "joint_names" ][ i ] = mJointNames[ i ];
-		ret[ "joint_names" ][ i ] = mJointNames[ i ].mName;
-// </FS:ND>
+		ret["joint_names"][i] = mJointNames[i];
 
 		for (U32 j = 0; j < 4; j++)
 		{
@@ -1515,6 +1514,38 @@ LLSD LLMeshSkinInfo::asLLSD(bool include_joints, bool lock_scale_if_joint_positi
 	}
 
 	return ret;
+}
+
+void LLMeshSkinInfo::updateHash()
+{
+    //  get hash of data relevant to render batches
+    LLMD5 hash;
+
+    //mJointNames
+    for (auto& name : mJointNames)
+    {
+        hash.update(name);
+    }
+    
+    //mJointNums 
+    hash.update((U8*)&(mJointNums[0]), sizeof(S32) * mJointNums.size());
+    
+    //mInvBindMatrix
+    F32* src = mInvBindMatrix[0].getF32ptr();
+    
+    for (int i = 0; i < mInvBindMatrix.size() * 16; ++i)
+    {
+        S32 t = llround(src[i] * 10000.f);
+        hash.update((U8*)&t, sizeof(S32));
+    }
+    //hash.update((U8*)&(mInvBindMatrix[0]), sizeof(LLMatrix4a) * mInvBindMatrix.size());
+
+    hash.finalize();
+
+    U64 digest[2];
+    hash.raw_digest((U8*) digest);
+
+    mHash = digest[0];
 }
 
 LLModel::Decomposition::Decomposition(LLSD& data)

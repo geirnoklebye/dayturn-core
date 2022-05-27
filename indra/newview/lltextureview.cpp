@@ -609,11 +609,13 @@ void LLGLTexMemBar::draw()
 	S32Megabytes gpu_used = getGPUMemoryUsed();
 
 	// <FS:Ansariel> Texture memory bars
-	//text = llformat("GL Tot: %d/%d MB Bound: %4d/%4d MB FBO: %d MB Raw Tot: %d MB Bias: %.2f Cache: %.1f/%.1f MB",
-	text = llformat("GL Tot: %d/%d MB Bound: %d/%d MB FBO: %d MB VRAM: %d/%d MB Raw Tot: %d MB Bias: %.2f Cache: %.1f/%.1f MB",
+	//text = llformat("GL Tot: %d/%d MB GL Free: %d Sys Free: %d MB Bound: %4d/%4d MB FBO: %d MB Raw Tot: %d MB Bias: %.2f Cache: %.1f/%.1f MB",
+	text = llformat("GL Tot: %d/%d MB GL Free: %d Sys Free: %d MB Bound: %4d/%4d MB FBO: %d MB Raw Tot: %d MB Bias: %.2f Cache: %.1f/%.1f MB",
 	// </FS:Ansariel>
 					total_mem.value(),
 					max_total_mem.value(),
+                    LLImageGLThread::getFreeVRAMMegabytes(),
+                    LLMemory::getAvailableMemKB()/1024,
 					bound_mem.value(),
 					max_bound_mem.value(),
 					LLRenderTarget::sBytesAllocated/(1024*1024),

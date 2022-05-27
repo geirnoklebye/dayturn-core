@@ -10166,6 +10166,7 @@ class LLViewHighlightTransparent : public view_listener_t
 		gPipeline.rebuildGroups();
 //mk
 		LLDrawPoolAlpha::sShowDebugAlpha = !LLDrawPoolAlpha::sShowDebugAlpha;
+        gPipeline.resetVertexBuffers();
 		return true;
 	}
 };

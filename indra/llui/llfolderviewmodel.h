@@ -122,11 +122,10 @@ public:
 	virtual S32 				getFirstRequiredGeneration() const = 0;
 };
 
-class LLFolderViewModelInterface : public LLTrace::MemTrackable<LLFolderViewModelInterface>
+class LLFolderViewModelInterface
 {
 public:
 	LLFolderViewModelInterface() 
-	:	LLTrace::MemTrackable<LLFolderViewModelInterface>("LLFolderViewModelInterface") 
 	{}
 
 	virtual ~LLFolderViewModelInterface() {}
@@ -147,11 +146,10 @@ public:
 
 // This is an abstract base class that users of the folderview classes
 // would use to bridge the folder view with the underlying data
-class LLFolderViewModelItem : public LLRefCount, public LLTrace::MemTrackable<LLFolderViewModelItem>
+class LLFolderViewModelItem : public LLRefCount
 {
 public:
 	LLFolderViewModelItem() 
-	:	LLTrace::MemTrackable<LLFolderViewModelItem>("LLFolderViewModelItem") 
 	{}
 
 	virtual ~LLFolderViewModelItem() { }
