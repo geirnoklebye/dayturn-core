@@ -638,8 +638,7 @@ void LLImage::setLastError(const std::string& message)
 //---------------------------------------------------------------------------
 
 LLImageBase::LLImageBase()
-:	LLTrace::MemTrackable<LLImageBase>("LLImage"),
-	mData(NULL),
+:	mData(NULL),
 	mDataSize(0),
 	mWidth(0),
 	mHeight(0),
@@ -688,7 +687,6 @@ void LLImageBase::sanityCheck()
 void LLImageBase::deleteData()
 {
 	ll_aligned_free_16(mData);
-	disclaimMem(mDataSize);
 	mDataSize = 0;
 	mData = NULL;
 }
@@ -747,7 +745,6 @@ U8* LLImageBase::allocateData(S32 size)
 	}
 	}
 	mDataSize = size;
-	claimMem(mDataSize);
 
 	return mData;
 }
@@ -768,9 +765,7 @@ U8* LLImageBase::reallocateData(S32 size)
 		ll_aligned_free_16(mData) ;
 	}
 	mData = new_datap;
-	disclaimMem(mDataSize);
 	mDataSize = size;
-	claimMem(mDataSize);
 	mBadBufferAllocation = false;
 	return mData;
 }
@@ -881,6 +876,12 @@ U8* LLImageRaw::reallocateData(S32 size)
 	return res;
 }
 
+void LLImageRaw::releaseData()
+{
+    LLImageBase::setSize(0, 0, 0);
+    LLImageBase::setDataAndSize(nullptr, 0);
+}
+
 // virtual
 void LLImageRaw::deleteData()
 {
@@ -899,8 +900,6 @@ void LLImageRaw::setDataAndSize(U8 *data, S32 width, S32 height, S8 components)
 
 	LLImageBase::setSize(width, height, components) ;
 	LLImageBase::setDataAndSize(data, width * height * components) ;
-	
-	sGlobalRawMemory += getDataSize();
 }
 
 bool LLImageRaw::resize(U16 width, U16 height, S8 components)
@@ -2283,9 +2282,7 @@ void LLImageBase::setDataAndSize(U8 *data, S32 size)
 { 
 	ll_assert_aligned(data, 16);
 	mData = data; 
-	disclaimMem(mDataSize); 
 	mDataSize = size; 
-	claimMem(mDataSize);
 }	
 
 //static

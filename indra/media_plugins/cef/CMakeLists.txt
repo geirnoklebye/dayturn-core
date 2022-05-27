@@ -122,12 +122,6 @@ if (DARWIN)
     LINK_FLAGS "-stdlib=libc++ -exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/../base/media_plugin_base.exp"
   )
 
-  # the target_compile_features command below can cause the configure phase to fail because cmake
-  # is discovering that the version of AppleClang is newer than it knows the command set for. Rely on other 
-  # aspects of the build system to engage this instead
-  # ## turns on C++11 using Cmake
-  # target_compile_features(media_plugin_cef PRIVATE c_std_11)
-
   add_custom_command(TARGET media_plugin_cef
     POST_BUILD COMMAND ${CMAKE_INSTALL_NAME_TOOL} -change "@executable_path/Chromium Embedded Framework"
         "@executable_path/../../../../Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework"

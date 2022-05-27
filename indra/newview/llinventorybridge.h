@@ -473,6 +473,7 @@ public:
 	void checkSearchBySuffixChanges();
 protected:
 	LLCallingCardObserver* mObserver;
+    LLUUID mCreatorUUID;
 };
 
 class LLNotecardBridge : public LLItemBridge

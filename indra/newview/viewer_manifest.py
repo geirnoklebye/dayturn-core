@@ -513,14 +513,6 @@ class WindowsManifest(ViewerManifest):
         # Get shared libs from the shared libs staging directory
         with self.prefix(src=os.path.join(self.args['build'], os.pardir,
                                           'sharedlibs', self.args['configuration'])):
-
-            # Mesh 3rd party libs needed for auto LOD and collada reading
-            try:
-                self.path("glod.dll")
-            except RuntimeError as err:
-                print(err.message)
-                print("Skipping GLOD library (assumming linked statically)")
-
             # Get fmodstudio dll, continue if missing
             try:
                 if self.args['fmodversion'].lower() == 'fmodstudio':
@@ -556,6 +548,7 @@ class WindowsManifest(ViewerManifest):
             # See http://msdn.microsoft.com/en-us/library/ms235291(VS.80).aspx
             self.path("msvcp140.dll")
             self.path("vcruntime140.dll")
+            self.path_optional("vcruntime140_1.dll")
 
             # SLVoice executable
             with self.prefix(src=os.path.join(pkgdir, 'bin', 'release')):
@@ -634,6 +627,7 @@ class WindowsManifest(ViewerManifest):
                                               'sharedlibs', 'Release')):
                 self.path("msvcp140.dll")
                 self.path("vcruntime140.dll")
+                self.path_optional("vcruntime140_1.dll")
 
             # CEF files common to all configurations
             with self.prefix(src=os.path.join(pkgdir, 'resources')):
@@ -1045,7 +1039,6 @@ class DarwinManifest(ViewerManifest):
                                 "libapr-1.0.dylib",
                                 "libaprutil-1.0.dylib",
                                 "libexpat.1.dylib",
-                                "libGLOD.dylib",
                                 # libnghttp2.dylib is a symlink to
                                 # libnghttp2.major.dylib, which is a symlink to
                                 # libnghttp2.version.dylib. Get all of them.

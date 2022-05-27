@@ -227,6 +227,10 @@ LLFloaterOpenHandler gFloaterOpenHandler;
 
 void LLViewerFloaterReg::registerFloaters()
 {
+	if (gNonInteractive)
+	{
+		return;
+	}
 	// *NOTE: Please keep these alphabetized for easier merges
 
 	LLFloaterAboutUtil::registerFloater();

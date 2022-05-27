@@ -70,7 +70,6 @@ if(WINDOWS)
         libaprutil-1.dll
         libapriconv-1.dll
         nghttp2.dll
-        glod.dll
         libhunspell.dll
         uriparser.dll
         )
@@ -127,6 +126,8 @@ if(WINDOWS)
         set(MSVC_VER 120)
     elseif (MSVC_VERSION GREATER_EQUAL 1910 AND MSVC_VERSION LESS 1920) # Visual Studio 2017
         set(MSVC_VER 140)
+    elseif (MSVC_VERSION GREATER_EQUAL 1920 AND MSVC_VERSION LESS 1930) # Visual Studio 2019
+        set(MSVC_VER 140)
     else (MSVC80)
         MESSAGE(WARNING "New MSVC_VERSION ${MSVC_VERSION} of MSVC: adapt Copy3rdPartyLibs.cmake")
     endif (MSVC80)
@@ -161,6 +162,7 @@ if(WINDOWS)
             msvcp${MSVC_VER}.dll
             msvcr${MSVC_VER}.dll
             vcruntime${MSVC_VER}.dll
+            vcruntime${MSVC_VER}_1.dll
             )
         if(EXISTS "${registry_path}/${release_msvc_file}")
             to_staging_dirs(
@@ -199,7 +201,6 @@ elseif(DARWIN)
         libaprutil-1.0.dylib
         libaprutil-1.dylib
         ${EXPAT_COPY}
-        libGLOD.dylib
         libhunspell-1.3.0.dylib
         libndofdev.dylib
         libnghttp2.dylib
@@ -284,7 +285,6 @@ elseif(LINUX)
         libdb-5.1.so
         ${EXPAT_COPY}
         libfreetype.so.6.6.2
-        libGLOD.so
         libgmodule-2.0.so
         libgobject-2.0.so
         libhunspell-1.3.so.0.0.0
