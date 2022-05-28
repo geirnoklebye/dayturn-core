@@ -617,6 +617,8 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, bool depth_only, bool rigged)
 						}
 					}
 
+				}
+
 //MK
 				LLFace*	facep = params.mFace;
 				if (facep)
@@ -656,8 +658,6 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, bool depth_only, bool rigged)
 					}
 				}
 //mk
-				}
-
 				LLRenderPass::applyModelMatrix(params);
 
 				LLMaterial* mat = NULL;

@@ -1020,6 +1020,16 @@ void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 	if( !single_avatar || (avatarp == single_avatar) )
 	{
 		avatarp->renderSkinned();
+//MK
+		if (is_post_deferred_render)
+		{
+			// Draw a big black sphere around our avatar if the camera render is limited by RLV
+			if (gRRenabled && avatarp == gAgentAvatarp && gAgentAvatarp->getVisible())
+			{
+				gAgent.mRRInterface.drawRenderLimit(FALSE);
+			}
+		}
+//mk
 	}
 }
 
