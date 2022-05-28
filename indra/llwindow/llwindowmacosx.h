@@ -113,7 +113,7 @@ public:
 	void spawnWebBrowser(const std::string& escaped_url, bool async) override;
 	F32 getSystemUISize() override;
 	void openFile(const std::string& file_name) override;
-	void setTitle(const std::string& title) override;
+	void setTitle(const std::string title) override;
 
 	static std::vector<std::string> getDisplaysResolutionList();
 
