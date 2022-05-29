@@ -986,7 +986,7 @@
       height="12"
       name="show_nearby_typing"
       width="200"
-      label="Show typing indicator in name tag" />
+      label="Show typing indicator in name tag..." />
      <check_box
       control_name="KokuaNameTagBoldTyping"
       follows="left|top"
@@ -997,7 +997,7 @@
       name="nametag_bold_typing"
       width="250"
       enabled_control="ShowNearbyAvatarsTyping"
-      label="Show typing indicator using bold" />
+      label="...using bold" />
      <check_box
       control_name="KokuaNameTagColorTyping"
       follows="left|top"
@@ -1007,7 +1007,7 @@
       name="nametag_typing_status_only"
       width="250"
       enabled_control="ShowNearbyAvatarsTyping"
-      label="Show typing indicator in color" />
+      label="...using color" />
      <check_box
       control_name="KokuaNameTagLabelTyping"
       follows="left|top"
@@ -1017,7 +1017,7 @@
       name="nametag_typing_label"
       width="250"
       enabled_control="ShowNearbyAvatarsTyping"
-      label="Show typing indicator as label (black on white)" />
+      label="...using background color" />
      <check_box
       control_name="KokuaNameTagTypingColorsWholeTag"
       follows="left|top"
@@ -1027,7 +1027,7 @@
       name="nametag_typing_whole_tag"
       width="250"
       enabled_control="ShowNearbyAvatarsTyping"
-      label="Typing indicator colors whole tag" />
+      label="...using whole tag" />
      <panel
      	 left="30"
        top_pad="-44"
@@ -1045,7 +1045,7 @@
        layout="topleft"
        left="10"
        name="typing_tag"
-       top_pad="18"
+       top_pad="0"
        width="44" >
        <color_swatch.init_callback
        function="Pref.getUIColor"

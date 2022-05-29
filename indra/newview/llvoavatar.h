@@ -296,6 +296,7 @@ public:
 	static void		invalidateNameTags();
 	void			addNameTagLine(const std::string& line, const LLColor4& color, S32 style, const LLFontGL* font, const bool use_ellipses = false);
 	void			addNameTagLineAsLabel(const std::string& line);
+	void			addNameTagLineAsLabelWithColorAndEmphasis(const std::string& line, const LLColor4& color, bool useBold);
 	void 			idleUpdateRenderComplexity();
 	void 			idleUpdateDebugInfo();
     void 			accountRenderComplexityForObject(const LLViewerObject *attached_object,
