@@ -3494,7 +3494,8 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 	static LLUIColor tag_shout_color = LLUIColorTable::instance().getColor("NameTagShoutDistanceColor", LLColor4::yellow);
 	static LLUIColor tag_beyond_shout_color = LLUIColorTable::instance().getColor("NameTagBeyondShoutDistanceColor", LLColor4::red);
 	// KKA-936 add some options around the typing indication
-	static LLColor4 tag_typing_color = LLUIColorTable::instance().getColor("KokuaNameTagTypingColor", LLColor4::orange);
+	// don't make this static otherwise we miss out on UI colour changes
+	LLColor4 tag_typing_color = LLUIColorTable::instance().getColor("KokuaNameTagTypingColor", LLColor4::orange);
 	static LLUICachedControl<bool> show_typing_in_bold("KokuaNameTagBoldTyping");
 	static LLUICachedControl<bool> show_typing_in_color("KokuaNameTagColorTyping");
 	static LLUICachedControl<bool> show_whole_tag_in_typing_color("KokuaNameTagTypingColorsWholeTag");
@@ -3633,7 +3634,7 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 			// More on KKA-936, option to show typing in inverse like a bubble chat header
 			if (is_typing && show_typing_as_label && !mVisibleChat)
 			{
-				addNameTagLineAsLabel(line);
+				addNameTagLineAsLabelWithColorAndEmphasis(line, tag_typing_color, show_typing_in_bold);
 			}
 			else
 			{
@@ -3887,6 +3888,13 @@ void LLVOAvatar::addNameTagLineAsLabel(const std::string& line)
 {
 	llassert(mNameText);
 	mNameText->addLabel(line);
+  mNameIsSet |= !line.empty();
+}
+
+void LLVOAvatar::addNameTagLineAsLabelWithColorAndEmphasis(const std::string& line, const LLColor4& color, bool useBold)
+{
+	llassert(mNameText);
+	mNameText->addLabelWithColorAndEmphasis(line, color, useBold);
   mNameIsSet |= !line.empty();
 }
 
