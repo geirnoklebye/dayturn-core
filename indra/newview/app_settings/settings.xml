@@ -345,6 +345,17 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
+    <key>KokuaNameTagLabelTyping</key>
+    <map>
+      <key>Comment</key>
+      <string>Show the name tag typing indicator as a label</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
     <key>KokuaNameTagTypingColorsWholeTag</key>
     <map>
       <key>Comment</key>

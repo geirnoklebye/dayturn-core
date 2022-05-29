@@ -295,6 +295,7 @@ public:
 	// force all name tags to rebuild, useful when display names turned on/off
 	static void		invalidateNameTags();
 	void			addNameTagLine(const std::string& line, const LLColor4& color, S32 style, const LLFontGL* font, const bool use_ellipses = false);
+	void			addNameTagLineAsLabel(const std::string& line);
 	void 			idleUpdateRenderComplexity();
 	void 			idleUpdateDebugInfo();
     void 			accountRenderComplexityForObject(const LLViewerObject *attached_object,

@@ -3533,6 +3533,7 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 	static LLUICachedControl<bool> show_typing_in_bold("KokuaNameTagBoldTyping");
 	static LLUICachedControl<bool> show_typing_in_color("KokuaNameTagColorTyping");
 	static LLUICachedControl<bool> show_whole_tag_in_typing_color("KokuaNameTagTypingColorsWholeTag");
+	static LLUICachedControl<bool> show_typing_as_label("KokuaNameTagLabelTyping");
 
 	if (!isSelf() && (show_distance_color_tag || show_distance_in_tag))
 	{
@@ -3665,8 +3666,16 @@ void LLVOAvatar::idleUpdateNameTagText(bool new_name)
 			}
 			// trim last ", "
 			line.resize( line.length() - 2 );
-			addNameTagLine(line, ((is_typing && show_typing_in_color) ? tag_typing_color : name_tag_color), ((is_typing && show_typing_in_bold) ? LLFontGL::BOLD : LLFontGL::NORMAL),
-				LLFontGL::getFontSansSerifSmall());
+			// More on KKA-936, option to show typing in inverse like a bubble chat header
+			if (is_typing && show_typing_as_label && !mVisibleChat)
+			{
+				addNameTagLineAsLabel(line);
+			}
+			else
+			{
+				addNameTagLine(line, ((is_typing && show_typing_in_color) ? tag_typing_color : name_tag_color), ((is_typing && show_typing_in_bold) ? LLFontGL::BOLD : LLFontGL::NORMAL),
+				LLFontGL::getFontSansSerifSmall());				
+			}
 		}
 
 		if (sRenderGroupTitles
@@ -3930,6 +3939,13 @@ void LLVOAvatar::addNameTagLine(const std::string& line, const LLColor4& color, 
 		mNameText->addLine(line, color, (LLFontGL::StyleFlags)style, font, use_ellipses);
 	}
     mNameIsSet |= !line.empty();
+}
+
+void LLVOAvatar::addNameTagLineAsLabel(const std::string& line)
+{
+	llassert(mNameText);
+	mNameText->addLabel(line);
+  mNameIsSet |= !line.empty();
 }
 
 void LLVOAvatar::clearNameTag()
