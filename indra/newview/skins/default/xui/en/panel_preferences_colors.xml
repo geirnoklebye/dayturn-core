@@ -1009,6 +1009,16 @@
       enabled_control="ShowNearbyAvatarsTyping"
       label="Show typing indicator in color" />
      <check_box
+      control_name="KokuaNameTagLabelTyping"
+      follows="left|top"
+      layout="topleft"
+      left="240"
+      height="12"
+      name="nametag_typing_label"
+      width="250"
+      enabled_control="ShowNearbyAvatarsTyping"
+      label="Show typing indicator as label (black on white)" />
+     <check_box
       control_name="KokuaNameTagTypingColorsWholeTag"
       follows="left|top"
       layout="topleft"
