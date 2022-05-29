@@ -3942,13 +3942,6 @@ void LLVOAvatar::addNameTagLine(const std::string& line, const LLColor4& color, 
     mNameIsSet |= !line.empty();
 }
 
-void LLVOAvatar::addNameTagLineAsLabel(const std::string& line)
-{
-	llassert(mNameText);
-	mNameText->addLabel(line);
-  mNameIsSet |= !line.empty();
-}
-
 void LLVOAvatar::addNameTagLineAsLabelWithColorAndEmphasis(const std::string& line, const LLColor4& color, bool useBold)
 {
 	llassert(mNameText);
