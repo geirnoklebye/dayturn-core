@@ -430,6 +430,10 @@ void AOEngine::enable(BOOL yes)
 
 			gAgent.sendAnimationRequest(animation, ANIM_REQUEST_START);
 			mAnimationChangedSignal(state->mAnimations[state->mCurrentAnimation].mInventoryUUID, state->mName, state->mAnimations[state->mCurrentAnimation].mName);
+
+			// remember to ignore this motion once in the overrider so stopping the Linden motion
+			// will not trigger a stop of the override animation
+			mIgnoreMotionStopOnce = mLastMotion;
 		}
 	}
 	else
@@ -522,10 +526,22 @@ const LLUUID AOEngine::override(const LLUUID& pMotion, BOOL start)
 		return animation;
 	}
 
-	// we don't distinguish between these two
-	if (motion == ANIM_AGENT_SIT_GROUND)
+	// ignore stopping this motion once so we can stop the Linden animation
+	// without killing our overrider when logging in or re-enabling
+	if (!start && motion == mIgnoreMotionStopOnce)
 	{
-		motion = ANIM_AGENT_SIT_GROUND_CONSTRAINED;
+		LL_DEBUGS("AOEngine") << "Not stop-overriding motion " << gAnimLibrary.animationName(motion)
+			<< " within same state." << LL_ENDL;
+
+		mIgnoreMotionStopOnce = LLUUID::null;
+
+		// when stopping a sit motion make sure to stop the cycle point cover-up animation
+		if (motion == ANIM_AGENT_SIT)
+		{
+			gAgent.sendAnimationRequest(ANIM_AGENT_SIT_GENERIC, ANIM_REQUEST_STOP);
+		}
+
+		return LLUUID::null;
 	}
 
 	// map the requested motion to an animation state, taking underwater
