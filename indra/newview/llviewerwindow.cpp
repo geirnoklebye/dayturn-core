@@ -2038,37 +2038,24 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	// is performed against a lower limit as not exactly 2 or 4GB might not be
 	// returned.
 #if ADDRESS_SIZE == 64
-	LL_INFOS() << "GLManager detected " << gGLManager.mVRAM << " MB VRAM" << LL_ENDL;
+	LL_INFOS("VRAM") << "GLManager detected " << gGLManager.mVRAM << " MB VRAM" << LL_ENDL;
 
 	if (gGLManager.mVRAM > 3584)
 	{
 		gMaxVideoRam = S32Megabytes(2048);
-		LL_INFOS() << "At least 4 GB video memory detected - increasing max video ram for textures to 2048 MB" << LL_ENDL;
+		LL_INFOS("VRAM") << "At least 4 GB video memory detected - increasing max video ram for textures to 2048 MB" << LL_ENDL;
 	}
 	else if (gGLManager.mVRAM > 1536)
 	{
 		gMaxVideoRam = S32Megabytes(1024);
-		LL_INFOS() << "At least 2 GB video memory detected - increasing max video ram for textures to 1024 MB" << LL_ENDL;
+		LL_INFOS("VRAM") << "At least 2 GB video memory detected - increasing max video ram for textures to 1024 MB" << LL_ENDL;
 	}
 	else if (gGLManager.mVRAM > 768)
 	{
 		gMaxVideoRam = S32Megabytes(768);
-		LL_INFOS() << "At least 1 GB video memory detected - increasing max video ram for textures to 768 MB" << LL_ENDL;
+		LL_INFOS("VRAM") << "At least 1 GB video memory detected - increasing max video ram for textures to 768 MB" << LL_ENDL;
 	}
 #endif
-	// </FS:Ansariel>
-
-	// <FS:Ansariel> Max texture resolution
-#if ADDRESS_SIZE == 64
-	if (gSavedSettings.getBOOL("FSRestrictMaxTextureSize"))
-	{
-		DESIRED_NORMAL_TEXTURE_SIZE = (U32)LLViewerFetchedTexture::MAX_IMAGE_SIZE_DEFAULT / 2;
-	}
-#else
-	gSavedSettings.setBOOL("FSRestrictMaxTextureSize", TRUE);
-#endif
-	LL_INFOS() << "Maximum fetched texture size: " << DESIRED_NORMAL_TEXTURE_SIZE << "px" << LL_ENDL;
-	// </FS:Ansariel>
 		
 	// Init the image list.  Must happen after GL is initialized and before the images that
 	// LLViewerWindow needs are requested.
