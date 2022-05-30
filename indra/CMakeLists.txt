@@ -42,15 +42,6 @@ endif (HAVOK_TPV)
 
 #</FS:AW optional opensim support>
 
-#<FS:Ansariel> Support for test builds
-option(TESTBUILD "Generating test build" OFF)
-if(TESTBUILD AND TESTBUILDPERIOD)
-  add_definitions(-DTESTBUILD=1 -DTESTBUILDPERIOD=${TESTBUILDPERIOD})
-  message("creating test build version; test period: ${TESTBUILDPERIOD} days")
-endif(TESTBUILD AND TESTBUILDPERIOD)
-#</FS:Ansariel>
-
-
 add_subdirectory(cmake)
 
 add_subdirectory(${LIBS_OPEN_PREFIX}llaudio)
