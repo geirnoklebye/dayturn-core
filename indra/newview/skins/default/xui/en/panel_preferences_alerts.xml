@@ -54,15 +54,7 @@
      left_delta="-50"
      name="FSLogSnapshotsToLocal"
      top_pad="3" 
-     width="300" /> 
-    <check_box
-     control_name="AutoQueryGridStatus"
-     height="16"
-     label="Query status.secondlifegrid.net for latest news at login"
-     layout="topleft"
-     name="AutoQueryGridStatus"
-     top_pad="3"
-     width="450"/>
+     width="300" />
     <text
      type="string"
      length="1"

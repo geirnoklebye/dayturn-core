@@ -4398,9 +4398,7 @@ name="Command_360_Capture_Label">360 snapshot</string>
       The physics shape does not have correct version. Set the correct version for the physics model.
   </string>
   <string name="GroupChatMuteNotice">Muting group chat from [NAME].</string>
-  <string name="SLGridStatusInvalidMsg">SL Grid Status error: Invalid message format. Try again later.</string>
-  <string name="SLGridStatusTimedOut">SL Grid Status error: Request timed out.</string>
-  <string name="SLGridStatusOtherError">SL Grid Status error: [STATUS] ( https://en.wikipedia.org/wiki/List_of_HTTP_status_codes ).</string>
+
   <!-- CURL error messages -->
   <string name="couldnt_resolve_host">
 DNS could not resolve the host name([HOSTNAME]).

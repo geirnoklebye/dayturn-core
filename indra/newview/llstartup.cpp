@@ -53,7 +53,6 @@
 
 #include "fscommon.h"
 #include "fsfloatersearch.h"	// <FS:CR> FIRE-6310
-#include "fscorehttputil.h"
 #include "llavatarnamecache.h"
 #include "llexperiencecache.h"
 #include "lllandmark.h"
@@ -218,10 +217,7 @@
 #endif
 
 #include "streamtitledisplay.h"
-#include "fscorehttputil.h"
-#include <boost/algorithm/string/replace.hpp>
 #include "lggcontactsets.h"
-#include <boost/algorithm/string/regex.hpp>
 //
 // exported globals
 //
@@ -318,131 +314,6 @@ void callback_cache_name(const LLUUID& id, const std::string& full_name, bool is
 //
 // local classes
 //
-
- void downloadGridstatusComplete( LLSD const &aData )
-{
-	LLSD header = aData[ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS ][ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_HEADERS];
-    LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD( aData[ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS ] );
-
-    const LLSD::Binary &rawData = aData[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_RAW].asBinary();
-
-	if( status.getType() < 200 && status.getType() >= 300 && status.getType() != HTTP_NOT_MODIFIED)
-	{
-		if (status.getType() == HTTP_INTERNAL_ERROR)
-		{
-			report_to_nearby_chat(LLTrans::getString("SLGridStatusTimedOut"));
-		}
-		else
-		{
-			LLStringUtil::format_map_t args;
-			args["STATUS"] = llformat("%d", status.getType());
-			report_to_nearby_chat(LLTrans::getString("SLGridStatusOtherError", args));
-		}
-		LL_WARNS("SLGridStatusResponder") << "Error - status " << status.getType() << LL_ENDL;
-		return;
-	}
-
-	if (rawData.size() == 0)
-	{
-		report_to_nearby_chat(LLTrans::getString("SLGridStatusInvalidMsg"));
-		LL_WARNS("SLGridStatusResponder") << "Error - empty output" << LL_ENDL;
-		return;
-	}
-
-	std::string fetchedNews;
-	fetchedNews.assign( rawData.begin(), rawData.end() );
-
-	size_t itemStart = fetchedNews.find("<item>");
-	size_t itemEnd = fetchedNews.find("</item>");
-	if (itemEnd != std::string::npos && itemStart != std::string::npos)
-	{
-		// Isolate latest news data
-		itemStart += 6;
-		std::string theNews = fetchedNews.substr(itemStart, itemEnd - itemStart);
-
-		// Check for and remove CDATA characters if they're present
-		size_t titleStart = theNews.find("<title><![CDATA[");
-		if (titleStart != std::string::npos)
-		{
-			theNews.replace(titleStart, 16, "<title>");
-		}
-		size_t titleEnd = theNews.find("]]></title>");
-		if (titleEnd != std::string::npos)
-		{
-			theNews.replace(titleEnd, 11, "</title>");
-		}
-		size_t descStart = theNews.find("<description><![CDATA[");
-		if (descStart != std::string::npos)
-		{
-			theNews.replace(descStart, 22, "<description>");
-		}
-		size_t descEnd = theNews.find("]]></description>");
-		if (descEnd != std::string::npos)
-		{
-			theNews.replace(descEnd, 17, "</description>");
-		}
-		size_t linkStart = theNews.find("<link><![CDATA[");
-		if (linkStart != std::string::npos)
-		{
-			theNews.replace(linkStart, 15, "<link>");
-		}
-		size_t linkEnd = theNews.find("]]></link>");
-		if (linkEnd != std::string::npos)
-		{
-			theNews.replace(linkEnd, 10, "</link>");
-		}
-
-		// Get indexes
-		titleStart = theNews.find("<title>");
-		descStart = theNews.find("<description>");
-		linkStart = theNews.find("<link>");
-		titleEnd = theNews.find("</title>");
-		descEnd = theNews.find("</description>");
-		linkEnd = theNews.find("</link>");
-
-		if (titleStart != std::string::npos &&
-			descStart != std::string::npos &&
-			linkStart != std::string::npos &&
-			titleEnd != std::string::npos &&
-			descEnd != std::string::npos &&
-			linkEnd != std::string::npos)
-		{
-			titleStart += 7;
-			descStart += 13;
-			linkStart += 6;
-			std::string newsTitle = theNews.substr(titleStart, titleEnd - titleStart);
-			std::string newsDesc = theNews.substr(descStart, descEnd - descStart);
-			std::string newsLink = theNews.substr(linkStart, linkEnd - linkStart);
-			LLStringUtil::trim(newsTitle);
-			LLStringUtil::trim(newsDesc);
-			LLStringUtil::trim(newsLink);
-			    
-			boost::replace_all(newsDesc,"&lt;", "<");
-			boost::replace_all(newsDesc,"&gt;", ">");
-			boost::replace_all(newsDesc,"&#39;", "'");
-			boost::replace_all(newsDesc,"&amp;", "&");
-            boost::replace_all(newsDesc,"&apos;", "'");
-            boost::replace_all(newsDesc,"<p>", "\n\n");
-            boost::replace_all(newsDesc,"<br>", "\n");
-
-            boost::regex re("<[^<]*>");
-            newsDesc = boost::regex_replace(newsDesc, re, "");
-			    
-			report_to_nearby_chat("[ " + newsTitle + " ] " + newsDesc + " [ " + newsLink + " ]");
-		}
-		else
-		{
-			report_to_nearby_chat(LLTrans::getString("SLGridStatusInvalidMsg"));
-			LL_WARNS("SLGridStatusResponder") << "Error - inner tag(s) missing" << LL_ENDL;
-		}
-	}
-	else
-	{
-		report_to_nearby_chat(LLTrans::getString("SLGridStatusInvalidMsg"));
-		LL_WARNS("SLGridStatusResponder") << "Error - output without </item>" << LL_ENDL;
-	}
-}
-// </FS:PP>
 
 void update_texture_fetch()
 {
@@ -2557,16 +2428,7 @@ bool idle_startup()
 
 		LLUIUsage::instance().clear();
 
-		// <FS:PP>
-		if (gSavedSettings.getBOOL("AutoQueryGridStatus"))
-		{
-			FSCoreHttpUtil::callbackHttpGetRaw( gSavedSettings.getString("AutoQueryGridStatusURL"),
-												downloadGridstatusComplete );
-
-		}
-		// </FS:PP>
-		
-		return TRUE;
+		return true;
 	}
 
 	return TRUE;
