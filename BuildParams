@@ -37,7 +37,7 @@ BUILDSCRIPTS_PY3 = "true"
 # All Linden Lab builds (and only Linden Lab builds)
 # should use a viewer_channel that begins with "Second Life"
 ################################################################
-viewer_channel = "Kokua Release"
+viewer_channel = "Dayturn Release"
 
 
 ################################################################
