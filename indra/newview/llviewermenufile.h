@@ -35,7 +35,6 @@
 #include <queue>
 
 #include "llviewerassetupload.h"
-#include <boost/signals2.hpp> // <FS:CR Threaded Filepickers />
 
 class LLTransactionID;
 class LLPluginClassMedia;
