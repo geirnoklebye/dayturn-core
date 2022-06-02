@@ -25,17 +25,13 @@
 #ifndef AOENGINE_H
 #define AOENGINE_H
 
-#include <boost/signals2.hpp>
-
 #include "aoset.h"
 
 #include "llassettype.h"
 #include "lleventtimer.h"
-#include "llsingleton.h"
-
-// NaCl - feex
 #include "llextendedstatus.h"
-// NaCl End
+#include "llsingleton.h"
+#include <boost/signals2.hpp>
 
 class AOTimerCollection
 :	public LLEventTimer
@@ -205,6 +201,10 @@ class AOEngine
 		LLUUID mLastMotion;
 		LLUUID mLastOverriddenMotion;
 		LLUUID mTransitionId;
+
+		// this motion will be ignored once in the overrider when stopping, fixes a case
+		// where the AO doesn't correctly start up on login or when getting enabled manually
+		LLUUID mIgnoreMotionStopOnce;
 
 		std::vector<AOSet*> mSets;
 		std::vector<AOSet*> mOldSets;
