@@ -675,8 +675,7 @@ LLAppViewer::LLAppViewer()
 	mFastTimerLogThread(NULL),
 	mSettingsLocationList(NULL),
 	mIsFirstRun(false),
-	mSaveSettingsOnExit(true),		// <FS:Zi> Backup Settings
-	mPurgeTextures(false) // <FS:Ansariel> FIRE-13066
+	mSaveSettingsOnExit(true)		// <FS:Zi> Backup Settings
 {
 	if(NULL != sInstance)
 	{
@@ -4566,28 +4565,16 @@ bool LLAppViewer::initCache()
 	if(!read_only)
 	{
 		// Purge cache if user requested it
-		if (gSavedSettings.getBOOL("PurgeCacheOnStartup") ||
-			gSavedSettings.getBOOL("PurgeCacheOnNextStartup"))
+		if (gSavedSettings.getbool("PurgeCacheOnStartup") ||
+			gSavedSettings.getbool("PurgeCacheOnNextStartup"))
 		{
 			LL_INFOS("AppCache") << "Startup cache purge requested: " << (gSavedSettings.getBOOL("PurgeCacheOnStartup") ? "ALWAYS" : "ONCE") << LL_ENDL;
-			gSavedSettings.setBOOL("PurgeCacheOnNextStartup", false);
-			LL_INFOS("AppCache") << "Scheduling texture purge, based on PurgeCache* settings." << LL_ENDL;
+			gSavedSettings.setbool("PurgeCacheOnNextStartup", false);
 			mPurgeCache = true;
 			// STORM-1141 force purgeAllTextures to get called to prevent a crash here. -brad
 			texture_cache_mismatch = true;
 		}
 
-		// <FS> If the J2C has changed since the last run, clear the cache
-		const std::string j2c_info = LLImageJ2C::getEngineInfo();
-		const std::string j2c_last = gSavedSettings.getString("LastJ2CVersion");
-		if (j2c_info != j2c_last && !j2c_last.empty())
-		{
-			LL_INFOS("AppCache") << "Scheduling texture purge, based on LastJ2CVersion mismatch." << LL_ENDL;
-			mPurgeTextures = true;
-		}
-		gSavedSettings.setString("LastJ2CVersion", j2c_info);
-		// </FS>
-	
 		// We have moved the location of the cache directory over time.
 		migrateCacheDirectory();
 	
@@ -4633,17 +4620,6 @@ bool LLAppViewer::initCache()
 	}
 	LLAppViewer::getPurgeDiskCacheThread()->start();
 
-	// <FS:Ansariel> FIRE-13066
-	if (mPurgeTextures && !read_only)
-	{
-		LL_INFOS("AppCache") << "Purging Texture Cache..." << LL_ENDL;
-		LLSplashScreen::update(LLTrans::getString("StartupClearingTextureCache"));
-		LLAppViewer::getTextureCache()->purgeCache(LL_PATH_CACHE);
-	}
-	// </FS:Ansariel>
-	// <FS:ND> For Windows, purging the cache can take an extraordinary amount of time. Rename the cache dir and purge it using another thread.
-	startCachePurge();
-	// </FS:ND>
 	LLSplashScreen::update(LLTrans::getString("StartupInitializingTextureCache"));
 	
 	// Init the texture cache

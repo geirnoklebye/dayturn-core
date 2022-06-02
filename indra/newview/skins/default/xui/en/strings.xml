@@ -16,7 +16,6 @@
 	<string name="StartupDetectingHardware">Detecting hardware...</string>
 	<string name="StartupLoading">Loading [APP_NAME]...</string>
 	<string name="StartupClearingCache">Clearing cache...</string>
-	<string name="StartupClearingTextureCache">Clearing texture cache...</string>
 	<string name="StartupClearingAllConfiguration">Clearing ALL configuration...</string>
 	<string name="StartupClearingColorCOnfiguration">Clearing color configuration...</string>
 	<string name="StartupInitializingTextureCache">Initializing texture cache...</string>
