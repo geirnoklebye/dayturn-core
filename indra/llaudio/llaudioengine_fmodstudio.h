@@ -1,11 +1,11 @@
 /** 
  * @file audioengine_fmodstudio.h
  * @brief Definition of LLAudioEngine class abstracting the audio 
- * support as a FMOD Studio implementation
+ * support as a FMODSTUDIO implementation
  *
- * $LicenseInfo:firstyear=2002&license=viewerlgpl$
+ * $LicenseInfo:firstyear=2020&license=viewerlgpl$
  * Second Life Viewer Source Code
- * Copyright (C) 2014, Linden Research, Inc.
+ * Copyright (C) 2020, Linden Research, Inc.
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -47,17 +47,11 @@ typedef struct FMOD_DSP_DESCRIPTION FMOD_DSP_DESCRIPTION;
 class LLAudioEngine_FMODSTUDIO : public LLAudioEngine 
 {
 public:
-	enum
-	{
-		RESAMPLE_LINEAR=0,
-		RESAMPLE_CUBIC,
-		RESAMPLE_SPLINE
-	};
-	LLAudioEngine_FMODSTUDIO(bool enable_profiler, U32 resample_method);
+	LLAudioEngine_FMODSTUDIO(bool enable_profiler);
 	virtual ~LLAudioEngine_FMODSTUDIO();
 
 	// initialization/startup/shutdown
-	virtual bool init(const S32 num_channels, void *user_data);
+	virtual bool init(const S32 num_channels, void *user_data, const std::string &app_title);
 	virtual std::string getDriverName(bool verbose);
 	virtual void allocateListener();
 
@@ -71,12 +65,6 @@ public:
 	typedef F32 MIXBUFFERFORMAT;
 
 	FMOD::System *getSystem()				const {return mSystem;}
-
-	/*virtual*/ std::map<LLUUID, std::string> getDevices();
-	/*virtual*/ void setDevice(const LLUUID& device_uuid);
-
-	LLUUID getSelectedDeviceUUID() const { return mSelectedDeviceUUID; }
-
 protected:
 	/*virtual*/ LLAudioBuffer *createBuffer(); // Get a free buffer, or flush an existing one if you have to.
 	/*virtual*/ LLAudioChannel *createChannel(); // Create a new audio channel.
@@ -91,9 +79,6 @@ protected:
 	FMOD::DSP *mWindDSP;
 	FMOD::System *mSystem;
 	bool mEnableProfiler;
-	U32 mResampleMethod;
-
-	LLUUID mSelectedDeviceUUID;
 
 public:
 	static FMOD::ChannelGroup *mChannelGroups[LLAudioEngine::AUDIO_TYPE_COUNT];
@@ -103,8 +88,8 @@ public:
 class LLAudioChannelFMODSTUDIO : public LLAudioChannel
 {
 public:
-	LLAudioChannelFMODSTUDIO(FMOD::System *audioengine);
-	virtual ~LLAudioChannelFMODSTUDIO();
+    LLAudioChannelFMODSTUDIO(FMOD::System *audioengine);
+    virtual ~LLAudioChannelFMODSTUDIO();
 
 protected:
 	/*virtual*/ void play();
@@ -128,8 +113,8 @@ protected:
 class LLAudioBufferFMODSTUDIO : public LLAudioBuffer
 {
 public:
-	LLAudioBufferFMODSTUDIO(FMOD::System *audioengine);
-	virtual ~LLAudioBufferFMODSTUDIO();
+    LLAudioBufferFMODSTUDIO(FMOD::System *audioengine);
+    virtual ~LLAudioBufferFMODSTUDIO();
 
 	/*virtual*/ bool loadWAV(const std::string& filename);
 	/*virtual*/ U32 getLength();

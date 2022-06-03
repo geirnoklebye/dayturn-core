@@ -649,7 +649,7 @@ bool idle_startup()
 			if (NULL == getenv("LL_BAD_FMODSTUDIO_DRIVER"))
 #endif // !LL_WINDOWS
 			{
-				gAudiop = (LLAudioEngine *) new LLAudioEngine_FMODSTUDIO(gSavedSettings.getBOOL("FMODProfilerEnable"), gSavedSettings.getU32("FMODResampleMethod"));
+				gAudiop = (LLAudioEngine *) new LLAudioEngine_FMODSTUDIO(gSavedSettings.getBOOL("FMODProfilerEnable"));
 			}
 #endif
 
@@ -672,9 +672,12 @@ bool idle_startup()
 #else
 				void* window_handle = NULL;
 #endif
-				bool init = gAudiop->init(kAUDIO_NUM_SOURCES, window_handle);
+				bool init = gAudiop->init(kAUDIO_NUM_SOURCES, window_handle, LLAppViewer::instance()->getSecondLifeTitle());
 				if(init)
 				{
+					// <FS:Ansariel> Output device selection
+					//gAudiop->setDevice(LLUUID(gSavedSettings.getString("FSOutputDeviceUUID")));
+
 					gAudiop->setMuted(true);
 				}
 				else

@@ -669,7 +669,7 @@ void handleOutputDeviceChanged(const LLSD& newvalue)
 {
    if (gAudiop)
    {
-        gAudiop->setDevice(newvalue.asUUID());
+//        gAudiop->setDevice(newvalue.asUUID());
    }
 }
 // </FS:Ansariel>

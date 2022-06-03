@@ -41,8 +41,6 @@
 
 #include "lllistener.h"
 
-#include <boost/signals2.hpp> // <FS:Ansariel> Output device selection
-
 const F32 LL_WIND_UPDATE_INTERVAL = 0.1f;
 const F32 LL_WIND_UNDERWATER_CENTER_FREQ = 20.f;
 
@@ -90,7 +88,7 @@ public:
 	virtual ~LLAudioEngine();
 
 	// initialization/startup/shutdown
-	virtual bool init(const S32 num_channels, void *userdata);
+	virtual bool init(const S32 num_channels, void *userdata, const std::string &app_title);
 	virtual std::string getDriverName(bool verbose) = 0;
 	virtual void shutdown();
 
@@ -179,20 +177,6 @@ public:
 	void startNextTransfer();
 	static void assetCallback(const LLUUID &uuid, LLAssetType::EType type, void *user_data, S32 result_code, LLExtStat ext_status);
 
-	// <FS:Ansariel> Output device selection
-	typedef std::map<LLUUID, std::string> output_device_map_t;
-	virtual output_device_map_t getDevices();
-	virtual void setDevice(const LLUUID& device_uuid) { };
-
-	typedef boost::signals2::signal<void(output_device_map_t output_device_map)> output_device_list_changed_callback_t;
-	boost::signals2::connection setOutputDeviceListChangedCallback(const output_device_list_changed_callback_t::slot_type& cb)
-	{
-		return mOutputDeviceListChangedCallback.connect(cb);
-	}
-
-	void OnOutputDeviceListChanged(output_device_map_t output_device_map);
-	// </FS:Ansariel>
-
 	friend class LLPipeline; // For debugging
 public:
 	F32 mMaxWindGain; // Hack.  Public to set before fade in?
@@ -258,9 +242,6 @@ protected:
 
 	LLFrameTimer mWindUpdateTimer;
 
-	// <FS:Ansariel> Output device selection
-	output_device_list_changed_callback_t mOutputDeviceListChangedCallback;
-
 private:
 	void setDefaults();
 	LLStreamingAudioInterface *mStreamingAudioImpl;
@@ -321,10 +302,10 @@ public:
 	virtual void setGain(const F32 gain)							{ mGain = llclamp(gain, 0.f, 1.f); }
 
 	const LLUUID &getID() const		{ return mID; }
-  // NaCl - Sound Explorer
-  const LLUUID &getLogID() const { return mLogID; }
-  void setSourceID(const LLUUID& id) {mSourceID = id; }
-  // NaCl End
+	// NaCl - Sound Explorer
+	const LLUUID &getLogID() const { return mLogID; }
+	void setSourceID(const LLUUID& id) {mSourceID = id; }
+	// NaCl End	
 	bool isDone() const;
 	bool isMuted() const { return mSourceMuted; }
 
@@ -371,11 +352,11 @@ protected:
 	S32             mType;
 	LLVector3d		mPositionGlobal;
 	LLVector3		mVelocity;
-  // NaCl - Sound explorer
-  LLUUID      mLogID;
-  LLUUID      mSourceID;
-  bool      mIsTrigger;
-  // NaCl end
+  	// NaCl - Sound explorer
+  	LLUUID      mLogID;
+  	LLUUID      mSourceID;
+  	bool      mIsTrigger;
+  	// NaCl end
 
 	//LLAudioSource	*mSyncMasterp;	// If we're a slave, the source that we're synced to.
 	LLAudioChannel	*mChannelp;		// If we're currently playing back, this is the channel that we're assigned to.
@@ -514,6 +495,7 @@ struct SoundData
 		this->pos_global = pos_global;
 	}
 };
+
 
 extern LLAudioEngine* gAudiop;
 

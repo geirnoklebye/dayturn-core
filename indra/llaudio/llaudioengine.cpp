@@ -114,7 +114,7 @@ void LLAudioEngine::setDefaults()
 }
 
 
-bool LLAudioEngine::init(const S32 num_channels, void* userdata)
+bool LLAudioEngine::init(const S32 num_channels, void* userdata, const std::string &app_title)
 {
 	setDefaults();
 
@@ -279,7 +279,7 @@ void LLAudioEngine::idle(F32 max_decode_time)
 		{
 			// The source is done playing, clean it up.
 			delete sourcep;
-            iter = mAllSources.erase(iter);
+			mAllSources.erase(iter++);
 			continue;
 		}
 
@@ -818,15 +818,15 @@ void LLAudioEngine::triggerSound(const LLUUID &audio_uuid, const LLUUID& owner_i
 	// Create a new source (since this can't be associated with an existing source.
 	//LL_INFOS() << "Localized: " << audio_uuid << LL_ENDL;
 
-  // NaCl - Do not load silent sounds.
-	if (mMuted || gain <FLT_EPSILON*2)	{
+	if (mMuted)
+	{
 		return;
 	}
 
 	LLUUID source_id;
 	source_id.generate();
 
-	LLAudioSource *asp = new LLAudioSource(source_id, owner_id, gain, type, source_object, true);
+	LLAudioSource *asp = new LLAudioSource(source_id, owner_id, gain, type);
 	addAudioSource(asp);
 	if (pos_global.isExactlyZero())
 	{
@@ -1264,18 +1264,6 @@ void LLAudioEngine::assetCallback(const LLUUID &uuid, LLAssetType::EType type, v
 	gAudiop->startNextTransfer();
 }
 
-// <FS:Ansariel> Output device selection
-//virtual
-LLAudioEngine::output_device_map_t LLAudioEngine::getDevices()
-{
-	return output_device_map_t();
-}
-
-void LLAudioEngine::OnOutputDeviceListChanged(output_device_map_t output_device_map)
-{
-	mOutputDeviceListChangedCallback(output_device_map);
-}
-// </FS:Ansariel>
 
 //
 // LLAudioSource implementation
@@ -1369,7 +1357,6 @@ void LLAudioSource::pruneSoundLog()
 }
 // NaCl End
 
-
 LLAudioSource::~LLAudioSource()
 {
 	if (mChannelp)
@@ -1377,10 +1364,10 @@ LLAudioSource::~LLAudioSource()
 		// Stop playback of this sound
 		mChannelp->setSource(NULL);
 		mChannelp = NULL;
-    // NaCl - Sound Explorer
-    if(mType != LLAudioEngine::AUDIO_TYPE_UI) // && mSourceID.notNull())
-      logSoundStop(mLogID);
-    // NaCl End
+		// NaCl - Sound Explorer
+		if(mType != LLAudioEngine::AUDIO_TYPE_UI) // && mSourceID.notNull())
+		  logSoundStop(mLogID);
+		// NaCl End
 	}
 }
 
@@ -1500,10 +1487,10 @@ void LLAudioSource::stop()
 
 bool LLAudioSource::play(const LLUUID &audio_uuid)
 {
-  // NaCl - Sound Explorer
-  if(mType != LLAudioEngine::AUDIO_TYPE_UI) //&& mSourceID.notNull())
+  	// NaCl - Sound Explorer
+  	if(mType != LLAudioEngine::AUDIO_TYPE_UI) //&& mSourceID.notNull())
     logSoundPlay(mLogID, this, mPositionGlobal, mType, audio_uuid, mOwnerID, mSourceID, mIsTrigger, mLoop);
-  // NaCl End
+  	// NaCl End
 	// Special abuse of play(); don't play a sound, but kill it.
 	if (audio_uuid.isNull())
 	{
