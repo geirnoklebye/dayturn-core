@@ -653,7 +653,6 @@ bool toggle_show_object_render_cost(const LLSD& newvalue)
 
 void handleRenderAutoMuteByteLimitChanged(const LLSD& new_value);
 
-// <FS:Ansariel> Output device selection
 // <FS:CR> Posestand Ground Lock
 static void handleSetPoseStandLock(const LLSD& newvalue)
 {
@@ -873,10 +872,8 @@ void settings_setup_listeners()
 	gSavedSettings.getControl("DebugAvatarJoints")->getCommitSignal()->connect(boost::bind(&handleDebugAvatarJointsChanged, _2));
 	gSavedSettings.getControl("RenderAutoMuteByteLimit")->getSignal()->connect(boost::bind(&handleRenderAutoMuteByteLimitChanged, _2));
 	gSavedPerAccountSettings.getControl("AvatarHoverOffsetZ")->getCommitSignal()->connect(boost::bind(&handleAvatarHoverOffsetChanged, _2));
-    // <FS:Ansariel> Output device selection
 	// <FS:CR> Pose stand ground lock
 	gSavedSettings.getControl("FSPoseStandLock")->getSignal()->connect(boost::bind(&handleSetPoseStandLock, _2));
-    gSavedSettings.getControl("FSOutputDeviceUUID")->getSignal()->connect(boost::bind(&handleOutputDeviceChanged, _2));
     // <FS:Ansariel> FIRE-18250: Option to disable default eye movement
     gSavedSettings.getControl("FSStaticEyesUUID")->getSignal()->connect(boost::bind(&handleStaticEyesChanged));
     gSavedPerAccountSettings.getControl("FSStaticEyes")->getSignal()->connect(boost::bind(&handleStaticEyesChanged));
