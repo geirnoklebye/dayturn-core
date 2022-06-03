@@ -5,7 +5,7 @@
  label="AVATAR RENDERING"
  layout="topleft"
  name="panel_block_avatar_rendering"
- width="350">
+ width="425">
     <string
      name="av_never_render"
      value="Never"/>

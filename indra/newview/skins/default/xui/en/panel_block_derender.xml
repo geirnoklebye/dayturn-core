@@ -4,7 +4,7 @@
  height="300"
  label="DERENDERED LIST"
  layout="topleft"
- width="350">
+ width="425">
     <scroll_list
      draw_border="false"
      draw_heading="true"

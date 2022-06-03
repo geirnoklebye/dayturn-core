@@ -14,7 +14,7 @@
  save_visibility="true"
  single_instance="true"
  title="BLOCKED / DERENDER LIST"
- width="350">
+ width="425">
     <filter_editor
      follows="left|top|right"
      height="23"
