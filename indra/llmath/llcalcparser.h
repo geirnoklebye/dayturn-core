@@ -26,10 +26,7 @@
 
 #ifndef LL_CALCPARSER_H
 #define LL_CALCPARSER_H
-#if LL_LINUX && (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 70000
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif
+
 #include <boost/spirit/include/classic_attribute.hpp>
 #include <boost/spirit/include/classic_core.hpp>
 #include <boost/spirit/include/classic_error_handling.hpp>
@@ -84,18 +81,18 @@ struct LLCalcParser : grammar<LLCalcParser>
 			;
 
 			unary_func =
-                ((str_p("SIN") >> '(' >> expression[unary_func.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&LLCalcParser::_sin)(self,arg1)]) |
-				 (str_p("COS") >> '(' >> expression[unary_func.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&LLCalcParser::_cos)(self,arg1)]) |
-				 (str_p("TAN") >> '(' >> expression[unary_func.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&LLCalcParser::_tan)(self,arg1)]) |
-				 (str_p("ASIN") >> '(' >> expression[unary_func.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&LLCalcParser::_asin)(self,arg1)]) |
-				 (str_p("ACOS") >> '(' >> expression[unary_func.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&LLCalcParser::_acos)(self,arg1)]) |
-				 (str_p("ATAN") >> '(' >> expression[unary_func.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&LLCalcParser::_atan)(self,arg1)]) |
-				 (str_p("SQRT") >> '(' >> expression[unary_func.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&LLCalcParser::_sqrt)(self,arg1)]) |
-				 (str_p("LOG") >> '(' >> expression[unary_func.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&LLCalcParser::_log)(self,arg1)]) |
-				 (str_p("EXP") >> '(' >> expression[unary_func.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&LLCalcParser::_exp)(self,arg1)]) |
-				 (str_p("ABS") >> '(' >> expression[unary_func.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&LLCalcParser::_fabs)(self,arg1)]) |
-				 (str_p("FLR") >> '(' >> expression[unary_func.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&LLCalcParser::_floor)(self,arg1)]) |
-				 (str_p("CEIL") >> '(' >> expression[unary_func.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&LLCalcParser::_ceil)(self,arg1)])
+				((str_p("SIN") >> '(' >> expression[unary_func.value = bind(&LLCalcParser::_sin)(self,arg1)]) |
+				 (str_p("COS") >> '(' >> expression[unary_func.value = bind(&LLCalcParser::_cos)(self,arg1)]) |
+				 (str_p("TAN") >> '(' >> expression[unary_func.value = bind(&LLCalcParser::_tan)(self,arg1)]) |
+				 (str_p("ASIN") >> '(' >> expression[unary_func.value = bind(&LLCalcParser::_asin)(self,arg1)]) |
+				 (str_p("ACOS") >> '(' >> expression[unary_func.value = bind(&LLCalcParser::_acos)(self,arg1)]) |
+				 (str_p("ATAN") >> '(' >> expression[unary_func.value = bind(&LLCalcParser::_atan)(self,arg1)]) |
+				 (str_p("SQRT") >> '(' >> expression[unary_func.value = bind(&LLCalcParser::_sqrt)(self,arg1)]) |
+				 (str_p("LOG") >> '(' >> expression[unary_func.value = bind(&LLCalcParser::_log)(self,arg1)]) |
+				 (str_p("EXP") >> '(' >> expression[unary_func.value = bind(&LLCalcParser::_exp)(self,arg1)]) |
+				 (str_p("ABS") >> '(' >> expression[unary_func.value = bind(&LLCalcParser::_fabs)(self,arg1)]) |
+				 (str_p("FLR") >> '(' >> expression[unary_func.value = bind(&LLCalcParser::_floor)(self,arg1)]) |
+				 (str_p("CEIL") >> '(' >> expression[unary_func.value = bind(&LLCalcParser::_ceil)(self,arg1)])
 				) >> assert_syntax(ch_p(')'))
 			;
 			
@@ -121,10 +118,10 @@ struct LLCalcParser : grammar<LLCalcParser>
 				 // Lookup throws an Unknown Symbol error if it is unknown, while this works fine,
 				 // would be "neater" to handle symbol lookup from here with an assertive parser.
 //				 constants_p[factor.value = arg1]|
-				 identifier[factor.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&LLCalcParser::lookup)(self, arg1, arg2)]
+				 identifier[factor.value = bind(&LLCalcParser::lookup)(self, arg1, arg2)]
 				) >>
 				// Detect and throw math errors.
-				assert_domain(eps_p(/*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&LLCalcParser::checkNaN)(self, factor.value)))
+				assert_domain(eps_p(bind(&LLCalcParser::checkNaN)(self, factor.value)))
 			;
 
 			unary_expr =
@@ -134,14 +131,14 @@ struct LLCalcParser : grammar<LLCalcParser>
 			
 			power =
 				unary_expr[power.value = arg1] >>
-				*('^' >> assert_syntax(unary_expr[power.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&powf)(power.value, arg1)]))
+				*('^' >> assert_syntax(unary_expr[power.value = bind(&powf)(power.value, arg1)]))
 			;
 			
 			term =
 				power[term.value = arg1] >>
 				*(('*' >> assert_syntax(power[term.value *= arg1])) |
 				  ('/' >> assert_syntax(power[term.value /= arg1])) |
-				  ('%' >> assert_syntax(power[term.value = /*<FS:ND/> Replace bind with phoenix::bind to make GCC happy*/ phoenix::bind(&fmodf)(term.value, arg1)]))
+				  ('%' >> assert_syntax(power[term.value = bind(&fmodf)(term.value, arg1)]))
 				)
 			;
 			
@@ -187,7 +184,5 @@ private:
 	
 	F32&		mResult;
 };
-#if LL_LINUX && (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 70000
-#pragma GCC diagnostic pop
-#endif
+
 #endif // LL_CALCPARSER_H
