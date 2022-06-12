@@ -998,36 +998,34 @@ static LLNotificationFunctorRegistration jgr_3("JoinGroupCanAfford", join_group_
 //-----------------------------------------------------------------------------
 // Instant Message
 //-----------------------------------------------------------------------------
-// <FS:Ansariel> Moved to header; needed in llimprocessing.cpp
-//class LLOpenAgentOffer : public LLInventoryFetchItemsObserver
-//{
-//public:
-//	LLOpenAgentOffer(const LLUUID& object_id,
-//					 const std::string& from_name) : 
-//		LLInventoryFetchItemsObserver(object_id),
-//		mFromName(from_name) {}
-//	/*virtual*/ void startFetch()
-//	{
-//		for (uuid_vec_t::const_iterator it = mIDs.begin(); it < mIDs.end(); ++it)
-//		{
-//			LLViewerInventoryCategory* cat = gInventory.getCategory(*it);
-//			if (cat)
-//			{
-//				mComplete.push_back((*it));
-//			}
-//		}
-//		LLInventoryFetchItemsObserver::startFetch();
-//	}
-//	/*virtual*/ void done()
-//	{
-//		open_inventory_offer(mComplete, mFromName);
-//		gInventory.removeObserver(this);
-//		delete this;
-//	}
-//private:
-//	std::string mFromName;
-//};
-// </FS:Ansariel>
+class LLOpenAgentOffer : public LLInventoryFetchItemsObserver
+{
+public:
+	LLOpenAgentOffer(const LLUUID& object_id,
+					 const std::string& from_name) : 
+		LLInventoryFetchItemsObserver(object_id),
+		mFromName(from_name) {}
+	/*virtual*/ void startFetch()
+	{
+		for (uuid_vec_t::const_iterator it = mIDs.begin(); it < mIDs.end(); ++it)
+		{
+			LLViewerInventoryCategory* cat = gInventory.getCategory(*it);
+			if (cat)
+			{
+				mComplete.push_back((*it));
+			}
+		}
+		LLInventoryFetchItemsObserver::startFetch();
+	}
+	/*virtual*/ void done()
+	{
+		open_inventory_offer(mComplete, mFromName);
+		gInventory.removeObserver(this);
+		delete this;
+	}
+private:
+	std::string mFromName;
+};
 
 /**
  * Class to observe adding of new items moved from the world to user's inventory to select them in inventory.
@@ -1434,9 +1432,7 @@ bool check_asset_previewable(const LLAssetType::EType asset_type)
 			(asset_type == LLAssetType::AT_SOUND);
 }
 
-// <FS:Ansariel> FIRE-15886
-//void open_inventory_offer(const uuid_vec_t& objects, const std::string& from_name)
-void open_inventory_offer(const uuid_vec_t& objects, const std::string& from_name, bool from_agent_manual /* = false*/)
+void open_inventory_offer(const uuid_vec_t& objects, const std::string& from_name)
 {
 	for (uuid_vec_t::const_iterator obj_iter = objects.begin();
 		 obj_iter != objects.end();
@@ -1846,15 +1842,9 @@ bool LLOfferInfo::inventory_offer_callback(const LLSD& notification, const LLSD&
 				// This is an offer from an agent. In this case, the back
 				// end has already copied the items into your inventory,
 				// so we can fetch it out of our inventory.
-				// <FS:Ansariel> FIRE-3234: Ask if items should be previewed;
-				// ShowOfferedInventory is always true anyway - instead there is
-				// ShowNewInventory that is actually changable by the user!
-				//if (gSavedSettings.getBOOL("ShowOfferedInventory"))
+				if (gSavedSettings.getbool("ShowOfferedInventory"))
 				{
-					// <FS:Ansariel> FIRE-23476: Don't select inventory offer in inventory if AutoAcceptNewInventory && !ShowInInventory && ShowNewInventory
-					//LLOpenAgentOffer* open_agent_offer = new LLOpenAgentOffer(mObjectID, from_string);
-					LLOpenAgentOffer* open_agent_offer = new LLOpenAgentOffer(mObjectID, from_string, true);
-					// </FS:Ansariel>
+					LLOpenAgentOffer* open_agent_offer = new LLOpenAgentOffer(mObjectID, from_string);
 					open_agent_offer->startFetch();
 					if(catp || (itemp && itemp->isFinished()))
 					{

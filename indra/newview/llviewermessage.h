@@ -206,9 +206,7 @@ void invalid_message_callback(LLMessageSystem*, void*, EMessageException);
 
 void process_initiate_download(LLMessageSystem* msg, void**);
 void start_new_inventory_observer();
-// <FS:Ansariel> FIRE-15886
-//void open_inventory_offer(const uuid_vec_t& items, const std::string& from_name);
-void open_inventory_offer(const uuid_vec_t& items, const std::string& from_name, bool from_agent_manual = false);
+void open_inventory_offer(const uuid_vec_t& items, const std::string& from_name);
 
 // Returns true if item is not in certain "quiet" folder which don't need UI
 // notification (e.g. trash, cof, lost-and-found) and agent is not AFK, false otherwise.
@@ -275,44 +273,6 @@ private:
 
 	respond_function_map_t mRespondFunctions;
 };
-
-// <FS:Ansariel> Moved from source; needed in llimprocessing.cpp
-class LLOpenAgentOffer : public LLInventoryFetchItemsObserver
-{
-public:
-	LLOpenAgentOffer(const LLUUID& object_id,
-					 const std::string& from_name,
-					 bool is_manuelly_accepted) : 
-		LLInventoryFetchItemsObserver(object_id),
-		mFromName(from_name),
-		mIsManuallyAccepted(is_manuelly_accepted) {}
-	/*virtual*/ void startFetch()
-	{
-		for (uuid_vec_t::const_iterator it = mIDs.begin(); it < mIDs.end(); ++it)
-		{
-			LLViewerInventoryCategory* cat = gInventory.getCategory(*it);
-			if (cat)
-			{
-				mComplete.push_back((*it));
-			}
-		}
-		LLInventoryFetchItemsObserver::startFetch();
-	}
-	/*virtual*/ void done()
-	{
-		// <FS:Ansariel> FIRE-3234: Don't need a check for ShowNewInventory here;
-		// This only gets called if the user explicity clicks "Show" or
-		// AutoAcceptNewInventory and ShowNewInventory are TRUE.
-		//open_inventory_offer(mComplete, mFromName);
-		open_inventory_offer(mComplete, mFromName, mIsManuallyAccepted);
-		gInventory.removeObserver(this);
-		delete this;
-	}
-private:
-	std::string	mFromName;
-	bool		mIsManuallyAccepted;
-};
-// </FS:Ansariel>
 
 void process_feature_disabled_message(LLMessageSystem* msg, void**);
 

@@ -84,53 +84,6 @@
      name="favorites_on_login_check"
      top_pad="10"
      width="350" />
-    <check_box
-     control_name="AutoAcceptNewInventory"
-     height="16"
-     layout="topleft"
-     label="Automatically accept new inventory items upon receipt"
-     left="30"
-     name="auto_accept_new_inventory"
-     top_pad="10"
-     width="350" />
-    <check_box
-     control_name="FSLogAutoAcceptInventoryToChat"
-     enabled_control="AutoAcceptNewInventory"
-     height="16"
-     label="Log automatically accepted new inventory items to nearby chat"
-     layout="topleft"
-     left="40"
-     name="FSLogAutoAcceptInventoryToChat"
-     top_pad="3"
-     width="350" />
-    <check_box
-     control_name="KokuaAutoAcceptAnyNewInventory"
-     enabled_control="AutoAcceptNewInventory"
-     height="16"
-     label="Accept all types (in addition to notecards, landmarks and textures)"
-     layout="topleft"
-     left="40"
-     name="kokua_auto_accept_any_new_inventory"
-     top_pad="3"
-     width="350" />
-    <check_box
-     control_name="ShowInInventory"
-     height="16"
-     layout="topleft"
-     label="Automatically show newly received items in Inventory"
-     left="30"
-     name="show_in_inventory"
-     top_pad="10"
-     width="350" />
-    <check_box
-     control_name="ShowNewInventory"
-     height="16"
-     layout="topleft"
-     label="Automatically open newly received notecards/textures/landmarks"
-     left="30"
-     name="show_new_inventory"
-     top_pad="10"
-     width="350" />
     <button
      follows="left|top"
      height="23"

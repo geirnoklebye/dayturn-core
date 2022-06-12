@@ -19952,50 +19952,6 @@
     <key>Value</key>
     <integer>1</integer>
   </map>    
-    <key>FSLogAutoAcceptInventoryToChat</key>
-    <map>
-      <key>Comment</key>
-      <string>If enabled, auto-accepted inventory items will be logged to nearby chat.</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>1</integer>
-    </map>
-    <key>FSExperimentalLostAttachmentsFix</key>
-    <map>
-      <key>Comment</key>
-      <string>Enables the experimental fix for attachments getting detached on teleports and region crossings.</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>1</integer>
-    </map>
-    <key>FSExperimentalLostAttachmentsFixKillDelay</key>
-    <map>
-      <key>Comment</key>
-      <string>Delay in seconds after a teleport for that kill object messages to detach attachments are being ignored.</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>F32</string>
-      <key>Value</key>
-      <real>3.0</real>
-    </map>
-    <key>FSExperimentalLostAttachmentsFixReport</key>
-    <map>
-      <key>Comment</key>
-      <string>If enabled, reports attachments that were attempted to get detached during a teleport or region crossing to nearby chat.</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>0</integer>
-    </map>
     <key>KokuaGiveSingleRLVMessage</key>
     <map>
       <key>Comment</key>
