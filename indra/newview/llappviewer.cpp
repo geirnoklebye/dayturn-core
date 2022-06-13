@@ -557,8 +557,8 @@ static void settings_to_globals()
 	LLVOAvatar::sVisibleInFirstPerson	= gSavedSettings.getbool("FirstPersonAvatarVisible");
 	// clamp auto-open time to some minimum usable value
 	LLFolderView::sAutoOpenTime			= llmax(0.25f, gSavedSettings.getF32("FolderAutoOpenDelay"));
-	LLSelectMgr::sRectSelectInclusive	= gSavedSettings.getBOOL("RectangleSelectInclusive");
-	LLSelectMgr::sRenderHiddenSelections = gSavedSettings.getBOOL("RenderHiddenSelections");
+	LLSelectMgr::sRectSelectInclusive	= gSavedSettings.getbool("RectangleSelectInclusive");
+	LLSelectMgr::sRenderHiddenSelections = gSavedSettings.getbool("RenderHiddenSelections");
 	LLSelectMgr::sRenderLightRadius = gSavedSettings.getbool("RenderLightRadius");
 
 	gAgentPilot.setNumRuns(gSavedSettings.getS32("StatsNumRuns"));

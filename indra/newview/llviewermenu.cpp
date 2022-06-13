@@ -1738,16 +1738,16 @@ class LLAdvancedEnableAppearanceToXML : public view_listener_t
         LLViewerObject *obj = LLSelectMgr::getInstance()->getSelection()->getPrimaryObject();
         if (obj && obj->isAnimatedObject() && obj->getControlAvatar())
         {
-            return gSavedSettings.getBOOL("DebugAnimatedObjects");
+            return gSavedSettings.getbool("DebugAnimatedObjects");
         }
         else if (obj && obj->isAttachment() && obj->getAvatar())
         {
-            return gSavedSettings.getBOOL("DebugAvatarAppearanceMessage");
+            return gSavedSettings.getbool("DebugAvatarAppearanceMessage");
         }
         else if (obj && obj->isAvatar())
         {
             // This has to be a non-control avatar, because control avs are invisible and unclickable.
-            return gSavedSettings.getBOOL("DebugAvatarAppearanceMessage");
+            return gSavedSettings.getbool("DebugAvatarAppearanceMessage");
         }
 		else
 		{
@@ -2294,7 +2294,7 @@ class LLAdvancedEnableViewAdminOptions : public view_listener_t
 	{
 		// Don't enable in god mode since the admin menu is shown anyway.
 		// Only enable if the user has set the appropriate debug setting.
-		bool new_value = !gAgent.getAgentAccess().isGodlikeWithoutAdminMenuFakery() && gSavedSettings.getBOOL("AdminMenu");
+		bool new_value = !gAgent.getAgentAccess().isGodlikeWithoutAdminMenuFakery() && gSavedSettings.getbool("AdminMenu");
 		return new_value;
 	}
 };
@@ -2372,7 +2372,7 @@ class LLAdvancedEnableRenderDeferredOptions: public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		bool new_value = gGLManager.mHasFramebufferObject && LLViewerShaderMgr::instance()->getShaderLevel(LLViewerShaderMgr::SHADER_WINDLIGHT) > 1 &&
-			LLViewerShaderMgr::instance()->getShaderLevel(LLViewerShaderMgr::SHADER_AVATAR) > 0 && gSavedSettings.getBOOL("RenderDeferred");
+			LLViewerShaderMgr::instance()->getShaderLevel(LLViewerShaderMgr::SHADER_AVATAR) > 0 && gSavedSettings.getbool("RenderDeferred");
 		return new_value;
 	}
 };
@@ -2615,7 +2615,7 @@ class LLDevelopTextureFetchDebugger : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		return gSavedSettings.getBOOL("TextureFetchDebuggerEnabled");
+		return gSavedSettings.getbool("TextureFetchDebuggerEnabled");
 	}
 };
 
@@ -3093,7 +3093,7 @@ void handle_object_edit()
 		LLFloaterTools::sPreviousFocusOnAvatar = true;
 		LLObjectSelectionHandle selection = LLSelectMgr::getInstance()->getSelection();
 
-		if (selection->getSelectType() == SELECT_TYPE_HUD || !gSavedSettings.getBOOL("EditCameraMovement"))
+		if (selection->getSelectType() == SELECT_TYPE_HUD || !gSavedSettings.getbool("EditCameraMovement"))
 		{
 			// always freeze camera in space, even if camera doesn't move
 			// so, for example, follow cam scripts can't affect you when in build mode
@@ -4600,12 +4600,12 @@ void handle_reset_view()
 		LLFloaterSidePanelContainer::showPanel("appearance", LLSD().with("type", "my_outfits"));
 	}
 	// <FS:Zi> Added optional V1 behavior so the avatar turns into camera direction after hitting ESC
-	if(gSavedSettings.getBOOL("ResetViewTurnsAvatar"))
+	if(gSavedSettings.getbool("ResetViewTurnsAvatar"))
 		gAgentCamera.resetView();
 	// </FS:Zi>
 	// KKA-720, better version of fix based on recommendation from FS:Ansariel in BUG-228864
 	gAgentCamera.setFocusOnAvatar(true, false, false);
-	reset_view_final( TRUE );
+	reset_view_final( true );
 	LLFloaterCamera::resetCameraMode();
 }
 // <FS:Zi> Add reset camera angles menu
@@ -4711,7 +4711,7 @@ class LLViewToggleUI : public view_listener_t
 			substitutions["SHORTCUT"] = "Ctrl+Shift+U";
 #endif
 			params.substitutions = substitutions;
-			if (!gSavedSettings.getBOOL("HideUIControls"))
+			if (!gSavedSettings.getbool("HideUIControls"))
 			{
 				// hiding, so show notification
 				LLNotifications::instance().add(params);
@@ -5749,7 +5749,7 @@ class LLToolsSelectNextPartFace : public view_listener_t
     bool handleEvent(const LLSD& userdata)
     {
         bool cycle_faces = LLToolFace::getInstance() == LLToolMgr::getInstance()->getCurrentTool();
-        bool cycle_linked = gSavedSettings.getBOOL("EditLinkedParts");
+        bool cycle_linked = gSavedSettings.getbool("EditLinkedParts");
 
         if (!cycle_faces && !cycle_linked)
         {
@@ -6357,7 +6357,7 @@ void print_agent_nvpairs(void*)
 
 void kokua_menus()
 {
-    BOOL kokuaclassic = gSavedSettings.getBOOL("KokuaClassicMainMenu");
+    bool kokuaclassic = gSavedSettings.getbool("KokuaClassicMainMenu");
 		gMenuBarView->setItemEnabled("Kokua Classic Menus", kokuaclassic);	
 			LLSD args;
 			args["MESSAGE"] = 
@@ -6370,8 +6370,8 @@ void show_debug_menus()
 	// this might get called at login screen where there is no menu so only toggle it if one exists
 	if ( gMenuBarView )
 	{
-		BOOL debug = gSavedSettings.getBOOL("UseDebugMenus");
-		BOOL qamode = gSavedSettings.getBOOL("QAMode");
+		bool debug = gSavedSettings.getbool("UseDebugMenus");
+		bool qamode = gSavedSettings.getbool("QAMode");
 
 		gMenuBarView->setItemVisible("Advanced", debug);
 // 		gMenuBarView->setItemEnabled("Advanced", debug); // Don't disable Advanced keyboard shortcuts when hidden
@@ -6389,7 +6389,7 @@ void show_debug_menus()
 	}
 	if (gLoginMenuBarView)
 	{
-		BOOL debug = gSavedSettings.getBOOL("UseDebugMenus");
+		bool debug = gSavedSettings.getbool("UseDebugMenus");
 		gLoginMenuBarView->setItemVisible("Debug", debug);
 		gLoginMenuBarView->setItemEnabled("Debug", debug);
 	}
@@ -8391,8 +8391,8 @@ protected:
 	bool handleEvent(const LLSD& userdata)
 	{
 		std::string control_name = userdata.asString();
-		BOOL checked = gSavedSettings.getBOOL( control_name );
-		gSavedSettings.setBOOL( control_name, !checked );
+		bool checked = gSavedSettings.getbool( control_name );
+		gSavedSettings.setbool( control_name, !checked );
 		return true;
 	}
 };
@@ -8402,7 +8402,7 @@ class LLCheckControl : public view_listener_t
 	bool handleEvent( const LLSD& userdata)
 	{
 		std::string callback_data = userdata.asString();
-		bool new_value = gSavedSettings.getBOOL(callback_data);
+		bool new_value = gSavedSettings.getbool(callback_data);
 		return new_value;
 	}
 };
@@ -8413,8 +8413,8 @@ class LLTogglePerAccountControl : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		std::string control_name = userdata.asString();
-		BOOL checked = gSavedPerAccountSettings.getBOOL( control_name );
-		gSavedPerAccountSettings.setBOOL( control_name, !checked );
+		bool checked = gSavedPerAccountSettings.getbool( control_name );
+		gSavedPerAccountSettings.setbool( control_name, !checked );
 		return true;
 	}
 };
@@ -8424,7 +8424,7 @@ class LLCheckPerAccountControl : public view_listener_t
 	bool handleEvent( const LLSD& userdata)
 	{
 		std::string callback_data = userdata.asString();
-		bool new_value = gSavedPerAccountSettings.getBOOL(callback_data);
+		bool new_value = gSavedPerAccountSettings.getbool(callback_data);
 		return new_value;
 	}
 };
@@ -8569,8 +8569,8 @@ class LLToggleShaderControl : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
         std::string control_name = userdata.asString();
-		BOOL checked = gSavedSettings.getBOOL( control_name );
-		gSavedSettings.setBOOL( control_name, !checked );
+		bool checked = gSavedSettings.getbool( control_name );
+		gSavedSettings.setbool( control_name, !checked );
         LLPipeline::refreshCachedSettings();
         //gPipeline.updateRenderDeferred();
 		//gPipeline.releaseGLBuffers();
@@ -8824,12 +8824,12 @@ bool enable_god_basic(void*)
 
 void toggle_show_xui_names(void *)
 {
-	gSavedSettings.setBOOL("DebugShowXUINames", !gSavedSettings.getBOOL("DebugShowXUINames"));
+	gSavedSettings.setbool("DebugShowXUINames", !gSavedSettings.getbool("DebugShowXUINames"));
 }
 
 bool check_show_xui_names(void *)
 {
-	return (bool)gSavedSettings.getBOOL("DebugShowXUINames");
+	return gSavedSettings.getbool("DebugShowXUINames");
 }
 // <FS:CR> FIRE-4345: Undeform
 class FSToolsUndeform : public view_listener_t
@@ -8870,9 +8870,9 @@ class LLToolsSelectOnlyMyObjects : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		BOOL cur_val = gSavedSettings.getBOOL("SelectOwnedOnly");
+		bool cur_val = gSavedSettings.getbool("SelectOwnedOnly");
 
-		gSavedSettings.setBOOL("SelectOwnedOnly", ! cur_val );
+		gSavedSettings.setbool("SelectOwnedOnly", ! cur_val );
 
 		return true;
 	}
@@ -8896,7 +8896,7 @@ class LLToolsSelectBySurrounding : public view_listener_t
 	{
 		LLSelectMgr::sRectSelectInclusive = !LLSelectMgr::sRectSelectInclusive;
 
-		gSavedSettings.setBOOL("RectangleSelectInclusive", LLSelectMgr::sRectSelectInclusive);
+		gSavedSettings.setbool("RectangleSelectInclusive", LLSelectMgr::sRectSelectInclusive);
 		return true;
 	}
 };
@@ -8908,7 +8908,7 @@ class LLToolsShowHiddenSelection : public view_listener_t
 		// TomY TODO Merge these
 		LLSelectMgr::sRenderHiddenSelections = !LLSelectMgr::sRenderHiddenSelections;
 
-		gSavedSettings.setBOOL("RenderHiddenSelections", LLSelectMgr::sRenderHiddenSelections);
+		gSavedSettings.setbool("RenderHiddenSelections", LLSelectMgr::sRenderHiddenSelections);
 		return true;
 	}
 };
@@ -9164,7 +9164,7 @@ bool LLViewerMenuHolderGL::hideMenus()
 	
 	if (LLMenuHolderGL::hideMenus())
 	{
-		handled = TRUE;
+		handled = true;
 	}
 
 	// drop pie menu selection
@@ -9343,7 +9343,7 @@ class LLViewShowHoverTips : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		gSavedSettings.setBOOL("ShowHoverTips", !gSavedSettings.getBOOL("ShowHoverTips"));
+		gSavedSettings.setbool("ShowHoverTips", !gSavedSettings.getbool("ShowHoverTips"));
 		return true;
 	}
 };
@@ -9352,7 +9352,7 @@ class LLViewCheckShowHoverTips : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		bool new_value = gSavedSettings.getBOOL("ShowHoverTips");
+		bool new_value = gSavedSettings.getbool("ShowHoverTips");
 		return new_value;
 	}
 };
@@ -9412,73 +9412,73 @@ class LLViewToggleBeacon : public view_listener_t
 		if (beacon == "scriptsbeacon")
 		{
 			LLPipeline::toggleRenderScriptedBeacons();
-			gSavedSettings.setBOOL( "scriptsbeacon", LLPipeline::getRenderScriptedBeacons() );
+			gSavedSettings.setbool( "scriptsbeacon", LLPipeline::getRenderScriptedBeacons() );
 			// toggle the other one off if it's on
 			if (LLPipeline::getRenderScriptedBeacons() && LLPipeline::getRenderScriptedTouchBeacons())
 			{
 				LLPipeline::toggleRenderScriptedTouchBeacons();
-				gSavedSettings.setBOOL( "scripttouchbeacon", LLPipeline::getRenderScriptedTouchBeacons() );
+				gSavedSettings.setbool( "scripttouchbeacon", LLPipeline::getRenderScriptedTouchBeacons() );
 			}
 		}
 		else if (beacon == "physicalbeacon")
 		{
 			LLPipeline::toggleRenderPhysicalBeacons();
-			gSavedSettings.setBOOL( "physicalbeacon", LLPipeline::getRenderPhysicalBeacons() );
+			gSavedSettings.setbool( "physicalbeacon", LLPipeline::getRenderPhysicalBeacons() );
 		}
 		else if (beacon == "moapbeacon")
 		{
 			LLPipeline::toggleRenderMOAPBeacons();
-			gSavedSettings.setBOOL( "moapbeacon", LLPipeline::getRenderMOAPBeacons() );
+			gSavedSettings.setbool( "moapbeacon", LLPipeline::getRenderMOAPBeacons() );
 		}
 		else if (beacon == "soundsbeacon")
 		{
 			LLPipeline::toggleRenderSoundBeacons();
-			gSavedSettings.setBOOL( "soundsbeacon", LLPipeline::getRenderSoundBeacons() );
+			gSavedSettings.setbool( "soundsbeacon", LLPipeline::getRenderSoundBeacons() );
 		}
 		else if (beacon == "particlesbeacon")
 		{
 			LLPipeline::toggleRenderParticleBeacons();
-			gSavedSettings.setBOOL( "particlesbeacon", LLPipeline::getRenderParticleBeacons() );
+			gSavedSettings.setbool( "particlesbeacon", LLPipeline::getRenderParticleBeacons() );
 		}
 		else if (beacon == "scripttouchbeacon")
 		{
 			LLPipeline::toggleRenderScriptedTouchBeacons();
-			gSavedSettings.setBOOL( "scripttouchbeacon", LLPipeline::getRenderScriptedTouchBeacons() );
+			gSavedSettings.setbool( "scripttouchbeacon", LLPipeline::getRenderScriptedTouchBeacons() );
 			// toggle the other one off if it's on
 			if (LLPipeline::getRenderScriptedBeacons() && LLPipeline::getRenderScriptedTouchBeacons())
 			{
 				LLPipeline::toggleRenderScriptedBeacons();
-				gSavedSettings.setBOOL( "scriptsbeacon", LLPipeline::getRenderScriptedBeacons() );
+				gSavedSettings.setbool( "scriptsbeacon", LLPipeline::getRenderScriptedBeacons() );
 			}
 		}
 		else if (beacon == "sunbeacon")
 		{
-			gSavedSettings.setBOOL("sunbeacon", !gSavedSettings.getBOOL("sunbeacon"));
+			gSavedSettings.setbool("sunbeacon", !gSavedSettings.getbool("sunbeacon"));
 		}
 		else if (beacon == "moonbeacon")
 		{
-			gSavedSettings.setBOOL("moonbeacon", !gSavedSettings.getBOOL("moonbeacon"));
+			gSavedSettings.setbool("moonbeacon", !gSavedSettings.getbool("moonbeacon"));
 		}
 		else if (beacon == "renderbeacons")
 		{
 			LLPipeline::toggleRenderBeacons();
-			gSavedSettings.setBOOL( "renderbeacons", LLPipeline::getRenderBeacons() );
+			gSavedSettings.setbool( "renderbeacons", LLPipeline::getRenderBeacons() );
 			// toggle the other one on if it's not
 			if (!LLPipeline::getRenderBeacons() && !LLPipeline::getRenderHighlights())
 			{
 				LLPipeline::toggleRenderHighlights();
-				gSavedSettings.setBOOL( "renderhighlights", LLPipeline::getRenderHighlights() );
+				gSavedSettings.setbool( "renderhighlights", LLPipeline::getRenderHighlights() );
 			}
 		}
 		else if (beacon == "renderhighlights")
 		{
 			LLPipeline::toggleRenderHighlights();
-			gSavedSettings.setBOOL( "renderhighlights", LLPipeline::getRenderHighlights() );
+			gSavedSettings.setbool( "renderhighlights", LLPipeline::getRenderHighlights() );
 			// toggle the other one on if it's not
 			if (!LLPipeline::getRenderBeacons() && !LLPipeline::getRenderHighlights())
 			{
 				LLPipeline::toggleRenderBeacons();
-				gSavedSettings.setBOOL( "renderbeacons", LLPipeline::getRenderBeacons() );
+				gSavedSettings.setbool( "renderbeacons", LLPipeline::getRenderBeacons() );
 			}
 		}
 
@@ -9494,42 +9494,42 @@ class LLViewCheckBeaconEnabled : public view_listener_t
 		bool new_value = false;
 		if (beacon == "scriptsbeacon")
 		{
-			new_value = gSavedSettings.getBOOL( "scriptsbeacon");
+			new_value = gSavedSettings.getbool( "scriptsbeacon");
 			LLPipeline::setRenderScriptedBeacons(new_value);
 		}
 		else if (beacon == "moapbeacon")
 		{
-			new_value = gSavedSettings.getBOOL( "moapbeacon");
+			new_value = gSavedSettings.getbool( "moapbeacon");
 			LLPipeline::setRenderMOAPBeacons(new_value);
 		}
 		else if (beacon == "physicalbeacon")
 		{
-			new_value = gSavedSettings.getBOOL( "physicalbeacon");
+			new_value = gSavedSettings.getbool( "physicalbeacon");
 			LLPipeline::setRenderPhysicalBeacons(new_value);
 		}
 		else if (beacon == "soundsbeacon")
 		{
-			new_value = gSavedSettings.getBOOL( "soundsbeacon");
+			new_value = gSavedSettings.getbool( "soundsbeacon");
 			LLPipeline::setRenderSoundBeacons(new_value);
 		}
 		else if (beacon == "particlesbeacon")
 		{
-			new_value = gSavedSettings.getBOOL( "particlesbeacon");
+			new_value = gSavedSettings.getbool( "particlesbeacon");
 			LLPipeline::setRenderParticleBeacons(new_value);
 		}
 		else if (beacon == "scripttouchbeacon")
 		{
-			new_value = gSavedSettings.getBOOL( "scripttouchbeacon");
+			new_value = gSavedSettings.getbool( "scripttouchbeacon");
 			LLPipeline::setRenderScriptedTouchBeacons(new_value);
 		}
 		else if (beacon == "renderbeacons")
 		{
-			new_value = gSavedSettings.getBOOL( "renderbeacons");
+			new_value = gSavedSettings.getbool( "renderbeacons");
 			LLPipeline::setRenderBeacons(new_value);
 		}
 		else if (beacon == "renderhighlights")
 		{
-			new_value = gSavedSettings.getBOOL( "renderhighlights");
+			new_value = gSavedSettings.getbool( "renderhighlights");
 			LLPipeline::setRenderHighlights(new_value);
 		}
 		return new_value;
@@ -9916,10 +9916,10 @@ class LLToggleUIHints : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		bool ui_hints_enabled = gSavedSettings.getBOOL("EnableUIHints");
+		bool ui_hints_enabled = gSavedSettings.getbool("EnableUIHints");
 		// toggle
 		ui_hints_enabled = !ui_hints_enabled;
-		gSavedSettings.setBOOL("EnableUIHints", ui_hints_enabled);
+		gSavedSettings.setbool("EnableUIHints", ui_hints_enabled);
 		return true;
 	}
 };
@@ -10000,7 +10000,7 @@ void toggleWebBrowser(const LLSD& sdParam)
 // </FS:Ansariel> For web browser toolbar button
 
 // <FS:Techwolf Lupindo> export
-BOOL enable_export_object()
+bool enable_export_object()
 {
     // <FS:CR>
 	for (LLObjectSelection::root_iterator iter = LLSelectMgr::getInstance()->getSelection()->root_begin();
@@ -10009,7 +10009,7 @@ BOOL enable_export_object()
 		LLSelectNode* node = *iter;
 		LLViewerObject* obj = node->getObject();
 		if (obj || node)
-			return gSavedSettings.getBOOL("FSEnableObjectExports");
+			return gSavedSettings.getbool("FSEnableObjectExports");
 	}
     return false;
     // </FS:CR>
