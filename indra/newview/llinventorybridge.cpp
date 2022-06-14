@@ -5835,7 +5835,10 @@ void LLTextureBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 		getClipboardEntries(true, items, disabled_items, flags);
 
 		items.push_back(std::string("Texture Separator"));
-		
+
+    // KKA-940 prevent trying to save textures when viewtexture=n (crash prevention and shouldn't be allowed either)
+    if (!gRRenabled || !gAgent.mRRInterface.contains ("viewtexture"))
+    {		
         if ((flags & ITEM_IN_MULTI_SELECTION) != 0)
         {
             items.push_back(std::string("Save Selected As"));
@@ -5848,7 +5851,7 @@ void LLTextureBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
                 disabled_items.push_back(std::string("Save As"));
             }
         }
-
+    }
 	}
 	addLinkReplaceMenuOption(items, disabled_items);
 	hide_context_entries(menu, items, disabled_items);	
@@ -5857,6 +5860,12 @@ void LLTextureBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 // virtual
 void LLTextureBridge::performAction(LLInventoryModel* model, std::string action)
 {
+  // KKA-940 prevent trying to save textures when viewtexture=n (crash prevention and shouldn't be allowed either)
+  // The insert above prevents the menu entry being generated but prevent it here too in case it's called directly for any reason
+  if (gRRenabled && gAgent.mRRInterface.contains ("viewtexture"))
+  {
+    return;
+  }
 	if ("save_as" == action)
 	{
 		LLPreviewTexture* preview_texture = LLFloaterReg::getTypedInstance<LLPreviewTexture>("preview_texture", mUUID);
