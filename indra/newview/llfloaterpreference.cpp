@@ -1440,7 +1440,6 @@ void LLFloaterPreference::refreshEnabledState()
 	bool enabled = LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") &&
 						bumpshiny &&
 						shaders && 
-						gGLManager.mHasFramebufferObject &&
 						(ctrl_wind_light->get()) ? true : false;
 
 	ctrl_deferred->setEnabled(enabled);
@@ -1516,7 +1515,6 @@ void LLFloaterPreference::refreshEnabledStateAdvanced()
     
     bool enabled = LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") &&
                         ((bumpshiny_ctrl && bumpshiny_ctrl->get()) ? true : false) &&
-                        gGLManager.mHasFramebufferObject &&
                         (ctrl_wind_light->get()) ? true : false;
 
     ctrl_deferred->setEnabled(enabled);
@@ -1652,8 +1650,7 @@ void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 	}
 
 	// disabled deferred
-	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") ||
-		!gGLManager.mHasFramebufferObject)
+	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred"))
 	{
 		ctrl_shadows->setEnabled(false);
 		ctrl_shadows->setValue(0);
