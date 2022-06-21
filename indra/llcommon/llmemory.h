@@ -54,8 +54,6 @@ class LLMutex ;
 #define LL_DEFAULT_HEAP_ALIGN 8
 #elif LL_DARWIN
 #define LL_DEFAULT_HEAP_ALIGN 16
-#elif LL_LINUX
-#define LL_DEFAULT_HEAP_ALIGN 8
 #endif
 
 
@@ -87,7 +85,7 @@ template <typename T> T* LL_NEXT_ALIGNED_ADDRESS_64(T* address)
 		(uintptr_t(address) + 0x3F) & ~0x3F);
 }
 
-#if LL_LINUX || LL_DARWIN
+#if LL_DARWIN
 
 #define			LL_ALIGN_PREFIX(x)
 #define			LL_ALIGN_POSTFIX(x)		__attribute__((aligned(x)))

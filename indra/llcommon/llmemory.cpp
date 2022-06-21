@@ -35,8 +35,6 @@
 # include <sys/types.h>
 # include <mach/task.h>
 # include <mach/mach_init.h>
-#elif LL_LINUX
-# include <unistd.h>
 #endif
 
 #include "llmemory.h"
@@ -222,39 +220,6 @@ U64 LLMemory::getCurrentRSS()
 	}
 
 	return residentSize;
-}
-
-#elif defined(LL_LINUX)
-
-U64 LLMemory::getCurrentRSS()
-{
-	static const char statPath[] = "/proc/self/stat";
-	LLFILE *fp = LLFile::fopen(statPath, "r");
-	U64 rss = 0;
-
-	if (fp == NULL)
-	{
-		LL_WARNS() << "couldn't open " << statPath << LL_ENDL;
-		return 0;
-	}
-
-	// Eee-yew!	 See Documentation/filesystems/proc.txt in your
-	// nearest friendly kernel tree for details.
-	
-	{
-		int ret = fscanf(fp, "%*d (%*[^)]) %*c %*d %*d %*d %*d %*d %*d %*d "
-						 "%*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %*d %Lu",
-						 &rss);
-		if (ret != 1)
-		{
-			LL_WARNS() << "couldn't parse contents of " << statPath << LL_ENDL;
-			rss = 0;
-		}
-	}
-	
-	fclose(fp);
-
-	return rss;
 }
 
 #else
