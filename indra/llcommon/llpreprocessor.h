@@ -28,13 +28,7 @@
 #ifndef LLPREPROCESSOR_H
 #define LLPREPROCESSOR_H
 
-// Figure out endianness of platform
-#ifdef LL_LINUX
-#define __ENABLE_WSTRING
-#include <endian.h>
-#endif	//	LL_LINUX
-
-#if (defined(LL_WINDOWS) || (defined(LL_LINUX) && (__BYTE_ORDER == __LITTLE_ENDIAN)) || (defined(LL_DARWIN) && defined(__LITTLE_ENDIAN__)))
+#if (defined(LL_WINDOWS) || (defined(LL_DARWIN) && defined(__LITTLE_ENDIAN__)))
 #define LL_LITTLE_ENDIAN 1
 #else
 #define LL_BIG_ENDIAN 1
@@ -88,7 +82,7 @@
 #endif
 
 // Deal with minor differences on Unixy OSes.
-#if LL_DARWIN || LL_LINUX
+#if LL_DARWIN
 	// Different name, same functionality.
 	#define stricmp strcasecmp
 	#define strnicmp strncasecmp
@@ -171,9 +165,6 @@
 #if LL_WINDOWS
 #define LL_DLLEXPORT __declspec(dllexport)
 #define LL_DLLIMPORT __declspec(dllimport)
-#elif LL_LINUX
-#define LL_DLLEXPORT __attribute__ ((visibility("default")))
-#define LL_DLLIMPORT
 #else
 #define LL_DLLEXPORT
 #define LL_DLLIMPORT
