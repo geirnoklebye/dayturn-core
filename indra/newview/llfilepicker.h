@@ -54,13 +54,6 @@
 #include <commdlg.h>
 #endif
 
-extern "C" {
-// mostly for Linux, possible on others
-#if LL_GTK
-# include "gtk/gtk.h"
-#endif // LL_GTK
-}
-
 class LLFilePicker
 {
 #ifdef LL_GTK
@@ -88,7 +81,7 @@ public:
 		FFLOAD_SCRIPT = 11,
 		FFLOAD_DICTIONARY = 12,
 		FFLOAD_DIRECTORY = 13,   //To call from lldirpicker.
-		FFLOAD_EXE = 14,         // Note: EXE will be treated as ALL on Windows and Linux but not on Darwin
+		FFLOAD_EXE = 14,         // Note: EXE will be treated as ALL on Windows but not on Darwin
 		
 		// Firestorm additions
 		FFLOAD_IMPORT = 50

@@ -37,7 +37,7 @@
 #include "llviewercontrol.h"
 #include "llwin32headerslean.h"
 
-#if LL_LINUX || LL_DARWIN
+#if LL_DARWIN
 # include "llfilepicker.h"
 #endif
 
@@ -64,7 +64,7 @@ bool LLDirPicker::check_local_file_access_enabled()
 	if ( ! local_file_system_browsing_enabled )
 	{
 		mDir.clear();	// Windows
-		mFileName = NULL; // Mac/Linux
+		mFileName = NULL; // Mac
 		return false;
 	}
 
@@ -187,66 +187,6 @@ std::string LLDirPicker::getDirName()
 	return mFilePicker->getFirstFile();
 }
 
-#elif LL_LINUX
-
-LLDirPicker::LLDirPicker() :
-	mFileName(NULL),
-	mLocked(false)
-{
-	mFilePicker = new LLFilePicker();
-	reset();
-}
-
-LLDirPicker::~LLDirPicker()
-{
-	delete mFilePicker;
-}
-
-
-void LLDirPicker::reset()
-{
-	if (mFilePicker)
-		mFilePicker->reset();
-}
-
-bool LLDirPicker::getDir(std::string* filename, bool blocking)
-{
-	reset();
-
-	// if local file browsing is turned off, return without opening dialog
-	if ( check_local_file_access_enabled() == false )
-	{
-		return false;
-	}
-
-#if !LL_MESA_HEADLESS
-
-	if (mFilePicker)
-	{
-		GtkWindow* picker = mFilePicker->buildFilePicker(false, true,
-								 "dirpicker");
-
-		if (picker)
-		{		   
-		   gtk_window_set_title(GTK_WINDOW(picker), LLTrans::getString("choose_the_directory").c_str());
-		   gtk_widget_show_all(GTK_WIDGET(picker));
-		   gtk_main();
-		   return (!mFilePicker->getFirstFile().empty());
-		}
-	}
-#endif // !LL_MESA_HEADLESS
-
-	return FALSE;
-}
-
-std::string LLDirPicker::getDirName()
-{
-	if (mFilePicker)
-	{
-		return mFilePicker->getFirstFile();
-	}
-	return "";
-}
 
 #else // not implemented
 
