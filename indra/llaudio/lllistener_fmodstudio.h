@@ -1,7 +1,7 @@
 /** 
  * @file listener_fmodstudio.h
  * @brief Description of LISTENER class abstracting the audio support
- * as an FMOD Studio implementation (windows and Linux)
+ * as an FMOD Studio implementation (windows and Darwin)
  *
  * $LicenseInfo:firstyear=2002&license=viewerlgpl$
  * Second Life Viewer Source Code
