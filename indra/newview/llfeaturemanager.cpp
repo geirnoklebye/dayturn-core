@@ -62,8 +62,6 @@
 
 #if LL_DARWIN
 const char FEATURE_TABLE_FILENAME[] = "featuretable_mac.txt";
-#elif LL_LINUX
-const char FEATURE_TABLE_FILENAME[] = "featuretable_linux.txt";
 #else
 const char FEATURE_TABLE_FILENAME[] = "featuretable.txt";
 #endif
@@ -551,7 +549,7 @@ void LLFeatureManager::applyRecommendedSettings()
 
 void LLFeatureManager::applyFeatures(bool skipFeatures)
 {
-	// see featuretable.txt / featuretable_linux.txt / featuretable_mac.txt
+	// see featuretable.txt / featuretable_mac.txt
 
 #ifndef LL_RELEASE_FOR_DOWNLOAD
 	dump();
