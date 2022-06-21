@@ -1570,50 +1570,6 @@ if (DARWIN)
   list(APPEND viewer_SOURCE_FILES ${viewer_RESOURCE_FILES})
 endif (DARWIN)
 
-if (LINUX)
-    LIST(APPEND viewer_SOURCE_FILES winevoicevivox.cpp)
-    LIST(APPEND viewer_HEADER_FILES winevoicevivox.h)
-    LIST(APPEND viewer_SOURCE_FILES llappviewerlinux.cpp)
-    set_source_files_properties(
-      llappviewerlinux.cpp
-      PROPERTIES
-# <FS:TS> The next line causes a full rebuild of the entire newview
-#         directory every time the Mercurial revision number changes.
-#         Instead of doing that, we use the configure tool to build
-#         fsversionstrings.h with the right numbers in it.
-#         Chorazin: For Kokua this is dayturnbuildversion.h based on same principles
-#      COMPILE_DEFINITIONS "${VIEWER_CHANNEL_VERSION_DEFINES}"
-      )
-    LIST(APPEND viewer_SOURCE_FILES llappviewerlinux_api_dbus.cpp)
-    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--as-needed")
-
-    set(viewer_LIBRARIES
-        X11
-        Xinerama
-        )
-#X11 is needed to prevent DSO symbol resolution error to the version of libX11 used
-#some Debian versions. This occurs when another lib calls libX11. So, an explict
-#link to the X11 surpresses it and link completes.
-#https://github.com/tum-vision/lsd_slam/issues/29#issuecomment-61084472
-    if (OPENAL)
-      LIST(APPEND viewer_LIBRARIES ${OPENAL_LIBRARIES})
-    endif (OPENAL)
-    # To do NP Move to windows and drawin. 
-    include_directories(${CMAKE_COMMON_INC})
-
-    # <FS:ND> Get rid of memory limit exceeded for -fvar-tracking-assignments.
-    if (NOT CMAKE_CXX_COMPILER MATCHES ".*clang")
-      SET_SOURCE_FILES_PROPERTIES(llviewermenu.cpp PROPERTIES COMPILE_FLAGS -fno-var-tracking-assignments)
-    endif()
-    # </FS:ND>
-
-#    include(FindOpenMP)
-#    if(OPENMP_FOUND)
-# 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-# 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-
-endif (LINUX)
 
 if (WINDOWS)
     list(APPEND viewer_SOURCE_FILES
@@ -2135,12 +2091,6 @@ elseif (DARWIN)
         PROPERTIES
         LINK_FLAGS_RELEASE "${LINK_FLAGS_RELEASE} -Xlinker -dead_strip -Xlinker -map -Xlinker ${CMAKE_CURRENT_BINARY_DIR}/${VIEWER_BINARY_NAME}.MAP"
         )
-else (WINDOWS)
-        # Linux
-    set_target_properties(${VIEWER_BINARY_NAME}
-        PROPERTIES
-        LINK_FLAGS_RELEASE "${LINK_FLAGS_RELEASE} -Wl,--Map=${VIEWER_BINARY_NAME}.MAP"
-        )
 endif (WINDOWS)
 
 # *NOTE: - this list is very sensitive to ordering, test carefully on all
@@ -2231,79 +2181,6 @@ endif (USE_BUGSPLAT)
 set(ARTWORK_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH
     "Path to artwork files.")
 
-if (LINUX)
-  set(product Dayturn-${ARCH}-${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION})
-
-  # These are the generated targets that are copied to package/
-  set(COPY_INPUT_DEPENDENCIES
-    ${VIEWER_BINARY_NAME}
-    SLPlugin
-    media_plugin_cef
-    media_plugin_libvlc
-    llcommon
-    )
-
-  add_custom_command(
-      OUTPUT ${product}.tar.bz2
-      COMMAND ${PYTHON_EXECUTABLE}
-      ARGS
-        ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
-        --arch=${ARCH}
-        --artwork=${ARTWORK_DIR}
-        "--bugsplat=${BUGSPLAT_DB}"
-        "--openal=${OPENAL}"
-        --build=${CMAKE_CURRENT_BINARY_DIR}
-        --buildtype=${CMAKE_BUILD_TYPE}
-        "--channel=${VIEWER_CHANNEL}"
-        --configuration=${CMAKE_CFG_INTDIR}
-        --dest=${CMAKE_CURRENT_BINARY_DIR}/packaged
-        --grid=${GRID}
-        --source=${CMAKE_CURRENT_SOURCE_DIR}
-        --touch=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/.${product}.touched
-        --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
-        --fmodversion=${FMODVERSION}
-      DEPENDS
-        ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
-        ${COPY_INPUT_DEPENDENCIES}
-      )
-
-  if (PACKAGE)
-  endif (PACKAGE)
-
-  add_custom_command(
-    OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/.${product}.copy_touched
-    COMMAND ${PYTHON_EXECUTABLE}
-    ARGS
-      ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
-      --actions=copy
-      --arch=${ARCH}
-      --artwork=${ARTWORK_DIR}
-      "--bugsplat=${BUGSPLAT_DB}"
-      "--openal=${OPENAL}"
-      --build=${CMAKE_CURRENT_BINARY_DIR}
-      --buildtype=${CMAKE_BUILD_TYPE}
-      "--channel=${VIEWER_CHANNEL}"
-      --configuration=${CMAKE_CFG_INTDIR}
-      --dest=${CMAKE_CURRENT_BINARY_DIR}/packaged
-      --grid=${GRID}
-      --source=${CMAKE_CURRENT_SOURCE_DIR}
-      --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
-      --fmodversion=${FMODVERSION}
-    DEPENDS
-      ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
-      ${COPY_INPUT_DEPENDENCIES}
-    COMMENT "Performing viewer_manifest copy"
-    )
-
-  add_custom_target(copy_l_viewer_manifest ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/.${product}.copy_touched)
-
-  if (PACKAGE)
-    add_custom_target(llpackage ALL DEPENDS ${product}.tar.bz2)
-    # Make sure we don't run two instances of viewer_manifest.py at the same time.
-    add_dependencies(llpackage copy_l_viewer_manifest)
-    check_message_template(llpackage)
-  endif (PACKAGE)
-endif (LINUX)
 
 if (DARWIN)
   # These all get set with PROPERTIES. It's not that the property names are
@@ -2500,10 +2377,7 @@ if (PACKAGE AND (RELEASE_CRASH_REPORTING OR NON_RELEASE_CRASH_REPORTING) AND VIE
         )
       add_dependencies(generate_symbols dsym_tarball dsym_xcarchive)
     endif (DARWIN)
-    if (LINUX)
-      # TBD
-    endif (LINUX)
-  endif (USE_BUGSPLAT)
+  endif (BUGSPLAT_DB)
 
   # for both Bugsplat and Breakpad
   add_dependencies(llpackage generate_symbols)
@@ -2615,13 +2489,6 @@ if (LL_TESTS)
     ${LLCOMMON_LIBRARIES}
     ${GOOGLEMOCK_LIBRARIES}
     )
-
-  if (LINUX)
-    # llcommon uses `clock_gettime' which is provided by librt on linux.
-    set(LIBRT_LIBRARY
-      rt
-      )
-  endif (LINUX)
 
   set(test_libs
     ${WINDOWS_LIBRARIES}

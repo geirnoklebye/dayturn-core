@@ -29,16 +29,6 @@
  * Keeps a cache of group information.
  */
  
- // <FS:ND> Disable some warnings on newer GCC versions.
-// This might also trigger on something like 4.8, but I did not suchh a GCC to test anything lower than 4.9 and higher than 4.6
-#if LL_LINUX
- #if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
-   #pragma GCC diagnostic ignored "-Wuninitialized"
-   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
- #endif
-#endif
-// </FS:ND>
-
 #include "llviewerprecompiledheaders.h"
 
 #include "llgroupmgr.h"
@@ -65,13 +55,6 @@
 #include "llcorehttputil.h"
 #include "lluiusage.h"
 
-#if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
-   #pragma GCC diagnostic push
-   #pragma GCC diagnostic ignored "-Wuninitialized"
-   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif
-
-
 #if LL_MSVC
 #pragma warning(push)   
 // disable boost::lexical_cast warning
@@ -82,13 +65,6 @@
 
 #if LL_MSVC
 #pragma warning(pop)   // Restore all warnings to the previous state
-#endif
-
-#if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
-   #pragma GCC diagnostic pop 
-///No idea of the scope of   #pragma GCC diagnostic ignored"-Wuninitialized" 
-///or    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-///but using push and pop in case a problem occurs later.
 #endif
 
 const U32 MAX_CACHED_GROUPS = 20;
@@ -951,12 +927,6 @@ LLGroupMgrGroupData* LLGroupMgr::getGroupData(const LLUUID& id)
 // Helper function for LLGroupMgr::processGroupMembersReply
 // This reformats date strings from MM/DD/YYYY to YYYY-MM-DD ( e.g. 1/27/2008 -> 2008-01-27 )
 // so that the sorter can sort by year before month before day.
-#if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
-   #pragma GCC diagnostic push
-   #pragma GCC diagnostic ignored "-Wuninitialized"
-   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif
-
 static void formatDateString(std::string &date_string)
 {
 	using namespace boost;
@@ -973,14 +943,6 @@ static void formatDateString(std::string &date_string)
 		date_string = llformat("%04d-%02d-%02d", year, month, day);
 	}
 }
-
-#if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
-   #pragma GCC diagnostic pop 
-///No idea of the scope of   #pragma GCC diagnostic ignored"-Wuninitialized" 
-///or    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-///but using push and pop in case a problem occurs later.
-#endif
-
 
 // static
 void LLGroupMgr::processGroupMembersReply(LLMessageSystem* msg, void** data)

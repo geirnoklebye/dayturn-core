@@ -260,10 +260,6 @@ using namespace LL;
 // define a self-registering event API object
 #include "llappviewerlistener.h"
 
-#if LL_LINUX && LL_GTK
-#include "glib.h"
-#endif // (LL_LINUX) && LL_GTK
-
 #if LL_MSVC
 // disable boost::lexical_cast warning
 #pragma warning (disable:4702)
@@ -305,9 +301,7 @@ S32 gLastExecDuration = -1; // (<0 indicates unknown)
 #   define LL_PLATFORM_KEY "win"
 #elif LL_DARWIN
 #   define LL_PLATFORM_KEY "mac"
-#elif LL_LINUX
-#   define LL_PLATFORM_KEY "lnx"
-else
+#else
 #   error "Unknown Platform"
 #endif
 const char* gPlatform = LL_PLATFORM_KEY;
@@ -993,8 +987,6 @@ bool LLAppViewer::init()
 	std::string mime_types_name;
 #if LL_DARWIN
 	mime_types_name = "mime_types_mac.xml";
-#elif LL_LINUX
-	mime_types_name = "mime_types_linux.xml";
 #else
 	mime_types_name = "mime_types.xml";
 #endif

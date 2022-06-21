@@ -52,9 +52,6 @@ LLExternalEditor::EErrorCode LLExternalEditor::setCommand(const std::string& env
 		cmd = findCommand("", comspec);
 #elif LL_DARWIN
 		cmd = findCommand("", "/usr/bin/open \"%s\"");
-#elif LL_LINUX
-		// xdg-open might not actually be installed on all distros, but it's out best shot
-		cmd = findCommand("", "/usr/bin/xdg-open \"%s\"");
 #endif
 		if (cmd.empty())
 		{

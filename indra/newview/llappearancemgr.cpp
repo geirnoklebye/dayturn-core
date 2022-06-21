@@ -1784,7 +1784,6 @@ void LLAppearanceMgr::slamCategoryLinks(const LLUUID& src_id, const LLUUID& dst_
 			}
 			default:
 			{
-				// Linux refuses to compile unless all possible enums are handled. Really, Linux?
 				break;
 			}
 		}

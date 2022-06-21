@@ -62,9 +62,6 @@
 #include "lllivefile.h"					// live file poll/stat/reload
 #include "llviewermenufile.h" // LLFilePickerReplyThread
 
-// Boost (for linux/unix command-line execv)
-#include <boost/tokenizer.hpp>
-
 // External utility
 #include <string>
 #include <list>

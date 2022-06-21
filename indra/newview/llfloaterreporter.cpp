@@ -742,8 +742,6 @@ LLSD LLFloaterReporter::gatherReport()
 	const char* platform = "Win";
 #elif LL_DARWIN
 	const char* platform = "Mac";
-#elif LL_LINUX
-	const char* platform = "Lnx";
 #else
 	const char* platform = "???";
 #endif
