@@ -32,13 +32,11 @@ include_directories(SYSTEM
 
 ### media_plugin_example
 
-if(NOT ADDRESS_SIZE EQUAL 32)
-  if(WINDOWS)
+if(WINDOWS)
     ##add_definitions(/FIXED:NO)
-  else(WINDOWS) # not windows therefore gcc LINUX and DARWIN
+else(WINDOWS) # not windows therefore DARWIN
     add_definitions(-fPIC)
-  endif(WINDOWS)
-endif(NOT ADDRESS_SIZE EQUAL 32)
+endif(WINDOWS)
 
 set(media_plugin_example_SOURCE_FILES
     media_plugin_example.cpp

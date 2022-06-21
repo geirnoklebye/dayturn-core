@@ -16,14 +16,6 @@ include(MediaPluginBase)
 
 include(CEFPlugin)
 
-if (!DARWIN)
-# We don't want PulseAudio on DARWIN. Geir Nøklebye
-# <FS:ND> Linux volume catcher
-include(PulseAudio)
-include_directories( ${PULSEAUDIO_INCLUDE_DIRS} )
-# </FS:ND>
-endif (!DARWIN)
-
 include_directories(
     ${LLPLUGIN_INCLUDE_DIRS}
     ${MEDIA_PLUGIN_BASE_INCLUDE_DIRS}
@@ -40,13 +32,11 @@ include_directories(SYSTEM
 
 ### media_plugin_cef
 
-if(NOT ADDRESS_SIZE EQUAL 32)
-  if(WINDOWS)
+if(WINDOWS)
     ##add_definitions(/FIXED:NO)
-  else(WINDOWS) # not windows therefore gcc LINUX and DARWIN
+else(WINDOWS) # not windows therefore gcc DARWIN
     add_definitions(-fPIC)
-  endif(WINDOWS)
-endif(NOT ADDRESS_SIZE EQUAL 32)
+endif(WINDOWS)
 
 set(media_plugin_cef_SOURCE_FILES
     media_plugin_cef.cpp
@@ -64,12 +54,7 @@ set (media_plugin_cef_LINK_LIBRARIES
   ${PLUGIN_API_WINDOWS_LIBRARIES})
 
 # Select which VolumeCatcher implementation to use
-if (LINUX)
-#  message(FATAL_ERROR "CEF plugin has been enabled for a Linux compile.\n"
-#    "  Please create a volume_catcher implementation for this platform.")
-  list(APPEND media_plugin_cef_SOURCE_FILES dummy_volume_catcher.cpp)
-  set(CMAKE_SHARED_LINKER_FLAGS  "-Wl,--build-id -Wl,-rpath,'$ORIGIN:$ORIGIN/../../lib'")
-elseif (DARWIN)
+if (DARWIN)
   list(APPEND media_plugin_cef_SOURCE_FILES mac_volume_catcher_null.cpp)
   find_library(CORESERVICES_LIBRARY CoreServices)
   find_library(AUDIOUNIT_LIBRARY AudioUnit)
@@ -79,7 +64,7 @@ elseif (DARWIN)
        )
 elseif (WINDOWS)
   list(APPEND media_plugin_cef_SOURCE_FILES windows_volume_catcher.cpp)
-endif (LINUX)
+endif (DARWIN)
 
 set_source_files_properties(${media_plugin_cef_HEADER_FILES}
                             PROPERTIES HEADER_FILE_ONLY TRUE)
