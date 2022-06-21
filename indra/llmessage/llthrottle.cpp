@@ -374,7 +374,6 @@ bool LLThrottleGroup::dynamicAdjust()
 	}
 	mDynamicAdjustTime = mt_sec;
 
-	S32 total = 0;
 	// Update historical information
 	for (i = 0; i < TC_EOF; i++)
 	{
@@ -391,7 +390,6 @@ bool LLThrottleGroup::dynamicAdjust()
 		}
 
 		mBitsSentThisPeriod[i] = 0;
-		total += ll_round(mBitsSentHistory[i]);
 	}
 
 	// Look for busy channels

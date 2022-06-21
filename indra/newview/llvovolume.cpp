@@ -1913,6 +1913,7 @@ bool LLVOVolume::genBBoxes(bool force_global, bool should_update_octree_bounds)
         }
     }
 
+
     if (any_valid_boxes)
     {
         if (rebuild && should_update_octree_bounds)
