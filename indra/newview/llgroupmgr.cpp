@@ -160,7 +160,7 @@ LLGroupRoleData::LLGroupRoleData(const LLUUID& role_id,
 								const S32 member_count) :
 	mRoleID(role_id),
 	mMemberCount(member_count),
-	mMembersNeedsSort(FALSE)
+	mMembersNeedsSort(false)
 {
 	mRoleData.mRoleName = role_name;
 	mRoleData.mRoleTitle = role_title;
@@ -175,7 +175,7 @@ LLGroupRoleData::LLGroupRoleData(const LLUUID& role_id,
 	mRoleID(role_id),
 	mRoleData(role_data),
 	mMemberCount(member_count),
-	mMembersNeedsSort(FALSE)
+	mMembersNeedsSort(false)
 {
 
 }
@@ -185,7 +185,7 @@ LLGroupRoleData::~LLGroupRoleData()
 }
 
 S32 LLGroupRoleData::getMembersInRole(uuid_vec_t members,
-									  BOOL needs_sort)
+									  bool needs_sort)
 {
 	if (mRoleID.isNull())
 	{
@@ -198,7 +198,7 @@ S32 LLGroupRoleData::getMembersInRole(uuid_vec_t members,
 	if (mMembersNeedsSort)
 	{
 		std::sort(mMemberIDs.begin(), mMemberIDs.end());
-		mMembersNeedsSort = FALSE;
+		mMembersNeedsSort = false;
 	}
 	if (needs_sort)
 	{
@@ -218,7 +218,7 @@ S32 LLGroupRoleData::getMembersInRole(uuid_vec_t members,
 			  
 void LLGroupRoleData::addMember(const LLUUID& member)
 {
-	mMembersNeedsSort = TRUE;
+	mMembersNeedsSort = true;
 	mMemberIDs.push_back(member);
 }
 
@@ -228,7 +228,7 @@ bool LLGroupRoleData::removeMember(const LLUUID& member)
 
 	if (it != mMemberIDs.end())
 	{
-		mMembersNeedsSort = TRUE;
+		mMembersNeedsSort = true;
 		mMemberIDs.erase(it);
 		return true;
 	}
@@ -238,7 +238,7 @@ bool LLGroupRoleData::removeMember(const LLUUID& member)
 
 void LLGroupRoleData::clearMembers()
 {
-	mMembersNeedsSort = FALSE;
+	mMembersNeedsSort = false;
 	mMemberIDs.clear();
 }
 
@@ -360,7 +360,7 @@ void LLGroupMgrGroupData::setRoleData(const LLUUID& role_id, LLRoleData role_dat
 	}
 }
 
-BOOL LLGroupMgrGroupData::pendingRoleChanges()
+bool LLGroupMgrGroupData::pendingRoleChanges()
 {
 	return (!mRoleChanges.empty());
 }
@@ -2418,7 +2418,7 @@ bool LLGroupMgr::parseRoleActions(const std::string& xml_filename)
 {
 	LLXMLNodePtr root;
 
-	BOOL success = LLUICtrlFactory::getLayeredXMLNode(xml_filename, root);	
+	bool success = LLUICtrlFactory::getLayeredXMLNode(xml_filename, root);	
 	
 	if (!success || !root || !root->hasName( "role_actions" ))
 	{

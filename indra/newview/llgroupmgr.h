@@ -150,7 +150,7 @@ public:
 	const LLUUID& getID() const { return mRoleID; }
 
 	const uuid_vec_t& getRoleMembers() const { return mMemberIDs; }
-	S32 getMembersInRole(uuid_vec_t members, BOOL needs_sort = TRUE);
+	S32 getMembersInRole(uuid_vec_t members, bool needs_sort = true);
 	S32 getTotalMembersInRole() { return mMemberCount ? mMemberCount : mMemberIDs.size(); } //FIXME: Returns 0 for Everyone role when Member list isn't yet loaded, see MAINT-5225
 
 	LLRoleData getRoleData() const { return mRoleData; }
@@ -169,7 +169,7 @@ public:
 
 protected:
 	LLGroupRoleData()
-	: mMemberCount(0), mMembersNeedsSort(FALSE) {}
+	: mMemberCount(0), mMembersNeedsSort(false) {}
 
 	LLUUID mRoleID;
 	LLRoleData	mRoleData;
@@ -178,7 +178,7 @@ protected:
 	S32	mMemberCount;
 
 private:
-	BOOL mMembersNeedsSort;
+	bool mMembersNeedsSort;
 };
 
 struct LLRoleMemberChange
@@ -238,7 +238,7 @@ public:
 	void setRoleData(const LLUUID& role_id, LLRoleData role_data);
 	void createRole(const LLUUID& role_id, LLRoleData role_data);
 	void deleteRole(const LLUUID& role_id);
-	BOOL pendingRoleChanges();
+	bool pendingRoleChanges();
 
 	void addRolePower(const LLUUID& role_id, U64 power);
 	void removeRolePower(const LLUUID& role_id, U64 power);

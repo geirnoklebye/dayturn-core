@@ -959,7 +959,7 @@ void LLPanelGroupMembersSubTab::handleMemberSelect()
 
 		if (group_role_data)
 		{
-			const BOOL needs_sort = FALSE;
+			const bool needs_sort = false;
 			S32 count = group_role_data->getMembersInRole(
 											selected_members, needs_sort);
 			//check if the user has permissions to assign/remove
