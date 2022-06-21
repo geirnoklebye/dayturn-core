@@ -128,38 +128,8 @@ public:
 #endif
 
 
-#if (LL_LINUX) && !(defined(__i386__) || defined(__amd64__))
-	//
-	// Linux implementation of CPU clock - non-x86.
-	// This is accurate but SLOW!  Only use out of desperation.
-	//
-	// Try to use the MONOTONIC clock if available, this is a constant time counter
-	// with nanosecond resolution (but not necessarily accuracy) and attempts are
-	// made to synchronize this value between cores at kernel start. It should not
-	// be affected by CPU frequency. If not available use the REALTIME clock, but
-	// this may be affected by NTP adjustments or other user activity affecting
-	// the system time.
-	static U64 getCPUClockCount64()
-	{
-		struct timespec tp;
 
-#ifdef CLOCK_MONOTONIC // MONOTONIC supported at build-time?
-		if (-1 == clock_gettime(CLOCK_MONOTONIC,&tp)) // if MONOTONIC isn't supported at runtime then ouch, try REALTIME
-#endif
-			clock_gettime(CLOCK_REALTIME,&tp);
-
-		return (tp.tv_sec*sClockResolution)+tp.tv_nsec;        
-	}
-
-	static U32 getCPUClockCount32()
-	{
-		return (U32)(getCPUClockCount64() >> 8);
-	}
-
-#endif // (LL_LINUX) && !(defined(__i386__) || defined(__amd64__))
-
-
-#if (LL_LINUX || LL_DARWIN) && (defined(__i386__) || defined(__amd64__))
+#if (LL_DARWIN) && (defined(__i386__) || defined(__amd64__))
 	//
 	// Mac+Linux FAST x86 implementation of CPU clock
 	static U32 getCPUClockCount32()

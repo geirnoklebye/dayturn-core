@@ -29,10 +29,6 @@
 #ifndef LL_LLAPR_H
 #define LL_LLAPR_H
 
-#if LL_LINUX
-#include <sys/param.h>  // Need PATH_MAX in APR headers...
-#endif
-
 #include <boost/noncopyable.hpp>
 #include "llwin32headerslean.h"
 #include "apr_thread_proc.h"

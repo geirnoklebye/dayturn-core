@@ -36,9 +36,6 @@
 // Forward declarations
 class LLErrorThread;
 class LLLiveFile;
-#if LL_LINUX
-#include <signal.h>
-#endif
 
 typedef void (*LLAppErrorHandler)();
 

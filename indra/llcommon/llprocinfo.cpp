@@ -76,19 +76,7 @@ void LLProcInfo::getCPUUsage(time_type & user_time, time_type & system_time)
 	user_time = U64(usage.ru_utime.tv_sec) * U64L(1000000) + usage.ru_utime.tv_usec;
 	system_time = U64(usage.ru_stime.tv_sec) * U64L(1000000) + usage.ru_stime.tv_usec;
 
-#else // Linux
-
-	struct rusage usage;
-
-	if (getrusage(RUSAGE_SELF, &usage))
-	{
-		user_time = system_time = time_type(0U);
-		return;
-	}
-	user_time = U64(usage.ru_utime.tv_sec) * U64L(1000000) + usage.ru_utime.tv_usec;
-	system_time = U64(usage.ru_stime.tv_sec) * U64L(1000000) + usage.ru_stime.tv_usec;
-	
-#endif // LL_WINDOWS/LL_DARWIN/Linux
+#endif // LL_WINDOWS/LL_DARWIN
 }
 
 

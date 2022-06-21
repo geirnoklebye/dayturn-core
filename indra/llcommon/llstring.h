@@ -39,18 +39,14 @@
 #include <map>
 #include "llformat.h"
 #include "llsd.h"
-#if LL_LINUX
-#include <wctype.h>
-#include <wchar.h>
-#endif
 
 #include <string.h>
 
 const char LL_UNKNOWN_CHAR = '?';
 class LLSD;
 
-#if LL_DARWIN || LL_LINUX
-// Template specialization of char_traits for U16s. Only necessary on Mac and Linux (exists on Windows already)
+#if LL_DARWIN
+// Template specialization of char_traits for U16s. Only necessary on Mac (exists on Windows already)
 #include <cstring>
 
 namespace std
@@ -400,9 +396,7 @@ public:
 	static S32		compareStrings(const T* lhs, const T* rhs);
 	static S32		compareStrings(const string_type& lhs, const string_type& rhs);
 	
-	// case insensitive version of above. Uses current locale on
-	// Win32, and falls back to a non-locale aware comparison on
-	// Linux.
+	// case insensitive version of above. Uses current locale on Win32
 	static S32		compareInsensitive(const T* lhs, const T* rhs);
 	static S32		compareInsensitive(const string_type& lhs, const string_type& rhs);
 
