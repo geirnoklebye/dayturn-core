@@ -14,7 +14,7 @@
 
 #include <string>
 #include <list>
-#include <iosfwd>                   // std::streamsize
+#include <ios>                   // std::streamsize
 #include <boost/iostreams/categories.hpp>
 
 /**
