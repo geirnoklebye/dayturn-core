@@ -52,8 +52,8 @@ bool LLSysDarwin::getOperatingSystemInfo(int &major, int &minor, int &patch)
 	}
 	else
 	{
-		NSString* versionString = [[NSDictionary dictionaryWithContentsOfFile:
-									@"/System/Library/CoreServices/SystemVersion.plist"] objectForKey:@"ProductVersion"];
+		NSString* versionString = [NSDictionary dictionaryWithContentsOfFile:
+				@"/System/Library/CoreServices/SystemVersion.plist"][@"ProductVersion"];
 		NSArray* versions = [versionString componentsSeparatedByString:@"."];
 		NSUInteger count = [versions count];
 		if (count > 0) {
@@ -71,7 +71,7 @@ bool LLSysDarwin::getOperatingSystemInfo(int &major, int &minor, int &patch)
 
 const char* LLSysDarwin::getPreferredLanguage()
 {
-	NSString* lang = [[NSLocale preferredLanguages] objectAtIndex:0];
+	NSString* lang = [NSLocale preferredLanguages][0];
 	const char* ret = [lang cStringUsingEncoding:NSASCIIStringEncoding];
 	return ret;
 }
