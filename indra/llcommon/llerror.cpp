@@ -103,7 +103,7 @@ namespace {
 
         virtual bool enabled() override
         {
-            return LLError::getEnabledLogTypesMask() & 0x01;
+            return static_cast<bool>(LLError::getEnabledLogTypesMask() & 0x01);
         }
         
 		virtual void recordMessage(LLError::ELevel level,
@@ -156,7 +156,7 @@ namespace {
 #ifdef LL_RELEASE_FOR_DOWNLOAD
             return 1;
 #else
-            return LLError::getEnabledLogTypesMask() & 0x02;
+            return static_cast<bool>(LLError::getEnabledLogTypesMask() & 0x02);
 #endif
         }
         
@@ -194,7 +194,7 @@ namespace {
 		
         virtual bool enabled() override
         {
-            return LLError::getEnabledLogTypesMask() & 0x04;
+            return static_cast<bool>(LLError::getEnabledLogTypesMask() & 0x04);
         }
         
         LL_FORCE_INLINE std::string createBoldANSI()
@@ -315,7 +315,7 @@ namespace {
 		
         virtual bool enabled() override
         {
-            return LLError::getEnabledLogTypesMask() & 0x08;
+            return static_cast<bool>(LLError::getEnabledLogTypesMask() & 0x08);
         }
         
 		virtual void recordMessage(LLError::ELevel level,
@@ -1319,15 +1319,14 @@ namespace {
 	bool checkLevelMap(const LevelMap& map, const std::string& key,
 						LLError::ELevel& level)
 	{
-		bool stop_checking;
 		LevelMap::const_iterator i = map.find(key);
 		if (i == map.end())
 		{
-			return stop_checking = false;
+			return false; // don't stop checking
 		}
 		
 			level = i->second;
-		return stop_checking = true;
+		return true;  // stop checking
 	}
 	
 	bool checkLevelMap(	const LevelMap& map, 
