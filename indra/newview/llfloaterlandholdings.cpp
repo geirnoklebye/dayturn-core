@@ -59,7 +59,7 @@ LLFloaterLandHoldings::LLFloaterLandHoldings(const LLSD& key)
 :	LLFloater(key),
 	mActualArea(0),
 	mBillableArea(0),
-	mFirstPacketReceived(FALSE),
+	mFirstPacketReceived(false),
 	mSortColumn(""),
 	mSortAscending(TRUE)
 {
@@ -181,7 +181,7 @@ void LLFloaterLandHoldings::processPlacesReply(LLMessageSystem* msg, void**)
 	// If this is the first packet, clear out the "loading..." indicator
 	if (!self->mFirstPacketReceived)
 	{
-		self->mFirstPacketReceived = TRUE;
+		self->mFirstPacketReceived = true;
 		list->operateOnAll(LLCtrlSelectionInterface::OP_DELETE);
 	}
 
