@@ -12,8 +12,7 @@
     bg_opaque_color="DkGray"
     chrome="true"
     mouse_opaque="false"
-    tab_stop="false">
-    <panel.string name="time">
+     <panel.string name="time">
         [hour12, datetime, slt]:[min, datetime, slt] [ampm, datetime, slt] [timezone,datetime, slt]
     </panel.string>
     <panel.string name="timeTooltip">
