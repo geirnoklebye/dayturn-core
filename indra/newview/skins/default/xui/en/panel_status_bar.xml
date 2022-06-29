@@ -11,7 +11,7 @@
     background_visible="true"
     bg_opaque_color="DkGray"
     chrome="true"
-    mouse_opaque="false"
+    mouse_opaque="false">
      <panel.string name="time">
         [hour12, datetime, slt]:[min, datetime, slt] [ampm, datetime, slt] [timezone,datetime, slt]
     </panel.string>
