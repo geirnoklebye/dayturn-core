@@ -171,12 +171,11 @@ void LLFloaterColorPicker::createUI ()
 void LLFloaterColorPicker::showUI ()
 {
 	openFloater(getKey());
-	setVisible ( TRUE );
+	setVisible ( true );
 	setFocus ( true );
-	setRevertOnCancel(FALSE);
 
 	// HACK: if system color picker is required - close the SL one we made and use default system dialog
-	if ( gSavedSettings.getBOOL ( "UseDefaultColorPicker" ) )
+	if ( gSavedSettings.getbool ( "UseDefaultColorPicker" ) )
 	{
 		LLColorSwatchCtrl* swatch = getSwatch ();
 
@@ -399,10 +398,7 @@ void LLFloaterColorPicker::onClickCancel ( void* data )
 
 		if ( self )
 		{
-		    if(self->getRevertOnCancel())
-		    {
-		        self->cancelSelection ();
-		    }
+		    self->cancelSelection();
 			self->closeFloater();
 		}
 	}
@@ -484,7 +480,7 @@ F32 LLFloaterColorPicker::getSwatchTransparency()
 	return getTransparencyType() == TT_ACTIVE ? 1.f : LLFloater::getCurrentTransparency();
 }
 
-BOOL LLFloaterColorPicker::isColorChanged()
+bool LLFloaterColorPicker::isColorChanged()
 {
     return ((getOrigR() != getCurR()) || (getOrigG() != getCurG()) || (getOrigB() != getCurB()));
 }
