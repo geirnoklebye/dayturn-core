@@ -252,7 +252,6 @@ if (USESYSTEMLIBS)
 else (USESYSTEMLIBS)
 if (LINUX AND ${ARCH} STREQUAL "i686")
   set(${ARCH}_linux_INCLUDES
-      ELFIO
       atk
       cairo
       gdk

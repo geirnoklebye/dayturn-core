@@ -1765,39 +1765,19 @@ void LLPanelObject::sendPosition(BOOL btn_down)
 		}
 	}
 
+    bool is_valid_pos = true;
+    if (mObject->isAttachment())
+    {
+        LLVector3 delta_pos = mObject->getPositionEdit() - newpos;
+        LLVector3d attachment_pos = regionp->getPosGlobalFromRegion(mObject->getPositionRegion() + delta_pos);
+        is_valid_pos = LLWorld::getInstance()->positionRegionValidGlobal(attachment_pos);
+    }
+    else
+    {
+        is_valid_pos = LLWorld::getInstance()->positionRegionValidGlobal(new_pos_global);
+    }
 
-	// partly copied from llmaniptranslate.cpp to get the positioning right
-	if (mObject->isAttachment())
-	{
-		LLVector3 old_position_local=mObject->getPosition();
-
-		if(mRootObject!=mObject)
-		{
-			newpos=newpos-mRootObject->getPosition();
-			newpos=newpos*~mRootObject->getRotation();
-			mObject->setPositionParent(newpos);
-		}
-		else
-			mObject->setPosition(newpos);
-		LLManip::rebuild(mObject) ;
-
-		LLVector3 new_position_local = mObject->getPosition();
-
-		// for individually selected roots, we need to counter-translate all unselected children
-		if (mObject->isRootEdit())
-		{
-			// counter-translate child objects if we are moving the root as an individual
-			mObject->resetChildrenPosition(old_position_local-new_position_local,TRUE);
-		}
-
-		if(!btn_down)
-		{
-			LLSelectMgr::getInstance()->sendMultipleUpdate(UPD_POSITION);
-		}
-
-		LLSelectMgr::getInstance()->updateSelectionCenter();
-	}
-	else if (LLWorld::getInstance()->positionRegionValidGlobal(new_pos_global) )
+	if (is_valid_pos)
 	{
 		// send only if the position is changed, that is, the delta vector is not zero
 		LLVector3d old_pos_global = mObject->getPositionGlobal();

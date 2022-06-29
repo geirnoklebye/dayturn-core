@@ -91,7 +91,15 @@ public:
 	BOOL getInfo(BOOL vram_only, bool disable_wmi);
 	// </FS:Ansariel>
 
-	std::string getDriverVersionWMI();
+    // WMI can return multiple GPU drivers
+    // specify which one to output
+    typedef enum {
+        GPU_INTEL,
+        GPU_NVIDIA,
+        GPU_AMD,
+        GPU_ANY
+    } EGPUVendor;
+	std::string getDriverVersionWMI(EGPUVendor vendor);
 
 	S32 getVRAM() const { return mVRAM; }
 

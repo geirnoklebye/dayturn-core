@@ -603,7 +603,7 @@ static void settings_modify()
 // [/RLVa:KB]
     LLVOSurfacePatch::sLODFactor        = gSavedSettings.getF32("RenderTerrainLODFactor");
     LLVOSurfacePatch::sLODFactor *= LLVOSurfacePatch::sLODFactor;  // square lod factor to get exponential range of [1,4]
-    gDebugGL       = gSavedSettings.getBOOL("RenderDebugGL") || gDebugSession;
+    gDebugGL       = gDebugGLSession || gDebugSession;
     gDebugPipeline = gSavedSettings.getBOOL("RenderDebugPipeline");
 }
 
@@ -1262,7 +1262,8 @@ bool LLAppViewer::init()
 	gGLActive = FALSE;
 #if 0 // no updater for Kokua
 //#if LL_RELEASE_FOR_DOWNLOAD 
-    if (!gSavedSettings.getBOOL("CmdLineSkipUpdater"))
+    // Skip updater if this is a non-interactive instance
+    if (!gSavedSettings.getBOOL("CmdLineSkipUpdater") && !gNonInteractive)
     {
 #if !LL_LINUX
         LLProcess::Params updater;
@@ -3077,6 +3078,15 @@ bool LLAppViewer::initConfiguration()
 		ll_init_fail_log(gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "test_failures.log"));
 	}
 
+    if (gSavedSettings.getBOOL("RenderDebugGLSession"))
+    {
+        gDebugGLSession = TRUE;
+        gDebugGL = TRUE;
+        // gDebugGL can cause excessive logging
+        // so it's limited to a single session
+        gSavedSettings.setBOOL("RenderDebugGLSession", FALSE);
+    }
+
 	const LLControlVariable* skinfolder = gSavedSettings.getControl("SkinCurrent");
 	if(skinfolder && LLStringUtil::null != skinfolder->getValue().asString())
 	{
@@ -3510,6 +3520,11 @@ bool LLAppViewer::isUpdaterMissing()
     return mUpdaterNotFound;
 }
 
+bool LLAppViewer::waitForUpdater()
+{
+    return !gSavedSettings.getBOOL("CmdLineSkipUpdater") && !mUpdaterNotFound && !gNonInteractive;
+}
+
 void LLAppViewer::writeDebugInfo(bool isStatic)
 {
 #if LL_WINDOWS && LL_BUGSPLAT
@@ -3603,7 +3618,28 @@ LLSD LLAppViewer::getViewerInfo() const
 	info["GRAPHICS_CARD"] = ll_safe_string((const char*)(glGetString(GL_RENDERER)));
 
 #if LL_WINDOWS
-	std::string drvinfo = gDXHardware.getDriverVersionWMI();
+    std::string drvinfo;
+
+    if (gGLManager.mIsIntel)
+    {
+        drvinfo = gDXHardware.getDriverVersionWMI(LLDXHardware::GPU_INTEL);
+    }
+    else if (gGLManager.mIsNVIDIA)
+    {
+        drvinfo = gDXHardware.getDriverVersionWMI(LLDXHardware::GPU_NVIDIA);
+    }
+    else if (gGLManager.mIsAMD)
+    {
+        drvinfo = gDXHardware.getDriverVersionWMI(LLDXHardware::GPU_AMD);
+    }
+
+    if (drvinfo.empty())
+    {
+        // Generic/substitute windows driver? Unknown vendor?
+        LL_WARNS("DriverVersion") << "Vendor based driver search failed, searching for any driver" << LL_ENDL;
+        drvinfo = gDXHardware.getDriverVersionWMI(LLDXHardware::GPU_ANY);
+    }
+
 	if (!drvinfo.empty())
 	{
 		info["GRAPHICS_DRIVER_VERSION"] = drvinfo;
@@ -5300,12 +5336,17 @@ void LLAppViewer::idle()
 		}
 	}
 
+
+    // Update layonts, handle mouse events, tooltips, e t c
+    // updateUI() needs to be called even in case viewer disconected
+    // since related notification still needs handling and allows
+    // opening chat.
+    gViewerWindow->updateUI();
+
 	if (gDisconnected)
     {
 		return;
     }
-
-    gViewerWindow->updateUI();
 
 	if (gTeleportDisplay)
     {

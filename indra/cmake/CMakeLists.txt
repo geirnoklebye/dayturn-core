@@ -10,7 +10,6 @@ set(cmake_SOURCE_FILES
     00-Common.cmake
     APR.cmake
     Audio.cmake
-    BerkeleyDB.cmake
     Boost.cmake
     bugsplat.cmake
     BuildVersion.cmake
@@ -26,7 +25,6 @@ set(cmake_SOURCE_FILES
     EXPAT.cmake
     FindAPR.cmake
     FindAutobuild.cmake
-    FindBerkeleyDB.cmake
     FindFMODSTUDIO.cmake
     FindFMODEX.cmake
     FindGLH.cmake
@@ -38,7 +36,7 @@ set(cmake_SOURCE_FILES
     FindSCP.cmake
     FindURIPARSER.cmake
     FindXmlRpcEpi.cmake
-    FindZLIB.cmake
+    FindZLIBNG.cmake
     FMODEX.cmake
     FreeType.cmake
     GLEXT.cmake
@@ -98,7 +96,7 @@ set(cmake_SOURCE_FILES
     VisualLeakDetector.cmake
 #    WebKitLibPlugin.cmake
     XmlRpcEpi.cmake
-    ZLIB.cmake
+    ZLIBNG.cmake
     jemalloc.cmake
     )
 else (LINUX)
@@ -108,7 +106,6 @@ set(cmake_SOURCE_FILES
     00-Common.cmake
     APR.cmake
     Audio.cmake
-    BerkeleyDB.cmake
     Boost.cmake
     BuildVersion.cmake
     CEFPlugin.cmake
@@ -122,7 +119,6 @@ set(cmake_SOURCE_FILES
     EXPAT.cmake
     FindAPR.cmake
     FindAutobuild.cmake
-    FindBerkeleyDB.cmake
     FindFMODSTUDIO.cmake
     FindFMODEX.cmake
     FindGLH.cmake
@@ -133,7 +129,7 @@ set(cmake_SOURCE_FILES
     FindSCP.cmake
     FindURIPARSER.cmake
     FindXmlRpcEpi.cmake
-    FindZLIB.cmake
+    FindZLIBNG.cmake
     FMODSTUDIO.cmake
     FMODEX.cmake
     FreeType.cmake
@@ -190,7 +186,7 @@ set(cmake_SOURCE_FILES
     VisualLeakDetector.cmake
     LibVLCPlugin.cmake
     XmlRpcEpi.cmake
-    ZLIB.cmake
+    ZLIBNG.cmake
     )
 endif (LINUX)
 
