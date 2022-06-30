@@ -406,7 +406,7 @@ void LLPanelLogin::addFavoritesToStartLocation()
             if ((*iter1).has("save_password"))
             {
                 bool save_password = (*iter1)["save_password"].asBoolean();
-                gSavedSettings.setBOOL("RememberPassword", save_password);
+                gSavedSettings.setbool("RememberPassword", save_password);
                 if (!save_password)
                 {
                     getChild<LLButton>("connect_btn")->setEnabled(false);
@@ -428,7 +428,7 @@ void LLPanelLogin::addFavoritesToStartLocation()
 		}
         if (update_password_setting)
         {
-            gSavedSettings.setBOOL("UpdateRememberPasswordSetting", TRUE);
+            gSavedSettings.setbool("UpdateRememberPasswordSetting", true);
         }
 		break;
 	}
@@ -1102,7 +1102,7 @@ void LLPanelLogin::onRememberPasswordCheck(void*)
 {
     if (sInstance)
     {
-        gSavedSettings.setBOOL("UpdateRememberPasswordSetting", TRUE);
+        gSavedSettings.setbool("UpdateRememberPasswordSetting", true);
     }
 }
 

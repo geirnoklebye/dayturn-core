@@ -226,8 +226,8 @@ public:
 	// Remove record of current user's favorites from file on disk.
 	static void removeFavoritesRecordOfUser();
 
-	BOOL saveFavoritesRecord(bool pref_changed = false);
-	void showFavoritesOnLoginChanged(BOOL show);
+	bool saveFavoritesRecord(bool pref_changed = false);
+	void showFavoritesOnLoginChanged(bool show);
 
 	bool isStorageUpdateNeeded();
 

@@ -1625,7 +1625,7 @@ void LLFavoritesOrderStorage::destroyClass()
 		file.close();
 		LLFile::remove(filename);
 	}
-	if(mSaveOnExit || gSavedSettings.getBOOL("UpdateRememberPasswordSetting"))
+	if(mSaveOnExit || gSavedSettings.getbool("UpdateRememberPasswordSetting"))
 	{
 	    LLFavoritesOrderStorage::instance().saveFavoritesRecord(true);
 	}
@@ -1940,7 +1940,7 @@ void LLFavoritesOrderStorage::rearrangeFavoriteLandmarks(const LLUUID& source_it
 	saveItemsOrder(items);
 }
 
-BOOL LLFavoritesOrderStorage::saveFavoritesRecord(bool pref_changed)
+bool LLFavoritesOrderStorage::saveFavoritesRecord(bool pref_changed)
 {
 	pref_changed |= mRecreateFavoriteStorage;
 	mRecreateFavoriteStorage = false;
@@ -1948,13 +1948,13 @@ BOOL LLFavoritesOrderStorage::saveFavoritesRecord(bool pref_changed)
 	// Can get called before inventory is done initializing.
 	if (!gInventory.isInventoryUsable())
 	{
-		return FALSE;
+		return false;
 	}
 	
 	LLUUID favorite_folder= gInventory.findCategoryUUIDForType(LLFolderType::FT_FAVORITE);
 	if (favorite_folder.isNull())
 	{
-		return FALSE;
+		return false;
 	}
 
 	LLInventoryModel::item_array_t items;
@@ -1985,7 +1985,7 @@ BOOL LLFavoritesOrderStorage::saveFavoritesRecord(bool pref_changed)
 		}
 	}
 
-	if((items != mPrevFavorites) || name_changed || pref_changed || gSavedSettings.getBOOL("UpdateRememberPasswordSetting"))
+	if((items != mPrevFavorites) || name_changed || pref_changed || gSavedSettings.getbool("UpdateRememberPasswordSetting"))
 	{
 	    std::string filename = getStoredFavoritesFilename();
 		if (!filename.empty())
@@ -2008,14 +2008,14 @@ BOOL LLFavoritesOrderStorage::saveFavoritesRecord(bool pref_changed)
 			mMissingSLURLs.clear();
 
             LLSD save_pass;
-            save_pass["save_password"] = gSavedSettings.getBOOL("RememberPassword");
+            save_pass["save_password"] = gSavedSettings.getbool("RememberPassword");
             user_llsd[fav_iter] = save_pass;
             fav_iter++;
 
 			for (LLInventoryModel::item_array_t::iterator it = items.begin(); it != items.end(); it++)
 			{
 				LLSD value;
-				if (gSavedPerAccountSettings.getBOOL("ShowFavoritesOnLogin"))
+				if (gSavedPerAccountSettings.getbool("ShowFavoritesOnLogin"))
 				{
 					value["name"] = (*it)->getName();
 					value["asset_id"] = (*it)->getAssetUUID();
@@ -2066,11 +2066,11 @@ BOOL LLFavoritesOrderStorage::saveFavoritesRecord(bool pref_changed)
 		mPrevFavorites = items;
 	}
 
-	return TRUE;
+	return true;
 
 }
 
-void LLFavoritesOrderStorage::showFavoritesOnLoginChanged(BOOL show)
+void LLFavoritesOrderStorage::showFavoritesOnLoginChanged(bool show)
 {
 	if (show)
 	{
