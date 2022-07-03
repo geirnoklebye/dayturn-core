@@ -986,11 +986,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d9cf352b86a3a73d9d30eec236c17dfd</string>
+              <string>4960be3bc5688d0c643cfa8d81d309be</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.02.01-darwin64-211501753.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.02.07-darwin64-221812249.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -1000,11 +1000,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>1e07af1bb10f462e19faf02859cc6542</string>
+              <string>90f849b4fb4b1cc2ff6aa750e0b4ccfe</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.02.01-linux64-211491834.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.02.07-linux64-221822012.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1028,18 +1028,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>267026d7fe87180c4d95e019909b7561</string>
+              <string>a262f7c0e84aacb297541c155a64e4fa</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.02.01-windows64-211501446.tar.bz2</string>
+              <string>https://bitbucket.org/kokuaprivate/3p-fmodstudio/downloads/fmodstudio-2.02.07-windows64-221832308.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>2.02.01</string>
+        <string>2.02.07</string>
       </map>
       <key>fontconfig</key>
       <map>
@@ -2797,6 +2797,62 @@
         <key>version</key>
         <string>0.16.221500027</string>
       </map>
+      <key>minizip-ng</key>
+      <map>
+        <key>canonical_repo</key>
+        <string>https://bitbucket.org/lindenlab/3p-minizip-ng</string>
+        <key>copyright</key>
+        <string>This project uses the zlib license. Copyright (C) 1995-2013 Jean-loup Gailly and Mark Adler</string>
+        <key>description</key>
+        <string>minizip-ng is a zip manipulation library. Based on work of Gilles Vollant.</string>
+        <key>license</key>
+        <string>minizip-ng</string>
+        <key>license_file</key>
+        <string>LICENSES/minizip-ng.txt</string>
+        <key>name</key>
+        <string>minizip-ng</string>
+        <key>platforms</key>
+        <map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>843587a078102d86d90054d03354684d</string>
+              <key>url</key>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/95876/856095/minizip_ng-3.0.2.569217-darwin64-569217.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>26dc254f443ca9c5509547d7fbd9d8e5</string>
+              <key>url</key>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/95878/856107/minizip_ng-3.0.2.569217-windows-569217.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+          <key>windows64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>e9241fa325f4014995b62193321e7a1c</string>
+              <key>url</key>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/95877/856106/minizip_ng-3.0.2.569217-windows64-569217.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>3.0.2.569217</string>
+      </map>
       <key>ndPhysicsStub</key>
       <map>
         <key>copyright</key>
@@ -2894,62 +2950,6 @@
         </map>
         <key>version</key>
         <string>1.0</string>
-      </map>
-      <key>minizip-ng</key>
-      <map>
-        <key>canonical_repo</key>
-        <string>https://bitbucket.org/lindenlab/3p-minizip-ng</string>
-        <key>copyright</key>
-        <string>This project uses the zlib license. Copyright (C) 1995-2013 Jean-loup Gailly and Mark Adler</string>
-        <key>description</key>
-        <string>minizip-ng is a zip manipulation library. Based on work of Gilles Vollant.</string>
-        <key>license</key>
-        <string>minizip-ng</string>
-        <key>license_file</key>
-        <string>LICENSES/minizip-ng.txt</string>
-        <key>name</key>
-        <string>minizip-ng</string>
-        <key>platforms</key>
-        <map>
-          <key>darwin64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>843587a078102d86d90054d03354684d</string>
-              <key>url</key>
-              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/95876/856095/minizip_ng-3.0.2.569217-darwin64-569217.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>darwin64</string>
-          </map>
-          <key>windows</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>26dc254f443ca9c5509547d7fbd9d8e5</string>
-              <key>url</key>
-              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/95878/856107/minizip_ng-3.0.2.569217-windows-569217.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>windows</string>
-          </map>
-          <key>windows64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>e9241fa325f4014995b62193321e7a1c</string>
-              <key>url</key>
-              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/95877/856106/minizip_ng-3.0.2.569217-windows64-569217.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>windows64</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>3.0.2.569217</string>
       </map>
       <key>nghttp2</key>
       <map>
