@@ -6897,7 +6897,7 @@ bool LLVolumeFace::createSide(LLVolume* volume, bool partial_build)
 
 	LLVector4a* norm = mNormals;
 
-	static LLAlignedArray<LLVector4a, 64> triangle_normals;
+    static thread_local LLAlignedArray<LLVector4a, 64> triangle_normals;
     try
     {
         triangle_normals.resize(count);
