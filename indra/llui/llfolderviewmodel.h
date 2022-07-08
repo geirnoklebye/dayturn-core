@@ -186,7 +186,7 @@ public:
 	virtual bool removeItem() = 0;
 	virtual void removeBatch(std::vector<LLFolderViewModelItem*>& batch) = 0;
 
-	virtual bool isItemCopyable() const = 0;
+	virtual bool isItemCopyable(bool can_copy_as_link = true) const = 0;
 	virtual bool copyToClipboard() const = 0;
 	virtual bool cutToClipboard() = 0;
 	virtual bool isCutToClipboard() { return false; };

@@ -603,7 +603,7 @@ bool LLInvFVBridge::isClipboardPasteable() const
 		if (cat)
 		{
 			LLFolderBridge cat_br(mInventoryPanel.get(), mRoot, item_id);
-			if (!cat_br.isItemCopyable())
+			if (!cat_br.isItemCopyable(false))
 			return false;
 			// Skip to the next item in the clipboard
 			continue;
@@ -611,7 +611,7 @@ bool LLInvFVBridge::isClipboardPasteable() const
 
 		// Each item must be copyable to be pastable
 		LLItemBridge item_br(mInventoryPanel.get(), mRoot, item_id);
-		if (!item_br.isItemCopyable())
+		if (!item_br.isItemCopyable(false))
 		{
 			return false;
 		}
@@ -643,6 +643,11 @@ bool LLInvFVBridge::isClipboardPasteableAsLink() const
 			{
 				return false;
 			}
+
+            if (gInventory.isObjectDescendentOf(item->getUUID(), gInventory.getLibraryRootFolderID()))
+            {
+                return FALSE;
+            }
 		}
 		const LLViewerInventoryCategory *cat = model->getCategory(objects.at(i));
 		if (cat && LLFolderType::lookupIsProtectedType(cat->getPreferredType()))
@@ -2145,22 +2150,24 @@ bool LLItemBridge::confirmRemoveItem(const LLSD& notification, const LLSD& respo
 	return false;
 }
 
-bool LLItemBridge::isItemCopyable() const
+bool LLItemBridge::isItemCopyable(bool can_copy_as_link) const
 {
-	LLViewerInventoryItem* item = getItem();
-	if (item)
-	{
-		// Can't copy worn objects.
-		// Worn objects are tied to their inworld conterparts
-		// Copy of modified worn object will return object with obsolete asset and inventory
-		if(get_is_item_worn(mUUID))
-		{
-			return false;
-		}
+    LLViewerInventoryItem* item = getItem();
+    if (item)
+    {
+        return false;
+    }
+    // Can't copy worn objects.
+    // Worn objects are tied to their inworld conterparts
+    // Copy of modified worn object will return object with obsolete asset and inventory
+    if (get_is_item_worn(mUUID))
+    {
+        return false;
+    }
 
-		return item->getPermissions().allowCopyBy(gAgent.getID()) || gSavedSettings.getbool("InventoryLinking");
-	}
-	return false;
+    static LLCachedControl<bool> inventory_linking(gSavedSettings, "InventoryLinking", true);
+    return (can_copy_as_link && inventory_linking)
+        || item->getPermissions().allowCopyBy(gAgent.getID());
 }
 
 LLViewerInventoryItem* LLItemBridge::getItem() const
@@ -2364,7 +2371,7 @@ bool LLFolderBridge::isUpToDate() const
 	return category->getVersion() != LLViewerInventoryCategory::VERSION_UNKNOWN;
 }
 
-bool LLFolderBridge::isItemCopyable() const
+bool LLFolderBridge::isItemCopyable(bool can_copy_as_link) const
 {
 	// Folders are copyable if items in them are, recursively, copyable.
 	
@@ -2379,22 +2386,26 @@ bool LLFolderBridge::isItemCopyable() const
 	{
 		LLInventoryItem* item = *iter;
 		LLItemBridge item_br(mInventoryPanel.get(), mRoot, item->getUUID());
-		if (!item_br.isItemCopyable())
-			return false;
-}
+        if (!item_br.isItemCopyable(false))
+        {
+            return false;
+        }
+    }
 
 	// Check the folders
 	LLInventoryModel::cat_array_t cat_array_copy = *cat_array;
 	for (LLInventoryModel::cat_array_t::iterator iter = cat_array_copy.begin(); iter != cat_array_copy.end(); iter++)
-{
+    {
 		LLViewerInventoryCategory* category = *iter;
 		LLFolderBridge cat_br(mInventoryPanel.get(), mRoot, category->getUUID());
-		if (!cat_br.isItemCopyable())
-			return false;
-	}
-	
-		return true;
-	}
+        if (!cat_br.isItemCopyable(false))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 bool LLFolderBridge::isClipboardPasteable() const
 {
@@ -3824,6 +3835,7 @@ void LLFolderBridge::perform_pasteFromClipboard()
 			LLInventoryObject *obj = model->getObject(item_id);
 			if (obj)
 			{
+
 				if (move_is_into_lost_and_found)
 				{
 					if (LLAssetType::AT_CATEGORY == obj->getType())

@@ -119,7 +119,7 @@ public:
 	//virtual bool removeItem() = 0;
 	virtual void removeBatch(std::vector<LLFolderViewModelItem*>& batch);
 	virtual void move(LLFolderViewModelItem* new_parent_bridge) {}
-	virtual bool isItemCopyable() const { return FALSE; }
+    virtual bool isItemCopyable(bool can_copy_as_link = true) const { return false; }
 	virtual bool copyToClipboard() const;
 	virtual bool cutToClipboard();
 	virtual bool isCutToClipboard();
@@ -252,7 +252,7 @@ public:
 	virtual bool isItemRenameable() const;
 	virtual bool renameItem(const std::string& new_name);
 	virtual bool removeItem();
-	virtual bool isItemCopyable() const;
+    virtual bool isItemCopyable(bool can_copy_as_link = true) const;
 	virtual bool hasChildren() const { return false; }
 	virtual bool isUpToDate() const { return true; }
 	virtual LLUIImagePtr getIconOverlay() const;
@@ -325,7 +325,7 @@ public:
 	virtual bool isItemRemovable() const;
 	virtual bool isItemMovable() const ;
 	virtual bool isUpToDate() const;
-	virtual bool isItemCopyable() const;
+    virtual bool isItemCopyable(bool can_copy_as_link = true) const;
 	virtual bool isClipboardPasteable() const;
 	virtual bool isClipboardPasteableAsLink() const;
 	

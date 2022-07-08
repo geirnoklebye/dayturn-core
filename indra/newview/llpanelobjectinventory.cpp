@@ -132,7 +132,7 @@ public:
 	virtual bool removeItem();
 	virtual void removeBatch(std::vector<LLFolderViewModelItem*>& batch);
 	virtual void move(LLFolderViewModelItem* parent_listener);	
-	virtual bool isItemCopyable() const;
+    virtual bool isItemCopyable(bool can_copy_as_link = true) const;
 	virtual bool copyToClipboard() const;
 	virtual bool cutToClipboard();
 	virtual bool isClipboardPasteable() const;
@@ -440,7 +440,7 @@ void LLTaskInvFVBridge::move(LLFolderViewModelItem* parent_listener)
 {
 }
 
-bool LLTaskInvFVBridge::isItemCopyable() const
+bool LLTaskInvFVBridge::isItemCopyable(bool can_link) const
 {
 	LLInventoryItem* item = findItem();
 	if(!item) return false;
