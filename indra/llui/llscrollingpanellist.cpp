@@ -152,7 +152,7 @@ void LLScrollingPanelList::removePanel( U32 panel_index )
 	}
 }
 
-void LLScrollingPanelList::updatePanels(BOOL allow_modify)
+void LLScrollingPanelList::updatePanels(bool allow_modify)
 {
     for (std::deque<LLScrollingPanel*>::iterator iter = mPanelList.begin();
 		 iter != mPanelList.end(); ++iter)

@@ -658,7 +658,7 @@ bool LLPanelEditWearable::changeHeightUnits(const LLSD& new_value)
         return true;
 }
 
-void LLPanelEditWearable::updateMetricLayout(BOOL new_value)
+void LLPanelEditWearable::updateMetricLayout(bool new_value)
 {
         LLUIString current_metric, replacment_metric;
         current_metric = new_value ? mMeters : mFeet;
@@ -828,7 +828,7 @@ bool LLPanelEditWearable::postBuild()
         color = mPanelShape->getString("heigth_value_label_color");
         mAvatarHeigthValueLabelColor = LLUIColorTable::instance().getColor(color, LLColor4::green);
         gSavedSettings.getControl("HeightUnits")->getSignal()->connect(boost::bind(&LLPanelEditWearable::changeHeightUnits, this, _2));
-        updateMetricLayout(gSavedSettings.getBOOL("HeightUnits"));
+        updateMetricLayout(gSavedSettings.getbool("HeightUnits"));
 
         return true;
 }
@@ -871,7 +871,7 @@ void LLPanelEditWearable::setVisible(bool visible)
 {
         if (!visible)
         {
-                showWearable(mWearablePtr, FALSE);
+                showWearable(mWearablePtr, false);
         }
         LLPanel::setVisible(visible);
 }
@@ -952,7 +952,7 @@ void LLPanelEditWearable::onCommitSexChange()
         gAgentAvatarp->updateSexDependentLayerSets();
 
         gAgentAvatarp->updateVisualParams();
-        showWearable(mWearablePtr, TRUE, TRUE);
+        showWearable(mWearablePtr, true, true);
         updateScrollingPanelUI();
 }
 
@@ -1398,7 +1398,7 @@ void LLPanelEditWearable::updateScrollingPanelUI()
                                 continue;
                         }
                         
-                        panel_list->updatePanels(TRUE);
+                        panel_list->updatePanels(true);
                 }
         }
 }
@@ -1758,8 +1758,8 @@ public:
         bool handle(const LLSD& params, const LLSD& query_map, LLMediaCtrl* web)
         {
                 // change height units TRUE for meters and FALSE for feet
-                BOOL new_value = (gSavedSettings.getBOOL("HeightUnits") == FALSE) ? TRUE : FALSE;
-                gSavedSettings.setBOOL("HeightUnits", new_value);
+                bool new_value = (gSavedSettings.getbool("HeightUnits") == false) ? true : false;
+                gSavedSettings.setbool("HeightUnits", new_value);
                 return true;
         }
 };

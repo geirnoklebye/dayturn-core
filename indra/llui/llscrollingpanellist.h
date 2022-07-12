@@ -68,7 +68,7 @@ public:
 	S32					addPanel( LLScrollingPanel* panel );
 	void				removePanel( LLScrollingPanel* panel );
 	void				removePanel( U32 panel_index );
-	void				updatePanels(BOOL allow_modify);
+	void				updatePanels(bool allow_modify);
 	const panel_list_t&	getPanelList() { return mPanelList; }
 
 private:

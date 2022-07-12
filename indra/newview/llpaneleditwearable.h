@@ -106,7 +106,7 @@ private:
 	bool changeHeightUnits(const LLSD& new_value);
 
 	// updates current metric and replacement metric label text
-	void updateMetricLayout(BOOL new_value);
+	void updateMetricLayout(bool new_value);
 
 	// updates avatar height label
 	void updateAvatarHeightLabel();
