@@ -1311,10 +1311,9 @@ void LLPanelEditWearable::changeCamera(U8 subpart)
         gMorphView->setCameraTargetJoint( gAgentAvatarp->getJoint( subpart_entry->mTargetJoint ) );
         gMorphView->setCameraTargetOffset( subpart_entry->mTargetOffset );
         gMorphView->setCameraOffset( subpart_entry->mCameraOffset );
-        if (gSavedSettings.getBOOL("AppearanceCameraMovement"))
+        if (gSavedSettings.getbool("AppearanceCameraMovement"))
         {
-            gAgentCamera.setFocusOnAvatar(FALSE, FALSE);
-            gMorphView->updateCamera();
+                gMorphView->updateCamera();
         }
 }
 
@@ -1343,7 +1342,7 @@ void LLPanelEditWearable::updateTypeSpecificControls(LLWearableType::EType type)
         {
                 // Update avatar height
                 F32 new_size = gAgentAvatarp->mBodySize.mV[VZ];
-                if (gSavedSettings.getBOOL("HeightUnits") == FALSE)
+                if (gSavedSettings.getbool("HeightUnits") == false)
                 {
                         // convert meters to feet
                         new_size = new_size / ONE_FOOT;
