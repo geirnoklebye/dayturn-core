@@ -57,9 +57,9 @@
 #include "llviewerobjectlist.h"
 #include "llviewertexteditor.h"
 #include "llvoavatarself.h"
+#include "llwearabledata.h"
 
 #include "RRInterface.h"
-#include "RRInterfaceHelper.h" //for MAX_CLOTHING_PER_TYPE
 
 #include <boost/foreach.hpp>
 
@@ -1201,7 +1201,7 @@ void KokuaFloaterRLVWorn::refreshWornStatus()
 		// do this as a while to make the early exit more readable, unfortunately getWearableCount
 		// isn't public although it exists
 		int ind_layers = 0;
-		while (ind_layers < MAX_CLOTHING_PER_TYPE)
+		while (ind_layers < LLWearableData::MAX_CLOTHING_LAYERS)
 		{
 			LLViewerInventoryItem* vi_item = gInventory.getItem(gAgentWearables.getWearableItemID((LLWearableType::EType)ind_wt, ind_layers));
 
@@ -1231,7 +1231,7 @@ void KokuaFloaterRLVWorn::refreshWornStatus()
 					sdWearColumns[3]["value"] = "locked";
 				}
 				pClothingList->addElement(sdWearRow, ADD_BOTTOM);
-				ind_layers = MAX_CLOTHING_PER_TYPE;
+				ind_layers = LLWearableData::MAX_CLOTHING_LAYERS;
 			}
 			else
 			{
@@ -1242,7 +1242,7 @@ void KokuaFloaterRLVWorn::refreshWornStatus()
 					sdWearColumns[1]["value"] = vi_item->getName();
 
 					BOOL can_wear = gAgent.mRRInterface.canWear((LLWearableType::EType)ind_wt, false);
-					// ideally this would return false if MAX_CLOTHING_PER_TYPE is reached, but we won't try to
+					// ideally this would return false if LLWearableData::MAX_CLOTHING_LAYERS is reached, but we won't try to
 					// allow for that here
 					if (can_wear)
 					{
@@ -1276,7 +1276,7 @@ void KokuaFloaterRLVWorn::refreshWornStatus()
 					ind_layers++;
 					vi_item = gInventory.getItem(gAgentWearables.getWearableItemID((LLWearableType::EType)ind_wt, ind_layers));
 				} while (vi_item);
-				ind_layers = MAX_CLOTHING_PER_TYPE;
+				ind_layers = LLWearableData::MAX_CLOTHING_LAYERS;
 			}
 		}
 		ind_wt++;

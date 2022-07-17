@@ -1087,7 +1087,7 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 				// The "wearables" array contains all the wearables (bodyparts included) that must be worn and no other.
 				// => Only remove clothes that we know have changed in the array of new wearables.
 
-				for (unsigned int index = 0; index < MAX_CLOTHING_PER_TYPE; ++index)
+				for (unsigned int index = 0; index < MAX_CLOTHING_LAYERS; ++index)
 				{
 					bool remove_this = true;
 					// cur_wearable is the piece of clothing we are wearing on index "index" on the layer "j" (ex : WT_SHIRT, WT_PANTS...)
@@ -1141,7 +1141,7 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 			{
 				if (wearable_type_inst->getAssetType((LLWearableType::EType)type) == LLAssetType::AT_CLOTHING)
 				{
-					for (unsigned int index = 0; index < MAX_CLOTHING_PER_TYPE && wear_this; ++index)
+					for (unsigned int index = 0; index < MAX_CLOTHING_LAYERS && wear_this; ++index)
 					{
 						LLViewerWearable* cur_wearable = getViewerWearable ((LLWearableType::EType)type, index);
 						if (cur_wearable && cur_wearable->getItemID() == new_wearable->getItemID())
