@@ -4125,7 +4125,7 @@ void LLWindowWin32::handleStartCompositionMessage()
 
 void LLWindowWin32::handleCompositionMessage(const U32 indexes)
 {
-	BOOL needs_update = FALSE;
+	bool needs_update = false;
 	LLWString result_string;
 	LLWString preedit_string;
 	S32 preedit_string_utf16_length = 0;
@@ -4148,7 +4148,7 @@ void LLWindowWin32::handleCompositionMessage(const U32 indexes)
 				result_string = utf16str_to_wstring(llutf16string(data, size / sizeof(WCHAR)));
 			}
 			delete[] data;
-			needs_update = TRUE;
+			needs_update = true;
 		}
 	}
 	
@@ -4165,7 +4165,7 @@ void LLWindowWin32::handleCompositionMessage(const U32 indexes)
 				preedit_string = utf16str_to_wstring(llutf16string(data, size / sizeof(WCHAR)));
 			}
 			delete[] data;
-			needs_update = TRUE;
+			needs_update = true;
 		}
 	}
 
@@ -4231,7 +4231,7 @@ void LLWindowWin32::handleCompositionMessage(const U32 indexes)
 		// I'm not sure this condition really happens, but
 		// Windows SDK document says it is an indication
 		// of "reset everything."
-		needs_update = TRUE;
+		needs_update = true;
 	}
 
 	LLWinImm::releaseContext(mWindowHandle, himc);
