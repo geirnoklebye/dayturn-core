@@ -32,6 +32,7 @@
 #ifndef CHATBAR_AS_CMDLINE_H
 #define CHATBAR_AS_CMDLINE_H
 
+#include "llpanelobject.h"
 #include "llviewerprecompiledheaders.h"
 
 #include "llchat.h"
