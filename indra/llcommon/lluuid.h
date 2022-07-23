@@ -189,6 +189,18 @@ namespace boost { template <> struct hash<LLUUID>
 };
 } // <FS:ND/> close namespace
 
+// Adapt boost hash to std hash
+namespace std
+{
+    template<> struct hash<LLUUID>
+    {
+        std::size_t operator()(LLUUID const& s) const noexcept
+        {
+            return boost::hash<LLUUID>()(s);
+        }
+    };
+}
+
 // <FS:Ansariel> UUID hash calculation
 struct FSUUIDHash
 {
