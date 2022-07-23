@@ -459,6 +459,16 @@
 		<combo_box.commit_callback
 		function="WMap.Landmark"/>
     </combo_box>
+    <check_box
+     label="Favorites only"
+     control_name="KokuaWorldmapFavoriteLandmarksOnly"
+     follows="top|right"
+     height="16"
+     layout="topleft"
+     left="27"
+     name="favorite_only_chk"
+     top_pad="4"
+     width="22" />
        <icon
      color="0.5 0 0 1"
      follows="top|right"
@@ -503,7 +513,7 @@
      draw_stripes="false"
      bg_writeable_color="MouseGray"
      follows="all"
-     height="145"
+     height="127"
      layout="topleft"
      left="28"
      name="search_results"
