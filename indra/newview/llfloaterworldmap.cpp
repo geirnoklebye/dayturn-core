@@ -1214,7 +1214,9 @@ void LLFloaterWorldMap::buildLandmarkIDLists()
 	LLInventoryModel::cat_array_t cats;
 	LLInventoryModel::item_array_t items;
 	LLIsType is_landmark(LLAssetType::AT_LANDMARK);
-	gInventory.collectDescendentsIf(gInventory.getRootFolderID(),
+	// KKA-946 Add option to just list Favorites instead of all landmarks
+	LLUUID search_folder_id = (gSavedSettings.getBOOL("KokuaWorldmapFavoriteLandmarksOnly") ? gInventory.findCategoryUUIDForType(LLFolderType::FT_FAVORITE) : gInventory.getRootFolderID());
+	gInventory.collectDescendentsIf(search_folder_id,
 									cats,
 									items,
 									LLInventoryModel::EXCLUDE_TRASH,
