@@ -911,6 +911,9 @@ public:
 	bool cacheOptimize();
 
 	void createOctree(F32 scaler = 0.25f, const LLVector4a& center = LLVector4a(0,0,0), const LLVector4a& size = LLVector4a(0.5f,0.5f,0.5f));
+    void destroyOctree();
+    // Get a reference to the octree, which may be null
+    const LLOctreeNode<LLVolumeTriangle, LLVolumeTriangle*>* getOctree() const;
 
 	enum
 	{
@@ -978,14 +981,12 @@ public:
     // Which joints are rigged to, and the bounding box of any rigged
     // vertices per joint.
     LLJointRiggingInfoTab mJointRiggingInfoTab;
-    
-    // This octree stores raw pointer references to triangles in mOctreeTriangles
-    LLOctreeNode<LLVolumeTriangle, LLVolumeTriangle*>* mOctree;
 
 	//whether or not face has been cache optimized
 	bool mOptimized;
 
 private:
+    LLOctreeNode<LLVolumeTriangle, LLVolumeTriangle*>* mOctree;
     LLVolumeTriangle* mOctreeTriangles;
 
 	bool createUnCutCubeCap(LLVolume* volume, bool partial_build = false);
