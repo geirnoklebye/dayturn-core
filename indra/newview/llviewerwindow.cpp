@@ -2568,7 +2568,7 @@ void LLViewerWindow::reshape(S32 width, S32 height)
 
 		calcDisplayScale();
 	
-		BOOL display_scale_changed = mDisplayScale != LLUI::getScaleFactor();
+		bool display_scale_changed = mDisplayScale != LLUI::getScaleFactor();
 		LLUI::setScaleFactor(mDisplayScale);
 
 		// update our window rectangle
@@ -2586,7 +2586,7 @@ void LLViewerWindow::reshape(S32 width, S32 height)
             // Needs only a 'scale change' update, everything else gets handled by LLLayoutStack::updateClass()
             LLPanelLogin::reshapePanel();
         }
-		LLView::sForceReshape = FALSE;
+		LLView::sForceReshape = false;
 
 		// clear font width caches
 		if (display_scale_changed)
