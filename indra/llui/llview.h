@@ -245,13 +245,7 @@ public:
 
 	ECursorType	getHoverCursor() { return mHoverCursor; }
 
-	// <FS:ND> Made this non inline when changing mToolTipMsg from a LLUIString to a char* to reduce memory usage,
-	// (Making a virtual function inline is debatable anyway).
-
-	// virtual const std::string getToolTip() const			{ return mToolTipMsg.getString(); }
-	virtual const std::string getToolTip() const;
-
-	// </FS:ND>
+	virtual const std::string getToolTip() const			{ return mToolTipMsg.getString(); }
 
 	void		sendChildToFront(LLView* child);
 	void		sendChildToBack(LLView* child);
@@ -614,15 +608,7 @@ private:
 	bool		mEnabled;		// Enabled means "accepts input that has an effect on the state of the application."
 								// A disabled view, for example, may still have a scrollbar that responds to mouse events.
 	bool		mMouseOpaque;	// Opaque views handle all mouse events that are over their rect.
-								// isNull() is true if none.
-	 
-	// <FS:ND> LLUIString comes with a tax of 92 byte (Numbers apply to Win32).
-	// Saving roughly 90% (char* + pointer for args) for each LLView derived object makes this really worthwile. Especially when having a large inventory,
-	
-	// LLUIString	mToolTipMsg;
-	char *mToolTipMsg;
-	LLStringUtil::format_map_t *mTooltipArgs;
-	// </FS:ND>
+	LLUIString	mToolTipMsg;	// isNull() is true if none.
 
 	U8          mSoundFlags;
 	bool		mFromXUI;
