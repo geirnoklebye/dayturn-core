@@ -118,8 +118,8 @@ protected:
 
 public:
 	LLXMLNode();
-	LLXMLNode(const char* name, BOOL is_attribute);
-	LLXMLNode(LLStringTableEntry* name, BOOL is_attribute);
+	LLXMLNode(const char* name, bool is_attribute);
+	LLXMLNode(LLStringTableEntry* name, bool is_attribute);
 	LLXMLNode(const LLXMLNode& rhs);
 	LLXMLNodePtr deepCopy();
 

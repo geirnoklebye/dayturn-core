@@ -69,7 +69,7 @@ LLXMLNode::LLXMLNode() :
 {
 }
 
-LLXMLNode::LLXMLNode(const char* name, BOOL is_attribute) : 
+LLXMLNode::LLXMLNode(const char* name, bool is_attribute) : 
 	mID(""),
 	mParser(NULL),
 	mIsAttribute(is_attribute),
@@ -91,7 +91,7 @@ LLXMLNode::LLXMLNode(const char* name, BOOL is_attribute) :
     mName = gStringTable.addStringEntry(name);
 }
 
-LLXMLNode::LLXMLNode(LLStringTableEntry* name, BOOL is_attribute) : 
+LLXMLNode::LLXMLNode(LLStringTableEntry* name, bool is_attribute) : 
 	mID(""),
 	mParser(NULL),
 	mIsAttribute(is_attribute),
@@ -375,7 +375,7 @@ void XMLCALL StartXMLNode(void *userData,
                           const XML_Char **atts)
 {
 	// Create a new node
-	LLXMLNode *new_node_ptr = new LLXMLNode(name, FALSE);
+	LLXMLNode *new_node_ptr = new LLXMLNode(name, false);
 
 	LLXMLNodePtr new_node = new_node_ptr;
 	new_node->mID.clear();
@@ -482,7 +482,7 @@ void XMLCALL StartXMLNode(void *userData,
 		LLXMLNodePtr attr_node;
 		if (!new_node->getAttribute(attr_name.c_str(), attr_node, FALSE))
 		{
-			attr_node = new LLXMLNode(attr_name.c_str(), TRUE);
+			attr_node = new LLXMLNode(attr_name.c_str(), true);
 			attr_node->setLineNumber(XML_GetCurrentLineNumber(*new_node_ptr->mParser));
 		}
 		attr_node->setValue(attr_value);
@@ -692,7 +692,7 @@ bool LLXMLNode::parseBuffer(
 	XML_SetCharacterDataHandler(my_parser, XMLData);
 
 	// Create a root node
-	LLXMLNode *file_node_ptr = new LLXMLNode("XML", FALSE);
+	LLXMLNode *file_node_ptr = new LLXMLNode("XML", false);
 	LLXMLNodePtr file_node = file_node_ptr;
 
 	file_node->mParser = &my_parser;
@@ -741,7 +741,7 @@ bool LLXMLNode::parseStream(
 	XML_SetCharacterDataHandler(my_parser, XMLData);
 
 	// Create a root node
-	LLXMLNode *file_node_ptr = new LLXMLNode("XML", FALSE);
+	LLXMLNode *file_node_ptr = new LLXMLNode("XML", false);
 	LLXMLNodePtr file_node = file_node_ptr;
 
 	file_node->mParser = &my_parser;
