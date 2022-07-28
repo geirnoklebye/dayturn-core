@@ -563,7 +563,7 @@ std::string LLControlGroup::sanityTypeEnumToString(eSanityType sanitytypeenum)
 
 // <FS:Zi> Backup Settings
 //LLControlVariable* LLControlGroup::declareControl(const std::string& name, eControlType type, const LLSD initial_val, const std::string& comment, LLControlVariable::ePersist persist, BOOL hidefromsettingseditor)
-LLControlVariable* LLControlGroup::declareControl(const std::string& name, eControlType type, const LLSD initial_val, const std::string& comment, eSanityType sanity_type, LLSD sanity_value, const std::string& sanity_comment, LLControlVariable::ePersist persist, BOOL can_backup, BOOL hidefromsettingseditor)
+LLControlVariable* LLControlGroup::declareControl(const std::string& name, eControlType type, const LLSD initial_val, const std::string& comment, eSanityType sanity_type, LLSD sanity_value, const std::string& sanity_comment, LLControlVariable::ePersist persist, bool can_backup, bool hidefromsettingseditor)
 // </FS:Zi>
 {
 	LLControlVariable* existing_control = getControl(name);
