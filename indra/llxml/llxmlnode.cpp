@@ -1283,7 +1283,7 @@ bool LLXMLNode::getAttribute_bool(const char* name, bool& value )
     {
         return false;
     }
-    BOOL temp;
+    S32 temp;
 	bool retval = node->getBoolValue(1, &temp);
     value = temp;
     return retval;
