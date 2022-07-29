@@ -113,7 +113,6 @@ set(llcommon_SOURCE_FILES
     llsys.cpp
     lltempredirect.cpp
     llthread.cpp
-    llthreadlocalstorage.cpp
     llthreadsafequeue.cpp
     lltimer.cpp
     lltrace.cpp

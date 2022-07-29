@@ -33,7 +33,6 @@
 
 #include "llmutex.h"
 #include "lltraceaccumulators.h"
-#include "llthreadlocalstorage.h"
 
 namespace LLTrace
 {
@@ -93,7 +92,7 @@ namespace LLTrace
 
 	};
 
-	const LLThreadLocalPointer<ThreadRecorder>& get_thread_recorder();
+	ThreadRecorder* get_thread_recorder();
 	void set_thread_recorder(ThreadRecorder*);
 
 	void set_master_thread_recorder(ThreadRecorder*);
