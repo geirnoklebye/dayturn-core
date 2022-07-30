@@ -111,7 +111,7 @@
         <panel
 		 class="panel_preference"
          filename="panel_preferences_chat.xml"
-         label="Chat"
+         label="Chat &amp; IM"
          layout="topleft"
          help_topic="preferences_chat_tab"
          name="chat" />
