@@ -1554,15 +1554,6 @@ even though the user gets a free copy.
              text_enabled_color="1 0 0.3 .7"
              top_pad="5"
              width="87" />
-			 <button follows="top|right"
-             height="18" 
-             label="C"
-             left_pad="5"
-             mouse_opaque="true"
-             name="copypos"
-             enabled="true"
-             tool_tip="Copy Position"
-             width="30" />
             <spinner
              decimal_digits="4"
 			 follows="left|top"
@@ -1579,15 +1570,6 @@ even though the user gets a free copy.
              text_enabled_color="EmphasisColor"
              top_pad="3"
              width="87" />
-			 <button follows="top|right"
-             height="18"
-             label="P"
-             left_pad="5"
-             mouse_opaque="true"
-             name="pastepos"
-             enabled="true"
-             tool_tip="Paste Position"
-             width="30" />
             <spinner
              decimal_digits="4"
 			 follows="left|top"
@@ -1603,15 +1585,6 @@ even though the user gets a free copy.
              text_enabled_color="0 0.8 1 .65"
              top_pad="3"
              width="87" />
-			 <button follows="top|right"
-             height="18"
-             label="PC"
-             left_pad="5"
-             mouse_opaque="true"
-             name="pasteposclip"
-             enabled="true"
-             tool_tip="Paste Position from Clipboard"
-             width="30" />
             <text
              type="string"
              length="1"
@@ -1640,15 +1613,6 @@ even though the user gets a free copy.
              text_enabled_color="1 1 1 1"
              top_pad="5"
              width="87" />
-			 <button follows="top|right"
-             height="18" 
-             label="C"
-             left_pad="5"
-             mouse_opaque="true"
-             name="copysize"
-             enabled="true"
-             tool_tip="Copy Size"
-             width="30" />
             <spinner
              decimal_digits="4"
 			 follows="left|top"
@@ -1665,15 +1629,6 @@ even though the user gets a free copy.
              text_enabled_color="1 1 1 1"
              top_pad="3"
              width="87" />
-			 <button follows="top|right"
-             height="18"
-             label="P"
-             left_pad="5"
-             mouse_opaque="true"
-             name="pastesize"
-             enabled="true"
-             tool_tip="Paste Size"
-             width="30" />
             <spinner
              decimal_digits="4"
 			 follows="left|top"
@@ -1690,15 +1645,6 @@ even though the user gets a free copy.
              text_enabled_color="1 1 1 1"
              top_pad="3"
              width="87" />
-			 <button follows="top|right"
-             height="18"
-             label="PC"
-             left_pad="5"
-             mouse_opaque="true"
-             name="pastesizeclip"
-             enabled="true"
-             tool_tip="Paste Size from Clipboard"
-             width="30" />
             <text
              type="string"
              length="1"
@@ -1727,15 +1673,6 @@ even though the user gets a free copy.
              text_enabled_color="1 1 1 1"
              top_pad="5"
              width="87" />
-			 <button follows="top|right"
-             height="18"
-             label="C"
-             left_pad="5"
-             mouse_opaque="true"
-             name="copyrot"
-             enabled="true"
-             tool_tip="Copy Rotation"
-             width="30" />
             <spinner
              decimal_digits="3"
              follows="left|top"
@@ -1752,15 +1689,6 @@ even though the user gets a free copy.
              text_enabled_color="1 1 1 1"
              top_pad="3"
              width="87" />
-			 <button follows="top|right"
-             height="18"
-             label="P"
-             left_pad="5"
-             mouse_opaque="true"
-             name="pasterot"
-             enabled="true"
-             tool_tip="Paste Rotation"
-             width="30" />
             <spinner
              decimal_digits="3"
              follows="left|top"
@@ -1777,15 +1705,6 @@ even though the user gets a free copy.
              text_enabled_color="1 1 1 1"
              top_pad="3"
              width="87" />
-			 <button follows="top|right"
-             height="18"
-             label="PC"
-             left_pad="5"
-             mouse_opaque="true"
-             name="pasterotclip"
-             enabled="true"
-             tool_tip="Paste Rotation from Clipboard"
-             width="30" />
             <combo_box
              height="19"
              layout="topleft"
@@ -2242,38 +2161,6 @@ even though the user gets a free copy.
              name="Revolutions"
              top_delta="0"
              width="68" />
-            <text
-             type="string"
-             length="1"
-             follows="left|top"
-             height="10"
-             layout="topleft"
-             left="140"
-             name="edit_object"
-             top_pad="5"
-             width="150">
-                    Copy/Paste Prim Shape
-            </text>
-            <button
-             follows="left|top"
-             height="18"
-             label="Copy"
-             layout="topleft"
-             left="140"
-             name="copyparams"
-             tool_tip="Copy prim shape parameters to the clipboard"
-             width="70">
-            </button>
-            <button
-             follows="top|right"
-             height="18"
-             label="Paste"
-             layout="topleft"
-             left_pad="10"
-             name="pasteparams"
-             tool_tip="Paste prim shape parameters from the clipboard"
-             width="70">
-            </button>
             <texture_picker
              can_apply_immediately="true"
              default_image_name="Default"
@@ -2744,40 +2631,6 @@ even though the user gets a free copy.
          help_topic="toolbox_texture_tab"
          name="Texture"
          filename="panel_tools_texture.xml">
-<!--			 <button
-             follows="top|right"
-             height="19"
-             label="Copy"
-             layout="topleft"
-             left_pad="10"
-             name="copytextures"
-             tool_tip="Copy Parameters to Clipboard"
-             width="68">
-            </button>
-           <spinner
-             follows="left|top"
-             height="19"
-             initial_value="0"
-             label="Vertical (V)"
-             label_width="125"
-             layout="topleft"
-             left="20"
-             min_val="-1"
-             name="TexOffsetV"
-             top_pad="1"
-             width="185" />
-
-			 <button
-             follows="top|right"
-             height="20"
-             label="Paste"
-             layout="topleft"
-             left_pad="10"
-             name="pastetextures"
-             tool_tip="Paste Parameters from Clipboard"
-             width="68">
-            </button>
--->
 	   </panel>
        <panel
          border="false"
