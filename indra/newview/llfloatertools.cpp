@@ -597,9 +597,11 @@ void LLFloaterTools::refresh()
 	else
 #endif
 	{
-		F32 link_cost  = LLSelectMgr::getInstance()->getSelection()->getSelectedLinksetCost();
+        LLObjectSelectionHandle selection = LLSelectMgr::getInstance()->getSelection();
         S32 prim_count = LLSelectMgr::getInstance()->getSelection()->getObjectCount();
-		S32 link_count = LLSelectMgr::getInstance()->getSelection()->getRootObjectCount();
+        F32 link_cost = selection->getSelectedLinksetCost();
+        S32 link_count = selection->getRootObjectCount();
+        S32 object_count = selection->getObjectCount();
 
 		LLCrossParcelFunctor func;
 		if (LLSelectMgr::getInstance()->getSelection()->applyToRootObjects(&func, true))
@@ -627,12 +629,47 @@ void LLFloaterTools::refresh()
 					childSetTextArg("remaining_capacity", "[CAPACITY_STRING]", empty_str);
 				}
 				// </FS:Ansariel>
-			}
-			else
-			{
-				LL_WARNS() << "Failed to get selected object" << LL_ENDL;
-			}
-		}
+            }
+            else
+            {
+                LL_WARNS() << "Failed to get selected object" << LL_ENDL;
+            }
+        }
+
+        if (object_count == 1)
+        {
+            // "selection_faces" shouldn't be visible if not LLToolFace::getInstance()
+            // But still need to be populated in case user switches
+
+            std::string faces_str = "";
+
+            for (LLObjectSelection::iterator iter = selection->begin(); iter != selection->end();)
+            {
+                LLObjectSelection::iterator nextiter = iter++; // not strictly needed, we have only one object
+                LLSelectNode* node = *nextiter;
+                LLViewerObject* object = (*nextiter)->getObject();
+                if (!object)
+                    continue;
+                S32 num_tes = llmin((S32)object->getNumTEs(), (S32)object->getNumFaces());
+                for (S32 te = 0; te < num_tes; ++te)
+                {
+                    if (node->isTESelected(te))
+                    {
+                        if (!faces_str.empty())
+                        {
+                            faces_str += ", ";
+                        }
+                        faces_str += llformat("%d", te);
+                    }
+                }
+            }
+
+            childSetTextArg("selection_faces", "[FACES_STRING]", faces_str);
+        }
+
+        bool show_faces = (object_count == 1)
+                          && LLToolFace::getInstance() == LLToolMgr::getInstance()->getCurrentTool();
+        getChildView("selection_faces")->setVisible(show_faces);
 
 		LLStringUtil::format_map_t selection_args;
 		selection_args["OBJ_COUNT"] = llformat("%.1d", link_count);
@@ -981,6 +1018,8 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 
 	getChildView("selection_count")->setVisible(!land_visible && have_selection);
 	getChildView("remaining_capacity")->setVisible(!land_visible && have_selection);
+    getChildView("selection_faces")->setVisible(LLToolFace::getInstance() == LLToolMgr::getInstance()->getCurrentTool()
+                                                && LLSelectMgr::getInstance()->getSelection()->getObjectCount() == 1);
 	getChildView("selection_empty")->setVisible(!land_visible && !have_selection);
 	
 	mTab->setVisible(!land_visible);
@@ -1258,7 +1297,7 @@ void LLFloaterTools::onClickGridOptions()
 	//LLFloaterReg::showInstance("build_options");
 	LLFloater* floaterp = LLFloaterReg::showInstance("advancedbuild_options");
 	// position floater next to build tools, not over
-	floaterp->setRect(gFloaterView->findNeighboringPosition(this, floaterp));
+	floaterp->setShape(gFloaterView->findNeighboringPosition(this, floaterp), true);
 }
 
 // static

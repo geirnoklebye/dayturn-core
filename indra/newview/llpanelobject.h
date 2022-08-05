@@ -37,6 +37,7 @@ class LLCheckBoxCtrl;
 class LLTextBox;
 class LLUICtrl;
 class LLButton;
+class LLMenuButton;
 class LLViewerObject;
 class LLComboBox;
 class LLColorSwatchCtrl;
@@ -66,18 +67,14 @@ public:
 	static void 	onCommitPhantom(		LLUICtrl* ctrl, void* userdata);
 	static void 	onCommitPhysics(		LLUICtrl* ctrl, void* userdata);
 	
-	void 	onCopyPos(				const LLSD& data);
-	void 	onPastePos(				const LLSD& data);
-	void 	onPastePosClip(			const LLSD& data);
-	void 	onCopySize(				const LLSD& data);
-	void 	onPasteSize(			const LLSD& data);
-	void 	onPasteSizeClip(		const LLSD& data);
-	void 	onCopyRot(				const LLSD& data);
-	void 	onPasteRot(				const LLSD& data);
-	void 	onPasteRotClip(			const LLSD& data);
-	void 	onCopyParams(			const LLSD& data);
-	void 	onPasteParams(			const LLSD& data);
-
+    void            onCopyPos();
+    void            onPastePos();
+    void            onCopySize();
+    void            onPasteSize();
+    void            onCopyRot();
+    void            onPasteRot();
+    void            onCopyParams();
+    void            onPasteParams();
 	static void 	onCommitParametric(LLUICtrl* ctrl, void* userdata);
 
 
@@ -86,6 +83,9 @@ public:
 	void     		onSelectSculpt(const LLSD& data);
 	BOOL     		onDropSculpt(LLInventoryItem* item);
 	static void     onCommitSculptType(    LLUICtrl *ctrl, void* userdata);
+
+    void            menuDoToSelected(const LLSD& userdata);
+    bool            menuEnableItem(const LLSD& userdata);
 
 protected:
 	void			getState();
@@ -103,23 +103,9 @@ protected:
 	
 protected:
 	
-	LLVector3		mClipboardPos;
-	LLVector3		mClipboardSize;
-	LLVector3		mClipboardRot;
-
-	BOOL			mHasPosClipboard;
-	BOOL			mHasSizeClipboard;
-	BOOL			mHasRotClipboard;
-
-	LLSD			mPramsClipboard;
-	LLVolumeParams	mClipboardVolumeParams;
-	BOOL			mHasParamClipboard;
-	BOOL			mHasFlexiParam;
-	BOOL			mHasSculptParam;
-	BOOL			mHasLightParam;
-
 	// Per-object options
 	LLComboBox*		mComboBaseType;
+	LLMenuButton*	mMenuClipboardParams;
 
 	LLTextBox*		mLabelCut;
 	LLSpinCtrl*		mSpinCutBegin;
@@ -159,37 +145,25 @@ protected:
 	LLTextBox*		mLabelRevolutions;
 	LLSpinCtrl*		mSpinRevolutions;
 
+	LLMenuButton*   mMenuClipboardPos;
 	LLTextBox*		mLabelPosition;
 	LLSpinCtrl*		mCtrlPosX;
 	LLSpinCtrl*		mCtrlPosY;
 	LLSpinCtrl*		mCtrlPosZ;
 
+	LLMenuButton*   mMenuClipboardSize;
 	LLTextBox*		mLabelSize;
 	LLSpinCtrl*		mCtrlScaleX;
 	LLSpinCtrl*		mCtrlScaleY;
 	LLSpinCtrl*		mCtrlScaleZ;
 	BOOL			mSizeChanged;
 
+	LLMenuButton*   mMenuClipboardRot;
 	LLTextBox*		mLabelRotation;
 	LLSpinCtrl*		mCtrlRotX;
 	LLSpinCtrl*		mCtrlRotY;
 	LLSpinCtrl*		mCtrlRotZ;
 	
-	LLButton		*mBtnCopyPos;
-	LLButton		*mBtnPastePos;
-	LLButton		*mBtnPastePosClip;
-	
-	LLButton		*mBtnCopySize;
-	LLButton		*mBtnPasteSize;
-	LLButton		*mBtnPasteSizeClip;
-	
-	LLButton		*mBtnCopyRot;
-	LLButton		*mBtnPasteRot;
-	LLButton		*mBtnPasteRotClip;
-
-	LLButton*		mBtnCopyParams;
-	LLButton*		mBtnPasteParams;
-
 	LLCheckBoxCtrl	*mCheckLock;
 	LLCheckBoxCtrl	*mCheckPhysics;
 	LLCheckBoxCtrl	*mCheckTemporary;
@@ -200,7 +174,7 @@ protected:
 	LLComboBox      *mCtrlSculptType;
 	LLCheckBoxCtrl  *mCtrlSculptMirror;
 	LLCheckBoxCtrl  *mCtrlSculptInvert;
-	
+
 	LLVector3		mCurEulerDegrees;		// to avoid sending rotation when not changed
 	BOOL			mIsPhysical;			// to avoid sending "physical" when not changed
 	BOOL			mIsTemporary;			// to avoid sending "temporary" when not changed
@@ -209,6 +183,15 @@ protected:
 
 	LLUUID          mSculptTextureRevert;   // so we can revert the sculpt texture on cancel
 	U8              mSculptTypeRevert;      // so we can revert the sculpt type on cancel
+
+    LLVector3       mClipboardPos;
+    LLVector3       mClipboardSize;
+    LLVector3       mClipboardRot;
+    LLSD            mClipboardParams;
+
+    bool            mHasClipboardPos;
+    bool            mHasClipboardSize;
+    bool            mHasClipboardRot;
 
 	LLPointer<LLViewerObject> mObject;
 	LLPointer<LLViewerObject> mRootObject;
