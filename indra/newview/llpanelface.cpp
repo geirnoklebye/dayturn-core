@@ -876,7 +876,7 @@ void LLPanelFace::updateUI(bool force_set_values /*false*/)
 
 		getChildView("radio_material_type")->setEnabled(editable);
 		getChildView("checkbox_sync_settings")->setEnabled(editable);
-		childSetValue("checkbox_sync_settings", gSavedSettings.getBOOL("SyncMaterialSettings"));
+		childSetValue("checkbox_sync_settings", gSavedSettings.getbool("SyncMaterialSettings"));
 		updateVisibility();
 
 		bool identical				= true;	// true because it is anded below
@@ -994,18 +994,18 @@ void LLPanelFace::updateUI(bool force_set_values /*false*/)
 			// Normal map
 			LLSelectedTEMaterial::getNormalID(normmap_id, identical_norm);
 
-			mIsAlpha = FALSE;
+			mIsAlpha = false;
 			LLGLenum image_format = GL_RGB;
 			bool identical_image_format = false;
 			LLSelectedTE::getImageFormat(image_format, identical_image_format);
             
-         mIsAlpha = FALSE;
+         mIsAlpha = false;
          switch (image_format)
          {
                case GL_RGBA:
                case GL_ALPHA:
                {
-                  mIsAlpha = TRUE;
+                  mIsAlpha = true;
                }
                break;
 
@@ -3030,7 +3030,7 @@ void LLPanelFace::onCommitMaterialBumpyOffsetX(LLUICtrl* ctrl, void* userdata)
 	LLPanelFace* self = (LLPanelFace*) userdata;
 	llassert_always(self);
 
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		syncOffsetX(self,self->getCurrentBumpyOffsetU());
 	}
@@ -3047,7 +3047,7 @@ void LLPanelFace::onCommitMaterialBumpyOffsetY(LLUICtrl* ctrl, void* userdata)
 	LLPanelFace* self = (LLPanelFace*) userdata;
 	llassert_always(self);
 
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		syncOffsetY(self,self->getCurrentBumpyOffsetV());
 	}
@@ -3063,7 +3063,7 @@ void LLPanelFace::onCommitMaterialShinyOffsetX(LLUICtrl* ctrl, void* userdata)
 	LLPanelFace* self = (LLPanelFace*) userdata;
 	llassert_always(self);
 
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		syncOffsetX(self, self->getCurrentShinyOffsetU());
 	}
@@ -3079,7 +3079,7 @@ void LLPanelFace::onCommitMaterialShinyOffsetY(LLUICtrl* ctrl, void* userdata)
 	LLPanelFace* self = (LLPanelFace*) userdata;
 	llassert_always(self);
 
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		syncOffsetY(self,self->getCurrentShinyOffsetV());
 	}
@@ -3116,7 +3116,7 @@ void LLPanelFace::onCommitMaterialBumpyScaleX(LLUICtrl* ctrl, void* userdata)
 		bumpy_scale_u *= 0.5f;
 	}
 
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		self->getChild<LLSpinCtrl>("TexScaleU")->forceSetValue(self->getCurrentBumpyScaleU());
 		syncRepeatX(self, bumpy_scale_u);
@@ -3139,7 +3139,7 @@ void LLPanelFace::onCommitMaterialBumpyScaleY(LLUICtrl* ctrl, void* userdata)
 	}
 
 
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		self->getChild<LLSpinCtrl>("TexScaleV")->forceSetValue(self->getCurrentBumpyScaleV());
 		syncRepeatY(self, bumpy_scale_v);
@@ -3161,7 +3161,7 @@ void LLPanelFace::onCommitMaterialShinyScaleX(LLUICtrl* ctrl, void* userdata)
 		shiny_scale_u *= 0.5f;
 	}
 
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		self->getChild<LLSpinCtrl>("TexScaleU")->forceSetValue(self->getCurrentShinyScaleU());
 		syncRepeatX(self, shiny_scale_u);
@@ -3183,7 +3183,7 @@ void LLPanelFace::onCommitMaterialShinyScaleY(LLUICtrl* ctrl, void* userdata)
 		shiny_scale_v *= 0.5f;
 	}
 
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		self->getChild<LLSpinCtrl>("TexScaleV")->forceSetValue(self->getCurrentShinyScaleV());
 		syncRepeatY(self, shiny_scale_v);
@@ -3208,7 +3208,7 @@ void LLPanelFace::onCommitMaterialBumpyRot(LLUICtrl* ctrl, void* userdata)
 	LLPanelFace* self = (LLPanelFace*) userdata;
 	llassert_always(self);
 
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		self->getChild<LLSpinCtrl>("TexRot")->forceSetValue(self->getCurrentBumpyRot());
 		syncMaterialRot(self, self->getCurrentBumpyRot());
@@ -3236,7 +3236,7 @@ void LLPanelFace::onCommitMaterialShinyRot(LLUICtrl* ctrl, void* userdata)
 	LLPanelFace* self = (LLPanelFace*) userdata;
 	llassert_always(self);
 
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		self->getChild<LLSpinCtrl>("TexRot")->forceSetValue(self->getCurrentShinyRot());
 		syncMaterialRot(self, self->getCurrentShinyRot());
@@ -3294,7 +3294,7 @@ void LLPanelFace::onCommitTextureInfo( LLUICtrl* ctrl, void* userdata )
 void LLPanelFace::onCommitTextureScaleX( LLUICtrl* ctrl, void* userdata )
 {
 	LLPanelFace* self = (LLPanelFace*) userdata;
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		F32 bumpy_scale_u = self->getChild<LLUICtrl>("TexScaleU")->getValue().asReal();
 		if (self->isIdenticalPlanarTexgen())
@@ -3314,7 +3314,7 @@ void LLPanelFace::onCommitTextureScaleX( LLUICtrl* ctrl, void* userdata )
 void LLPanelFace::onCommitTextureScaleY( LLUICtrl* ctrl, void* userdata )
 {
 	LLPanelFace* self = (LLPanelFace*) userdata;
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		F32 bumpy_scale_v = self->getChild<LLUICtrl>("TexScaleV")->getValue().asReal();
 		if (self->isIdenticalPlanarTexgen())
@@ -3335,7 +3335,7 @@ void LLPanelFace::onCommitTextureRot( LLUICtrl* ctrl, void* userdata )
 {
 	LLPanelFace* self = (LLPanelFace*) userdata;
 
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		syncMaterialRot(self, self->getChild<LLUICtrl>("TexRot")->getValue().asReal());
 	}
@@ -3350,7 +3350,7 @@ void LLPanelFace::onCommitTextureRot( LLUICtrl* ctrl, void* userdata )
 void LLPanelFace::onCommitTextureOffsetX( LLUICtrl* ctrl, void* userdata )
 {
 	LLPanelFace* self = (LLPanelFace*) userdata;
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		syncOffsetX(self, self->getChild<LLUICtrl>("TexOffsetU")->getValue().asReal());
 	}
@@ -3365,7 +3365,7 @@ void LLPanelFace::onCommitTextureOffsetX( LLUICtrl* ctrl, void* userdata )
 void LLPanelFace::onCommitTextureOffsetY( LLUICtrl* ctrl, void* userdata )
 {
 	LLPanelFace* self = (LLPanelFace*) userdata;
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		syncOffsetY(self, self->getChild<LLUICtrl>("TexOffsetV")->getValue().asReal());
 	}
@@ -3390,8 +3390,8 @@ void LLPanelFace::onCommitRepeatsPerMeter(LLUICtrl* ctrl, void* userdata)
 	U32 material_type           = (materials_media == MATMEDIA_MATERIAL) ? radio_mat_type->getSelectedIndex() : 0;
 	F32 repeats_per_meter	= repeats_ctrl->getValue().asReal();
 	
-   F32 obj_scale_s = 1.0f;
-   F32 obj_scale_t = 1.0f;
+	F32 obj_scale_s = 1.0f;
+	F32 obj_scale_t = 1.0f;
 
 	bool identical_scale_s = false;
 	bool identical_scale_t = false;
@@ -3404,7 +3404,7 @@ void LLPanelFace::onCommitRepeatsPerMeter(LLUICtrl* ctrl, void* userdata)
 	LLUICtrl* shiny_scale_u = self->getChild<LLUICtrl>("shinyScaleU");
 	LLUICtrl* shiny_scale_v = self->getChild<LLUICtrl>("shinyScaleV");
  
-	if (gSavedSettings.getBOOL("SyncMaterialSettings"))
+	if (gSavedSettings.getbool("SyncMaterialSettings"))
 	{
 		LLSelectMgr::getInstance()->selectionTexScaleAutofit( repeats_per_meter );
 
