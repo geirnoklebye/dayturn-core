@@ -127,7 +127,10 @@ void LLPanelPresetsCameraPulldown::onRowClick(const LLSD& user_data)
             LL_DEBUGS() << "selected '" << name << "'" << LL_ENDL;
 			LLFloaterCamera::switchToPreset(name);
 
-			setVisible(false);
+            // Scroll grabbed focus, drop it to prevent selection of parent menu
+            setFocus(false);
+
+            setVisible(false);
 		}
         else
         {
