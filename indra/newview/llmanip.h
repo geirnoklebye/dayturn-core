@@ -136,14 +136,14 @@ protected:
 	LLVector3			getSavedPivotPoint() const;
 	LLVector3			getPivotPoint();
 	void				getManipNormal(LLViewerObject* object, EManipPart manip, LLVector3 &normal);
-	BOOL				getManipAxis(LLViewerObject* object, EManipPart manip, LLVector3 &axis);
+	bool				getManipAxis(LLViewerObject* object, EManipPart manip, LLVector3 &axis);
 	F32					getSubdivisionLevel(const LLVector3 &reference_point, const LLVector3 &translate_axis, F32 grid_scale, S32 min_pixel_spacing = MIN_DIVISION_PIXEL_WIDTH, F32 min_subdivisions = sGridMinSubdivisionLevel, F32 max_subdivisions = sGridMaxSubdivisionLevel);
 	void				renderTickValue(const LLVector3& pos, F32 value, const std::string& suffix, const LLColor4 &color);
 	void				renderTickText(const LLVector3& pos, const std::string& suffix, const LLColor4 &color);
 	void				updateGridSettings();
-	BOOL				getMousePointOnPlaneGlobal(LLVector3d& point, S32 x, S32 y, LLVector3d origin, LLVector3 normal) const;
-	BOOL				getMousePointOnPlaneAgent(LLVector3& point, S32 x, S32 y, LLVector3 origin, LLVector3 normal);
-	BOOL				nearestPointOnLineFromMouse( S32 x, S32 y, const LLVector3& b1, const LLVector3& b2, F32 &a_param, F32 &b_param );
+	bool				getMousePointOnPlaneGlobal(LLVector3d& point, S32 x, S32 y, LLVector3d origin, LLVector3 normal) const;
+	bool				getMousePointOnPlaneAgent(LLVector3& point, S32 x, S32 y, LLVector3 origin, LLVector3 normal);
+	bool				nearestPointOnLineFromMouse( S32 x, S32 y, const LLVector3& b1, const LLVector3& b2, F32 &a_param, F32 &b_param );
 	LLColor4			setupSnapGuideRenderPass(S32 pass);
 protected:
 	LLFrameTimer		mHelpTextTimer;

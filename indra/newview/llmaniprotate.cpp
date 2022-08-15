@@ -1418,10 +1418,10 @@ LLQuaternion LLManipRotate::dragConstrained( S32 x, S32 y )
 		}
 
 		LLVector3 projected_mouse;
-		BOOL hit = getMousePointOnPlaneAgent(projected_mouse, x, y, snap_plane_center, constraint_axis);
+		bool hit = getMousePointOnPlaneAgent(projected_mouse, x, y, snap_plane_center, constraint_axis);
 		projected_mouse -= snap_plane_center;
 
-		if (gSavedSettings.getBOOL("SnapEnabled")) {
+		if (gSavedSettings.getbool("SnapEnabled")) {
 			S32 snap_plane = 0;
 	
 			F32 dot = cam_to_snap_plane * constraint_axis;

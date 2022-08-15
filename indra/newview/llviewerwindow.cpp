@@ -4249,9 +4249,9 @@ LLVector3d LLViewerWindow::clickPointInWorldGlobal(S32 x, S32 y_from_bot, LLView
 }
 
 
-BOOL LLViewerWindow::clickPointOnSurfaceGlobal(const S32 x, const S32 y, LLViewerObject *objectp, LLVector3d &point_global) const
+bool LLViewerWindow::clickPointOnSurfaceGlobal(const S32 x, const S32 y, LLViewerObject *objectp, LLVector3d &point_global) const
 {
-	BOOL intersect = FALSE;
+	bool intersect = false;
 
 //	U8 shape = objectp->mPrimitiveCode & LL_PCODE_BASE_MASK;
 	if (!intersect)
@@ -4570,7 +4570,7 @@ LLVector3 LLViewerWindow::mouseDirectionCamera(const S32 x, const S32 y) const
 
 
 
-BOOL LLViewerWindow::mousePointOnPlaneGlobal(LLVector3d& point, const S32 x, const S32 y, 
+bool LLViewerWindow::mousePointOnPlaneGlobal(LLVector3d& point, const S32 x, const S32 y, 
 										const LLVector3d &plane_point_global, 
 										const LLVector3 &plane_normal_global)
 {
@@ -4601,11 +4601,11 @@ BOOL LLViewerWindow::mousePointOnPlaneGlobal(LLVector3d& point, const S32 x, con
 
 
 // Returns global position
-BOOL LLViewerWindow::mousePointOnLandGlobal(const S32 x, const S32 y, LLVector3d *land_position_global, BOOL ignore_distance)
+bool LLViewerWindow::mousePointOnLandGlobal(const S32 x, const S32 y, LLVector3d *land_position_global, bool ignore_distance)
 {
 	LLVector3		mouse_direction_global = mouseDirectionGlobal(x,y);
 	F32				mouse_dir_scale;
-	BOOL			hit_land = FALSE;
+	bool			hit_land = false;
 	LLViewerRegion	*regionp;
 	F32			land_z;
 	const F32	FIRST_PASS_STEP = 1.0f;		// meters
@@ -4651,7 +4651,7 @@ BOOL LLViewerWindow::mousePointOnLandGlobal(const S32 x, const S32 y, LLVector3d
 
 			// cout << "under land at " << probe_point << " scale " << mouse_vec_scale << endl;
 
-			hit_land = TRUE;
+			hit_land = true;
 			break;
 		}
 	}
@@ -4699,12 +4699,12 @@ BOOL LLViewerWindow::mousePointOnLandGlobal(const S32 x, const S32 y, LLVector3d
 				// ...just went under land again
 
 				*land_position_global = probe_point_global;
-				return TRUE;
+				return true;
 			}
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 // Saves an image to the harddrive as "SnapshotX" where X >= 1.

@@ -370,7 +370,7 @@ BOOL LLManipTranslate::handleMouseDownOnPart( S32 x, S32 y, MASK mask )
 	}
 
 	// Compute unit vectors for arrow hit and a plane through that vector
-	BOOL axis_exists = getManipAxis(selected_object, mManipPart, axis);
+	bool axis_exists = getManipAxis(selected_object, mManipPart, axis);
 	getManipNormal(selected_object, mManipPart, mManipNormal);
 
 	//LLVector3 select_center_agent = gAgent.getPosAgentFromGlobal(LLSelectMgr::getInstance()->getSelectionCenterGlobal());
