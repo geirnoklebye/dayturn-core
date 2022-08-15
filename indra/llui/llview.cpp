@@ -83,7 +83,7 @@ LLView::DrilldownFunc LLView::sDrilldown =
 	boost::bind(&LLView::pointInView, _1, _2, _3, HIT_TEST_USE_BOUNDING_RECT);
 
 //#if LL_DEBUG
-BOOL LLView::sIsDrawing = FALSE;
+bool LLView::sIsDrawing = false;
 //#endif
 
 // Compiler optimization, generate extern template
@@ -184,7 +184,7 @@ LLView::~LLView()
 	{
 		LL_DEBUGS() << "Deleting view " << mName << " during UI draw() phase" << LL_ENDL;
 	}
-// 	llassert(LLView::sIsDrawing == FALSE);
+// 	llassert(LLView::sIsDrawing == false);
 	
 //	llassert_always(sDepth == 0); // avoid deleting views while drawing! It can subtly break list iterators
 	

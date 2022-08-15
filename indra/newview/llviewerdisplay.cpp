@@ -476,7 +476,7 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 		case LLAgent::TELEPORT_START_ARRIVAL:
 			// Transition to ARRIVING.  Viewer has received avatar update, etc., from destination simulator
 			gTeleportArrivalTimer.reset();
-				gViewerWindow->setProgressCancelButtonVisible(FALSE, LLTrans::getString("Cancel"));
+				gViewerWindow->setProgressCancelButtonVisible(false, LLTrans::getString("Cancel"));
 			gViewerWindow->setProgressPercent(75.f);
 			LL_INFOS("Teleport") << "Changing state to TELEPORT_ARRIVING" << LL_ENDL;
 			gAgent.setTeleportState( LLAgent::TELEPORT_ARRIVING );
@@ -499,7 +499,7 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 					LL_INFOS("Teleport") << "arrival_fraction is " << arrival_fraction << " changing state to TELEPORT_NONE" << LL_ENDL;
 					gAgent.setTeleportState( LLAgent::TELEPORT_NONE );
 				}
-				gViewerWindow->setProgressCancelButtonVisible(FALSE, LLTrans::getString("Cancel"));
+				gViewerWindow->setProgressCancelButtonVisible(false, LLTrans::getString("Cancel"));
 				gViewerWindow->setProgressPercent(  arrival_fraction * 25.f + 75.f);
 				gViewerWindow->setProgressString(message);
 			}

@@ -1559,7 +1559,7 @@ void LLViewerWindow::handleFocus(LLWindow *window)
 // The top-level window has lost focus (e.g. via ALT-TAB)
 void LLViewerWindow::handleFocusLost(LLWindow *window)
 {
-	gFocusMgr.setAppHasFocus(FALSE);
+	gFocusMgr.setAppHasFocus(false);
 	//LLModalDialog::onAppFocusLost();
 	LLToolMgr::getInstance()->onAppFocusLost();
 	gFocusMgr.setMouseCapture( NULL );
@@ -1959,13 +1959,13 @@ LLViewerWindow::LLViewerWindow(const Params& p)
     mWindow->getSize(&scr);
 
     // Reset UI scale factor on first run if OS's display scaling is not 100%
-    if (gSavedSettings.getBOOL("ResetUIScaleOnFirstRun"))
+    if (gSavedSettings.getbool("ResetUIScaleOnFirstRun"))
     {
         if (mWindow->getSystemUISize() != 1.f)
         {
             gSavedSettings.setF32("UIScaleFactor", 1.f);
         }
-        gSavedSettings.setBOOL("ResetUIScaleOnFirstRun", FALSE);
+        gSavedSettings.setbool("ResetUIScaleOnFirstRun", false);
     }
 
 	// Get the real window rect the window was created with (since there are various OS-dependent reasons why
@@ -2013,10 +2013,10 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	if (LLFeatureManager::getInstance()->isSafe()
 		|| (gSavedSettings.getS32("LastFeatureVersion") != LLFeatureManager::getInstance()->getVersion())
 		|| (gSavedSettings.getString("LastGPUString") != LLFeatureManager::getInstance()->getGPUString())
-		|| (gSavedSettings.getBOOL("ProbeHardwareOnStartup")))
+		|| (gSavedSettings.getbool("ProbeHardwareOnStartup")))
 	{
 		LLFeatureManager::getInstance()->applyRecommendedSettings();
-		gSavedSettings.setBOOL("ProbeHardwareOnStartup", FALSE);
+		gSavedSettings.setbool("ProbeHardwareOnStartup", false);
 	}
 
 	if (!gGLManager.mHasDepthClamp)
@@ -2219,7 +2219,7 @@ void LLViewerWindow::initBase()
 	// Add the progress bar view (startup view), which overrides everything
 	mProgressView = getRootView()->findChild<LLProgressView>("progress_view");
 	setShowProgress(false);
-	setProgressCancelButtonVisible(FALSE);
+	setProgressCancelButtonVisible(false);
 
 	gMenuHolder = getRootView()->getChild<LLViewerMenuHolderGL>("Menu Holder");
 	LLMenuGL::sMenuContainer = gMenuHolder;
@@ -2737,7 +2737,7 @@ void LLViewerWindow::draw()
 {
 	
 //#if LL_DEBUG
-	LLView::sIsDrawing = TRUE;
+	LLView::sIsDrawing = true;
 //#endif
 	stop_glerror();
 	
@@ -2751,13 +2751,13 @@ void LLViewerWindow::draw()
 
 	//S32 screen_x, screen_y;
 
-	if (!gSavedSettings.getBOOL("RenderUIBuffer"))
+	if (!gSavedSettings.getbool("RenderUIBuffer"))
 	{
 		LLView::sDirtyRect = getWindowRectScaled();
 	}
 
 	// HACK for timecode debugging
-	if (gSavedSettings.getBOOL("DisplayTimecode"))
+	if (gSavedSettings.getbool("DisplayTimecode"))
 	{
 		// draw timecode block
 		std::string text;
@@ -2854,7 +2854,9 @@ void LLViewerWindow::draw()
 
 	gUIProgram.unbind();
 
-	LLView::sIsDrawing = FALSE;
+//#if LL_DEBUG
+	LLView::sIsDrawing = false;
+//#endif
 }
 void LLViewerWindow::setTitle(const std::string& win_title)
 {
@@ -2863,7 +2865,7 @@ void LLViewerWindow::setTitle(const std::string& win_title)
 // Takes a single keyup event, usually when UI is visible
 bool LLViewerWindow::handleKeyUp(KEY key, MASK mask)
 {
-    if (LLSetKeyBindDialog::recordKey(key, mask, FALSE))
+    if (LLSetKeyBindDialog::recordKey(key, mask, false))
     {
         LL_DEBUGS() << "KeyUp handled by LLSetKeyBindDialog" << LL_ENDL;
         LLViewerEventRecorder::instance().logKeyEvent(key, mask);
@@ -2915,7 +2917,7 @@ bool LLViewerWindow::handleKey(KEY key, MASK mask)
 
     // Menus get handled on key down instead of key up
     // so keybindings have to be recorded before that
-    if (LLSetKeyBindDialog::recordKey(key, mask, TRUE))
+    if (LLSetKeyBindDialog::recordKey(key, mask, true))
     {
         LL_DEBUGS() << "Key handled by LLSetKeyBindDialog" << LL_ENDL;
         LLViewerEventRecorder::instance().logKeyEvent(key,mask);
@@ -3066,7 +3068,7 @@ bool LLViewerWindow::handleKey(KEY key, MASK mask)
 	{
 		if ((focusedFloaterName == "nearby_chat") || (focusedFloaterName == "im_container") || (focusedFloaterName == "impanel") || focusedFloaterName == "kokua_chatbar" || focusedFloaterName == "kc_chat_editor")
 		{
-			if (gSavedSettings.getBOOL("ArrowKeysAlwaysMove"))
+			if (gSavedSettings.getbool("ArrowKeysAlwaysMove"))
 			{
 				// let Control-Up and Control-Down through for chat line history,
 				if (!(key == KEY_UP && mask == MASK_CONTROL)
@@ -3215,7 +3217,7 @@ bool LLViewerWindow::handleUnicodeChar(llwchar uni_char, MASK mask)
 	}
 
 	// let menus handle navigation (jump) keys
-	if (gMenuBarView && gMenuBarView->handleUnicodeChar(uni_char, TRUE))
+	if (gMenuBarView && gMenuBarView->handleUnicodeChar(uni_char, true))
 	{
 		return true;
 	}
@@ -3887,7 +3889,7 @@ void LLViewerWindow::updateMouseDelta()
 
 	LLVector2 mouse_vel; 
 
-	if (gSavedSettings.getBOOL("MouseSmooth"))
+	if (gSavedSettings.getbool("MouseSmooth"))
 	{
 		static F32 fdx = 0.f;
 		static F32 fdy = 0.f;
@@ -3977,7 +3979,7 @@ void LLViewerWindow::updateKeyboardFocus()
 		if ((mask & MASK_CONTROL) == 0)
 		{
 			// control key no longer held down, finish cycle mode
-			gFloaterView->setCycleMode(FALSE);
+			gFloaterView->setCycleMode(false);
 
 			gFloaterView->syncFloaterTabOrder();
 		}
@@ -5126,7 +5128,7 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 			if (read_width && read_height)
 			{
 				const U32 subfield = subimage_x+(subimage_y*llceil(scale_factor));
-				display(do_rebuild, scale_factor, subfield, TRUE);
+				display(do_rebuild, scale_factor, subfield, true);
 				
 				if (!LLPipeline::sRenderDeferred)
 				{
@@ -5549,7 +5551,7 @@ void LLViewerWindow::setProgressPercent(const F32 percent)
 	}
 }
 
-void LLViewerWindow::setProgressCancelButtonVisible( BOOL b, const std::string& label )
+void LLViewerWindow::setProgressCancelButtonVisible(bool b, const std::string& label)
 {
 	if (mProgressView)
 	{
@@ -5620,7 +5622,7 @@ void LLViewerWindow::stopGL(BOOL save_state)
 		gTextureList.destroyGL(save_state);
 		stop_glerror();
 		
-		gGLManager.mIsDisabled = TRUE;
+		gGLManager.mIsDisabled = true;
 		stop_glerror();
 
 		//unload shader's
@@ -5643,7 +5645,7 @@ void LLViewerWindow::restoreGL(const std::string& progress_message)
 	if (gGLManager.mIsDisabled)
 	{
 		LL_INFOS() << "Restoring GL..." << LL_ENDL;
-		gGLManager.mIsDisabled = FALSE;
+		gGLManager.mIsDisabled = false;
 		
 		initGLDefaults();
 		LLGLState::restoreGL();

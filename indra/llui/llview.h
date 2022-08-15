@@ -171,7 +171,7 @@ private:
 	LLView(const LLView& other);
 public:
 //#if LL_DEBUG
-	static BOOL sIsDrawing;
+	static bool sIsDrawing;
 //#endif
 	enum ESoundFlags
 	{

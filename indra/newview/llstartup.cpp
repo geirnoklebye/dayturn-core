@@ -1202,7 +1202,7 @@ bool idle_startup()
 		// Display the startup progress bar.
 		gViewerWindow->initTextures(agent_location_id);
 		gViewerWindow->setShowProgress(true);
-		gViewerWindow->setProgressCancelButtonVisible(TRUE, LLTrans::getString("Quit"));
+		gViewerWindow->setProgressCancelButtonVisible(true, LLTrans::getString("Quit"));
 
 		gViewerWindow->revealIntroPanel();
 
@@ -2494,7 +2494,7 @@ bool idle_startup()
 		LL_DEBUGS("AppInit") << "Done releasing bitmap" << LL_ENDL;
 		//gViewerWindow->revealIntroPanel();
 		gViewerWindow->setStartupComplete(); 
-		gViewerWindow->setProgressCancelButtonVisible(FALSE);
+		gViewerWindow->setProgressCancelButtonVisible(false);
 		display_startup();
 
 		// We're not away from keyboard, even though login might have taken
