@@ -772,7 +772,7 @@ void LLIMModel::LLIMSession::sessionInitReplyReceived(const LLUUID& new_session_
 	}
 }
 
-void LLIMModel::LLIMSession::addMessage(const std::string& from, const LLUUID& from_id, const std::string& utf8_text, const std::string& time, const bool is_history)
+void LLIMModel::LLIMSession::addMessage(const std::string& from, const LLUUID& from_id, const std::string& utf8_text, const std::string& time, const bool is_history, bool is_region_msg)
 {
 	LLSD message;
 	message["from"] = from;
@@ -781,6 +781,7 @@ void LLIMModel::LLIMSession::addMessage(const std::string& from, const LLUUID& f
 	message["time"] = time; 
 	message["index"] = (LLSD::Integer)mMsgs.size(); 
 	message["is_history"] = is_history;
+	message["is_region_msg"] = is_region_msg;
 
 	LL_DEBUGS("UIUsage") << "addMessage " << " from " << from << " from_id " << from_id << " utf8_text " << utf8_text << " time " << time << " is_history " << is_history << " session mType " << mType << LL_ENDL;
 	if (from_id == gAgent.getID())
@@ -1167,9 +1168,9 @@ void LLIMModel::sendNoUnreadMessages(const LLUUID& session_id)
 }
 
 // <FS:Ansariel> Added is_announcement parameter
-//bool LLIMModel::addToHistory(const LLUUID& session_id, const std::string& from, const LLUUID& from_id, const std::string& utf8_text) {
-bool LLIMModel::addToHistory(const LLUUID& session_id, const std::string& from, const LLUUID& from_id, const std::string& utf8_text, bool is_announcement /* = false */) {
-	
+//bool LLIMModel::addToHistory(const LLUUID& session_id, const std::string& from, const LLUUID& from_id, const std::string& utf8_text, bool is_region_msg)) {
+bool LLIMModel::addToHistory(const LLUUID& session_id, const std::string& from, const LLUUID& from_id, const std::string& utf8_text, bool is_announcement /* = false */, bool is_region_msg) 
+{
 	LLIMSession* session = findIMSession(session_id);
 
 	if (!session) 
@@ -1178,7 +1179,7 @@ bool LLIMModel::addToHistory(const LLUUID& session_id, const std::string& from, 
 		return false;
 	}
 
-	session->addMessage(from, from_id, utf8_text, LLLogChat::timestamp(false)); //might want to add date separately
+	session->addMessage(from, from_id, utf8_text, LLLogChat::timestamp(false), false, is_region_msg); //might want to add date separately
 
 	return true;
 }
@@ -1221,9 +1222,9 @@ bool LLIMModel::proccessOnlineOfflineNotification(
 
 // <FS:Ansariel> Added is_announcement parameter
 //bool LLIMModel::addMessage(const LLUUID& session_id, const std::string& from, const LLUUID& from_id, 
-//						   const std::string& utf8_text, bool log2file /* = true */) { 
+//						   const std::string& utf8_text, bool log2file, bool is_region_msg) { 
 bool LLIMModel::addMessage(const LLUUID& session_id, const std::string& from, const LLUUID& from_id, 
-						   const std::string& utf8_text, bool log2file /* = true */, bool is_announcement /* = false */, bool keyword_alert_performed /* = false */) { 
+						   const std::string& utf8_text, bool log2file /* = true */, bool is_announcement /* = false */, bool keyword_alert_performed /* = false */, bool is_region_msg) { 
 
 	LLIMSession* session = addMessageSilently(session_id, from, from_id, utf8_text, log2file, is_announcement);
 	if (!session) return false;
@@ -1253,9 +1254,9 @@ bool LLIMModel::addMessage(const LLUUID& session_id, const std::string& from, co
 
 // <FS:Ansariel> Added is_announcement parameter
 //LLIMModel::LLIMSession* LLIMModel::addMessageSilently(const LLUUID& session_id, const std::string& from, const LLUUID& from_id, 
-//													 const std::string& utf8_text, bool log2file /* = true */)
+//													 const std::string& utf8_text, bool log2file, bool is_region_msg)
 LLIMModel::LLIMSession* LLIMModel::addMessageSilently(const LLUUID& session_id, const std::string& from, const LLUUID& from_id, 
-													 const std::string& utf8_text, bool log2file /* = true */, bool is_announcement /* = false */)
+													 const std::string& utf8_text, bool log2file /* = true */, bool is_announcement /* = false */, bool is_region_msg)
 {
 	LLIMSession* session = findIMSession(session_id);
 
@@ -1274,7 +1275,7 @@ LLIMModel::LLIMSession* LLIMModel::addMessageSilently(const LLUUID& session_id, 
 		from_name = LLTrans::getString("Audio Stream");
 	}
 
-	addToHistory(session_id, from_name, from_id, utf8_text, is_announcement);
+	addToHistory(session_id, from_name, from_id, utf8_text, is_announcement || is_region_msg);
 	if (log2file && !is_announcement)
 	{
 		logToFile(getHistoryFileName(session_id), from_name, from_id, utf8_text);
@@ -2697,9 +2698,9 @@ void LLIMMgr::addMessage(
 	U32 parent_estate_id,
 	const LLUUID& region_id,
 	const LLVector3& position,
-	bool link_name, // If this is true, then we insert the name and link it to a profile
 	bool is_announcement, // <FS:Ansariel> Special parameter indicating announcements
-	bool keyword_alert_performed) // <FS:Ansariel> Pass info if keyword alert has been performed
+	bool keyword_alert_performed, // <FS:Ansariel> Pass info if keyword alert has been performed
+	bool is_region_msg)
 {
 	LLUUID other_participant_id = target_id;
 
@@ -2815,7 +2816,7 @@ void LLIMMgr::addMessage(
 				//<< "*** region_id: " << region_id << std::endl
 				//<< "*** position: " << position << std::endl;
 
-				LLIMModel::instance().addMessage(new_session_id, from, other_participant_id, bonus_info.str());
+				LLIMModel::instance().addMessage(new_session_id, from, other_participant_id, bonus_info.str(), true, is_region_msg);
 			}
 
 			// Logically it would make more sense to reject the session sooner, in another area of the
@@ -2846,8 +2847,8 @@ void LLIMMgr::addMessage(
 	if (!LLMuteList::getInstance()->isMuted(other_participant_id, LLMute::flagTextChat) && !skip_message)
 	{
 		// <FS:Ansariel> Added is_announcement parameter
-		//LLIMModel::instance().addMessage(new_session_id, from, other_participant_id, msg);
-		LLIMModel::instance().addMessage(new_session_id, from, other_participant_id, msg, true, is_announcement, keyword_alert_performed);
+		//LLIMModel::instance().addMessage(new_session_id, from, other_participant_id, msg, true, is_region_msg);
+		LLIMModel::instance().addMessage(new_session_id, from, other_participant_id, msg, true, is_announcement, keyword_alert_performed, is_region_msg);
 	}
 
 	// Open conversation floater if offline messages are present
@@ -3774,8 +3775,7 @@ public:
 				IM_SESSION_INVITE,
 				message_params["parent_estate_id"].asInteger(),
 				message_params["region_id"].asUUID(),
-				ll_vector3_from_sd(message_params["position"]),
-				true);
+				ll_vector3_from_sd(message_params["position"]));
 
 			if (LLMuteList::getInstance()->isMuted(from_id, name, LLMute::flagTextChat))
 			{

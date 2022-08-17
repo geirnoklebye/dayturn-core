@@ -55,6 +55,7 @@
 #include "llviewerwindow.h"
 #include "llviewerregion.h"
 #include "llvoavatarself.h"
+#include "llworld.h"
 
 #include "boost/lexical_cast.hpp"
 // Firestorm includes
@@ -535,7 +536,6 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
                     parent_estate_id,
                     region_id,
                     position,
-                    true,
                     false,
                     keyword_alert_performed);
 
@@ -600,6 +600,16 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 
                     buffer = saved + message;
 
+                    bool region_message = false;
+                    if (region_id.isNull())
+                    {
+                        LLViewerRegion* regionp = LLWorld::instance().getRegionFromID(from_id);
+                        if (regionp)
+                        {
+                            region_message = true;
+                        }
+                    }
+
                     gIMMgr->addMessage(
                         session_id,
                         from_id,
@@ -611,9 +621,9 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
                         parent_estate_id,
                         region_id,
                         position,
-                        true,
                         false,
-                        keyword_alert_performed);
+                        keyword_alert_performed,
+                        region_message);
                 }
                 else
                 {
@@ -1077,7 +1087,6 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
                 }
             }
 
-
             //Object IMs send with from name: 'Second Life' need to be displayed also in notification toasts (EXT-1590)
             if (!chat_from_system) break;
 
@@ -1142,8 +1151,7 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
                     IM_SESSION_INVITE,
                     parent_estate_id,
                     region_id,
-                    position,
-                    true);
+                    position);
             }
             else
             {
@@ -1180,7 +1188,6 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
                     parent_estate_id,
                     region_id,
                     position,
-                    true,
                     false,
                     keyword_alert_performed);
             }

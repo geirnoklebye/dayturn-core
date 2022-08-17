@@ -38,8 +38,10 @@ typedef enum e_chat_source_type
 	CHAT_SOURCE_AGENT = 1,
 	CHAT_SOURCE_OBJECT = 2,
 	CHAT_SOURCE_TELEPORT = 3,
-	CHAT_SOURCE_AUDIO_STREAM = 4,
-	CHAT_SOURCE_UNKNOWN = 5
+
+	CHAT_SOURCE_UNKNOWN = 4,
+	CHAT_SOURCE_REGION = 5,
+	CHAT_SOURCE_AUDIO_STREAM = 6 // LL decided to keep Unknown at 4 and allocate afterwards, so moving this to 6
 } EChatSourceType;
 
 typedef enum e_chat_type

@@ -838,7 +838,7 @@ public:
 
 	void showInspector()
 	{      
-		if (mAvatarID.isNull() && CHAT_SOURCE_SYSTEM != mSourceType) return;
+		if (mAvatarID.isNull() && CHAT_SOURCE_SYSTEM != mSourceType && CHAT_SOURCE_REGION != mSourceType) return;
 
 		if (mSourceType == CHAT_SOURCE_OBJECT)
 		{
@@ -1024,7 +1024,7 @@ public:
 			icon->setValue(LLSD("OBJECT_Icon"));
 			break;
 		case CHAT_SOURCE_SYSTEM:
-//CA
+		case CHAT_SOURCE_REGION:
 //			icon->setValue(LLSD("Dayturn_Logo"));
 			// FS:LO FIRE-1439 - Clickable avatar names on local chat radar crossing reports
 			if (chat.mChatType == CHAT_TYPE_RADAR)
@@ -1310,8 +1310,9 @@ protected:
 	void showInfoCtrl()
 	{
 //CA
-//		const bool isVisible = !mAvatarID.isNull() && !mFrom.empty() && CHAT_SOURCE_SYSTEM != mSourceType && CHAT_SOURCE_AUDIO_STREAM != mSourceType;
-		const bool isVisible = !mAvatarID.isNull() && !mFrom.empty() && (CHAT_SOURCE_SYSTEM != mSourceType || mType == CHAT_TYPE_RADAR) && CHAT_SOURCE_AUDIO_STREAM != mSourceType;
+
+//		const bool isVisible = !mAvatarID.isNull() && !mFrom.empty() && CHAT_SOURCE_SYSTEM != mSourceType && CHAT_SOURCE_REGION != mSourceType;
+		const bool isVisible = !mAvatarID.isNull() && !mFrom.empty() && (CHAT_SOURCE_SYSTEM != mSourceType || mType == CHAT_TYPE_RADAR) && CHAT_SOURCE_AUDIO_STREAM != mSourceType && CHAT_SOURCE_REGION != mSourceType;
 //ca
 		if (isVisible)
 		{
@@ -1715,7 +1716,7 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 				mEditor->appendText(chat.mFromName + delimiter, prependNewLineState, link_params);
 				prependNewLineState = false;
 			}
-			else if (chat.mFromName != SYSTEM_FROM && chat.mFromID.notNull() && chat.mFromID != AUDIO_STREAM_FROM && !message_from_log)
+			else if (chat.mFromName != SYSTEM_FROM && chat.mFromID.notNull() && chat.mFromID != AUDIO_STREAM_FROM && !message_from_log && chat.mSourceType != CHAT_SOURCE_REGION)
 			{
 				LLStyle::Params link_params(body_message_params);
 				link_params.overwriteFrom(LLStyleMap::instance().lookupAgent(chat.mFromID));
