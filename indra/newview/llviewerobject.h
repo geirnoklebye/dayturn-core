@@ -706,6 +706,8 @@ public:
 	// Replace textures with web pages on this object while drawing
 	bool mRenderMedia;
 
+    bool mRiggedAttachedWarned;
+
 	// In bits
 	S32				mBestUpdatePrecision;
 
