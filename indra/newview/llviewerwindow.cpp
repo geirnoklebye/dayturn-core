@@ -1943,7 +1943,7 @@ LLViewerWindow::LLViewerWindow(const Params& p)
     else if (!LLViewerShaderMgr::sInitialized)
     {
         //immediately initialize shaders
-        LLViewerShaderMgr::sInitialized = TRUE;
+        LLViewerShaderMgr::sInitialized = true;
         LLViewerShaderMgr::instance()->setShaders();
     }
 	
@@ -2485,7 +2485,7 @@ LLViewerWindow::~LLViewerWindow()
 	if (LLViewerShaderMgr::sInitialized)
 	{
 		LLViewerShaderMgr::releaseInstance();
-		LLViewerShaderMgr::sInitialized = FALSE;
+		LLViewerShaderMgr::sInitialized = false;
 	}
 }
 

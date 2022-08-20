@@ -63,7 +63,7 @@ using std::pair;
 using std::make_pair;
 using std::string;
 
-BOOL				LLViewerShaderMgr::sInitialized = FALSE;
+bool				LLViewerShaderMgr::sInitialized = false;
 bool				LLViewerShaderMgr::sSkipReload = false;
 
 LLVector4			gShinyOrigin;
@@ -458,7 +458,7 @@ void LLViewerShaderMgr::setShaders()
     gPipeline.releaseGLBuffers();
 
     LLPipeline::sWaterReflections = gGLManager.mHasCubeMap && LLPipeline::sRenderTransparentWater;
-    LLPipeline::sRenderGlow = gSavedSettings.getBOOL("RenderGlow"); 
+    LLPipeline::sRenderGlow = gSavedSettings.getbool("RenderGlow"); 
     LLPipeline::updateRenderDeferred();
     
     //hack to reset buffers that change behavior with shaders
@@ -556,7 +556,7 @@ void LLViewerShaderMgr::setShaders()
     mShaderLevel[SHADER_DEFERRED] = deferred_class;
     mShaderLevel[SHADER_TRANSFORM] = transform_class;
 
-    BOOL loaded = loadBasicShaders();
+    bool loaded = loadBasicShaders();
     if (loaded)
     {
         LL_INFOS() << "Loaded basic shaders." << LL_ENDL;
@@ -662,8 +662,8 @@ void LLViewerShaderMgr::setShaders()
         mMaxAvatarShaderLevel = 3;
                 
             if (loadShadersObject())
-        { //hardware skinning is enabled and rigged attachment shaders loaded correctly
-            BOOL avatar_cloth = gSavedSettings.getBOOL("RenderAvatarCloth");
+            { //hardware skinning is enabled and rigged attachment shaders loaded correctly
+                bool avatar_cloth = gSavedSettings.getbool("RenderAvatarCloth");
 
             // cloth is a class3 shader
             S32 avatar_class = avatar_cloth ? 3 : 1;
@@ -692,8 +692,8 @@ void LLViewerShaderMgr::setShaders()
             mShaderLevel[SHADER_AVATAR] = 0;
             mShaderLevel[SHADER_DEFERRED] = 0;
 
-                gSavedSettings.setBOOL("RenderDeferred", FALSE);
-                gSavedSettings.setBOOL("RenderAvatarCloth", FALSE);
+                gSavedSettings.setbool("RenderDeferred", false);
+                gSavedSettings.setbool("RenderAvatarCloth", false);
 
             loadShadersAvatar(); // unloads
 
@@ -704,9 +704,9 @@ void LLViewerShaderMgr::setShaders()
 
     if (!loaded)
     { //some shader absolutely could not load, try to fall back to a simpler setting
-        if (gSavedSettings.getBOOL("WindLightUseAtmosShaders"))
+        if (gSavedSettings.getbool("WindLightUseAtmosShaders"))
         { //disable windlight and try again
-            gSavedSettings.setBOOL("WindLightUseAtmosShaders", FALSE);
+            gSavedSettings.setbool("WindLightUseAtmosShaders", false);
             LL_WARNS() << "Falling back to no windlight shaders." << LL_ENDL;
             reentrance = false;
             setShaders();
@@ -859,7 +859,7 @@ void LLViewerShaderMgr::unloadShaders()
 	gPipeline.mShadersLoaded = false;
 }
 
-BOOL LLViewerShaderMgr::loadBasicShaders()
+bool LLViewerShaderMgr::loadBasicShaders()
 {
 	// Load basic dependency shaders first
 	// All of these have to load for any shaders to function
@@ -913,9 +913,9 @@ BOOL LLViewerShaderMgr::loadBasicShaders()
 	attribs["MAX_JOINTS_PER_MESH_OBJECT"] = 
 		boost::lexical_cast<std::string>(LLSkinningUtil::getMaxJointCount());
 
-    BOOL ambient_kill = gSavedSettings.getBOOL("AmbientDisable");
-	BOOL sunlight_kill = gSavedSettings.getBOOL("SunlightDisable");
-    BOOL local_light_kill = gSavedSettings.getBOOL("LocalLightDisable");
+    bool ambient_kill = gSavedSettings.getbool("AmbientDisable");
+	bool sunlight_kill = gSavedSettings.getbool("SunlightDisable");
+    bool local_light_kill = gSavedSettings.getbool("LocalLightDisable");
 
     if (ambient_kill)
     {
@@ -939,7 +939,7 @@ BOOL LLViewerShaderMgr::loadBasicShaders()
 		if (loadShaderFile(shaders[i].first, shaders[i].second, GL_VERTEX_SHADER_ARB, &attribs) == 0)
 		{
 			LL_SHADER_LOADING_WARNS() << "Failed to load vertex shader " << shaders[i].first << LL_ENDL;
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -999,21 +999,21 @@ BOOL LLViewerShaderMgr::loadBasicShaders()
 		if (loadShaderFile(shaders[i].first, shaders[i].second, GL_FRAGMENT_SHADER_ARB, &attribs, index_channels[i]) == 0)
 		{
 			LL_SHADER_LOADING_WARNS() << "Failed to load fragment shader " << shaders[i].first << LL_ENDL;
-			return FALSE;
+			return false;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL LLViewerShaderMgr::loadShadersEnvironment()
+bool LLViewerShaderMgr::loadShadersEnvironment()
 {
-	BOOL success = TRUE;
+	bool success = true;
 
 	if (mShaderLevel[SHADER_ENVIRONMENT] == 0)
 	{
 		gTerrainProgram.unload();
-		return TRUE;
+		return true;
 	}
 
 	if (success)
@@ -1039,18 +1039,18 @@ BOOL LLViewerShaderMgr::loadShadersEnvironment()
 	if (!success)
 	{
 		mShaderLevel[SHADER_ENVIRONMENT] = 0;
-		return FALSE;
+		return false;
 	}
 	
 	LLWorld::getInstance()->updateWaterObjects();
 	
-	return TRUE;
+	return true;
 }
 
-BOOL LLViewerShaderMgr::loadShadersWater()
+bool LLViewerShaderMgr::loadShadersWater()
 {
-	BOOL success = TRUE;
-	BOOL terrainWaterSuccess = TRUE;
+	bool success = true;
+	bool terrainWaterSuccess = true;
 
 	if (mShaderLevel[SHADER_WATER] == 0)
 	{
@@ -1058,7 +1058,7 @@ BOOL LLViewerShaderMgr::loadShadersWater()
 		gWaterEdgeProgram.unload();
 		gUnderWaterProgram.unload();
 		gTerrainWaterProgram.unload();
-		return TRUE;
+		return true;
 	}
 
 	if (success)
@@ -1148,7 +1148,7 @@ BOOL LLViewerShaderMgr::loadShadersWater()
 	if (!success)
 	{
 		mShaderLevel[SHADER_WATER] = 0;
-		return FALSE;
+		return false;
 	}
 
 	// if we failed to load the terrain water shaders and we need them (using class2 water),
@@ -1161,12 +1161,12 @@ BOOL LLViewerShaderMgr::loadShadersWater()
 	
 	LLWorld::getInstance()->updateWaterObjects();
 
-	return TRUE;
+	return true;
 }
 
-BOOL LLViewerShaderMgr::loadShadersEffects()
+bool LLViewerShaderMgr::loadShadersEffects()
 {
-	BOOL success = TRUE;
+	bool success = true;
 
 	if (mShaderLevel[SHADER_EFFECT] == 0)
 	{
@@ -1174,7 +1174,7 @@ BOOL LLViewerShaderMgr::loadShadersEffects()
 		gGlowExtractProgram.unload();
 		gPostColorFilterProgram.unload();	
 		gPostNightVisionProgram.unload();
-		return TRUE;
+		return true;
 	}
 
 	if (success)
@@ -1187,7 +1187,7 @@ BOOL LLViewerShaderMgr::loadShadersEffects()
 		success = gGlowProgram.createShader(NULL, NULL);
 		if (!success)
 		{
-			LLPipeline::sRenderGlow = FALSE;
+			LLPipeline::sRenderGlow = false;
 		}
 	}
 	
@@ -1201,7 +1201,7 @@ BOOL LLViewerShaderMgr::loadShadersEffects()
 		success = gGlowExtractProgram.createShader(NULL, NULL);
 		if (!success)
 		{
-			LLPipeline::sRenderGlow = FALSE;
+			LLPipeline::sRenderGlow = false;
 		}
 	}
 	
@@ -1209,13 +1209,13 @@ BOOL LLViewerShaderMgr::loadShadersEffects()
 
 }
 
-BOOL LLViewerShaderMgr::loadShadersDeferred()
+bool LLViewerShaderMgr::loadShadersDeferred()
 {
     bool use_sun_shadow = mShaderLevel[SHADER_DEFERRED] > 1;
 
-    BOOL ambient_kill = gSavedSettings.getBOOL("AmbientDisable");
-	BOOL sunlight_kill = gSavedSettings.getBOOL("SunlightDisable");
-    BOOL local_light_kill = gSavedSettings.getBOOL("LocalLightDisable");
+    bool ambient_kill = gSavedSettings.getbool("AmbientDisable");
+	bool sunlight_kill = gSavedSettings.getbool("SunlightDisable");
+    bool local_light_kill = gSavedSettings.getbool("LocalLightDisable");
 
 	if (mShaderLevel[SHADER_DEFERRED] == 0)
 	{
@@ -1300,10 +1300,10 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
 			gDeferredMaterialProgram[i].unload();
 			gDeferredMaterialWaterProgram[i].unload();
 		}
-		return TRUE;
+		return true;
 	}
 
-	BOOL success = TRUE;
+	bool success = true;
 
     if (success)
 	{
@@ -1786,7 +1786,7 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
 		std::string fragment;
 		std::string vertex = "deferred/sunLightV.glsl";
 
-        bool use_ao = gSavedSettings.getBOOL("RenderDeferredSSAO");
+        bool use_ao = gSavedSettings.getbool("RenderDeferredSSAO");
 
         if (use_ao)
         {
@@ -2268,7 +2268,7 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
             gDeferredSoftenProgram.addPermutation("LOCAL_LIGHT_KILL", "1");
         }
 
-		if (gSavedSettings.getBOOL("RenderDeferredSSAO"))
+		if (gSavedSettings.getbool("RenderDeferredSSAO"))
 		{ //if using SSAO, take screen space light map into account as if shadows are enabled
 			gDeferredSoftenProgram.mShaderLevel = llmax(gDeferredSoftenProgram.mShaderLevel, 2);
 		}
@@ -2312,7 +2312,7 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
             gDeferredSoftenWaterProgram.addPermutation("LOCAL_LIGHT_KILL", "1");
         }
 
-		if (gSavedSettings.getBOOL("RenderDeferredSSAO"))
+		if (gSavedSettings.getbool("RenderDeferredSSAO"))
 		{ //if using SSAO, take screen space light map into account as if shadows are enabled
 			gDeferredSoftenWaterProgram.mShaderLevel = llmax(gDeferredSoftenWaterProgram.mShaderLevel, 2);
 		}
@@ -2823,9 +2823,9 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
 	return success;
 }
 
-BOOL LLViewerShaderMgr::loadShadersObject()
+bool LLViewerShaderMgr::loadShadersObject()
 {
-	BOOL success = TRUE;
+	bool success = true;
 
 	if (success)
 	{
@@ -3340,15 +3340,15 @@ BOOL LLViewerShaderMgr::loadShadersObject()
 	if( !success )
 	{
 		mShaderLevel[SHADER_OBJECT] = 0;
-		return FALSE;
+		return false;
 	}
 	
-	return TRUE;
+	return true;
 }
 
-BOOL LLViewerShaderMgr::loadShadersAvatar()
+bool LLViewerShaderMgr::loadShadersAvatar()
 {
-	BOOL success = TRUE;
+	bool success = true;
 
 	if (mShaderLevel[SHADER_AVATAR] == 0)
 	{
@@ -3356,7 +3356,7 @@ BOOL LLViewerShaderMgr::loadShadersAvatar()
 		gAvatarWaterProgram.unload();
 		gAvatarEyeballProgram.unload();
 		gAvatarPickProgram.unload();
-		return TRUE;
+		return true;
 	}
 
 	if (success)
@@ -3437,15 +3437,15 @@ BOOL LLViewerShaderMgr::loadShadersAvatar()
 	{
 		mShaderLevel[SHADER_AVATAR] = 0;
 		mMaxAvatarShaderLevel = 0;
-		return FALSE;
+		return false;
 	}
 	
-	return TRUE;
+	return true;
 }
 
-BOOL LLViewerShaderMgr::loadShadersInterface()
+bool LLViewerShaderMgr::loadShadersInterface()
 {
-	BOOL success = TRUE;
+	bool success = true;
 
 	if (success)
 	{
@@ -3747,15 +3747,15 @@ BOOL LLViewerShaderMgr::loadShadersInterface()
 	if( !success )
 	{
 		mShaderLevel[SHADER_INTERFACE] = 0;
-		return FALSE;
+		return false;
 	}
 	
-	return TRUE;
+	return true;
 }
 
-BOOL LLViewerShaderMgr::loadShadersWindLight()
+bool LLViewerShaderMgr::loadShadersWindLight()
 {	
-	BOOL success = TRUE;
+	bool success = true;
 
 	if (mShaderLevel[SHADER_WINDLIGHT] < 2)
 	{
@@ -3763,7 +3763,7 @@ BOOL LLViewerShaderMgr::loadShadersWindLight()
 		gWLCloudProgram.unload();
 		gWLSunProgram.unload();
 		gWLMoonProgram.unload();
-		return TRUE;
+		return true;
 	}
 
     if (success)
@@ -3835,9 +3835,9 @@ BOOL LLViewerShaderMgr::loadShadersWindLight()
 	return success;
 }
 
-BOOL LLViewerShaderMgr::loadTransformShaders()
+bool LLViewerShaderMgr::loadTransformShaders()
 {
-	BOOL success = TRUE;
+	bool success = true;
 	
 	if (mShaderLevel[SHADER_TRANSFORM] < 1)
 	{
@@ -3846,7 +3846,7 @@ BOOL LLViewerShaderMgr::loadTransformShaders()
 		gTransformNormalProgram.unload();
 		gTransformColorProgram.unload();
 		gTransformTangentProgram.unload();
-		return TRUE;
+		return true;
 	}
 
 	if (success)
