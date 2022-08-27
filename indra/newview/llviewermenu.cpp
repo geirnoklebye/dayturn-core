@@ -273,8 +273,7 @@ void near_sit_down_point(bool success, void *);
 void velocity_interpolate( void* );
 void handle_visual_leak_detector_toggle(void*);
 void handle_rebake_textures(void*);
-void handle_refresh_scene(void*);
-BOOL check_admin_override(void*);
+bool check_admin_override(void*);
 void handle_admin_override_toggle(void*);
 #ifdef TOGGLE_HACKED_GODLIKE_VIEWER
 void handle_toggle_hacked_godmode(void*);
@@ -2042,20 +2041,6 @@ void handle_refresh_attachments()
 }
 //mk from kb
 
-///////////////////////////
-// REFRESH SCENE SHADERS //
-///////////////////////////
-	
-	
-class LLAdvancedRefreshScene : public view_listener_t
-{
-	bool handleEvent(const LLSD& userdata)
-	{
-		handle_refresh_scene(NULL);
-		return true;
-	}
-};
-		
 #if 1 //ndef LL_RELEASE_FOR_DOWNLOAD
 ///////////////////////////
 // DEBUG AVATAR TEXTURES //
@@ -4164,7 +4149,7 @@ class LLTogglePanelPeopleTab : public view_listener_t
 	}
 };
 
-BOOL check_admin_override(void*)
+bool check_admin_override(void*)
 {
 	return gAgent.getAdminOverride();
 }
@@ -9308,20 +9293,6 @@ void handle_rebake_textures(void*)
 	LLAttachmentsMgr::instance().refreshAttachments();
 //mk
 	gAgentAvatarp->setIsCrossingRegion(false); // <FS:Ansariel> FIRE-12004: Attachments getting lost on TP
-}
-
-void handle_refresh_scene(void*)
-{
-	if (!isAgentAvatarValid()) return;
-	// on RLV this won't do anything this the control it toggles to refresh the scene
-	// is currently forced on lower down, so use this to also do a much more fundamental
-	// kick by restarting the region's object sync with the viewer to try to recover from
-	// items getting lost at login (dropped UDP cache probes, I believe)
- 	gSavedSettings.setBOOL("VertexShaderEnable",false);
-	LL_WARNS("Rendering") << "Vertex shaders unloaded / refresh scene" << LL_ENDL; //Purpose is to also kill a little time without sleeping.
-	//need an event here looking at llvowlsky
-	gSavedSettings.setBOOL("VertexShaderEnable",true);
-	LLWorld::getInstance()->requestObjects();
 }
 
 void toggle_visibility(void* user_data)
