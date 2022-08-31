@@ -353,6 +353,93 @@ http://secondlife.com/viewer-access-faq
 	<string name="TestingDisconnect">
 		測試瀏覽器斷線
 	</string>
+	<string name="SocialFacebookConnecting">
+		連通臉書中…
+	</string>
+	<string name="SocialFacebookPosting">
+		發佈中…
+	</string>
+	<string name="SocialFacebookDisconnecting">
+		臉書連通中斷中…
+	</string>
+	<string name="SocialFacebookErrorConnecting">
+		連通臉書時出問題
+	</string>
+	<string name="SocialFacebookErrorPosting">
+		發佈到臉書時出問題
+	</string>
+	<string name="SocialFacebookErrorDisconnecting">
+		試圖中斷臉書連通時出問題
+	</string>
+	<string name="SocialFlickrConnecting">
+		連通 Flickr 中…
+	</string>
+	<string name="SocialFlickrPosting">
+		發佈中…
+	</string>
+	<string name="SocialFlickrDisconnecting">
+		Flickr 連通中斷中…
+	</string>
+	<string name="SocialFlickrErrorConnecting">
+		連通臉書時出問題
+	</string>
+	<string name="SocialFlickrErrorPosting">
+		發佈到 Flickr 時出問題
+	</string>
+	<string name="SocialFlickrErrorDisconnecting">
+		試圖中斷 Flickr 連通時出問題
+	</string>
+	<string name="SocialTwitterConnecting">
+		連通推特中…
+	</string>
+	<string name="SocialTwitterPosting">
+		發佈中…
+	</string>
+	<string name="SocialTwitterDisconnecting">
+		推特連通中斷中…
+	</string>
+	<string name="SocialTwitterErrorConnecting">
+		連通推特時出問題
+	</string>
+	<string name="SocialTwitterErrorPosting">
+		發佈到推特時出問題
+	</string>
+	<string name="SocialTwitterErrorDisconnecting">
+		試圖中斷推特連通時出問題
+	</string>
+	<string name="BlackAndWhite">
+		黑白
+	</string>
+	<string name="Colors1970">
+		1970年代色調
+	</string>
+	<string name="Intense">
+		強烈感
+	</string>
+	<string name="Newspaper">
+		黑白報紙
+	</string>
+	<string name="Sepia">
+		懷舊
+	</string>
+	<string name="Spotlight">
+		聚光焦點
+	</string>
+	<string name="Video">
+		舊影片
+	</string>
+	<string name="Autocontrast">
+		自動對比
+	</string>
+	<string name="LensFlare">
+		光暈
+	</string>
+	<string name="Miniature">
+		小模型移軸特效
+	</string>
+	<string name="Toycamera">
+		玩具相機
+	</string>
 	<string name="TooltipPerson">
 		人
 	</string>
@@ -2494,8 +2581,20 @@ http://secondlife.com/support 求助解決問題。
 	<string name="NoPicksClassifiedsText">
 		你尚未建立任何精選地點或個人廣告。 點按下面的 + 按鈕建立精選地點或個人廣告。
 	</string>
+	<string name="NoPicksText">
+		你尚未建立任何精選地點。 點按「新增」按鈕建立精選地點。
+	</string>
+	<string name="NoClassifiedsText">
+		你尚未建立任何分類廣告。 點按「新增」按鈕建立分類廣告。
+	</string>
 	<string name="NoAvatarPicksClassifiedsText">
 		使用者無精選地點或個人廣告
+	</string>
+	<string name="NoAvatarPicksText">
+		使用者沒有精選地點
+	</string>
+	<string name="NoAvatarClassifiedsText">
+		使用者沒有分類廣告
 	</string>
 	<string name="PicksClassifiedsLoadingText">
 		載入中...
@@ -4473,6 +4572,15 @@ http://secondlife.com/support 求助解決問題。
 	</string>
 	<string name="share_alert">
 		將收納區物品拖曳到這裡
+	</string>
+	<string name="facebook_post_success">
+		成功發佈到臉書。
+	</string>
+	<string name="flickr_post_success">
+		成功發佈到 Flickr。
+	</string>
+	<string name="twitter_post_success">
+		已成功發佈到推特。
 	</string>
 	<string name="no_session_message">
 		（IM 會話不存在）

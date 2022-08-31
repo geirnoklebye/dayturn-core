@@ -54,6 +54,7 @@
 #include "lllogininstance.h"
 #include "llnotificationsutil.h"
 #include "llpanelclassified.h"
+#include "llpanelprofile.h"
 #include "llparcel.h"
 #include "llproductinforequest.h"
 #include "llqueryflags.h"
@@ -310,11 +311,11 @@ BOOL FSFloaterSearch::postBuild()
 	mPanelWeb			= findChild<FSPanelSearchWeb>("panel_ls_web");
 
 	// <KC> If skin has legacy full profile view, use it
-	mPanelProfile = mPanelPeople->findChild<FSPanelProfile>("panel_profile_view");
+	mPanelProfile = mPanelPeople->findChild<LLPanelProfile>("panel_profile_view");
 	if (mPanelProfile)
 	{
 		mPanelProfile->setVisible(false);
-		mPanelProfile->setEmbedded(true);
+//		mPanelProfile->setEmbedded(true);
 		mPanelPeople->childSetAction("people_profile_btn", boost::bind(&FSFloaterSearch::onBtnPeopleProfile, this));
 	}
 

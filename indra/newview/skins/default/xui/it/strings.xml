@@ -353,6 +353,93 @@ Prova ad accedere nuovamente tra un minuto.
 	<string name="TestingDisconnect">
 		Verifica scollegamento viewer
 	</string>
+	<string name="SocialFacebookConnecting">
+		Connessione a Facebook in corso...
+	</string>
+	<string name="SocialFacebookPosting">
+		Caricamento post...
+	</string>
+	<string name="SocialFacebookDisconnecting">
+		Disconnessione da Facebook in corso...
+	</string>
+	<string name="SocialFacebookErrorConnecting">
+		Problemi con la connessione a Facebook
+	</string>
+	<string name="SocialFacebookErrorPosting">
+		Problemi con la connessione a Facebook
+	</string>
+	<string name="SocialFacebookErrorDisconnecting">
+		Problemi con la disconnessione da Facebook
+	</string>
+	<string name="SocialFlickrConnecting">
+		Collegamento a Flickr...
+	</string>
+	<string name="SocialFlickrPosting">
+		Caricamento post...
+	</string>
+	<string name="SocialFlickrDisconnecting">
+		Interruzione del collegamento con Flickr...
+	</string>
+	<string name="SocialFlickrErrorConnecting">
+		Problema nel collegamento a Flickr
+	</string>
+	<string name="SocialFlickrErrorPosting">
+		Problema nel caricamento post su Flickr
+	</string>
+	<string name="SocialFlickrErrorDisconnecting">
+		Problema nell&apos;interruzione del collegamento da Flickr
+	</string>
+	<string name="SocialTwitterConnecting">
+		Collegamento a Twitter...
+	</string>
+	<string name="SocialTwitterPosting">
+		Caricamento post...
+	</string>
+	<string name="SocialTwitterDisconnecting">
+		Interruzione del collegamento con Twitter...
+	</string>
+	<string name="SocialTwitterErrorConnecting">
+		Problema nel collegamento a Twitter
+	</string>
+	<string name="SocialTwitterErrorPosting">
+		Problema nel caricamento post su Twitter
+	</string>
+	<string name="SocialTwitterErrorDisconnecting">
+		Problema nell&apos;interruzione del collegamento da Twitter
+	</string>
+	<string name="BlackAndWhite">
+		Bianco e nero
+	</string>
+	<string name="Colors1970">
+		Colori anni &apos;70
+	</string>
+	<string name="Intense">
+		Intenso
+	</string>
+	<string name="Newspaper">
+		Giornale
+	</string>
+	<string name="Sepia">
+		Seppia
+	</string>
+	<string name="Spotlight">
+		Faretto
+	</string>
+	<string name="Video">
+		Video
+	</string>
+	<string name="Autocontrast">
+		Auto contrasto
+	</string>
+	<string name="LensFlare">
+		Bagliore
+	</string>
+	<string name="Miniature">
+		Miniatura
+	</string>
+	<string name="Toycamera">
+		Toy camera
+	</string>
 	<string name="TooltipPerson">
 		Persona
 	</string>
@@ -2482,8 +2569,20 @@ Se continui a ricevere questo messaggio, contatta l&apos;assistenza Second Life 
 	<string name="NoPicksClassifiedsText">
 		Non hai creato luoghi preferiti né inserzioni. Clicca il pulsante + qui sotto per creare un luogo preferito o un&apos;inserzione.
 	</string>
+	<string name="NoPicksText">
+		Non hai creato Luoghi preferiti. Fai clic sul pulsante Nuovo per creare un Luogo preferito.
+	</string>
+	<string name="NoClassifiedsText">
+		Non hai creato Annunci. Fai clic sul pulsante Nuovo per creare un Annuncio.
+	</string>
 	<string name="NoAvatarPicksClassifiedsText">
 		L&apos;utente non ha luoghi preferiti né inserzioni
+	</string>
+	<string name="NoAvatarPicksText">
+		L&apos;utente non ha luoghi preferiti
+	</string>
+	<string name="NoAvatarClassifiedsText">
+		L&apos;utente non ha annunci
 	</string>
 	<string name="PicksClassifiedsLoadingText">
 		Caricamento in corso...
@@ -4399,9 +4498,14 @@ Se il messaggio persiste, contatta [SUPPORT_SITE].
 	<string name="inventory_folder_offered-im">
 		Offerta cartella di inventario &quot;[ITEM_NAME]&quot;
 	</string>
+	<string name="facebook_post_success">
+		Hai pubblicato su Facebook.
 	</string>
-	<string name="inventory_folder_offered-im">
-		Offerta cartella di inventario &quot;[ITEM_NAME]&quot;
+	<string name="flickr_post_success">
+		Hai pubblicato su Flickr.
+	</string>
+	<string name="twitter_post_success">
+		Hai pubblicato su Twitter.
 	</string>
 	<string name="no_session_message">
 		(La sessione IM non esiste)
