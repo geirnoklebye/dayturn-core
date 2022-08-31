@@ -31,6 +31,8 @@
 // viewer includes
 #include "lggcontactsets.h"
 #include "llagent.h"
+#include "llfloaterprofile.h"
+#include "llfloaterreg.h"
 #include "llviewercontrol.h"
 #include "llviewerregion.h"
 #include "llvoavatar.h"
@@ -55,30 +57,6 @@ namespace LLViewerDisplayName
 	}
 
 	void doNothing() { }
-}
-
-void LLViewerDisplayName::setDisplayNameCoro(const std::string& cap_url, const LLSD& body)
-{
-	LLCore::HttpRequest::policy_t httpPolicy(LLCore::HttpRequest::DEFAULT_POLICY_ID);
-	LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t httpAdapter(new LLCoreHttpUtil::HttpCoroutineAdapter("SetDisplayNameCoro", httpPolicy));
-	LLCore::HttpHeaders::ptr_t httpHeaders(new LLCore::HttpHeaders);
-	LLCore::HttpRequest::ptr_t httpRequest(new LLCore::HttpRequest);
-
-	// People API can return localized error messages.  Indicate our
-	// language preference via header.
-	httpHeaders->append(HTTP_OUT_HEADER_ACCEPT_LANGUAGE, LLUI::getLanguage());
-
-	LLSD result = httpAdapter->postAndSuspend(httpRequest, cap_url, body, httpHeaders);
-
-	LLSD httpResults = result[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS];
-	LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD(httpResults);
-
-	if (!status)
-	{
-		LL_WARNS() << status.toString() << LL_ENDL;
-		LLViewerDisplayName::sSetDisplayNameSignal(false, "", LLSD());
-		LLViewerDisplayName::sSetDisplayNameSignal.disconnect_all_slots();
-	}
 }
 
 void LLViewerDisplayName::set(const std::string& display_name, const set_name_slot_t& slot)
@@ -109,7 +87,7 @@ void LLViewerDisplayName::set(const std::string& display_name, const set_name_sl
 	LLSD change_array = LLSD::emptyArray();
 	change_array.append(av_name.getDisplayName());
 	change_array.append(display_name);
-
+	
 	LL_INFOS() << "Set name POST to " << cap_url << LL_ENDL;
 
 	// Record our caller for when the server sends back a reply
@@ -120,8 +98,33 @@ void LLViewerDisplayName::set(const std::string& display_name, const set_name_sl
 	// communicates with the back-end.
 	LLSD body;
 	body["display_name"] = change_array;
+    LLCoros::instance().launch("LLViewerDisplayName::SetDisplayNameCoro",
+            boost::bind(&LLViewerDisplayName::setDisplayNameCoro, cap_url, body));
+}
 
-	LLCoros::instance().launch("SetDisplayNameCoro", boost::bind(&LLViewerDisplayName::setDisplayNameCoro, cap_url, body));
+void LLViewerDisplayName::setDisplayNameCoro(const std::string& cap_url, const LLSD& body)
+{
+    LLCore::HttpRequest::policy_t httpPolicy(LLCore::HttpRequest::DEFAULT_POLICY_ID);
+    LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t
+        httpAdapter(new LLCoreHttpUtil::HttpCoroutineAdapter("SetDisplayNameCoro", httpPolicy));
+    LLCore::HttpRequest::ptr_t httpRequest(new LLCore::HttpRequest);
+    LLCore::HttpHeaders::ptr_t httpHeaders(new LLCore::HttpHeaders);
+
+    // People API can return localized error messages.  Indicate our
+    // language preference via header.
+    httpHeaders->append(HTTP_OUT_HEADER_ACCEPT_LANGUAGE, LLUI::getLanguage());
+
+    LLSD result = httpAdapter->postAndSuspend(httpRequest, cap_url, body, httpHeaders);
+
+    LLSD httpResults = result[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS];
+    LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD(httpResults);
+
+    if (!status)
+    {
+        LL_WARNS() << "Unable to set display name. Status: " << status.toString() << LL_ENDL;
+        LLViewerDisplayName::sSetDisplayNameSignal(false, "", LLSD());
+        LLViewerDisplayName::sSetDisplayNameSignal.disconnect_all_slots();
+    }
 }
 
 class LLSetDisplayNameReply : public LLHTTPNode
@@ -152,7 +155,7 @@ public:
 			LLAvatarNameCache::getInstance()->erase( agent_id );
 			// Queue request for new data: nothing to do on callback though...
 			// Note: no need to disconnect the callback as it never gets out of scope
-			LLAvatarNameCache::get(agent_id, boost::bind(&LLViewerDisplayName::doNothing));
+            LLAvatarNameCache::getInstance()->get(agent_id, boost::bind(&LLViewerDisplayName::doNothing));
 			// Kill name tag, as it is wrong
 			LLVOAvatar::invalidateNameTag( agent_id );
 		}
@@ -191,9 +194,9 @@ class LLDisplayNameUpdate : public LLHTTPNode
 		//LLSD headers = response->mHeaders;
 		LLSD headers;
 		av_name.mExpires = 
-			LLAvatarNameCache::getInstance()->nameExpirationFromHeaders(headers);
+            LLAvatarNameCache::getInstance()->nameExpirationFromHeaders(headers);
 
-		LLAvatarNameCache::getInstance()->insert(agent_id, av_name);
+        LLAvatarNameCache::getInstance()->insert(agent_id, av_name);
 
 		// force name tag to update
 		LLVOAvatar::invalidateNameTag(agent_id);
@@ -202,7 +205,6 @@ class LLDisplayNameUpdate : public LLHTTPNode
 		args["OLD_NAME"] = old_display_name;
 		args["SLID"] = av_name.getUserName();
 		args["NEW_NAME"] = av_name.getDisplayName();
-
 		if (LGGContactSets::getInstance()->hasPseudonym(agent_id))
 		{
 			LLSD payload;
@@ -214,11 +216,16 @@ class LLDisplayNameUpdate : public LLHTTPNode
 		{
 			LLNotificationsUtil::add("DisplayNameUpdate", args);
 		}
-
 		if (agent_id == gAgent.getID())
 		{
 			LLViewerDisplayName::sNameChangedSignal();
 		}
+
+        LLFloaterProfile* profile_floater = dynamic_cast<LLFloaterProfile*>(LLFloaterReg::findInstance("profile", LLSD().with("id", agent_id)));
+        if (profile_floater)
+        {
+            profile_floater->refreshName();
+        }
 	}
 };
 

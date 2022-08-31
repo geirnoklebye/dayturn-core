@@ -72,8 +72,7 @@ name="Dummy Menu">
 ###       label="Picks..."
 ###       name="Picks">
 ###        <menu_item_call.on_click
-###         function="Floater.ToggleOrBringToFront"
-###         parameter="picks" />
+###         function="ShowAgentProfilePicks" />
 ###      </menu_item_call>
 ###      <menu_item_call
 ###        label="Experiences..."
@@ -3924,13 +3923,13 @@ name="Dummy Menu">
 ###        </menu_item_call>
 ###
 ###      <menu_item_call
-       label="Compress File Test"
-       name="Compress File Test">
-        <menu_item_call.on_click
-         function="Advanced.CompressFileTest" />
-      </menu_item_call>
-
-      <menu_item_call
+###       label="Compress File Test"
+###       name="Compress File Test">
+###        <menu_item_call.on_click
+###         function="Advanced.CompressFileTest" />
+###      </menu_item_call>
+###
+###      <menu_item_call
 ###         label="Enable Visual Leak Detector"
 ###         name="Enable Visual Leak Detector">
 ###        <menu_item_call.on_click

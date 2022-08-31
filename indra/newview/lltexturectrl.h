@@ -169,6 +169,8 @@ public:
 	void			setBlankImageAssetID( const LLUUID& id )	{ mBlankImageAssetID = id; }
 	const LLUUID&	getBlankImageAssetID() const { return mBlankImageAssetID; }
 
+	void			setOpenTexPreview(bool open_preview) { mOpenTexPreview = open_preview; }
+
 	void			setCaption(const std::string& caption);
 	void			setCanApplyImmediately(BOOL b);
 
@@ -257,6 +259,8 @@ private:
 
 	// <FS:Ansariel> Mask texture if desired
 	BOOL						mIsMasked;    
+	bool						mOpenTexPreview;
+	BOOL						mBakeTextureEnabled;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
