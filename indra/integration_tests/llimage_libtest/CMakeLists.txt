@@ -9,7 +9,6 @@ include(LLCommon)
 include(LLImage)
 include(LLMath)
 include(LLImageJ2COJ) 
-include(LLKDU)
 include(LLFileSystem)
 
 include_directories(

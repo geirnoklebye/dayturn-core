@@ -26,7 +26,6 @@ set(cmake_SOURCE_FILES
     FindAPR.cmake
     FindAutobuild.cmake
     FindFMODSTUDIO.cmake
-    FindFMODEX.cmake
     FindGLH.cmake
     FindGooglePerfTools.cmake
     FindHUNSPELL.cmake
@@ -37,7 +36,6 @@ set(cmake_SOURCE_FILES
     FindURIPARSER.cmake
     FindXmlRpcEpi.cmake
     FindZLIBNG.cmake
-    FMODEX.cmake
     FreeType.cmake
     GLEXT.cmake
     GLH.cmake
@@ -46,7 +44,6 @@ set(cmake_SOURCE_FILES
     Glut.cmake
     GoogleMock.cmake
     GooglePerfTools.cmake
-    Havok.cmake
     Hunspell.cmake
     JPEG.cmake
     JsonCpp.cmake
@@ -59,7 +56,6 @@ set(cmake_SOURCE_FILES
     LLImage.cmake
     LLImageJ2COJ.cmake
     LLInventory.cmake
-    LLKDU.cmake
     LLLogin.cmake
     LLMath.cmake
     LLMeshOptimizer.cmake
@@ -137,7 +133,6 @@ set(cmake_SOURCE_FILES
     GLEXT.cmake
     GLH.cmake
     GoogleMock.cmake
-    Havok.cmake
     Hunspell.cmake
     JPEG.cmake
     JsonCpp.cmake
@@ -151,7 +146,6 @@ set(cmake_SOURCE_FILES
     LLImage.cmake
     LLImageJ2COJ.cmake
     LLInventory.cmake
-    LLKDU.cmake
     LLLogin.cmake
     LLMath.cmake
     LLMessage.cmake

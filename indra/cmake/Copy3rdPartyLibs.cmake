@@ -211,14 +211,9 @@ elseif(DARWIN)
         liburiparser.1.0.27.dylib
        )
     if (FMODSTUDIO)
-      set(debug_files ${debug_files} libfmodstudioL.dylib)
-      set(release_files ${release_files} libfmodstudio.dylib)
+      set(debug_files ${debug_files} libfmodL.dylib)
+      set(release_files ${release_files} libfmod.dylib)
     endif (FMODSTUDIO)
-
-    if (FMODEX)
-      set(debug_files ${debug_files} libfmodexL.dylib)
-      set(release_files ${release_files} libfmodex.dylib)
-    endif (FMODEX)
 
 elseif(LINUX)
     # linux is weird, multiple side by side configurations aren't supported

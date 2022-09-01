@@ -17,10 +17,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 # fmodex and fmodstudio are mutually exclusive, make sure we only have one
 # give fmodex priority if both are defined
-if (FMODEX)
-set (FMODSTUDIO OFF CACHE STRING "fmodstudio" FORCE)
-message("-- Sound system: FMODex")
-endif (FMODEX)
 if (FMODSTUDIO)
 set (FMODEX OFF CACHE STRING "fmodex" FORCE)
 message("-- Sound system: FMODstudio")
@@ -60,7 +56,6 @@ add_subdirectory(${LIBS_OPEN_PREFIX}llcharacter)
 add_subdirectory(${LIBS_OPEN_PREFIX}llcommon)
 add_subdirectory(${LIBS_OPEN_PREFIX}llcorehttp)
 add_subdirectory(${LIBS_OPEN_PREFIX}llimage)
-add_subdirectory(${LIBS_OPEN_PREFIX}llkdu)
 add_subdirectory(${LIBS_OPEN_PREFIX}llimagej2coj)
 add_subdirectory(${LIBS_OPEN_PREFIX}llinventory)
 add_subdirectory(${LIBS_OPEN_PREFIX}llmath)

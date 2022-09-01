@@ -178,7 +178,7 @@ class ViewerManifest(LLManifest):
                             "Channel Base": CHANNEL_VENDOR_BASE,
                             "Channel":self.channel_with_pkg_suffix(),
                             "Platform":self.build_data_json_platform,
-                            "Address Size":self.address_size,
+                            #"Address Size":self.address_size,
                             "Update Service":"https://update.secondlife.com/update",
                             }
             # Only store this if it's both present and non-empty
