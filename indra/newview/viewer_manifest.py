@@ -491,20 +491,6 @@ class WindowsManifest(ViewerManifest):
             # Find kokua-bin.exe in the 'configuration' dir, then rename it to the result of final_exe.
             self.path(src='%s/kokua-bin.exe' % self.args['configuration'], dst=self.final_exe())
 
-            """
-            with self.prefix(src=os.path.join(pkgdir, "VMP")):
-                # include the compiled launcher scripts so that it gets included in the file_list
-                self.path('SLVersionChecker.exe')
-            """
-
-            with self.prefix(dst="vmp_icons"):
-                with self.prefix(src=self.icon_path()):
-                    self.path("secondlife.ico")
-                #VMP  Tkinter icons
-                with self.prefix(src="vmp_icons"):
-                    self.path("*.png")
-                    self.path("*.gif")
-
         # Plugin host application
         self.path2basename(os.path.join(os.pardir,
                                         'llplugin', 'slplugin', self.args['configuration']),
@@ -957,15 +943,6 @@ class DarwinManifest(ViewerManifest):
                 # need .icns file referenced by Info.plist
                 with self.prefix(src=self.icon_path(), dst="") :
                     self.path("kokua_icon.icns")
-
-                # Copy in the updater script and helper modules
-                self.path(src=os.path.join(pkgdir, 'VMP'), dst="updater")
-
-                with self.prefix(src="", dst=os.path.join("updater", "icons")):
-                    self.path2basename(self.icon_path(), "kokua_icon.ico")
-                    with self.prefix(src="vmp_icons", dst=""):
-                        self.path("*.png")
-                        self.path("*.gif")
 
                 with self.prefix(src=relpkgdir, dst=""):
                     self.path("libndofdev.dylib")
