@@ -69,7 +69,7 @@ public:
 	virtual void	draw();
 
     // llview overrides
-    virtual BOOL handleHover(S32 x, S32 y, MASK mask);
+    virtual bool handleHover(S32 x, S32 y, MASK mask);
 
 	// lluictrl overrides
 	virtual void	setValue(const LLSD& value );
