@@ -241,7 +241,7 @@ public:
 
 	LLPanelHideBeacon();
 	/*virtual*/ bool postBuild();
-	/*virtual*/ void setVisible(BOOL visible);
+	/*virtual*/ void setVisible(bool visible);
 	/*virtual*/ void draw();
 
 private:
