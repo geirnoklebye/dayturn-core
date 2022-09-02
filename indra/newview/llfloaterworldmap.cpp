@@ -1988,7 +1988,7 @@ void LLPanelHideBeacon::draw()
 }
 
 //virtual
-void LLPanelHideBeacon::setVisible(BOOL visible)
+void LLPanelHideBeacon::setVisible(bool visible)
 {
 	if (gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK) visible = false;
 
