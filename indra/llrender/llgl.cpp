@@ -1903,15 +1903,15 @@ void LLGLState::setEnabled(S32 enabled)
 	}
 	if (enabled == CURRENT_STATE)
 	{
-		enabled = sStateMap[mState] == GL_TRUE ? true : false;
+		enabled = sStateMap[mState] == GL_TRUE ? 1 : 0;
 	}
-	else if (enabled == true && sStateMap[mState] != GL_TRUE)
+	else if (enabled == 1 && sStateMap[mState] != GL_TRUE)
 	{
 		gGL.flush();
 		glEnable(mState);
 		sStateMap[mState] = GL_TRUE;
 	}
-	else if (enabled == false && sStateMap[mState] != GL_FALSE)
+	else if (enabled == 0 && sStateMap[mState] != GL_FALSE)
 	{
 		gGL.flush();
 		glDisable(mState);
