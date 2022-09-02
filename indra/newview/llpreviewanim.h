@@ -45,8 +45,9 @@ public:
 
 	void cleanup(); // cleanup 'playing' state
 	void play(const LLSD& param);
-	void showAdvanced();
 
+	void showAdvanced();
+	
 protected:
 	
 	LLUUID	mItemID; // Not an item id, but a playing asset id
