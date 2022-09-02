@@ -270,7 +270,7 @@ LLFolderViewItem* LLFolderViewItem::getPreviousOpenNode(BOOL include_children)
 	return itemp;
 }
 
-BOOL LLFolderViewItem::passedFilter(S32 filter_generation) 
+bool LLFolderViewItem::passedFilter(S32 filter_generation) 
 {
 	return getViewModelItem()->passedFilter(filter_generation);
 }
@@ -282,7 +282,7 @@ BOOL LLFolderViewItem::isPotentiallyVisible(S32 filter_generation)
 		filter_generation = getFolderViewModel()->getFilter().getFirstSuccessGeneration();
 	}
 	LLFolderViewModelItem* model = getViewModelItem();
-	BOOL visible = model->passedFilter(filter_generation);
+	bool visible = model->passedFilter(filter_generation);
 	if (model->getMarkedDirtyGeneration() >= filter_generation)
 	{
 		// unsure visibility state

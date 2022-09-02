@@ -440,7 +440,7 @@ public:
 	/*virtual*/ BOOL handleScrollWheel( S32 x, S32 y, S32 clicks );
 	/*virtual*/ void draw( void );
 	/*virtual*/ void drawBackground(LLMenuItemGL* itemp, F32 alpha);
-	/*virtual*/ void setVisible(BOOL visible);
+	/*virtual*/ void setVisible(bool visible);
 	/*virtual*/ bool addChild(LLView* view, S32 tab_group = 0);
 	/*virtual*/ void removeChild( LLView* ctrl);
 	/*virtual*/ bool postBuild();

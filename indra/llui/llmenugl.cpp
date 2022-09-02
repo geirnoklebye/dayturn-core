@@ -3239,7 +3239,7 @@ void LLMenuGL::drawBackground(LLMenuItemGL* itemp, F32 alpha)
 	gl_rect_2d( 0, item_rect.getHeight(), item_rect.getWidth(), 0);
 }
 
-void LLMenuGL::setVisible(BOOL visible)
+void LLMenuGL::setVisible(bool visible)
 {
 	if (visible != getVisible())
 	{

@@ -266,7 +266,7 @@ public:
 	BOOL			isDescendantOf( const LLFolderViewFolder* potential_ancestor );
 	S32				getIndentation() { return mIndentation; }
 
-	virtual BOOL	passedFilter(S32 filter_generation = -1);
+	virtual bool	passedFilter(S32 filter_generation = -1);
 	virtual BOOL	isPotentiallyVisible(S32 filter_generation = -1);
 
     // refresh information from the object being viewed.

@@ -168,7 +168,7 @@ public:
 	void reshape(S32 width, S32 height, BOOL called_from_parent = TRUE);
 	
 
-	void setVisible(BOOL visible);
+	void setVisible(bool visible);
 
 	S32 getLayoutDim() const;
 	S32 getTargetDim() const;
