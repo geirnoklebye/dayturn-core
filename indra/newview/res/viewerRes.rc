@@ -152,14 +152,14 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "Kokua Viewer Project"
-            VALUE "FileDescription", "Kokua Release Version"
+            VALUE "CompanyName", "Dayturn"
+            VALUE "FileDescription", "Dayturn Viewer"
             VALUE "FileVersion", "${VIEWER_VERSION_MAJOR}.${VIEWER_VERSION_MINOR}.${VIEWER_VERSION_PATCH}.${VIEWER_VERSION_REVISION}"
-            VALUE "InternalName", "Kokua Release Version"
-            VALUE "LegalCopyright", "Copyright (c) 2020, Linden Research, Inc."
-            VALUE "OriginalFilename", "Kokua.exe"
-            VALUE "ProductName", "Kokua"
-            VALUE "ProductVersion", "2012.08.02"
+            VALUE "InternalName", "Dayturn Viewer"
+            VALUE "LegalCopyright", "Copyright (c) 2022, Geir Nøklebye"
+            VALUE "OriginalFilename", "DayturnViewer.exe"
+            VALUE "ProductName", "Dayturn"
+            VALUE "ProductVersion", "3.00.00"
             VALUE "ProductVersion", "${VIEWER_VERSION_MAJOR}.${VIEWER_VERSION_MINOR}.${VIEWER_VERSION_PATCH}.${VIEWER_VERSION_REVISION}"
         END
     END
