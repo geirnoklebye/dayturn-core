@@ -90,7 +90,7 @@ public:
 	void setPickName(LLJointPickName name) { mPickName = name; }
 	LLJointPickName getPickName() { return mPickName; }
 
-	void setVisible( BOOL visible, BOOL recursive );
+	void setVisible( bool visible, bool recursive );
 
 	// Takes meshes in mMeshParts and sets each one as a child joint
 	void setMeshesToChildren();

@@ -127,7 +127,7 @@ void LLAvatarJoint::setSkeletonComponents( U32 comp, BOOL recursive )
 	}
 }
 
-void LLAvatarJoint::setVisible(BOOL visible, BOOL recursive)
+void LLAvatarJoint::setVisible(bool visible, bool recursive)
 {
 	mVisible = visible;
 
