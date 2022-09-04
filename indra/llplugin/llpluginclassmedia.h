@@ -211,11 +211,7 @@ public:
 	bool	canPaste() const { return mCanPaste; };
 	
 	// These can be called before init(), and they will be queued and sent before the media init message.
-#if LL_LINUX
-	void	setUserDataPath(const std::string &user_data_path_cache, const std::string &user_data_path_cookies, const std::string &user_data_path_cef_log);
-#else
 	void	setUserDataPath(const std::string &user_data_path_cache, const std::string &username, const std::string &user_data_path_cef_log);
-#endif
 	void	setLanguageCode(const std::string &language_code);
 	void	setPluginsEnabled(const bool enabled);
 	void	setJavascriptEnabled(const bool enabled);
@@ -275,11 +271,6 @@ public:
 	// This is valid during MEDIA_EVENT_CLICK_LINK_HREF and MEDIA_EVENT_GEOMETRY_CHANGE
 	std::string getClickUUID() const { return mClickUUID; };
 
-    #if LL_WINDOWS
-	//Open a debug console for this plugin.
-	void showConsole();
-    #endif
-
 	// mClickTarget is received from message and governs how link will be opened
 	// use this to enforce your own way of opening links inside plugins
 	void setOverrideClickTarget(const std::string &target);
@@ -323,11 +314,6 @@ public:
 	
 	// Hang the plugin.  If you use this outside of a testbed, you will be punished.
 	void		hangPlugin();
-
-	// This sends the message "base", "cleanup" to the plugin
-	// Don't call this unless you know what you're doing
-	// and you know this is exactly what you want to do
-	void		forceCleanUpPlugin();
 
 	///////////////////////////////////
 	// media time class functions

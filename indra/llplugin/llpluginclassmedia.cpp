@@ -371,9 +371,6 @@ void LLPluginClassMedia::setSizeInternal(void)
 #if LL_DARWIN
     if (!gRetinaSupport)
 #endif
-//<FS:TS> FIRE-30019: This clamp doesn't make sense on Linux, which can have
-//        huge windows without needing to turn on HiDPI support
-#if !LL_LINUX
     {
         if (mRequestedMediaWidth > 2048)
             mRequestedMediaWidth = 2048;
@@ -381,7 +378,6 @@ void LLPluginClassMedia::setSizeInternal(void)
         if (mRequestedMediaHeight > 2048)
             mRequestedMediaHeight = 2048;
     }
-#endif
 }
 
 void LLPluginClassMedia::setAutoScale(bool auto_scale)
@@ -998,39 +994,7 @@ void LLPluginClassMedia::receivePluginMessage(const LLPluginMessage &message)
 	if(message_class == LLPLUGIN_MESSAGE_CLASS_MEDIA)
 	{
 		std::string message_name = message.getName();
-
-		//
-		//	enable gstreamer plugin to report metadata relating
-		//	to the current stream
-		//
-		if (message_name == "ndMediadata_change") {
-			//
-			//	always overwrite the artist and title
-			//	(even if blank)
-			//
-			mTitle = message.getValue("title");
-			mArtist = message.getValue("artist");
-
-			//
-			//	only overwrite the stream name if a new value
-			//	is provided
-			//
-			std::string val = message.getValue("streamname");
-			if (!val.empty()) {
-				mStreamName = val;
-			}
-
-			//
-			//	only overwrite the stream location (URI) if a
-			//	new value is provided and that value starts
-			//	with "http"
-			//
-			val = message.getValue("streamlocation");
-			if (val.substr(0, 4) == "http") {
-				mStreamLocation = val;
-			}
-		}
-		else if (message_name == "texture_params")
+		if(message_name == "texture_params")
 		{
 			mRequestedTextureDepth = message.getValueS32("depth");
 			mRequestedTextureInternalFormat = message.getValueU32("internalformat");
@@ -1407,15 +1371,6 @@ bool LLPluginClassMedia::pluginSupportsMediaBrowser(void)
 	return !version.empty();
 }
 
-#if LL_WINDOWS
-void LLPluginClassMedia::showConsole()
-{
-	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_INTERNAL, "show_console");
-
-	sendMessage(message);
-}
-#endif
-
 void LLPluginClassMedia::focus(bool focused)
 {
 	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA_BROWSER, "focus");
@@ -1559,12 +1514,6 @@ void LLPluginClassMedia::hangPlugin()
 	sendMessage(message);
 }
 
-void LLPluginClassMedia::forceCleanUpPlugin()
-{
-	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_BASE, "cleanup");
-
-	sendMessage(message);
-}
 
 ////////////////////////////////////////////////////////////
 // MARK: media_time class functions
@@ -1641,12 +1590,3 @@ void LLPluginClassMedia::initializeUrlHistory(const LLSD& url_history)
 
 	LL_DEBUGS("Plugin") << "Sending history" << LL_ENDL;
 }
-
-//DKO
-//void LLPluginClassMedia::setFlipY( bool enabled )
-//{
-//	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA_BROWSER, "cef_flipy");
-//	message.setValueBoolean("enable", enabled);
-//	sendMessage(message);
-//}
-//DKO
