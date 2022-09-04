@@ -70,6 +70,9 @@ public:
     // Prepares class to be reused or destroyed
     void resetClass();
 
+	void refreshLimits(); // <AW: opensim-limits>
+	void updateLimits(); // <AW: opensim-limits>
+
 	LLViewerRegion*	addRegion(const U64 &region_handle, const LLHost &host);
 		// safe to call if already present, does the "right thing" if
 		// hosts are same, or if hosts are different, etc...
@@ -82,7 +85,7 @@ public:
 	LLViewerRegion*			getRegionFromPosAgent(const LLVector3 &pos);
 	LLViewerRegion*			getRegionFromHandle(const U64 &handle);
 	LLViewerRegion*			getRegionFromID(const LLUUID& region_id);
-	BOOL					positionRegionValidGlobal(const LLVector3d& pos);			// true if position is in valid region
+	bool					positionRegionValidGlobal(const LLVector3d& pos);			// true if position is in valid region
 	LLVector3d				clipToVisibleRegions(const LLVector3d &start_pos, const LLVector3d &end_pos);
 
 	void					updateAgentOffset(const LLVector3d &offset);
@@ -120,6 +123,90 @@ public:
 	F32						getRegionWidthInMeters() const	{ return mWidthInMeters; }
 	F32						getRegionMinHeight() const		{ return -mWidthInMeters; }
 	F32						getRegionMaxHeight() const		{ return MAX_OBJECT_Z; }
+
+// <AW: opensim-limits>
+	//getters
+//	F32 getRegionMaxHeight() const		{ return mRegionMaxHeight; }
+	F32 getRegionMinPrimScale() const;
+	F32 getRegionMaxPrimScale() const	{ return mRegionMaxPrimScale; }
+	F32 getRegionMaxPrimScaleNoMesh() const	{ return mRegionMaxPrimScaleNoMesh; }
+	F32 getRegionMaxHollowSize() const	{ return mRegionMaxHollowSize; }
+	F32 getRegionMinHoleSize() const	{ return mRegionMinHoleSize; }
+// <NP: disable build constraints>
+	F32	getRegionMinPrimXPos() const;
+	F32	getRegionMinPrimYPos() const;
+	F32	getRegionMinPrimZPos() const;
+	F32	getRegionMaxPrimXPos() const;
+	F32	getRegionMaxPrimYPos() const;
+	F32	getRegionMaxPrimZPos() const;
+
+
+	void setInferredServerScale(F32 xy, F32 z) { mInferredServerScaleXY = xy; mInferredServerScaleZ = z; }
+
+// </NP: disable build constraints>
+// </AW: opensim-limits>
+	int getMaxLinkedPrims() const         { return mMaxLinkedPrims; }
+	int getMaxPhysLinkedPrims() const     { return mMaxPhysLinkedPrims; }
+	int getMaxInventoryItemsTransfer() const { return mMaxInventoryItemsTransfer; }
+	int getAllowRenderName() const           { return mAllowRenderName; }
+	bool getAllowMinimap() const             { return mAllowMinimap; }
+	bool getAllowPhysicalPrims() const       { return mAllowPhysicalPrims; }
+
+	F32 getMaxPrimXPos() const			{ return mMaxPrimXPos; }
+	F32 getMaxPrimYPos() const			{ return mMaxPrimYPos; }
+	F32 getMaxPrimZPos() const			{ return mMaxPrimZPos; }
+	F32 getMinPrimXPos() const			{ return mMinPrimXPos; }
+	F32 getMinPrimYPos() const			{ return mMinPrimYPos; }
+	F32 getMinPrimZPos() const			{ return mMinPrimZPos; }
+	F32 getMaxDragDistance() const		{ return mMaxDragDistance; }
+	F32 getMaxPhysPrimScale() const		{ return mMaxPhysPrimScale; }
+	bool getSkyUseClassicClouds() const	{ return mClassicCloudsEnabled; }
+	bool getAllowParcelWindLight() const{ return mAllowParcelWindLight; }
+	bool getEnableTeenMode() const		{ return mEnableTeenMode; }
+	bool getEnforceMaxBuild() const		{ return mEnforceMaxBuild; }
+	bool getLockedDrawDistance() const	{ return mLockedDrawDistance; }
+
+	F32 getWhisperDistance() const		{ return mWhisperDistance; }
+	F32 getSayDistance() const			{ return mSayDistance; }
+	F32 getShoutDistance() const		{ return mShoutDistance; }
+
+	F32 getDrawDistance() const			{ return mDrawDistance; }
+	F32 getTerrainDetailScale() const	{ return mTerrainDetailScale; }
+
+	//setters
+	void setRegionMaxHeight(F32 val);
+	void setRegionMinPrimScale(F32 val);
+	void setRegionMaxPrimScale(F32 val);
+	void setRegionMaxPrimScaleNoMesh(F32 val);
+	void setRegionMaxHollowSize(F32 val);
+	void setRegionMinHoleSize(F32 val);
+
+	void setMaxLinkedPrims(S32 val);
+	void setMaxPhysLinkedPrims(S32 val);
+	void setMaxInventoryItemsTransfer(S32 val);
+	void setAllowRenderName(S32 val);
+	void setAllowMinimap(bool val);
+	void setAllowPhysicalPrims(bool val);
+	void setMaxPrimXPos(F32 val);
+	void setMaxPrimYPos(F32 val);
+	void setMaxPrimZPos(F32 val);
+	void setMinPrimXPos(F32 val);
+	void setMinPrimYPos(F32 val);
+	void setMinPrimZPos(F32 val);
+	void setMaxDragDistance(F32 val);
+	void setMaxPhysPrimScale(F32 val);
+	void setSkyUseClassicClouds(bool val);
+	void setAllowParcelWindLight(bool val);
+	void setEnableTeenMode(bool val);
+	void setEnforceMaxBuild(bool val);
+	void setLockedDrawDistance(bool val);
+
+	void setWhisperDistance(F32 val);
+	void setSayDistance(F32 val);
+	void setShoutDistance(F32 val);
+	void setDrawDistance(F32 val);
+	void setTerrainDetailScale(F32 val);
+// </AW: opensim-limits>
 
 	void					updateRegions(F32 max_update_time);
 	void					updateVisibilities();
@@ -185,15 +272,64 @@ private:
 
 	region_remove_signal_t mRegionRemovedSignal;
 
+	// maximum prim position inferred from server behaviour
+	F32 mInferredServerScaleXY;
+	F32 mInferredServerScaleZ;
+	
 	// Number of points on edge
 	static const U32 mWidth;
+    // static U32 mWidth; opensim
 
 	// meters/point, therefore mWidth * mScale = meters per edge
 	static const F32 mScale;
-
 	static const F32 mWidthInMeters;
+    // static  F32 mWidthInMeters; opensim
 
-	F32 mLandFarClip;					// Far clip distance for land.
+// <AW: opensim-limits>
+	F32 mRegionMaxHeight;
+	F32 mRegionMinPrimScale;
+	F32 mRegionMaxPrimScale;
+	F32 mRegionMaxPrimScaleNoMesh;
+	F32 mRegionMaxHollowSize;
+	F32 mRegionMinHoleSize;
+	F32	mRegionMaxPrimXPos;
+	F32	mRegionMaxPrimYPos;
+	F32	mRegionMaxPrimZPos;
+	F32	mRegionMinPrimXPos;
+	F32	mRegionMinPrimYPos;
+	F32	mRegionMinPrimZPos;
+
+	S32 mMaxLinkedPrims;
+	S32 mMaxPhysLinkedPrims;
+	S32 mMaxInventoryItemsTransfer;
+	S32 mAllowRenderName;
+	bool mAllowMinimap;
+	bool mAllowPhysicalPrims;
+
+	F32		mMaxPrimXPos;
+	F32		mMaxPrimYPos;
+	F32		mMaxPrimZPos;
+	F32		mMinPrimXPos;
+	F32		mMinPrimYPos;
+	F32		mMinPrimZPos;
+	F32     mMaxDragDistance;
+	F32		mMaxPhysPrimScale;
+	bool    mAllowParcelWindLight;
+	bool    mEnableTeenMode;
+	bool	mLockedDrawDistance;
+
+	F32 mWhisperDistance;
+	F32 mSayDistance;
+	F32 mShoutDistance;
+    F32 mRegionWidth;
+
+	F32 mDrawDistance;
+	F32 mTerrainDetailScale;
+	bool mLimitsNeedRefresh;
+	bool mEnforceMaxBuild;
+// </AW: opensim-limits>
+
+    F32 mLandFarClip;					// Far clip distance for land.
 	LLPatchVertexArray		mLandPatch;
 	S32 mLastPacketsIn;
 	S32 mLastPacketsOut;
@@ -201,7 +337,7 @@ private:
 	U32 mNumOfActiveCachedObjects;
 	U64MicrosecondsImplicit mSpaceTimeUSec;
 
-	BOOL mClassicCloudsEnabled;
+	bool mClassicCloudsEnabled;
 
 	////////////////////////////
 	//

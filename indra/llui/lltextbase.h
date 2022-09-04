@@ -369,7 +369,7 @@ public:
 	/*virtual*/ LLTextViewModel* getViewModel() const;
 
 	// LLEditMenuHandler interface
-	/*virtual*/ BOOL		canDeselect() const;
+	/*virtual*/ bool		canDeselect() const;
 	/*virtual*/ void		deselect();
 
 	virtual void	onFocusReceived();

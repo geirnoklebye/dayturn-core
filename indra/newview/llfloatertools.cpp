@@ -288,9 +288,9 @@ bool	LLFloaterTools::postBuild()
 	mCheckSticky = getChild<LLCheckBoxCtrl>("checkbox sticky");
 	getChild<LLUICtrl>("checkbox sticky")->setValue((BOOL)gSavedSettings.getBOOL("CreateToolKeepSelected"));
 	mCheckCopyCenters = getChild<LLCheckBoxCtrl>("checkbox copy centers");
-	getChild<LLUICtrl>("checkbox copy centers")->setValue((BOOL)gSavedSettings.getBOOL("CreateToolCopyCenters"));
+	getChild<LLUICtrl>("checkbox copy centers")->setValue(gSavedSettings.getbool("CreateToolCopyCenters"));
 	mCheckCopyRotates = getChild<LLCheckBoxCtrl>("checkbox copy rotates");
-	getChild<LLUICtrl>("checkbox copy rotates")->setValue((BOOL)gSavedSettings.getBOOL("CreateToolCopyRotates"));
+	getChild<LLUICtrl>("checkbox copy rotates")->setValue(gSavedSettings.getbool("CreateToolCopyRotates"));
 
 	mRadioGroupLand			= getChild<LLRadioGroup>("land_radio_group");
 	mBtnApplyToSelection	= getChild<LLButton>("button apply to selection");
@@ -388,8 +388,8 @@ LLFloaterTools::LLFloaterTools(const LLSD& key)
 
 	mLandImpactsObserver(NULL),
 
-	mDirty(TRUE),
-	mHasSelection(TRUE),
+	mDirty(true),
+	mHasSelection(true),
 	mNeedMediaTitle(TRUE)
 {
 	gFloaterTools = this;
@@ -458,7 +458,7 @@ void LLFloaterTools::refresh()
 	const S32 INFO_WIDTH = getRect().getWidth();
 	const S32 INFO_HEIGHT = 384;
 	LLRect object_info_rect(0, 0, INFO_WIDTH, -INFO_HEIGHT);
-	BOOL all_volume = LLSelectMgr::getInstance()->selectionAllPCode( LL_PCODE_VOLUME );
+	bool all_volume = LLSelectMgr::getInstance()->selectionAllPCode( LL_PCODE_VOLUME );
 
 	S32 idx_features = mTab->getPanelIndexByTitle(PANEL_NAMES[PANEL_FEATURES]);
 	S32 idx_face = mTab->getPanelIndexByTitle(PANEL_NAMES[PANEL_FACE]);
@@ -712,7 +712,7 @@ void LLFloaterTools::refresh()
 
 void LLFloaterTools::draw()
 {
-    BOOL has_selection = !LLSelectMgr::getInstance()->getSelection()->isEmpty();
+    bool has_selection = !LLSelectMgr::getInstance()->getSelection()->isEmpty();
     if(!has_selection && (mHasSelection != has_selection))
     {
         mDirty = TRUE;
@@ -1441,7 +1441,7 @@ void LLFloaterTools::getMediaState()
 		return;
 	}
 	
-	BOOL is_nonpermanent_enforced = (LLSelectMgr::getInstance()->getSelection()->getFirstRootNode() 
+	bool is_nonpermanent_enforced = (LLSelectMgr::getInstance()->getSelection()->getFirstRootNode() 
 		&& LLSelectMgr::getInstance()->selectGetRootsNonPermanentEnforced())
 		|| LLSelectMgr::getInstance()->selectGetNonPermanentEnforced();
 	bool editable = is_nonpermanent_enforced && (first_object->permModify() || selectedMediaEditable());

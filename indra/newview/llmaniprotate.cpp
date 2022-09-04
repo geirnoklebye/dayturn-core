@@ -121,7 +121,7 @@ void LLManipRotate::render()
 	LLGLEnable gls_alpha_test(GL_ALPHA_TEST);
 	
 	// You can rotate if you can move
-	LLViewerObject* first_object = mObjectSelection->getFirstMoveableObject(TRUE);
+	LLViewerObject* first_object = mObjectSelection->getFirstMoveableObject(true);
 	if( !first_object )
 	{
 		return;
@@ -367,7 +367,7 @@ BOOL LLManipRotate::handleMouseDown(S32 x, S32 y, MASK mask)
 {
 	BOOL	handled = FALSE;
 
-	LLViewerObject* first_object = mObjectSelection->getFirstMoveableObject(TRUE);
+	LLViewerObject* first_object = mObjectSelection->getFirstMoveableObject(true);
 	if( first_object )
 	{
 		if( mHighlightedPart != LL_NO_PART )
@@ -441,7 +441,7 @@ BOOL LLManipRotate::handleMouseDownOnPart( S32 x, S32 y, MASK mask )
 
 	// Route future Mouse messages here preemptively.  (Release on mouse up.)
 	setMouseCapture( TRUE );
-	LLSelectMgr::getInstance()->enableSilhouette(FALSE);
+	LLSelectMgr::getInstance()->enableSilhouette(false);
 
 	mHelpTextTimer.reset();
 	sNumTimesHelpTextShown++;
@@ -487,7 +487,7 @@ BOOL LLManipRotate::handleMouseUp(S32 x, S32 y, MASK mask)
 
 		// Might have missed last update due to timing.
 		LLSelectMgr::getInstance()->sendMultipleUpdate( UPD_ROTATION | UPD_POSITION );
-		LLSelectMgr::getInstance()->enableSilhouette(TRUE);
+		LLSelectMgr::getInstance()->enableSilhouette(true);
 		//gAgent.setObjectTracking(gSavedSettings.getBOOL("TrackFocusObject"));
 
 		LLSelectMgr::getInstance()->updateSelectionCenter();
@@ -1061,7 +1061,7 @@ void LLManipRotate::renderSnapGuides()
 				getObjectAxisClosestToMouse(object_axis);
 
 				// project onto constraint plane
-				LLSelectNode* first_node = mObjectSelection->getFirstMoveableNode(TRUE);
+				LLSelectNode* first_node = mObjectSelection->getFirstMoveableNode(true);
 				object_axis = object_axis * first_node->getObject()->getRenderRotation();
 				object_axis = object_axis - (object_axis * getConstraintAxis()) * getConstraintAxis();
 				object_axis.normVec();
@@ -1330,7 +1330,7 @@ LLVector3 LLManipRotate::getConstraintAxis()
 
 		LLSelectMgr::getInstance()->getGrid(grid_origin, grid_rotation, grid_scale);
 
-		LLSelectNode* first_node = mObjectSelection->getFirstMoveableNode(TRUE);
+		LLSelectNode* first_node = mObjectSelection->getFirstMoveableNode(true);
 		if (first_node)
 		{
 			// *FIX: get agent local attachment grid working
@@ -1344,7 +1344,7 @@ LLVector3 LLManipRotate::getConstraintAxis()
 
 LLQuaternion LLManipRotate::dragConstrained( S32 x, S32 y )
 {
-	LLSelectNode* first_object_node = mObjectSelection->getFirstMoveableNode(TRUE);
+	LLSelectNode* first_object_node = mObjectSelection->getFirstMoveableNode(true);
 	LLVector3 constraint_axis = getConstraintAxis();
 	LLVector3 center = gAgent.getPosAgentFromGlobal( mRotationCenter );
 
@@ -1740,7 +1740,7 @@ void LLManipRotate::highlightManipulators( S32 x, S32 y )
 	mHighlightedPart = LL_NO_PART;
 
 	//LLBBox bbox = LLSelectMgr::getInstance()->getBBoxOfSelection();
-	LLViewerObject *first_object = mObjectSelection->getFirstMoveableObject(TRUE);
+	LLViewerObject *first_object = mObjectSelection->getFirstMoveableObject(true);
 	
 	if (!first_object)
 	{
@@ -1875,7 +1875,7 @@ void LLManipRotate::highlightManipulators( S32 x, S32 y )
 
 S32 LLManipRotate::getObjectAxisClosestToMouse(LLVector3& object_axis)
 {
-	LLSelectNode* first_object_node = mObjectSelection->getFirstMoveableNode(TRUE);
+	LLSelectNode* first_object_node = mObjectSelection->getFirstMoveableNode(true);
 
 	if (!first_object_node)
 	{

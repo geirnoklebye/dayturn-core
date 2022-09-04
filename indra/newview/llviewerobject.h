@@ -178,7 +178,7 @@ public:
 	const std::string& getAttachmentItemName() const;
 
 	virtual LLVOAvatar* getAvatar() const;  //get the avatar this object is attached to, or NULL if object is not an attachment
-	virtual BOOL	isHUDAttachment() const { return FALSE; }
+	virtual bool	isHUDAttachment() const { return false; }
 	virtual BOOL	isTempAttachment() const;
 
 	virtual BOOL isHiglightedOrBeacon() const;
@@ -420,7 +420,7 @@ public:
 
 	void sendMaterialUpdate() const;
 
-	void setCanSelect(BOOL canSelect);
+	void setCanSelect(bool canSelect);
 
 	void setDebugText(const std::string &utf8text);
 	void initHudText();
@@ -681,7 +681,7 @@ public:
 
 	// Selection, picking and rendering variables
 	U32				mGLName;			// GL "name" used by selection code
-	BOOL			mbCanSelect;		// true if user can select this object by clicking
+	bool			mbCanSelect;		// true if user can select this object by clicking
 
 private:
 	// Grabbed from UPDATE_FLAGS

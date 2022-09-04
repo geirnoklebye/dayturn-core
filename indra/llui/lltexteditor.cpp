@@ -690,9 +690,9 @@ void LLTextEditor::indentSelectedLines( S32 spaces )
 }
 
 //virtual
-BOOL LLTextEditor::canSelectAll() const
+bool LLTextEditor::canSelectAll() const
 {
-	return TRUE;
+	return true;
 }
 
 // virtual
@@ -1418,7 +1418,7 @@ void LLTextEditor::deleteSelection(BOOL group_with_next_op )
 }
 
 // virtual
-BOOL LLTextEditor::canCut() const
+bool LLTextEditor::canCut() const
 {
 	return !mReadOnly && hasSelection();
 }
@@ -1438,7 +1438,7 @@ void LLTextEditor::cut()
 	onKeyStroke();
 }
 
-BOOL LLTextEditor::canCopy() const
+bool LLTextEditor::canCopy() const
 {
 	return hasSelection();
 }
@@ -1455,7 +1455,7 @@ void LLTextEditor::copy()
 	LLClipboard::instance().copyToClipboard(getWText(), left_pos, length);
 }
 
-BOOL LLTextEditor::canPaste() const
+bool LLTextEditor::canPaste() const
 {
 	return !mReadOnly && LLClipboard::instance().isTextAvailable();
 }
@@ -1608,7 +1608,7 @@ void LLTextEditor::copyPrimary()
 	LLClipboard::instance().copyToClipboard(getWText(), left_pos, length, true);
 }
 
-BOOL LLTextEditor::canPastePrimary() const
+bool LLTextEditor::canPastePrimary() const
 {
 	return !mReadOnly && LLClipboard::instance().isTextAvailable(true);
 }
@@ -1929,7 +1929,7 @@ bool LLTextEditor::handleUnicodeCharHere(llwchar uni_char)
 
 
 // virtual
-BOOL LLTextEditor::canDoDelete() const
+bool LLTextEditor::canDoDelete() const
 {
 	return !mReadOnly && ( !mPassDelete || ( hasSelection() || (mCursorPos < getLength())) );
 }
@@ -1993,7 +1993,7 @@ void LLTextEditor::blockUndo()
 }
 
 // virtual
-BOOL LLTextEditor::canUndo() const
+bool LLTextEditor::canUndo() const
 {
 	return !mReadOnly && mLastCmd != NULL;
 }
@@ -2024,7 +2024,7 @@ void LLTextEditor::undo()
 	onKeyStroke();
 }
 
-BOOL LLTextEditor::canRedo() const
+bool LLTextEditor::canRedo() const
 {
 	return !mReadOnly && (mUndoStack.size() > 0) && (mLastCmd != mUndoStack.front());
 }

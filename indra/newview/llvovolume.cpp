@@ -4024,7 +4024,7 @@ void LLVOVolume::generateSilhouette(LLSelectNode* nodep, const LLVector3& view_p
 
 		volume->generateSilhouetteVertices(nodep->mSilhouetteVertices, nodep->mSilhouetteNormals, view_vector, trans_mat, mRelativeXformInvTrans, nodep->getTESelectMask());
 
-		nodep->mSilhouetteExists = TRUE;
+		nodep->mSilhouetteExists = true;
 	}
 }
 
@@ -4056,7 +4056,7 @@ BOOL LLVOVolume::isAttachment() const
 	return mAttachmentState != 0 ;
 }
 
-BOOL LLVOVolume::isHUDAttachment() const
+bool LLVOVolume::isHUDAttachment() const
 {
 	// *NOTE: we assume hud attachment points are in defined range
 	// since this range is constant for backwards compatibility

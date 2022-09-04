@@ -344,7 +344,7 @@ BOOL LLManipScale::handleMouseDownOnPart( S32 x, S32 y, MASK mask )
 	highlightManipulators(x, y);
 	S32 hit_part = mHighlightedPart;
 
-	LLSelectMgr::getInstance()->enableSilhouette(FALSE);
+	LLSelectMgr::getInstance()->enableSilhouette(false);
 	mManipPart = (EManipPart)hit_part;
 
 	LLBBox bbox = LLSelectMgr::getInstance()->getBBoxOfSelection();
@@ -394,9 +394,9 @@ BOOL LLManipScale::handleMouseUp(S32 x, S32 y, MASK mask)
 		}
 
 		//send texture update
-		LLSelectMgr::getInstance()->adjustTexturesByScale(TRUE, getStretchTextures());
+		LLSelectMgr::getInstance()->adjustTexturesByScale(true, getStretchTextures());
 
-		LLSelectMgr::getInstance()->enableSilhouette(TRUE);
+		LLSelectMgr::getInstance()->enableSilhouette(true);
 		mManipPart = LL_NO_PART;
 
 		// Might have missed last update due to UPDATE_DELAY timing
@@ -440,7 +440,7 @@ bool LLManipScale::handleHover(S32 x, S32 y, MASK mask)
 	}
 
 	// Patch up textures, if possible.
-	LLSelectMgr::getInstance()->adjustTexturesByScale(FALSE, getStretchTextures());
+	LLSelectMgr::getInstance()->adjustTexturesByScale(false, getStretchTextures());
 
 	gViewerWindow->setCursor(UI_CURSOR_TOOLSCALE);
 	return true;

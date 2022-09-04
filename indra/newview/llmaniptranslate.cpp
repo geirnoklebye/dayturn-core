@@ -339,7 +339,7 @@ BOOL LLManipTranslate::handleMouseDownOnPart( S32 x, S32 y, MASK mask )
 
 	LLSelectMgr::getInstance()->getGrid(mGridOrigin, mGridRotation, mGridScale);
 
-	LLSelectMgr::getInstance()->enableSilhouette(FALSE);
+	LLSelectMgr::getInstance()->enableSilhouette(false);
 
 	// we just started a drag, so save initial object positions
 	LLSelectMgr::getInstance()->saveSelectedObjectTransform(SELECT_ACTION_TYPE_MOVE);
@@ -351,7 +351,7 @@ BOOL LLManipTranslate::handleMouseDownOnPart( S32 x, S32 y, MASK mask )
 
 	LLVector3		axis;
 
-	LLSelectNode *selectNode = mObjectSelection->getFirstMoveableNode(TRUE);
+	LLSelectNode *selectNode = mObjectSelection->getFirstMoveableNode(true);
 
 	if (!selectNode)
 	{
@@ -474,9 +474,8 @@ bool LLManipTranslate::handleHover(S32 x, S32 y, MASK mask)
 			if (mask == MASK_COPY)
 			{
 				// ...we're trying to make a copy
-				LLSelectMgr::getInstance()->selectDuplicate(LLVector3::zero, FALSE);
-				mCopyMadeThisDrag = TRUE;
-
+				LLSelectMgr::getInstance()->selectDuplicate(LLVector3::zero, false);
+				mCopyMadeThisDrag = true;
 				// When we make the copy, we don't want to do any other processing.
 				// If so, the object will also be moved, and the copy will be offset.
 				LL_DEBUGS("UserInput") << "hover handled by LLManipTranslate (made copy)" << LL_ENDL;
@@ -492,7 +491,7 @@ bool LLManipTranslate::handleHover(S32 x, S32 y, MASK mask)
 
 	// pick the first object to constrain to grid w/ common origin
 	// this is so we don't screw up groups
-	LLSelectNode* selectNode = mObjectSelection->getFirstMoveableNode(TRUE);
+	LLSelectNode* selectNode = mObjectSelection->getFirstMoveableNode(true);
 	if (!selectNode)
 	{
 		// somehow we lost the object!
@@ -1035,7 +1034,7 @@ BOOL LLManipTranslate::handleMouseUp(S32 x, S32 y, MASK mask)
 	{
 		// make sure arrow colors go back to normal
 		mManipPart = LL_NO_PART;
-		LLSelectMgr::getInstance()->enableSilhouette(TRUE);
+		LLSelectMgr::getInstance()->enableSilhouette(true);
 
 		// Might have missed last update due to UPDATE_DELAY timing.
 		LLSelectMgr::getInstance()->sendMultipleUpdate( UPD_POSITION );
@@ -1092,7 +1091,7 @@ void LLManipTranslate::renderSnapGuides()
 		return;
 	}
 
-	LLSelectNode *first_node = mObjectSelection->getFirstMoveableNode(TRUE);
+	LLSelectNode *first_node = mObjectSelection->getFirstMoveableNode(true);
 	if (!first_node)
 	{
 		return;
@@ -1817,7 +1816,7 @@ void LLManipTranslate::renderTranslationHandles()
 		mPlaneManipPositions.mV[VZ] = -1.f;
 	}
 
-	LLViewerObject *first_object = mObjectSelection->getFirstMoveableObject(TRUE);
+	LLViewerObject *first_object = mObjectSelection->getFirstMoveableObject(true);
 	if (!first_object) return;
 
 	LLVector3 selection_center = getPivotPoint();

@@ -3137,7 +3137,7 @@ void handle_attachment_touch(const LLUUID& inv_item_id)
 				{
 					bool apply(LLSelectNode* node)
 					{
-						node->setTransient(TRUE);
+						node->setTransient(true);
 						return true;
 					}
 				} f;
@@ -3955,7 +3955,7 @@ void handle_buy_object(LLSaleInfo sale_info)
 
 	LLUUID owner_id;
 	std::string owner_name;
-	BOOL owners_identical = LLSelectMgr::getInstance()->selectGetOwner(owner_id, owner_name);
+	bool owners_identical = LLSelectMgr::getInstance()->selectGetOwner(owner_id, owner_name);
 	if (!owners_identical)
 	{
 		LLNotificationsUtil::add("CannotBuyObjectsFromDifferentOwners");
@@ -3963,7 +3963,7 @@ void handle_buy_object(LLSaleInfo sale_info)
 	}
 
 	LLPermissions perm;
-	BOOL valid = LLSelectMgr::getInstance()->selectGetPermissions(perm);
+	bool valid = LLSelectMgr::getInstance()->selectGetPermissions(perm);
 	LLAggregatePermissions ag_perm;
 	valid &= LLSelectMgr::getInstance()->selectGetAggregatePermissions(ag_perm);
 	if(!valid || !sale_info.isForSale() || !perm.allowTransferTo(gAgent.getID()))
@@ -4724,7 +4724,7 @@ void handle_duplicate_in_place(void*)
 	LL_INFOS() << "handle_duplicate_in_place" << LL_ENDL;
 
 	LLVector3 offset(0.f, 0.f, 0.f);
-	LLSelectMgr::getInstance()->selectDuplicate(offset, TRUE);
+	LLSelectMgr::getInstance()->selectDuplicate(offset, true);
 }
 
 /* dead code 30-apr-2008
@@ -4733,7 +4733,7 @@ void handle_deed_object_to_group(void*)
 	LLUUID group_id;
 	
 	LLSelectMgr::getInstance()->selectGetGroup(group_id);
-	LLSelectMgr::getInstance()->sendOwner(LLUUID::null, group_id, FALSE);
+	LLSelectMgr::getInstance()->sendOwner(LLUUID::null, group_id, false);
 	LLViewerStats::getInstance()->incStat(LLViewerStats::ST_RELEASE_COUNT);
 }
 
@@ -4799,8 +4799,8 @@ void handle_object_owner_permissive(void*)
 	if(gAgent.isGodlike())
 	{
 		// do the objects.
-		LLSelectMgr::getInstance()->selectionSetObjectPermissions(PERM_BASE, TRUE, PERM_ALL, TRUE);
-		LLSelectMgr::getInstance()->selectionSetObjectPermissions(PERM_OWNER, TRUE, PERM_ALL, TRUE);
+		LLSelectMgr::getInstance()->selectionSetObjectPermissions(PERM_BASE, true, PERM_ALL, true);
+		LLSelectMgr::getInstance()->selectionSetObjectPermissions(PERM_OWNER, true, PERM_ALL, true);
 	}
 }
 
@@ -4809,14 +4809,14 @@ void handle_object_owner_self(void*)
 	// only send this if they're a god.
 	if(gAgent.isGodlike())
 	{
-		LLSelectMgr::getInstance()->sendOwner(gAgent.getID(), gAgent.getGroupID(), TRUE);
+		LLSelectMgr::getInstance()->sendOwner(gAgent.getID(), gAgent.getGroupID(), true);
 	}
 }
 
 // Shortcut to set owner permissions to not editable.
 void handle_object_lock(void*)
 {
-	LLSelectMgr::getInstance()->selectionSetObjectPermissions(PERM_OWNER, FALSE, PERM_MODIFY);
+	LLSelectMgr::getInstance()->selectionSetObjectPermissions(PERM_OWNER, false, PERM_MODIFY);
 }
 
 void handle_object_asset_ids(void*)
@@ -5542,7 +5542,7 @@ void handle_buy()
 	if (LLSelectMgr::getInstance()->getSelection()->isEmpty()) return;
 
 	LLSaleInfo sale_info;
-	BOOL valid = LLSelectMgr::getInstance()->selectGetSaleInfo(sale_info);
+	bool valid = LLSelectMgr::getInstance()->selectGetSaleInfo(sale_info);
 	if (!valid) return;
 
 	S32 price = sale_info.getSalePrice();
@@ -8904,7 +8904,7 @@ class LLToolsShowSelectionLightRadius : public view_listener_t
 		// TomY TODO merge these
 		LLSelectMgr::sRenderLightRadius = !LLSelectMgr::sRenderLightRadius;
 
-		gSavedSettings.setBOOL("RenderLightRadius", LLSelectMgr::sRenderLightRadius);
+		gSavedSettings.setbool("RenderLightRadius", LLSelectMgr::sRenderLightRadius);
 		return true;
 	}
 };

@@ -328,13 +328,13 @@ void LLPanelPermissions::refresh()
 	}
 
 	// figure out a few variables
-	const BOOL is_one_object = (object_count == 1);
+	const bool is_one_object = (object_count == 1);
 	
 	// BUG: fails if a root and non-root are both single-selected.
-	BOOL is_perm_modify = (LLSelectMgr::getInstance()->getSelection()->getFirstRootNode() 
+	bool is_perm_modify = (LLSelectMgr::getInstance()->getSelection()->getFirstRootNode() 
 						   && LLSelectMgr::getInstance()->selectGetRootsModify())
 		|| LLSelectMgr::getInstance()->selectGetModify();
-	BOOL is_nonpermanent_enforced = (LLSelectMgr::getInstance()->getSelection()->getFirstRootNode() 
+	bool is_nonpermanent_enforced = (LLSelectMgr::getInstance()->getSelection()->getFirstRootNode() 
 						   && LLSelectMgr::getInstance()->selectGetRootsNonPermanentEnforced())
 		|| LLSelectMgr::getInstance()->selectGetNonPermanentEnforced();
 	const LLFocusableElement* keyboard_focus_view = gFocusMgr.getKeyboardFocus();
@@ -579,9 +579,9 @@ void LLPanelPermissions::refresh()
 
 	S32 total_sale_price = 0;
 	S32 individual_sale_price = 0;
-	BOOL is_for_sale_mixed = FALSE;
-	BOOL is_sale_price_mixed = FALSE;
-	U32 num_for_sale = FALSE;
+	bool is_for_sale_mixed = false;
+	bool is_sale_price_mixed = false;
+	U32 num_for_sale = false;
     LLSelectMgr::getInstance()->selectGetAggregateSaleInfo(num_for_sale,
 														   is_for_sale_mixed,
 														   is_sale_price_mixed,
@@ -680,22 +680,22 @@ void LLPanelPermissions::refresh()
 	U32 next_owner_mask_on 		= 0;
 	U32 next_owner_mask_off		= 0;
 
-	BOOL valid_base_perms 		= LLSelectMgr::getInstance()->selectGetPerm(PERM_BASE,
+	bool valid_base_perms 		= LLSelectMgr::getInstance()->selectGetPerm(PERM_BASE,
 																			&base_mask_on,
 																			&base_mask_off);
 	//BOOL valid_owner_perms =//
 	LLSelectMgr::getInstance()->selectGetPerm(PERM_OWNER,
 											  &owner_mask_on,
 											  &owner_mask_off);
-	BOOL valid_group_perms 		= LLSelectMgr::getInstance()->selectGetPerm(PERM_GROUP,
+	bool valid_group_perms 		= LLSelectMgr::getInstance()->selectGetPerm(PERM_GROUP,
 																			&group_mask_on,
 																			&group_mask_off);
 	
-	BOOL valid_everyone_perms 	= LLSelectMgr::getInstance()->selectGetPerm(PERM_EVERYONE,
+	bool valid_everyone_perms 	= LLSelectMgr::getInstance()->selectGetPerm(PERM_EVERYONE,
 																			&everyone_mask_on,
 																			&everyone_mask_off);
 	
-	BOOL valid_next_perms 		= LLSelectMgr::getInstance()->selectGetPerm(PERM_NEXT_OWNER,
+	bool valid_next_perms 		= LLSelectMgr::getInstance()->selectGetPerm(PERM_NEXT_OWNER,
 																			&next_owner_mask_on,
 																			&next_owner_mask_off);
 
@@ -874,12 +874,12 @@ void LLPanelPermissions::refresh()
 		else if (everyone_mask_off & PERM_COPY)
 		{
 			getChild<LLUICtrl>("checkbox allow everyone copy")->setValue(FALSE);
-			getChild<LLUICtrl>("checkbox allow everyone copy")->setTentative(	FALSE);
+			getChild<LLUICtrl>("checkbox allow everyone copy")->setTentative(false);
 		}
 		else
 		{
 			getChild<LLUICtrl>("checkbox allow everyone copy")->setValue(TRUE);
-			getChild<LLUICtrl>("checkbox allow everyone copy")->setTentative(	TRUE);
+			getChild<LLUICtrl>("checkbox allow everyone copy")->setTentative(true);
 		}
 		
 		// <FS:CR> OpenSim export permissions
@@ -1122,10 +1122,10 @@ bool callback_deed_to_group(const LLSD& notification, const LLSD& response)
 	if (0 == option)
 	{
 		LLUUID group_id;
-		BOOL groups_identical = LLSelectMgr::getInstance()->selectGetGroup(group_id);
+		bool groups_identical = LLSelectMgr::getInstance()->selectGetGroup(group_id);
 		if(group_id.notNull() && groups_identical && (gAgent.hasPowerInGroup(group_id, GP_OBJECT_DEED)))
 		{
-			LLSelectMgr::getInstance()->sendOwner(LLUUID::null, group_id, FALSE);
+			LLSelectMgr::getInstance()->sendOwner(LLUUID::null, group_id, false);
 		}
 	}
 	return false;

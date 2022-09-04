@@ -289,9 +289,9 @@ bool	LLPanelObject::postBuild()
 
 LLPanelObject::LLPanelObject()
 :	LLPanel(),
-	mIsPhysical(FALSE),
-	mIsTemporary(FALSE),
-	mIsPhantom(FALSE),
+	mIsPhysical(false),
+	mIsTemporary(false),
+	mIsPhantom(false),
 	mSelectedType(MI_BOX),
 	mSculptTextureRevert(LLUUID::null),
 	mSculptTypeRevert(0),
@@ -356,7 +356,7 @@ void LLPanelObject::getState( )
 	}
 
 	S32 selected_count = LLSelectMgr::getInstance()->getSelection()->getObjectCount();
-	BOOL single_volume = (LLSelectMgr::getInstance()->selectionAllPCode( LL_PCODE_VOLUME ))
+	bool single_volume = (LLSelectMgr::getInstance()->selectionAllPCode( LL_PCODE_VOLUME ))
 						 && (selected_count == 1);
 
 	bool enable_move;
@@ -1170,7 +1170,7 @@ bool LLPanelObject::precommitValidate( const LLSD& data )
 
 void LLPanelObject::sendIsPhysical()
 {
-	BOOL value = mCheckPhysics->get();
+	bool value = mCheckPhysics->get();
 	if( mIsPhysical != value )
 	{
 		LLSelectMgr::getInstance()->selectionUpdatePhysics(value);
@@ -1186,7 +1186,7 @@ void LLPanelObject::sendIsPhysical()
 
 void LLPanelObject::sendIsTemporary()
 {
-	BOOL value = mCheckTemporary->get();
+	bool value = mCheckTemporary->get();
 	if( mIsTemporary != value )
 	{
 		LLSelectMgr::getInstance()->selectionUpdateTemporary(value);
@@ -1203,7 +1203,7 @@ void LLPanelObject::sendIsTemporary()
 
 void LLPanelObject::sendIsPhantom()
 {
-	BOOL value = mCheckPhantom->get();
+	bool value = mCheckPhantom->get();
 	if( mIsPhantom != value )
 	{
 		LLSelectMgr::getInstance()->selectionUpdatePhantom(value);
@@ -1636,7 +1636,7 @@ void LLPanelObject::sendScale(BOOL btn_down)
 
 		// check to see if we aren't scaling the textures
 		// (in which case the tex coord's need to be recomputed)
-		BOOL dont_stretch_textures = !LLManipScale::getStretchTextures();
+		bool dont_stretch_textures = !LLManipScale::getStretchTextures();
 		if (dont_stretch_textures)
 		{
 			LLSelectMgr::getInstance()->saveSelectedObjectTransform(SELECT_ACTION_TYPE_SCALE);
@@ -1649,7 +1649,7 @@ void LLPanelObject::sendScale(BOOL btn_down)
 			LLSelectMgr::getInstance()->sendMultipleUpdate(UPD_SCALE | UPD_POSITION);
 		}
 
-		LLSelectMgr::getInstance()->adjustTexturesByScale(TRUE, !dont_stretch_textures);
+		LLSelectMgr::getInstance()->adjustTexturesByScale(true, !dont_stretch_textures);
 	}
 	else
 	{
@@ -1933,7 +1933,7 @@ void LLPanelObject::onCommitLock(LLUICtrl *ctrl, void *data)
 
 	if(self->mRootObject.isNull()) return;
 
-	BOOL new_state = self->mCheckLock->get();
+	bool new_state = self->mCheckLock->get();
 	
 	LLSelectMgr::getInstance()->selectionSetObjectPermissions(PERM_OWNER, !new_state, PERM_MOVE | PERM_MODIFY);
 }
