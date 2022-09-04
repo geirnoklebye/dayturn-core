@@ -416,13 +416,13 @@ LLGLManager::LLGLManager() :
 	mHasCompressedTextures(false),
 	mHasFramebufferObject(false),
 	mMaxSamples(0),
-	mHasBlendFuncSeparate(FALSE),
-	mHasSync(FALSE),
+	mHasBlendFuncSeparate(false),
+	mHasSync(false),
 	mHasVertexBufferObject(false),
 	mHasVertexArrayObject(false),
-	mHasMapBufferRange(FALSE),
-	mHasFlushBufferRange(FALSE),
-	mHasPBuffer(FALSE),
+	mHasMapBufferRange(false),
+	mHasFlushBufferRange(false),
+	mHasPBuffer(false),
 	mNumTextureImageUnits(0),
 	mHasOcclusionQuery(false),
 	mHasTimerQuery(false),
@@ -1000,12 +1000,12 @@ void LLGLManager::initExtensions()
 	mHasBlendFuncSeparate = false;
 # endif // GL_EXT_blend_func_separate
 	mHasMipMapGeneration = false;
-	mHasSeparateSpecularColor = FALSE;
+	mHasSeparateSpecularColor = false;
 	mHasAnisotropic = false;
 	mHasCubeMap = false;
-	mHasOcclusionQuery = FALSE;
-	mHasPointParameters = FALSE;
-	mHasTextureRectangle = FALSE;
+	mHasOcclusionQuery = false;
+	mHasPointParameters = false;
+	mHasTextureRectangle = false;
 #else // LL_MESA_HEADLESS //important, gGLHExts.mSysExts is uninitialized until after glh_init_extensions is called
 	mHasMultitexture = glh_init_extensions("GL_ARB_multitexture");
 	mHasATIMemInfo = ExtensionExists("GL_ATI_meminfo", gGLHExts.mSysExts); //Basic AMD method, also see mHasAMDAssociations
@@ -1076,15 +1076,15 @@ void LLGLManager::initExtensions()
 		mHasARBEnvCombine = false;
 		mHasCompressedTextures = false;
 		mHasVertexBufferObject = false;
-		mHasFramebufferObject = FALSE;
-		mHasDrawBuffers = FALSE;
-		mHasBlendFuncSeparate = FALSE;
+		mHasFramebufferObject = false;
+		mHasDrawBuffers = false;
+		mHasBlendFuncSeparate = false;
 		mHasMipMapGeneration = false;
-		mHasSeparateSpecularColor = FALSE;
+		mHasSeparateSpecularColor = false;
 		mHasAnisotropic = false;
 		mHasCubeMap = false;
-		mHasOcclusionQuery = FALSE;
-		mHasPointParameters = FALSE;
+		mHasOcclusionQuery = false;
+		mHasPointParameters = false;
 		LL_WARNS("RenderInit") << "GL extension support DISABLED via LL_GL_NOEXT" << LL_ENDL;
 	}
 	else if (getenv("LL_GL_BASICEXT"))	/* Flawfinder: ignore */
@@ -1096,8 +1096,8 @@ void LLGLManager::initExtensions()
 		mHasMipMapGeneration = false;
 		mHasAnisotropic = false;
 		//mHasCubeMap = false; // apparently fatal on Intel 915 & similar
-		//mHasOcclusionQuery = FALSE; // source of many ATI system hangs
-		mHasBlendFuncSeparate = FALSE;
+		//mHasOcclusionQuery = false; // source of many ATI system hangs
+		mHasBlendFuncSeparate = false;
 		LL_WARNS("RenderInit") << "GL extension support forced to SIMPLE level via LL_GL_BASICEXT" << LL_ENDL;
 	}
 	if (getenv("LL_GL_BLACKLIST"))	/* Flawfinder: ignore */
@@ -1107,22 +1107,22 @@ void LLGLManager::initExtensions()
 		// SL-28126
 		const char *const blacklist = getenv("LL_GL_BLACKLIST");	/* Flawfinder: ignore */
 		LL_WARNS("RenderInit") << "GL extension support partially disabled via LL_GL_BLACKLIST: " << blacklist << LL_ENDL;
-		if (strchr(blacklist,'a')) mHasARBEnvCombine = FALSE;
+		if (strchr(blacklist,'a')) mHasARBEnvCombine = false;
 		if (strchr(blacklist,'b')) mHasCompressedTextures = false;
 		if (strchr(blacklist,'c')) mHasVertexBufferObject = false;
 		if (strchr(blacklist,'d')) mHasMipMapGeneration = false;//S
 // 		if (strchr(blacklist,'f')) mHasNVVertexArrayRange = FALSE;//S
 // 		if (strchr(blacklist,'g')) mHasNVFence = FALSE;//S
-		if (strchr(blacklist,'h')) mHasSeparateSpecularColor = FALSE;
+		if (strchr(blacklist,'h')) mHasSeparateSpecularColor = false;
 		if (strchr(blacklist,'i')) mHasAnisotropic = false;//S
 		if (strchr(blacklist,'j')) mHasCubeMap = false;//S
 // 		if (strchr(blacklist,'k')) mHasATIVAO = FALSE;//S
-		if (strchr(blacklist,'l')) mHasOcclusionQuery = FALSE;
-		if (strchr(blacklist,'p')) mHasPointParameters = FALSE;//S
-		if (strchr(blacklist,'q')) mHasFramebufferObject = FALSE;//S
-		if (strchr(blacklist,'r')) mHasDrawBuffers = FALSE;//S
-		if (strchr(blacklist,'s')) mHasTextureRectangle = FALSE;
-		if (strchr(blacklist,'t')) mHasBlendFuncSeparate = FALSE;//S
+		if (strchr(blacklist,'l')) mHasOcclusionQuery = false;
+		if (strchr(blacklist,'p')) mHasPointParameters = false;//S
+		if (strchr(blacklist,'q')) mHasFramebufferObject = false;//S
+		if (strchr(blacklist,'r')) mHasDrawBuffers = faøse;//S
+		if (strchr(blacklist,'s')) mHasTextureRectangle = false;
+		if (strchr(blacklist,'t')) mHasBlendFuncSeparate = false;//S
 		if (strchr(blacklist,'u')) mHasDepthClamp = false;
 		
 	}

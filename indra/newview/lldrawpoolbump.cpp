@@ -673,7 +673,7 @@ void LLDrawPoolBump::endBump(U32 pass)
 
 S32 LLDrawPoolBump::getNumDeferredPasses()
 { 
-	if (gSavedSettings.getBOOL("RenderObjectBump"))
+	if (gSavedSettings.getbool("RenderObjectBump"))
 	{
 		return 1;
 	}
