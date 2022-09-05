@@ -5865,10 +5865,7 @@ void LLAppViewer::forceErrorThreadCrash()
     thread->start();
 }
 
-// <FS:ND> Change from std::string to char const*, saving a lot of object construction/destruction per frame
-//void LLAppViewer::initMainloopTimeout(const std::string& state, F32 secs)
-void LLAppViewer::initMainloopTimeout( char const* state, F32 secs)
-// </FS:ND>
+void LLAppViewer::initMainloopTimeout(const std::string& state, F32 secs)
 {
 	if(!mMainloopTimeout)
 	{
@@ -5886,10 +5883,7 @@ void LLAppViewer::destroyMainloopTimeout()
 	}
 }
 
-// <FS:ND> Change from std::string to char const*, saving a lot of object construction/destruction per frame
-//void LLAppViewer::resumeMainloopTimeout(const std::string& state, F32 secs)
-void LLAppViewer::resumeMainloopTimeout( char const* state, F32 secs)
-// </FS:ND>
+void LLAppViewer::resumeMainloopTimeout(const std::string& state, F32 secs)
 {
 	if(mMainloopTimeout)
 	{
@@ -5912,10 +5906,7 @@ void LLAppViewer::pauseMainloopTimeout()
 	}
 }
 
-// <FS:ND> Change from std::string to char const*, saving a lot of object construction/destruction per frame
-//void LLAppViewer::pingMainloopTimeout(const std::string& state, F32 secs)
-void LLAppViewer::pingMainloopTimeout( char const* state, F32 secs)
-// </FS:ND>
+void LLAppViewer::pingMainloopTimeout(const std::string& state, F32 secs)
 {
 
 	if(mMainloopTimeout)
