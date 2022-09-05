@@ -44,6 +44,9 @@ import time
 import zipfile
 
 viewer_dir = os.path.dirname(__file__)
+global home_path
+from os.path import expanduser
+home_path = expanduser("~")
 # Add indra/lib/python to our path so we don't have to muck with PYTHONPATH.
 # Put it FIRST because some of our build hosts have an ancient install of
 # indra.util.llmanifest under their system Python!
@@ -59,7 +62,7 @@ class ViewerManifest(LLManifest):
         # files during the build (see copy_w_viewer_manifest
         # and copy_l_viewer_manifest targets)
         return 'package' in self.args['actions']
-    
+
     def construct(self):
         super(ViewerManifest, self).construct()
         self.path(src="../../scripts/messages/message_template.msg", dst="app_settings/message_template.msg")
@@ -92,7 +95,7 @@ class ViewerManifest(LLManifest):
 
                 # ... and the entire image filters directory
                 self.path("filters")
-            
+
                 # ... and the included spell checking dictionaries
                 pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
                 with self.prefix(src=pkgdir):
@@ -266,7 +269,7 @@ class ViewerManifest(LLManifest):
 
     def app_name_oneword(self):
         return ''.join(self.app_name().split())
-    
+
     def icon_path(self):
         return "icons/" + self.channel_type()
 
@@ -480,7 +483,7 @@ class WindowsManifest(ViewerManifest):
                 raise Exception("Directories are not supported by test_CRT_and_copy_action()")
         else:
             print("Doesn't exist:", src)
-        
+
     def construct(self):
         super(WindowsManifest, self).construct()
 
@@ -496,10 +499,11 @@ class WindowsManifest(ViewerManifest):
         self.path2basename(os.path.join(os.pardir,
                                         'llplugin', 'slplugin', self.args['configuration']),
                            "slplugin.exe")
-        
+
         # Get shared libs from the shared libs staging directory
         with self.prefix(src=os.path.join(self.args['build'], os.pardir,
                                           'sharedlibs', self.args['configuration'])):
+
             # Get fmodstudio dll, continue if missing
             try:
                 if self.args['fmodversion'].lower() == 'fmodstudio':
@@ -538,7 +542,7 @@ class WindowsManifest(ViewerManifest):
             else:
                 self.path("vivoxsdk.dll")
                 self.path("ortp.dll")
-            
+
             # OpenSSL
             if (self.address_size == 64):
                 self.path("libcrypto-1_1-x64.dll")
@@ -566,6 +570,7 @@ class WindowsManifest(ViewerManifest):
 
         self.path(src="licenses-win32.txt", dst="licenses.txt")
         self.path("featuretable.txt")
+        self.path("cube.dae")
 
         with self.prefix(src=pkgdir):
             self.path("ca-bundle.crt")
@@ -674,7 +679,7 @@ class WindowsManifest(ViewerManifest):
                 self.path("plugins/")
 
         if not self.is_packaging_viewer():
-            self.package_file = "copied_deps"    
+            self.package_file = "copied_deps"
 
     def nsi_file_commands(self, install=True):
         def wpath(path):
@@ -734,7 +739,7 @@ class WindowsManifest(ViewerManifest):
 
         installer_file = self.installer_base_name() + '_Setup.exe'
         substitution_strings['installer_file'] = installer_file
-        
+
         version_vars = """
         !define INSTEXE "%(final_exe)s"
         !define VERSION "%(version_short)s"
@@ -743,7 +748,7 @@ class WindowsManifest(ViewerManifest):
         !define VERSION_REGISTRY "%(version_registry)s"
         !define VIEWER_EXE "%(final_exe)s"
         """ % substitution_strings
-        
+
         if self.channel_type() == 'release':
             substitution_strings['caption'] = CHANNEL_VENDOR_BASE
         else:
@@ -781,11 +786,11 @@ class WindowsManifest(ViewerManifest):
         # Unlike the viewer binary, the VMP filenames are invariant with respect to version, os, etc.
         for exe in (
             self.final_exe(),
-            
+
             "llplugin/dullahan_host.exe",
             ):
             self.sign(exe)
-            
+
         # Check two paths, one for Program Files, and one for Program Files (x86).
         # Yay 64bit windows.
         for ProgramFiles in 'ProgramFiles', 'ProgramFiles(x86)':
@@ -921,7 +926,7 @@ class DarwinManifest(ViewerManifest):
                 # yields a slightly smaller binary but makes crash
                 # logs mostly useless. This may be desirable for the
                 # final release. Or not.
-                if ("package" in self.args['actions'] or 
+                if ("package" in self.args['actions'] or
                     "unpacked" in self.args['actions']):
                     self.run_command(
                         ['strip', '-S', executable])
@@ -937,7 +942,7 @@ class DarwinManifest(ViewerManifest):
 
                 with self.prefix(src=relpkgdir, dst=""):
                     self.path("libndofdev.dylib")
-                    self.path("libhunspell-*.dylib")   
+                    self.path("libhunspell-*.dylib")
 
                 with self.prefix(src_dst="cursors_mac"):
                     self.path("*.tif")
@@ -946,6 +951,7 @@ class DarwinManifest(ViewerManifest):
 
                 self.path("licenses-mac.txt", dst="licenses.txt")
                 self.path("featuretable_mac.txt")
+                self.path("cube.dae")
 
                 with self.prefix(src=pkgdir,dst=""):
                     self.path("ca-bundle.crt")
@@ -1191,7 +1197,7 @@ class DarwinManifest(ViewerManifest):
             hdi_output = subprocess.check_output(['hdiutil', 'attach', '-private', sparsename], text=True)
         except subprocess.CalledProcessError as err:
             sys.exit("failed to mount image at '%s'" % sparsename)
-            
+
         try:
             devfile = re.search("/dev/disk([0-9]+)[^s]", hdi_output).group(0).strip()
             volpath = re.search('HFS\s+(.+)', hdi_output).group(1).strip()
@@ -1236,27 +1242,23 @@ class DarwinManifest(ViewerManifest):
             # Set the disk image root's custom icon bit
             self.run_command(['SetFile', '-a', 'C', volpath])
 
-            # Sign the app if requested; 
-            # do this in the copy that's in the .dmg so that the extended attributes used by 
+            # Sign the app if requested;
+            # do this in the copy that's in the .dmg so that the extended attributes used by
             # the signature are preserved; moving the files using python will leave them behind
             # and invalidate the signatures.
             if 'signature' in self.args:
                 app_in_dmg=os.path.join(volpath,self.app_name()+".app")
-                print("Attempting to sign '%s'" % app_in_dmg)
+                print ("Attempting to sign '%s'" % app_in_dmg)
                 identity = self.args['signature']
                 if identity == '':
                     identity = 'Developer ID Application'
 
                 # Look for an environment variable set via build.sh when running in Team City.
-                try:
-                    build_secrets_checkout = os.environ['build_secrets_checkout']
-                except KeyError:
-                    pass
-                else:
+                if 'VIEWER_SIGNING_PWD' in os.environ:
                     # variable found so use it to unlock keychain followed by codesign
                     home_path = os.environ['HOME']
-                    keychain_pwd_path = os.path.join(build_secrets_checkout,'code-signing-osx','password.txt')
-                    keychain_pwd = open(keychain_pwd_path).read().rstrip()
+                    #keychain_pwd_path = os.path.join(build_secrets_checkout,'code-signing-osx','password.txt')
+                    keychain_pwd = os.environ['VIEWER_SIGNING_PWD']
 
                     # Note: As of macOS Sierra, keychains are created with
                     #       names postfixed with '-db' so for example, the SL
@@ -1284,66 +1286,70 @@ class DarwinManifest(ViewerManifest):
                     #       keychain 'viewer.keychain-db' and export it to
                     #       'viewer.keychain'
                     viewer_keychain = os.path.join(home_path, 'Library',
-                                                   'Keychains', 'viewer.keychain')
+                                                   'Keychains', 'login.keychain-db')
                     self.run_command(['security', 'unlock-keychain',
                                       '-p', keychain_pwd, viewer_keychain])
+                    signed=False
+                    sign_attempts=3
                     sign_retry_wait=15
-                    resources = app_in_dmg + "/Contents/Resources/"
-                    plain_sign = glob.glob(resources + "llplugin/*.dylib")
-                    deep_sign = [
-                        resources + "updater/SLVersionChecker",
-                        resources + "SLPlugin.app/Contents/MacOS/SLPlugin",
-                        app_in_dmg,
-                        ]
-                    for attempt in range(3):
-                        if attempt: # second or subsequent iteration
-                            print("codesign failed, waiting {:d} seconds before retrying".format(sign_retry_wait),
-                                  file=sys.stderr)
-                            time.sleep(sign_retry_wait)
-                            sign_retry_wait*=2
-
+                    ad_hoc_res = app_in_dmg + "/Contents/Resources/"
+                    libvlc_path = app_in_dmg + "/Contents/Resources/llplugin/media_plugin_libvlc.dylib"
+                    cef_path = app_in_dmg + "/Contents/Resources/llplugin/media_plugin_cef.dylib"
+                    slplugin_path = app_in_dmg + "/Contents/Resources/SLPlugin.app/Contents/MacOS/SLPlugin"
+                    #greenlet_path = app_in_dmg + "/Contents/Resources/updater/greenlet/_greenlet.so"
+                    while (not signed) and (sign_attempts > 0):
                         try:
+                            sign_attempts-=1
                             # Note: See blurb above about names of keychains
-                            for signee in plain_sign:
-                                self.run_command(
-                                    ['codesign',
-                                     '--force',
-                                     '--timestamp',
-                                     '--keychain', viewer_keychain,
-                                     '--sign', identity,
-                                     signee])
-                            for signee in deep_sign:
-                                self.run_command(
-                                    ['codesign',
-                                     '--verbose',
-                                     '--deep',
-                                     '--force',
-                                     '--entitlements', self.src_path_of("slplugin.entitlements"),
-                                     '--options', 'runtime',
-                                     '--keychain', viewer_keychain,
-                                     '--sign', identity,
-                                     signee])
-                            break # if no exception was raised, the codesign worked
+                            # sign dylibs in Resources with my signature
+                            self.run_command(['codesign', '--force', '--timestamp', '--keychain', viewer_keychain, '--sign', identity, ad_hoc_res + "libapr-1.0.dylib"])
+                            self.run_command(['codesign', '--force', '--timestamp', '--keychain', viewer_keychain, '--sign', identity, ad_hoc_res + "libaprutil-1.0.dylib"])
+                            self.run_command(['codesign', '--force', '--timestamp', '--keychain', viewer_keychain, '--sign', identity, ad_hoc_res + "libexpat.1.dylib"])
+                            self.run_command(['codesign', '--force', '--timestamp', '--keychain', viewer_keychain, '--sign', identity, ad_hoc_res + "libfmod.dylib"])
+                            self.run_command(['codesign', '--force', '--timestamp', '--keychain', viewer_keychain, '--sign', identity, ad_hoc_res + "libhunspell-1.3.0.dylib"])
+                            self.run_command(['codesign', '--force', '--timestamp', '--keychain', viewer_keychain, '--sign', identity, ad_hoc_res + "libndofdev.dylib"])
+                            self.run_command(['codesign', '--force', '--timestamp', '--keychain', viewer_keychain, '--sign', identity, ad_hoc_res + "libnghttp2.14.19.0.dylib"])
+                            self.run_command(['codesign', '--force', '--timestamp', '--keychain', viewer_keychain, '--sign', identity, ad_hoc_res + "libortp.dylib"])
+                            self.run_command(['codesign', '--force', '--timestamp', '--keychain', viewer_keychain, '--sign', identity, ad_hoc_res + "liburiparser.1.0.27.dylib"])
+                            self.run_command(['codesign', '--force', '--timestamp', '--keychain', viewer_keychain, '--sign', identity, ad_hoc_res + "libvivoxsdk.dylib"])
+                            self.run_command(['codesign', '--force', '--timestamp', '--options', 'runtime','--keychain', viewer_keychain, '--sign', identity, ad_hoc_res + "SLVoice"])
+                            # sign dylibs in libvlc_path with my signature
+                            self.run_command(['codesign', '--force', '--timestamp','--keychain', viewer_keychain, '--sign', identity, libvlc_path])
+                            # sign dylibs in cef_path with my signature
+                            self.run_command(['codesign', '--force', '--timestamp', '--keychain', viewer_keychain, '--sign', identity, cef_path])
+                            # sign dylibs in greenlet_path with my signature
+                            # self.run_command(['codesign', '--force', '--timestamp', '--keychain', viewer_keychain, '--sign', identity, greenlet_path])
+                            # sign slplugin with my signature
+                            self.run_command(['codesign', '--verbose', '--deep', '--force', '--entitlements', home_path + "/Developer/dayturn-core/slplugin.entitlements", '--options', 'runtime', '--keychain', viewer_keychain, '--sign', identity, slplugin_path])
+                            # finally sign the app bundle with my signature
+                            self.run_command(['codesign', '--verbose', '--deep', '--force', '--entitlements', home_path + "/Developer/dayturn-core/viewer.entitlements", '--options', 'runtime', '--keychain', viewer_keychain, '--sign', identity, app_in_dmg])
+                            signed=True # if no exception was raised, the codesign worked
                         except ManifestError as err:
-                            # 'err' goes out of scope
                             sign_failed = err
-                    else:
-                        print("Maximum codesign attempts exceeded; giving up", file=sys.stderr)
-                        raise sign_failed
+                            if sign_attempts:
+                                print("codesign failed, waiting {:d} seconds before retrying".format(sign_retry_wait),
+                                    file=sys.stderr)
+                                time.sleep(sign_retry_wait)
+                                sign_retry_wait*=2
+                            else:
+                                print("Maximum codesign attempts exceeded; giving up", file=sys.stderr)
+                                raise sign_failed
                     self.run_command(['spctl', '-a', '-texec', '-vvvv', app_in_dmg])
-                    self.run_command([self.src_path_of("installers/darwin/apple-notarize.sh"), app_in_dmg])
+                    #self.run_command([self.src_path_of("installers/darwin/apple-notarize.sh"), app_in_dmg])
 
         finally:
-            # Unmount the image even if exceptions from any of the above 
+            # Unmount the image even if exceptions from any of the above
             self.run_command(['hdiutil', 'detach', '-force', devfile])
 
-        print("Converting temp disk image to final disk image")
+        print ("Converting temp disk image to final disk image")
         self.run_command(['hdiutil', 'convert', sparsename, '-format', 'UDZO',
                           '-imagekey', 'zlib-level=9', '-o', finalname])
         # get rid of the temp file
         self.package_file = finalname
         self.remove(sparsename)
-
+        # finally sign the dmg
+        if 'signature' in self.args:
+            self.run_command(['codesign', '--verbose', '--options', 'runtime', '--timestamp', '--keychain', viewer_keychain, '--sign', identity, finalname])
 
 class Darwin_i386_Manifest(DarwinManifest):
     address_size = 32
@@ -1391,7 +1397,7 @@ class LinuxManifest(ViewerManifest):
         with self.prefix(src="", dst="bin"):
             self.path("kokua-bin","do-not-directly-run-kokua-bin")
             self.path2basename("../llplugin/slplugin", "SLPlugin")
- 
+
         # recurses, packaged again
         self.path("res-sdl")
 
@@ -1407,6 +1413,7 @@ class LinuxManifest(ViewerManifest):
         with self.prefix(src=os.path.join(self.args['build'], os.pardir, 'media_plugins'), dst="bin/llplugin"):
             self.path2basename("cef", "libmedia_plugin_cef.so")
             self.path2basename("libvlc", "libmedia_plugin_libvlc.so")
+
 
         # CEF runtime files - not debug (release, relwithdebinfo etc.)
 
@@ -1509,6 +1516,7 @@ class LinuxManifest(ViewerManifest):
             #print("Skipping llcommon.so (assuming llcommon was linked statically)")
 
         self.path("featuretable_linux.txt")
+        self.path("cube.dae")
 
         with self.prefix(src=pkgdir,dst="bin"):
             self.path("ca-bundle.crt")
@@ -1569,14 +1577,14 @@ class Linux_x86_64_Manifest(LinuxManifest):
         pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
         relpkgdir = os.path.join(pkgdir, "lib", "release")
         debpkgdir = os.path.join(pkgdir, "lib", "debug")
- 
+
        # support file for valgrind debug tool
         self.path("secondlife-i686.supp")
 
         # Arch does not package libpng12 a dependency of Kokua's gtk+ libraries
         if self.prefix("/lib/x86_64-linux-gnu", dst="lib"):
             self.path("libpng12.so.0*")
-            self.end_prefix("lib") 
+            self.end_prefix("lib")
 
         with self.prefix(src=relpkgdir, dst="lib"):
             try:
@@ -1596,8 +1604,8 @@ class Linux_x86_64_Manifest(LinuxManifest):
                        self.path("libfmod.so")
                        self.path("libfmod.so*")
             except:
-                print("Skipping libfmodstudio.so - not found")
-                pass            
+                print ("Skipping libfmodstudio.so - not found")
+                pass
 
             self.path("libapr-1.so*")
             self.path("libaprutil-1.so*")
@@ -1633,7 +1641,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
                     self.path("libsndfile.so.1")
                     self.path("libvivoxsdk.so")
                     self.path("libvivoxplatform.so")
-                    self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
+                    self.path("libvivoxoal.so.1") # vivox's sdk expects this soname
 
             # 32bit libs needed for voice
             with self.prefix(os.path.join(relpkgdir, "32bit-compat" ), dst="lib32"):
@@ -1693,7 +1701,6 @@ def symlinkf(src, dst):
         elif os.path.isdir(dst):
             print("Requested symlink (%s) exists but is a directory; replacing" % dst)
             shutil.rmtree(dst)
-
             os.symlink(src, dst)
         elif os.path.exists(dst):
             print("Requested symlink (%s) exists but is a file; replacing" % dst)
