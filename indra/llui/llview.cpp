@@ -1013,7 +1013,7 @@ bool LLView::handleKey(KEY key, MASK mask, bool called_from_parent)
 	if( !handled && !called_from_parent && mParentView)
 	{
 		// Upward traversal
-		handled = mParentView->handleKey( key, mask, FALSE );
+		handled = mParentView->handleKey( key, mask, false );
 	}
 	return handled;
 }
@@ -1045,7 +1045,7 @@ bool LLView::handleKeyUp(KEY key, MASK mask, bool called_from_parent)
 	if (!handled && !called_from_parent && mParentView)
 	{
 		// Upward traversal
-		handled = mParentView->handleKeyUp(key, mask, FALSE);
+		handled = mParentView->handleKeyUp(key, mask, false);
 	}
 	return handled;
 }

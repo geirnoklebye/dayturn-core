@@ -1081,7 +1081,7 @@ void LLMenuItemBranchGL::onCommit( void )
 	LLUICtrl::onCommit();
 }
 
-bool LLMenuItemBranchGL::handleKey(KEY key, MASK mask, BOOL called_from_parent)
+bool LLMenuItemBranchGL::handleKey(KEY key, MASK mask, bool called_from_parent)
 {
 	bool handled = false;
 	if (getBranch() && called_from_parent)
@@ -3812,7 +3812,7 @@ BOOL LLMenuHolderGL::handleRightMouseUp( S32 x, S32 y, MASK mask )
 	return handled;
 }
 
-bool LLMenuHolderGL::handleKey(KEY key, MASK mask, BOOL called_from_parent)
+bool LLMenuHolderGL::handleKey(KEY key, MASK mask, bool called_from_parent)
 {
 	bool handled =  false;
 	LLMenuGL* const  pMenu  = dynamic_cast<LLMenuGL*>(getVisibleMenu());
@@ -3831,7 +3831,7 @@ bool LLMenuHolderGL::handleKey(KEY key, MASK mask, BOOL called_from_parent)
 		{
 			if (pMenu->getHighlightedItem())
 			{
-				handled = pMenu->handleKey(key, mask, TRUE);
+				handled = pMenu->handleKey(key, mask, true);
 			}
 			else if (mask == MASK_NONE || (key >= KEY_LEFT && key <= KEY_DOWN))
 			{
@@ -4026,7 +4026,7 @@ bool LLTearOffMenu::handleKeyHere(KEY key, MASK mask)
 		}
 	}
 	// pass keystrokes down to menu
-	return mMenu->handleKey(key, mask, TRUE);
+	return mMenu->handleKey(key, mask, true);
 }
 
 void LLTearOffMenu::translate(S32 x, S32 y)

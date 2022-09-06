@@ -79,7 +79,7 @@ public:
 
 	virtual void onMouseEnter(S32 x, S32 y, MASK mask);
 	virtual void onMouseLeave(S32 x, S32 y, MASK mask);
-	virtual bool handleKey(KEY key, MASK mask, BOOL called_from_parent);
+	virtual bool handleKey(KEY key, MASK mask, bool called_from_parent);
 	virtual BOOL handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 								   EDragAndDropType cargo_type,
 								   void* cargo_data,
@@ -278,7 +278,7 @@ void LLAccordionCtrlTab::LLAccordionCtrlTabHeader::onMouseLeave(S32 x, S32 y, MA
 	mNeedsHighlight = false;
 	mAutoOpenTimer.stop();
 }
-bool LLAccordionCtrlTab::LLAccordionCtrlTabHeader::handleKey(KEY key, MASK mask, BOOL called_from_parent)
+bool LLAccordionCtrlTab::LLAccordionCtrlTabHeader::handleKey(KEY key, MASK mask, bool called_from_parent)
 {
 	if ( ( key == KEY_LEFT || key == KEY_RIGHT) && mask == MASK_NONE)
 	{
@@ -797,7 +797,7 @@ S32 LLAccordionCtrlTab::notify(const LLSD& info)
 	return 0;
 }
 
-bool LLAccordionCtrlTab::handleKey(KEY key, MASK mask, BOOL called_from_parent)
+bool LLAccordionCtrlTab::handleKey(KEY key, MASK mask, bool called_from_parent)
 {
 	if( !mHeader->hasFocus() )
 		return LLUICtrl::handleKey(key, mask, called_from_parent);
