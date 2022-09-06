@@ -132,7 +132,7 @@ void LLPanelSettingsWaterMainTab::refresh()
 {
     if (!mWaterSettings)
     {
-        setAllChildrenEnabled(FALSE);
+        setAllChildrenEnabled(false);
         setEnabled(false);
         return;
     }

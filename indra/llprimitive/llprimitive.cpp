@@ -257,11 +257,6 @@ LLTextureEntry* LLPrimitive::getTE(const U8 index) const
 	return mTextureList.getTexture(index);
 }
 
-LLTextureEntry& LLPrimitive::getTEref( const U8 te_num ) const
-{
-	return mTextureList.getTextureRef( te_num );
-}
-
 //===============================================================
 void LLPrimitive::setNumTEs(const U8 num_tes)
 {
@@ -756,7 +751,7 @@ void LLPrimitive::copyTEs(const LLPrimitive *primitivep)
 	}
 	for (i = 0; i < num_tes; i++)
 	{
-		mTextureList.copyTexture(i, primitivep->getTEref(i));
+		mTextureList.copyTexture(i, *(primitivep->getTE(i)));
 	}
 }
 
@@ -858,7 +853,7 @@ BOOL LLPrimitive::setVolume(const LLVolumeParams &volume_params, const S32 detai
 		if (old_face_mask & cur_mask)
 		{
 			S32 te_index = face_index_from_id(cur_mask, old_faces);
-			old_tes.copyTexture(face_bit, getTEref(te_index));
+			old_tes.copyTexture(face_bit, *(getTE(te_index)));
 			//LL_INFOS() << face_bit << ":" << te_index << ":" << old_tes[face_bit].getID() << LL_ENDL;
 		}
 	}
@@ -1233,13 +1228,11 @@ BOOL LLPrimitive::packTEMessage(LLMessageSystem *mesgsys) const
 		LLColor4U coloru;
 		for (face_index = 0; face_index <= last_face_index; face_index++)
 		{
-			const LLTextureEntry &te = getTEref( face_index );
-
 			// Directly sending image_ids is not safe!
-			memcpy( &image_ids[ face_index*UUID_BYTES ], te.getID().mData, UUID_BYTES );	/* Flawfinder: ignore */
+			memcpy(&image_ids[face_index*16],getTE(face_index)->getID().mData,16);	/* Flawfinder: ignore */ 
 
 			// Cast LLColor4 to LLColor4U
-			coloru.setVec( te.getColor() );
+			coloru.setVec( getTE(face_index)->getColor() );
 
 			// Note:  This is an optimization to send common colors (1.f, 1.f, 1.f, 1.f)
 			// as all zeros.  However, the subtraction and addition must be done in unsigned
@@ -1249,17 +1242,18 @@ BOOL LLPrimitive::packTEMessage(LLMessageSystem *mesgsys) const
 			colors[4*face_index + 2] = 255 - coloru.mV[2];
 			colors[4*face_index + 3] = 255 - coloru.mV[3];
 
-			scale_s[face_index] = (F32) te.mScaleS;
-			scale_t[face_index] = (F32) te.mScaleT;
-			offset_s[face_index] = (S16) ll_round((llclamp(te.mOffsetS,-1.0f,1.0f) * (F32)0x7FFF)) ;
-			offset_t[face_index] = (S16) ll_round((llclamp(te.mOffsetT,-1.0f,1.0f) * (F32)0x7FFF)) ;
-			image_rot[face_index] = (S16) ll_round(((fmod(te.mRotation, F_TWO_PI)/F_TWO_PI) * TEXTURE_ROTATION_PACK_FACTOR));
-			bump[face_index] = te.getBumpShinyFullbright();
-			media_flags[face_index] = te.getMediaTexGen();
-			glow[face_index] = (U8) ll_round((llclamp(te.getGlow(), 0.0f, 1.0f) * (F32)0xFF));
+			const LLTextureEntry* te = getTE(face_index);
+			scale_s[face_index] = (F32) te->mScaleS;
+			scale_t[face_index] = (F32) te->mScaleT;
+			offset_s[face_index] = (S16) ll_round((llclamp(te->mOffsetS,-1.0f,1.0f) * (F32)0x7FFF)) ;
+			offset_t[face_index] = (S16) ll_round((llclamp(te->mOffsetT,-1.0f,1.0f) * (F32)0x7FFF)) ;
+			image_rot[face_index] = (S16) ll_round(((fmod(te->mRotation, F_TWO_PI)/F_TWO_PI) * TEXTURE_ROTATION_PACK_FACTOR));
+			bump[face_index] = te->getBumpShinyFullbright();
+			media_flags[face_index] = te->getMediaTexGen();
+			glow[face_index] = (U8) ll_round((llclamp(te->getGlow(), 0.0f, 1.0f) * (F32)0xFF));
 
 			// Directly sending material_ids is not safe!
-			memcpy( &material_data[ face_index * UUID_BYTES ], te.getMaterialID().get(), UUID_BYTES );	/* Flawfinder: ignore */
+			memcpy(&material_data[face_index*16],getTE(face_index)->getMaterialID().get(),16);	/* Flawfinder: ignore */ 
 		}
 
 		cur_ptr += packTEField(cur_ptr, (U8 *)image_ids, sizeof(LLUUID),last_face_index, MVT_LLUUID);
@@ -1319,12 +1313,11 @@ BOOL LLPrimitive::packTEMessage(LLDataPacker &dp) const
 		LLColor4U coloru;
 		for (face_index = 0; face_index <= last_face_index; face_index++)
 		{
-			const LLTextureEntry &te = getTEref( face_index );
 			// Directly sending image_ids is not safe!
-			memcpy( &image_ids[ face_index*UUID_BYTES ], te.getID().mData, UUID_BYTES );	/* Flawfinder: ignore */
+			memcpy(&image_ids[face_index*16],getTE(face_index)->getID().mData,16);	/* Flawfinder: ignore */ 
 
 			// Cast LLColor4 to LLColor4U
-			coloru.setVec( te.getColor() );
+			coloru.setVec( getTE(face_index)->getColor() );
 
 			// Note:  This is an optimization to send common colors (1.f, 1.f, 1.f, 1.f)
 			// as all zeros.  However, the subtraction and addition must be done in unsigned
@@ -1334,17 +1327,18 @@ BOOL LLPrimitive::packTEMessage(LLDataPacker &dp) const
 			colors[4*face_index + 2] = 255 - coloru.mV[2];
 			colors[4*face_index + 3] = 255 - coloru.mV[3];
 
-			scale_s[face_index] = (F32) te.mScaleS;
-			scale_t[face_index] = (F32) te.mScaleT;
-			offset_s[face_index] = (S16) ll_round((llclamp(te.mOffsetS,-1.0f,1.0f) * (F32)0x7FFF)) ;
-			offset_t[face_index] = (S16) ll_round((llclamp(te.mOffsetT,-1.0f,1.0f) * (F32)0x7FFF)) ;
-			image_rot[face_index] = (S16) ll_round(((fmod(te.mRotation, F_TWO_PI)/F_TWO_PI) * TEXTURE_ROTATION_PACK_FACTOR));
-			bump[face_index] = te.getBumpShinyFullbright();
-			media_flags[face_index] = te.getMediaTexGen();
-            glow[face_index] = (U8) ll_round((llclamp(te.getGlow(), 0.0f, 1.0f) * (F32)0xFF));
+			const LLTextureEntry* te = getTE(face_index);
+			scale_s[face_index] = (F32) te->mScaleS;
+			scale_t[face_index] = (F32) te->mScaleT;
+			offset_s[face_index] = (S16) ll_round((llclamp(te->mOffsetS,-1.0f,1.0f) * (F32)0x7FFF)) ;
+			offset_t[face_index] = (S16) ll_round((llclamp(te->mOffsetT,-1.0f,1.0f) * (F32)0x7FFF)) ;
+			image_rot[face_index] = (S16) ll_round(((fmod(te->mRotation, F_TWO_PI)/F_TWO_PI) * TEXTURE_ROTATION_PACK_FACTOR));
+			bump[face_index] = te->getBumpShinyFullbright();
+			media_flags[face_index] = te->getMediaTexGen();
+            glow[face_index] = (U8) ll_round((llclamp(te->getGlow(), 0.0f, 1.0f) * (F32)0xFF));
 
 			// Directly sending material_ids is not safe!
-			memcpy( &material_data[ face_index*UUID_BYTES ], te.getMaterialID().get(), UUID_BYTES );	/* Flawfinder: ignore */
+			memcpy(&material_data[face_index*16],getTE(face_index)->getMaterialID().get(),16);	/* Flawfinder: ignore */ 
 		}
 
 		cur_ptr += packTEField(cur_ptr, (U8 *)image_ids, sizeof(LLUUID),last_face_index, MVT_LLUUID);

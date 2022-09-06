@@ -8299,7 +8299,7 @@ void handle_selected_material_info()
 		{
 			if (!node->isTESelected(i)) continue;
 	
-			const LLMaterialID& material_id = node->getObject()->getTEref(i).getMaterialID();
+			const LLMaterialID& material_id = node->getObject()->getTE(i)->getMaterialID();
 			faces_per_material[material_id].push_back(i);
 		}
 		// Per-material, dump which faces are using it.
