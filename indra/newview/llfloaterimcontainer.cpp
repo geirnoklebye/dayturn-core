@@ -2407,12 +2407,12 @@ bool LLFloaterIMContainer::isParticipantListExpanded()
 	return is_expanded;
 }
 
-// By default, if torn off session is currently frontmost, LLFloater::isFrontmost() will return FALSE, which can lead to some bugs
+// By default, if torn off session is currently frontmost, LLFloater::isFrontmost() will return false, which can lead to some bugs
 // So LLFloater::isFrontmost() is overriden here to check both selected session and the IM floater itself
 // Exclude "Nearby Chat" session from the check, as "Nearby Chat" window and "Conversations" floater can be brought
 // to front independently
 /*virtual*/
-BOOL LLFloaterIMContainer::isFrontmost()
+bool LLFloaterIMContainer::isFrontmost()
 {
 	LLFloaterIMSessionTab* selected_session = LLFloaterIMSessionTab::getConversation(mSelectedSession);
 	LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");

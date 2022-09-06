@@ -529,7 +529,7 @@ LLFloater::~LLFloater()
 	// This is important so that floaters with persistent rects (i.e., those
 	// created with rect control rather than an LLRect) are restored in their
 	// correct, non-minimized positions.
-	setMinimized( FALSE );
+	setMinimized( false );
 
 	delete mDragHandle;
 	for (S32 i = 0; i < 4; i++) 
@@ -692,7 +692,7 @@ void LLFloater::openFloater(const LLSD& key)
 			floater_to_stack = LLFloaterReg::getLastFloaterCascading();
 		}
 		applyControlsAndPosition(floater_to_stack);
-		setMinimized(FALSE);
+		setMinimized(false);
 		setVisibleAndFrontmost(mAutoFocus);
 	}
 
@@ -713,7 +713,7 @@ void LLFloater::closeFloater(bool app_quitting)
 	
 	// Always unminimize before trying to close.
 	// Most of the time the user will never see this state.
-	setMinimized(FALSE);
+	setMinimized(false);
 
 	if (canClose())
 	{
@@ -1224,7 +1224,7 @@ void LLFloater::handleReshape(const LLRect& new_rect, bool by_user)
 	}
 }
 
-void LLFloater::setMinimized(BOOL minimize)
+void LLFloater::setMinimized(bool minimize)
 {
 	const LLFloater::Params& default_params = LLFloater::getDefaultParams();
 	S32 floater_header_size = default_params.header_height;
@@ -1240,7 +1240,7 @@ void LLFloater::setMinimized(BOOL minimize)
 	if (minimize)
 	{
 		// minimized flag should be turned on before release focus
-		mMinimized = TRUE;
+		mMinimized = true;
 		mExpandedRect = getRect();
 
 		// If the floater has been dragged while minimized in the
@@ -1274,7 +1274,7 @@ void LLFloater::setMinimized(BOOL minimize)
 			{
 				if (floaterp->isMinimizeable())
 				{
-					floaterp->setMinimized(TRUE);
+					floaterp->setMinimized(true);
 				}
 				else if (!floaterp->isMinimized())
 				{
@@ -1344,7 +1344,7 @@ void LLFloater::setMinimized(BOOL minimize)
 			}
 		}
 		
-		mMinimized = FALSE;
+		mMinimized = false;
 		setFrontmost();
 		// Reshape *after* setting mMinimized
 		reshape( mExpandedRect.getWidth(), mExpandedRect.getHeight(), TRUE );
@@ -1503,7 +1503,7 @@ void LLFloater::moveResizeHandlesToFront()
 }
 
 /*virtual*/
-BOOL LLFloater::isFrontmost()
+bool LLFloater::isFrontmost()
 {
 	LLFloaterView* floater_view = getParentByType<LLFloaterView>();
 	return getVisible()
@@ -1612,7 +1612,7 @@ BOOL LLFloater::handleMouseDown(S32 x, S32 y, MASK mask)
 // virtual
 BOOL LLFloater::handleRightMouseDown(S32 x, S32 y, MASK mask)
 {
-	BOOL was_minimized = mMinimized;
+	BOOL was_minimized = (BOOL)mMinimized;
 	bringToFront( x, y );
 	return was_minimized || LLPanel::handleRightMouseDown( x, y, mask );
 }
@@ -1627,8 +1627,8 @@ BOOL LLFloater::handleMiddleMouseDown(S32 x, S32 y, MASK mask)
 // virtual
 BOOL LLFloater::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
-	BOOL was_minimized = mMinimized;
-	setMinimized(FALSE);
+	BOOL was_minimized = (BOOL)mMinimized;
+	setMinimized(false);
 	return was_minimized || LLPanel::handleDoubleClick(x, y, mask);
 }
 
@@ -1720,7 +1720,7 @@ void LLFloater::setDocked(bool docked, bool pop_on_undock)
 
 		if (mDocked)
 		{
-			setMinimized(FALSE);
+			setMinimized(false);
 			mPositioning = LLFloaterEnums::POSITIONING_RELATIVE;
 		}
 
@@ -1776,7 +1776,7 @@ void LLFloater::onClickTearOff(LLFloater* self)
 			{
 				self->storeRectControl();
 			}
-			self->setMinimized(FALSE); // to reenable minimize button if it was minimized
+			self->setMinimized(false); // to reenable minimize button if it was minimized
 			new_host->showFloater(self);
 			// make sure host is visible
 			new_host->openFloater(new_host->getKey());
@@ -2008,7 +2008,7 @@ void	LLFloater::setCanMinimize(BOOL can_minimize)
 	mCanMinimize = can_minimize;
 	if (!can_minimize)
 	{
-		setMinimized(FALSE);
+		setMinimized(false);
 	}
 
 	mButtonsEnabled[BUTTON_MINIMIZE] = can_minimize && !isMinimized();
@@ -2408,7 +2408,7 @@ void LLFloaterView::restoreAll()
 		LLFloater* floaterp = dynamic_cast<LLFloater*>(*child_it);
 		if (floaterp)
 		{
-			floaterp->setMinimized(FALSE);
+			floaterp->setMinimized(false);
 		}
 	}
 
@@ -2545,7 +2545,7 @@ void LLFloaterView::bringToFront(LLFloater* child, BOOL give_focus, BOOL restore
 		// always unminimize dependee, but allow dependents to stay minimized
 		if (!floaterp->isDependent())
 		{
-			floaterp->setMinimized(FALSE);
+			floaterp->setMinimized(false);
 		}
 	}
 	floaters_to_move.clear();
@@ -2570,7 +2570,7 @@ void LLFloaterView::bringToFront(LLFloater* child, BOOL give_focus, BOOL restore
 
 	if(restore)
 	{
-		child->setMinimized(FALSE);
+		child->setMinimized(false);
 	}
 
 	if (give_focus && !gFocusMgr.childHasKeyboardFocus(child))

@@ -120,7 +120,7 @@ public:
 	/*virtual*/ void closeFloater(bool app_quitting = false);
     void closeAllConversations();
     void closeSelectedConversations(const uuid_vec_t& ids);
-	/*virtual*/ BOOL isFrontmost();
+	/*virtual*/ bool isFrontmost();
 
 
 private:

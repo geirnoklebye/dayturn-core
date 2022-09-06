@@ -71,7 +71,7 @@ void LLMultiFloater::onClose(bool app_quitting)
 {
 	if(isMinimized())
 	{
-		setMinimized(FALSE);
+		setMinimized(false);
 	}
 	LLFloater::onClose(app_quitting);
 }

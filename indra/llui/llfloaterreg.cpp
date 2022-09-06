@@ -497,7 +497,7 @@ void LLFloaterReg::toggleInstanceOrBringToFront(const LLSD& sdname, const LLSD& 
 	{
 		if (host->isMinimized() || !host->isShown() || !host->isFrontmost())
 		{
-			host->setMinimized(FALSE);
+			host->setMinimized(false);
 			instance->openFloater(key);
 			instance->setVisibleAndFrontmost(true, key);
 		}
@@ -516,7 +516,7 @@ void LLFloaterReg::toggleInstanceOrBringToFront(const LLSD& sdname, const LLSD& 
 	{
 		if (instance->isMinimized())
 		{
-			instance->setMinimized(FALSE);
+			instance->setMinimized(false);
 			instance->setVisibleAndFrontmost(true, key);
 		}
 		else if (!instance->isShown())
@@ -557,7 +557,7 @@ void LLFloaterReg::showInstanceOrBringToFront(const LLSD& sdname, const LLSD& ke
     {
         if (host->isMinimized() || !host->isShown() || !host->isFrontmost())
         {
-            host->setMinimized(FALSE);
+            host->setMinimized(false);
             instance->openFloater(key);
             instance->setVisibleAndFrontmost(true, key);
         }
@@ -572,7 +572,7 @@ void LLFloaterReg::showInstanceOrBringToFront(const LLSD& sdname, const LLSD& ke
     {
         if (instance->isMinimized())
         {
-            instance->setMinimized(FALSE);
+            instance->setMinimized(false);
             instance->setVisibleAndFrontmost(true, key);
         }
         else if (!instance->isShown())

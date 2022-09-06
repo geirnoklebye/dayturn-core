@@ -253,13 +253,13 @@ public:
 	std::string		getTitle() const;
 	void			setShortTitle( const std::string& short_title );
 	std::string		getShortTitle() const;
-	virtual void	setMinimized(BOOL b);
+	virtual void	setMinimized(bool b);
 	void			moveResizeHandlesToFront();
 	void			addDependentFloater(LLFloater* dependent, BOOL reposition = TRUE);
 	void			addDependentFloater(LLHandle<LLFloater> dependent_handle, BOOL reposition = TRUE);
 	LLFloater*		getDependee() { return (LLFloater*)mDependeeHandle.get(); }
 	void		removeDependentFloater(LLFloater* dependent);
-	BOOL			isMinimized() const				{ return mMinimized; }
+	bool			isMinimized() const				{ return mMinimized; }
 	/// isShown() differs from getVisible() in that isShown() also considers
 	/// isMinimized(). isShown() is true only if visible and not minimized.
 	bool			isShown() const;
@@ -269,7 +269,7 @@ public:
 	static bool     isVisible(const LLFloater* floater);
 	static bool     isMinimized(const LLFloater* floater);
 	BOOL			isFirstLook() { return mFirstLook; } // EXT-2653: This function is necessary to prevent overlapping for secondary showed toasts
-	virtual BOOL	isFrontmost();
+	virtual bool	isFrontmost();
 	BOOL			isDependent()					{ return !mDependeeHandle.isDead(); }
 	void			setCanMinimize(BOOL can_minimize);
 	void			setCanClose(BOOL can_close);
