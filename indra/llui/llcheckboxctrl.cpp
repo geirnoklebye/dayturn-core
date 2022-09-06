@@ -192,7 +192,7 @@ void LLCheckBoxCtrl::setEnabled(bool b)
 
 void LLCheckBoxCtrl::clear()
 {
-	setValue( FALSE );
+	setValue( false );
 }
 
 void LLCheckBoxCtrl::reshape(S32 width, S32 height, BOOL called_from_parent)
