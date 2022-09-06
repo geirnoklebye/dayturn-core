@@ -30,7 +30,6 @@
 #include "llnamelistctrl.h"
 #include "llnotificationsutil.h"
 #include "llpanelblockedlist.h"
-#include "llscrolllistctrl.h"
 #include "lltabcontainer.h"
 #include "lltrans.h"
 #include "llviewercontrol.h"
