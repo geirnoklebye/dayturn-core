@@ -176,7 +176,6 @@ LLTextureEntry* LLPrimTextureList::getTexture(const U8 index) const
 	return NULL;
 }
 
-
 //virtual 
 //S32 setTE(const U8 index, const LLTextureEntry& te) = 0;
 
