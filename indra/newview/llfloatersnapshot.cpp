@@ -1406,10 +1406,10 @@ LLSnapshotFloaterView::~LLSnapshotFloaterView()
 }
 
 // virtual
-BOOL LLSnapshotFloaterView::handleKey(KEY key, MASK mask, BOOL called_from_parent)
+bool LLSnapshotFloaterView::handleKey(KEY key, MASK mask, bool called_from_parent)
 {
 	// use default handler when not in freeze-frame mode
-	if(!gSavedSettings.getBOOL("FreezeTime"))
+	if(!gSavedSettings.getbool("FreezeTime"))
 	{
 		return LLFloaterView::handleKey(key, mask, called_from_parent);
 	}
@@ -1422,9 +1422,9 @@ BOOL LLSnapshotFloaterView::handleKey(KEY key, MASK mask, BOOL called_from_paren
 	else
 	{
 		// bounce keystrokes back down
-		LLFloaterView::handleKey(key, mask, TRUE);
+		LLFloaterView::handleKey(key, mask, true);
 	}
-	return TRUE;
+	return true;
 }
 
 // virtual

@@ -251,7 +251,7 @@ public:
 	void navigateTo(const std::string& url, const std::string& mime_type = "", bool rediscover_type = false, bool server_request = false, bool clean_browser = false);
 	void navigateInternal();
 	void navigateStop();
-	BOOL handleKeyHere(KEY key, MASK mask);
+	bool handleKeyHere(KEY key, MASK mask);
 	bool handleKeyUpHere(KEY key, MASK mask);
 	bool handleUnicodeCharHere(llwchar uni_char);
 	bool canNavigateForward();

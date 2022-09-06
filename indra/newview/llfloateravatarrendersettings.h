@@ -43,7 +43,7 @@
 //    /*virtual*/ bool postBuild();
 //    /*virtual*/ void onOpen(const LLSD& key);
 //    /*virtual*/ void draw();
-//    /*virtual*/ BOOL handleKeyHere(KEY key, MASK mask );
+//    /*virtual*/ bool handleKeyHere(KEY key, MASK mask );
 //
 //    void onAvatarListRightClick(LLUICtrl* ctrl, S32 x, S32 y);
 //
