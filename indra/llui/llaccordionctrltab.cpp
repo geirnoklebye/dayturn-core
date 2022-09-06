@@ -79,7 +79,7 @@ public:
 
 	virtual void onMouseEnter(S32 x, S32 y, MASK mask);
 	virtual void onMouseLeave(S32 x, S32 y, MASK mask);
-	virtual BOOL handleKey(KEY key, MASK mask, BOOL called_from_parent);
+	virtual bool handleKey(KEY key, MASK mask, BOOL called_from_parent);
 	virtual BOOL handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 								   EDragAndDropType cargo_type,
 								   void* cargo_data,
@@ -278,7 +278,7 @@ void LLAccordionCtrlTab::LLAccordionCtrlTabHeader::onMouseLeave(S32 x, S32 y, MA
 	mNeedsHighlight = false;
 	mAutoOpenTimer.stop();
 }
-BOOL LLAccordionCtrlTab::LLAccordionCtrlTabHeader::handleKey(KEY key, MASK mask, BOOL called_from_parent)
+bool LLAccordionCtrlTab::LLAccordionCtrlTabHeader::handleKey(KEY key, MASK mask, BOOL called_from_parent)
 {
 	if ( ( key == KEY_LEFT || key == KEY_RIGHT) && mask == MASK_NONE)
 	{
@@ -797,7 +797,7 @@ S32 LLAccordionCtrlTab::notify(const LLSD& info)
 	return 0;
 }
 
-BOOL LLAccordionCtrlTab::handleKey(KEY key, MASK mask, BOOL called_from_parent)
+bool LLAccordionCtrlTab::handleKey(KEY key, MASK mask, BOOL called_from_parent)
 {
 	if( !mHeader->hasFocus() )
 		return LLUICtrl::handleKey(key, mask, called_from_parent);
@@ -805,7 +805,7 @@ BOOL LLAccordionCtrlTab::handleKey(KEY key, MASK mask, BOOL called_from_parent)
 	if ( (key == KEY_RETURN )&& mask == MASK_NONE)
 	{
 		changeOpenClose(getDisplayChildren());
-		return TRUE;
+		return true;
 	}
 
 	if ( (key == KEY_ADD || key == KEY_RIGHT)&& mask == MASK_NONE)
@@ -813,7 +813,7 @@ BOOL LLAccordionCtrlTab::handleKey(KEY key, MASK mask, BOOL called_from_parent)
 		if(getDisplayChildren() == false)
 		{
 			changeOpenClose(getDisplayChildren());
-			return TRUE;
+			return true;
 		}
 	}
 	if ( (key == KEY_SUBTRACT || key == KEY_LEFT)&& mask == MASK_NONE)
@@ -821,7 +821,7 @@ BOOL LLAccordionCtrlTab::handleKey(KEY key, MASK mask, BOOL called_from_parent)
 		if(getDisplayChildren() == true)
 		{
 			changeOpenClose(getDisplayChildren());
-			return TRUE;
+			return true;
 		}
 	}
 
@@ -835,7 +835,7 @@ BOOL LLAccordionCtrlTab::handleKey(KEY key, MASK mask, BOOL called_from_parent)
 		{
 			getAccordionView()->notify(LLSD().with("action","select_first"));
 		}
-		return TRUE;
+		return true;
 	}
 
 	if ( key == KEY_UP && mask == MASK_NONE)
@@ -844,7 +844,7 @@ BOOL LLAccordionCtrlTab::handleKey(KEY key, MASK mask, BOOL called_from_parent)
 
 		//we processing notifyParent so let call parent directly
 		getParent()->notifyParent(LLSD().with("action","select_prev"));
-		return TRUE;
+		return true;
 	}
 
 	return LLUICtrl::handleKey(key, mask, called_from_parent);
