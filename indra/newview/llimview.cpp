@@ -2860,16 +2860,6 @@ void LLIMMgr::addMessage(
 				}
 				return;
 			}
-			// KKA-947 optionally reject adhoc sessions initiated by non-friends
-			if (session->isAdHocSessionType() && gSavedSettings.getBOOL("KokuaIgnoreNonFriendAdHocGroupIM") && LLAvatarTracker::instance().getBuddyInfo(other_participant_id) == NULL)
-			{
-				LL_WARNS() << "Leaving non-friend originated AdHoc session due to option setting from " << from << LL_ENDL;
-				if (!gIMMgr->leaveSession(new_session_id))
-				{
-					LL_INFOS("IMVIEW") << "Session " << new_session_id << " does not exist." << LL_ENDL;
-				}
-				return;
-			}
 
 			//Play sound for new conversations
 			if (!skip_message & !gAgent.isDoNotDisturb() && (gSavedSettings.getBOOL("PlaySoundNewConversation") == TRUE))
