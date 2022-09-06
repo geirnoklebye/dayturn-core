@@ -1791,7 +1791,7 @@ void LLPanelProfileSecondLife::onShowAgentPermissionsDialog()
     }
     else // already open
     {
-        floater->setMinimized(FALSE);
+        floater->setMinimized(false);
         floater->setVisibleAndFrontmost(TRUE);
     }
 }
@@ -1828,7 +1828,7 @@ void LLPanelProfileSecondLife::onShowAgentProfileTexture()
     else // already open
     {
         LLFloaterProfileTexture * texture_view = dynamic_cast<LLFloaterProfileTexture*>(floater);
-        texture_view->setMinimized(FALSE);
+        texture_view->setMinimized(false);
         texture_view->setVisibleAndFrontmost(TRUE);
         if (mImageId.notNull())
         {
@@ -1902,7 +1902,7 @@ void LLPanelProfileSecondLife::onShowTexturePicker()
     }
     else
     {
-        floaterp->setMinimized(FALSE);
+        floaterp->setMinimized(false);
         floaterp->setVisibleAndFrontmost(TRUE);
     }
 }
@@ -2259,7 +2259,7 @@ void LLPanelProfileFirstLife::onChangePhoto()
     }
     else
     {
-        floaterp->setMinimized(FALSE);
+        floaterp->setMinimized(false);
         floaterp->setVisibleAndFrontmost(TRUE);
     }
 }

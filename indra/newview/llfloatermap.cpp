@@ -113,7 +113,7 @@ BOOL LLFloaterMap::handleDoubleClick(S32 x, S32 y, MASK mask)
 	// If floater is minimized, minimap should be shown on doubleclick (STORM-299)
 	if (isMinimized())
 	{
-		setMinimized(FALSE);
+		setMinimized(false);
 		return TRUE;
 	}
 

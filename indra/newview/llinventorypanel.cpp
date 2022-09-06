@@ -1844,7 +1844,7 @@ LLInventoryPanel* LLInventoryPanel::getActiveInventoryPanel(BOOL auto_open)
 		// Make sure the floater is not minimized (STORM-438).
 		if (active_inv_floaterp && active_inv_floaterp->isMinimized())
 		{
-			active_inv_floaterp->setMinimized(FALSE);
+			active_inv_floaterp->setMinimized(false);
 		}
 	}	
 	else if (auto_open)

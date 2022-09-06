@@ -700,7 +700,7 @@ void LLFloaterIMContainer::returnFloaterToHost()
 	floater->onTearOffClicked();
 }
 
-void LLFloaterIMContainer::setMinimized(BOOL b)
+void LLFloaterIMContainer::setMinimized(bool b)
 {
 	bool was_minimized = isMinimized();
 	LLMultiFloater::setMinimized(b);

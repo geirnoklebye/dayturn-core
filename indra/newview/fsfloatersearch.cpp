@@ -751,7 +751,7 @@ void FSFloaterSearch::onBtnTeleport()
 		}
 		else if (teleport_action == 2)
 		{
-			setMinimized(TRUE);
+			setMinimized(true);
 		}
 	}
 }

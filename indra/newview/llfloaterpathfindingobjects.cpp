@@ -494,7 +494,7 @@ void LLFloaterPathfindingObjects::showFloaterWithSelectionObjects()
 		rebuildObjectsScrollList(true);
 		if (isMinimized())
 		{
-			setMinimized(FALSE);
+			setMinimized(false);
 		}
 		setVisibleAndFrontmost();
 	}

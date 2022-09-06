@@ -65,7 +65,7 @@ public:
 
 	// LLView overrides
 	/*virtual*/ bool postBuild();
-	/*virtual*/ void setMinimized(BOOL b);
+	/*virtual*/ void setMinimized(bool b);
 	/*virtual*/ void setVisible(bool visible);
 	/*virtual*/ bool getVisible();
 	/*virtual*/ void setFocus(BOOL focus);

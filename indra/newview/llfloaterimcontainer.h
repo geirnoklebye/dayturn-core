@@ -59,7 +59,7 @@ public:
 	/*virtual*/ bool postBuild();
 	/*virtual*/ void onOpen(const LLSD& key);
 	/*virtual*/ void draw();
-	/*virtual*/ void setMinimized(BOOL b);
+	/*virtual*/ void setMinimized(bool b);
 	/*virtual*/ void setVisible(bool visible);
 	/*virtual*/ void setVisibleAndFrontmost(bool take_focus=true, const LLSD& key = LLSD());
 	/*virtual*/ void updateResizeLimits();

@@ -674,7 +674,7 @@ void LLFloaterIMSession::setDocked(bool docked, bool pop_on_undock)
 	}
 }
 
-void LLFloaterIMSession::setMinimized(BOOL b)
+void LLFloaterIMSession::setMinimized(bool b)
 {
 	bool wasMinimized = isMinimized();
 	LLFloaterIMSessionTab::setMinimized(b);

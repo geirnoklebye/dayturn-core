@@ -6795,7 +6795,7 @@ class LLAvatarToggleMyProfile : public view_listener_t
 		LLFloater* instance = LLAvatarActions::getProfileFloater(gAgent.getID());
 		if (LLFloater::isMinimized(instance))
 		{
-			instance->setMinimized(FALSE);
+			instance->setMinimized(false);
 			instance->setFocus(TRUE);
 		}
 		else if (!LLFloater::isShown(instance))
@@ -6821,7 +6821,7 @@ class LLAvatarTogglePicks : public view_listener_t
         LLFloater * instance = LLAvatarActions::getProfileFloater(gAgent.getID());
         if (LLFloater::isMinimized(instance) || (instance && !instance->hasFocus() && !instance->getIsChrome()))
         {
-            instance->setMinimized(FALSE);
+            instance->setMinimized(false);
             instance->setFocus(TRUE);
             LLAvatarActions::showPicks(gAgent.getID());
         }
@@ -6844,7 +6844,7 @@ class LLAvatarToggleSearch : public view_listener_t
 		LLFloater* instance = LLFloaterReg::findInstance("search");
 		if (LLFloater::isMinimized(instance))
 		{
-			instance->setMinimized(FALSE);
+			instance->setMinimized(false);
 			instance->setFocus(TRUE);
 		}
 		else if (!LLFloater::isShown(instance))
@@ -9661,7 +9661,7 @@ class LLToolsSelectTool : public view_listener_t
 		// attempt to open it, but it won't bring it to front or de-minimize.
 		if (gFloaterTools && (gFloaterTools->isMinimized() || !gFloaterTools->isShown() || !gFloaterTools->isFrontmost()))
 		{
-			gFloaterTools->setMinimized(FALSE);
+			gFloaterTools->setMinimized(false);
 			gFloaterTools->openFloater();
 			gFloaterTools->setVisibleAndFrontmost(true);
 		}
