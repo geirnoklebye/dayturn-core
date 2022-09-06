@@ -648,7 +648,7 @@ public:
 
 	virtual void onCommit( void );
 
-	virtual BOOL handleKey(KEY key, MASK mask, BOOL called_from_parent);
+	virtual bool handleKey(KEY key, MASK mask, BOOL called_from_parent);
 	virtual bool handleUnicodeChar(llwchar uni_char, bool called_from_parent);
 
 	// set the hover status (called by it's menu) and if the object is
@@ -836,7 +836,7 @@ public:
 	// Close context menus on right mouse up not handled by menus.
 	/*virtual*/ BOOL handleRightMouseUp( S32 x, S32 y, MASK mask );
 
-	virtual BOOL handleKey(KEY key, MASK mask, BOOL called_from_parent);
+	virtual bool handleKey(KEY key, MASK mask, BOOL called_from_parent);
 	virtual const LLRect getMenuRect() const { return getLocalRect(); }
 	LLView*const getVisibleMenu() const;
 	virtual BOOL hasVisibleMenu() const {return getVisibleMenu() != NULL;}

@@ -1081,9 +1081,9 @@ void LLMenuItemBranchGL::onCommit( void )
 	LLUICtrl::onCommit();
 }
 
-BOOL LLMenuItemBranchGL::handleKey(KEY key, MASK mask, BOOL called_from_parent)
+bool LLMenuItemBranchGL::handleKey(KEY key, MASK mask, BOOL called_from_parent)
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 	if (getBranch() && called_from_parent)
 	{
 		handled = getBranch()->handleKey(key, mask, called_from_parent);
@@ -3812,9 +3812,9 @@ BOOL LLMenuHolderGL::handleRightMouseUp( S32 x, S32 y, MASK mask )
 	return handled;
 }
 
-BOOL LLMenuHolderGL::handleKey(KEY key, MASK mask, BOOL called_from_parent)
+bool LLMenuHolderGL::handleKey(KEY key, MASK mask, BOOL called_from_parent)
 {
-	BOOL handled =  false;
+	bool handled =  false;
 	LLMenuGL* const  pMenu  = dynamic_cast<LLMenuGL*>(getVisibleMenu());
 			
 	if (pMenu)
@@ -3822,7 +3822,7 @@ BOOL LLMenuHolderGL::handleKey(KEY key, MASK mask, BOOL called_from_parent)
 		//eat TAB key - EXT-7000
 		if (key == KEY_TAB && mask == MASK_NONE)
 		{
-			return TRUE;
+			return true;
 		}
 
 		//handle ESCAPE and RETURN key
