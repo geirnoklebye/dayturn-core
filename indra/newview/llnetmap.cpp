@@ -1098,17 +1098,17 @@ BOOL LLNetMap::handleRightMouseDown(S32 x, S32 y, MASK mask)
 	return TRUE;
 }
 
-BOOL LLNetMap::handleClick(S32 x, S32 y, MASK mask)
+bool LLNetMap::handleClick(S32 x, S32 y, MASK mask)
 {
 	// TODO: allow clicking an avatar on minimap to select avatar in the nearby avatar list
 	// if(mClosestAgentToCursor.notNull())
 	//     mNearbyList->selectUser(mClosestAgentToCursor);
 	// Needs a registered observer i guess to accomplish this without using
 	// globals to tell the mNearbyList in llpeoplepanel to select the user
-	return TRUE;
+	return true;
 }
 
-BOOL LLNetMap::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLNetMap::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	LLVector3d pos_global = viewPosToGlobal(x, y);
 
@@ -1137,7 +1137,7 @@ BOOL LLNetMap::handleDoubleClick(S32 x, S32 y, MASK mask)
 	{
 		LLFloaterReg::showInstance("world_map");
 	}
-	return TRUE;
+	return true;
 }
 
 void LLNetMap::handleOverlayToggle(const LLSD& sdParam)

@@ -108,13 +108,13 @@ bool LLFloaterMap::postBuild()
 	return true;
 }
 
-BOOL LLFloaterMap::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLFloaterMap::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	// If floater is minimized, minimap should be shown on doubleclick (STORM-299)
 	if (isMinimized())
 	{
 		setMinimized(false);
-		return TRUE;
+		return true;
 	}
 
 	LLVector3d pos_global = mMap->viewPosToGlobal(x, y);
@@ -126,16 +126,16 @@ BOOL LLFloaterMap::handleDoubleClick(S32 x, S32 y, MASK mask)
 		world_map->trackLocation(pos_global);
 	}
 
-	if (gSavedSettings.getBOOL("DoubleClickTeleport"))
+	if (gSavedSettings.getbool("DoubleClickTeleport"))
 	{
 		// If DoubleClickTeleport is on, double clicking the minimap will teleport there
 		gAgent.teleportViaLocationLookAt(pos_global);
 	}
-	else if (gSavedSettings.getBOOL("DoubleClickShowWorldMap"))
+	else if (gSavedSettings.getbool("DoubleClickShowWorldMap"))
 	{
 		LLFloaterReg::showInstance("world_map");
 	}
-	return TRUE;
+	return true;
 }
 
 void LLFloaterMap::setDirectionPos( LLTextBox* text_box, F32 rotation )

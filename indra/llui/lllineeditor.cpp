@@ -666,7 +666,7 @@ void LLLineEditor::onSpellCheckSettingsChange()
 	mSpellCheckStart = mSpellCheckEnd = -1;
 }
 
-BOOL LLLineEditor::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLLineEditor::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	setFocus( TRUE );
 	mTripleClickTimer.setTimerExpirySec(TRIPLE_CLICK_INTERVAL);
@@ -723,7 +723,7 @@ BOOL LLLineEditor::handleDoubleClick(S32 x, S32 y, MASK mask)
 	// take selection to 'primary' clipboard
 	updatePrimary();
 
-	return TRUE;
+	return true;
 }
 
 BOOL LLLineEditor::handleMouseDown(S32 x, S32 y, MASK mask)

@@ -62,7 +62,7 @@ public:
 	virtual void handleFocusLost(LLWindow *window);
 	virtual void handleMenuSelect(LLWindow *window,  S32 menu_item);
 	virtual BOOL handlePaint(LLWindow *window,  S32 x,  S32 y,  S32 width,  S32 height);
-	virtual BOOL handleDoubleClick(LLWindow *window,  LLCoordGL pos, MASK mask);			// double-click of left mouse button
+	virtual bool handleDoubleClick(LLWindow *window,  LLCoordGL pos, MASK mask);			// double-click of left mouse button
 	virtual void handleWindowBlock(LLWindow *window);							// window is taking over CPU for a while
 	virtual void handleWindowUnblock(LLWindow *window);							// window coming back after taking over CPU for a while
 	virtual void handleDataCopy(LLWindow *window, S32 data_type, void *data);

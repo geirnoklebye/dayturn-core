@@ -108,7 +108,7 @@ LLColorSwatchCtrl::~LLColorSwatchCtrl ()
 	}
 }
 
-BOOL LLColorSwatchCtrl::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLColorSwatchCtrl::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	return static_cast<bool>(handleMouseDown(x, y, mask));
 }

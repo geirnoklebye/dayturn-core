@@ -1228,14 +1228,14 @@ BOOL LLViewerWindow::handleMouseDown(LLWindow *window,  LLCoordGL pos, MASK mask
     return gViewerInput.handleMouse(window, pos, mask, CLICK_LEFT, down);
 }
 
-BOOL LLViewerWindow::handleDoubleClick(LLWindow *window,  LLCoordGL pos, MASK mask)
+bool LLViewerWindow::handleDoubleClick(LLWindow *window,  LLCoordGL pos, MASK mask)
 {
 	// try handling as a double-click first, then a single-click if that
 	// wasn't handled.
-	BOOL down = TRUE;
+	bool down = true;
 	if (gViewerInput.handleMouse(window, pos, mask, CLICK_DOUBLELEFT, down))
 	{
-		return TRUE;
+		return true;
 	}
 	return handleMouseDown(window, pos, mask);
 }

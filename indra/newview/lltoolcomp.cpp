@@ -194,9 +194,9 @@ void LLToolCompInspect::pickCallback(const LLPickInfo& pick_info)
 	tool_inspectp->mSelectRect->handlePick( pick_info );
 }
 
-BOOL LLToolCompInspect::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLToolCompInspect::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
-	return TRUE;
+	return true;
 }
 
 bool LLToolCompInspect::handleKey(KEY key, MASK mask)
@@ -333,14 +333,14 @@ LLTool* LLToolCompTranslate::getOverrideTool(MASK mask)
 	return LLToolComposite::getOverrideTool(mask);
 }
 
-BOOL LLToolCompTranslate::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLToolCompTranslate::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	if (mManip->getSelection()->isEmpty() && mManip->getHighlightedPart() == LLManip::LL_NO_PART)
 	{
 		// You should already have an object selected from the mousedown.
 		// If so, show its properties
 		LLFloaterReg::showInstance("build", "Content");
-		return TRUE;
+		return true;
 	}
 	// Nothing selected means the first mouse click was probably
 	// bad, so try again.
@@ -452,14 +452,14 @@ LLTool* LLToolCompScale::getOverrideTool(MASK mask)
 }
 
 
-BOOL LLToolCompScale::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLToolCompScale::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	if (!mManip->getSelection()->isEmpty() && mManip->getHighlightedPart() == LLManip::LL_NO_PART)
 	{
 		// You should already have an object selected from the mousedown.
 		// If so, show its properties
 		LLFloaterReg::showInstance("build", "Content");
-		return TRUE;
+		return true;
 	}
 	else
 	{
@@ -535,7 +535,7 @@ void LLToolCompCreate::pickCallback(const LLPickInfo& pick_info)
 	LLToolCompCreate::getInstance()->mSelectRect->handlePick( pick_info );
 }
 
-BOOL LLToolCompCreate::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLToolCompCreate::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	return handleMouseDown(x, y, mask);
 }
@@ -649,14 +649,14 @@ LLTool* LLToolCompRotate::getOverrideTool(MASK mask)
 	return LLToolComposite::getOverrideTool(mask);
 }
 
-BOOL LLToolCompRotate::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLToolCompRotate::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	if (!mManip->getSelection()->isEmpty() && mManip->getHighlightedPart() == LLManip::LL_NO_PART)
 	{
 		// You should already have an object selected from the mousedown.
 		// If so, show its properties
 		LLFloaterReg::showInstance("build", "Content");
-		return TRUE;
+		return true;
 	}
 	else
 	{
@@ -760,13 +760,13 @@ BOOL LLToolCompGun::handleMouseDown(S32 x, S32 y, MASK mask)
 }
 
 
-BOOL LLToolCompGun::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLToolCompGun::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	// if the left button is grabbed, don't put up the pie menu
 	if (gAgent.leftButtonGrabbed() && gViewerInput.isLMouseHandlingDefault(MODE_FIRST_PERSON))
 	{
 		gAgent.setControlFlags(AGENT_CONTROL_ML_LBUTTON_DOWN);
-		return FALSE;
+		return false;
 	}
 
 	// On mousedown, start grabbing

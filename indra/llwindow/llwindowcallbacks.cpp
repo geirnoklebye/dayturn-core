@@ -157,9 +157,9 @@ BOOL LLWindowCallbacks::handlePaint(LLWindow *window, const S32 x, const S32 y,
 	return FALSE;
 }
 
-BOOL LLWindowCallbacks::handleDoubleClick(LLWindow *window, const LLCoordGL pos, MASK mask)
+bool LLWindowCallbacks::handleDoubleClick(LLWindow *window, const LLCoordGL pos, MASK mask)
 {
-	return FALSE;
+	return false;
 }
 
 void LLWindowCallbacks::handleWindowBlock(LLWindow *window)

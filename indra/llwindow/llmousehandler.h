@@ -54,7 +54,7 @@ public:
 	virtual BOOL	handleMiddleMouseUp(S32 x, S32 y, MASK mask) = 0;
 	virtual BOOL	handleRightMouseDown(S32 x, S32 y, MASK mask) = 0;
 	virtual BOOL	handleRightMouseUp(S32 x, S32 y, MASK mask) = 0;
-	virtual BOOL	handleDoubleClick(S32 x, S32 y, MASK mask) = 0;
+	virtual bool	handleDoubleClick(S32 x, S32 y, MASK mask) = 0;
 
 	virtual bool	handleHover(S32 x, S32 y, MASK mask) = 0;
 	virtual bool	handleScrollWheel(S32 x, S32 y, S32 clicks) = 0;

@@ -2277,10 +2277,10 @@ void LLScrollListCtrl::copySLURLToClipboard(std::string id, bool is_group)
 	LLUrlAction::copyURLToClipboard(slurl);
 }
 
-BOOL LLScrollListCtrl::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLScrollListCtrl::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	//BOOL handled = FALSE;
-	BOOL handled = handleClick(x, y, mask);
+	bool handled = handleClick(x, y, mask);
 
 	if (!handled)
 	{
@@ -2296,19 +2296,19 @@ BOOL LLScrollListCtrl::handleDoubleClick(S32 x, S32 y, MASK mask)
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL LLScrollListCtrl::handleClick(S32 x, S32 y, MASK mask)
+bool LLScrollListCtrl::handleClick(S32 x, S32 y, MASK mask)
 {
 	// which row was clicked on?
 	LLScrollListItem* hit_item = hitItem(x, y);
-	if (!hit_item) return FALSE;
+	if (!hit_item) return false;
 
 	// get appropriate cell from that row
 	S32 column_index = getColumnIndexFromOffset(x);
 	LLScrollListCell* hit_cell = hit_item->getColumn(column_index);
-	if (!hit_cell) return FALSE;
+	if (!hit_cell) return false;
 
 	// if cell handled click directly (i.e. clicked on an embedded checkbox)
 	if (hit_cell->handleClick())
@@ -2347,7 +2347,7 @@ BOOL LLScrollListCtrl::handleClick(S32 x, S32 y, MASK mask)
 			onCommit();
 		}
 		// eat click (e.g. do not trigger double click callback)
-		return TRUE;
+		return true;
 	}
 	else
 	{
@@ -2356,7 +2356,7 @@ BOOL LLScrollListCtrl::handleClick(S32 x, S32 y, MASK mask)
 		gFocusMgr.setMouseCapture(this);
 		mNeedsScroll = true;
 		// do not eat click (allow double click callback)
-		return FALSE;
+		return false;
 	}
 }
 

@@ -1138,7 +1138,7 @@ BOOL LLView::handleMouseDown(S32 x, S32 y, MASK mask)
 	return (r!=NULL);
 }
 
-BOOL LLView::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLView::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	return childrenHandleDoubleClick( x, y, mask ) != NULL;
 }

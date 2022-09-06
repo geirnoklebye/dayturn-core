@@ -887,7 +887,7 @@ void LLToolPie::stopClickToWalk()
 	}
 }
 
-BOOL LLToolPie::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLToolPie::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	if (gDebugClicks)
 	{
@@ -896,17 +896,17 @@ BOOL LLToolPie::handleDoubleClick(S32 x, S32 y, MASK mask)
 
 	if (handleMediaDblClick(mPick))
 	{
-		return TRUE;
+		return true;
 	}
     
 	if (!mDoubleClickTimer.getStarted() || (mDoubleClickTimer.getElapsedTimeF32() > 0.3f))
 	{
 		mDoubleClickTimer.stop();
-		return FALSE;
+		return false;
 	}
 	mDoubleClickTimer.stop();
 
-	return FALSE;
+	return false;
 }
 
 static bool needs_tooltip(LLSelectNode* nodep)

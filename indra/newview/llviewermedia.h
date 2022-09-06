@@ -328,7 +328,7 @@ public:
 	/*virtual*/ bool	handleHover(S32 x, S32 y, MASK mask) { return false; };
 	/*virtual*/ bool	handleScrollWheel(S32 x, S32 y, S32 clicks) { return false; };
 	/*virtual*/ bool	handleScrollHWheel(S32 x, S32 y, S32 clicks) { return false; };
-	/*virtual*/ BOOL	handleDoubleClick(S32 x, S32 y, MASK mask) { return FALSE; };
+	/*virtual*/ bool	handleDoubleClick(S32 x, S32 y, MASK mask) { return false; };
 	/*virtual*/ BOOL	handleRightMouseDown(S32 x, S32 y, MASK mask) { return FALSE; };
 	/*virtual*/ BOOL	handleRightMouseUp(S32 x, S32 y, MASK mask) { return FALSE; };
 	/*virtual*/ bool	handleToolTip(S32 x, S32 y, MASK mask) { return false; };

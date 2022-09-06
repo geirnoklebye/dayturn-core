@@ -1625,9 +1625,9 @@ BOOL LLFloater::handleMiddleMouseDown(S32 x, S32 y, MASK mask)
 
 
 // virtual
-BOOL LLFloater::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLFloater::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
-	BOOL was_minimized = (BOOL)mMinimized;
+	bool was_minimized = mMinimized;
 	setMinimized(false);
 	return was_minimized || LLPanel::handleDoubleClick(x, y, mask);
 }

@@ -389,9 +389,9 @@ BOOL LLMediaCtrl::handleRightMouseDown( S32 x, S32 y, MASK mask )
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-BOOL LLMediaCtrl::handleDoubleClick( S32 x, S32 y, MASK mask )
+bool LLMediaCtrl::handleDoubleClick( S32 x, S32 y, MASK mask )
 {
-	if (LLPanel::handleDoubleClick(x, y, mask)) return TRUE;
+	if (LLPanel::handleDoubleClick(x, y, mask)) return true;
 	convertInputCoords(x, y);
 
 	if (mMediaSource)
@@ -404,7 +404,7 @@ BOOL LLMediaCtrl::handleDoubleClick( S32 x, S32 y, MASK mask )
 		setFocus( TRUE );
 	}
 
-	return TRUE;
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

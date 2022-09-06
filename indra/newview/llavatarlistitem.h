@@ -136,7 +136,7 @@ public:
 	//colouring based on contact sets
 	void setUseContactColors(bool use) { mUseContactColors = use;};
 
-	/*virtual*/ BOOL handleDoubleClick(S32 x, S32 y, MASK mask);
+	/*virtual*/ bool handleDoubleClick(S32 x, S32 y, MASK mask);
 
 protected:
 	/**
