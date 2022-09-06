@@ -176,16 +176,6 @@ LLTextureEntry* LLPrimTextureList::getTexture(const U8 index) const
 	return NULL;
 }
 
-LLTextureEntry& LLPrimTextureList::getTextureRef( const U8 index ) const
-{
-	if( index >= mEntryList.size() )
-	{
-		LL_ERRS() << "Texture index out of bounds, index: " << (U32)index << " mEntryList.size(): " << mEntryList.size() << LL_ENDL;
-	}
-
-	return *mEntryList[ index ];
-}
-
 
 //virtual 
 //S32 setTE(const U8 index, const LLTextureEntry& te) = 0;
