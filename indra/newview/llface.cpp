@@ -924,7 +924,7 @@ BOOL LLFace::genVolumeBBoxes(const LLVolume &volume, S32 f,
 		//VECTORIZE THIS
 		LLMatrix4a mat_vert;
 		mat_vert.loadu(mat_vert_in);
-        // LLVector4a new_extents[2]; <FS:ND/> Unused.
+        LLVector4a new_extents[2];
 
 		llassert(less_than_max_mag(face.mExtents[0]));
 		llassert(less_than_max_mag(face.mExtents[1]));
@@ -1382,10 +1382,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 		clearState(GLOBAL);
 	}
 
-	// <FS:ND> Protection against faces w/o te set.
-	// LLColor4U color = tep->getColor();
-	LLColor4U color = (tep ? tep->getColor() : LLColor4());
-	// </FS:ND>
+	LLColor4U color = tep->getColor();
 
 	if (rebuild_color)
 	{ //decide if shiny goes in alpha channel of color
@@ -1751,11 +1748,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 				bump_t_primary_light_ray.load3((offset_multiple * t_scale * primary_light_ray).mV);
 			}
 
-			// <FS:ND> FIRE-14261 Guard against null textures
-			// U8 texgen = getTextureEntry()->getTexGen();
-			U8 texgen = getTextureEntry() ? getTextureEntry()->getTexGen() : LLTextureEntry::TEX_GEN_DEFAULT;
-			// </FS:ND>
-			
+			U8 texgen = getTextureEntry()->getTexGen();
 			if (rebuild_tcoord && texgen != LLTextureEntry::TEX_GEN_DEFAULT)
 			{ //planar texgen needs binormals
 				mVObjp->getVolume()->genTangents(f);
@@ -1799,10 +1792,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 			LLVector4a scalea;
 			scalea.load3(scale.mV);
 
-			// <FS:ND> Protection against faces w/o te set.
-			// LLMaterial* mat = tep->getMaterialParams().get();
-			LLMaterial* mat = tep ? tep->getMaterialParams().get() : 0;
-			// </FS:ND>
+			LLMaterial* mat = tep->getMaterialParams().get();
 
 			bool do_bump = bump_code && mVertexBuffer->hasDataType(LLVertexBuffer::TYPE_TEXCOORD1);
 
@@ -1826,14 +1816,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 						if (!do_xform)
 						{
                             LL_PROFILE_ZONE_NAMED_CATEGORY_FACE("ggv - texgen 1");
-
-							// <FS:ND> Don't round up, or there's high risk to write past buffer
-
-							// S32 tc_size = (num_vertices*2*sizeof(F32)+0xF) & ~0xF;
-							S32 tc_size = (num_vertices*2*sizeof(F32));
-
-							// </FS:ND>
-
+							S32 tc_size = (num_vertices*2*sizeof(F32)+0xF) & ~0xF;
 							LLVector4a::memcpyNonAliased16((F32*) tex_coords0.get(), (F32*) vf.mTexCoords, tc_size);
 						}
 						else
