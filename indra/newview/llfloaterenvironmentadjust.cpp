@@ -150,12 +150,12 @@ void LLFloaterEnvironmentAdjust::refresh()
 {
     if (!mLiveSky || !mLiveWater)
     {
-        setAllChildrenEnabled(FALSE);
+        setAllChildrenEnabled(false);
         return;
     }
 
-    setEnabled(TRUE);
-    setAllChildrenEnabled(TRUE);
+    setEnabled(true);
+    setAllChildrenEnabled(true);
 
     getChild<LLColorSwatchCtrl>(FIELD_SKY_AMBIENT_LIGHT)->set(mLiveSky->getAmbientColor() / SLIDER_SCALE_SUN_AMBIENT);
     getChild<LLColorSwatchCtrl>(FIELD_SKY_BLUE_HORIZON)->set(mLiveSky->getBlueHorizon() / SLIDER_SCALE_BLUE_HORIZON_DENSITY);

@@ -292,7 +292,7 @@ public:
 	// children, etc.
 	virtual void deleteAllChildren();
 
-	void 	setAllChildrenEnabled(BOOL b);
+	void 	setAllChildrenEnabled(bool b);
 
 	virtual void	setVisible(bool visible);
 	const bool		getVisible() const			{ return isAvailableOnThisGrid() && mVisible; }

@@ -645,7 +645,7 @@ void LLView::deleteAllChildren()
 	}
 }
 
-void LLView::setAllChildrenEnabled(BOOL b)
+void LLView::setAllChildrenEnabled(bool b)
 {
 	BOOST_FOREACH(LLView* viewp, mChildList)
 	{

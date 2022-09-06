@@ -179,7 +179,7 @@ void LLPanelSettingsSkyAtmosTab::refresh()
 {
     if (!mSkySettings)
     {
-        setAllChildrenEnabled(FALSE);
+        setAllChildrenEnabled(false);
         setEnabled(false);
         return;
     }
@@ -365,7 +365,7 @@ void LLPanelSettingsSkyCloudTab::refresh()
 {
     if (!mSkySettings)
     {
-        setAllChildrenEnabled(FALSE);
+        setAllChildrenEnabled(false);
         setEnabled(false);
         return;
     }
@@ -513,8 +513,8 @@ void LLPanelSettingsSkySunMoonTab::setEnabled(bool enabled)
         getChild<LLUICtrl>(FIELD_SKY_SUN_SCALE)->setEnabled(enabled);
         getChild<LLUICtrl>(FIELD_SKY_MOON_SCALE)->setEnabled(enabled);
         getChild<LLUICtrl>(FIELD_SKY_MOON_BRIGHTNESS)->setEnabled(enabled);
-        getChildView(PANEL_SKY_SUN_LAYOUT)->setAllChildrenEnabled(TRUE);
-        getChildView(PANEL_SKY_MOON_LAYOUT)->setAllChildrenEnabled(TRUE);
+        getChildView(PANEL_SKY_SUN_LAYOUT)->setAllChildrenEnabled(true);
+        getChildView(PANEL_SKY_MOON_LAYOUT)->setAllChildrenEnabled(true);
     }
 }
 
@@ -522,8 +522,8 @@ void LLPanelSettingsSkySunMoonTab::refresh()
 {
     if (!mSkySettings || !getCanChangeSettings())
     {
-        getChildView(PANEL_SKY_SUN_LAYOUT)->setAllChildrenEnabled(FALSE);
-        getChildView(PANEL_SKY_MOON_LAYOUT)->setAllChildrenEnabled(FALSE);
+        getChildView(PANEL_SKY_SUN_LAYOUT)->setAllChildrenEnabled(false);
+        getChildView(PANEL_SKY_MOON_LAYOUT)->setAllChildrenEnabled(false);
         getChildView(FIELD_SKY_SUN_BEACON)->setEnabled(true);
         getChildView(FIELD_SKY_MOON_BEACON)->setEnabled(true);
         
@@ -533,7 +533,7 @@ void LLPanelSettingsSkySunMoonTab::refresh()
     else
     {
         setEnabled(true);
-        setAllChildrenEnabled(TRUE);
+        setAllChildrenEnabled(true);
     }
 
     getChild<LLColorSwatchCtrl>(FIELD_SKY_SUN_MOON_COLOR)->set(mSkySettings->getSunlightColor() / SLIDER_SCALE_SUN_AMBIENT);
@@ -798,7 +798,7 @@ void LLPanelSettingsSkyDensityTab::refresh()
 {
     if (!mSkySettings)
     {
-        setAllChildrenEnabled(FALSE);
+        setAllChildrenEnabled(false);
         setEnabled(false);
         return;
     }
