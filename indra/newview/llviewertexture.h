@@ -129,7 +129,7 @@ public:
 	LLViewerTexture(const U32 width, const U32 height, const U8 components, BOOL usemipmaps) ;
 
 	virtual S8 getType() const;
-	virtual BOOL isMissingAsset() const ;
+	virtual bool isMissingAsset() const ;
 	virtual void dump();	// debug info to LL_INFOS()
 	
     virtual bool isViewerMediaTexture() const { return false; }
@@ -172,7 +172,7 @@ public:
 
 	
 	virtual void setCachedRawImage(S32 discard_level, LLImageRaw* imageraw) ;
-	BOOL isLargeImage() ;	
+	S32 isLargeImage() ;	
 	
 	void setParcelMedia(LLViewerMediaTexture* media) {mParcelMedia = media;}
 	BOOL hasParcelMedia() const { return mParcelMedia != NULL;}
@@ -361,9 +361,9 @@ public:
 	void addToCreateTexture();
 
     //call to determine if createTexture is necessary
-    BOOL preCreateTexture(S32 usename = 0);
+    bool preCreateTexture(S32 usename = 0);
 	 // ONLY call from LLViewerTextureList or ImageGL background thread
-	BOOL createTexture(S32 usename = 0);
+	bool createTexture(S32 usename = 0);
     void postCreateTexture();
     void scheduleCreateTexture();
 
@@ -372,7 +372,7 @@ public:
 	virtual void processTextureStats() ;
 	F32  calcDecodePriority() ;
 
-	BOOL needsAux() const { return mNeedsAux; }
+	S32 needsAux() const { return mNeedsAux; }
 
 	// Host we think might have this image, used for baked av textures.
 	void setTargetHost(LLHost host)			{ mTargetHost = host; }
@@ -396,7 +396,7 @@ public:
 	bool setDebugFetching(S32 debug_level);
 	bool isInDebug() const { return mInDebug; }
 
-	void setUnremovable(BOOL value) { mUnremovable = value; }
+	void setUnremovable(bool value) { mUnremovable = value; }
 	bool isUnremovable() const { return mUnremovable; }
 	
 	void clearFetchedResults(); //clear all fetched results, for debug use.
@@ -406,8 +406,8 @@ public:
 	// more data.
 	/*virtual*/ void setKnownDrawSize(S32 width, S32 height);
 
-	void setIsMissingAsset(BOOL is_missing = true);
-	/*virtual*/ BOOL isMissingAsset() const { return mIsMissingAsset; }
+	void setIsMissingAsset(bool is_missing = true);
+	/*virtual*/ bool isMissingAsset() const { return mIsMissingAsset; }
 
 	// returns dimensions of original image for local files (before power of two scaling)
 	// and returns 0 for all asset system images
@@ -455,9 +455,9 @@ public:
 	LLImageRaw* getSavedRawImage() ;
 	BOOL        hasSavedRawImage() const ;
 	F32         getElapsedLastReferencedSavedRawImageTime() const ;
-	BOOL		isFullyLoaded() const;
+	bool		isFullyLoaded() const;
 
-	BOOL        hasFetcher() const { return mHasFetcher;}
+	bool        hasFetcher() const { return mHasFetcher;}
 	bool        isFetching() const { return mIsFetching;}
 	void        setCanUseHTTP(bool can_use_http) {mCanUseHTTP = can_use_http;}
 
@@ -483,15 +483,15 @@ private:
 
 	//for atlas
 	void resetFaceAtlas() ;
-	void invalidateAtlas(BOOL rebuild_geom) ;
-	BOOL insertToAtlas() ;
+	void invalidateAtlas(bool rebuild_geom) ;
+	bool insertToAtlas() ;
 
 private:
-	BOOL  mFullyLoaded;
-	BOOL  mInDebug;
-	BOOL  mUnremovable;
-	BOOL  mInFastCacheList;
-	BOOL  mForceCallbackFetch;
+	bool  mFullyLoaded;
+	bool  mInDebug;
+	bool  mUnremovable;
+	bool  mInFastCacheList;
+	bool  mForceCallbackFetch;
 
 protected:		
 	std::string mLocalFileName;
@@ -518,17 +518,17 @@ protected:
 	S8  mDesiredDiscardLevel;			// The discard level we'd LIKE to have - if we have it and there's space	
 	S8  mMinDesiredDiscardLevel;	// The minimum discard level we'd like to have
 
-	S8  mNeedsAux;					// We need to decode the auxiliary channels
+	S32  mNeedsAux;					// We need to decode the auxiliary channels
 	S8  mHasAux;                    // We have aux channels
 	S8  mDecodingAux;				// Are we decoding high components
 	S8  mIsRawImageValid;
-	S8  mHasFetcher;				// We've made a fecth request
-	S8  mIsFetching;				// Fetch request is active
+	bool  mHasFetcher;				// We've made a fecth request
+	bool  mIsFetching;				// Fetch request is active
 	bool mCanUseHTTP;              //This texture can be fetched through http if true.
 	LLCore::HttpStatus mLastHttpGetStatus; // Result of the most recently completed http request for this texture.
 
 	FTType mFTType; // What category of image is this - map tile, server bake, etc?
-	mutable S8 mIsMissingAsset;		// True if we know that there is no image asset with this image id in the database.		
+	bool mIsMissingAsset;		// True if we know that there is no image asset with this image id in the database.		
 
 	typedef std::list<LLLoadedCallbackEntry*> callback_list_t;
 	S8              mLoadedCallbackDesiredDiscardLevel;
@@ -545,8 +545,8 @@ protected:
 
 	//keep a copy of mRawImage for some special purposes
 	//when mForceToSaveRawImage is set.
-	BOOL mForceToSaveRawImage ;
-	BOOL mSaveRawImage;
+	bool mForceToSaveRawImage ;
+	bool mSaveRawImage;
 	LLPointer<LLImageRaw> mSavedRawImage;
 	S32 mSavedRawDiscardLevel;
 	S32 mDesiredSavedRawDiscardLevel;
@@ -565,7 +565,7 @@ protected:
 	LLFrameTimer mStopFetchingTimer;	// Time since mDecodePriority == 0.f.
 
 	BOOL  mInImageList;				// TRUE if image is in list (in which case don't reset priority!)
-	BOOL  mNeedsCreateTexture;	
+	bool  mNeedsCreateTexture;	
 
 	BOOL   mForSculpt ; //a flag if the texture is used as sculpt data.
 	BOOL   mIsFetched ; //is loaded from remote or from cache, not generated locally.
