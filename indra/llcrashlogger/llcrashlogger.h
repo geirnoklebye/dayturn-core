@@ -85,15 +85,12 @@ protected:
     static void ssl_locking_callback(int mode, int type, const char * file, int line);
 
 	S32 mCrashBehavior;
-	BOOL mCrashInPreviousExec;
+	bool mCrashInPreviousExec;
 	std::map<std::string, std::string> mFileMap;
 	std::string mGridName;
 	LLControlGroup mCrashSettings;
 	std::string mProductName;
 	LLSD mCrashInfo;
-// [SL:KB] - Patch: Viewer-CrashLookup | Checked: 2011-03-24 (Catznip-2.6.0a) | Added: Catznip-2.6.0a
-	LLCrashLookup*	mCrashLookup;
-// [/SL:KB]
 	std::string mCrashHost;
 	std::string mAltCrashHost;
 	LLSD mDebugLog;

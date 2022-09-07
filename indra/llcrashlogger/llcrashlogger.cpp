@@ -51,15 +51,8 @@
 #include <openssl/crypto.h>
 
 
-// [SL:KB] - Patch: Viewer-CrashLookup | Checked: 2011-03-24 (Catznip-2.6.0a) | Added: Catznip-2.6.0a
-#ifdef LL_WINDOWS
-	#include <shellapi.h>
-#endif // LL_WINDOWS
-// [/SL:KB]
-
-
-BOOL gBreak = false;
-BOOL gSent = false;
+bool gBreak = false;
+bool gSent = false;
 
 int LLCrashLogger::ssl_mutex_count = 0;
 LLCoreInt::HttpMutex ** LLCrashLogger::ssl_mutex_list = NULL;
@@ -94,9 +87,6 @@ void LLCrashLoggerHandler::onFailure(LLCore::HttpResponse * response, LLCore::Ht
 }
 
 LLCrashLogger::LLCrashLogger() :
-// [SL:KB] - Patch: Viewer-CrashLookup | Checked: 2011-03-24 (Catznip-2.6.0a) | Added: Catznip-2.6.0a
-	mCrashLookup(NULL),
-// [/SL:KB]
 	mCrashBehavior(CRASH_BEHAVIOR_ASK),
 	mCrashInPreviousExec(false),
 	mCrashSettings("CrashSettings"),
@@ -547,8 +537,7 @@ bool LLCrashLogger::sendCrashLog(std::string dump_dir)
 
     gDirUtilp->setDumpDir( dump_dir );
     
-    std::string dump_path = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,
-                                                           "DayturnCrashReport");
+    std::string dump_path = gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "DayturnCrashReport");
     std::string report_file = dump_path + ".log";
 
     LL_DEBUGS("CRASHREPORT") << "sending " << report_file << LL_ENDL;
@@ -650,13 +639,6 @@ bool LLCrashLogger::sendCrashLogs()
             }
         }
     }
-
-	// <FS:ND> We want this appended right away, or this crash only gets send the next time the crashreporter runs.
-    //if (rec)
-    //{
-    //    newlocks.append(rec);
-    //}
-	// </FS:ND>
     
     mKeyMaster.putProcessList(newlocks);
     return true;
