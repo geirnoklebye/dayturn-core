@@ -61,7 +61,7 @@ public:
 
 	bool parseXml(LLXmlTreeNode* node);
 	BOOL createVisualParams(LLAvatarAppearance *appearance);
-	BOOL isUserSettable() { return mLocalTexture != -1;	}
+	S32 isUserSettable() { return mLocalTexture != -1;	}
 	S32  getLocalTexture() const { return mLocalTexture; }
 	BOOL getOnlyAlpha() const { return mUseLocalTextureAlphaOnly; }
 	std::string getName() const { return mName;	}
