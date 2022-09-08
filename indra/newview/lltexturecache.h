@@ -87,14 +87,14 @@ public:
 	class Responder : public LLResponder
 	{
 	public:
-		virtual void setData(U8* data, S32 datasize, S32 imagesize, S32 imageformat, BOOL imagelocal) = 0;
+		virtual void setData(U8* data, S32 datasize, S32 imagesize, S32 imageformat, bool imagelocal) = 0;
 	};
 	
 	class ReadResponder : public Responder
 	{
 	public:
 		ReadResponder();
-		void setData(U8* data, S32 datasize, S32 imagesize, S32 imageformat, BOOL imagelocal);
+		void setData(U8* data, S32 datasize, S32 imagesize, S32 imageformat, bool imagelocal);
 		void setImage(LLImageFormatted* image) { mFormattedImage = image; }
 	protected:
 		LLPointer<LLImageFormatted> mFormattedImage;
@@ -104,7 +104,7 @@ public:
 
 	class WriteResponder : public Responder
 	{
-		void setData(U8* data, S32 datasize, S32 imagesize, S32 imageformat, BOOL imagelocal)
+		void setData(U8* data, S32 datasize, S32 imagesize, S32 imageformat, bool imagelocal)
 		{
 			// not used
 		}

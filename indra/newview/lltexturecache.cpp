@@ -2325,7 +2325,7 @@ LLTextureCache::ReadResponder::ReadResponder()
 {
 }
 
-void LLTextureCache::ReadResponder::setData(U8* data, S32 datasize, S32 imagesize, S32 imageformat, BOOL imagelocal)
+void LLTextureCache::ReadResponder::setData(U8* data, S32 datasize, S32 imagesize, S32 imageformat, bool imagelocal)
 {
 	if (mFormattedImage.notNull())
 	{
