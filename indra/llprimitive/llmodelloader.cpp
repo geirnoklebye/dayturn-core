@@ -47,7 +47,7 @@
 
 std::list<LLModelLoader*> LLModelLoader::sActiveLoaderList;
 
-void stretch_extents(LLModel* model, LLMatrix4a& mat, LLVector4a& min, LLVector4a& max, BOOL& first_transform)
+void stretch_extents(LLModel* model, LLMatrix4a& mat, LLVector4a& min, LLVector4a& max, S32& first_transform)
 {
 	LLVector4a box[] =
 	{
@@ -95,7 +95,7 @@ void stretch_extents(LLModel* model, LLMatrix4a& mat, LLVector4a& min, LLVector4
 	}
 }
 
-void stretch_extents(LLModel* model, LLMatrix4& mat, LLVector3& min, LLVector3& max, BOOL& first_transform)
+void stretch_extents(LLModel* model, LLMatrix4& mat, LLVector3& min, LLVector3& max, S32& first_transform)
 {
 	LLVector4a mina, maxa;
 	LLMatrix4a mata;
@@ -131,7 +131,7 @@ LLModelLoader::LLModelLoader(
 , mFilename(filename)
 , mLod(lod)
 , mTrySLM(false)
-, mFirstTransform(TRUE)
+, mFirstTransform(true)
 , mNumOfFetchingTextures(0)
 , mLoadCallback(load_cb)
 , mJointLookupFunc(joint_lookup_func)
@@ -346,7 +346,7 @@ bool LLModelLoader::loadFromSLM(const std::string& filename)
 
 
 	//convert instance_list to mScene
-	mFirstTransform = TRUE;
+	mFirstTransform = true;
 	for (U32 i = 0; i < instance_list.size(); ++i)
 	{
 		LLModelInstance& cur_instance = instance_list[i];
