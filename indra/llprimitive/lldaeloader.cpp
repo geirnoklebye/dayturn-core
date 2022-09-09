@@ -253,7 +253,7 @@ LLModel::EModelStatus load_face_from_dom_triangles(
 								n[idx[i+norm_offset]*3+2]));
 		}
 		
-		BOOL found = FALSE;
+		bool found = false;
 			
 		LLVolumeFace::VertexMapData::PointMap::iterator point_iter;
 		point_iter = point_map.find(LLVector3(cv.getPosition().getF32ptr()));
@@ -505,7 +505,7 @@ LLModel::EModelStatus load_face_from_dom_polylist(
 			
 			cur_idx += idx_stride;
 			
-			BOOL found = FALSE;
+			bool found = false;
 				
 			LLVolumeFace::VertexMapData::PointMap::iterator point_iter;
 			LLVector3 pos3(cv.getPosition().getF32ptr());
@@ -517,7 +517,7 @@ LLModel::EModelStatus load_face_from_dom_polylist(
 				{
 					if ((point_iter->second)[k] == cv)
 					{
-						found = TRUE;
+						found = true;
 						U32 index = (point_iter->second)[k].mIndex;
 						if (j == 0)
 						{

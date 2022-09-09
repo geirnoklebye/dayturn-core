@@ -174,7 +174,7 @@ public:
 
 				void	markForUpdate(BOOL priority);
 				void	markForUnload()							{ LLViewerObject::markForUnload(TRUE); mVolumeChanged = TRUE; }
-				void    faceMappingChanged()                    { mFaceMappingChanged=TRUE; };
+				void    faceMappingChanged()                    { mFaceMappingChanged=true; };
 
 	/*virtual*/ void	onShift(const LLVector4a &shift_vector); // Called when the drawable shifts
 
@@ -213,11 +213,11 @@ public:
 	/*virtual*/ S32		setTEScaleT(const U8 te, const F32 t);
 	/*virtual*/ S32		setTETexGen(const U8 te, const U8 texgen);
 	/*virtual*/ S32		setTEMediaTexGen(const U8 te, const U8 media);
-	/*virtual*/ BOOL 	setMaterial(const U8 material);
+	/*virtual*/ bool 	setMaterial(const U8 material);
 
 				void	setTexture(const S32 face);
 				S32     getIndexInTex(U32 ch) const {return mIndexInTex[ch];}
-	/*virtual*/ BOOL	setVolume(const LLVolumeParams &volume_params, const S32 detail, bool unique_volume = false);
+	/*virtual*/ bool	setVolume(const LLVolumeParams &volume_params, const S32 detail, bool unique_volume = false);
 				void	updateSculptTexture();
 				void    setIndexInTex(U32 ch, S32 index) { mIndexInTex[ch] = index ;}
 				void	sculpt();
@@ -415,7 +415,7 @@ private:
 	friend class LLDrawable;
 	friend class LLFace;
 
-	BOOL		mFaceMappingChanged;
+	bool		mFaceMappingChanged;
 	LLFrameTimer mTextureUpdateTimer;
 	S32			mLOD;
 	BOOL		mLODChanged;
