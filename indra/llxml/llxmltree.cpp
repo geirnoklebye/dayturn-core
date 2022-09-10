@@ -256,43 +256,43 @@ bool LLXmlTreeNode::getFastAttributeF64(LLStdStringHandle canonical_name, F64& v
 bool LLXmlTreeNode::getFastAttributeColor(LLStdStringHandle canonical_name, LLColor4& value)
 {
 	const std::string *s = getAttribute( canonical_name );
-	return s ? LLColor4::parseColor(*s, &value) : FALSE;
+	return s ? LLColor4::parseColor(*s, &value) : false;
 }
 
 bool LLXmlTreeNode::getFastAttributeColor4(LLStdStringHandle canonical_name, LLColor4& value)
 {
 	const std::string *s = getAttribute( canonical_name );
-	return s ? LLColor4::parseColor4(*s, &value) : FALSE;
+	return s ? LLColor4::parseColor4(*s, &value) : false;
 }
 
 bool LLXmlTreeNode::getFastAttributeColor4U(LLStdStringHandle canonical_name, LLColor4U& value)
 {
 	const std::string *s = getAttribute( canonical_name );
-	return s ? LLColor4U::parseColor4U(*s, &value ) : FALSE;
+	return s ? LLColor4U::parseColor4U(*s, &value ) : false;
 }
 
 bool LLXmlTreeNode::getFastAttributeVector3(LLStdStringHandle canonical_name, LLVector3& value)
 {
 	const std::string *s = getAttribute( canonical_name );
-	return s ? LLVector3::parseVector3(*s, &value ) : FALSE;
+	return s ? LLVector3::parseVector3(*s, &value ) : false;
 }
 
 bool LLXmlTreeNode::getFastAttributeVector3d(LLStdStringHandle canonical_name, LLVector3d& value)
 {
 	const std::string *s = getAttribute( canonical_name );
-	return s ? LLVector3d::parseVector3d(*s,  &value ) : FALSE;
+	return s ? LLVector3d::parseVector3d(*s,  &value ) : false;
 }
 
 bool LLXmlTreeNode::getFastAttributeQuat(LLStdStringHandle canonical_name, LLQuaternion& value)
 {
 	const std::string *s = getAttribute( canonical_name );
-	return s ? LLQuaternion::parseQuat(*s, &value ) : FALSE;
+	return s ? LLQuaternion::parseQuat(*s, &value ) : false;
 }
 
 bool LLXmlTreeNode::getFastAttributeUUID(LLStdStringHandle canonical_name, LLUUID& value)
 {
 	const std::string *s = getAttribute( canonical_name );
-	return s ? LLUUID::parseUUID(*s, &value ) : FALSE;
+	return s ? LLUUID::parseUUID(*s, &value ) : false;
 }
 
 bool LLXmlTreeNode::getFastAttributeString(LLStdStringHandle canonical_name, std::string& value)
