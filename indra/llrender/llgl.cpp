@@ -445,9 +445,7 @@ LLGLManager::LLGLManager() :
 	mIsAMD(false),
 	mIsNVIDIA(false),
 	mIsIntel(false),
-#if LL_DARWIN
-	mIsMobileGF(false),
-#endif
+
 	mHasRequirements(true),
 
 	mHasSeparateSpecularColor(false),

@@ -135,11 +135,6 @@ public:
 	bool mIsNVIDIA;
 	bool mIsIntel;
 
-#if LL_DARWIN
-	// Needed to distinguish problem cards on older Macs that break with Materials
-	bool mIsMobileGF;
-#endif
-
 	// Whether this version of GL is good enough for SL to use
 	bool mHasRequirements;
 
