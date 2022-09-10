@@ -582,6 +582,13 @@ extern PFNGLGETDEBUGMESSAGELOGARBPROC glGetDebugMessageLogARB;
 // Note that they also must not be called on 10.3.9.  This should be taken care of by a runtime check for the existence of the GL extension.
 #include <AvailabilityMacros.h>
 
+// GL_ARB_vertex_array_object Apple equivalent
+#define glBindVertexArray glBindVertexArrayAPPLE
+#define glGenVertexArrays glGenVertexArraysAPPLE
+#define glDeleteVertexArrays glDeleteVertexArraysAPPLE
+#define glIsVertexArray glIsVertexArrayAPPLE
+
+
 // <FS:ND> Workaround to get a OSX version to compile (until someone with a Mac makes including gl3.h work)
 #ifndef GL_TEXTURE_RECTANGLE
   #define GL_TEXTURE_RECTANGLE GL_TEXTURE_RECTANGLE_ARB

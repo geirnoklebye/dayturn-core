@@ -1145,7 +1145,7 @@ F32 gpu_benchmark()
 	// ensure matched pair of bind() and unbind() calls
 	ShaderBinder binder(gBenchmarkProgram);
 
-#ifdef GL_ARB_vertex_array_object
+#if defined GL_ARB_vertex_array_object || defined GL_APPLE_vertex_array_object
     U32 glarray = 0;
 
     if (LLRender::sGLCoreProfile)
@@ -1187,7 +1187,7 @@ F32 gpu_benchmark()
 		}
 	}
 
-#ifdef GL_ARB_vertex_array_object
+#if defined GL_ARB_vertex_array_object || defined GL_APPLE_vertex_array_object
     if (LLRender::sGLCoreProfile)
     {
         glBindVertexArray(0);
