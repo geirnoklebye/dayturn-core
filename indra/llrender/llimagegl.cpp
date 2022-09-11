@@ -677,7 +677,6 @@ void LLImageGL::setExplicitFormat( LLGLint internal_format, LLGLenum primary_for
 
 void LLImageGL::setImage(const LLImageRaw* imageraw)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	llassert((imageraw->getWidth() == getWidth(mCurrentDiscardLevel)) &&
 			 (imageraw->getHeight() == getHeight(mCurrentDiscardLevel)) &&
 			 (imageraw->getComponents() == getComponents()));
@@ -685,9 +684,8 @@ void LLImageGL::setImage(const LLImageRaw* imageraw)
 	setImage(rawdata, false);
 }
 
-BOOL LLImageGL::setImage(const U8* data_in, BOOL data_hasmips /* = FALSE */, S32 usename /* = 0 */)
+bool LLImageGL::setImage(const U8* data_in, bool data_hasmips /* = false */, S32 usename /* = 0 */)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	bool is_compressed = false;
 
     switch (mFormatPrimary)
@@ -1086,9 +1084,8 @@ void LLImageGL::postAddToAtlas()
 	stop_glerror();	
 }
 
-BOOL LLImageGL::setSubImage(const U8* datap, S32 data_width, S32 data_height, S32 x_pos, S32 y_pos, S32 width, S32 height, BOOL force_fast_update /* = FALSE */, LLGLuint use_name)
+bool LLImageGL::setSubImage(const U8* datap, S32 data_width, S32 data_height, S32 x_pos, S32 y_pos, S32 width, S32 height, bool force_fast_update /* = FALSE */, LLGLuint use_name)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if (!width || !height)
 	{
 		return true;
@@ -1162,7 +1159,7 @@ BOOL LLImageGL::setSubImage(const U8* datap, S32 data_width, S32 data_height, S3
 
 		datap += (y_pos * data_width + x_pos) * getComponents();
 		// Update the GL texture
-		BOOL res = gGL.getTexUnit(0)->bindManual(mBindTarget, tex_name);
+		bool res = gGL.getTexUnit(0)->bindManual(mBindTarget, tex_name);
 		if (!res) LL_ERRS() << "LLImageGL::setSubImage(): bindTexture failed" << LL_ENDL;
 		stop_glerror();
 
@@ -1183,9 +1180,8 @@ BOOL LLImageGL::setSubImage(const U8* datap, S32 data_width, S32 data_height, S3
 	return true;
 }
 
-BOOL LLImageGL::setSubImage(const LLImageRaw* imageraw, S32 x_pos, S32 y_pos, S32 width, S32 height, BOOL force_fast_update /* = FALSE */, LLGLuint use_name)
+bool LLImageGL::setSubImage(const LLImageRaw* imageraw, S32 x_pos, S32 y_pos, S32 width, S32 height, bool force_fast_update /* = FALSE */, LLGLuint use_name)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	return setSubImage(imageraw->getData(), imageraw->getWidth(), imageraw->getHeight(), x_pos, y_pos, width, height, force_fast_update, use_name);
 }
 
@@ -1373,9 +1369,8 @@ void LLImageGL::setManualImage(U32 target, S32 miplevel, S32 intformat, S32 widt
 
 //create an empty GL texture: just create a texture name
 //the texture is assiciate with some image by calling glTexImage outside LLImageGL
-BOOL LLImageGL::createGLTexture()
+bool LLImageGL::createGLTexture()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
     checkActiveThread();
 
 	if (gGLManager.mIsDisabled)
@@ -1407,9 +1402,8 @@ BOOL LLImageGL::createGLTexture()
 	return true ;
 }
 
-BOOL LLImageGL::createGLTexture(S32 discard_level, const LLImageRaw* imageraw, S32 usename/*=0*/, BOOL to_create, S32 category, bool defer_copy, LLGLuint* tex_name)
+bool LLImageGL::createGLTexture(S32 discard_level, const LLImageRaw* imageraw, S32 usename/*=0*/, bool to_create, S32 category, bool defer_copy, LLGLuint* tex_name)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
     checkActiveThread();
 
 	if (gGLManager.mIsDisabled)
@@ -1425,7 +1419,7 @@ BOOL LLImageGL::createGLTexture(S32 discard_level, const LLImageRaw* imageraw, S
 	{
 		LL_WARNS() << "Trying to create a texture from invalid image data" << LL_ENDL;
         mGLTextureCreated = false;
-		return FALSE;
+		return false;
 	}
 
 	if (discard_level < 0)
@@ -1446,7 +1440,7 @@ BOOL LLImageGL::createGLTexture(S32 discard_level, const LLImageRaw* imageraw, S
 	{
 		LL_WARNS() << "Trying to create a texture with incorrect dimensions!" << LL_ENDL;
         mGLTextureCreated = false;
-		return FALSE;
+		return false;
 	}
 
 	if (mHasExplicitFormat && 
@@ -1515,18 +1509,17 @@ BOOL LLImageGL::createGLTexture(S32 discard_level, const LLImageRaw* imageraw, S
 		mCurrentDiscardLevel = discard_level;	
 		mLastBindTime = sLastFrameTime;
         mGLTextureCreated = false;
-		return TRUE ;
+		return true ;
 	}
 
 	setCategory(category);
  	const U8* rawdata = imageraw->getData();
-	return createGLTexture(discard_level, rawdata, FALSE, usename, defer_copy, tex_name);
+	return createGLTexture(discard_level, rawdata, false, usename, defer_copy, tex_name);
 }
 
-BOOL LLImageGL::createGLTexture(S32 discard_level, const U8* data_in, BOOL data_hasmips, S32 usename, bool defer_copy, LLGLuint* tex_name)
+bool LLImageGL::createGLTexture(S32 discard_level, const U8* data_in, bool data_hasmips, S32 usename, bool defer_copy, LLGLuint* tex_name)
 // Call with void data, vmem is allocated but unitialized
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
     checkActiveThread();
 
     bool main_thread = on_main_thread();
@@ -1553,7 +1546,6 @@ BOOL LLImageGL::createGLTexture(S32 discard_level, const U8* data_in, BOOL data_
         && !defer_copy // <--- ... or defer copy is set
         && mTexName != 0 && discard_level == mCurrentDiscardLevel)
     {
-        LL_PROFILE_ZONE_NAMED("cglt - early setImage");
         // This will only be true if the size has not changed
         if (tex_name != nullptr)
         {
@@ -1592,10 +1584,9 @@ BOOL LLImageGL::createGLTexture(S32 discard_level, const U8* data_in, BOOL data_
     mCurrentDiscardLevel = discard_level;
 
     {
-        LL_PROFILE_ZONE_NAMED("cglt - late setImage");
         if (!setImage(data_in, data_hasmips, new_texname))
         {
-            return FALSE;
+            return false;
         }
     }
 
@@ -1639,13 +1630,11 @@ BOOL LLImageGL::createGLTexture(S32 discard_level, const U8* data_in, BOOL data_
     mLastBindTime = sLastFrameTime;
 
     checkActiveThread();
-    return TRUE;
+    return true;
 }
 
 void LLImageGLThread::updateClass()
 {
-    LL_PROFILE_ZONE_SCOPED;
-
     // update available vram one per second
     static LLFrameTimer sTimer;
 

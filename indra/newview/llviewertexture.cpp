@@ -1442,7 +1442,7 @@ void LLViewerFetchedTexture::addToCreateTexture()
 	if(isForSculptOnly())
 	{
 		//just update some variables, not to create a real GL texture.
-		createGLTexture(mRawDiscardLevel, mRawImage, 0, FALSE);
+		createGLTexture(mRawDiscardLevel, mRawImage, 0, false);
 		mNeedsCreateTexture = false;
 		destroyRawImage();
 	}
@@ -1660,7 +1660,7 @@ bool LLViewerFetchedTexture::createTexture(S32 usename/*= 0*/)
         return false;
     }
 
-	bool res = mGLTexturep->createGLTexture(mRawDiscardLevel, mRawImage, usename, TRUE, mBoostLevel);
+	bool res = mGLTexturep->createGLTexture(mRawDiscardLevel, mRawImage, usename, true, mBoostLevel);
     
 	return res;
 }
