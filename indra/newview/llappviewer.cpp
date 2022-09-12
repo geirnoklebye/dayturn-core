@@ -461,17 +461,8 @@ void idle_afk_check()
 {
 	// check idle timers
 	F32 current_idle = gAwayTriggerTimer.getElapsedTimeF32();
-	// <FS:CR> Cache frequently hit location
-	static LLCachedControl<S32> sAFKTimeout(gSavedSettings, "AFKTimeout");
-// [RLVa:KB] - Checked: 2010-05-03 (RLVa-1.2.0g) | Modified: RLVa-1.2.0g
-	// Enforce an idle time of 30 minutes if @allowidle=n restricted
-	//S32 afk_timeout = (!gRlvHandler.hasBehaviour(RLV_BHVR_ALLOWIDLE)) ? sAFKTimeout : 60 * 30;
-	S32 afk_timeout = sAFKTimeout;
-// [/RLVa:KB]
-//	F32 afk_timeout  = gSavedSettings.getS32("AFKTimeout");
-	// <FS:CR> Explicit conversions just cos.
-	//if (afk_timeout && (current_idle > afk_timeout) && ! gAgent.getAFK())
-	if (static_cast<S32>(afk_timeout) && (current_idle > static_cast<F32>(afk_timeout)) && ! gAgent.getAFK())
+	F32 afk_timeout  = gSavedSettings.getS32("AFKTimeout");
+	if (afk_timeout && (current_idle > afk_timeout) && ! gAgent.getAFK())
 	{
 		LL_INFOS("IdleAway") << "Idle more than " << afk_timeout << " seconds: automatically changing to Away status" << LL_ENDL;
 		gAgent.setAFK();

@@ -513,13 +513,7 @@ void LLNetMap::draw()
 			
 			LLColor4 color = getAvatarColor(uuid);	// <FS:CR>
 
-// [RLVa:KB] - Checked: 2010-04-19 (RLVa-1.2.0f) | Modified: RLVa-1.2.0f | FS-Specific
-//			LLWorldMapView::drawAvatar(
-//				pos_map.mV[VX], pos_map.mV[VY],
-//				(RlvActions::canShowName(RlvActions::SNC_DEFAULT, uuid)) ? color : map_avatar_color.get(),
-//				pos_map.mV[VZ], mDotRadius,
-//				unknown_relative_z);
-// [/RLVa:KB]
+
 			LLWorldMapView::drawAvatar(
 				pos_map.mV[VX], pos_map.mV[VY], 
 				color, 
