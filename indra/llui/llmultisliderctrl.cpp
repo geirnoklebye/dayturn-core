@@ -329,7 +329,7 @@ void LLMultiSliderCtrl::clear()
 
 }
 
-BOOL LLMultiSliderCtrl::isMouseHeldDown()
+bool LLMultiSliderCtrl::isMouseHeldDown()
 {
 	return gFocusMgr.getMouseCapture() == mMultiSlider;
 }

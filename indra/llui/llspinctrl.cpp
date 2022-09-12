@@ -414,7 +414,7 @@ void LLSpinCtrl::setTentative(bool b)
 }
 
 
-BOOL LLSpinCtrl::isMouseHeldDown() const
+bool LLSpinCtrl::isMouseHeldDown() const
 {
 	return 
 		mDownBtn->hasMouseCapture()

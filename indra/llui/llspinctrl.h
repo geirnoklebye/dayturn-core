@@ -67,7 +67,7 @@ public:
 			F32		get() const { return getValueF32(); }
 			void	set(F32 value) { setValue(value); mInitialValue = value; }
 
-	BOOL			isMouseHeldDown() const;
+	bool			isMouseHeldDown() const;
 
 	virtual void    setEnabled( bool b );
 	virtual void	setFocus( BOOL b );

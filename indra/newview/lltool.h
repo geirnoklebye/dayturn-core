@@ -94,8 +94,8 @@ public:
 	virtual bool			handleKey(KEY key, MASK mask);
 
 	// Note: NOT virtual.  Subclasses should call this version.
-	void					setMouseCapture(BOOL b);
-	BOOL					hasMouseCapture();
+	void					setMouseCapture(bool b);
+	bool					hasMouseCapture();
 	virtual void			onMouseCaptureLost() {}  // override this one as needed.
 
 protected:

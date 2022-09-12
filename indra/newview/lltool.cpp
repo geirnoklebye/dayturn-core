@@ -163,7 +163,7 @@ bool LLTool::handleToolTip(S32 x, S32 y, MASK mask)
 	return false;
 }
 
-void LLTool::setMouseCapture( BOOL b )
+void LLTool::setMouseCapture( bool b )
 {
 	if( b )
 	{
@@ -180,7 +180,7 @@ void LLTool::setMouseCapture( BOOL b )
 void LLTool::draw()
 { }
 
-BOOL LLTool::hasMouseCapture()
+bool LLTool::hasMouseCapture()
 {
 	return gFocusMgr.getMouseCapture() == (mComposite ? mComposite : this);
 }

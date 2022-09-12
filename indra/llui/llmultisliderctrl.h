@@ -98,7 +98,7 @@ public:
 	virtual void	setMinValue(const LLSD& min_value)	{ setMinValue((F32)min_value.asReal()); }
 	virtual void	setMaxValue(const LLSD& max_value)	{ setMaxValue((F32)max_value.asReal());  }
 
-	BOOL			isMouseHeldDown();
+	bool			isMouseHeldDown();
 
 	virtual void    setEnabled( bool b );
 	virtual void	clear();

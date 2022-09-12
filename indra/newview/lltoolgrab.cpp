@@ -111,7 +111,7 @@ void LLToolGrabBase::handleDeselect()
 {
 	if( hasMouseCapture() )
 	{
-		setMouseCapture( FALSE );
+		setMouseCapture( false );
 	}
 
 	// Make sure that temporary(invalid) selection won't pass anywhere except pie tool.
@@ -186,7 +186,7 @@ void LLToolGrabBase::pickCallback(const LLPickInfo& pick_info)
 	// if not over object, do nothing
 	if (!objectp)
 	{
-		LLToolGrab::getInstance()->setMouseCapture(TRUE);
+		LLToolGrab::getInstance()->setMouseCapture(true);
 		LLToolGrab::getInstance()->mMode = GRAB_NOOBJECT;
 		LLToolGrab::getInstance()->mGrabPick.mObjectID.setNull();
 	}

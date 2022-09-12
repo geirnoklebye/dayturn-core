@@ -89,7 +89,7 @@ public:
 	void			setMouseCapture(LLMouseHandler* new_captor);	// new_captor = NULL to release the mouse.
 	LLMouseHandler* getMouseCapture() const { return mMouseCaptor; } 
 	void			removeMouseCaptureWithoutCallback( const LLMouseHandler* captor );
-	BOOL			childHasMouseCapture( const LLView* parent ) const;
+	bool			childHasMouseCapture( const LLView* parent ) const;
 
 	// Keyboard Focus
 	void			setKeyboardFocus(LLFocusableElement* new_focus, BOOL lock = FALSE, BOOL keystrokes_only = FALSE);		// new_focus = NULL to release the focus.

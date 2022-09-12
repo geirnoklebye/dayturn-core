@@ -90,7 +90,7 @@ public:
 	/*virtual*/ LLSD	getValue() const			{ return LLSD(getValueF32()); }
 	/*virtual*/ BOOL	setLabelArg( const std::string& key, const LLStringExplicit& text );
 
-	BOOL			isMouseHeldDown() const { return mSlider->hasMouseCapture(); }
+	bool			isMouseHeldDown() const { return mSlider->hasMouseCapture(); }
 
 	virtual void	setPrecision(S32 precision);
 
