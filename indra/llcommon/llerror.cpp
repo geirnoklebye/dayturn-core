@@ -244,32 +244,22 @@ namespace {
             // The list of color codes can be found in many places but I used this page:
             // https://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html#256-colors
             // (Note: you may need to restart Visual Studio to pick environment changes)
-			// Original colours 30-37 (standard) and 90-97 (bright) used with 'ESC [ col m' map to 'ESC [ 38/48 5 0-16' (38 is foreground, 48 is background)
-			// 0-7 standard black->white (b0 red, b1 green, b2 blue)
-			// 8-15 high intensity black->white (as above)
-			// 16-231 6x6x6 colour cube 16 + (36r) + (6g) + b, each ranges 0-5
-			// 232-255 black to white greyscale
-			
             char* val = nullptr;
-            std::string s_ansi_error_code = "160"; // LL 160 - keep for Kokua
+            std::string s_ansi_error_code = "160";
             if ((val = getenv("LL_ANSI_ERROR_COLOR_CODE")) != nullptr) s_ansi_error_code = std::string(val);
-            std::string s_ansi_warn_code = "11"; // LL 33 - bright yellow 11 for Kokua
+            std::string s_ansi_warn_code = "33";
             if ((val = getenv("LL_ANSI_WARN_COLOR_CODE")) != nullptr) s_ansi_warn_code = std::string(val);
-            std::string s_ansi_info_code = "14"; // Not in LL - bright cyan 14 for Kokua
-            if ((val = getenv("LL_ANSI_INFO_COLOR_CODE")) != nullptr) s_ansi_info_code = std::string(val);
-            std::string s_ansi_debug_code = "7"; // LL 177 - standard white 7 for Kokua
+            std::string s_ansi_debug_code = "177";
             if ((val = getenv("LL_ANSI_DEBUG_COLOR_CODE")) != nullptr) s_ansi_debug_code = std::string(val);
 
-            static std::string s_ansi_error = createANSI(s_ansi_error_code); // LL default is red 160
-            static std::string s_ansi_warn  = createANSI(s_ansi_warn_code); // LL default is blue 33
-            static std::string s_ansi_info  = createANSI(s_ansi_info_code); // not coloured by LL
-            static std::string s_ansi_debug = createANSI(s_ansi_debug_code); // LL default is magenta 177
+            static std::string s_ansi_error = createANSI(s_ansi_error_code); // default is red
+            static std::string s_ansi_warn  = createANSI(s_ansi_warn_code); // default is blue
+            static std::string s_ansi_debug = createANSI(s_ansi_debug_code); // default is magenta
 
 			if (mUseANSI)
 			{
                 writeANSI((level == LLError::LEVEL_ERROR) ? s_ansi_error :
                           (level == LLError::LEVEL_WARN)  ? s_ansi_warn :
-                          (level == LLError::LEVEL_INFO)  ? s_ansi_info :
                                                             s_ansi_debug, message);
 			}
             else

@@ -434,7 +434,7 @@ namespace LLInitParam
 		typedef self_t type_value_t;
 
 		TypeValuesHelper(const std::string& val)
-		:	base_t(val) //TypeValuesHelper(val) // [ALCH:LD] This is invalid under gcc unless using c++11
+		:	base_t(val)
 		{}
 
 		void operator ()(const std::string& name)
