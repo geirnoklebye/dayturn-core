@@ -202,6 +202,7 @@
 // NaCl End
 
 // handle secondlife:///app/openfloater/{NAME} URLs
+const std::string FLOATER_PROFILE("profile");
 class LLFloaterOpenHandler : public LLCommandHandler
 {
 public:
@@ -217,7 +218,12 @@ public:
 		}
 
 		const std::string floater_name = LLURI::unescape(params[0].asString());
-		LLFloaterReg::showInstance(floater_name);
+        LLSD key;
+        if (floater_name == FLOATER_PROFILE)
+        {
+            key["id"] = gAgentID;
+        }
+		LLFloaterReg::showInstance(floater_name, key);
 
 		return true;
 	}
