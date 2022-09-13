@@ -173,9 +173,7 @@ public:
 	S32 read(void* buf, S32 nbytes);
 	S32 write(const void* buf, S32 nbytes);
 	
-	apr_file_t* getFileHandle() {return mFile;}	
-
-	void flush(); // <FS:ND/> Forceful file flushing
+	apr_file_t* getFileHandle() {return mFile;}
 	
 //
 //*******************************************************************************************************************************

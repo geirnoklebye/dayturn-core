@@ -149,17 +149,7 @@ LLVolatileAPRPool::LLVolatileAPRPool(bool is_local, apr_pool_t *parent, apr_size
 				  mNumTotalRef(0)
 {
 	//create mutex
-
-	// <FS:ND> Crashfix/FIRE-4090/FIRE-4820: is_local is default to TRUE. And of today (2012-07-15) all instances of LLVolatileAPRPool seem
-	// to be created just using this default argument.
-	// Using apr_os_thread_current and apr_os_thread_equal it appears that there are pools that get access from different threads nonetheless.
-	// This would explain why mNumActiveRef sometimes gets garbled.
-	// Resolution: Always use a mutex and give it a broader test is this helps.
-
-	//	if(!is_local) //not a local apr_pool, that is: shared by multiple threads.
-
-	// </FS:ND>
-
+	if(!is_local) //not a local apr_pool, that is: shared by multiple threads.
 	{
 		mMutexp.reset(new std::mutex());
 	}
@@ -772,16 +762,7 @@ namespace nd
     }
 }
     //
+//
 //end of static components of LLAPRFile
 //*******************************************************************************************************************************
 //
-// <FS:ND> Allow file to be flushed
-void LLAPRFile::flush()
-{
-	if( mFile )
-		apr_file_flush( mFile );
-
-}
-
-// </FS:ND>
-
