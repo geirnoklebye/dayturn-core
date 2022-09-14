@@ -642,11 +642,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>2653c3627fd8687ff9e003425fd14834</string>
+              <string>439d92ec73f0500ba1671faad2bd8090</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/90199/821852/dullahan-1.12.3.202111032211_91.1.21_g9dd45fe_chromium-91.0.4472.114-darwin64-565428.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/104637/916643/dullahan-1.12.4.202209142017_91.1.21_g9dd45fe_chromium-91.0.4472.114-darwin64-575005.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -668,16 +668,16 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d9030d7a7390b3bda7de2adcc27e535a</string>
+              <string>d06bee9b2517fbb09ba1a65e6d675361</string>
               <key>url</key>
-              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/90200/821876/dullahan-1.12.3.202111032221_91.1.21_g9dd45fe_chromium-91.0.4472.114-windows64-565428.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/104639/916659/dullahan-1.12.4.202209142021_91.1.21_g9dd45fe_chromium-91.0.4472.114-windows64-575005.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.12.3.202111032221_91.1.21_g9dd45fe_chromium-91.0.4472.114</string>
+        <string>1.12.4.202209142021_91.1.21_g9dd45fe_chromium-91.0.4472.114</string>
       </map>
       <key>expat</key>
       <map>
