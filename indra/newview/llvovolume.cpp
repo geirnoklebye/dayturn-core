@@ -4579,7 +4579,7 @@ void LLVOVolume::parameterChanged(U16 param_type, LLNetworkData* data, BOOL in_u
 	}
 }
 
-void LLVOVolume::setSelected(BOOL sel)
+void LLVOVolume::setSelected(bool sel)
 {
 	LLViewerObject::setSelected(sel);
     if (isAnimatedObject())
