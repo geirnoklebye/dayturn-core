@@ -186,7 +186,7 @@ public:
 											U32 block_num, const EObjectUpdateType update_type,
 											LLDataPacker *dp);
 
-	/*virtual*/ void	setSelected(BOOL sel);
+	/*virtual*/ void	setSelected(bool sel);
 	/*virtual*/ BOOL	setDrawableParent(LLDrawable* parentp);
 
 	/*virtual*/ void	setScale(const LLVector3 &scale, BOOL damped);
