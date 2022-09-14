@@ -1556,7 +1556,7 @@ bool LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 			LLVector3 rot_angles;
 			U16 x, y, z;
 
-			BOOL success = TRUE;
+			bool success = true;
 
 			if (old_version)
 			{
@@ -1582,7 +1582,7 @@ bool LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 			{
 				LL_WARNS() << "non-finite angle in rotation key"
                            << " for animation " << asset_id << LL_ENDL;
-				success = FALSE;
+				success = false;
 			}
 			
 			if (!success)
@@ -1643,7 +1643,7 @@ bool LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 				pos_key.mTime = U16_to_F32(time_short, 0.f, mJointMotionList->mDuration);
 			}
 
-			BOOL success = TRUE;
+			bool success = true;
 
 			if (old_version)
 			{
@@ -1672,7 +1672,7 @@ bool LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 			{
 				LL_WARNS() << "non-finite position in key"
                            << " for animation " << asset_id << LL_ENDL;
-				success = FALSE;
+				success = false;
 			}
 			
 			if (!success)
@@ -1954,7 +1954,7 @@ bool LLKeyframeMotion::deserialize(LLDataPacker& dp, const LLUUID& asset_id)
 //-----------------------------------------------------------------------------
 bool LLKeyframeMotion::serialize(LLDataPacker& dp) const
 {
-	BOOL success = TRUE;
+	bool success = true;
 
 	LL_DEBUGS("BVH") << "serializing" << LL_ENDL;
 
