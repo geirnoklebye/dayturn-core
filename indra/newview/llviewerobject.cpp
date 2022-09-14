@@ -293,8 +293,8 @@ LLViewerObject::LLViewerObject(const LLUUID &id, const LLPCode pcode, LLViewerRe
 	mInventoryDirty(FALSE),
 	mRegionp(regionp),
 	mDead(FALSE),
-	mOrphaned(FALSE),
-	mUserSelected(FALSE),
+	mOrphaned(false),
+	mUserSelected(false),
 	mOnActiveList(FALSE),
 	mOnMap(FALSE),
 	mStatic(FALSE),
@@ -726,7 +726,7 @@ void LLViewerObject::setNameValueList(const std::string& name_value_list)
 	}
 }
 
-BOOL LLViewerObject::isAnySelected() const
+bool LLViewerObject::isAnySelected() const
 {
     bool any_selected = isSelected();
     for (child_list_t::const_iterator iter = mChildList.begin();
@@ -738,7 +738,7 @@ BOOL LLViewerObject::isAnySelected() const
     return any_selected;
 }
 
-void LLViewerObject::setSelected(BOOL sel)
+void LLViewerObject::setSelected(bool sel)
 {
 	mUserSelected = sel;
 	resetRot();
@@ -2449,7 +2449,7 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 //
 	// Additionally, if any child is selected, need to update the dialogs and selection
 	// center.
-	BOOL needs_refresh = mUserSelected;
+	bool needs_refresh = mUserSelected;
 	for (child_list_t::iterator iter = mChildList.begin();
 		 iter != mChildList.end(); iter++)
 	{
@@ -3752,7 +3752,7 @@ void LLViewerObject::setLinksetCost(F32 cost)
 	mLinksetCost = cost;
 	mCostStale = false;
 
-	BOOL needs_refresh = isSelected();
+	bool needs_refresh = isSelected();
 	child_list_t::iterator iter = mChildList.begin();
 	while(iter != mChildList.end() && !needs_refresh)
 	{

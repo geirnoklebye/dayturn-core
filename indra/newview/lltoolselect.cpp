@@ -111,7 +111,7 @@ LLObjectSelectionHandle LLToolSelect::handleObjectSelection(const LLPickInfo& pi
 	}
 	else
 	{
-		BOOL already_selected = object->isSelected();
+		bool already_selected = object->isSelected();
 
 		if (already_selected &&
 			object->getNumTEs() > 0 &&
