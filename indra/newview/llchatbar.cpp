@@ -568,8 +568,6 @@ void LLChatBar::sendChatFromViewer(const LLWString &wtext, EChatType type, bool 
 	// how to chat
 	gWarningSettings.setbool("FirstOtherChatBeforeUser", false);
 
-	LLUIUsage::instance().logCommand("Chat.Send"); // Pseudo-command
-	
 	// Look for "/20 foo" channel chats.
 	S32 channel = 0;
 	LLWString out_text = stripChannelNumber(wtext, &channel);
