@@ -1,0 +1,30 @@
+This repository is used to develop a *macOS only* codebase for an OpenSim compatible viewer. 
+
+The repository is a refinement of a fork of the Kokua viewer which was made at the point in
+2015 just before Linden Labs removed support for curl from the viewer, and added the http coroutines. 
+
+That fork is called Dayturn and is the base to develop a generic viewer for connecting to OpenSim grids
+and standalone instances leaving out SecondLife specific functionality. 
+Dayturn exists in https://bitbucket.org/dayturn/dayturn
+
+Because of the complexity of having a shared codebase for Linux, macOS and Windows, the code in this
+repository has been stripped of all Windows and Linux specifics and is only suitable for a macOS version
+of the viewer. 
+
+Increasingly as many of the opensource libraries as possible will be replaced with Apple frameworks or
+the system supplied versions of opensource libraries, both because they often are richer in functionality,
+significantly better tested, in many cases highly optimized for Apple hardware, and provides better compatibility
+across operating system versions, and when new hardware is introduced. 
+This will of course break compatibility with Linux and Windows versions at the source-level and to a lesser degree
+at the functionality level. 
+
+This version of the viewer does not have the so-called SecondLife Jelly Dolls. 
+
+Support for the Linden Lab version 2.0 rigging and skeleton, Bento, in addition to Linden Lab Animated Mesh was 
+added in 2018.
+
+This version of the viewer does currently not have support for Marine Kelly's RLV.
+
+Now that the support for "legacy" assets has been removed from SecondLife, the code for the SecondLife unified 
+marketplace and pathfinding will be removed, in addition to numerous other SecondLife tie-ins and functionality 
+that don't apply to OpenSim users or grids.
