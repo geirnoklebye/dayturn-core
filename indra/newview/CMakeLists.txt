@@ -1943,7 +1943,6 @@ if (FMODSTUDIO)
 endif (FMODSTUDIO)
 
 if (WINDOWS)
-
     set_target_properties(${VIEWER_BINARY_NAME}
         PROPERTIES
         # *TODO -reenable this once we get server usage sorted out
@@ -1998,7 +1997,6 @@ if (WINDOWS)
       ${GOOGLE_PERF_TOOLS_SOURCE}
       ${CMAKE_CURRENT_SOURCE_DIR}/licenses-win32.txt
       ${CMAKE_CURRENT_SOURCE_DIR}/featuretable.txt
-      ${CMAKE_CURRENT_SOURCE_DIR}/featuretable_xp.txt
       ${viewer_APPSETTINGS_FILES}
       SLPlugin
       media_plugin_cef
@@ -2236,7 +2234,7 @@ set(ARTWORK_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH
     "Path to artwork files.")
 
 if (LINUX)
-  set(product kokua-${ARCH}-${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION})
+  set(product Dayturn-${ARCH}-${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION})
 
   # These are the generated targets that are copied to package/
   set(COPY_INPUT_DEPENDENCIES
