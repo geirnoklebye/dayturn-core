@@ -106,14 +106,6 @@ attributedStringInfo getSegments(NSAttributedString *str)
 }
 
 
-- (NSPoint)convertPointToScreenCoordinates:(NSPoint)aPoint
-{
-    float normalizedX = fabs(fabs(self.frame.origin.x) - fabs(aPoint.x));
-    float normalizedY = aPoint.y - self.frame.origin.y;
-    
-    return NSMakePoint(normalizedX, normalizedY);
-}
-
 - (NSPoint)flipPoint:(NSPoint)aPoint
 {
     return NSMakePoint(aPoint.x, self.frame.size.height - aPoint.y);
@@ -226,16 +218,6 @@ attributedStringInfo getSegments(NSAttributedString *str)
 	return [self initWithFrame:[self bounds] withSamples:2 andVsync:TRUE];
 }
 
-- (id) initWithSamples:(NSUInteger)samples
-{
-	return [self initWithFrame:[self bounds] withSamples:samples andVsync:TRUE];
-}
-
-- (id) initWithSamples:(NSUInteger)samples andVsync:(BOOL)vsync
-{
-	return [self initWithFrame:[self bounds] withSamples:samples andVsync:vsync];
-}
-
 - (id) initWithFrame:(NSRect)frame withSamples:(NSUInteger)samples andVsync:(BOOL)vsync
 {
     self = [self initWithFrame:frame];
@@ -304,11 +286,6 @@ attributedStringInfo getSegments(NSAttributedString *str)
         }
     }
     return self;
-}
-
-- (BOOL) rebuildContext
-{
-	return [self rebuildContextWithFormat:[self pixelFormat]];
 }
 
 - (BOOL) rebuildContextWithFormat:(NSOpenGLPixelFormat *)format
@@ -870,11 +847,6 @@ attributedStringInfo getSegments(NSAttributedString *str)
 	}
 	
 	return NSZeroPoint;
-}
-
-- (NSPoint)flipPoint:(NSPoint)aPoint
-{
-    return NSMakePoint(aPoint.x, self.frame.size.height - aPoint.y);
 }
 
 - (BOOL) becomeFirstResponder

@@ -45,18 +45,11 @@
     bool mSimulatedRightClick;
     bool mOldResize;
 }
-- (id) initWithSamples:(NSUInteger)samples;
-- (id) initWithSamples:(NSUInteger)samples andVsync:(BOOL)vsync;
 - (id) initWithFrame:(NSRect)frame withSamples:(NSUInteger)samples andVsync:(BOOL)vsync;
 
 - (void)commitCurrentPreedit;
 
 - (void) setOldResize:(bool)oldresize;
-
-// rebuildContext
-// Destroys and recreates a context with the view's internal format set via setPixelFormat;
-// Use this in event of needing to rebuild a context for whatever reason, without needing to assign a new pixel format.
-- (BOOL) rebuildContext;
 
 // rebuildContextWithFormat
 // Destroys and recreates a context with the specified pixel format.
@@ -90,7 +83,6 @@
 @interface LLNSWindow : NSWindow
 
 - (NSPoint)convertToScreenFromLocalPoint:(NSPoint)point relativeToView:(NSView *)view;
-- (NSPoint)flipPoint:(NSPoint)aPoint;
 
 @end
 
@@ -100,11 +92,6 @@
  Returns the screen where the mouse resides
  */
 + (NSScreen *)currentScreenForMouseLocation;
-
-/*
- Allows you to convert a point from global coordinates to the current screen coordinates.
- */
-- (NSPoint)convertPointToScreenCoordinates:(NSPoint)aPoint;
 
 /*
  Allows to flip the point coordinates, so y is 0 at the top instead of the bottom. x remains the same
