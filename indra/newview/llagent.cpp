@@ -2424,7 +2424,7 @@ void LLAgent::endAnimationUpdateUI()
 		LLFloaterView::skip_list_t skip_list;
 		skip_list.insert(LLFloaterReg::findInstance("mini_map"));
 		skip_list.insert(LLFloaterReg::findInstance("beacons"));
-		gFloaterView->pushVisibleAll(FALSE, skip_list);
+		gFloaterView->pushVisibleAll(false, skip_list);
 #endif
 
 		if( gMorphView )

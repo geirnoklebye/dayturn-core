@@ -2231,7 +2231,7 @@ void LLViewerWindow::initWorldUI()
 	{
 		gIMMgr = LLIMMgr::getInstance();
 		LLNavigationBar::getInstance();
-		gFloaterView->pushVisibleAll(FALSE);
+		gFloaterView->pushVisibleAll(false);
 		return;
 	}
 	
