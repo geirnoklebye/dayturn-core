@@ -456,7 +456,6 @@ LLFontGlyphInfo* LLFontFreetype::addGlyph(llwchar wch) const
 
 LLFontGlyphInfo* LLFontFreetype::addGlyphFromFont(const LLFontFreetype *fontp, llwchar wch, U32 glyph_index) const
 {
-    LL_PROFILE_ZONE_SCOPED;
 	if (mFTFace == NULL)
 		return NULL;
 

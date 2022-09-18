@@ -172,7 +172,6 @@ bool LLRenderTarget::allocate(U32 resx, U32 resy, U32 color_fmt, bool depth, boo
 
 void LLRenderTarget::setColorAttachment(LLImageGL* img, LLGLuint use_name)
 {
-    LL_PROFILE_ZONE_SCOPED;
     llassert(img != nullptr); // img must not be null
     llassert(sUseFBO); // FBO support must be enabled
     llassert(mDepth == 0); // depth buffers not supported with this mode
@@ -206,7 +205,6 @@ void LLRenderTarget::setColorAttachment(LLImageGL* img, LLGLuint use_name)
 
 void LLRenderTarget::releaseColorAttachment()
 {
-    LL_PROFILE_ZONE_SCOPED;
     llassert(mTex.size() == 1); //cannot use releaseColorAttachment with LLRenderTarget managed color targets
     llassert(mFBO != 0);  // mFBO must be valid
     

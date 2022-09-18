@@ -187,7 +187,6 @@ bool is_little_endian()
 //static 
 void LLImageGL::initClass(LLWindow* window, S32 num_catagories, BOOL skip_analyze_alpha /* = false */, bool multi_threaded /* = false */)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	sSkipAnalyzeAlpha = skip_analyze_alpha;
 
     if (multi_threaded)
@@ -199,7 +198,6 @@ void LLImageGL::initClass(LLWindow* window, S32 num_catagories, BOOL skip_analyz
 //static 
 void LLImageGL::cleanupClass() 
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
     LLImageGLThread::deleteSingleton();
 }
 
@@ -285,7 +283,6 @@ S32 LLImageGL::dataFormatComponents(S32 dataformat)
 // static
 void LLImageGL::updateStats(F32 current_time)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	sLastFrameTime = current_time;
 	sBoundTextureMemory = sCurBoundTextureMemory;
 	sCurBoundTextureMemory = S32Bytes(0);
@@ -1204,14 +1201,12 @@ bool LLImageGL::setSubImageFromFrameBuffer(S32 fb_x, S32 fb_y, S32 x_pos, S32 y_
 // static
 void LLImageGL::generateTextures(S32 numTextures, U32 *textures)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
     static constexpr U32 pool_size = 1024;
     static thread_local U32 name_pool[pool_size]; // pool of texture names
     static thread_local U32 name_count = 0; // number of available names in the pool
 
     if (name_count == 0)
     {
-        LL_PROFILE_ZONE_NAMED("iglgt - reup pool");
         // pool is emtpy, refill it
         glGenTextures(pool_size, name_pool);
         name_count = pool_size;
@@ -1225,7 +1220,6 @@ void LLImageGL::generateTextures(S32 numTextures, U32 *textures)
     }
     else
     {
-        LL_PROFILE_ZONE_NAMED("iglgt - pool miss");
         glGenTextures(numTextures, textures);
     }
 }
@@ -1242,7 +1236,6 @@ void LLImageGL::deleteTextures(S32 numTextures, const U32 *textures)
 // static
 void LLImageGL::setManualImage(U32 target, S32 miplevel, S32 intformat, S32 width, S32 height, U32 pixformat, U32 pixtype, const void* pixels, bool allow_compression)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
     bool use_scratch = false;
     U32* scratch = NULL;
     if (LLRender::sGLCoreProfile)
@@ -1371,7 +1364,6 @@ void LLImageGL::setManualImage(U32 target, S32 miplevel, S32 intformat, S32 widt
 
     stop_glerror();
     {
-        LL_PROFILE_ZONE_NAMED("glTexImage2D");
         glTexImage2D(target, miplevel, intformat, width, height, 0, pixformat, pixtype, use_scratch ? scratch : pixels);
     }
     stop_glerror();
@@ -1693,11 +1685,9 @@ void LLImageGLThread::updateClass()
 
 void LLImageGL::syncToMainThread(LLGLuint new_tex_name)
 {
-    LL_PROFILE_ZONE_SCOPED;
     llassert(!on_main_thread());
 
     {
-        LL_PROFILE_ZONE_NAMED("cglt - sync");
         if (gGLManager.mHasSync)
         {
             // post a sync to the main thread (will execute before tex name swap lambda below)
@@ -1710,13 +1700,10 @@ void LLImageGL::syncToMainThread(LLGLuint new_tex_name)
                 mMainQueue,
                 [=]()
                 {
-                    LL_PROFILE_ZONE_NAMED("cglt - wait sync");
                     {
-                        LL_PROFILE_ZONE_NAMED("glWaitSync");
                         glWaitSync(sync, 0, GL_TIMEOUT_IGNORED);
                     }
                     {
-                        LL_PROFILE_ZONE_NAMED("glDeleteSync");
                         glDeleteSync(sync);
                     }
                 });
@@ -1732,7 +1719,6 @@ void LLImageGL::syncToMainThread(LLGLuint new_tex_name)
         mMainQueue,
         [=]()
         {
-            LL_PROFILE_ZONE_NAMED("cglt - delete callback");
             syncTexName(new_tex_name);
             unref();
         });
@@ -2430,7 +2416,6 @@ LLImageGLThread::LLImageGLThread(LLWindow* window)
     : ThreadPool("LLImageGL", 1, 1024*1024)
     , mWindow(window)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
     sEnabled = true;
     mFinished = false;
 
@@ -2440,7 +2425,6 @@ LLImageGLThread::LLImageGLThread(LLWindow* window)
 
 void LLImageGLThread::run()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
     // We must perform setup on this thread before actually servicing our
     // WorkQueue, likewise cleanup afterwards.
     mWindow->makeContextCurrent(mContext);

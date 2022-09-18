@@ -123,8 +123,6 @@ bool LLVertexBuffer::sPreferStreamDraw = false;
 
 U32 LLVBOPool::genBuffer()
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX
-
 	if (sNameIdx == 0)
 	{
 		glGenBuffersARB(1024, sNamePool);
@@ -136,7 +134,6 @@ U32 LLVBOPool::genBuffer()
 
 void LLVBOPool::deleteBuffer(U32 name)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX
 	if (gGLManager.mInited)
 	{
 		LLVertexBuffer::unbind();
@@ -159,7 +156,6 @@ LLVBOPool::LLVBOPool(U32 vboUsage, U32 vboType)
 
 U8* LLVBOPool::allocate(U32& name, U32 size, bool for_seed)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX
 	llassert(vbo_block_size(size) == size);
 	
 	U8* ret = NULL;
@@ -275,12 +271,10 @@ void LLVBOPool::release(U32 name, U8* buffer, U32 size)
 
 void LLVBOPool::seedPool()
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX
 	U32 dummy_name = 0;
 
 	if (mFreeList.size() < LL_VBO_POOL_SEED_COUNT)
 	{
-		LL_PROFILE_ZONE_NAMED_CATEGORY_VERTEX("VBOPool Resize");
 		mFreeList.resize(LL_VBO_POOL_SEED_COUNT);
 	}
 
@@ -421,7 +415,6 @@ void LLVertexBuffer::releaseVAOName(U32 name)
 //static
 void LLVertexBuffer::seedPools()
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX
 	sStreamVBOPool.seedPool();
 	sDynamicVBOPool.seedPool();
 	sDynamicCopyVBOPool.seedPool();
@@ -470,7 +463,6 @@ void LLVertexBuffer::setupClientArrays(U32 data_mask)
 //static
 void LLVertexBuffer::drawArrays(U32 mode, const std::vector<LLVector3>& pos)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX;
     gGL.begin(mode);
     for (auto& v : pos)
     {
@@ -483,7 +475,6 @@ void LLVertexBuffer::drawArrays(U32 mode, const std::vector<LLVector3>& pos)
 //static
 void LLVertexBuffer::drawElements(U32 mode, const LLVector4a* pos, const LLVector2* tc, S32 num_indices, const U16* indicesp)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX;
 	llassert(LLGLSLShader::sCurBoundShaderPtr != NULL);
 
 	gGL.syncMatrices();
@@ -692,7 +683,6 @@ void LLVertexBuffer::draw(U32 mode, U32 count, U32 indices_offset) const
 
 void LLVertexBuffer::drawArrays(U32 mode, U32 first, U32 count) const
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX;
     llassert(LLGLSLShader::sCurBoundShaderPtr != NULL);
     mMappable = false;
     gGL.syncMatrices();
@@ -1250,7 +1240,6 @@ void LLVertexBuffer::setupVertexArray()
 		return;
 	}
 
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX;
 #if defined GL_ARB_vertex_array_object || defined GL_APPLE_vertex_array_object
 	glBindVertexArray(mGLArray);
 #endif
@@ -1427,7 +1416,6 @@ bool expand_region(LLVertexBuffer::MappedRegion& region, S32 index, S32 count)
 // Map for data access
 U8* LLVertexBuffer::mapVertexBuffer(S32 type, S32 index, S32 count, bool map_range)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX;
 	bindGLBuffer(true);
 	if (mFinal)
 	{
@@ -1604,7 +1592,6 @@ U8* LLVertexBuffer::mapVertexBuffer(S32 type, S32 index, S32 count, bool map_ran
 
 U8* LLVertexBuffer::mapIndexBuffer(S32 index, S32 count, bool map_range)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX;
 	bindGLIndices(true);
 	if (mFinal)
 	{
@@ -1771,10 +1758,8 @@ void LLVertexBuffer::unmapBuffer()
 	}
 
 	bool updated_all = false;
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX;
 	if (mMappedData && mVertexLocked)
 	{
-        LL_PROFILE_ZONE_NAMED_CATEGORY_VERTEX("unmapBuffer - vertex");
 		bindGLBuffer(true);
 		updated_all = mIndexLocked; //both vertex and index buffers done updating
 
@@ -1821,7 +1806,6 @@ void LLVertexBuffer::unmapBuffer()
 			{
 				if (!mMappedVertexRegions.empty())
 				{
-                    LL_PROFILE_ZONE_NAMED_CATEGORY_VERTEX("unmapBuffer - flush vertex");
 					for (U32 i = 0; i < mMappedVertexRegions.size(); ++i)
 					{
 						const MappedRegion& region = mMappedVertexRegions[i];
@@ -1857,7 +1841,6 @@ void LLVertexBuffer::unmapBuffer()
 	
 	if (mMappedIndexData && mIndexLocked)
 	{
-        LL_PROFILE_ZONE_NAMED_CATEGORY_VERTEX("unmapBuffer - index");
 		bindGLIndices();
 		if(!mMappable)
 		{
@@ -1903,7 +1886,6 @@ void LLVertexBuffer::unmapBuffer()
 				{
 					for (U32 i = 0; i < mMappedIndexRegions.size(); ++i)
 					{
-                        LL_PROFILE_ZONE_NAMED_CATEGORY_VERTEX("unmapBuffer - flush index");
 						const MappedRegion& region = mMappedIndexRegions[i];
 						S32 offset = region.mIndex >= 0 ? sizeof(U16)*region.mIndex : 0;
 						S32 length = sizeof(U16)*region.mCount;
@@ -2056,7 +2038,6 @@ bool LLVertexBuffer::bindGLArray()
 	if (mGLArray && sGLRenderArray != mGLArray)
 	{
 		{
-            LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX;
 #if defined GL_ARB_vertex_array_object || defined GL_APPLE_vertex_array_object
 			glBindVertexArray(mGLArray);
 #endif
@@ -2081,7 +2062,6 @@ bool LLVertexBuffer::bindGLBuffer(bool force_bind)
 
 	if (useVBOs() && (force_bind || (mGLBuffer && (mGLBuffer != sGLRenderBuffer || !sVBOActive))))
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX;
 		glBindBufferARB(GL_ARRAY_BUFFER_ARB, mGLBuffer);
 		sGLRenderBuffer = mGLBuffer;
 		sBindCount++;
@@ -2112,7 +2092,6 @@ bool LLVertexBuffer::bindGLBufferFast()
 
 bool LLVertexBuffer::bindGLIndices(bool force_bind)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VERTEX;
 	bindGLArray();
 
 	bool ret = false;

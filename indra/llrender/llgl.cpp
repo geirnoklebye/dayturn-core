@@ -1867,7 +1867,6 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 LLGLState::LLGLState(LLGLenum state, S32 enabled) :
 	mState(state), mWasEnabled(false), mIsEnabled(false)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_PIPELINE;
 	switch (state)
 	{
 		case GL_ALPHA_TEST:
@@ -1924,7 +1923,6 @@ void LLGLState::setEnabled(S32 enabled)
 
 LLGLState::~LLGLState() 
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_PIPELINE;
 	stop_glerror();
 	if (mState)
 	{
