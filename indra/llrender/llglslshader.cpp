@@ -804,7 +804,7 @@ bool LLGLSLShader::mapUniforms(const vector<LLStaticHashedString> * uniforms)
 {
     LL_PROFILE_ZONE_SCOPED_CATEGORY_SHADER;
 
-    BOOL res = TRUE;
+    bool res = true;
 
 	mTotalUniformSize = 0;
 	mActiveTextureChannels = 0;
@@ -976,7 +976,7 @@ void LLGLSLShader::bind()
     if (mUniformsDirty)
     {
         LLShaderMgr::instance()->updateShaderUniforms(this);
-        mUniformsDirty = FALSE;
+        mUniformsDirty = false;
     }
 }
 

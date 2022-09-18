@@ -1653,7 +1653,7 @@ void LLEnvironment::update(const LLViewerCamera * cam)
                 && (gPipeline.canUseWindLightShaders()
                 || shaders_iter->mShaderGroup == LLGLSLShader::SG_WATER))
             {
-                shaders_iter->mUniformsDirty = TRUE;
+                shaders_iter->mUniformsDirty = true;
             }
         }
     }
