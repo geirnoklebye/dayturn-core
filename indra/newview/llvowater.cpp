@@ -304,7 +304,7 @@ LLWaterPartition::LLWaterPartition(LLViewerRegion* regionp)
 
 LLVoidWaterPartition::LLVoidWaterPartition(LLViewerRegion* regionp) : LLWaterPartition(regionp)
 {
-	mOcclusionEnabled = FALSE;
+	mOcclusionEnabled = false;
 	mDrawableType = LLPipeline::RENDER_TYPE_VOIDWATER;
 	mPartitionType = LLViewerRegion::PARTITION_VOIDWATER;
 }

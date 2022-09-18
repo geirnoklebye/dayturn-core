@@ -1003,7 +1003,7 @@ U32 LLVOSurfacePatch::getPartitionType() const
 LLTerrainPartition::LLTerrainPartition(LLViewerRegion* regionp)
 : LLSpatialPartition(LLDrawPoolTerrain::VERTEX_DATA_MASK, FALSE, GL_DYNAMIC_DRAW_ARB, regionp)
 {
-	mOcclusionEnabled = FALSE;
+	mOcclusionEnabled = false;
 	mInfiniteFarClip = TRUE;
 	mDrawableType = LLPipeline::RENDER_TYPE_TERRAIN;
 	mPartitionType = LLViewerRegion::PARTITION_TERRAIN;
