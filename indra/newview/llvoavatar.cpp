@@ -8769,7 +8769,7 @@ void LLVOAvatar::updateMeshTextures()
 									  && layerset_invalid);
 			if (use_lkg_baked_layer[i])
 			{
-				layerset->setUpdatesEnabled(TRUE);
+				layerset->setUpdatesEnabled(true);
 			}
 		}
 		else
@@ -8866,7 +8866,7 @@ void LLVOAvatar::updateMeshTextures()
 			debugColorizeSubMeshes(i,LLColor4::yellow );
 
 			layerset->createComposite();
-			layerset->setUpdatesEnabled( TRUE );
+			layerset->setUpdatesEnabled(true);
 			mBakedTextureDatas[i].mIsUsed = FALSE;
 
 			avatar_joint_mesh_list_t::iterator iter = mBakedTextureDatas[i].mJointMeshes.begin();
@@ -9791,7 +9791,7 @@ LLViewerTexture* LLVOAvatar::getBakedTexture(const U8 te)
 	else if (layerset && isEditingAppearance())
 	{
 		layerset->createComposite();
-		layerset->setUpdatesEnabled(TRUE);
+		layerset->setUpdatesEnabled(true);
 
 		return layerset->getViewerComposite();
 	}

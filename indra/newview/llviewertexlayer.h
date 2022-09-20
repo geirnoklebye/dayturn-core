@@ -47,12 +47,12 @@ public:
 	virtual ~LLViewerTexLayerSet();
 
 	/*virtual*/void				requestUpdate();
-	BOOL						isLocalTextureDataAvailable() const;
-	BOOL						isLocalTextureDataFinal() const;
+	bool						isLocalTextureDataAvailable() const;
+	bool						isLocalTextureDataFinal() const;
 	void						updateComposite();
 	/*virtual*/void				createComposite();
-	void						setUpdatesEnabled(BOOL b);
-	BOOL						getUpdatesEnabled()	const 	{ return mUpdatesEnabled; }
+	void						setUpdatesEnabled(bool b);
+	bool						getUpdatesEnabled()	const 	{ return mUpdatesEnabled; }
 
 	LLVOAvatarSelf*				getAvatar();
 	const LLVOAvatarSelf*		getAvatar()	const;
@@ -60,7 +60,7 @@ public:
 	const LLViewerTexLayerSetBuffer*	getViewerComposite() const;
 
 private:
-	BOOL						mUpdatesEnabled;
+	bool						mUpdatesEnabled;
 
 };
 
@@ -79,7 +79,7 @@ public:
 
 public:
 	/*virtual*/ S8          getType() const;
-	BOOL					isInitialized(void) const;
+	bool					isInitialized(void) const;
 	static void				dumpTotalByteCount();
 	const std::string		dumpTextureInfo() const;
 	virtual void 			restoreGLTexture();
@@ -95,8 +95,8 @@ private:
 	// Tex Layer Render
 	//--------------------------------------------------------------------
 	virtual void			preRenderTexLayerSet();
-	virtual void			midRenderTexLayerSet(BOOL success);
-	virtual void			postRenderTexLayerSet(BOOL success);
+	virtual void			midRenderTexLayerSet(bool success);
+	virtual void			postRenderTexLayerSet(bool success);
 	virtual S32				getCompositeOriginX() const { return getOriginX(); }
 	virtual S32				getCompositeOriginY() const { return getOriginY(); }
 	virtual S32				getCompositeWidth() const { return getFullWidth(); }

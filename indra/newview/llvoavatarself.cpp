@@ -900,7 +900,7 @@ void LLVOAvatarSelf::removeMissingBakedTextures()
 		for (U32 i = 0; i < mBakedTextureDatas.size(); i++)
 		{
 			LLViewerTexLayerSet *layerset = getTexLayerSet(i);
-			layerset->setUpdatesEnabled(TRUE);
+			layerset->setUpdatesEnabled(true);
 			invalidateComposite(layerset);
 		}
 		updateMeshTextures();
@@ -2616,7 +2616,7 @@ void LLVOAvatarSelf::forceBakeAllTextures(bool slam_for_debug)
 		{
 			if (slam_for_debug)
 			{
-				layer_set->setUpdatesEnabled(TRUE);
+				layer_set->setUpdatesEnabled(true);
 			}
 
 			invalidateComposite(layer_set);

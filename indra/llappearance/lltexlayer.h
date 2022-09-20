@@ -274,13 +274,13 @@ protected:
 	void					pushProjection() const;
 	void					popProjection() const;
 	virtual void			preRenderTexLayerSet();
-	virtual void			midRenderTexLayerSet(BOOL success) {}
-	virtual void			postRenderTexLayerSet(BOOL success);
+	virtual void			midRenderTexLayerSet(bool success) {}
+	virtual void			postRenderTexLayerSet(bool success);
 	virtual S32				getCompositeOriginX() const = 0;
 	virtual S32				getCompositeOriginY() const = 0;
 	virtual S32				getCompositeWidth() const = 0;
 	virtual S32				getCompositeHeight() const = 0;
-	BOOL					renderTexLayerSet(LLRenderTarget* bound_target);
+	bool					renderTexLayerSet(LLRenderTarget* bound_target);
 
 	LLTexLayerSet* const	mTexLayerSet;
 };

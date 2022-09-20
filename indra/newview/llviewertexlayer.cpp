@@ -150,7 +150,7 @@ void LLViewerTexLayerSetBuffer::preRenderTexLayerSet()
 }
 
 // virtual
-void LLViewerTexLayerSetBuffer::postRenderTexLayerSet(BOOL success)
+void LLViewerTexLayerSetBuffer::postRenderTexLayerSet(bool success)
 {
 
 	LLTexLayerSetBuffer::postRenderTexLayerSet(success);
@@ -158,7 +158,7 @@ void LLViewerTexLayerSetBuffer::postRenderTexLayerSet(BOOL success)
 }
 
 // virtual
-void LLViewerTexLayerSetBuffer::midRenderTexLayerSet(BOOL success)
+void LLViewerTexLayerSetBuffer::midRenderTexLayerSet(bool success)
 {
 	const bool update_now = mNeedsUpdate && isReadyToUpdate();
 	if (update_now)
@@ -171,7 +171,7 @@ void LLViewerTexLayerSetBuffer::midRenderTexLayerSet(BOOL success)
 	mGLTexturep->setGLTextureCreated(true);
 }
 
-BOOL LLViewerTexLayerSetBuffer::isInitialized(void) const
+bool LLViewerTexLayerSetBuffer::isInitialized(void) const
 {
 	return mGLTexturep.notNull() && mGLTexturep->isGLTextureCreated();
 }
@@ -190,8 +190,8 @@ bool LLViewerTexLayerSetBuffer::isReadyToUpdate() const
 	if (texture_timeout != 0)
 	{
 		// If we hit our timeout and have textures available at even lower resolution, then update.
-		const BOOL is_update_textures_timeout = mNeedsUpdateTimer.getElapsedTimeF32() >= texture_timeout;
-		const BOOL has_lower_lod = getViewerTexLayerSet()->isLocalTextureDataAvailable();
+		const bool is_update_textures_timeout = mNeedsUpdateTimer.getElapsedTimeF32() >= texture_timeout;
+		const bool has_lower_lod = getViewerTexLayerSet()->isLocalTextureDataAvailable();
 		if (has_lower_lod && is_update_textures_timeout) return true; 
 	}
 
@@ -218,7 +218,7 @@ bool LLViewerTexLayerSetBuffer::requestUpdateImmediate()
 void LLViewerTexLayerSetBuffer::doUpdate()
 {
 	LLViewerTexLayerSet* layer_set = getViewerTexLayerSet();
-	const BOOL highest_lod = layer_set->isLocalTextureDataFinal();
+	const bool highest_lod = layer_set->isLocalTextureDataFinal();
 	if (highest_lod)
 	{
 		mNeedsUpdate = false;
@@ -235,9 +235,9 @@ void LLViewerTexLayerSetBuffer::doUpdate()
 	layer_set->getAvatar()->updateMeshTextures();
 	
 	// Print out notification that we updated this texture.
-	if (gSavedSettings.getBOOL("DebugAvatarRezTime"))
+	if (gSavedSettings.getbool("DebugAvatarRezTime"))
 	{
-		const BOOL highest_lod = layer_set->isLocalTextureDataFinal();
+		const bool highest_lod = layer_set->isLocalTextureDataFinal();
 		const std::string lod_str = highest_lod ? "HighRes" : "LowRes";
 		LLSD args;
 		args["EXISTENCE"] = llformat("%d",(U32)layer_set->getAvatar()->debugGetExistenceTimeElapsedF32());
@@ -256,7 +256,7 @@ void LLViewerTexLayerSetBuffer::doUpdate()
 
 LLViewerTexLayerSet::LLViewerTexLayerSet(LLAvatarAppearance* const appearance) :
 	LLTexLayerSet(appearance),
-	mUpdatesEnabled( FALSE )
+	mUpdatesEnabled(false)
 {
 }
 
@@ -265,18 +265,18 @@ LLViewerTexLayerSet::~LLViewerTexLayerSet()
 {
 }
 
-// Returns TRUE if at least one packet of data has been received for each of the textures that this layerset depends on.
-BOOL LLViewerTexLayerSet::isLocalTextureDataAvailable() const
+// Returns true if at least one packet of data has been received for each of the textures that this layerset depends on.
+bool LLViewerTexLayerSet::isLocalTextureDataAvailable() const
 {
-	if (!mAvatarAppearance->isSelf()) return FALSE;
+	if (!mAvatarAppearance->isSelf()) return false;
 	return getAvatar()->isLocalTextureDataAvailable(this);
 }
 
 
-// Returns TRUE if all of the data for the textures that this layerset depends on have arrived.
-BOOL LLViewerTexLayerSet::isLocalTextureDataFinal() const
+// Returns true if all of the data for the textures that this layerset depends on have arrived.
+bool LLViewerTexLayerSet::isLocalTextureDataFinal() const
 {
-	if (!mAvatarAppearance->isSelf()) return FALSE;
+	if (!mAvatarAppearance->isSelf()) return false;
 	return getAvatar()->isLocalTextureDataFinal(this);
 }
 
@@ -312,7 +312,7 @@ void LLViewerTexLayerSet::createComposite()
 	}
 }
 
-void LLViewerTexLayerSet::setUpdatesEnabled( BOOL b )
+void LLViewerTexLayerSet::setUpdatesEnabled( bool b )
 {
 	mUpdatesEnabled = b; 
 }
@@ -342,7 +342,7 @@ const std::string LLViewerTexLayerSetBuffer::dumpTextureInfo() const
 {
 	if (!isAgentAvatarValid()) return "";
 
-	const BOOL is_high_res = TRUE; 
+	const bool is_high_res = true; 
 	const U32 num_low_res = 0;
 	const std::string local_texture_info = gAgentAvatarp->debugDumpLocalTextureDataInfo(getViewerTexLayerSet());
 

@@ -130,17 +130,17 @@ void LLTexLayerSetBuffer::preRenderTexLayerSet()
 }
 
 // virtual
-void LLTexLayerSetBuffer::postRenderTexLayerSet(BOOL success)
+void LLTexLayerSetBuffer::postRenderTexLayerSet(bool success)
 {
 	popProjection();
 }
 
-BOOL LLTexLayerSetBuffer::renderTexLayerSet(LLRenderTarget* bound_target)
+bool LLTexLayerSetBuffer::renderTexLayerSet(LLRenderTarget* bound_target)
 {
 	// Default color mask for tex layer render
 	gGL.setColorMask(true, true);
 
-	BOOL success = TRUE;
+	bool success = true;
 	
 	gAlphaMaskProgram.bind();
 	gAlphaMaskProgram.setMinimumAlpha(0.004f);
