@@ -88,7 +88,7 @@ LLAvatarJoint::~LLAvatarJoint()
 //--------------------------------------------------------------------
 // setValid()
 //--------------------------------------------------------------------
-void LLAvatarJoint::setValid( BOOL valid, BOOL recursive )
+void LLAvatarJoint::setValid( bool valid, bool recursive )
 {
 	//----------------------------------------------------------------
 	// set visibility for this joint
@@ -104,7 +104,7 @@ void LLAvatarJoint::setValid( BOOL valid, BOOL recursive )
 			 iter != mChildren.end(); ++iter)
 		{
 			LLAvatarJoint* joint = static_cast<LLAvatarJoint*>(*iter);
-			joint->setValid(valid, TRUE);
+			joint->setValid(valid, true);
 		}
 	}
 

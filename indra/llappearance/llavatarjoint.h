@@ -55,7 +55,7 @@ public:
 	bool getValid() { return mValid; }
 
 	// Sets the validity of this joint
-	virtual void setValid( BOOL valid, BOOL recursive=FALSE );
+	virtual void setValid( bool valid, bool recursive=false );
 
 	// Returns true if this object is transparent.
 	// This is used to determine in which order to draw objects.
