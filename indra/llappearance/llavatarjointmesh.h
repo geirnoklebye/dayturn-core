@@ -49,7 +49,7 @@ class LLSkinJoint
 public:
 	LLSkinJoint();
 	~LLSkinJoint();
-	BOOL setupSkinJoint( LLAvatarJoint *joint);
+	bool setupSkinJoint( LLAvatarJoint *joint);
 
 	LLAvatarJoint	*mJoint;
 	LLVector3		mRootToJointSkinOffset;

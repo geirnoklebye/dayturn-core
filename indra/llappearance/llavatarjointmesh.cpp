@@ -102,7 +102,7 @@ LLSkinJoint::~LLSkinJoint()
 //-----------------------------------------------------------------------------
 // LLSkinJoint::setupSkinJoint()
 //-----------------------------------------------------------------------------
-BOOL LLSkinJoint::setupSkinJoint( LLAvatarJoint *joint)
+bool LLSkinJoint::setupSkinJoint( LLAvatarJoint *joint)
 {
 	// find the named joint
 	mJoint = joint;
@@ -119,7 +119,7 @@ BOOL LLSkinJoint::setupSkinJoint( LLAvatarJoint *joint)
 	mRootToParentJointSkinOffset = totalSkinOffset(getBaseSkeletonAncestor(joint));
 	mRootToParentJointSkinOffset = -mRootToParentJointSkinOffset;
 
-	return TRUE;
+	return true;
 }
 
 

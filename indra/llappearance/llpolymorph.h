@@ -159,7 +159,7 @@ public:
 	/*virtual*/ LLViewerVisualParam* cloneParam(LLWearable* wearable) const;
 
 	// LLVisualParam Virtual functions
-	///*virtual*/ BOOL				parseData(LLXmlTreeNode* node);
+	///*virtual*/ bool				parseData(LLXmlTreeNode* node);
 	/*virtual*/ void				apply( ESex sex );
 	
 	// LLViewerVisualParam Virtual functions

@@ -614,7 +614,7 @@ bool LLPolyMeshSharedData::loadMesh( const std::string& fileName )
                                 }
                                 LLPolyMorphData* morph_data = new LLPolyMorphData(std::string(morphName));
 
-                                BOOL result = morph_data->loadBinary(fp, this);
+                                bool result = morph_data->loadBinary(fp, this);
 
                                 if (!result)
                                 {
