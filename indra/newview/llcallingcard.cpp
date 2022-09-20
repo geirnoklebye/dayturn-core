@@ -54,6 +54,8 @@
 #include "llvoavatar.h"
 #include "llavataractions.h"
 #include "lggcontactsets.h"
+#include "lluiusage.h"
+
 //MK
 #include "llfloaterimnearbychat.h"
 #include "fskeywords.h"
@@ -300,6 +302,8 @@ void LLAvatarTracker::copyBuddyList(buddy_map_t& buddies) const
 void LLAvatarTracker::terminateBuddy(const LLUUID& id)
 {
 	LL_DEBUGS() << "LLAvatarTracker::terminateBuddy()" << LL_ENDL;
+	LLUIUsage::instance().logCommand("Avatar.TerminateFriendship");
+
 	LLRelationship* buddy = get_ptr_in_map(mBuddyInfo, id);
 	if(!buddy) return;
 	mBuddyInfo.erase(id);
