@@ -1339,8 +1339,7 @@ void LLTexLayer::renderMorphMasks(S32 x, S32 y, S32 width, S32 height, const LLC
 		LL_DEBUGS() << "skipping renderMorphMasks for " << getUUID() << LL_ENDL;
 		return;
 	}
-    LL_PROFILE_ZONE_SCOPED;
-	BOOL success = TRUE;
+	bool success = true;
 
 	llassert( !mParamAlphaList.empty() );
 
