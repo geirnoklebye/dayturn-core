@@ -65,7 +65,7 @@ public:
 	LLTexLayerInterface(const LLTexLayerInterface &layer, LLWearable *wearable);
 	virtual ~LLTexLayerInterface() {}
 
-	virtual BOOL			render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target) = 0;
+	virtual bool			render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target) = 0;
 	virtual void			deleteCaches() = 0;
 	virtual BOOL			blendAlphaTexture(S32 x, S32 y, S32 width, S32 height) = 0;
 	virtual BOOL			isInvisibleAlphaMask() const = 0;
@@ -121,7 +121,7 @@ public:
 	LLTexLayerTemplate(LLTexLayerSet* const layer_set, LLAvatarAppearance* const appearance);
 	LLTexLayerTemplate(const LLTexLayerTemplate &layer);
 	/*virtual*/ ~LLTexLayerTemplate();
-	/*virtual*/ BOOL		render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target);
+	/*virtual*/ bool		render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target);
 	/*virtual*/ BOOL		setInfo(const LLTexLayerInfo *info, LLWearable* wearable); // This sets mInfo and calls initialization functions
 	/*virtual*/ BOOL		blendAlphaTexture(S32 x, S32 y, S32 width, S32 height); // Multiplies a single alpha texture against the frame buffer
 	/*virtual*/ void		gatherAlphaMasks(U8 *data, S32 originX, S32 originY, S32 width, S32 height, LLRenderTarget* bound_target);
@@ -152,7 +152,7 @@ public:
 	/*virtual*/ ~LLTexLayer();
 
 	/*virtual*/ BOOL		setInfo(const LLTexLayerInfo *info, LLWearable* wearable); // This sets mInfo and calls initialization functions
-	/*virtual*/ BOOL		render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target);
+	/*virtual*/ bool		render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target);
 
 	/*virtual*/ void		deleteCaches();
 	const U8*				getAlphaData() const;
@@ -199,7 +199,7 @@ public:
 	const LLTexLayerSetInfo* 	getInfo() const 			{ return mInfo; }
 	BOOL						setInfo(const LLTexLayerSetInfo *info); // This sets mInfo and calls initialization functions
 
-	BOOL						render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target = nullptr);
+	bool						render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target = nullptr);
 	void						renderAlphaMaskTextures(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target = nullptr, bool forceClear = false);
 
 	BOOL						isBodyRegion(const std::string& region) const;
@@ -218,7 +218,7 @@ public:
 	void						setBakedTexIndex(LLAvatarAppearanceDefines::EBakedTextureIndex index) { mBakedTexIndex = index; }
 	bool						isVisible() const 			{ return mIsVisible; }
 
-	static BOOL					sHasCaches;
+	static bool					sHasCaches;
 
 protected:
 	typedef std::vector<LLTexLayerInterface *> layer_list_t;
@@ -226,7 +226,7 @@ protected:
 	layer_list_t				mMaskLayerList;
 	LLPointer<LLTexLayerSetBuffer>	mComposite;
 	LLAvatarAppearance*	const	mAvatarAppearance; // note: backlink only; don't make this an LLPointer.
-	BOOL						mIsVisible;
+	bool						mIsVisible;
 
 	LLAvatarAppearanceDefines::EBakedTextureIndex mBakedTexIndex;
 	const LLTexLayerSetInfo* 	mInfo;

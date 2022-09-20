@@ -89,7 +89,7 @@ public:
 	/*virtual*/ const LLVector4a*	getNextDistortion(U32 *index, LLPolyMesh **poly_mesh)	{ index = 0; poly_mesh = NULL; return NULL;};
 
 	// New functions
-	BOOL					render( S32 x, S32 y, S32 width, S32 height );
+	bool					render( S32 x, S32 y, S32 width, S32 height );
 	BOOL					getSkip() const;
 	void					deleteCaches();
 	BOOL					getMultiplyBlend() const;

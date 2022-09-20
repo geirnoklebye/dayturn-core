@@ -255,11 +255,11 @@ void LLTexLayerSetInfo::createVisualParams(LLAvatarAppearance *appearance)
 // An ordered set of texture layers that get composited into a single texture.
 //-----------------------------------------------------------------------------
 
-BOOL LLTexLayerSet::sHasCaches = FALSE;
+bool LLTexLayerSet::sHasCaches = false;
 
 LLTexLayerSet::LLTexLayerSet(LLAvatarAppearance* const appearance) :
 	mAvatarAppearance( appearance ),
-	mIsVisible( TRUE ),
+	mIsVisible(true),
 	mBakedTexIndex(LLAvatarAppearanceDefines::BAKED_HEAD),
 	mInfo( NULL )
 {
@@ -361,10 +361,10 @@ void LLTexLayerSet::deleteCaches()
 }
 
 
-BOOL LLTexLayerSet::render( S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target )
+bool LLTexLayerSet::render( S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target )
 {
-	BOOL success = TRUE;
-	mIsVisible = TRUE;
+	bool success = true;
+	mIsVisible = true;
 
 	if (mMaskLayerList.size() > 0)
 	{
@@ -373,7 +373,7 @@ BOOL LLTexLayerSet::render( S32 x, S32 y, S32 width, S32 height, LLRenderTarget*
 			LLTexLayerInterface* layer = *iter;
 			if (layer->isInvisibleAlphaMask())
 			{
-				mIsVisible = FALSE;
+				mIsVisible = false;
 			}
 		}
 	}
@@ -1057,7 +1057,7 @@ void LLTexLayer::calculateTexLayerColor(const param_color_list_t &param_list, LL
 	}
 }
 
-BOOL LLTexLayer::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target)
+bool LLTexLayer::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target)
 {
 	LLGLEnable color_mat(GL_COLOR_MATERIAL);
 	// *TODO: Is this correct?
@@ -1065,7 +1065,7 @@ BOOL LLTexLayer::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bou
 	stop_glerror();
 
 	LLColor4 net_color;
-	BOOL color_specified = findNetColor(&net_color);
+	bool color_specified = findNetColor(&net_color);
 	
 	if (mTexLayerSet->getAvatarAppearance()->mIsDummy)
 	{
@@ -1073,7 +1073,7 @@ BOOL LLTexLayer::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bou
 		net_color = LLAvatarAppearance::getDummyColor();
 	}
 
-	BOOL success = TRUE;
+	bool success = true;
 	
 	// If you can't see the layer, don't render it.
 	if( is_approx_zero( net_color.mV[VW] ) )
@@ -1081,7 +1081,7 @@ BOOL LLTexLayer::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bou
 		return success;
 	}
 
-	BOOL alpha_mask_specified = FALSE;
+	bool alpha_mask_specified = false;
 	param_alpha_list_t::const_iterator iter = mParamAlphaList.begin();
 	if( iter != mParamAlphaList.end() )
 	{
@@ -1112,7 +1112,7 @@ BOOL LLTexLayer::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bou
 
 		const bool force_render = true;
 		renderMorphMasks(x, y, width, height, net_color, bound_target, force_render);
-		alpha_mask_specified = TRUE;
+		alpha_mask_specified = true;
 		gGL.flush();
 		gGL.blendFunc(LLRender::BF_DEST_ALPHA, LLRender::BF_ONE_MINUS_DEST_ALPHA);
 	}
@@ -1186,7 +1186,7 @@ BOOL LLTexLayer::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bou
 			}
 			else
 			{
-				success = FALSE;
+				success = false;
 			}
 		}
 	}
@@ -1674,14 +1674,14 @@ LLTexLayer* LLTexLayerTemplate::getLayer(U32 i) const
 	return layer;
 }
 
-/*virtual*/ BOOL LLTexLayerTemplate::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target)
+/*virtual*/ bool LLTexLayerTemplate::render(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target)
 {
 	if(!mInfo)
 	{
-		return FALSE ;
+		return false ;
 	}
 
-	BOOL success = TRUE;
+	bool success = true;
 	updateWearableCache();
 	for (wearable_cache_t::const_iterator iter = mWearableCache.begin(); iter!= mWearableCache.end(); iter++)
 	{

@@ -261,10 +261,9 @@ BOOL LLTexLayerParamAlpha::getSkip() const
 }
 
 
-BOOL LLTexLayerParamAlpha::render(S32 x, S32 y, S32 width, S32 height)
+bool LLTexLayerParamAlpha::render(S32 x, S32 y, S32 width, S32 height)
 {
-    LL_PROFILE_ZONE_SCOPED;
-	BOOL success = TRUE;
+	bool success = true;
 
 	if (!mTexLayer)
 	{
@@ -272,7 +271,7 @@ BOOL LLTexLayerParamAlpha::render(S32 x, S32 y, S32 width, S32 height)
 	}
 
 	F32 effective_weight = (mTexLayer->getTexLayerSet()->getAvatarAppearance()->getSex() & getSex()) ? mCurWeight : getDefaultWeight();
-	BOOL weight_changed = effective_weight != mCachedEffectiveWeight;
+	bool weight_changed = effective_weight != mCachedEffectiveWeight;
 	if (getSkip())
 	{
 		return success;
@@ -296,13 +295,13 @@ BOOL LLTexLayerParamAlpha::render(S32 x, S32 y, S32 width, S32 height)
 			// Don't load the image file until we actually need it the first time.  Like now.
 			mStaticImageTGA = LLTexLayerStaticImageList::getInstance()->getImageTGA(info->mStaticImageFileName);  
 			// We now have something in one of our caches
-			LLTexLayerSet::sHasCaches |= mStaticImageTGA.notNull() ? TRUE : FALSE;
+			LLTexLayerSet::sHasCaches |= mStaticImageTGA.notNull() ? true : false;
 
 			if (mStaticImageTGA.isNull())
 			{
 				LL_WARNS() << "Unable to load static file: " << info->mStaticImageFileName << LL_ENDL;
 				mStaticImageInvalid = TRUE; // don't try again.
-				return FALSE;
+				return false;
 			}
 		}
 
@@ -321,7 +320,7 @@ BOOL LLTexLayerParamAlpha::render(S32 x, S32 y, S32 width, S32 height)
 				mCachedProcessedTexture = gTextureManagerBridgep->getLocalTexture(image_tga_width, image_tga_height, 1, FALSE);
 
 				// We now have something in one of our caches
-				LLTexLayerSet::sHasCaches |= mCachedProcessedTexture ? TRUE : FALSE;
+				LLTexLayerSet::sHasCaches |= mCachedProcessedTexture ? true : false;
 
 				mCachedProcessedTexture->setExplicitFormat(GL_ALPHA8, GL_ALPHA);
 			}
