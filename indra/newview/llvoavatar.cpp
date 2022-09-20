@@ -7351,7 +7351,7 @@ void LLVOAvatar::setPixelAreaAndAngle(LLAgent &agent)
 //-----------------------------------------------------------------------------
 // updateJointLODs()
 //-----------------------------------------------------------------------------
-BOOL LLVOAvatar::updateJointLODs()
+bool LLVOAvatar::updateJointLODs()
 {
 	const F32 MAX_PIXEL_AREA = 100000000.f;
 	F32 lod_factor = (sLODFactor * AVATAR_LOD_TWEAK_RANGE + (1.f - AVATAR_LOD_TWEAK_RANGE));
@@ -7382,19 +7382,19 @@ BOOL LLVOAvatar::updateJointLODs()
 
 		// now select meshes to render based on adjusted pixel area
 		LLViewerJoint* root = dynamic_cast<LLViewerJoint*>(mRoot);
-		BOOL res = FALSE;
+		bool res = false;
 		if (root)
 		{
-			res = root->updateLOD(mAdjustedPixelArea, TRUE);
+			res = root->updateLOD(mAdjustedPixelArea, true);
 		}
  		if (res)
 		{
 			sNumLODChangesThisFrame++;
 			dirtyMesh(2);
-			return TRUE;
+			return true;
 		}
 
-	return FALSE;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -10545,19 +10545,19 @@ void LLVOAvatar::updateFreezeCounter(S32 counter)
 	}
 }
 
-BOOL LLVOAvatar::updateLOD()
+bool LLVOAvatar::updateLOD()
 {
     if (mDrawable.isNull())
     {
-        return FALSE;
+        return false;
     }
     
 	if (!LLPipeline::sImpostorRender && isImpostor() && 0 != mDrawable->getNumFaces() && mDrawable->getFace(0)->hasGeometry())
 	{
-		return TRUE;
+		return true;
 	}
 
-	BOOL res = updateJointLODs();
+	bool res = updateJointLODs();
 
 	LLFace* facep = mDrawable->getFace(0);
 	if (!facep || !facep->getVertexBuffer())

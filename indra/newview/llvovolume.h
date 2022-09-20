@@ -132,7 +132,7 @@ public:
 				void	generateSilhouette(LLSelectNode* nodep, const LLVector3& view_point);
 	/*virtual*/	BOOL	setParent(LLViewerObject* parent);
 				S32		getLOD() const						{ return mLOD; }
-				void	setNoLOD()							{ mLOD = NO_LOD; mLODChanged = TRUE; }
+				void	setNoLOD()							{ mLOD = NO_LOD; mLODChanged = true; }
 				bool	isNoLOD() const						{ return NO_LOD == mLOD; }
 	const LLVector3		getPivotPositionAgent() const;
 	const LLMatrix4&	getRelativeXform() const				{ return mRelativeXform; }
@@ -228,7 +228,7 @@ public:
 				void	updateRelativeXform(bool force_identity = false);
 	/*virtual*/ BOOL	updateGeometry(LLDrawable *drawable);
 	/*virtual*/ void	updateFaceSize(S32 idx);
-	/*virtual*/ BOOL	updateLOD();
+	/*virtual*/ bool	updateLOD();
 				void	updateRadius();
 	/*virtual*/ void	updateTextures();
 				void	updateTextureVirtualSize(bool forced = false);
@@ -418,7 +418,7 @@ private:
 	bool		mFaceMappingChanged;
 	LLFrameTimer mTextureUpdateTimer;
 	S32			mLOD;
-	BOOL		mLODChanged;
+	bool		mLODChanged;
 	BOOL		mSculptChanged;
     BOOL		mColorChanged;
 	F32			mSpotLightPriority;

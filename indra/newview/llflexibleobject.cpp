@@ -822,7 +822,7 @@ BOOL LLVolumeImplFlexible::doUpdateGeometry(LLDrawable *drawable)
 	}
 			
 	volume->mVolumeChanged = FALSE;
-	volume->mLODChanged = FALSE;
+	volume->mLODChanged = false;
 	volume->mFaceMappingChanged = false;
 
 	// clear UV flag

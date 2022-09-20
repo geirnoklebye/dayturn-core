@@ -224,7 +224,7 @@ LLVOVolume::LLVOVolume(const LLUUID &id, const LLPCode pcode, LLViewerRegion *re
 	mVolumeChanged = FALSE;
 	mVObjRadius = LLVector3(1,1,0.5f).length();
 	mNumFaces = 0;
-	mLODChanged = FALSE;
+	mLODChanged = false;
 	mSculptChanged = FALSE;
     mColorChanged = FALSE;
 	mSpotLightPriority = 0.f;
@@ -1663,14 +1663,14 @@ void LLVOVolume::forceLOD(S32 lod)
 }
 //</FS:Beq>
 
-BOOL LLVOVolume::updateLOD()
+bool LLVOVolume::updateLOD()
 {
 	if (mDrawable.isNull())
 	{
-		return FALSE;
+		return false;
 	}
 	
-	BOOL lod_changed = FALSE;
+	bool lod_changed = false;
 
 	if (!LLSculptIDSize::instance().isUnloaded(getVolume()->getParams().getSculptID())) 
 	{
@@ -1678,7 +1678,7 @@ BOOL LLVOVolume::updateLOD()
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 
 	if (lod_changed)
@@ -1698,7 +1698,7 @@ BOOL LLVOVolume::updateLOD()
         }
 
 		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, FALSE);
-		mLODChanged = TRUE;
+		mLODChanged = true;
 	}
 	else
 	{
@@ -2240,7 +2240,7 @@ BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
 	}
 		
 	mVolumeChanged = FALSE;
-	mLODChanged = FALSE;
+	mLODChanged = false;
 	mSculptChanged = FALSE;
 	mFaceMappingChanged = false;
     mColorChanged = FALSE;
@@ -2375,7 +2375,7 @@ S32 LLVOVolume::setTEColor(const U8 te, const LLColor4& color)
 		{
 			gPipeline.markTextured(mDrawable);
 			//treat this alpha change as an LoD update since render batches may need to get rebuilt
-			mLODChanged = TRUE;
+			mLODChanged = true;
 			gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, FALSE);
 		}
 		retval = LLPrimitive::setTEColor(te, color);

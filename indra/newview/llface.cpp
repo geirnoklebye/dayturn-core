@@ -330,7 +330,7 @@ void LLFace::dirtyTexture()
 				LLVOVolume* vobj = drawablep->getVOVolume();
 				if (vobj)
 				{
-					vobj->mLODChanged = TRUE;
+					vobj->mLODChanged = true;
 
                     vobj->updateVisualComplexity();
 				}
