@@ -73,7 +73,7 @@ public:
 	/*virtual*/ void setPixelAreaAndAngle(LLAgent &agent); // generate accurate apparent angle and area
 
 	/*virtual*/ void updateSpatialExtents(LLVector4a& newMin, LLVector4a& newMax);
-	/*virtual*/ BOOL isActive() const; // Whether this object needs to do an idleUpdate.
+	/*virtual*/ bool isActive() const; // Whether this object needs to do an idleUpdate.
 
 	void setPatch(LLSurfacePatch *patchp);
 	LLSurfacePatch	*getPatch() const		{ return mPatchp; }

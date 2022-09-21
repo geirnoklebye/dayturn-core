@@ -170,16 +170,16 @@ public:
 										LLDataPacker *dp);
 
 
-	virtual BOOL    isActive() const; // Whether this object needs to do an idleUpdate.
-	BOOL			onActiveList() const				{return mOnActiveList;}
-	void			setOnActiveList(BOOL on_active)		{ mOnActiveList = on_active; }
+	virtual bool    isActive() const; // Whether this object needs to do an idleUpdate.
+	bool			onActiveList() const				{return mOnActiveList;}
+	void			setOnActiveList(bool on_active)		{ mOnActiveList = on_active; }
 
-	virtual BOOL	isAttachment() const { return FALSE; }
+	virtual bool	isAttachment() const { return false; }
 	const std::string& getAttachmentItemName() const;
 
 	virtual LLVOAvatar* getAvatar() const;  //get the avatar this object is attached to, or NULL if object is not an attachment
 	virtual bool	isHUDAttachment() const { return false; }
-	virtual BOOL	isTempAttachment() const;
+	virtual bool	isTempAttachment() const;
 
 	virtual BOOL isHiglightedOrBeacon() const;
 
@@ -836,9 +836,9 @@ protected:
 	BOOL			mDead;
 	bool			mOrphaned;					// This is an orphaned child
 	bool			mUserSelected;				// Cached user select information
-	BOOL			mOnActiveList;
+	bool			mOnActiveList;
 	BOOL			mOnMap;						// On the map.
-	BOOL			mStatic;					// Object doesn't move.
+	bool			mStatic;					// Object doesn't move.
 	S32				mSeatCount;
 	S32				mNumFaces;
 
@@ -876,7 +876,7 @@ protected:
 	static void setMaxUpdateInterpolationTime(F32 value)		{ sMaxUpdateInterpolationTime = (F64Seconds) value;	}
 	static void setMaxRegionCrossingInterpolationTime(F32 value)		{ sMaxRegionCrossingInterpolationTime = (F64Seconds) value; }
 
-	static void	setVelocityInterpolate(BOOL value)		{ sVelocityInterpolate = value;	}
+	static void	setVelocityInterpolate(bool value)		{ sVelocityInterpolate = value;	}
 	static void	setPingInterpolate(BOOL value)			{ sPingInterpolate = value;	}
 
 private:	
@@ -886,7 +886,7 @@ private:
 	static F64Seconds sMaxUpdateInterpolationTime;			// For motion interpolation
 	static F64Seconds sMaxRegionCrossingInterpolationTime;			// For motion interpolation
 
-	static BOOL sVelocityInterpolate;
+	static bool sVelocityInterpolate;
 	static BOOL sPingInterpolate;
 
 	bool mCachedOwnerInMuteList;

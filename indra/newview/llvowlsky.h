@@ -42,7 +42,7 @@ public:
 	LLVOWLSky(const LLUUID &id, const LLPCode pcode, LLViewerRegion *regionp);
 
 	/*virtual*/ void		 idleUpdate(LLAgent &agent, const F64 &time);
-	/*virtual*/ BOOL		 isActive(void) const;
+	/*virtual*/ bool		 isActive(void) const;
 	/*virtual*/ LLDrawable * createDrawable(LLPipeline *pipeline);
 	/*virtual*/ BOOL		 updateGeometry(LLDrawable *drawable);
 

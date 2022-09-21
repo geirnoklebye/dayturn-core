@@ -111,7 +111,7 @@
 
 //#define DEBUG_UPDATE_TYPE
 
-BOOL		LLViewerObject::sVelocityInterpolate = TRUE;
+bool		LLViewerObject::sVelocityInterpolate = true;
 BOOL		LLViewerObject::sPingInterpolate = TRUE; 
 
 U32			LLViewerObject::sNumZombieObjects = 0;
@@ -295,9 +295,9 @@ LLViewerObject::LLViewerObject(const LLUUID &id, const LLPCode pcode, LLViewerRe
 	mDead(FALSE),
 	mOrphaned(false),
 	mUserSelected(false),
-	mOnActiveList(FALSE),
+	mOnActiveList(false),
 	mOnMap(FALSE),
-	mStatic(FALSE),
+	mStatic(false),
 	mSeatCount(0),
 	mNumFaces(0),
 	mRotTime(0.f),
@@ -2437,11 +2437,11 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 		(MAG_CUTOFF >= accel_mag_sq) &&
 		(MAG_CUTOFF >= getAngularVelocity().magVecSquared()))
 	{
-		mStatic = TRUE; // This object doesn't move!
+		mStatic = true; // This object doesn't move!
 	}
 	else
 	{
-		mStatic = FALSE;
+		mStatic = false;
 	}
 
 // BUG: This code leads to problems during group rotate and any scale operation.
@@ -2500,9 +2500,9 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 	return retval;
 }
 
-BOOL LLViewerObject::isActive() const
+bool LLViewerObject::isActive() const
 {
-	return TRUE;
+	return true;
 }
 
 //load flags from cache or from message
@@ -6862,7 +6862,7 @@ void LLViewerObject::resetChildrenPosition(const LLVector3& offset, bool simplif
 }
 
 // virtual 
-BOOL	LLViewerObject::isTempAttachment() const
+bool	LLViewerObject::isTempAttachment() const
 {
 	return (mID.notNull() && (mID == mAttachmentItemID));
 }

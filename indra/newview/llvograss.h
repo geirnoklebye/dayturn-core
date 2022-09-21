@@ -72,7 +72,7 @@ public:
 
 	void plantBlades();
 
-	/*virtual*/ BOOL    isActive() const; // Whether this object needs to do an idleUpdate.
+	/*virtual*/ bool    isActive() const; // Whether this object needs to do an idleUpdate.
 	/*virtual*/ void idleUpdate(LLAgent &agent, const F64 &time);
 
 	/*virtual*/ BOOL lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end, 

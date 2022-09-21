@@ -136,7 +136,7 @@ public:
 	/*virtual*/ bool   	 	 	updateLOD();
 	bool  	 	 	 	 	updateJointLODs();
 	void					updateLODRiggedAttachments( void );
-	/*virtual*/ BOOL   	 	 	isActive() const; // Whether this object needs to do an idleUpdate.
+	/*virtual*/ bool   	 	 	isActive() const; // Whether this object needs to do an idleUpdate.
 	S32Bytes				totalTextureMemForUUIDS(std::set<LLUUID>& ids);
 	bool 						allTexturesCompletelyDownloaded(std::set<LLUUID>& ids) const;
 	bool 						allLocalTexturesCompletelyDownloaded() const;

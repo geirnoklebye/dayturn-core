@@ -1061,7 +1061,7 @@ void LLVOVolume::updateTextureVirtualSize(bool forced)
 	}
 }
 
-BOOL LLVOVolume::isActive() const
+bool LLVOVolume::isActive() const
 {
 	return !mStatic;
 }
@@ -4045,7 +4045,7 @@ void LLVOVolume::updateRadius()
 }
 
 
-BOOL LLVOVolume::isAttachment() const
+bool LLVOVolume::isAttachment() const
 {
 	return mAttachmentState != 0 ;
 }

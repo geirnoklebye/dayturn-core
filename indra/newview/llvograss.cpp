@@ -271,9 +271,9 @@ U32 LLVOGrass::processUpdateMessage(LLMessageSystem *mesgsys,
 	return retval;
 }
 
-BOOL LLVOGrass::isActive() const
+bool LLVOGrass::isActive() const
 {
-	return TRUE;
+	return true;
 }
 
 void LLVOGrass::idleUpdate(LLAgent &agent, const F64 &time)

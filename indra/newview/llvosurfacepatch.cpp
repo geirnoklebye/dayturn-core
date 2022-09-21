@@ -101,9 +101,9 @@ void LLVOSurfacePatch::markDead()
 }
 
 
-BOOL LLVOSurfacePatch::isActive() const
+bool LLVOSurfacePatch::isActive() const
 {
-	return FALSE;
+	return false;
 }
 
 

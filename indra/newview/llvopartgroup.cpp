@@ -183,9 +183,9 @@ LLVOPartGroup::~LLVOPartGroup()
 {
 }
 
-BOOL LLVOPartGroup::isActive() const
+bool LLVOPartGroup::isActive() const
 {
-	return FALSE;
+	return false;
 }
 
 F32 LLVOPartGroup::getBinRadius()

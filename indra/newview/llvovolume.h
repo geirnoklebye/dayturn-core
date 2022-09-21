@@ -124,8 +124,8 @@ public:
 				void	animateTextures();
 	
 	            BOOL    isVisible() const ;
-	/*virtual*/ BOOL	isActive() const;
-	/*virtual*/ BOOL	isAttachment() const;
+	/*virtual*/ bool	isActive() const;
+	/*virtual*/ bool	isAttachment() const;
 	/*virtual*/ bool	isRootEdit() const; // overridden for sake of attachments treating themselves as a root object
 	/*virtual*/ bool	isHUDAttachment() const;
 

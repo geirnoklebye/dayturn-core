@@ -1406,7 +1406,7 @@ void LLViewerObjectList::cleanupReferences(LLViewerObject *objectp)
 	if (objectp->onActiveList())
 	{
 		//LL_INFOS() << "Removing " << objectp->mID << " " << objectp->getPCodeString() << " from active list in cleanupReferences." << LL_ENDL;
-		objectp->setOnActiveList(FALSE);
+		objectp->setOnActiveList(false);
 		removeFromActiveList(objectp);
 	}
 
@@ -1608,14 +1608,12 @@ void LLViewerObjectList::removeFromActiveList(LLViewerObject* objectp)
 
 void LLViewerObjectList::updateActive(LLViewerObject *objectp)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWABLE;
-
 	if (objectp->isDead())
 	{
 		return; // We don't update dead objects!
 	}
 
-	BOOL active = objectp->isActive();
+	bool active = objectp->isActive();
 	if (active != objectp->onActiveList())
 	{
 		if (active)
@@ -1626,7 +1624,7 @@ void LLViewerObjectList::updateActive(LLViewerObject *objectp)
 			{
 				mActiveObjects.push_back(objectp);
 				objectp->setListIndex(mActiveObjects.size()-1);
-			objectp->setOnActiveList(TRUE);
+			objectp->setOnActiveList(true);
 		}
 		else
 		{
@@ -1644,7 +1642,7 @@ void LLViewerObjectList::updateActive(LLViewerObject *objectp)
 		{
 			//LL_INFOS() << "Removing " << objectp->mID << " " << objectp->getPCodeString() << " from active list." << LL_ENDL;
 			removeFromActiveList(objectp);
-			objectp->setOnActiveList(FALSE);
+			objectp->setOnActiveList(false);
 		}
 	}
 
