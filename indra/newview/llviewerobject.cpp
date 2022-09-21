@@ -6806,7 +6806,7 @@ void LLViewerObject::resetChildrenRotationAndPosition(const std::vector<LLQuater
 }
 
 //counter-translation
-void LLViewerObject::resetChildrenPosition(const LLVector3& offset, BOOL simplified, BOOL skip_avatar_child)
+void LLViewerObject::resetChildrenPosition(const LLVector3& offset, bool simplified, bool skip_avatar_child)
 {
 	if(mChildList.empty())
 	{

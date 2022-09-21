@@ -706,7 +706,7 @@ bool LLManipTranslate::handleHover(S32 x, S32 y, MASK mask)
 				if (selectNode->mIndividualSelection)
 				{
 					// counter-translate child objects if we are moving the root as an individual
-					object->resetChildrenPosition(old_position_local - new_position_local, TRUE) ;					
+					object->resetChildrenPosition(old_position_local - new_position_local, true) ;					
 				}
 			}
 			else
@@ -760,7 +760,7 @@ bool LLManipTranslate::handleHover(S32 x, S32 y, MASK mask)
 				if (selectNode->mIndividualSelection)
 				{
 					// counter-translate child objects if we are moving the root as an individual
-					object->resetChildrenPosition(old_position_agent - new_position_agent, TRUE) ;					
+					object->resetChildrenPosition(old_position_agent - new_position_agent, true) ;					
 				}
 			}
 			selectNode->mLastPositionLocal  = object->getPosition();
