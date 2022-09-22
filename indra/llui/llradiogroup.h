@@ -95,7 +95,7 @@ public:
 	/*virtual*/ S32		getFirstSelectedIndex() const		{ return getSelectedIndex(); }
 	/*virtual*/ BOOL	setCurrentByID( const LLUUID& id );
 	/*virtual*/ LLUUID	getCurrentID() const;				// LLUUID::null if no items in menu
-	/*virtual*/ BOOL	setSelectedByValue(const LLSD& value, BOOL selected);
+	/*virtual*/ bool	setSelectedByValue(const LLSD& value, bool selected);
 	/*virtual*/ LLSD	getSelectedValue();
 	/*virtual*/ BOOL	isSelected(const LLSD& value) const;
 	/*virtual*/ BOOL	operateOnSelection(EOperation op);

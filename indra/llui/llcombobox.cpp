@@ -331,9 +331,9 @@ void LLComboBox::sortByName(BOOL ascending)
 
 // Choose an item with a given name in the menu.
 // Returns TRUE if the item was found.
-BOOL LLComboBox::setSimple(const LLStringExplicit& name)
+bool LLComboBox::setSimple(const LLStringExplicit& name)
 {
-	BOOL found = mList->selectItemByLabel(name, FALSE);
+	bool found = mList->selectItemByLabel(name, false);
 
 	if (found)
 	{
@@ -439,9 +439,9 @@ void LLComboBox::updateLabel()
 	}
 }
 
-BOOL LLComboBox::remove(const std::string& name)
+bool LLComboBox::remove(const std::string& name)
 {
-	BOOL found = mList->selectItemByLabel(name);
+	bool found = mList->selectItemByLabel(name);
 
 	if (found)
 	{
@@ -456,15 +456,15 @@ BOOL LLComboBox::remove(const std::string& name)
 	return found;
 }
 
-BOOL LLComboBox::remove(S32 index)
+bool LLComboBox::remove(S32 index)
 {
 	if (index < mList->getItemCount())
 	{
 		mList->deleteSingleItem(index);
 		setLabel(getSelectedItemLabel());
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 // Keyboard focus lost.
@@ -905,7 +905,7 @@ void LLComboBox::onTextEntry(LLLineEditor* line_editor)
 	if (key == KEY_BACKSPACE || 
 		key == KEY_DELETE)
 	{
-		if (mList->selectItemByLabel(line_editor->getText(), FALSE))
+		if (mList->selectItemByLabel(line_editor->getText(), false))
 		{
 			line_editor->setTentative(false);
 			mLastSelectedIndex = mList->getFirstSelectedIndex();
@@ -986,12 +986,12 @@ void LLComboBox::updateSelection()
 		prearrangeList(mTextEntry->getText());
 	}
 
-	if (mList->selectItemByLabel(full_string, FALSE))
+	if (mList->selectItemByLabel(full_string, false))
 	{
 		mTextEntry->setTentative(false);
 		mLastSelectedIndex = mList->getFirstSelectedIndex();
 	}
-	else if (mList->selectItemByPrefix(left_wstring, FALSE))
+	else if (mList->selectItemByPrefix(left_wstring, false))
 	{
 		LLWString selected_item = utf8str_to_wstring(getSelectedItemLabel());
 		LLWString wtext = left_wstring + selected_item.substr(left_wstring.size(), selected_item.size());
@@ -1167,9 +1167,9 @@ LLUUID LLComboBox::getCurrentID() const
 {
 	return mList->getStringUUIDSelectedItem();
 }
-BOOL LLComboBox::setSelectedByValue(const LLSD& value, BOOL selected)
+bool LLComboBox::setSelectedByValue(const LLSD& value, bool selected)
 {
-	BOOL found = mList->setSelectedByValue(value, selected);
+	bool found = mList->setSelectedByValue(value, selected);
 	if (found)
 	{
 		setLabel(getSelectedItemLabel());

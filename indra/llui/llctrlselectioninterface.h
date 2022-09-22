@@ -64,7 +64,7 @@ public:
 
 			BOOL	selectByValue(const LLSD value);
 			BOOL	deselectByValue(const LLSD value);
-	virtual BOOL	setSelectedByValue(const LLSD& value, BOOL selected) = 0;
+	virtual bool	setSelectedByValue(const LLSD& value, bool selected) = 0;
 	virtual LLSD	getSelectedValue() = 0;
 
 	virtual BOOL	isSelected(const LLSD& value) const = 0;

@@ -224,7 +224,7 @@ public:
 
 	// Match item by value.asString(), which should work for string, integer, uuid.
 	// Returns FALSE if not found.
-	BOOL			setSelectedByValue(const LLSD& value, BOOL selected);
+	bool			setSelectedByValue(const LLSD& value, bool selected);
 
 	BOOL			isSorted() const { return mSorted; }
 
@@ -244,7 +244,7 @@ public:
 // [/SL:KB]
 	void			deleteItems(const LLSD& sd);
 	void 			deleteSelectedItems();
-	void			deselectAllItems(BOOL no_commit_on_change = FALSE);	// by default, go ahead and commit on selection change
+	void			deselectAllItems(bool no_commit_on_change = false);	// by default, go ahead and commit on selection change
 
 	void			clearHighlightedItems();
 	
@@ -277,11 +277,11 @@ public:
 	// one of which can be selected at a time.
 	virtual LLScrollListItem* addSimpleElement(const std::string& value, EAddPosition pos = ADD_BOTTOM, const LLSD& id = LLSD());
 
-	BOOL			selectItemByLabel( const std::string& item, BOOL case_sensitive = TRUE, S32 column = 0 );		// FALSE if item not found
-	BOOL			selectItemByPrefix(const std::string& target, BOOL case_sensitive = TRUE);
-	BOOL			selectItemByPrefix(const LLWString& target, BOOL case_sensitive = TRUE);
+	bool			selectItemByLabel( const std::string& item, bool case_sensitive = true, S32 column = 0 );		// false if item not found
+	bool			selectItemByPrefix(const std::string& target, bool case_sensitive = true);
+	bool			selectItemByPrefix(const LLWString& target, bool case_sensitive = true);
 	// <FS:Ansariel> Allow selection by substring match
-	BOOL			selectItemByStringMatch(const LLWString& target, bool prefix_match, BOOL case_sensitive = TRUE);
+	bool			selectItemByStringMatch(const LLWString& target, bool prefix_match, bool case_sensitive = true);
 	// </FS:Ansariel>
 	LLScrollListItem*  getItemByLabel( const std::string& item, BOOL case_sensitive = TRUE, S32 column = 0 );
 	const std::string	getSelectedItemLabel(S32 column = 0) const;

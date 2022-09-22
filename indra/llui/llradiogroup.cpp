@@ -391,7 +391,7 @@ LLUUID	LLRadioGroup::getCurrentID() const
 	return LLUUID::null;
 }
 
-BOOL	LLRadioGroup::setSelectedByValue(const LLSD& value, BOOL selected)
+bool	LLRadioGroup::setSelectedByValue(const LLSD& value, bool selected)
 {
 	S32 idx = 0;
 	for (button_list_t::const_iterator iter = mRadioButtons.begin();
@@ -400,12 +400,12 @@ BOOL	LLRadioGroup::setSelectedByValue(const LLSD& value, BOOL selected)
 		if((*iter)->getPayload().asString() == value.asString())
 		{
 			setSelectedIndex(idx);
-			return TRUE;
+			return true;
 		}
 		idx++;
 	}
 
-	return FALSE;
+	return false;
 }
 
 LLSD	LLRadioGroup::getSelectedValue()

@@ -1388,7 +1388,7 @@ void LLScrollListCtrl::selectNextItem( BOOL extend_selection)
 
 
 
-void LLScrollListCtrl::deselectAllItems(BOOL no_commit_on_change)
+void LLScrollListCtrl::deselectAllItems(bool no_commit_on_change)
 {
 	item_list::iterator iter;
 	for (iter = mItemList.begin(); iter != mItemList.end(); iter++)
@@ -1435,9 +1435,9 @@ LLScrollListItem* LLScrollListCtrl::addSeparator(EAddPosition pos)
 // Selects first enabled item of the given name.
 // Returns false if item not found.
 // Calls getItemByLabel in order to combine functionality
-BOOL LLScrollListCtrl::selectItemByLabel(const std::string& label, BOOL case_sensitive, S32 column/* = 0*/)
+bool LLScrollListCtrl::selectItemByLabel(const std::string& label, bool case_sensitive, S32 column/* = 0*/)
 {
-	deselectAllItems(TRUE); 	// ensure that no stale items are selected, even if we don't find a match
+	deselectAllItems(true); 	// ensure that no stale items are selected, even if we don't find a match
 	LLScrollListItem* item = getItemByLabel(label, case_sensitive, column);
 
 	bool found = NULL != item;
@@ -1485,23 +1485,23 @@ LLScrollListItem* LLScrollListCtrl::getItemByLabel(const std::string& label, BOO
 }
 
 
-BOOL LLScrollListCtrl::selectItemByPrefix(const std::string& target, BOOL case_sensitive)
+bool LLScrollListCtrl::selectItemByPrefix(const std::string& target, bool case_sensitive)
 {
 	return selectItemByPrefix(utf8str_to_wstring(target), case_sensitive);
 }
 
 // Selects first enabled item that has a name where the name's first part matched the target string.
 // Returns false if item not found.
-BOOL LLScrollListCtrl::selectItemByPrefix(const LLWString& target, BOOL case_sensitive)
+bool LLScrollListCtrl::selectItemByPrefix(const LLWString& target, bool case_sensitive)
 // <FS:Ansariel> Allow selection by substring match
 {
 	return selectItemByStringMatch(target, true, case_sensitive);
 }
 
-BOOL LLScrollListCtrl::selectItemByStringMatch(const LLWString& target, bool prefix_match, BOOL case_sensitive)
+bool LLScrollListCtrl::selectItemByStringMatch(const LLWString& target, bool prefix_match, bool case_sensitive)
 // </FS:Ansariel>
 {
-	BOOL found = FALSE;
+	bool found = false;
 
 	LLWString target_trimmed( target );
 	S32 target_len = target_trimmed.size();
@@ -1515,11 +1515,11 @@ BOOL LLScrollListCtrl::selectItemByStringMatch(const LLWString& target, bool pre
 			LLScrollListItem* item = *iter;
 			// Only select enabled items with matching names
 			LLScrollListCell* cellp = item->getColumn(getSearchColumn());
-			BOOL select = cellp ? item->getEnabled() && ('\0' == cellp->getValue().asString()[0]) : FALSE;
+			bool select = cellp ? item->getEnabled() && ('\0' == cellp->getValue().asString()[0]) : false;
 			if (select)
 			{
 				selectItem(item, -1);
-				found = TRUE;
+				found = true;
 				break;
 			}
 		}
@@ -1553,7 +1553,7 @@ BOOL LLScrollListCtrl::selectItemByStringMatch(const LLWString& target, bool pre
 			
 			// <FS:Ansariel> Allow selection by substring match
 			//BOOL select = item->getEnabled() && trimmed_label.compare(0, target_trimmed.size(), target_trimmed) == 0;
-			BOOL select;
+			bool select;
 			if (prefix_match)
 			{
 				select = item->getEnabled() && trimmed_label.compare(0, target_trimmed.size(), target_trimmed) == 0;
@@ -1570,7 +1570,7 @@ BOOL LLScrollListCtrl::selectItemByStringMatch(const LLWString& target, bool pre
 				S32 offset = item_label.find(target_trimmed);
 				cellp->highlightText(offset, target_trimmed.size());
 				selectItem(item, -1);
-				found = TRUE;
+				found = true;
 				break;
 			}
 		}
@@ -1603,7 +1603,7 @@ U32 LLScrollListCtrl::searchItems(const LLWString& substring, bool case_sensitiv
     }
     else
     {
-        deselectAllItems(TRUE);
+        deselectAllItems(true);
         if (!case_sensitive)
         {
             // do comparisons in lower case
@@ -1699,11 +1699,11 @@ BOOL LLScrollListCtrl::selectByID( const LLUUID& id )
 	return selectByValue( LLSD(id) );
 }
 
-BOOL LLScrollListCtrl::setSelectedByValue(const LLSD& value, BOOL selected)
+bool LLScrollListCtrl::setSelectedByValue(const LLSD& value, bool selected)
 {
-	BOOL found = FALSE;
+	bool found = false;
 
-	if (selected && !mAllowMultipleSelection) deselectAllItems(TRUE);
+	if (selected && !mAllowMultipleSelection) deselectAllItems(true);
 
 	item_list::iterator iter;
 	for (iter = mItemList.begin(); iter != mItemList.end(); iter++)
@@ -1717,12 +1717,12 @@ BOOL LLScrollListCtrl::setSelectedByValue(const LLSD& value, BOOL selected)
                 {
                     LLSD::Binary data1 = value.asBinary();
                     LLSD::Binary data2 = item->getValue().asBinary();
-                    found = std::equal(data1.begin(), data1.end(), data2.begin()) ? TRUE : FALSE;
+                    found = std::equal(data1.begin(), data1.end(), data2.begin()) ? true : false;
                 }
             }
             else
             {
-                found = item->getValue().asString() == value.asString() ? TRUE : FALSE;
+                found = item->getValue().asString() == value.asString() ? true : false;
             }
 
             if (found)
@@ -2155,7 +2155,7 @@ BOOL LLScrollListCtrl::selectItemAt(S32 x, S32 y, MASK mask)
 			}
 			else
 			{
-				deselectAllItems(TRUE);
+				deselectAllItems(true);
 				selectItem(hit_item, getColumnIndexFromOffset(x));
 			}
 		}
@@ -2176,7 +2176,7 @@ BOOL LLScrollListCtrl::selectItemAt(S32 x, S32 y, MASK mask)
 	else
 	{
 		//mLastSelected = NULL;
-		//deselectAllItems(TRUE);
+		//deselectAllItems(true);
 	}
 
 	return selection_changed;
@@ -2900,7 +2900,7 @@ void LLScrollListCtrl::selectItem(LLScrollListItem* itemp, S32 cell, BOOL select
 		}
 		if (select_single_item)
 		{
-			deselectAllItems(TRUE);
+			deselectAllItems(true);
 		}
 		itemp->setSelected(TRUE);
         switch (mSelectionType)

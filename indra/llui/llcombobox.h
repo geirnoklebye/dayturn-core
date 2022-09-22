@@ -140,14 +140,14 @@ public:
 	LLScrollListItem*	add(const std::string& name, void* userdata, EAddPosition pos = ADD_BOTTOM, BOOL enabled = TRUE);
 	LLScrollListItem*	add(const std::string& name, LLSD value, EAddPosition pos = ADD_BOTTOM, BOOL enabled = TRUE);
 	LLScrollListItem*	addSeparator(EAddPosition pos = ADD_BOTTOM);
-	BOOL			remove( S32 index );	// remove item by index, return TRUE if found and removed
+	bool			remove( S32 index );	// remove item by index, return TRUE if found and removed
 	void			removeall() { clearRows(); }
 	bool			itemExists(const std::string& name);
 
 	void			sortByName(BOOL ascending = TRUE); // Sort the entries in the combobox by name
 
 	// Select current item by name using selectItemByLabel.  Returns FALSE if not found.
-	BOOL			setSimple(const LLStringExplicit& name);
+	bool			setSimple(const LLStringExplicit& name);
 	// Get name of current item. Returns an empty string if not found.
 	const std::string	getSimple() const;
 	// Get contents of column x of selected row
@@ -160,7 +160,7 @@ public:
 	// Updates the combobox label to match the selected list item.
 	void			updateLabel();
 
-	BOOL			remove(const std::string& name);	// remove item "name", return TRUE if found and removed
+	bool			remove(const std::string& name);	// remove item "name", return TRUE if found and removed
 	
 	BOOL			setCurrentByIndex( S32 index );
 	S32				getCurrentIndex() const;
@@ -193,7 +193,7 @@ public:
 	virtual S32		getFirstSelectedIndex() const		{ return getCurrentIndex(); }
 	virtual BOOL	setCurrentByID( const LLUUID& id );
 	virtual LLUUID	getCurrentID() const;				// LLUUID::null if no items in menu
-	virtual BOOL	setSelectedByValue(const LLSD& value, BOOL selected);
+	virtual bool	setSelectedByValue(const LLSD& value, bool selected);
 	virtual LLSD	getSelectedValue();
 	virtual BOOL	isSelected(const LLSD& value) const;
 	virtual BOOL	operateOnSelection(EOperation op);
