@@ -4174,7 +4174,7 @@ LLContextMenu::LLContextMenu(const Params& p)
 	mHoveredAnyItem(false),
 	mHoverItem(NULL)
 {
-	//setBackgroundVisible(TRUE);
+	//setBackgroundVisible(true);
 }
 
 void LLContextMenu::setVisible(bool visible)

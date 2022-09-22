@@ -136,7 +136,7 @@ private:
 
 	LLScrollbar* mScrollbar[ORIENTATION_COUNT];
 	S32			mSize;
-	BOOL		mIsOpaque;
+	bool		mIsOpaque;
 	LLUIColor	mBackgroundColor;
 	LLRect		mInnerRect;
 	LLViewBorder* mBorder;

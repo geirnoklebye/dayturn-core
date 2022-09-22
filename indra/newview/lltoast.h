@@ -148,7 +148,7 @@ public:
 	//
 	virtual void setVisible(bool show);
 
-	/*virtual*/ void setBackgroundOpaque(BOOL b);
+	/*virtual*/ void setBackgroundOpaque(bool b);
 	//
 	virtual void hide();
 

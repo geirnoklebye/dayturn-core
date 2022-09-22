@@ -459,7 +459,7 @@ public:
 	// background colors
 	void setBackgroundColor( const LLUIColor& color ) { mBackgroundColor = color; }
 	const LLUIColor& getBackgroundColor() const { return mBackgroundColor; }
-	void setBackgroundVisible( BOOL b )	{ mBgVisible = b; }
+	void setBackgroundVisible( bool b )	{ mBgVisible = b; }
 	void setCanTearOff(BOOL tear_off);
 
 	// add a separator to this menu
@@ -595,7 +595,7 @@ private:
 	BOOL			mAlwaysShowMenu;
 
 	LLUIColor		mBackgroundColor;
-	BOOL			mBgVisible;
+	bool			mBgVisible;
 	LLHandle<LLView> mParentMenuItem;
 	LLUIString		mLabel;
 	BOOL mDropShadowed; 	//  Whether to drop shadow 

@@ -91,8 +91,8 @@ LLToastAlertPanel::LLToastAlertPanel( LLNotificationPtr notification, bool modal
 	S32 edit_text_max_chars = 0;
 	bool is_password = false;
 
-	LLToastPanel::setBackgroundVisible(FALSE);
-	LLToastPanel::setBackgroundOpaque(TRUE);
+	LLToastPanel::setBackgroundVisible(false);
+	LLToastPanel::setBackgroundOpaque(true);
 
 
 	typedef std::vector<std::pair<std::string, std::string> > options_t;

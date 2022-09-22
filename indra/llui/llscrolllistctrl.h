@@ -281,8 +281,6 @@ public:
 	BOOL			selectItemByPrefix(const std::string& target, BOOL case_sensitive = TRUE);
 	BOOL			selectItemByPrefix(const LLWString& target, BOOL case_sensitive = TRUE);
 	// <FS:Ansariel> Allow selection by substring match
-	BOOL			selectItemBySubstring(const std::string& target, BOOL case_sensitive = TRUE);
-	BOOL			selectItemBySubstring(const LLWString& target, BOOL case_sensitive = TRUE);
 	BOOL			selectItemByStringMatch(const LLWString& target, bool prefix_match, BOOL case_sensitive = TRUE);
 	// </FS:Ansariel>
 	LLScrollListItem*  getItemByLabel( const std::string& item, BOOL case_sensitive = TRUE, S32 column = 0 );
@@ -328,8 +326,8 @@ public:
 	void setHighlightedColor(const LLColor4 &c) { mHighlightedColor = c; }
 	void setFgDisableColor(const LLColor4 &c)	{ mFgDisabledColor = c; }
 
-	void setBackgroundVisible(BOOL b)			{ mBackgroundVisible = b; }
-	void setDrawStripes(BOOL b)					{ mDrawStripes = b; }
+	void setBackgroundVisible(bool b)			{ mBackgroundVisible = b; }
+	void setDrawStripes(bool b)					{ mDrawStripes = b; }
 	void setColumnPadding(const S32 c)			{ mColumnPadding = c; }
 	S32  getColumnPadding() const				{ return mColumnPadding; }
 	void setRowPadding(const S32 c)				{ mColumnPadding = c; }
@@ -499,7 +497,7 @@ private:
 	
 	void            updateLineHeightInsert(LLScrollListItem* item);
 	void			reportInvalidInput();
-	BOOL			isRepeatedChars(const LLWString& string) const;
+	bool			isRepeatedChars(const LLWString& string) const;
 	void			selectItem(LLScrollListItem* itemp, S32 cell, BOOL single_select = TRUE);
 	void			deselectItem(LLScrollListItem* itemp);
 	void			commitIfChanged();
@@ -555,8 +553,8 @@ private:
 	S32             mColumnPadding;
 	S32             mRowPadding;
 
-	BOOL			mBackgroundVisible;
-	BOOL			mDrawStripes;
+	bool			mBackgroundVisible;
+	bool			mDrawStripes;
 
 	LLUIColor		mBgWriteableColor;
 	LLUIColor		mBgReadOnlyColor;

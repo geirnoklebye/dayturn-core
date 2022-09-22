@@ -189,8 +189,8 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 	mLocationLength(0),
 	mShowFavorites(false)
 {
-	setBackgroundVisible(FALSE);
-	setBackgroundOpaque(TRUE);
+	setBackgroundVisible(false);
+	setBackgroundOpaque(true);
 
 	mPasswordModified = FALSE;
 

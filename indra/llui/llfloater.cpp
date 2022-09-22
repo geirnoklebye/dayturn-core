@@ -283,7 +283,7 @@ LLFloater::LLFloater(const LLSD& key, const LLFloater::Params& p)
 	setMouseOpaque(TRUE);
 	
 	// Floaters always draw their background, unlike every other panel.
-	setBackgroundVisible(TRUE);
+	setBackgroundVisible(true);
 
 	// Floaters start not minimized.  When minimized, they save their
 	// prior rectangle to be used on restore.

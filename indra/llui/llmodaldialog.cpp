@@ -48,8 +48,8 @@ LLModalDialog::LLModalDialog( const LLSD& key, BOOL modal )
 		setCanClose(FALSE);
 	}
 	setVisible(false);
-	setBackgroundVisible(TRUE);
-	setBackgroundOpaque(TRUE);
+	setBackgroundVisible(true);
+	setBackgroundOpaque(true);
 	centerOnScreen(); // default position
 	mCloseSignal.connect(boost::bind(&LLModalDialog::stopModal, this));
 }

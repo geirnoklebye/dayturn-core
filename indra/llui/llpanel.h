@@ -143,10 +143,10 @@ public:
 	LLPointer<LLUIImage> getTransparentImage() const { return mBgAlphaImage; }
 	LLColor4		getBackgroundImageOverlay() { return mBgOpaqueImageOverlay; }
 	LLColor4		getTransparentImageOverlay() { return mBgAlphaImageOverlay; }
-	void			setBackgroundVisible( BOOL b )	{ mBgVisible = b; }
-	BOOL			isBackgroundVisible() const { return mBgVisible; }
-	void			setBackgroundOpaque(BOOL b)		{ mBgOpaque = b; }
-	BOOL			isBackgroundOpaque() const { return mBgOpaque; }
+	void			setBackgroundVisible( bool b )	{ mBgVisible = b; }
+	bool			isBackgroundVisible() const { return mBgVisible; }
+	void			setBackgroundOpaque(bool b)		{ mBgOpaque = b; }
+	bool			isBackgroundOpaque() const { return mBgOpaque; }
 	void			setDefaultBtn(LLButton* btn = NULL);
 	void			setDefaultBtn(const std::string& id);
 	void			updateDefaultBtn();
@@ -238,8 +238,8 @@ protected:
 	std::string		mXMLFilename;
 	
 private:
-	BOOL			mBgVisible;				// any background at all?
-	BOOL			mBgOpaque;				// use opaque color or image
+	bool			mBgVisible;				// any background at all?
+	bool			mBgOpaque;				// use opaque color or image
 	LLUIColor		mBgOpaqueColor;
 	LLUIColor		mBgAlphaColor;
 	LLUIColor		mBgOpaqueImageOverlay;

@@ -519,7 +519,7 @@ void LLToast::updateHoveredState()
 	}
 }
 
-void LLToast::setBackgroundOpaque(BOOL b)
+void LLToast::setBackgroundOpaque(bool b)
 {
 	if(mWrapperPanel && !isBackgroundVisible())
 	{

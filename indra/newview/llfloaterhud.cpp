@@ -55,7 +55,7 @@ LLFloaterHUD::LLFloaterHUD(const LLSD& key)
 	}
 	
 	// Opaque background since we never get the focus
-	setBackgroundOpaque(TRUE);
+	setBackgroundOpaque(true);
 }
 
 bool LLFloaterHUD::postBuild()
