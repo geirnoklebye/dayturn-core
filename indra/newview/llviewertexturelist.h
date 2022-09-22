@@ -137,7 +137,9 @@ public:
 	static bool canUseDynamicTextureMemory();
 	// </FS:Ansariel>
 	
+    // Local UI images
 	void doPreloadImages();
+    // Network images. Needs caps and cache to work
 	void doPrefetchImages();
 
 	void clearFetchingRequests();
