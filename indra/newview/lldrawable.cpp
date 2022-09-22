@@ -1727,25 +1727,25 @@ const LLVector3	LLDrawable::getPositionAgent() const
 	}
 }
 
-BOOL LLDrawable::isAnimating() const
+bool LLDrawable::isAnimating() const
 {
 	if (!getVObj())
 	{
-		return TRUE;
+		return true;
 	}
 
 	if (getScale() != mVObjp->getScale())
 	{
-		return TRUE;
+		return true;
 	}
 
 	if (mVObjp->getPCode() == LLViewerObject::LL_VO_PART_GROUP)
 	{
-		return TRUE;
+		return true;
 	}
 	if (mVObjp->getPCode() == LLViewerObject::LL_VO_HUD_PART_GROUP)
 	{
-		return TRUE;
+		return true;
 	}
 
 	/*if (!isRoot() && !mVObjp->getAngularVelocity().isExactlyZero())
@@ -1753,7 +1753,7 @@ BOOL LLDrawable::isAnimating() const
 		return TRUE;
 	}*/
 
-	return FALSE;
+	return false;
 }
 
 void LLDrawable::updateFaceSize(S32 idx)

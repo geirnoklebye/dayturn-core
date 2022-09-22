@@ -4618,7 +4618,7 @@ F32 LLVOVolume::getBinRadius()
 
 	const LLVector4a* ext = mDrawable->getSpatialExtents();
 	
-	BOOL shrink_wrap = mDrawable->isAnimating();
+	bool shrink_wrap = mDrawable->isAnimating();
 	BOOL alpha_wrap = FALSE;
 
 	if (!isHUDAttachment())
@@ -5778,8 +5778,6 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 #endif
 
 	{
-        LL_PROFILE_ZONE_NAMED("rebuildGeom - face list");
-
 		//get all the faces into a list
 		for (LLSpatialGroup::element_iter drawable_iter = group->getDataBegin(); 
              drawable_iter != group->getDataEnd(); ++drawable_iter)

@@ -69,7 +69,7 @@ public:
 	void setGroup(S32 group) { mGroup = group; }
 	void setOriginalPosition(LLVector3 &position);
 	void setAttachmentVisibility(BOOL visible);
-	void setIsHUDAttachment(BOOL is_hud) { mIsHUDAttachment = is_hud; }
+	void setIsHUDAttachment(bool is_hud) { mIsHUDAttachment = is_hud; }
 	BOOL getIsHUDAttachment() const { return mIsHUDAttachment; }
 
 	bool isAnimatable() const { return false; }

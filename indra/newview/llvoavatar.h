@@ -485,7 +485,7 @@ public:
 	U32 		renderRigid();
 	U32 		renderSkinned();
 	F32			getLastSkinTime() { return mLastSkinTime; }
-	U32 		renderTransparent(BOOL first_pass);
+	U32 		renderTransparent(bool first_pass);
 	void 		renderCollisionVolumes();
 	void		renderBones(const std::string &selected_joint = std::string());
 	void		renderJoints();
@@ -822,11 +822,11 @@ public:
 	// True if we are computing our appearance via local compositing
 	// instead of baked textures, as for example during wearable
 	// editing or when waiting for a subsequent server rebake.
-	/*virtual*/ BOOL	isUsingLocalAppearance() const { return mUseLocalAppearance; }
+	/*virtual*/ bool	isUsingLocalAppearance() const { return mUseLocalAppearance; }
 
 	// True if we are currently in appearance editing mode. Often but
 	// not always the same as isUsingLocalAppearance().
-	/*virtual*/ BOOL	isEditingAppearance() const { return mIsEditingAppearance; }
+	/*virtual*/ bool	isEditingAppearance() const { return mIsEditingAppearance; }
 
 	// FIXME review isUsingLocalAppearance uses, some should be isEditing instead.
 
@@ -834,8 +834,8 @@ private:
 	BOOL			mAppearanceAnimating;
 	LLFrameTimer	mAppearanceMorphTimer;
 	F32				mLastAppearanceBlendTime;
-	BOOL			mIsEditingAppearance; // flag for if we're actively in appearance editing mode
-	BOOL			mUseLocalAppearance; // flag for if we're using a local composite
+	bool			mIsEditingAppearance; // flag for if we're actively in appearance editing mode
+	bool			mUseLocalAppearance; // flag for if we're using a local composite
 
 	//--------------------------------------------------------------------
 	// Visibility

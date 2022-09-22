@@ -741,8 +741,8 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mLoadedCallbackTextures(0),
 	mRenderUnloadedAvatar(LLCachedControl<bool>(gSavedSettings, "RenderUnloadedAvatar", false)),
 	mLastRezzedStatus(-1),
-	mIsEditingAppearance(FALSE),
-	mUseLocalAppearance(FALSE),
+	mIsEditingAppearance(false),
+	mUseLocalAppearance(false),
 	mLastUpdateRequestCOFVersion(-1),
 	mLastUpdateReceivedCOFVersion(-1),
 	mCachedMuteListUpdateTime(0),
@@ -5311,7 +5311,7 @@ U32 LLVOAvatar::renderSkinned()
 		bool should_alpha_mask = shouldAlphaMask();
 		LLGLState test(GL_ALPHA_TEST, should_alpha_mask);
 		
-		BOOL first_pass = TRUE;
+		bool first_pass = true;
 		if (!LLDrawPoolAvatar::sSkipOpaque)
 		{
 			if (isUIAvatar() && mIsDummy)
@@ -5321,7 +5321,7 @@ U32 LLVOAvatar::renderSkinned()
 				{
 					num_indices += hair_mesh->render(mAdjustedPixelArea, first_pass, mIsDummy);
 				}
-				first_pass = FALSE;
+				first_pass = false;
 			}
 			if (!isSelf() || gAgent.needsRenderHead() || LLPipeline::sShadowRender)
 			{
@@ -5333,7 +5333,7 @@ U32 LLVOAvatar::renderSkinned()
 					{
 						num_indices += head_mesh->render(mAdjustedPixelArea, first_pass, mIsDummy);
 					}
-					first_pass = FALSE;
+					first_pass = false;
 				}
 			}
 			if (isTextureVisible(TEX_UPPER_BAKED) || (getOverallAppearance() == AOA_JELLYDOLL && !isControlAvatar()) || isUIAvatar())
@@ -5343,7 +5343,7 @@ U32 LLVOAvatar::renderSkinned()
 				{
 					num_indices += upper_mesh->render(mAdjustedPixelArea, first_pass, mIsDummy);
 				}
-				first_pass = FALSE;
+				first_pass = false;
 			}
 			
 			if (isTextureVisible(TEX_LOWER_BAKED) || (getOverallAppearance() == AOA_JELLYDOLL && !isControlAvatar()) || isUIAvatar())
@@ -5353,7 +5353,7 @@ U32 LLVOAvatar::renderSkinned()
 				{
 					num_indices += lower_mesh->render(mAdjustedPixelArea, first_pass, mIsDummy);
 				}
-				first_pass = FALSE;
+				first_pass = false;
 			}
 		}
 
@@ -5367,7 +5367,7 @@ U32 LLVOAvatar::renderSkinned()
 	return num_indices;
 }
 
-U32 LLVOAvatar::renderTransparent(BOOL first_pass)
+U32 LLVOAvatar::renderTransparent(bool first_pass)
 {
 	U32 num_indices = 0;
 	if( isWearingWearableType( LLWearableType::WT_SKIRT ) && (isUIAvatar() || isTextureVisible(TEX_SKIRT_BAKED)) )
@@ -5376,9 +5376,9 @@ U32 LLVOAvatar::renderTransparent(BOOL first_pass)
 		LLViewerJoint* skirt_mesh = getViewerJoint(MESH_ID_SKIRT);
 		if (skirt_mesh)
 		{
-			num_indices += skirt_mesh->render(mAdjustedPixelArea, FALSE);
+			num_indices += skirt_mesh->render(mAdjustedPixelArea, false);
 		}
-		first_pass = FALSE;
+		first_pass = false;
         gGL.flush();
 	}
 
@@ -5396,7 +5396,7 @@ U32 LLVOAvatar::renderTransparent(BOOL first_pass)
 			{
 				num_indices += eyelash_mesh->render(mAdjustedPixelArea, first_pass, mIsDummy);
 			}
-			first_pass = FALSE;
+			first_pass = false;
 		}
 		if (isTextureVisible(TEX_HAIR_BAKED) && (getOverallAppearance() != AOA_JELLYDOLL))
 		{
@@ -5405,7 +5405,7 @@ U32 LLVOAvatar::renderTransparent(BOOL first_pass)
 			{
 				num_indices += hair_mesh->render(mAdjustedPixelArea, first_pass, mIsDummy);
 			}
-			first_pass = FALSE;
+			first_pass = false;
 		}
 		if (LLPipeline::sImpostorRender)
 		{
@@ -5447,11 +5447,11 @@ U32 LLVOAvatar::renderRigid()
 		LLViewerJoint* eyeball_right = getViewerJoint(MESH_ID_EYEBALL_RIGHT);
 		if (eyeball_left)
 		{
-			num_indices += eyeball_left->render(mAdjustedPixelArea, TRUE, mIsDummy);
+			num_indices += eyeball_left->render(mAdjustedPixelArea, true, mIsDummy);
 		}
 		if(eyeball_right)
 		{
-			num_indices += eyeball_right->render(mAdjustedPixelArea, TRUE, mIsDummy);
+			num_indices += eyeball_right->render(mAdjustedPixelArea, true, mIsDummy);
 		}
 	}
 

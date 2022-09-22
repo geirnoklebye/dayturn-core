@@ -109,8 +109,8 @@ public:
 public:
 	virtual bool 	isSelf() const { return false; } // True if this avatar is for this viewer's agent
 	virtual bool	isValid() const;
-	virtual BOOL	isUsingLocalAppearance() const = 0;
-	virtual BOOL	isEditingAppearance() const = 0;
+	virtual bool	isUsingLocalAppearance() const = 0;
+	virtual bool	isEditingAppearance() const = 0;
 
 	bool isBuilt() const { return mIsBuilt; }
 
@@ -156,17 +156,17 @@ public:
 
 
 protected:
-	static BOOL			parseSkeletonFile(const std::string& filename, LLXmlTree& skeleton_xml_tree);
+	static bool			parseSkeletonFile(const std::string& filename, LLXmlTree& skeleton_xml_tree);
 	virtual void		buildCharacter();
-	virtual BOOL		loadAvatar();
+	virtual bool		loadAvatar();
 	virtual F32 getAvatarOffset();
 
-	BOOL				setupBone(const LLAvatarBoneInfo* info, LLJoint* parent, S32 &current_volume_num, S32 &current_joint_num);
-	BOOL				allocateCharacterJoints(U32 num);
-	BOOL				buildSkeleton(const LLAvatarSkeletonInfo *info);
+	bool				setupBone(const LLAvatarBoneInfo* info, LLJoint* parent, S32 &current_volume_num, S32 &current_joint_num);
+	bool				allocateCharacterJoints(U32 num);
+	bool				buildSkeleton(const LLAvatarSkeletonInfo *info);
 
 	void				clearSkeleton();
-	BOOL				mIsBuilt; // state of deferred character building
+	bool				mIsBuilt; // state of deferred character building
 	avatar_joint_list_t	mSkeleton;
 	LLVector3OverrideMap	mPelvisFixups;
     joint_alias_map_t   mJointAliasMap;
@@ -226,7 +226,7 @@ protected:
  **                    RENDERING
  **/
 public:
-	BOOL		mIsDummy; // for special views and animated object controllers; local to viewer
+	bool		mIsDummy; // for special views and animated object controllers; local to viewer
 
 	//--------------------------------------------------------------------
 	// Morph masks
@@ -280,7 +280,7 @@ protected:
 public:
 	void			setClothesColor(LLAvatarAppearanceDefines::ETextureIndex te, const LLColor4& new_color);
 	LLColor4		getClothesColor(LLAvatarAppearanceDefines::ETextureIndex te);
-	static BOOL		teToColorParams(LLAvatarAppearanceDefines::ETextureIndex te, U32 *param_name);
+	static bool		teToColorParams(LLAvatarAppearanceDefines::ETextureIndex te, U32 *param_name);
 
 	//--------------------------------------------------------------------
 	// Global colors
@@ -357,7 +357,7 @@ public:
   	S32			mNumCollisionVolumes;
 	LLAvatarJointCollisionVolume* mCollisionVolumes;
 protected:
-	BOOL		allocateCollisionVolumes(U32 num);
+	bool		allocateCollisionVolumes(U32 num);
 
 /**                    Physics
  **                                                                            **
@@ -412,8 +412,8 @@ protected:
 		struct LLAvatarAttachmentInfo
 		{
 			LLAvatarAttachmentInfo()
-				: mGroup(-1), mAttachmentID(-1), mPieMenuSlice(-1), mVisibleFirstPerson(FALSE),
-				  mIsHUDAttachment(FALSE), mHasPosition(FALSE), mHasRotation(FALSE) {}
+				: mGroup(-1), mAttachmentID(-1), mPieMenuSlice(-1), mVisibleFirstPerson(false),
+				  mIsHUDAttachment(false), mHasPosition(false), mHasRotation(false) {}
 			std::string mName;
 			std::string mJointName;
 			LLVector3 mPosition;
@@ -421,10 +421,10 @@ protected:
 			S32 mGroup;
 			S32 mAttachmentID;
 			S32 mPieMenuSlice;
-			BOOL mVisibleFirstPerson;
-			BOOL mIsHUDAttachment;
-			BOOL mHasPosition;
-			BOOL mHasRotation;
+			bool mVisibleFirstPerson;
+			bool mIsHUDAttachment;
+			bool mHasPosition;
+			bool mHasRotation;
 		};
 		typedef std::vector<LLAvatarAttachmentInfo*> attachment_info_list_t;
 		attachment_info_list_t mAttachmentInfoList;
@@ -442,11 +442,11 @@ protected:
 		struct LLAvatarMorphInfo
 		{
 			LLAvatarMorphInfo()
-				: mInvert(FALSE) {}
+				: mInvert(false) {}
 			std::string mName;
 			std::string mRegion;
 			std::string mLayer;
-			BOOL mInvert;
+			bool mInvert;
 		};
 
 		typedef std::vector<LLAvatarMorphInfo*> morph_info_list_t;
@@ -457,10 +457,10 @@ protected:
 	class LLMaskedMorph
 	{
 	public:
-		LLMaskedMorph(LLVisualParam *morph_target, BOOL invert, std::string layer);
+		LLMaskedMorph(LLVisualParam *morph_target, bool invert, std::string layer);
 
 		LLVisualParam	*mMorphTarget;
-		BOOL				mInvert;
+		bool				mInvert;
 		std::string			mLayer;
 	};
 /**                    Support Classes

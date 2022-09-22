@@ -164,7 +164,7 @@ public:
 
 	BOOL isActive()	const							{ return isState(ACTIVE); }
 	BOOL isStatic() const							{ return !isActive(); }
-	BOOL isAnimating() const;
+	bool isAnimating() const;
 
 	virtual BOOL updateMove();
 	virtual void movePartition();

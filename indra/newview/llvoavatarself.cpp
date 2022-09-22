@@ -301,9 +301,9 @@ void LLVOAvatarSelf::markDead()
 	LLVOAvatar::markDead();
 }
 
-/*virtual*/ BOOL LLVOAvatarSelf::loadAvatar()
+/*virtual*/ bool LLVOAvatarSelf::loadAvatar()
 {
-	BOOL success = LLVOAvatar::loadAvatar();
+	bool success = LLVOAvatar::loadAvatar();
 
 	// set all parameters stored directly in the avatar to have
 	// the isSelfParam to be TRUE - this is used to prevent
@@ -315,7 +315,7 @@ void LLVOAvatarSelf::markDead()
 	{
 		if (param->getWearableType() != LLWearableType::WT_INVALID)
 		{
-			param->setIsDummy(TRUE);
+			param->setIsDummy(true);
 		}
 	}
 

@@ -218,7 +218,7 @@ void LLTexLayerParamAlpha::setAnimationTarget(F32 target_value)
 
 	mTargetWeight = target_value; 
 	setWeight(target_value); 
-	mIsAnimating = TRUE;
+	mIsAnimating = true;
 	if (mNext)
 	{
 		mNext->setAnimationTarget(target_value);
@@ -517,7 +517,7 @@ void LLTexLayerParamColor::setAnimationTarget(F32 target_value)
 	// set value first then set interpolating flag to ignore further updates
 	mTargetWeight = target_value; 
 	setWeight(target_value);
-	mIsAnimating = TRUE;
+	mIsAnimating = true;
 	if (mNext)
 	{
 		mNext->setAnimationTarget(target_value);

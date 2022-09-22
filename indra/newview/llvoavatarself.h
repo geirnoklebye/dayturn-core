@@ -59,7 +59,7 @@ public:
 	virtual void 			initInstance(); // Called after construction to initialize the class.
 	void					cleanup();
 protected:
-	/*virtual*/ BOOL		loadAvatar();
+	/*virtual*/ bool		loadAvatar();
 	BOOL					loadAvatarSelf();
 	BOOL					buildSkeletonSelf(const LLAvatarSkeletonInfo *info);
 	BOOL					buildMenus();
