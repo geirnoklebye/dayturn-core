@@ -1770,6 +1770,31 @@ bool LLAppViewer::doFrame()
 			pingMainloopTimeout("Main:End");
 		}
 	}
+
+	if (LLApp::isExiting())
+	{
+		// Save snapshot for next time, if we made it through initialization
+		if (STATE_STARTED == LLStartUp::getStartupState())
+		{
+			saveFinalSnapshot();
+		}
+
+		if (LLVoiceClient::instanceExists())
+		{
+			LLVoiceClient::getInstance()->terminate();
+		}
+
+		delete gServicePump;
+		gServicePump = NULL;
+
+		destroyMainloopTimeout();
+
+		LL_INFOS() << "Exiting main_loop" << LL_ENDL;
+	}
+
+    LL_PROFILER_FRAME_END
+
+	return ! LLApp::isRunning();
 }
 
 S32 LLAppViewer::updateTextureThreads(F32 max_time)
