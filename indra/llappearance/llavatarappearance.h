@@ -374,7 +374,7 @@ protected:
 		~LLAvatarXmlInfo();
 
 		bool 	parseXmlSkeletonNode(LLXmlTreeNode* root);
-		bool 	parseXmlMeshNodes(LLXmlTreeNode* root);
+		S32 	parseXmlMeshNodes(LLXmlTreeNode* root);
 		bool 	parseXmlColorNodes(LLXmlTreeNode* root);
 		bool 	parseXmlLayerNodes(LLXmlTreeNode* root);
 		bool 	parseXmlDriverNodes(LLXmlTreeNode* root);
