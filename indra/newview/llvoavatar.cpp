@@ -7168,17 +7168,17 @@ void LLVOAvatar::requestStopMotion( LLMotion* motion )
 // loadSkeletonNode(): loads <skeleton> node from XML tree
 //-----------------------------------------------------------------------------
 //virtual
-BOOL LLVOAvatar::loadSkeletonNode ()
+bool LLVOAvatar::loadSkeletonNode ()
 {
 	if (!LLAvatarAppearance::loadSkeletonNode())
 	{
-		return FALSE;
+		return false;
 	}
 	
     bool ignore_hud_joints = false;
     initAttachmentPoints(ignore_hud_joints);
 
-	return TRUE;
+	return true;
 }
 
 //-----------------------------------------------------------------------------

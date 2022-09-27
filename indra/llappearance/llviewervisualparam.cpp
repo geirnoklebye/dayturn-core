@@ -39,7 +39,7 @@
 LLViewerVisualParamInfo::LLViewerVisualParamInfo()
 	:
 	mWearableType( LLWearableType::WT_INVALID ),
-	mCrossWearable(FALSE),
+	mCrossWearable(false),
 	mCamDist( 0.5f ),
 	mCamAngle( 0.f ),
 	mCamElevation( 0.f ),
@@ -80,7 +80,7 @@ bool LLViewerVisualParamInfo::parseXml(LLXmlTreeNode *node)
 	}
 
 	static LLStdStringHandle cross_wearable_string = LLXmlTree::addAttributeString("cross_wearable");
-	if (!node->getFastAttributeBOOL(cross_wearable_string, mCrossWearable))
+	if (!node->getFastAttributebool(cross_wearable_string, mCrossWearable))
 	{
 		mCrossWearable = false;
 	}
@@ -166,14 +166,14 @@ bool LLViewerVisualParam::setInfo(LLViewerVisualParamInfo *info)
 //-----------------------------------------------------------------------------
 // parseData()
 //-----------------------------------------------------------------------------
-BOOL LLViewerVisualParam::parseData(LLXmlTreeNode *node)
+bool LLViewerVisualParam::parseData(LLXmlTreeNode *node)
 {
 	LLViewerVisualParamInfo* info = new LLViewerVisualParamInfo;
 
 	info->parseXml(node);
 	if (!setInfo(info))
-		return FALSE;
+		return false;
 	
-	return TRUE;
+	return true;
 }
 */

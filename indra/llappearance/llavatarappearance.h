@@ -71,9 +71,9 @@ public:
 	static void			cleanupClass();	// Cleanup data that's only init'd once per class.
 	virtual void 		initInstance(); // Called after construction to initialize the instance.
     S32					mInitFlags;
-	virtual BOOL		loadSkeletonNode();
-	BOOL				loadMeshNodes();
-	BOOL				loadLayersets();
+	virtual bool		loadSkeletonNode();
+	bool				loadMeshNodes();
+	bool				loadLayersets();
 
 
 /**                    Initialization
@@ -232,7 +232,7 @@ public:
 	// Morph masks
 	//--------------------------------------------------------------------
 public:
-	void 	addMaskedMorph(LLAvatarAppearanceDefines::EBakedTextureIndex index, LLVisualParam* morph_target, BOOL invert, std::string layer);
+	void 	addMaskedMorph(LLAvatarAppearanceDefines::EBakedTextureIndex index, LLVisualParam* morph_target, bool invert, std::string layer);
 	virtual void	applyMorphMask(U8* tex_data, S32 width, S32 height, S32 num_components, LLAvatarAppearanceDefines::EBakedTextureIndex index = LLAvatarAppearanceDefines::BAKED_NUM_INDICES) = 0;
 
 /**                    Rendering
@@ -373,12 +373,12 @@ protected:
 		LLAvatarXmlInfo();
 		~LLAvatarXmlInfo();
 
-		BOOL 	parseXmlSkeletonNode(LLXmlTreeNode* root);
-		BOOL 	parseXmlMeshNodes(LLXmlTreeNode* root);
-		BOOL 	parseXmlColorNodes(LLXmlTreeNode* root);
-		BOOL 	parseXmlLayerNodes(LLXmlTreeNode* root);
-		BOOL 	parseXmlDriverNodes(LLXmlTreeNode* root);
-		BOOL	parseXmlMorphNodes(LLXmlTreeNode* root);
+		bool 	parseXmlSkeletonNode(LLXmlTreeNode* root);
+		bool 	parseXmlMeshNodes(LLXmlTreeNode* root);
+		bool 	parseXmlColorNodes(LLXmlTreeNode* root);
+		bool 	parseXmlLayerNodes(LLXmlTreeNode* root);
+		bool 	parseXmlDriverNodes(LLXmlTreeNode* root);
+		bool	parseXmlMorphNodes(LLXmlTreeNode* root);
 
 		struct LLAvatarMeshInfo
 		{

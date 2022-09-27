@@ -49,7 +49,7 @@ public:
 
 protected:
 	S32			mWearableType;
-	BOOL		mCrossWearable;
+	bool		mCrossWearable;
 	std::string	mEditGroup;
 	F32			mCamDist;
 	F32			mCamAngle;		// degrees
@@ -80,7 +80,7 @@ public:
 	virtual LLViewerVisualParam* cloneParam(LLWearable* wearable) const = 0;
 	
 	// LLVisualParam Virtual functions
-	///*virtual*/ BOOL			parseData(LLXmlTreeNode* node);
+	///*virtual*/ bool			parseData(LLXmlTreeNode* node);
 
 	// New Virtual functions
 	virtual F32					getTotalDistortion() = 0;
@@ -103,7 +103,7 @@ public:
 	F32					getSimpleMin() const		{ return getInfo()->mSimpleMin; }
 	F32					getSimpleMax() const		{ return getInfo()->mSimpleMax; }
 
-	BOOL				getCrossWearable() const 	{ return getInfo()->mCrossWearable; }
+	bool				getCrossWearable() const 	{ return getInfo()->mCrossWearable; }
 
 protected:
 	LLViewerVisualParam(const LLViewerVisualParam& pOther);
