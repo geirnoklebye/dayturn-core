@@ -1366,7 +1366,7 @@ public:
 	virtual BOOL handleAcceleratorKey(KEY key, MASK mask);
     
     virtual void onFocusLost();
-    virtual void setFocus(BOOL b);
+    virtual void setFocus(bool b);
 };
 
 LLMenuItemBranchDownGL::LLMenuItemBranchDownGL( const Params& p) :
@@ -1529,7 +1529,7 @@ void LLMenuItemBranchDownGL::onFocusLost()
     setHighlight(FALSE);
 }
 
-void LLMenuItemBranchDownGL::setFocus(BOOL b)
+void LLMenuItemBranchDownGL::setFocus(bool b)
 {
     // needed for tab-based selection
     LLMenuItemBranchGL::setFocus(b);
