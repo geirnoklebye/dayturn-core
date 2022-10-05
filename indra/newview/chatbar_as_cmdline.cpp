@@ -73,7 +73,7 @@ class JCZdrop : public LLEventTimer
 public:
     bool mRunning;
     
-    JCZdrop(std::stack<LLViewerInventoryItem*> stack, LLUUID dest, std::string sFolder, std::string sUUID, bool package = false) : LLEventTimer(1.0), mRunning(FALSE)
+    JCZdrop(std::stack<LLViewerInventoryItem*> stack, LLUUID dest, std::string sFolder, std::string sUUID, bool package = false) : LLEventTimer(1.0), mRunning(false)
     {
         mPackage = package;
         instack = stack;
@@ -168,7 +168,7 @@ class JCZtake : public LLEventTimer
 public:
     bool mRunning;
 
-    JCZtake(const LLUUID& target, bool package = false, LLUUID destination = LLUUID::null, std::string dtarget = "") : LLEventTimer(0.66f), mTarget(target), mRunning(FALSE), mCountdown(5), mPackage(package), mPackageDest(destination)
+    JCZtake(const LLUUID& target, bool package = false, LLUUID destination = LLUUID::null, std::string dtarget = "") : LLEventTimer(0.66f), mTarget(target), mRunning(false), mCountdown(5), mPackage(package), mPackageDest(destination)
     {
         mFolderName = dtarget;
         if(mPackage)
@@ -499,11 +499,11 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
                 {
                     if (status == "on" )
                     {
-                        gSavedPerAccountSettings.setBOOL("UseAO",TRUE);
+                        gSavedPerAccountSettings.setbool("UseAO",true);
                     }
                     else if (status == "off" )
                     {
-                        gSavedPerAccountSettings.setBOOL("UseAO",FALSE);
+                        gSavedPerAccountSettings.setbool("UseAO",false);
                     }
                     else if (status == "sit" )
                     {
@@ -513,11 +513,11 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
                         {
                             if(status == "off")
                             {
-                                AOEngine::instance().setOverrideSits(tmp,TRUE);
+                                AOEngine::instance().setOverrideSits(tmp,true);
                             }
                             else if(status == "on")
                             {
-                                AOEngine::instance().setOverrideSits(tmp,FALSE);
+                                AOEngine::instance().setOverrideSits(tmp,false);
                             }
                         }
                         else
@@ -776,7 +776,7 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
                                 {
                                     report_to_nearby_chat("UUID entered is of an invalid length! (Hint: use the \"copy key\" button in the build menu.)");
                                 }
-                                else if (gObjectList.findObject(LLUUID(loldest)) == FALSE) 
+                                else if (gObjectList.findObject(LLUUID(loldest)) == 0) 
                                 {
                                     report_to_nearby_chat("Unable to locate object.  Please verify the object is rezzed and in view, and that the UUID is correct.");
                                 }
@@ -936,7 +936,7 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
                     {
                         report_to_nearby_chat("UUID entered is of an invalid length! (Hint: use the \"copy key\" button in the build menu.)");
                     }
-                    else if (gObjectList.findObject(LLUUID(loldest)) == FALSE) 
+                    else if (gObjectList.findObject(LLUUID(loldest)) == 0) 
                     {
                         report_to_nearby_chat("Unable to locate object.  Please verify the object is rezzed, in view, and that the UUID is correct.");
                     }
