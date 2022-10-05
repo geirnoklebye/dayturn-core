@@ -71,7 +71,7 @@ static void collapse_all_folders(LLFolderView* root_folder);
 static void expand_all_folders(LLFolderView* root_folder);
 static bool has_expanded_folders(LLFolderView* root_folder);
 static bool has_collapsed_folders(LLFolderView* root_folder);
-static void toggle_restore_menu(LLMenuGL* menu, BOOL visible, BOOL enabled);
+static void toggle_restore_menu(LLMenuGL* menu, bool visible, bool enabled);
 
 /**
  * Functor counting expanded and collapsed folders in folder view tree to know
@@ -925,8 +925,8 @@ void LLLandmarksPanel::onMenuVisibilityChange(LLUICtrl* ctrl, const LLSD& param)
 	// We don't have to update items visibility if the menu is hiding.
 	if (!new_visibility) return;
 
-	BOOL are_any_items_in_trash = FALSE;
-	BOOL are_all_items_in_trash = TRUE;
+	bool are_any_items_in_trash = false;
+	bool are_all_items_in_trash = true;
 
 	LLFolderView* root_folder_view = mCurrentSelectedList ? mCurrentSelectedList->getRootFolder() : NULL;
 	if(root_folder_view)
@@ -1233,7 +1233,7 @@ static bool has_collapsed_folders(LLFolderView* root_folder)
 // Displays "Restore Item" context menu entry while hiding
 // all other entries or vice versa.
 // Sets "Restore Item" enabled state.
-void toggle_restore_menu(LLMenuGL *menu, BOOL visible, BOOL enabled)
+void toggle_restore_menu(LLMenuGL *menu, bool visible, bool enabled)
 {
 	if (!menu) return;
 
