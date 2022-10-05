@@ -1835,17 +1835,16 @@ void LLVOVolume::regenFaces()
 	}
 }
 
-BOOL LLVOVolume::genBBoxes(BOOL force_global, BOOL should_update_octree_bounds)
+bool LLVOVolume::genBBoxes(bool force_global, bool should_update_octree_bounds)
 {
-    LL_PROFILE_ZONE_SCOPED;
-    BOOL res = TRUE;
+    bool res = true;
 
     LLVector4a min, max;
 
     min.clear();
     max.clear();
 
-    BOOL rebuild = mDrawable->isState(LLDrawable::REBUILD_VOLUME | LLDrawable::REBUILD_POSITION | LLDrawable::REBUILD_RIGGED);
+    bool rebuild = mDrawable->isState(LLDrawable::REBUILD_VOLUME | LLDrawable::REBUILD_POSITION | LLDrawable::REBUILD_RIGGED);
 
     if (getRiggedVolume())
     {
@@ -2154,7 +2153,7 @@ BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
 	if (mDrawable->isState(LLDrawable::REBUILD_RIGGED))
 	{
 		updateRiggedVolume();
-		genBBoxes(FALSE);
+		genBBoxes(false);
 		mDrawable->clearState(LLDrawable::REBUILD_RIGGED);
 	}
 
@@ -2229,7 +2228,7 @@ BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
 
     // Generate bounding boxes if needed, and update the object's size in the
     // octree
-    genBBoxes(FALSE, should_update_octree_bounds);
+    genBBoxes(false, should_update_octree_bounds);
 
 	// Update face flags
 	updateFaceFlags();

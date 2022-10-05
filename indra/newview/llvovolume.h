@@ -235,7 +235,7 @@ public:
 
 				void	updateFaceFlags();
 				void	regenFaces();
-                BOOL    genBBoxes(BOOL force_global, BOOL should_update_octree_bounds = TRUE);
+                bool    genBBoxes(bool force_global, bool should_update_octree_bounds = true);
 				void	preRebuild();
 	virtual		void	updateSpatialExtents(LLVector4a& min, LLVector4a& max);
 	virtual		F32		getBinRadius();

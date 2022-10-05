@@ -117,7 +117,7 @@ public:
 	U32 mShaderMask;
 	U32 mBlendFuncSrc;
 	U32 mBlendFuncDst;
-	BOOL mHasGlow;
+	bool mHasGlow;
 	LLPointer<LLViewerTexture> mSpecularMap;
 	const LLMatrix4* mSpecularMapMatrix;
 	LLPointer<LLViewerTexture> mNormalMap;
