@@ -4569,7 +4569,7 @@ void LLVOVolume::parameterChanged(U16 param_type, LLNetworkData* data, BOOL in_u
     }
 	if (mDrawable.notNull())
 	{
-		BOOL is_light = getIsLight();
+		bool is_light = getIsLight();
 		if (is_light != mDrawable->isState(LLDrawable::LIGHT))
 		{
 			gPipeline.setLight(mDrawable, is_light);

@@ -6867,7 +6867,7 @@ bool	LLViewerObject::isTempAttachment() const
 	return (mID.notNull() && (mID == mAttachmentItemID));
 }
 
-BOOL LLViewerObject::isHiglightedOrBeacon() const
+bool LLViewerObject::isHiglightedOrBeacon() const
 {
 	if (LLFloaterReg::instanceVisible("beacons") && (gPipeline.getRenderBeacons() || gPipeline.getRenderHighlights()))
 	{
@@ -6882,7 +6882,7 @@ BOOL LLViewerObject::isHiglightedOrBeacon() const
 				|| (is_scripted && flagHandleTouch() && gPipeline.getRenderScriptedTouchBeacons())
 				|| (is_physical && gPipeline.getRenderPhysicalBeacons());
 	}
-	return FALSE;
+	return false;
 }
 
 

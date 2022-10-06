@@ -181,7 +181,7 @@ public:
 	virtual bool	isHUDAttachment() const { return false; }
 	virtual bool	isTempAttachment() const;
 
-	virtual BOOL isHiglightedOrBeacon() const;
+	virtual bool isHiglightedOrBeacon() const;
 
 	virtual void 	updateRadius() {};
 	virtual F32 	getVObjRadius() const; // default implemenation is mDrawable->getRadius()
