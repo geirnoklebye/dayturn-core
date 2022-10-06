@@ -175,7 +175,7 @@ GLuint SafeChoosePixelFormat(HDC &hdc, const PIXELFORMATDESCRIPTOR *ppfd)
 //static
 BOOL LLWindowWin32::sIsClassRegistered = FALSE;
 
-BOOL	LLWindowWin32::sLanguageTextInputAllowed = TRUE;
+bool	LLWindowWin32::sLanguageTextInputAllowed = true;
 BOOL	LLWindowWin32::sWinIMEOpened = FALSE;
 HKL		LLWindowWin32::sWinInputLocale = 0;
 DWORD	LLWindowWin32::sWinIMEConversionMode = IME_CMODE_NATIVE;

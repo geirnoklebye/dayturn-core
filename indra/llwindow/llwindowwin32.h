@@ -223,7 +223,7 @@ protected:
 	// The following variables are for Language Text Input control.
 	// They are all static, since one context is shared by all LLWindowWin32
 	// instances.
-	static BOOL		sLanguageTextInputAllowed;
+	static bool		sLanguageTextInputAllowed;
 	static BOOL		sWinIMEOpened;
 	static HKL		sWinInputLocale;
 	static DWORD	sWinIMEConversionMode;
