@@ -206,7 +206,7 @@ public:
 	// destroys this item recursively
 	virtual void destroyView();
 
-	BOOL isSelected() const { return mIsSelected; }
+	bool isSelected() const { return mIsSelected; }
 	bool isInSelection() const;
 
 	void setUnselected() { mIsSelected = false; }
