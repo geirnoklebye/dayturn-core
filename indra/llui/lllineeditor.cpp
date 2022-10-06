@@ -2180,7 +2180,7 @@ void LLLineEditor::setFocus( bool new_state )
 
 	if (!new_state)
 	{
-		getWindow()->allowLanguageTextInput(this, FALSE);
+		getWindow()->allowLanguageTextInput(this, false);
 	}
 
 
@@ -2404,11 +2404,11 @@ void LLLineEditor::updateAllowingLanguageInput()
 	}
 	if (hasFocus() && !mReadOnly && !mDrawAsterixes && mPrevalidateFunc == NULL)
 	{
-		window->allowLanguageTextInput(this, TRUE);
+		window->allowLanguageTextInput(this, true);
 	}
 	else
 	{
-		window->allowLanguageTextInput(this, FALSE);
+		window->allowLanguageTextInput(this, false);
 	}
 }
 

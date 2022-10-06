@@ -108,7 +108,7 @@ public:
 	void *getPlatformWindow() override;
 	void bringToFront() override {};
 	
-	void allowLanguageTextInput(LLPreeditor *preeditor, BOOL b) override;
+	void allowLanguageTextInput(LLPreeditor *preeditor, bool b) override;
 	void interruptLanguageTextInput() override;
 	void spawnWebBrowser(const std::string& escaped_url, bool async) override;
 	F32 getSystemUISize() override;

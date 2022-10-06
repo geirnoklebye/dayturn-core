@@ -445,7 +445,7 @@ LLWindowWin32::LLWindowWin32(LLWindowCallbacks* callbacks,
 
 	// Initialize (boot strap) the Language text input management,
 	// based on the system's (user's) default settings.
-	allowLanguageTextInput(mPreeditor, FALSE);
+	allowLanguageTextInput(mPreeditor, false);
 
 	WNDCLASS		wc;
 	RECT			window_rect;
@@ -748,7 +748,7 @@ LLWindowWin32::LLWindowWin32(LLWindowCallbacks* callbacks,
 
 	// Initialize (boot strap) the Language text input management,
 	// based on the system's (or user's) default settings.
-	allowLanguageTextInput(NULL, FALSE);
+	allowLanguageTextInput(NULL, false);
 }
 
 
@@ -3854,7 +3854,7 @@ void LLWindowWin32::focusClient()
         });
 }
 
-void LLWindowWin32::allowLanguageTextInput(LLPreeditor *preeditor, BOOL b)
+void LLWindowWin32::allowLanguageTextInput(LLPreeditor *preeditor, bool b)
 {
 	if (b == sLanguageTextInputAllowed || !LLWinImm::isAvailable())
 	{

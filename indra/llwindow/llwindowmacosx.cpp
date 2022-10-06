@@ -188,7 +188,7 @@ LLWindowMacOSX::LLWindowMacOSX(LLWindowCallbacks* callbacks,
 		initCursors();
 		setCursor( UI_CURSOR_ARROW );
 		
-		allowLanguageTextInput(NULL, FALSE);
+		allowLanguageTextInput(NULL, false);
 	}
 
 	mCallbacks = callbacks;
@@ -1881,7 +1881,7 @@ static long getDictLong (CFDictionaryRef refDict, CFStringRef key)
 	return int_value; // otherwise return the long value
 }
 
-void LLWindowMacOSX::allowLanguageTextInput(LLPreeditor *preeditor, BOOL b)
+void LLWindowMacOSX::allowLanguageTextInput(LLPreeditor *preeditor, bool b)
 {
 	if (preeditor != mPreeditor && !b)
 	{

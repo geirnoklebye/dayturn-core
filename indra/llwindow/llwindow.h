@@ -177,7 +177,7 @@ public:
 	virtual void *getMediaWindow();
 	
 	// control platform's Language Text Input mechanisms.
-	virtual void allowLanguageTextInput(LLPreeditor *preeditor, BOOL b) {}
+	virtual void allowLanguageTextInput(LLPreeditor *preeditor, bool b) {}
 	virtual void setLanguageTextInput( const LLCoordGL & pos ) {};
 	virtual void updateLanguageTextInputArea() {}
 	virtual void interruptLanguageTextInput() {}

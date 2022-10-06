@@ -2317,7 +2317,7 @@ void LLTextEditor::setFocus( bool new_state )
 	// Notify early if we are losing focus.
 	if (!new_state)
 	{
-		getWindow()->allowLanguageTextInput(this, FALSE);
+		getWindow()->allowLanguageTextInput(this, false);
 	}
 
 	LLTextBase::setFocus( new_state );
@@ -2715,11 +2715,11 @@ void LLTextEditor::updateAllowingLanguageInput()
 	}
 	if (hasFocus() && !mReadOnly)
 	{
-		window->allowLanguageTextInput(this, TRUE);
+		window->allowLanguageTextInput(this, true);
 	}
 	else
 	{
-		window->allowLanguageTextInput(this, FALSE);
+		window->allowLanguageTextInput(this, false);
 	}
 }
 

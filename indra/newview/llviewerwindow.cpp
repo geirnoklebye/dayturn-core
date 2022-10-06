@@ -2380,7 +2380,7 @@ void LLViewerWindow::shutdownViews()
 	gFocusMgr.setTopCtrl(NULL);
 	if (mWindow)
 	{
-		mWindow->allowLanguageTextInput(NULL, FALSE);
+		mWindow->allowLanguageTextInput(NULL, false);
 	}
 
 	delete mDebugText;
