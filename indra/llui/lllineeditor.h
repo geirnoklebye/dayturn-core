@@ -193,7 +193,7 @@ public:
 	virtual void	setValue(const LLSD& value );
 	virtual LLSD	getValue() const;
 	virtual bool	setTextArg( const std::string& key, const LLStringExplicit& text );
-	virtual BOOL	setLabelArg( const std::string& key, const LLStringExplicit& text );
+	virtual bool	setLabelArg( const std::string& key, const LLStringExplicit& text );
 
 	void			setLabel(const LLStringExplicit &new_label) { mLabel = new_label; }
 	const std::string& 	getLabel()	{ return mLabel.getString(); }

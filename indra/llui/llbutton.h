@@ -241,7 +241,7 @@ public:
 	void            autoResize();	// resize with label of current btn state 
 	void            resize(LLUIString label); // resize with label input
 	void			setLabel( const LLStringExplicit& label);
-	virtual BOOL	setLabelArg( const std::string& key, const LLStringExplicit& text );
+	virtual bool	setLabelArg( const std::string& key, const LLStringExplicit& text );
 	void			setLabelUnselected(const LLStringExplicit& label);
 	void			setLabelSelected(const LLStringExplicit& label);
 	void			setDisabledLabelColor( const LLColor4& c )		{ mDisabledLabelColor = c; }
@@ -260,7 +260,7 @@ public:
 
 	void			setDropShadowedText(bool b)			{ mDropShadowedText = b; }
 
-	void			setBorderEnabled(bool b)					{ mBorderEnabled = b; }
+	void			setBorderEnabled(bool b)			{ mBorderEnabled = b; }
 
 	void			setHoverGlowStrength(F32 strength) { mHoverGlowStrength = strength; }
 

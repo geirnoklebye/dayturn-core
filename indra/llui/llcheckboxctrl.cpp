@@ -281,9 +281,9 @@ std::string LLCheckBoxCtrl::getLabel() const
 	return mLabel->getText();
 }
 
-BOOL LLCheckBoxCtrl::setLabelArg( const std::string& key, const LLStringExplicit& text )
+bool LLCheckBoxCtrl::setLabelArg( const std::string& key, const LLStringExplicit& text )
 {
-	BOOL res = mLabel->setTextArg(key, text);
+	bool res = mLabel->setTextArg(key, text);
 	reshape(getRect().getWidth(), getRect().getHeight(), FALSE);
 	return res;
 }

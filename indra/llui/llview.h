@@ -309,7 +309,7 @@ public:
 	static bool		isAvailable(const LLView* view);
 	U8              getSoundFlags() const       { return mSoundFlags; }
 
-	virtual BOOL	setLabelArg( const std::string& key, const LLStringExplicit& text );
+	virtual bool	setLabelArg( const std::string& key, const LLStringExplicit& text );
 
 	virtual void	onVisibilityChange ( bool new_visibility );
 	virtual void	onUpdateScrollToChild(const LLUICtrl * cntrl);

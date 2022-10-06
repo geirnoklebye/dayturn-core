@@ -146,7 +146,7 @@ bool LLSearchEditor::setTextArg( const std::string& key, const LLStringExplicit&
 }
 
 //virtual
-BOOL LLSearchEditor::setLabelArg( const std::string& key, const LLStringExplicit& text )
+bool LLSearchEditor::setLabelArg( const std::string& key, const LLStringExplicit& text )
 {
 	return mSearchEditor->setLabelArg(key, text);
 }

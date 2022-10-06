@@ -2381,10 +2381,10 @@ bool LLLineEditor::setTextArg( const std::string& key, const LLStringExplicit& t
 	return true;
 }
 
-BOOL LLLineEditor::setLabelArg( const std::string& key, const LLStringExplicit& text )
+bool LLLineEditor::setLabelArg( const std::string& key, const LLStringExplicit& text )
 {
 	mLabel.setArg(key, text);
-	return TRUE;
+	return true;
 }
 
 

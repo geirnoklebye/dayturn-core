@@ -526,9 +526,9 @@ bool LLView::isAvailable(const LLView* view)
 }
 
 //virtual
-BOOL LLView::setLabelArg( const std::string& key, const LLStringExplicit& text )
+bool LLView::setLabelArg( const std::string& key, const LLStringExplicit& text )
 {
-	return FALSE;
+	return false;
 }
 
 //virtual

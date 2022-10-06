@@ -2340,10 +2340,10 @@ void LLTextBase::setLabel(const LLStringExplicit& label)
 	resetLabel();
 }
 
-BOOL LLTextBase::setLabelArg(const std::string& key, const LLStringExplicit& text )
+bool LLTextBase::setLabelArg(const std::string& key, const LLStringExplicit& text )
 {
 	mLabel.setArg(key, text);
-	return TRUE;
+	return true;
 }
 
 void LLTextBase::resetLabel()

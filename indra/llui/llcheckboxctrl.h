@@ -104,7 +104,7 @@ public:
 	virtual void		setTentative(bool b);
 	virtual bool		getTentative() const;
 
-	virtual BOOL		setLabelArg( const std::string& key, const LLStringExplicit& text );
+	virtual bool		setLabelArg( const std::string& key, const LLStringExplicit& text );
 
 	virtual void		clear();
 	virtual void		onCommit();

@@ -557,10 +557,10 @@ void LLMenuItemGL::draw( void )
 	}
 }
 
-BOOL LLMenuItemGL::setLabelArg( const std::string& key, const LLStringExplicit& text )
+bool LLMenuItemGL::setLabelArg( const std::string& key, const LLStringExplicit& text )
 {
 	mLabel.setArg(key, text);
-	return TRUE;
+	return true;
 }
 
 void LLMenuItemGL::onVisibilityChange(bool new_visibility)

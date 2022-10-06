@@ -237,9 +237,9 @@ void LLMultiSliderCtrl::resetCurSlider()
 	mMultiSlider->resetCurSlider();
 }
 
-BOOL LLMultiSliderCtrl::setLabelArg( const std::string& key, const LLStringExplicit& text )
+bool LLMultiSliderCtrl::setLabelArg( const std::string& key, const LLStringExplicit& text )
 {
-	BOOL res = FALSE;
+	bool res = false;
 	if (mLabelBox)
 	{
 		res = mLabelBox->setTextArg(key, text);
