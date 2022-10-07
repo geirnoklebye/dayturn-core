@@ -209,7 +209,7 @@ public:
 	// eye blinking
 	LLFrameTimer		mEyeBlinkTimer;
 	F32					mEyeBlinkTime;
-	BOOL				mEyesClosed;
+	bool				mEyesClosed;
 };
 
 #endif // LL_LLHEADROTMOTION_H

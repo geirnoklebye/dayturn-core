@@ -76,16 +76,16 @@ LLMotionRegistry::~LLMotionRegistry()
 //-----------------------------------------------------------------------------
 // addMotion()
 //-----------------------------------------------------------------------------
-BOOL LLMotionRegistry::registerMotion( const LLUUID& id, LLMotionConstructor constructor )
+bool LLMotionRegistry::registerMotion( const LLUUID& id, LLMotionConstructor constructor )
 {
 	//	LL_INFOS() << "Registering motion: " << name << LL_ENDL;
 	if (!is_in_map(mMotionTable, id))
 	{
 		mMotionTable[id] = constructor;
-		return TRUE;
+		return true;
 	}
 	
-	return FALSE;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -282,7 +282,7 @@ void LLMotionController::setTimeStep(F32 step)
 			LLMotion* motionp = *iter;
 			F32 activation_time = motionp->mActivationTimestamp;
 			motionp->mActivationTimestamp = (F32)(llfloor(activation_time / step)) * step;
-			BOOL stopped = motionp->isStopped();
+			bool stopped = motionp->isStopped();
 			motionp->setStopTime((F32)(llfloor(motionp->getStopTime() / step)) * step);
 			motionp->setStopped(stopped);
 			motionp->mSendStopTimestamp = (F32)llfloor(motionp->mSendStopTimestamp / step) * step;
@@ -310,7 +310,7 @@ void LLMotionController::setCharacter(LLCharacter *character)
 //-----------------------------------------------------------------------------
 // registerMotion()
 //-----------------------------------------------------------------------------
-BOOL LLMotionController::registerMotion( const LLUUID& id, LLMotionConstructor constructor )
+bool LLMotionController::registerMotion( const LLUUID& id, LLMotionConstructor constructor )
 {
 	return sRegistry.registerMotion(id, constructor);
 }
@@ -438,7 +438,7 @@ bool LLMotionController::startMotion(const LLUUID &id, F32 start_offset)
 //-----------------------------------------------------------------------------
 // stopMotionLocally()
 //-----------------------------------------------------------------------------
-BOOL LLMotionController::stopMotionLocally(const LLUUID &id, BOOL stop_immediate)
+bool LLMotionController::stopMotionLocally(const LLUUID &id, bool stop_immediate)
 {
 	// if already inactive, return false
 	LLMotion *motion = findMotion(id);
@@ -446,11 +446,11 @@ BOOL LLMotionController::stopMotionLocally(const LLUUID &id, BOOL stop_immediate
 	return stopMotionInstance(motion, stop_immediate||mPaused);
 }
 
-BOOL LLMotionController::stopMotionInstance(LLMotion* motion, BOOL stop_immediate)
+bool LLMotionController::stopMotionInstance(LLMotion* motion, bool stop_immediate)
 {
 	if (!motion)
 	{
-		return FALSE;
+		return false;
 	}
 
 	
@@ -462,15 +462,15 @@ BOOL LLMotionController::stopMotionInstance(LLMotion* motion, BOOL stop_immediat
 		{
 			deactivateMotionInstance(motion);
 		}
-		return TRUE;
+		return true;
 	}
 	else if (isMotionLoading(motion))
 	{
-		motion->setStopped(TRUE);
-		return TRUE;
+		motion->setStopped(true);
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -504,7 +504,6 @@ void LLMotionController::resetJointSignatures()
 //-----------------------------------------------------------------------------
 void LLMotionController::updateIdleMotion(LLMotion* motionp)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 	if (motionp->isStopped() && mAnimTime > motionp->getStopTime() + motionp->getEaseOutDuration())
 	{
 		deactivateMotionInstance(motionp);
@@ -543,7 +542,6 @@ void LLMotionController::updateIdleMotion(LLMotion* motionp)
 //-----------------------------------------------------------------------------
 void LLMotionController::updateIdleActiveMotions()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 	for (motion_list_t::iterator iter = mActiveMotions.begin();
 		 iter != mActiveMotions.end(); )
 	{
@@ -768,7 +766,6 @@ void LLMotionController::updateMotionsByType(LLMotion::LLMotionBlendType anim_ty
 //-----------------------------------------------------------------------------
 void LLMotionController::updateLoadingMotions()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 	// query pending motions for completion
 	for (motion_set_t::iterator iter = mLoadingMotions.begin();
 		 iter != mLoadingMotions.end(); )
@@ -816,7 +813,6 @@ void LLMotionController::updateLoadingMotions()
 //-----------------------------------------------------------------------------
 void LLMotionController::updateMotions(bool force_update)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
     // SL-763: "Distant animated objects run at super fast speed"
     // The use_quantum optimization or possibly the associated code in setTimeStamp()
     // does not work as implemented.
@@ -912,7 +908,6 @@ void LLMotionController::updateMotions(bool force_update)
 //-----------------------------------------------------------------------------
 void LLMotionController::updateMotionsMinimal()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 	// Always update mPrevTimerElapsed
 	mPrevTimerElapsed = mTimer.getElapsedTimeF32();
 
@@ -930,7 +925,6 @@ void LLMotionController::updateMotionsMinimal()
 //-----------------------------------------------------------------------------
 bool LLMotionController::activateMotionInstance(LLMotion *motion, F32 time)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 	// It's not clear why the getWeight() line seems to be crashing this, but
 	// hopefully this fixes it.
 	if (motion == NULL || motion->getPose() == NULL)
@@ -941,7 +935,7 @@ bool LLMotionController::activateMotionInstance(LLMotion *motion, F32 time)
 	if (mLoadingMotions.find(motion) != mLoadingMotions.end())
 	{
 		// we want to start this motion, but we can't yet, so flag it as started
-		motion->setStopped(FALSE);
+		motion->setStopped(false);
 		// report pending animations as activated
 		return true;
 	}

@@ -211,7 +211,7 @@ protected:
 			mEaseInStopTime(0.f),
 			mEaseOutStartTime(0.f),
 			mEaseOutStopTime(0.f), 
-			mUseTargetOffset(FALSE),
+			mUseTargetOffset(false),
 			mConstraintType(CONSTRAINT_TYPE_POINT),
 			mConstraintTargetType(CONSTRAINT_TARGET_TYPE_BODY),
 			mSourceConstraintVolume(0),
@@ -231,7 +231,7 @@ protected:
 		F32						mEaseInStopTime;
 		F32						mEaseOutStartTime;
 		F32						mEaseOutStopTime;
-		BOOL					mUseTargetOffset;
+		bool					mUseTargetOffset;
 		EConstraintType			mConstraintType;
 		EConstraintTargetType	mConstraintTargetType;
 	};
@@ -251,7 +251,7 @@ protected:
 		LLVector3					mPositions[MAX_CHAIN_LENGTH];
 		F32							mJointLengths[MAX_CHAIN_LENGTH];
 		F32							mJointLengthFractions[MAX_CHAIN_LENGTH];
-		BOOL						mActive;
+		bool						mActive;
 		LLVector3d					mGroundPos;
 		LLVector3					mGroundNorm;
 		LLJoint*					mSourceVolume;

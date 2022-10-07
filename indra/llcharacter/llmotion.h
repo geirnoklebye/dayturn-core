@@ -91,11 +91,11 @@ public:
 
 	virtual void setStopTime(F32 time);
 
-	BOOL isStopped() const { return mStopped; }
+	bool isStopped() const { return mStopped; }
 
-	void setStopped(BOOL stopped) { mStopped = stopped; }
+	void setStopped(bool stopped) { mStopped = stopped; }
 
-	BOOL isBlending();
+	bool isBlending();
 
 	// Activation functions.
 	// It is OK for other classes to activate a motion,
@@ -105,7 +105,7 @@ public:
 protected:
 	// Used by LLMotionController only
 	void deactivate();
-	BOOL isActive() { return mActive; }
+	bool isActive() { return mActive; }
 public:
 	void activate(F32 time);
 	
@@ -169,8 +169,8 @@ protected:
 
 protected:
 	LLPose		mPose;
-	BOOL		mStopped;		// motion has been stopped;
-	BOOL		mActive;		// motion is on active list (can be stopped or not stopped)
+	bool		mStopped;		// motion has been stopped;
+	bool		mActive;		// motion is on active list (can be stopped or not stopped)
 
 	//-------------------------------------------------------------------------
 	// these are set implicitly by the motion controller and

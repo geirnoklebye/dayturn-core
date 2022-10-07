@@ -10766,7 +10766,7 @@ void LLVOAvatar::updateImpostors()
 		}
 	}
 
-	LLCharacter::sAllowInstancesChange = TRUE;
+	LLCharacter::sAllowInstancesChange = true;
 }
 
 // virtual

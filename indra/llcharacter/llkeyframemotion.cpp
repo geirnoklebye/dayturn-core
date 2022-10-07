@@ -503,7 +503,7 @@ LLMotion::LLMotionInitStatus LLKeyframeMotion::onInitialize(LLCharacter *charact
 						LLAssetType::AT_ANIMATION,
 						onLoadComplete,
 						(void *)character_id,
-						FALSE);
+						false);
 
 		return STATUS_HOLD;
 	case ASSET_FETCHED:
@@ -870,7 +870,7 @@ void LLKeyframeMotion::initializeConstraint(JointConstraint* constraint)
 void LLKeyframeMotion::activateConstraint(JointConstraint* constraint)
 {
 	JointConstraintSharedData *shared_data = constraint->mSharedData;
-	constraint->mActive = TRUE;
+	constraint->mActive = true;
 	S32 joint_num;
 
 	// grab ground position if we need to
@@ -912,7 +912,7 @@ void LLKeyframeMotion::deactivateConstraint(JointConstraint *constraintp)
 			constraintp->mTargetVolume->mUpdateXform = false;
 		}
 	}
-	constraintp->mActive = FALSE;
+	constraintp->mActive = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -1089,9 +1089,9 @@ void LLKeyframeMotion::applyConstraint(JointConstraint* constraint, F32 time, U8
 			// convert intermediate joint positions to world coordinates
 			positions[joint_num] = ( constraint->mPositions[joint_num] * mPelvisp->getWorldRotation()) + mPelvisp->getWorldPosition();
 			F32 time_constant = 1.f / clamp_rescale(constraint->mFixupDistanceRMS, 0.f, 0.5f, 0.2f, 8.f);
-//			LL_INFOS() << "Interpolant " << LLSmoothInterpolation::getInterpolant(time_constant, FALSE) << " and fixup distance " << constraint->mFixupDistanceRMS << " on " << mCharacter->findCollisionVolume(shared_data->mSourceConstraintVolume)->getName() << LL_ENDL;
+//			LL_INFOS() << "Interpolant " << LLSmoothInterpolation::getInterpolant(time_constant, false) << " and fixup distance " << constraint->mFixupDistanceRMS << " on " << mCharacter->findCollisionVolume(shared_data->mSourceConstraintVolume)->getName() << LL_ENDL;
 			positions[joint_num] = lerp(positions[joint_num], kinematic_position, 
-				LLSmoothInterpolation::getInterpolant(time_constant, FALSE));
+				LLSmoothInterpolation::getInterpolant(time_constant, false));
 		}
 
 		S32 iteration_count;
@@ -2478,7 +2478,7 @@ LLKeyframeMotion::JointConstraint::JointConstraint(JointConstraintSharedData* sh
 {
 	mWeight = 0.f;
 	mTotalLength = 0.f;
-	mActive = FALSE;
+	mActive = false;
 	mSourceVolume = NULL;
 	mTargetVolume = NULL;
 	mFixupDistanceRMS = 0.f;

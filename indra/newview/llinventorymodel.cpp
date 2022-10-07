@@ -1229,7 +1229,7 @@ U32 LLInventoryModel::updateItem(const LLViewerInventoryItem* item, U32 mask)
 		// Target ID is stored in the description field of the card.
 		LLUUID id;
 		std::string desc = new_item->getDescription();
-		BOOL isId = desc.empty() ? FALSE : id.set(desc, FALSE);
+		bool isId = desc.empty() ? false : id.set(desc, false);
 		if (isId)
 		{
 			// Valid UUID; set the item UUID and rename it

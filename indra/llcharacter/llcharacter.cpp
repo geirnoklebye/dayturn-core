@@ -39,7 +39,7 @@
 LLStringTable LLCharacter::sVisualParamNames(1024);
 
 std::vector< LLCharacter* > LLCharacter::sInstances;
-BOOL LLCharacter::sAllowInstancesChange = TRUE ;
+bool LLCharacter::sAllowInstancesChange = true ;
 
 //-----------------------------------------------------------------------------
 // LLCharacter()
@@ -114,7 +114,7 @@ LLJoint *LLCharacter::getJoint( const std::string &name )
 //-----------------------------------------------------------------------------
 // registerMotion()
 //-----------------------------------------------------------------------------
-BOOL LLCharacter::registerMotion( const LLUUID& id, LLMotionConstructor create )
+bool LLCharacter::registerMotion( const LLUUID& id, LLMotionConstructor create )
 {
 	return mMotionController.registerMotion(id, create);
 }
@@ -164,7 +164,7 @@ bool LLCharacter::stopMotion(const LLUUID& id, bool stop_immediate)
 //-----------------------------------------------------------------------------
 // isMotionActive()
 //-----------------------------------------------------------------------------
-BOOL LLCharacter::isMotionActive(const LLUUID& id)
+bool LLCharacter::isMotionActive(const LLUUID& id)
 {
 	LLMotion *motionp = mMotionController.findMotion(id);
 	if (motionp)
@@ -172,7 +172,7 @@ BOOL LLCharacter::isMotionActive(const LLUUID& id)
 		return mMotionController.isMotionActive(motionp);
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -190,7 +190,6 @@ void LLCharacter::requestStopMotion( LLMotion* motion)
 //-----------------------------------------------------------------------------
 void LLCharacter::updateMotions(e_update_t update_type)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 	if (update_type == HIDDEN_UPDATE)
 	{
 		mMotionController.updateMotionsMinimal();
@@ -281,22 +280,22 @@ void LLCharacter::removeAnimationData(std::string name)
 //-----------------------------------------------------------------------------
 // setVisualParamWeight()
 //-----------------------------------------------------------------------------
-BOOL LLCharacter::setVisualParamWeight(const LLVisualParam* which_param, F32 weight)
+bool LLCharacter::setVisualParamWeight(const LLVisualParam* which_param, F32 weight)
 {
 	S32 index = which_param->getID();
 	visual_param_index_map_t::iterator index_iter = mVisualParamIndexMap.find(index);
 	if (index_iter != mVisualParamIndexMap.end())
 	{
 		index_iter->second->setWeight(weight);
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // setVisualParamWeight()
 //-----------------------------------------------------------------------------
-BOOL LLCharacter::setVisualParamWeight(const char* param_name, F32 weight)
+bool LLCharacter::setVisualParamWeight(const char* param_name, F32 weight)
 {
 	std::string tname(param_name);
 	LLStringUtil::toLower(tname);
@@ -305,25 +304,25 @@ BOOL LLCharacter::setVisualParamWeight(const char* param_name, F32 weight)
 	if (name_iter != mVisualParamNameMap.end())
 	{
 		name_iter->second->setWeight(weight);
-		return TRUE;
+		return true;
 	}
 	LL_WARNS() << "LLCharacter::setVisualParamWeight() Invalid visual parameter: " << param_name << LL_ENDL;
-	return FALSE;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // setVisualParamWeight()
 //-----------------------------------------------------------------------------
-BOOL LLCharacter::setVisualParamWeight(S32 index, F32 weight)
+bool LLCharacter::setVisualParamWeight(S32 index, F32 weight)
 {
 	visual_param_index_map_t::iterator index_iter = mVisualParamIndexMap.find(index);
 	if (index_iter != mVisualParamIndexMap.end())
 	{
 		index_iter->second->setWeight(weight);
-		return TRUE;
+		return true;
 	}
 	LL_WARNS() << "LLCharacter::setVisualParamWeight() Invalid visual parameter index: " << index << LL_ENDL;
-	return FALSE;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
