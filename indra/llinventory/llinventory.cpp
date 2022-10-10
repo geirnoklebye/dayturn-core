@@ -123,7 +123,7 @@ LLAssetType::EType LLInventoryObject::getActualType() const
 	return mType;
 }
 
-BOOL LLInventoryObject::getIsLinkType() const
+bool LLInventoryObject::getIsLinkType() const
 {
 	return LLAssetType::lookupIsLinkType(mType);
 }

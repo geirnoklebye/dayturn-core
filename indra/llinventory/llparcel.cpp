@@ -561,21 +561,21 @@ void LLParcel::unpackMessage(LLMessageSystem* msg)
     msg->getStringFast( _PREHASH_ParcelData,_PREHASH_MediaURL, buffer );
     setMediaURL(buffer);
     
-	BOOL see_avs = true;			// All default to true for legacy server behavior
-	BOOL any_av_sounds = true;
-	BOOL group_av_sounds = true;
+	bool see_avs = true;			// All default to true for legacy server behavior
+	bool any_av_sounds = true;
+	bool group_av_sounds = true;
 	bool have_new_parcel_limit_data = (msg->getSizeFast(_PREHASH_ParcelData, _PREHASH_SeeAVs) > 0);		// New version of server should send all 3 of these values
 	have_new_parcel_limit_data &= (msg->getSizeFast(_PREHASH_ParcelData, _PREHASH_AnyAVSounds) > 0);
 	have_new_parcel_limit_data &= (msg->getSizeFast(_PREHASH_ParcelData, _PREHASH_GroupAVSounds) > 0);
 	if (have_new_parcel_limit_data)
 	{
-		msg->getBOOLFast(_PREHASH_ParcelData, _PREHASH_SeeAVs, see_avs);
-		msg->getBOOLFast(_PREHASH_ParcelData, _PREHASH_AnyAVSounds, any_av_sounds);
-		msg->getBOOLFast(_PREHASH_ParcelData, _PREHASH_GroupAVSounds, group_av_sounds);
+		msg->getboolFast(_PREHASH_ParcelData, _PREHASH_SeeAVs, see_avs);
+		msg->getboolFast(_PREHASH_ParcelData, _PREHASH_AnyAVSounds, any_av_sounds);
+		msg->getboolFast(_PREHASH_ParcelData, _PREHASH_GroupAVSounds, group_av_sounds);
 	}
-	setSeeAVs((bool) see_avs);
-	setAllowAnyAVSounds((bool) any_av_sounds);
-	setAllowGroupAVSounds((bool) group_av_sounds);
+	setSeeAVs(see_avs);
+	setAllowAnyAVSounds(any_av_sounds);
+	setAllowGroupAVSounds(group_av_sounds);
 
 	setHaveNewParcelLimitData(have_new_parcel_limit_data);
 

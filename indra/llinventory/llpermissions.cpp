@@ -559,9 +559,9 @@ void LLPermissions::unpackMessage(LLMessageSystem* msg, const char* block, S32 b
 	msg->getU32Fast(block, _PREHASH_GroupMask, mMaskGroup, block_num );
 	msg->getU32Fast(block, _PREHASH_EveryoneMask, mMaskEveryone, block_num );
 	msg->getU32Fast(block, _PREHASH_NextOwnerMask, mMaskNextOwner, block_num );
-	BOOL tmp;
-	msg->getBOOLFast(block, _PREHASH_GroupOwned, tmp, block_num);
-	mIsGroupOwned = (bool)tmp;
+	bool tmp;
+	msg->getboolFast(block, _PREHASH_GroupOwned, tmp, block_num);
+	mIsGroupOwned = tmp;
 }
 
 bool LLPermissions::importLegacyStream(std::istream& input_stream)

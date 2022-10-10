@@ -73,7 +73,7 @@ public:
 	virtual const std::string& getName() const;
 	virtual LLAssetType::EType getType() const;
 	LLAssetType::EType getActualType() const; // bypasses indirection for linked items
-	BOOL getIsLinkType() const;
+	bool getIsLinkType() const;
 	virtual time_t getCreationDate() const;
 	
 	//--------------------------------------------------------------------
