@@ -2108,7 +2108,7 @@ bool LLItemBridge::removeItem()
 	if (!item) return false;
 	if (item->getType() != LLAssetType::AT_LSL_TEXT)
 	{
-		LLPreview::hide(mUUID, TRUE);
+		LLPreview::hide(mUUID, true);
 	}
 	// Already in trash
 	if (model->isObjectDescendentOf(mUUID, trash_id)) return false;

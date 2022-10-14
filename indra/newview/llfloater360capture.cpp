@@ -498,7 +498,7 @@ void LLFloater360Capture::capture360Images()
 
     bool render_attached_lights = LLPipeline::sRenderAttachedLights;
     // determine whether or not to include avatar in the scene as we capture the 360 panorama
-    if (gSavedSettings.getBOOL("360CaptureHideAvatars"))
+    if (gSavedSettings.getbool("360CaptureHideAvatars"))
     {
         // Turn off the avatar if UI tells us to hide it.
         // Note: the original call to gAvatar.hide(FALSE) did *not* hide

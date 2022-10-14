@@ -561,7 +561,7 @@ void LLInventoryModel::consolidateForType(const LLUUID& main_id, LLFolderType::E
             const LLUUID trash_id = findCategoryUUIDForType(LLFolderType::FT_TRASH);
             if (trash_id.notNull())
             {
-                changeCategoryParent(cat, trash_id, TRUE);
+                changeCategoryParent(cat, trash_id, true);
             }
         }
         remove_inventory_category(folder_id, NULL);
@@ -932,7 +932,7 @@ public:
 	virtual bool operator()(LLInventoryCategory* cat,
 							LLInventoryItem* item)
 	{
-		return TRUE;
+		return true;
 	}
 };
 
@@ -1145,7 +1145,7 @@ U32 LLInventoryModel::updateItem(const LLViewerInventoryItem* item, U32 mask)
 		{
 			// Parent id at server is null, so update server even if item already is in the same folder
 			old_item->setParent(new_parent_id);
-			new_item->updateParentOnServer(FALSE);
+			new_item->updateParentOnServer(false);
 		}
 		mask |= LLInventoryObserver::INTERNAL;
 	}
@@ -1166,7 +1166,7 @@ U32 LLInventoryModel::updateItem(const LLViewerInventoryItem* item, U32 mask)
 				gInventory.accountForUpdate(update);
 
 				// *FIX: bit of a hack to call update server from here...
-				new_item->updateParentOnServer(FALSE);
+				new_item->updateParentOnServer(false);
 				item_array->push_back(new_item);
 			}
 			else
@@ -1211,7 +1211,7 @@ U32 LLInventoryModel::updateItem(const LLViewerInventoryItem* item, U32 mask)
 					gInventory.accountForUpdate(update);
 					// *FIX: bit of a hack to call update server from
 					// here...
-					new_item->updateParentOnServer(FALSE);
+					new_item->updateParentOnServer(false);
 					item_array->push_back(new_item);
 				}
 				else
@@ -1423,7 +1423,7 @@ void LLInventoryModel::changeItemParent(LLViewerInventoryItem* item,
 
 		// ## Zi: Animation Overrider
 		if(isObjectDescendentOf(item->getUUID(),AOEngine::instance().getAOFolder())
-			&& gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
+			&& gSavedPerAccountSettings.getbool("ProtectAOFolders"))
 			return;
 		// ## Zi: Animation Overrider
 
@@ -1460,12 +1460,7 @@ void LLInventoryModel::changeCategoryParent(LLViewerInventoryCategory* cat,
 
 	// ## Zi: Animation Overrider
 	if((isObjectDescendentOf(cat->getUUID(),AOEngine::instance().getAOFolder())
-		&& gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
-// //-TT Client LSL Bridge
-// 		|| (isObjectDescendentOf(cat->getUUID(),FSLSLBridge::instance().getBridgeFolder())
-// 			&& gSavedPerAccountSettings.getBOOL("ProtectBridgeFolder"))
-// //-TT
-		)
+		&& gSavedPerAccountSettings.getbool("ProtectAOFolders")))
 		return;
 	// ## Zi: Animation Overrider
 
@@ -1486,7 +1481,7 @@ void LLInventoryModel::changeCategoryParent(LLViewerInventoryCategory* cat,
 void LLInventoryModel::onAISUpdateReceived(const std::string& context, const LLSD& update)
 {
 	LLTimer timer;
-	if (gSavedSettings.getBOOL("DebugAvatarAppearanceMessage"))
+	if (gSavedSettings.getbool("DebugAvatarAppearanceMessage"))
 	{
 		dump_sequential_xml(gAgentAvatarp->getFullname() + "_ais_update", update);
 	}
@@ -1671,7 +1666,7 @@ void LLInventoryModel::onObjectDeletedFromServer(const LLUUID& object_id, bool f
 		LLViewerInventoryItem *item = getItem(object_id);
 		if (item && (item->getType() != LLAssetType::AT_LSL_TEXT))
 		{
-			LLPreview::hide(object_id, TRUE);
+			LLPreview::hide(object_id, true);
 		}
 		deleteObject(object_id, fix_broken_links, do_notify_observers);
 	}
@@ -2660,7 +2655,7 @@ void LLInventoryModel::buildParentChildMap()
 		// cat->updateServer(true);
 
 		// MoveInventoryFolder message, intentionally per item
-		cat->updateParentOnServer(FALSE);
+		cat->updateParentOnServer(false);
 		catsp = getUnlockedCatArray(cat->getParentUUID());
 		if(catsp)
 		{
@@ -2747,7 +2742,7 @@ void LLInventoryModel::buildParentChildMap()
 			msg->addString("NewName", NULL);
 			if(msg->isSendFull(NULL))
 			{
-				start_new_message = TRUE;
+				start_new_message = true;
 				gAgent.sendReliableMessage();
 			}
 		}
@@ -3718,7 +3713,7 @@ void LLInventoryModel::removeCategory(const LLUUID& category_id)
 	// Look for any gestures and deactivate them
 	LLInventoryModel::cat_array_t	descendent_categories;
 	LLInventoryModel::item_array_t	descendent_items;
-	collectDescendents(category_id, descendent_categories, descendent_items, FALSE);
+	collectDescendents(category_id, descendent_categories, descendent_items, false);
 
 	for (LLInventoryModel::item_array_t::const_iterator iter = descendent_items.begin();
 		 iter != descendent_items.end();
