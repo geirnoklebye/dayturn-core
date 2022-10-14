@@ -1890,10 +1890,10 @@ bool LLFloaterIMContainer::removeConversationListItem(const LLUUID& uuid, bool c
 		is_widget_selected = widget->isSelected();
         if (mConversationsRoot)
         {
-            new_selection = mConversationsRoot->getNextFromChild(widget, FALSE);
+            new_selection = mConversationsRoot->getNextFromChild(widget, false);
             if (!new_selection)
             {
-                new_selection = mConversationsRoot->getPreviousFromChild(widget, FALSE);
+                new_selection = mConversationsRoot->getPreviousFromChild(widget, false);
             }
         }
 
@@ -2242,7 +2242,7 @@ void LLFloaterIMContainer::openNearbyChat()
 		if (nearby_chat)
 		{
 			reSelectConversation();
-			nearby_chat->setOpen(TRUE);
+			nearby_chat->setOpen(true);
 		}
 	}
 }
@@ -2362,11 +2362,11 @@ bool LLFloaterIMContainer::selectNextorPreviousConversation(bool select_next, bo
 		{
 			if(select_next)
 			{
-				new_selection = mConversationsRoot->getNextFromChild(widget, FALSE);
+				new_selection = mConversationsRoot->getNextFromChild(widget, false);
 			}
 			else
 			{
-				new_selection = mConversationsRoot->getPreviousFromChild(widget, FALSE);
+				new_selection = mConversationsRoot->getPreviousFromChild(widget, false);
 			}
 			if (new_selection)
 			{

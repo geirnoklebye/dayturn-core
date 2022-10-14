@@ -1953,7 +1953,7 @@ void move_items_to_folder(const LLUUID& new_cat_uuid, const uuid_vec_t& selected
             LLFolderViewItem* fv_folder = sidepanel_inventory->getActivePanel()->getItemByID(new_cat_uuid);
             if (fv_folder)
             {
-                fv_folder->setOpen(TRUE);
+                fv_folder->setOpen(true);
             }
         }
     }
@@ -2303,7 +2303,7 @@ void LLSaveFolderState::doFolder(LLFolderViewFolder* folder)
 		{
 			if (!folder->isOpen())
 			{
-				folder->setOpen(TRUE);
+				folder->setOpen(true);
 			}
 		}
 		else
@@ -2311,7 +2311,7 @@ void LLSaveFolderState::doFolder(LLFolderViewFolder* folder)
 			// keep selected filter in its current state, this is less jarring to user
 			if (!folder->isSelected() && folder->isOpen())
 			{
-				folder->setOpen(FALSE);
+				folder->setOpen(false);
 			}
 		}
 	}
@@ -2355,7 +2355,7 @@ void LLSelectFirstFilteredItem::doItem(LLFolderViewItem *item)
 		{
 			item->getParentFolder()->setOpenArrangeRecursively(true, LLFolderViewFolder::RECURSE_UP);
 		}
-		mItemSelected = TRUE;
+		mItemSelected = true;
 	}
 }
 
@@ -2366,7 +2366,7 @@ void LLSelectFirstFilteredItem::doFolder(LLFolderViewFolder* folder)
 	{
 		folder->getRoot()->setSelection(folder, false, false);
 		folder->getParentFolder()->setOpenArrangeRecursively(true, LLFolderViewFolder::RECURSE_UP);
-		mFolderSelected = TRUE;
+		mFolderSelected = true;
 	}
 }
 

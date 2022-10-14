@@ -977,7 +977,7 @@ static void highlight_inventory_objects_in_panel(const std::vector<LLUUID>& item
 					// Parent folders can be different in case of 2 consecutive drag and drop
 					// operations when the second one is started before the first one completes.
 					LL_DEBUGS("Inventory_Move") << "Open folder: " << fv_folder->getName() << LL_ENDL;
-					fv_folder->setOpen(TRUE);
+					fv_folder->setOpen(true);
 					if (fv_folder->isSelected())
 					{
 						fv->changeSelection(fv_folder, false);

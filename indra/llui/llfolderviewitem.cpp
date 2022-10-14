@@ -224,7 +224,7 @@ bool LLFolderViewItem::isDescendantOf( const LLFolderViewFolder* potential_ances
 	return false;
 }
 
-LLFolderViewItem* LLFolderViewItem::getNextOpenNode(BOOL include_children)
+LLFolderViewItem* LLFolderViewItem::getNextOpenNode(bool include_children)
 {
 	if (!mParentFolder)
 	{
@@ -246,7 +246,7 @@ LLFolderViewItem* LLFolderViewItem::getNextOpenNode(BOOL include_children)
 	return itemp;
 }
 
-LLFolderViewItem* LLFolderViewItem::getPreviousOpenNode(BOOL include_children)
+LLFolderViewItem* LLFolderViewItem::getPreviousOpenNode(bool include_children)
 {
 	if (!mParentFolder)
 	{
@@ -342,8 +342,8 @@ void LLFolderViewItem::refreshSuffix()
 }
 
 // Utility function for LLFolderView
-void LLFolderViewItem::arrangeAndSet(BOOL set_selection,
-									 BOOL take_keyboard_focus)
+void LLFolderViewItem::arrangeAndSet(bool set_selection,
+									 bool take_keyboard_focus)
 {
 	LLFolderView* root = getRoot();
 	if (getParentFolder())
@@ -486,7 +486,7 @@ bool LLFolderViewItem::isMovable()
 	return getViewModelItem()->isItemMovable();
 }
 
-BOOL LLFolderViewItem::isRemovable()
+bool LLFolderViewItem::isRemovable()
 {
 	return getViewModelItem()->isItemRemovable();
 }
@@ -506,11 +506,11 @@ void LLFolderViewItem::destroyView()
 // Call through to the viewed object and return true if it can be
 // removed.
 //BOOL LLFolderViewItem::removeRecursively(BOOL single_item)
-BOOL LLFolderViewItem::remove()
+bool LLFolderViewItem::remove()
 {
 	if(!isRemovable())
 	{
-		return FALSE;
+		return false;
 	}
 	return getViewModelItem()->removeItem();
 }
@@ -775,7 +775,7 @@ void LLFolderViewItem::drawHighlight(const bool showContent, const bool hasKeybo
     //--------------------------------------------------------------------------------//
     // Draw highlight for selected items
 	// Note: Always render "current" item or flashing item, only render other selected 
-	// items if mShowSingleSelection is FALSE.
+	// items if mShowSingleSelection is false.
     //
     if (isHighlightAllowed())	
     							
@@ -883,8 +883,8 @@ void LLFolderViewItem::drawLabel(const LLFontGL * font, const F32 x, const F32 y
 
 void LLFolderViewItem::draw()
 {
-    const BOOL show_context = (getRoot() ? getRoot()->getShowSelectionContext() : FALSE);
-    const BOOL filled = show_context || (getRoot() ? getRoot()->getParentPanel()->hasFocus() : FALSE); // If we have keyboard focus, draw selection filled
+    const bool show_context = (getRoot() ? getRoot()->getShowSelectionContext() : false);
+    const bool filled = show_context || (getRoot() ? getRoot()->getParentPanel()->hasFocus() : false); // If we have keyboard focus, draw selection filled
 
 	const Params& default_params = LLUICtrlFactory::getDefaultParams<LLFolderViewItem>();
 	const S32 TOP_PAD = default_params.item_top_pad;
@@ -1018,8 +1018,8 @@ bool LLFolderViewItem::isInSelection() const
 
 LLFolderViewFolder::LLFolderViewFolder( const LLFolderViewItem::Params& p ): 
 	LLFolderViewItem( p ),
-	mIsOpen(FALSE),
-	mExpanderHighlighted(FALSE),
+	mIsOpen(false),
+	mExpanderHighlighted(false),
 	mCurHeight(0.f),
 	mTargetHeight(0.f),
 	mAutoOpenCountdown(0.f),
@@ -1694,11 +1694,11 @@ bool LLFolderViewFolder::isMovable()
 }
 
 
-BOOL LLFolderViewFolder::isRemovable()
+bool LLFolderViewFolder::isRemovable()
 {
 	if( !(getViewModelItem()->isItemRemovable()) )
 	{
-			return FALSE;
+			return false;
 		}
 
 		for (items_t::iterator iter = mItems.begin();
@@ -1707,7 +1707,7 @@ BOOL LLFolderViewFolder::isRemovable()
 			items_t::iterator iit = iter++;
 			if(!(*iit)->isRemovable())
 			{
-				return FALSE;
+				return false;
 			}
 		}
 
@@ -1717,10 +1717,10 @@ BOOL LLFolderViewFolder::isRemovable()
 			folders_t::iterator fit = iter++;
 			if(!(*fit)->isRemovable())
 			{
-				return FALSE;
+				return false;
 			}
 		}
-	return TRUE;
+	return true;
 }
 
 // this is an internal method used for adding items to folders. 
@@ -1789,14 +1789,14 @@ void LLFolderViewFolder::toggleOpen()
 }
 
 // Force a folder open or closed
-void LLFolderViewFolder::setOpen(BOOL openitem)
+void LLFolderViewFolder::setOpen(bool openitem)
 {
 	setOpenArrangeRecursively(openitem);
 }
 
 void LLFolderViewFolder::setOpenArrangeRecursively(bool openitem, ERecurseType recurse)
 {
-	BOOL was_open = isOpen();
+	bool was_open = isOpen();
 	mIsOpen = openitem;
 		if(!was_open && openitem)
 		{
@@ -2046,19 +2046,19 @@ void LLFolderViewFolder::draw()
 		LLView::draw();
 	}
 
-	mExpanderHighlighted = FALSE;
+	mExpanderHighlighted = false;
 }
 
 // this does prefix traversal, as folders are listed above their contents
-LLFolderViewItem* LLFolderViewFolder::getNextFromChild( LLFolderViewItem* item, BOOL include_children )
+LLFolderViewItem* LLFolderViewFolder::getNextFromChild( LLFolderViewItem* item, bool include_children )
 {
-	BOOL found_item = FALSE;
+	bool found_item = false;
 
 	LLFolderViewItem* result = NULL;
 	// when not starting from a given item, start at beginning
 	if(item == NULL)
 	{
-		found_item = TRUE;
+		found_item = true;
 	}
 
 	// find current item among children
@@ -2076,16 +2076,16 @@ LLFolderViewItem* LLFolderViewFolder::getNextFromChild( LLFolderViewItem* item, 
 		{
 			if(item == (*fit))
 			{
-				found_item = TRUE;
+				found_item = true;
 				// if we are on downwards traversal
 				if (include_children && (*fit)->isOpen())
 				{
 					// look for first descendant
-					return (*fit)->getNextFromChild(NULL, TRUE);
+					return (*fit)->getNextFromChild(NULL, true);
 				}
 				// otherwise advance to next folder
 				++fit;
-				include_children = TRUE;
+				include_children = true;
 				break;
 			}
 		}
@@ -2097,7 +2097,7 @@ LLFolderViewItem* LLFolderViewFolder::getNextFromChild( LLFolderViewItem* item, 
 			{
 				if(item == (*iit))
 				{
-					found_item = TRUE;
+					found_item = true;
 					// point to next item
 					++iit;
 					break;
@@ -2148,22 +2148,22 @@ LLFolderViewItem* LLFolderViewFolder::getNextFromChild( LLFolderViewItem* item, 
 	{
 		// If there are no siblings or children to go to, recurse up one level in the tree
 		// and skip children for this folder, as we've already discounted them
-		result = mParentFolder->getNextFromChild(this, FALSE);
+		result = mParentFolder->getNextFromChild(this, false);
 	}
 
 	return result;
 }
 
 // this does postfix traversal, as folders are listed above their contents
-LLFolderViewItem* LLFolderViewFolder::getPreviousFromChild( LLFolderViewItem* item, BOOL include_children )
+LLFolderViewItem* LLFolderViewFolder::getPreviousFromChild( LLFolderViewItem* item, bool include_children )
 {
-	BOOL found_item = FALSE;
+	bool found_item = false;
 
 	LLFolderViewItem* result = NULL;
 	// when not starting from a given item, start at end
 	if(item == NULL)
 	{
-		found_item = TRUE;
+		found_item = true;
 	}
 
 	// find current item among children
@@ -2181,7 +2181,7 @@ LLFolderViewItem* LLFolderViewFolder::getPreviousFromChild( LLFolderViewItem* it
 		{
 			if(item == (*iit))
 			{
-				found_item = TRUE;
+				found_item = true;
 				// point to next item
 				++iit;
 				break;
@@ -2195,7 +2195,7 @@ LLFolderViewItem* LLFolderViewFolder::getPreviousFromChild( LLFolderViewItem* it
 			{
 				if(item == (*fit))
 				{
-					found_item = TRUE;
+					found_item = true;
 					// point to next folder
 					++fit;
 					break;

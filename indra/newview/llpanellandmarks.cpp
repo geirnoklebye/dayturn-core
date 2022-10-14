@@ -141,7 +141,7 @@ void LLOpenFolderByID::doFolder(LLFolderViewFolder* folder)
 	{
 		if (!folder->isOpen())
 		{
-			folder->setOpen(TRUE);
+			folder->setOpen(true);
 			mIsFolderOpen = true;
 		}
 	}

@@ -233,10 +233,10 @@ public:
 	bool 			hasSelectedItem() const;
 
 	bool			handleClick(S32 x, S32 y, MASK mask);
-	BOOL			selectFirstItem();
-	BOOL			selectNthItem( S32 index );
-	BOOL			selectItemRange( S32 first, S32 last );
-	BOOL			selectItemAt(S32 x, S32 y, MASK mask);
+	bool			selectFirstItem();
+	bool			selectNthItem( S32 index );
+	bool			selectItemRange( S32 first, S32 last );
+	bool			selectItemAt(S32 x, S32 y, MASK mask);
 	
 	void			deleteSingleItem( S32 index );
 // [SL:KB] - Patch: Control-ScrollList | Checked: Catznip-3.5

@@ -165,7 +165,7 @@ public:
 	void removeFromSelectionList(LLFolderViewItem* item);
 
 	bool startDrag();
-	void setDragAndDropThisFrame() { mDragAndDropThisFrame = TRUE; }
+	void setDragAndDropThisFrame() { mDragAndDropThisFrame = true; }
 	void setDraggingOverItem(LLFolderViewItem* item) { mDraggingOverItem = item; }
 	LLFolderViewItem* getDraggingOverItem() { return mDraggingOverItem; }
 
@@ -174,8 +174,8 @@ public:
 
 	void autoOpenItem(LLFolderViewFolder* item);
 	void closeAutoOpenedFolders();
-	BOOL autoOpenTest(LLFolderViewFolder* item);
-	BOOL isOpen() const { return TRUE; } // root folder always open
+	bool autoOpenTest(LLFolderViewFolder* item);
+	bool isOpen() const { return true; } // root folder always open
 
 	// Copy & paste
 	virtual bool	canCopy() const;
@@ -206,7 +206,7 @@ public:
 								   EAcceptance* accept,
 								   std::string& tooltip_msg);
 	/*virtual*/ void reshape(S32 width, S32 height, bool called_from_parent = true);
-	/*virtual*/ void onMouseLeave(S32 x, S32 y, MASK mask) { setShowSelectionContext(FALSE); }
+	/*virtual*/ void onMouseLeave(S32 x, S32 y, MASK mask) { setShowSelectionContext(false); }
 	virtual void draw();
 	virtual void deleteAllChildren();
 
@@ -215,11 +215,11 @@ public:
 	void setScrollContainer( LLScrollContainer* parent ) { mScrollContainer = parent; }
 	LLRect getVisibleRect();
 
-	BOOL search(LLFolderViewItem* first_item, const std::string &search_string, BOOL backward);
+	bool search(LLFolderViewItem* first_item, const std::string &search_string, bool backward);
 	void setShowSelectionContext(bool show) { mShowSelectionContext = show; }
-	BOOL getShowSelectionContext();
+	bool getShowSelectionContext();
 	void setShowSingleSelection(bool show);
-	BOOL getShowSingleSelection() { return mShowSingleSelection; }
+	bool getShowSingleSelection() { return mShowSingleSelection; }
 	F32  getSelectionFadeElapsedTime() { return mMultiSelectionFadeTimer.getElapsedTimeF32(); }
 	bool getUseEllipses() { return mUseEllipses; }
 	S32 getSelectedCount() { return (S32)mSelectedItems.size(); }
@@ -270,7 +270,7 @@ protected:
 	bool selectFirstItem();
 	bool selectLastItem();
 	
-	BOOL addNoOptions(LLMenuGL* menu) const;
+	bool addNoOptions(LLMenuGL* menu) const;
 
 
 protected:
@@ -371,14 +371,14 @@ public:
 class LLSelectFirstFilteredItem : public LLFolderViewFunctor
 {
 public:
-	LLSelectFirstFilteredItem() : mItemSelected(FALSE), mFolderSelected(FALSE) {}
+	LLSelectFirstFilteredItem() : mItemSelected(false), mFolderSelected(false) {}
 	virtual ~LLSelectFirstFilteredItem() {}
 	virtual void doFolder(LLFolderViewFolder* folder);
 	virtual void doItem(LLFolderViewItem* item);
-	BOOL wasItemSelected() { return mItemSelected || mFolderSelected; }
+	bool wasItemSelected() { return mItemSelected || mFolderSelected; }
 protected:
-	BOOL mItemSelected;
-	BOOL mFolderSelected;
+	bool mItemSelected;
+	bool mFolderSelected;
 };
 
 class LLOpenFilteredFolders : public LLFolderViewFunctor

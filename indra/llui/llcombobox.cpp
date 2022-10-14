@@ -498,9 +498,9 @@ void LLComboBox::setButtonVisible(bool visible)
 	}
 }
 
-BOOL LLComboBox::setCurrentByIndex( S32 index )
+bool LLComboBox::setCurrentByIndex( S32 index )
 {
-	BOOL found = mList->selectNthItem( index );
+	bool found = mList->selectNthItem( index );
 	if (found)
 	{
 		setLabel(getSelectedItemLabel());
@@ -1207,7 +1207,7 @@ bool LLComboBox::operateOnAll(EOperation op)
 	return false;
 }
 
-BOOL LLComboBox::selectItemRange( S32 first, S32 last )
+bool LLComboBox::selectItemRange( S32 first, S32 last )
 {
 	return mList->selectItemRange(first, last);
 }

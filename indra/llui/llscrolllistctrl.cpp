@@ -949,19 +949,19 @@ void LLScrollListCtrl::setPageLines(S32 new_page_lines)
 	updateLayout();
 }
 
-BOOL LLScrollListCtrl::selectFirstItem()
+bool LLScrollListCtrl::selectFirstItem()
 {
 // [SL:KB] - Patch: Control-ScrollListCtrl | Checked: 2012-09-22 (Catznip-3.3)
 	if (!mCanSelect)
 	{
-		return FALSE;
+		return false;
 	}
 // [/SL:KB]
 
-	BOOL success = FALSE;
+	bool success = false;
 
 	// our $%&@#$()^%#$()*^ iterators don't let us check against the first item inside out iteration
-	BOOL first_item = TRUE;
+	bool first_item = true;
 
 	item_list::iterator iter;
 	for (iter = mItemList.begin(); iter != mItemList.end(); iter++)
@@ -981,7 +981,7 @@ BOOL LLScrollListCtrl::selectFirstItem()
                     selectItem(itemp, -1);
                 }
 			}
-			success = TRUE;
+			success = true;
 			mOriginalSelection = 0;
 		}
 		else
@@ -999,17 +999,17 @@ BOOL LLScrollListCtrl::selectFirstItem()
 
 // Deselects all other items
 // virtual
-BOOL LLScrollListCtrl::selectNthItem( S32 target_index )
+bool LLScrollListCtrl::selectNthItem( S32 target_index )
 {
 	return selectItemRange(target_index, target_index);
 }
 
 // virtual
-BOOL LLScrollListCtrl::selectItemRange( S32 first_index, S32 last_index )
+bool LLScrollListCtrl::selectItemRange( S32 first_index, S32 last_index )
 {
 	if (mItemList.empty())
 	{
-		return FALSE;
+		return false;
 	}
 
 	// make sure sort is up to date
@@ -1023,7 +1023,7 @@ BOOL LLScrollListCtrl::selectItemRange( S32 first_index, S32 last_index )
 	else
 		last_index = llclamp(last_index, first_index, listlen-1);
 
-	BOOL success = FALSE;
+	bool success = false;
 	S32 index = 0;
 	for (item_list::iterator iter = mItemList.begin(); iter != mItemList.end(); )
 	{
@@ -1048,7 +1048,7 @@ BOOL LLScrollListCtrl::selectItemRange( S32 first_index, S32 last_index )
 			{
 				// TODO: support range selection for cells
 				selectItem(itemp, -1, false);
-				success = TRUE;				
+				success = true;				
 			}
 		}
 		else
@@ -2071,11 +2071,11 @@ bool LLScrollListCtrl::handleToolTip(S32 x, S32 y, MASK mask)
 	return handled;
 }
 
-BOOL LLScrollListCtrl::selectItemAt(S32 x, S32 y, MASK mask)
+bool LLScrollListCtrl::selectItemAt(S32 x, S32 y, MASK mask)
 {
-	if (!mCanSelect) return FALSE;
+	if (!mCanSelect) return false;
 
-	BOOL selection_changed = FALSE;
+	bool selection_changed = false;
 
 	LLScrollListItem* hit_item = hitItem(x, y);
 
@@ -2122,7 +2122,7 @@ BOOL LLScrollListCtrl::selectItemAt(S32 x, S32 y, MASK mask)
 							if (hit_item == lastSelected)
 							{
 								// stop selecting now, since we just clicked on our last selected item
-								selecting = FALSE;
+								selecting = false;
 							}
 						}
 						if (selecting)

@@ -934,7 +934,7 @@ void LLInventoryPanel::initializeViews(F64 max_time)
 		LLFolderViewFolder* lib_folder =   getFolderByID(gInventory.getLibraryRootFolderID());
 		if (lib_folder)
 		{
-			lib_folder->setOpen(TRUE);
+			lib_folder->setOpen(true);
 		}
 		
 		// Auto close the user's my inventory folder
@@ -1129,7 +1129,7 @@ LLFolderViewItem* LLInventoryPanel::buildViewsTree(const LLUUID& id,
             // In the case of the root folder been shown, open that folder by default once the widget is created
             if (create_root)
             {
-                folder_view_item->setOpen(TRUE);
+                folder_view_item->setOpen(true);
             }
         }
 	}
@@ -1297,7 +1297,7 @@ void LLInventoryPanel::openStartFolderOrMyInventory()
 			&& fchild->getViewModelItem()
 			&& fchild->getViewModelItem()->getName() == "My Inventory")
 		{
-			fchild->setOpen(TRUE);
+			fchild->setOpen(true);
 			break;
 		}
 	}
@@ -1982,7 +1982,7 @@ void LLInventoryPanel::setSelectionByID( const LLUUID& obj_id, BOOL    take_keyb
 
 	if(itemp && itemp->getViewModelItem())
 	{
-		itemp->arrangeAndSet(TRUE, take_keyboard_focus);
+		itemp->arrangeAndSet(true, take_keyboard_focus);
 		mSelectThisID.setNull();
 		mFocusSelection = false;
 		return;

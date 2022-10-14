@@ -162,7 +162,7 @@ public:
 
 	bool			remove(const std::string& name);	// remove item "name", return TRUE if found and removed
 	
-	BOOL			setCurrentByIndex( S32 index );
+	bool			setCurrentByIndex( S32 index );
 	S32				getCurrentIndex() const;
 
 	void			setEnabledByValue(const LLSD& value, bool enabled);
@@ -187,9 +187,9 @@ public:
 
 	// LLCtrlSelectionInterface functions
 	virtual bool	getCanSelect() const				{ return true; }
-	virtual BOOL	selectFirstItem()					{ return setCurrentByIndex(0); }
-	virtual BOOL	selectNthItem( S32 index )			{ return setCurrentByIndex(index); }
-	virtual BOOL	selectItemRange( S32 first, S32 last );
+	virtual bool	selectFirstItem()					{ return setCurrentByIndex(0); }
+	virtual bool	selectNthItem( S32 index )			{ return setCurrentByIndex(index); }
+	virtual bool	selectItemRange( S32 first, S32 last );
 	virtual S32		getFirstSelectedIndex() const		{ return getCurrentIndex(); }
 	virtual bool	setCurrentByID( const LLUUID& id );
 	virtual LLUUID	getCurrentID() const;				// LLUUID::null if no items in menu
