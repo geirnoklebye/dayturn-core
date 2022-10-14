@@ -188,12 +188,12 @@ void LLScrollbar::setPageSize( S32 page_size )
 	}
 }
 
-BOOL LLScrollbar::isAtBeginning()
+bool LLScrollbar::isAtBeginning()
 {
 	return mDocPos == 0;
 }
 
-BOOL LLScrollbar::isAtEnd()
+bool LLScrollbar::isAtEnd()
 {
 	return mDocPos == getDocPosMax();
 }

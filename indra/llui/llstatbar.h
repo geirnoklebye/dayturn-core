@@ -44,7 +44,7 @@ public:
 								bar_max,
 								tick_spacing;
 
-		Optional<bool> 			show_bar,
+		Optional<bool>			show_bar,
 								show_history,
 								scale_range,
 								show_median; // default is mean

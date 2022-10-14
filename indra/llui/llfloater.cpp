@@ -3270,7 +3270,6 @@ boost::signals2::connection LLFloater::setCloseCallback( const commit_signal_t::
 
 bool LLFloater::initFloaterXML(LLXMLNodePtr node, LLView *parent, const std::string& filename, LLXMLNodePtr output_node)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	Params default_params(LLUICtrlFactory::getDefaultParams<LLFloater>());
 	Params params(default_params);
 
@@ -3419,7 +3418,6 @@ bool LLFloater::isVisible(const LLFloater* floater)
 
 bool LLFloater::buildFromFile(const std::string& filename)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	LLXMLNodePtr root;
 
 	if (!LLUICtrlFactory::getLayeredXMLNode(filename, root))

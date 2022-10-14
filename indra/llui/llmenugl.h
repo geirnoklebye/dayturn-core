@@ -154,10 +154,10 @@ public:
 	virtual bool getHighlight() const { return mHighlight; }
 
 	// determine if this represents an active sub-menu
-	virtual BOOL isActive( void ) const { return FALSE; }
+	virtual bool isActive( void ) const { return false; }
 
 	// determine if this represents an open sub-menu
-	virtual BOOL isOpen( void ) const { return FALSE; }
+	virtual bool isOpen( void ) const { return false; }
 
 	virtual void setEnabledSubMenus(bool enable){};
 
@@ -450,7 +450,7 @@ public:
 
 	LLMenuGL* findChildMenuByName(const std::string& name, bool recurse) const;
 	
-	BOOL clearHoverItem();
+	bool clearHoverItem();
 
 	// return the name label
 	const std::string& getLabel( void ) const { return mLabel.getString(); }
@@ -487,7 +487,7 @@ public:
 
 	virtual bool jumpKeysActive();
 
-	virtual BOOL isOpen();
+	virtual bool isOpen();
 
 	void needsArrange() { mNeedsArrange = true; }
 	// Shape this menu to fit the current state of the children, and
@@ -657,9 +657,9 @@ public:
 
 	virtual bool handleKeyHere(KEY key, MASK mask);
 
-	virtual BOOL isActive() const;
+	virtual bool isActive() const;
 
-	virtual BOOL isOpen() const;
+	virtual bool isOpen() const;
 
 	LLMenuGL* getBranch() const { return (LLMenuGL*)mBranchHandle.get(); }
 

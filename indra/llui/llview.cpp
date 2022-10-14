@@ -72,9 +72,9 @@ bool	LLView::sDebugMouseHandling = false;
 std::string LLView::sMouseHandlerMessage;
 bool	LLView::sForceReshape = false;
 std::set<LLView*> LLView::sPreviewHighlightedElements;
-BOOL LLView::sHighlightingDiffs = FALSE;
+bool LLView::sHighlightingDiffs = false;
 LLView* LLView::sPreviewClickedElement = NULL;
-BOOL	LLView::sDrawPreviewHighlights = FALSE;
+bool	LLView::sDrawPreviewHighlights = false;
 S32		LLView::sLastLeftXML = S32_MIN;
 S32		LLView::sLastBottomXML = S32_MIN;
 std::vector<LLViewDrawContext*> LLViewDrawContext::sDrawContextStack;
@@ -153,7 +153,7 @@ LLView::LLView(const LLView::Params& p)
 	mReshapeFlags(FOLLOWS_NONE),
 	mFromXUI(p.from_xui),
 	mIsFocusRoot(p.focus_root),
-	mLastVisible(FALSE),
+	mLastVisible(false),
 	mHoverCursor(getCursorFromString(p.hover_cursor)),
 	mEnabled(p.enabled),
 	mMouseOpaque(p.mouse_opaque),
@@ -244,7 +244,7 @@ void LLView::setToolTip(const LLStringExplicit& msg)
 	// </FS:ND>
 }
 
-BOOL LLView::setToolTipArg(const LLStringExplicit& key, const LLStringExplicit& text)
+bool LLView::setToolTipArg(const LLStringExplicit& key, const LLStringExplicit& text)
 {
 	// <FS:ND> LLUIString comes with a tax of 92 byte (Numbers apply to Win32).
 	// Saving roughly 90% (char* + pointer for args) for each LLView derived object makes this really worthwile. Especially when having a large inventory,
@@ -257,7 +257,7 @@ BOOL LLView::setToolTipArg(const LLStringExplicit& key, const LLStringExplicit& 
 
 	// </FS:ND>
 
-	return TRUE;
+	return true;
 }
 
 void LLView::setToolTipArgs( const LLStringUtil::format_map_t& args )
@@ -281,7 +281,7 @@ void LLView::setRect(const LLRect& rect)
 	updateBoundingRect();
 }
 
-void LLView::setUseBoundingRect( BOOL use_bounding_rect ) 
+void LLView::setUseBoundingRect( bool use_bounding_rect ) 
 {
 	if (mUseBoundingRect != use_bounding_rect)
 	{
@@ -290,7 +290,7 @@ void LLView::setUseBoundingRect( BOOL use_bounding_rect )
 	}
 }
 
-BOOL LLView::getUseBoundingRect() const
+bool LLView::getUseBoundingRect() const
 {
 	return mUseBoundingRect;
 }
@@ -543,20 +543,20 @@ LLRect LLView::getRequiredRect()
 	return mRect;
 }
 
-BOOL LLView::focusNextRoot()
+bool LLView::focusNextRoot()
 {
 	LLView::child_list_t result = LLView::getFocusRootsQuery().run(this);
 	return LLView::focusNext(result);
 }
 
-BOOL LLView::focusPrevRoot()
+bool LLView::focusPrevRoot()
 {
 	LLView::child_list_t result = LLView::getFocusRootsQuery().run(this);
 	return LLView::focusPrev(result);
 }
 
 // static
-BOOL LLView::focusNext(LLView::child_list_t & result)
+bool LLView::focusNext(LLView::child_list_t & result)
 {
 	LLView::child_list_reverse_iter_t focused = result.rend();
 	for(LLView::child_list_reverse_iter_t iter = result.rbegin();
@@ -584,15 +584,15 @@ BOOL LLView::focusNext(LLView::child_list_t & result)
 			ctrl->setFocus(true);
 			ctrl->onTabInto();  
 			gFocusMgr.triggerFocusFlash();
-			return TRUE;
+			return true;
 		}
 		++next;
 	}
-	return FALSE;
+	return false;
 }
 
 // static
-BOOL LLView::focusPrev(LLView::child_list_t & result)
+bool LLView::focusPrev(LLView::child_list_t & result)
 {
 	LLView::child_list_iter_t focused = result.end();
 	for(LLView::child_list_iter_t iter = result.begin();
@@ -623,11 +623,11 @@ BOOL LLView::focusPrev(LLView::child_list_t & result)
 				ctrl->onTabInto();  
 				gFocusMgr.triggerFocusFlash();
 			}
-			return TRUE;
+			return true;
 		}
 		++next;
 	}
-	return FALSE;
+	return false;
 }
 
 // delete all children. Override this function if you need to
@@ -948,7 +948,7 @@ bool LLView::handleToolTip(S32 x, S32 y, MASK mask)
 	// TS: Don't bother with a tooltip unless the app itself has focus.
 	if (!gFocusMgr.getAppHasFocus())
 	{
-		return true;
+		return TRUE;
 	}
 
 	// parents provide tooltips first, which are optionally
@@ -1013,7 +1013,7 @@ bool LLView::handleKey(KEY key, MASK mask, bool called_from_parent)
 	if( !handled && !called_from_parent && mParentView)
 	{
 		// Upward traversal
-		handled = mParentView->handleKey( key, mask, false );
+		handled = mParentView->handleKey( key, mask, FALSE );
 	}
 	return handled;
 }
@@ -1045,7 +1045,7 @@ bool LLView::handleKeyUp(KEY key, MASK mask, bool called_from_parent)
 	if (!handled && !called_from_parent && mParentView)
 	{
 		// Upward traversal
-		handled = mParentView->handleKeyUp(key, mask, false);
+		handled = mParentView->handleKeyUp(key, mask, FALSE);
 	}
 	return handled;
 }
@@ -1612,11 +1612,11 @@ LLRect LLView::getLocalSnapRect() const
 	return local_snap_rect;
 }
 
-BOOL LLView::hasAncestor(const LLView* parentp) const
+bool LLView::hasAncestor(const LLView* parentp) const
 {
 	if (!parentp)
 	{
-		return FALSE;
+		return false;
 	}
 
 	LLView* viewp = getParent();
@@ -1624,12 +1624,12 @@ BOOL LLView::hasAncestor(const LLView* parentp) const
 	{
 		if (viewp == parentp)
 		{
-			return TRUE;
+			return true;
 		}
 		viewp = viewp->getParent();
 	}
 
-	return FALSE;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -1667,9 +1667,7 @@ LLView* LLView::getChildView(const std::string& name, bool recurse) const
 }
 
 LLView* LLView::findChildView(const std::string& name, bool recurse) const
-{
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
-	
+{	
     // Look for direct children *first*
 	BOOST_FOREACH(LLView* childp, mChildList)
 	{

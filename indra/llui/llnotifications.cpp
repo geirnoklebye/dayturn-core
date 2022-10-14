@@ -1549,7 +1549,7 @@ bool LLNotifications::loadTemplates()
 
 	std::string base_filename = search_paths.front();
 	LLXMLNodePtr root;
-	BOOL success  = LLXMLNode::getLayeredXMLNode(root, search_paths);
+	bool success  = LLXMLNode::getLayeredXMLNode(root, search_paths);
 
 	if (!success || root.isNull() || !root->hasName( "notifications" ))
 	{

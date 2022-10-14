@@ -1241,13 +1241,13 @@ bool LLMenuItemBranchGL::handleKeyHere( KEY key, MASK mask )
 }
 
 //virtual
-BOOL LLMenuItemBranchGL::isActive() const
+bool LLMenuItemBranchGL::isActive() const
 {
 	return isOpen() && getBranch() && getBranch()->getHighlightedItem();
 }
 
 //virtual
-BOOL LLMenuItemBranchGL::isOpen() const
+bool LLMenuItemBranchGL::isOpen() const
 {
 	return getBranch() && getBranch()->isOpen();
 }
@@ -1355,7 +1355,7 @@ public:
 	// active. This is used for behavior transfer.
 	virtual void setHighlight( bool highlight );
 
-	virtual BOOL isActive( void ) const;
+	virtual bool isActive( void ) const;
 
 	// LLView functionality
 	virtual BOOL handleMouseDown( S32 x, S32 y, MASK mask );
@@ -1477,7 +1477,7 @@ void LLMenuItemBranchDownGL::setHighlight( bool highlight )
 	}
 }
 
-BOOL LLMenuItemBranchDownGL::isActive() const
+bool LLMenuItemBranchDownGL::isActive() const
 {
 	// for top level menus, being open is sufficient to be considered 
 	// active, because clicking on them with the mouse will open
@@ -1525,8 +1525,8 @@ void LLMenuItemBranchDownGL::onFocusLost()
 {
     // needed for tab-based selection
     LLMenuItemBranchGL::onFocusLost();
-    LLMenuGL::setKeyboardMode(FALSE);
-    setHighlight(FALSE);
+    LLMenuGL::setKeyboardMode(false);
+    setHighlight(false);
 }
 
 void LLMenuItemBranchDownGL::setFocus(bool b)
@@ -1936,7 +1936,7 @@ bool LLMenuGL::jumpKeysActive()
 	return active;
 }
 
-BOOL LLMenuGL::isOpen()
+bool LLMenuGL::isOpen()
 {
 	if (getTornOff())
 	{
@@ -1945,7 +1945,7 @@ BOOL LLMenuGL::isOpen()
 		// the open menu chain even if we don't have focus
 		if (itemp && itemp->isOpen())
 		{
-			return TRUE;
+			return true;
 		}
 		// otherwise we are only active if we have keyboard focus
 		LLFloater * parent = dynamic_cast<LLFloater *>(getParent());
@@ -1953,7 +1953,7 @@ BOOL LLMenuGL::isOpen()
 		{
 			return parent->hasFocus();
 		}
-		return FALSE;
+		return false;
 	}
 	else
 	{
@@ -3283,7 +3283,7 @@ LLMenuGL* LLMenuGL::findChildMenuByName(const std::string& name, bool recurse) c
 	return NULL;
 }
 
-BOOL LLMenuGL::clearHoverItem()
+bool LLMenuGL::clearHoverItem()
 {
 	for ( child_list_const_iter_t child_it = getChildList()->begin(); child_it != getChildList()->end(); ++child_it)
 	{
@@ -3294,7 +3294,7 @@ BOOL LLMenuGL::clearHoverItem()
 			return true;
 		}
 	}		
-	return FALSE;
+	return false;
 }
 
 void hide_top_view( LLView* view )
@@ -3831,7 +3831,7 @@ bool LLMenuHolderGL::handleKey(KEY key, MASK mask, bool called_from_parent)
 		{
 			if (pMenu->getHighlightedItem())
 			{
-				handled = pMenu->handleKey(key, mask, true);
+				handled = pMenu->handleKey(key, mask, TRUE);
 			}
 			else if (mask == MASK_NONE || (key >= KEY_LEFT && key <= KEY_DOWN))
 			{
@@ -4026,7 +4026,7 @@ bool LLTearOffMenu::handleKeyHere(KEY key, MASK mask)
 		}
 	}
 	// pass keystrokes down to menu
-	return mMenu->handleKey(key, mask, true);
+	return mMenu->handleKey(key, mask, TRUE);
 }
 
 void LLTearOffMenu::translate(S32 x, S32 y)

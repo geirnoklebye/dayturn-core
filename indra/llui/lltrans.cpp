@@ -147,8 +147,6 @@ std::string LLTrans::getString(const std::string &xml_desc, const LLStringUtil::
 {
 	// Don't care about time as much as call count.  Make sure we're not
 	// calling LLTrans::getString() in an inner loop. JC
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
-	
 	if (def_string)
 	{
 		return getDefString(xml_desc, msg_args);
@@ -196,8 +194,6 @@ std::string LLTrans::getString(const std::string &xml_desc, const LLSD& msg_args
 {
 	// Don't care about time as much as call count.  Make sure we're not
 	// calling LLTrans::getString() in an inner loop. JC
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
-
 	if (def_string)
 	{
 		return getDefString(xml_desc, msg_args);
@@ -237,8 +233,6 @@ std::string LLTrans::getDefString(const std::string &xml_desc, const LLSD& msg_a
 //static 
 bool LLTrans::findString(std::string &result, const std::string &xml_desc, const LLStringUtil::format_map_t& msg_args)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
-	
 	template_map_t::iterator iter = sStringTemplates.find(xml_desc);
 	if (iter != sStringTemplates.end())
 	{
@@ -259,8 +253,6 @@ bool LLTrans::findString(std::string &result, const std::string &xml_desc, const
 //static
 bool LLTrans::findString(std::string &result, const std::string &xml_desc, const LLSD& msg_args)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
-
 	template_map_t::iterator iter = sStringTemplates.find(xml_desc);
 	if (iter != sStringTemplates.end())
 	{

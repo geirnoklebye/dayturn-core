@@ -729,7 +729,7 @@ bool LLTabContainer::handleToolTip( S32 x, S32 y, MASK mask)
 	{
 		LLTabTuple* firsttuple = getTab(0);
 
-		BOOL has_scroll_arrows = !mHideScrollArrows && (getMaxScrollPos() > 0);
+		bool has_scroll_arrows = !mHideScrollArrows && (getMaxScrollPos() > 0);
 		LLRect clip;
 		if (mIsVertical)
 		{
@@ -1249,7 +1249,7 @@ void LLTabContainer::removeTabPanel(LLPanel* child)
 		}
 	}
 	
-	BOOL has_focus = gFocusMgr.childHasKeyboardFocus(this);
+	bool has_focus = gFocusMgr.childHasKeyboardFocus(this);
 
 	// If the tab being deleted is the selected one, select a different tab.
 	for(std::vector<LLTabTuple*>::iterator iter = mTabList.begin(); iter != mTabList.end(); ++iter)

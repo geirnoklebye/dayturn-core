@@ -93,8 +93,8 @@ public:
 	void	setEnabled( bool b )			{ mEnabled = b; }
 	bool	getEnabled() const 				{ return mEnabled; }
 
-	void	setHighlighted( BOOL b );
-	BOOL	getHighlighted() const			{ return mHighlighted; }
+	void	setHighlighted( bool b );
+	bool	getHighlighted() const			{ return mHighlighted; }
 
 	void	setSelectedCell( S32 cell );
 	S32		getSelectedCell() const			{ return mSelectedIndex; }
@@ -136,10 +136,10 @@ protected:
 
 private:
 	bool	mSelected;
-    BOOL	mHighlighted;
+    bool	mHighlighted;
     S32		mHoverIndex;
 	S32		mSelectedIndex;
-	BOOL	mEnabled;
+	bool	mEnabled;
 	void*	mUserdata;
 	LLSD	mItemValue;
 	LLSD	mItemAltValue;

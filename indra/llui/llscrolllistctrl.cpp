@@ -1454,7 +1454,7 @@ bool LLScrollListCtrl::selectItemByLabel(const std::string& label, bool case_sen
 	return found;
 }
 
-LLScrollListItem* LLScrollListCtrl::getItemByLabel(const std::string& label, BOOL case_sensitive, S32 column)
+LLScrollListItem* LLScrollListCtrl::getItemByLabel(const std::string& label, bool case_sensitive, S32 column)
 {
 	if (label.empty()) 	//RN: assume no empty items
 	{
@@ -1679,7 +1679,7 @@ const std::string LLScrollListCtrl::getSelectedItemLabel(S32 column) const
 // "StringUUID" interface: use this when you're creating a list that contains non-unique strings each of which
 // has an associated, unique UUID, and only one of which can be selected at a time.
 
-LLScrollListItem* LLScrollListCtrl::addStringUUIDItem(const std::string& item_text, const LLUUID& id, EAddPosition pos, BOOL enabled)
+LLScrollListItem* LLScrollListCtrl::addStringUUIDItem(const std::string& item_text, const LLUUID& id, EAddPosition pos, bool enabled)
 {
 	if (getItemCount() < mMaxItemCount)
 	{
@@ -2744,7 +2744,7 @@ bool LLScrollListCtrl::handleKeyHere(KEY key,MASK mask )
 						}
 					}
 				}
-				else if (selectItemByPrefix(wstring_to_utf8str(mSearchString), FALSE))
+				else if (selectItemByPrefix(wstring_to_utf8str(mSearchString), false))
 				{
 					mNeedsScroll = true;
 					// update search string only on successful match
@@ -2784,7 +2784,7 @@ bool LLScrollListCtrl::handleUnicodeCharHere(llwchar uni_char)
 	// type ahead search is case insensitive
 	uni_char = LLStringOps::toLower((llwchar)uni_char);
 
-	if (selectItemByPrefix(wstring_to_utf8str(mSearchString + (llwchar)uni_char), FALSE))
+	if (selectItemByPrefix(wstring_to_utf8str(mSearchString + (llwchar)uni_char), false))
 	{
 		// update search string only on successful match
 		mNeedsScroll = true;
@@ -2946,7 +2946,7 @@ void LLScrollListCtrl::commitIfChanged()
 	if (mSelectionChanged)
 	{
 		mDirty = true;
-		mSelectionChanged = FALSE;
+		mSelectionChanged = false;
 		onCommit();
 	}
 }
@@ -3433,6 +3433,7 @@ void LLScrollListCtrl::clearColumns()
 	mTotalColumnPadding = 0;
 
     dirtyColumns(); // Clears mColumnsIndexed
+
 	// <FS:Ansariel> Reset number of dynamic columns, too
 	mNumDynamicWidthColumns = 0;
 }

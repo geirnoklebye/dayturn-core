@@ -283,7 +283,7 @@ public:
 	// <FS:Ansariel> Allow selection by substring match
 	bool			selectItemByStringMatch(const LLWString& target, bool prefix_match, bool case_sensitive = true);
 	// </FS:Ansariel>
-	LLScrollListItem*  getItemByLabel( const std::string& item, BOOL case_sensitive = TRUE, S32 column = 0 );
+	LLScrollListItem*  getItemByLabel( const std::string& item, bool case_sensitive = true, S32 column = 0 );
 	const std::string	getSelectedItemLabel(S32 column = 0) const;
 	LLSD			getSelectedValue();
 
@@ -298,7 +298,7 @@ public:
 	// DEPRECATED: Use LLSD versions of setCommentText() and getSelectedValue().
 	// "StringUUID" interface: use this when you're creating a list that contains non-unique strings each of which
 	// has an associated, unique UUID, and only one of which can be selected at a time.
-	LLScrollListItem*	addStringUUIDItem(const std::string& item_text, const LLUUID& id, EAddPosition pos = ADD_BOTTOM, BOOL enabled = TRUE);
+	LLScrollListItem*	addStringUUIDItem(const std::string& item_text, const LLUUID& id, EAddPosition pos = ADD_BOTTOM, bool enabled = true);
 	LLUUID				getStringUUIDSelectedItem() const;
 
 	LLScrollListItem*	getFirstSelected() const;

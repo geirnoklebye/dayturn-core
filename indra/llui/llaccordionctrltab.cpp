@@ -288,6 +288,7 @@ bool LLAccordionCtrlTab::LLAccordionCtrlTabHeader::handleKey(KEY key, MASK mask,
 	}
 	return LLUICtrl::handleKey(key, mask, called_from_parent);
 }
+
 bool LLAccordionCtrlTab::LLAccordionCtrlTabHeader::handleDragAndDrop(S32 x, S32 y, MASK mask,
 																	 bool drop,
 																	 EDragAndDropType cargo_type,

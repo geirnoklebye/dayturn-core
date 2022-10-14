@@ -404,7 +404,7 @@ void LLComboBox::setLabel(const LLStringExplicit& name)
 	if ( mTextEntry )
 	{
 		mTextEntry->setText(name);
-		if (mList->selectItemByLabel(name, FALSE))
+		if (mList->selectItemByLabel(name, false))
 		{
 			mTextEntry->setTentative(false);
 			mLastSelectedIndex = mList->getFirstSelectedIndex();

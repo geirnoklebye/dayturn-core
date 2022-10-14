@@ -185,14 +185,14 @@ LLView * LLDockableFloater::getDockWidget()
 
 void LLDockableFloater::onDockHidden()
 {
-	setCanDock(FALSE);
+	setCanDock(false);
 }
 
 void LLDockableFloater::onDockShown()
 {
 	if (!isMinimized())
 	{
-		setCanDock(TRUE);
+		setCanDock(true);
 	}
 }
 

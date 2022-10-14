@@ -124,7 +124,7 @@ LLFolderViewItem::LLFolderViewItem(const LLFolderViewItem::Params& p)
 	mLabelWidthDirty(false),
     mSuffixNeedsRefresh(false),
     mLabelPaddingRight(DEFAULT_LABEL_PADDING_RIGHT),
-	mParentFolder( NULL ),
+	mParentFolder(NULL),
 	mIsSelected(false),
 	mIsCurSelection(false),
 	mSelectPending(false),

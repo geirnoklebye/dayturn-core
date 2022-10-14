@@ -46,7 +46,7 @@ class LLViewerEventRecorder : public LLSimpleton<LLViewerEventRecorder>
 public:
     LLViewerEventRecorder();
     ~LLViewerEventRecorder();
-   
+
   void updateMouseEventInfo(S32 local_x,S32 local_y, S32 global_x, S32 global_y,  std::string mName);
   void setMouseLocalCoords(S32 x,S32 y);
   void setMouseGlobalCoords(S32 x,S32 y);

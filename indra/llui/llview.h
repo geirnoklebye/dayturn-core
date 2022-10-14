@@ -224,7 +224,7 @@ public:
 	void		setMouseOpaque( bool b )		{ mMouseOpaque = b; }
 	bool		getMouseOpaque() const			{ return mMouseOpaque; }
 	void		setToolTip( const LLStringExplicit& msg );
-	BOOL		setToolTipArg( const LLStringExplicit& key, const LLStringExplicit& text );
+	bool		setToolTipArg( const LLStringExplicit& key, const LLStringExplicit& text );
 	void		setToolTipArgs( const LLStringUtil::format_map_t& args );
 
 	virtual void setRect(const LLRect &rect);
@@ -240,8 +240,8 @@ public:
 
 	void        setSoundFlags(U8 flags)			{ mSoundFlags = flags; }
 	void		setName(std::string name)			{ mName = name; }
-	void		setUseBoundingRect( BOOL use_bounding_rect );
-	BOOL		getUseBoundingRect() const;
+	void		setUseBoundingRect( bool use_bounding_rect );
+	bool		getUseBoundingRect() const;
 
 	ECursorType	getHoverCursor() { return mHoverCursor; }
 
@@ -275,12 +275,12 @@ public:
 	bool		isInVisibleChain() const;
 	bool		isInEnabledChain() const;
 
-	void		setFocusRoot(BOOL b)			{ mIsFocusRoot = b; }
-	BOOL		isFocusRoot() const				{ return mIsFocusRoot; }
+	void		setFocusRoot(bool b)			{ mIsFocusRoot = b; }
+	bool		isFocusRoot() const				{ return mIsFocusRoot; }
 	virtual bool canFocusChildren() const;
 
-	BOOL focusNextRoot();
-	BOOL focusPrevRoot();
+	bool focusNextRoot();
+	bool focusPrevRoot();
 
 	// Normally we want the app menus to get priority on accelerated keys
 	// However, sometimes we want to give specific views a first chance
@@ -316,7 +316,7 @@ public:
 
 	void			pushVisible(bool visible)	{ mLastVisible = mVisible; setVisible(visible); }
 	void			popVisible()				{ setVisible(mLastVisible); }
-	BOOL			getLastVisible()	const	{ return mLastVisible; }
+	bool			getLastVisible()	const	{ return mLastVisible; }
 
 	U32			getFollows() const				{ return mReshapeFlags; }
 	BOOL		followsLeft() const				{ return mReshapeFlags & FOLLOWS_LEFT; }
@@ -348,7 +348,7 @@ public:
 	LLView*		findNextSibling(LLView* child);
 	S32			getChildCount()	const			{ return (S32)mChildList.size(); }
 	template<class _Pr3> void sortChildren(_Pr3 _Pred) { mChildList.sort(_Pred); }
-	BOOL		hasAncestor(const LLView* parentp) const;
+	bool		hasAncestor(const LLView* parentp) const;
 	bool		hasChild(const std::string& childname, bool recurse = false) const;
 	BOOL 		childHasKeyboardFocus( const std::string& childname ) const;
 	
@@ -502,9 +502,9 @@ public:
 	//static LLFontGL::HAlign selectFontHAlign(LLXMLNodePtr node);
 	
 	// focuses the item in the list after the currently-focused item, wrapping if necessary
-	static	BOOL focusNext(LLView::child_list_t & result);
+	static	bool focusNext(LLView::child_list_t & result);
 	// focuses the item in the list before the currently-focused item, wrapping if necessary
-	static	BOOL focusPrev(LLView::child_list_t & result);
+	static	bool focusPrev(LLView::child_list_t & result);
 
 	// returns query for iterating over controls in tab order	
 	static const LLViewQuery & getTabOrderQuery();
@@ -627,10 +627,10 @@ private:
 	U8          mSoundFlags;
 	bool		mFromXUI;
 
-	BOOL		mIsFocusRoot;
-	BOOL		mUseBoundingRect; // hit test against bounding rectangle that includes all child elements
+	bool		mIsFocusRoot;
+	bool		mUseBoundingRect; // hit test against bounding rectangle that includes all child elements
 
-	BOOL		mLastVisible;
+	bool		mLastVisible;
 
 	bool		mInDraw;
 
@@ -689,9 +689,9 @@ public:
 	static std::string sMouseHandlerMessage;
 	static S32	sSelectID;
 	static std::set<LLView*> sPreviewHighlightedElements;	// DEV-16869
-	static BOOL sHighlightingDiffs;							// DEV-16869
+	static bool sHighlightingDiffs;							// DEV-16869
 	static LLView* sPreviewClickedElement;					// DEV-16869
-	static BOOL sDrawPreviewHighlights;
+	static bool sDrawPreviewHighlights;
 	static S32 sLastLeftXML;
 	static S32 sLastBottomXML;
 	static bool sForceReshape;

@@ -368,7 +368,7 @@ public:
 	// Passes selection information on to children and record
 	// selection information if necessary.
 	// Returns TRUE if this object (or a child) ends up being selected.
-	// If 'openitem' is TRUE then folders are opened up along the way to the selection.
+	// If 'openitem' is true then folders are opened up along the way to the selection.
 	virtual bool setSelection(LLFolderViewItem* selection, bool openitem, bool take_keyboard_focus = true);
 
 	// This method is used to change the selection of an item.

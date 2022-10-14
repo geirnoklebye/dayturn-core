@@ -1609,8 +1609,6 @@ S32 LLTextBase::getLeftOffset(S32 width)
 
 void LLTextBase::reflow()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
-
 	updateSegments();
 
 	if (mReflowIndex == S32_MAX)
@@ -1959,7 +1957,6 @@ void LLTextBase::removeDocumentChild(LLView* view)
 
 void LLTextBase::updateSegments()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
 	createDefaultSegment();
 }
 
@@ -2223,7 +2220,6 @@ static LLUIImagePtr image_from_icon_name(const std::string& icon_name)
 
 void LLTextBase::appendTextImpl(const std::string &new_text, const LLStyle::Params& input_params)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
 	LLStyle::Params style_params(input_params);
 	style_params.fillFrom(getStyleParams());
 
@@ -2325,7 +2321,6 @@ void LLTextBase::setLastSegmentToolTip(const std::string &tooltip)
 
 void LLTextBase::appendText(const std::string &new_text, bool prepend_newline, const LLStyle::Params& input_params)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
 	if (new_text.empty()) 
 		return;
 

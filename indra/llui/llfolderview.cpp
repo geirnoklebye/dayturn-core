@@ -161,13 +161,13 @@ LLFolderView::Params::Params()
 // Default constructor
 LLFolderView::LLFolderView(const Params& p)
 :	LLFolderViewFolder(p),
-	mScrollContainer( NULL ),
+	mScrollContainer(NULL),
 	mPopupMenuHandle(),
 	mAllowMultiSelect(p.allow_multiselect),
 	mAllowDrag(p.allow_drag),
 	mShowEmptyMessage(p.show_empty_message),
 	mShowFolderHierarchy(false),
-	mRenameItem( NULL ),
+	mRenameItem(NULL),
 	mNeedsScroll(false),
 	mUseLabelSuffix(p.use_label_suffix),
 	mSuppressFolderMenu(p.suppress_folder_menu),
@@ -1639,9 +1639,7 @@ static LLTrace::BlockTimerStatHandle FTM_INVENTORY("Inventory");
 void LLFolderView::update()
 {
 	// If this is associated with the user's inventory, don't do anything
-	// until that inventory is loaded up.
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_UI; //LL_RECORD_BLOCK_TIME(FTM_INVENTORY);
-    
+	// until that inventory is loaded up.    
     // If there's no model, the view is in suspended state (being deleted) and shouldn't be updated
     if (getFolderViewModel() == NULL)
     {
@@ -1794,10 +1792,10 @@ void LLFolderView::update()
 	if (mSignalSelectCallback)
 	{
 		//RN: we use keyboard focus as a proxy for user-explicit actions
-		BOOL take_keyboard_focus = (mSignalSelectCallback == SIGNAL_KEYBOARD_FOCUS);
+		bool take_keyboard_focus = (mSignalSelectCallback == SIGNAL_KEYBOARD_FOCUS);
 		mSelectSignal(mSelectedItems, take_keyboard_focus);
 	}
-	mSignalSelectCallback = FALSE;
+	mSignalSelectCallback = false;
 }
 
 void LLFolderView::dumpSelectionInformation()

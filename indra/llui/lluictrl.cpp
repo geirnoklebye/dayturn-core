@@ -483,7 +483,6 @@ LLViewModel* LLUICtrl::getViewModel() const
 //virtual
 bool LLUICtrl::postBuild()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
 	//
 	// Find all of the children that want to be in front and move them to the front
 	//
@@ -811,9 +810,9 @@ bool LLUICtrl::getIsChrome() const
 }
 
 
+
 bool LLUICtrl::focusFirstItem(bool prefer_text_fields, bool focus_flash)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
 	// try to select default tab group child
 	LLViewQuery query = getTabOrderQuery();
 	child_list_t result = query(this);
@@ -1172,17 +1171,17 @@ void LLUICtrl::addInfo(LLSD & info)
 // <FS:Zi> Decide if a control should be visible, according to ControlVisibility
 void LLUICtrl::decideVisibility()
 {
-	BOOL visible=TRUE;
+	bool visible=true;
 
 	if(mMakeVisibleControlVariable &&
 	   !mMakeVisibleControlVariable->getValue().asBoolean())
 	{
-		visible=FALSE;
+		visible=false;
 	}
 	else if(mMakeInvisibleControlVariable &&
 	        mMakeInvisibleControlVariable->getValue().asBoolean())
 	{
-		visible=FALSE;
+		visible=false;
 	}
 
 	setVisible(visible);
