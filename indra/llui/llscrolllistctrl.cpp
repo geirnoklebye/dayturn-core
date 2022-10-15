@@ -66,7 +66,7 @@ static LLDefaultChildRegistry::Register<LLScrollListCtrl> r("scroll_list");
 // local structures & classes.
 struct SortScrollListItem
 {
-	SortScrollListItem(const std::vector<std::pair<S32, BOOL> >& sort_orders,const LLScrollListCtrl::sort_signal_t*	sort_signal, bool alternate_sort)
+	SortScrollListItem(const std::vector<std::pair<S32, bool> >& sort_orders,const LLScrollListCtrl::sort_signal_t*	sort_signal, bool alternate_sort)
 	:	mSortOrders(sort_orders)
 	,   mSortSignal(sort_signal)
 	,	mAltSort(alternate_sort)
@@ -80,7 +80,7 @@ struct SortScrollListItem
 			 it != mSortOrders.rend(); ++it)
 		{
 			S32 col_idx = it->first;
-			BOOL sort_ascending = it->second;
+			bool sort_ascending = it->second;
 
 			S32 order = sort_ascending ? 1 : -1; // ascending or descending sort for this column?
 
@@ -114,7 +114,7 @@ struct SortScrollListItem
 	}
 	
 
-	typedef std::vector<std::pair<S32, BOOL> > sort_order_t;
+	typedef std::vector<std::pair<S32, bool> > sort_order_t;
 	const LLScrollListCtrl::sort_signal_t* mSortSignal;
 	const sort_order_t& mSortOrders;
 	const bool mAltSort;
@@ -647,7 +647,7 @@ void LLScrollListCtrl::updateLayout()
 	// how many lines of content in a single "page"
 	S32 page_lines =  getLinesPerPage();
 
-	BOOL scrollbar_visible = mLineHeight * getItemCount() > mItemListRect.getHeight();
+	bool scrollbar_visible = mLineHeight * getItemCount() > mItemListRect.getHeight();
 	if (scrollbar_visible)
 	{
 		// provide space on the right for scrollbar
@@ -3028,7 +3028,7 @@ void LLScrollListCtrl::sortByColumn(const std::string& name, bool ascending)
 }
 
 // First column is column 0
-void  LLScrollListCtrl::sortByColumnIndex(U32 column, BOOL ascending)
+void  LLScrollListCtrl::sortByColumnIndex(U32 column, bool ascending)
 {
 	setSort(column, ascending);
 	updateSort();
@@ -3051,7 +3051,7 @@ void LLScrollListCtrl::updateSort() const
 // for one-shot sorts, does not save sort column/order
 void LLScrollListCtrl::sortOnce(S32 column, bool ascending)
 {
-	std::vector<std::pair<S32, BOOL> > sort_column;
+	std::vector<std::pair<S32, bool> > sort_column;
 	sort_column.push_back(std::make_pair(column, ascending));
 
 	// do stable sort to preserve any previous sorts
@@ -3791,7 +3791,7 @@ void LLScrollListCtrl::loadPersistedSortOrder()
 			for (LLSD::array_iterator it = sort_order.beginArray(); it != sort_order.endArray(); ++it)
 			{
 				S32 sort_val = (*it).asInteger();
-				BOOL ascending = sort_val > 0;
+				bool ascending = sort_val > 0;
 				sort_val = llabs(sort_val) - 1;
 
 				setSort(sort_val, ascending);

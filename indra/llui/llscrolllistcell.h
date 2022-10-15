@@ -126,8 +126,8 @@ public:
 	virtual bool			getVisible() const { return true; }
 	virtual void			setWidth(S32 width) { mWidth = width; }
 	virtual void			highlightText(S32 offset, S32 num_chars) {}
-	virtual BOOL			isText() const { return FALSE; }
-	virtual BOOL			needsToolTip() const { return ! mToolTip.empty(); }
+	virtual bool			isText() const { return false; }
+	virtual bool			needsToolTip() const { return ! mToolTip.empty(); }
 	virtual void			setColor(const LLColor4&) {}
 	virtual void			onCommit() {};
 
@@ -170,9 +170,9 @@ public:
 	/*virtual*/ void	highlightText(S32 offset, S32 num_chars);
 
 	/*virtual*/ void	setColor(const LLColor4&);
-	/*virtual*/ BOOL	isText() const;
+	/*virtual*/ bool	isText() const;
 	/*virtual*/ const std::string &	getToolTip() const;
-	/*virtual*/ BOOL	needsToolTip() const;
+	/*virtual*/ bool	needsToolTip() const;
 
 	S32				getTextWidth() const { return mTextWidth;}
 	void			setTextWidth(S32 value) { mTextWidth = value;} 

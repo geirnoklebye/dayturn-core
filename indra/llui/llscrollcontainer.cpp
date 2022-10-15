@@ -81,7 +81,7 @@ LLScrollContainer::Params::Params()
 // Default constructor
 LLScrollContainer::LLScrollContainer(const LLScrollContainer::Params& p)
 :	LLUICtrl(p),
-	mAutoScrolling( FALSE ),
+	mAutoScrolling( false ),
 	mAutoScrollRate( 0.f ),
 	mBackgroundColor(p.bg_color()),
 	mIsOpaque(p.is_opaque),
@@ -190,8 +190,8 @@ void LLScrollContainer::reshape(S32 width, S32 height,
 
 		S32 visible_width = 0;
 		S32 visible_height = 0;
-		BOOL show_v_scrollbar = FALSE;
-		BOOL show_h_scrollbar = FALSE;
+		S32 show_v_scrollbar = 0;
+		S32 show_h_scrollbar = 0;
 		calcVisibleSize( &visible_width, &visible_height, &show_h_scrollbar, &show_v_scrollbar );
 
 		mScrollbar[VERTICAL]->setDocSize( scrolled_rect.getHeight() );
@@ -365,7 +365,7 @@ bool LLScrollContainer::autoScroll(S32 x, S32 y, bool do_scroll)
 				if (do_scroll)
 				{
 					mScrollbar[HORIZONTAL]->setDocPos(mScrollbar[HORIZONTAL]->getDocPos() - auto_scroll_speed);
-					mAutoScrolling = TRUE;
+					mAutoScrolling = true;
 				}
 				scrolling = true;
 			}
@@ -377,7 +377,7 @@ bool LLScrollContainer::autoScroll(S32 x, S32 y, bool do_scroll)
 				if (do_scroll)
 				{
 					mScrollbar[HORIZONTAL]->setDocPos(mScrollbar[HORIZONTAL]->getDocPos() + auto_scroll_speed);
-					mAutoScrolling = TRUE;
+					mAutoScrolling = true;
 				}
 				scrolling = true;
 			}
@@ -391,7 +391,7 @@ bool LLScrollContainer::autoScroll(S32 x, S32 y, bool do_scroll)
 				if (do_scroll)
 				{
 					mScrollbar[VERTICAL]->setDocPos(mScrollbar[VERTICAL]->getDocPos() + auto_scroll_speed);
-					mAutoScrolling = TRUE;
+					mAutoScrolling = true;
 				}
 				scrolling = true;
 			}
@@ -403,7 +403,7 @@ bool LLScrollContainer::autoScroll(S32 x, S32 y, bool do_scroll)
 				if (do_scroll)
 				{
 					mScrollbar[VERTICAL]->setDocPos(mScrollbar[VERTICAL]->getDocPos() - auto_scroll_speed);
-					mAutoScrolling = TRUE;
+					mAutoScrolling = true;
 				}
 				scrolling = true;
 			}
@@ -412,7 +412,7 @@ bool LLScrollContainer::autoScroll(S32 x, S32 y, bool do_scroll)
 	return scrolling;
 }
 
-void LLScrollContainer::calcVisibleSize( S32 *visible_width, S32 *visible_height, BOOL* show_h_scrollbar, BOOL* show_v_scrollbar ) const
+void LLScrollContainer::calcVisibleSize( S32 *visible_width, S32 *visible_height, S32* show_h_scrollbar, S32* show_v_scrollbar ) const
 {
 	const LLRect& doc_rect = getScrolledViewRect();
 	static LLUICachedControl<S32> scrollbar_size_control ("UIScrollbarSize", 0);
@@ -425,8 +425,8 @@ void LLScrollContainer::calcVisibleSize( S32 *visible_width, S32 *visible_height
 	*visible_width = getRect().getWidth() - 2 * border_width;
 	*visible_height = getRect().getHeight() - 2 * border_width;
 	
-	*show_v_scrollbar = FALSE;
-	*show_h_scrollbar = FALSE;
+	*show_v_scrollbar = 0;
+	*show_h_scrollbar = 0;
 
 	if (!mHideScrollbar)
 	{
@@ -434,12 +434,12 @@ void LLScrollContainer::calcVisibleSize( S32 *visible_width, S32 *visible_height
 		// the display of sliders.
 		if ((doc_height - *visible_height) > 1)
 		{
-			*show_v_scrollbar = TRUE;
+			*show_v_scrollbar = 1;
 			*visible_width -= scrollbar_size;
 		}
 		if ((doc_width - *visible_width) > 1)
 		{
-			*show_h_scrollbar = TRUE;
+			*show_h_scrollbar = 1;
 			*visible_height -= scrollbar_size;
 			// Note: Do *not* recompute *show_v_scrollbar here because with
 			// The view inside the scroll container should not be extended
@@ -448,7 +448,7 @@ void LLScrollContainer::calcVisibleSize( S32 *visible_width, S32 *visible_height
 
 			if( !*show_v_scrollbar && ((doc_height - *visible_height) > 1) )
 			{
-				*show_v_scrollbar = TRUE;
+				*show_v_scrollbar = 1;
 				*visible_width -= scrollbar_size;
 			}
 		}
@@ -472,7 +472,7 @@ void LLScrollContainer::draw()
 		mAutoScrollRate = mMinAutoScrollRate;
 	}
 	// clear this flag to be set on next call to autoScroll
-	mAutoScrolling = FALSE;
+	mAutoScrolling = false;
 
 	// auto-focus when scrollbar active
 	// this allows us to capture user intent (i.e. stop automatically scrolling the view/etc)
@@ -505,8 +505,8 @@ void LLScrollContainer::draw()
 			{
 				S32 visible_width = 0;
 				S32 visible_height = 0;
-				BOOL show_v_scrollbar = FALSE;
-				BOOL show_h_scrollbar = FALSE;
+				S32 show_v_scrollbar = 0; //used as bool
+				S32 show_h_scrollbar = 0;
 				calcVisibleSize( &visible_width, &visible_height, &show_h_scrollbar, &show_v_scrollbar );
 
 				LLLocalClipRect clip(LLRect(mInnerRect.mLeft, 
@@ -577,8 +577,8 @@ void LLScrollContainer::updateScroll()
 	S32 doc_height = doc_rect.getHeight();
 	S32 visible_width = 0;
 	S32 visible_height = 0;
-	BOOL show_v_scrollbar = FALSE;
-	BOOL show_h_scrollbar = FALSE;
+	S32 show_v_scrollbar = 0;
+	S32 show_h_scrollbar = 0;
 	calcVisibleSize( &visible_width, &visible_height, &show_h_scrollbar, &show_v_scrollbar );
 
 	S32 border_width = getBorderWidth();
@@ -675,8 +675,8 @@ LLRect LLScrollContainer::getContentWindowRect()
 	LLRect scroller_view_rect;
 	S32 visible_width = 0;
 	S32 visible_height = 0;
-	BOOL show_h_scrollbar = FALSE;
-	BOOL show_v_scrollbar = FALSE;
+	S32 show_h_scrollbar = 0;
+	S32 show_v_scrollbar = 0;
 	calcVisibleSize( &visible_width, &visible_height, &show_h_scrollbar, &show_v_scrollbar );
 	S32 border_width = getBorderWidth();
 	scroller_view_rect.setOriginAndSize(border_width, 

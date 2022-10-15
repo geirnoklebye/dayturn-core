@@ -142,7 +142,7 @@ void LLScrollbar::setDocParams( S32 size, S32 pos )
 }
 
 // returns true if document position really changed
-bool LLScrollbar::setDocPos(S32 pos, BOOL update_thumb)
+bool LLScrollbar::setDocPos(S32 pos, bool update_thumb)
 {
 	pos = llclamp(pos, 0, getDocPosMax());
 	if (pos != mDocPos)

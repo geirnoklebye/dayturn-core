@@ -2980,7 +2980,7 @@ bool LLViewerWindow::handleKey(KEY key, MASK mask)
                 // We have keyboard focus, and it's not an accelerator
                 if (keyboard_focus && keyboard_focus->wantsKeyUpKeyDown())
                 {
-                    return keyboard_focus->handleKey(key, mask, FALSE);
+                    return keyboard_focus->handleKey(key, mask, false);
                 }
                 else if (key < 0x80)
                 {
@@ -2992,9 +2992,9 @@ bool LLViewerWindow::handleKey(KEY key, MASK mask)
     }
 
 	// let menus handle navigation keys for navigation
-	if ((gMenuBarView && gMenuBarView->handleKey(key, mask, TRUE))
-		||(gLoginMenuBarView && gLoginMenuBarView->handleKey(key, mask, TRUE))
-		||(gMenuHolder && gMenuHolder->handleKey(key, mask, TRUE)))
+	if ((gMenuBarView && gMenuBarView->handleKey(key, mask, true))
+		||(gLoginMenuBarView && gLoginMenuBarView->handleKey(key, mask, true))
+		||(gMenuHolder && gMenuHolder->handleKey(key, mask, true)))
 	{
 		LL_DEBUGS() << "LLviewerWindow::handleKey handle nav keys for nav" << LL_ENDL;
 		LLViewerEventRecorder::instance().logKeyEvent(key,mask);
@@ -3009,7 +3009,7 @@ bool LLViewerWindow::handleKey(KEY key, MASK mask)
 		// Check the current floater's menu first, if it has one.
 		if (gFocusMgr.keyboardFocusHasAccelerators()
 			&& keyboard_focus 
-			&& keyboard_focus->handleKey(key,mask,FALSE))
+			&& keyboard_focus->handleKey(key,mask,false))
 		{
 			LLViewerEventRecorder::instance().logKeyEvent(key,mask);
 			return true;
@@ -3095,7 +3095,7 @@ bool LLViewerWindow::handleKey(KEY key, MASK mask)
 		}
 		}
 
-		if (keyboard_focus->handleKey(key, mask, FALSE))
+		if (keyboard_focus->handleKey(key, mask, false))
 		{
 
 			LL_DEBUGS() << "LLviewerWindow::handleKey - in 'traverse up' - no loops seen... just called keyboard_focus->handleKey an it returned true" << LL_ENDL;

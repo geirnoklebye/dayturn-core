@@ -90,7 +90,7 @@ public:
 	void			scrollToShowRect( const LLRect& rect, const LLRect& constraint);
 	void			scrollToShowRect( const LLRect& rect) { scrollToShowRect(rect, LLRect(0, mInnerRect.getHeight(), mInnerRect.getWidth(), 0)); }
 
-	void			setReserveScrollCorner( BOOL b ) { mReserveScrollCorner = b; }
+	void			setReserveScrollCorner( bool b ) { mReserveScrollCorner = b; }
 	LLRect			getVisibleContentRect();
 	LLRect			getContentWindowRect();
 	virtual const LLRect	getScrolledViewRect() const { return mScrolledView ? mScrolledView->getRect() : LLRect::null; }
@@ -132,7 +132,7 @@ private:
 	virtual void scrollVertical( S32 new_pos );
 	void updateScroll();
 	bool autoScroll(S32 x, S32 y, bool do_scroll);
-	void calcVisibleSize( S32 *visible_width, S32 *visible_height, BOOL* show_h_scrollbar, BOOL* show_v_scrollbar ) const;
+	void calcVisibleSize( S32 *visible_width, S32 *visible_height, S32* show_h_scrollbar, S32* show_v_scrollbar ) const;
 
 	LLScrollbar* mScrollbar[ORIENTATION_COUNT];
 	S32			mSize;
@@ -140,8 +140,8 @@ private:
 	LLUIColor	mBackgroundColor;
 	LLRect		mInnerRect;
 	LLViewBorder* mBorder;
-	BOOL		mReserveScrollCorner;
-	BOOL		mAutoScrolling;
+	bool		mReserveScrollCorner;
+	bool		mAutoScrolling;
 	F32			mAutoScrollRate;
 	F32			mMinAutoScrollRate;
 	F32			mMaxAutoScrollRate;

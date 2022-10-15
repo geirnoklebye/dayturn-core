@@ -3831,7 +3831,7 @@ bool LLMenuHolderGL::handleKey(KEY key, MASK mask, bool called_from_parent)
 		{
 			if (pMenu->getHighlightedItem())
 			{
-				handled = pMenu->handleKey(key, mask, TRUE);
+				handled = pMenu->handleKey(key, mask, true);
 			}
 			else if (mask == MASK_NONE || (key >= KEY_LEFT && key <= KEY_DOWN))
 			{
@@ -4026,7 +4026,7 @@ bool LLTearOffMenu::handleKeyHere(KEY key, MASK mask)
 		}
 	}
 	// pass keystrokes down to menu
-	return mMenu->handleKey(key, mask, TRUE);
+	return mMenu->handleKey(key, mask, true);
 }
 
 void LLTearOffMenu::translate(S32 x, S32 y)

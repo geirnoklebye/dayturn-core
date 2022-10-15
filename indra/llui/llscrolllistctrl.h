@@ -171,7 +171,7 @@ public:
 	
 	// Sets an array of column descriptors
 	void 	   		setColumnHeadings(const LLSD& headings);
-	void   			sortByColumnIndex(U32 column, BOOL ascending);
+	void   			sortByColumnIndex(U32 column, bool ascending);
 	
 	// LLCtrlListInterface functions
 	virtual S32  getItemCount() const;
@@ -615,7 +615,7 @@ private:
 	typedef std::vector<LLScrollListColumn*> ordered_columns_t;
 	ordered_columns_t	mColumnsIndexed;
 
-	typedef std::pair<S32, BOOL> sort_column_t;
+	typedef std::pair<S32, bool> sort_column_t;
 	std::vector<sort_column_t>	mSortColumns;
 
 	sort_signal_t*	mSortCallback;

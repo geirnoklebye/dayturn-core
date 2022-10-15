@@ -212,9 +212,9 @@ void LLScrollListText::highlightText(S32 offset, S32 num_chars)
 }
 
 //virtual 
-BOOL LLScrollListText::isText() const
+bool LLScrollListText::isText() const
 {
-	return TRUE;
+	return true;
 }
 
 // virtual
@@ -229,7 +229,7 @@ const std::string &LLScrollListText::getToolTip() const
 }
 
 // virtual
-BOOL LLScrollListText::needsToolTip() const
+bool LLScrollListText::needsToolTip() const
 {
 	// If base class has a tooltip, return that
 	if (LLScrollListCell::needsToolTip())
