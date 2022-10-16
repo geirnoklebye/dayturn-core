@@ -626,10 +626,7 @@ void LLViewerInventoryCategory::updateServer(bool is_new) const
 {
 	// communicate that change with the server.
 
-//	if (LLFolderType::lookupIsProtectedType(mPreferredType))
-// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
-	if (LLFolderType::lookupIsProtectedType(mPreferredType, LLUUID::null))
-// [/SL:KB]
+	if (LLFolderType::lookupIsProtectedType(mPreferredType))
 	{
 		LLNotificationsUtil::add("CannotModifyProtectedCategories");
 		return;
@@ -1372,10 +1369,7 @@ void update_inventory_category(
 	LL_DEBUGS(LOG_INV) << "cat_id: [" << cat_id << "] name " << (obj ? obj->getName() : "(NOT FOUND)") << LL_ENDL;
 	if(obj)
 	{
-//		if (LLFolderType::lookupIsProtectedType(obj->getPreferredType()))
-// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
-		if (LLFolderType::lookupIsProtectedType(obj->getPreferredType(), LLUUID::null))
-// [/SL:KB]
+		if (LLFolderType::lookupIsProtectedType(obj->getPreferredType()))
 		{
 			LLNotificationsUtil::add("CannotModifyProtectedCategories");
 			return;
@@ -1502,10 +1496,7 @@ void remove_inventory_category(
 		{
 			LL_WARNS() << "Removing (purging) incomplete category " << obj->getName() << LL_ENDL;
 		}
-//		if(LLFolderType::lookupIsProtectedType(obj->getPreferredType()))
-// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
-		if(LLFolderType::lookupIsProtectedType(obj->getPreferredType(), obj->getUUID()))
-// [/SL:KB]
+		if(LLFolderType::lookupIsProtectedType(obj->getPreferredType()))
 		{
 			LLNotificationsUtil::add("CannotRemoveProtectedCategories");
 			return;

@@ -449,10 +449,7 @@ std::string LLPanelLandmarkInfo::getFullFolderName(const LLViewerInventoryCatego
 
 					// Looking for translation only for protected type categories
 					// to avoid warnings about non existent string in strings.xml.
-// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
-					bool is_protected_type = LLFolderType::lookupIsProtectedType(cat->getPreferredType(), LLUUID::null);
-// [/SL:KB]
-//					bool is_protected_type = LLFolderType::lookupIsProtectedType(cat->getPreferredType());
+					bool is_protected_type = LLFolderType::lookupIsProtectedType(cat->getPreferredType());
 
 					if (is_under_root_category)
 					{

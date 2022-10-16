@@ -1382,10 +1382,7 @@ LLSD ll_create_sd_from_inventory_category(LLPointer<LLInventoryCategory> cat)
 	rv[INV_PARENT_ID_LABEL] = cat->getParentUUID();
 	rv[INV_NAME_LABEL] = cat->getName();
 	rv[INV_ASSET_TYPE_LABEL] = LLAssetType::lookup(cat->getType());
-//	if(LLFolderType::lookupIsProtectedType(cat->getPreferredType()))
-// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
-	if(LLFolderType::lookupIsProtectedType(cat->getPreferredType(), LLUUID::null))
-// [/SL:KB]
+	if(LLFolderType::lookupIsProtectedType(cat->getPreferredType()))
 	{
 		rv[INV_PREFERRED_TYPE_LABEL] =
 			LLFolderType::lookup(cat->getPreferredType()).c_str();

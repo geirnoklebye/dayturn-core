@@ -746,10 +746,7 @@ bool get_is_category_removable(const LLInventoryModel* model, const LLUUID& id)
 
 	const LLFolderType::EType folder_type = category->getPreferredType();
 	
-//	if (LLFolderType::lookupIsProtectedType(folder_type))
-// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
-	if (LLFolderType::lookupIsProtectedType(folder_type, id))
-// [/SL:KB]
+	if (LLFolderType::lookupIsProtectedType(folder_type))
 	{
 		return false;
 	}
@@ -783,11 +780,8 @@ bool get_is_category_renameable(const LLInventoryModel* model, const LLUUID& id)
 
 	LLViewerInventoryCategory* cat = model->getCategory(id);
 
-//	if (cat && !LLFolderType::lookupIsProtectedType(cat->getPreferredType()) &&
-//		cat->getOwnerID() == gAgent.getID())
-// [SL:KB] - Patch: Inventory-UserProtectedFolders | Checked: Catznip-5.2
-	if (cat && !LLFolderType::lookupIsProtectedType(cat->getPreferredType(), LLUUID::null) && cat->getOwnerID() == gAgent.getID())
-// [/SL:KB]
+	if (cat && !LLFolderType::lookupIsProtectedType(cat->getPreferredType()) &&
+		cat->getOwnerID() == gAgent.getID())
 	{
 		return true;
 	}
@@ -1913,7 +1907,7 @@ void change_item_parent(const LLUUID& item_id, const LLUUID& new_parent_id)
 
 		LLPointer<LLViewerInventoryItem> new_item = new LLViewerInventoryItem(inv_item);
 		new_item->setParent(new_parent_id);
-		new_item->updateParentOnServer(FALSE);
+		new_item->updateParentOnServer(false);
 		gInventory.updateItem(new_item);
 		gInventory.notifyObservers();
 	}
@@ -1931,7 +1925,7 @@ void move_items_to_folder(const LLUUID& new_cat_uuid, const uuid_vec_t& selected
         else
         {
             LLInventoryCategory* inv_cat = gInventory.getCategory(*it);
-            if (inv_cat && !LLFolderType::lookupIsProtectedType(inv_cat->getPreferredType(), LLUUID::null))
+            if (inv_cat && !LLFolderType::lookupIsProtectedType(inv_cat->getPreferredType()))
             {
                 gInventory.changeCategoryParent((LLViewerInventoryCategory*)inv_cat, new_cat_uuid, false);
             }
@@ -2697,7 +2691,7 @@ void LLInventoryAction::doToSelected(LLInventoryModel* model, LLFolderView* root
         if (selected_uuid_set.size() == 1)
         {
             LLInventoryCategory* inv_cat = gInventory.getCategory(*ids.begin());
-            if (!inv_cat || LLFolderType::lookupIsProtectedType(inv_cat->getPreferredType(), LLUUID::null))
+            if (!inv_cat || LLFolderType::lookupIsProtectedType(inv_cat->getPreferredType()))
             {
                 return;
             }
