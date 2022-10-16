@@ -472,7 +472,7 @@ void LLPanelPlaces::onOpen(const LLSD& key)
 				if (!item)
 					return;
 
-                BOOL is_editable = gInventory.isObjectDescendentOf(id, gInventory.getRootFolderID())
+                bool is_editable = gInventory.isObjectDescendentOf(id, gInventory.getRootFolderID())
                                    && item->getPermissions().allowModifyBy(gAgent.getID());
                 mLandmarkInfo->setCanEdit(is_editable);
 
@@ -782,7 +782,7 @@ void LLPanelPlaces::onEditButtonClicked()
 
 	isLandmarkEditModeOn = true;
 
-	mLandmarkInfo->toggleLandmarkEditMode(TRUE);
+	mLandmarkInfo->toggleLandmarkEditMode(true);
 
 	updateVerbs();
 }
@@ -830,7 +830,7 @@ void LLPanelPlaces::onSaveButtonClicked()
 		gInventory.accountForUpdate(update);
 
 		new_item->setParent(folder_id);
-		new_item->updateParentOnServer(FALSE);
+		new_item->updateParentOnServer(false);
 	}
 
 	gInventory.updateItem(new_item);
@@ -850,7 +850,7 @@ void LLPanelPlaces::onCancelButtonClicked()
 	}
 	else
 	{
-		mLandmarkInfo->toggleLandmarkEditMode(FALSE);
+		mLandmarkInfo->toggleLandmarkEditMode(false);
 		isLandmarkEditModeOn = false;
 
 		updateVerbs();

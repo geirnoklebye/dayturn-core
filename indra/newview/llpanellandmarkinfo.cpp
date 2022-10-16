@@ -338,7 +338,7 @@ void LLPanelLandmarkInfo::displayItemInfo(const LLInventoryItem* pItem)
 	mNotesEditor->setText(pItem->getDescription());
 }
 
-void LLPanelLandmarkInfo::toggleLandmarkEditMode(BOOL enabled)
+void LLPanelLandmarkInfo::toggleLandmarkEditMode(bool enabled)
 {
 	// If switching to edit mode while creating landmark
 	// the "Create Landmark" title remains.
@@ -353,7 +353,7 @@ void LLPanelLandmarkInfo::toggleLandmarkEditMode(BOOL enabled)
 		mLandmarkTitle->setText(mLandmarkTitleEditor->getText());
 	}
 
-	if (mNotesEditor->getReadOnly() ==  (enabled == TRUE))
+	if (mNotesEditor->getReadOnly() ==  (enabled == true))
 	{
 		mLandmarkTitle->setVisible(!enabled);
 		mLandmarkTitleEditor->setVisible(enabled);
@@ -371,7 +371,7 @@ void LLPanelLandmarkInfo::toggleLandmarkEditMode(BOOL enabled)
 	setFocus(true);
 }
 
-void LLPanelLandmarkInfo::setCanEdit(BOOL enabled)
+void LLPanelLandmarkInfo::setCanEdit(bool enabled)
 {
     getChild<LLButton>("edit_btn")->setEnabled(enabled);
 }
@@ -391,7 +391,7 @@ const LLUUID LLPanelLandmarkInfo::getLandmarkFolder() const
 	return mFolderCombo->getValue().asUUID();
 }
 
-BOOL LLPanelLandmarkInfo::setLandmarkFolder(const LLUUID& id)
+bool LLPanelLandmarkInfo::setLandmarkFolder(const LLUUID& id)
 {
 	return mFolderCombo->setCurrentByID(id);
 }
@@ -545,7 +545,7 @@ void LLPanelLandmarkInfo::collectLandmarkFolders(LLInventoryModel::cat_array_t& 
 	gInventory.accountForUpdate(update);
 
 	mItem->setParent(mNewParentId);
-	mItem->updateParentOnServer(FALSE);
+	mItem->updateParentOnServer(false);
 
 	gInventory.updateItem(mItem);
 	gInventory.notifyObservers();
