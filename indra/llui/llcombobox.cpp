@@ -48,7 +48,6 @@
 #include "llfocusmgr.h"
 #include "lllineeditor.h"
 #include "v2math.h"
-#include "lluictrlfactory.h"
 #include "lltooltip.h"
 
 // Globals

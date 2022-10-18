@@ -35,7 +35,6 @@
 #include "llcachename.h"
 #include "llxmlnode.h"
 #include "lluictrl.h"
-#include "lluictrlfactory.h"
 #include "lldir.h"
 #include "llsdserialize.h"
 #include "lltrans.h"

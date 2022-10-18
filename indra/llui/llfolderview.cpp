@@ -37,7 +37,6 @@
 #include "lltextbox.h"
 #include "lltrans.h"
 #include "llui.h"
-#include "lluictrlfactory.h"
 
 // Linden library includes
 #include "lldbstrings.h"

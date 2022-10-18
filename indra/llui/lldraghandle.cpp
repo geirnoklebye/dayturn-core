@@ -40,7 +40,6 @@
 #include "llfontgl.h"
 #include "llwindow.h"
 #include "llfocusmgr.h"
-#include "lluictrlfactory.h"
 
 const S32 LEADING_PAD = 5;
 const S32 TITLE_HPAD = 8;

@@ -40,7 +40,6 @@
 #include "llviewborder.h"
 #include "llfocusmgr.h"
 #include "llframetimer.h"
-#include "lluictrlfactory.h"
 #include "llpanel.h"
 #include "llfontgl.h"
 

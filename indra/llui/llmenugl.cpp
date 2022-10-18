@@ -59,7 +59,6 @@
 
 #include "v2math.h"
 #include <set>
-#include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
 
 // static

@@ -37,7 +37,6 @@
 #include "llkeyboard.h"
 #include "llstring.h"
 #include "lltextbox.h"
-#include "lluictrlfactory.h"
 
 static LLDefaultChildRegistry::Register<LLTimeCtrl> time_r("time");
 

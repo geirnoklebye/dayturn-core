@@ -45,7 +45,6 @@
 #include "llwindow.h"
 #include "llnotificationsutil.h"
 #include "llrender.h"
-#include "lluictrlfactory.h"
 #include "lluiusage.h"
 #include "llhelp.h"
 #include "lldockablefloater.h"

@@ -42,7 +42,6 @@
 #include "llcontrol.h"
 #include "llfocusmgr.h"
 #include "llresmgr.h"
-#include "lluictrlfactory.h"
 
 const U32 MAX_STRING_LENGTH = 255;
 

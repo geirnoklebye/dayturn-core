@@ -49,7 +49,6 @@
 #include "llstring.h"
 #include "llwindow.h"
 #include "llui.h"
-#include "lluictrlfactory.h"
 #include "llclipboard.h"
 #include "llmenugl.h"
 

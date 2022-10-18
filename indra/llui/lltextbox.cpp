@@ -29,7 +29,6 @@
 #define LLTEXTBOX_CPP
 #include "lltextbox.h"
 
-#include "lluictrlfactory.h"
 #include "llfocusmgr.h"
 #include "llwindow.h"
 #include "llurlregistry.h"

@@ -32,7 +32,6 @@
 #include "llsingleton.h"
 
 // Project includes
-#include "lluictrlfactory.h"
 #include "lluiimage.h"
 #include "boost/foreach.hpp"
 

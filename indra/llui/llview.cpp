@@ -31,9 +31,7 @@
 #include "llview.h"
 
 #include <sstream>
-#include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
-#include <boost/bind.hpp>
 
 #include "llrender.h"
 #include "llevent.h"
@@ -44,7 +42,6 @@
 #include "lluictrl.h"
 #include "llwindow.h"
 #include "v3color.h"
-#include "lluictrlfactory.h"
 #include "lltooltip.h"
 #include "llsdutil.h"
 #include "llsdserialize.h"

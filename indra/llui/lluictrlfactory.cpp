@@ -32,7 +32,6 @@
 #include "llxmlnode.h"
 
 #include <fstream>
-#include <boost/tokenizer.hpp>
 
 // other library includes
 #include "llcontrol.h"

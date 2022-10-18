@@ -31,7 +31,6 @@
 
 #include "llcheckboxctrl.h"
 #include "llui.h"	// LLUIImage
-#include "lluictrlfactory.h"
 
 //static 
 LLScrollListCell* LLScrollListCell::create(const LLScrollListCell::Params& cell_p)

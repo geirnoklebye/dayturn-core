@@ -33,7 +33,6 @@
 
 #include "llfocusmgr.h"
 
-#include "lluictrlfactory.h"
 #include "llbutton.h"
 #include "llcheckboxctrl.h"
 #include "llcriticaldamp.h" // LLSmoothInterpolation

@@ -34,7 +34,6 @@
 #include "llscrolllistcell.h"
 #include "llscrolllistctrl.h"
 #include "llscrolllistitem.h"
-#include "lluictrlfactory.h"
 
 const S32 MIN_COLUMN_WIDTH = 20;
 

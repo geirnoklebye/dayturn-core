@@ -34,7 +34,6 @@
 #include "llresizehandle.h"
 #include "lltextbox.h"
 #include "llcriticaldamp.h"
-#include "lluictrlfactory.h"
 #include "llrender.h"
 #include "llfloater.h"
 #include "lltrans.h"

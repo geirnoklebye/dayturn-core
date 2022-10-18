@@ -28,7 +28,6 @@
 #include "linden_common.h"
 
 #include "lltoggleablemenu.h"
-#include "lluictrlfactory.h"
 
 static LLDefaultChildRegistry::Register<LLToggleableMenu> r("toggleable_menu");
 

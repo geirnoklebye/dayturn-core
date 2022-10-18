@@ -34,7 +34,6 @@
 #include "llui.h"
 #include "llstring.h"
 #include "llscrollcontainer.h"
-#include "lluictrlfactory.h"
 
 static LLDefaultChildRegistry::Register<LLContainerView> r1("container_view");
 

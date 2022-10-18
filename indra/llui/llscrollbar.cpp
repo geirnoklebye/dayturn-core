@@ -40,7 +40,6 @@
 #include "llwindow.h"
 #include "llcontrol.h"
 #include "llrender.h"
-#include "lluictrlfactory.h"
 
 static LLDefaultChildRegistry::Register<LLScrollbar> register_scrollbar("scroll_bar");
 

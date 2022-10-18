@@ -28,7 +28,6 @@
 #include "llbadge.h"
 
 #include "llscrollcontainer.h"
-#include "lluictrlfactory.h"
 
 
 static LLDefaultChildRegistry::Register<LLBadge> r("badge");

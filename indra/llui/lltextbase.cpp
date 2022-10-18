@@ -43,7 +43,6 @@
 #include "llurlregistry.h"
 #include "llview.h"
 #include "llwindow.h"
-#include <boost/bind.hpp>
 // [SL:KB] - Patch: Control-TextHighlight | Checked: 2013-12-30 (Catznip-3.6)
 #include <boost/algorithm/string.hpp>
 // [/SL:KB]

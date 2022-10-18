@@ -24,7 +24,6 @@
 * $/LicenseInfo$
 */
 #include "../newview/llviewerprecompiledheaders.h"
-#include "../newview/aoengine.h" // ## Zi: Animation Overrider
 #include "llflashtimer.h"
 
 #include "linden_common.h"

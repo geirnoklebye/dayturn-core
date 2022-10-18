@@ -33,7 +33,6 @@
 #include "llgl.h"
 #include "llui.h"
 #include "lluiconstants.h"
-#include "lluictrlfactory.h"
 #include "llcontrol.h"
 
 #include "llstring.h"

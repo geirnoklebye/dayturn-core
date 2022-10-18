@@ -41,7 +41,6 @@
 #include "llcontrol.h"
 #include "llfocusmgr.h"
 #include "llresmgr.h"
-#include "lluictrlfactory.h"
 
 static LLDefaultChildRegistry::Register<LLSliderCtrl> r("slider");
 

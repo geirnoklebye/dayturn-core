@@ -36,7 +36,6 @@
 #include "llcontrol.h"
 #include "llui.h"
 #include "llfocusmgr.h"
-#include "lluictrlfactory.h"
 #include "llsdutil.h"
 
 static LLDefaultChildRegistry::Register<LLRadioGroup> r1("radio_group");
