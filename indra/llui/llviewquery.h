@@ -35,7 +35,7 @@
 class LLView;
 
 typedef std::list<LLView *>			viewList_t;
-typedef std::pair<BOOL, BOOL>		filterResult_t;
+typedef std::pair<bool, bool>		filterResult_t;
 
 // Abstract base class for all query filters.
 class LLQueryFilter
