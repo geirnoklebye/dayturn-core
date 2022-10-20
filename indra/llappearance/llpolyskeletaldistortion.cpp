@@ -190,8 +190,6 @@ bool LLPolySkeletalDistortion::setInfo(LLPolySkeletalDistortionInfo *info)
 //-----------------------------------------------------------------------------
 void LLPolySkeletalDistortion::apply( ESex avatar_sex )
 {
-    LL_PROFILE_ZONE_SCOPED;
-
     F32 effective_weight = ( getSex() & avatar_sex ) ? mCurWeight : getDefaultWeight();
 
     LLJoint* joint;

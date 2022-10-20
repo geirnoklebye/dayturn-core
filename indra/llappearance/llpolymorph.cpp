@@ -548,8 +548,6 @@ void LLPolyMorphTarget::apply( ESex avatar_sex )
 		return;
 	}
 
-    LL_PROFILE_ZONE_SCOPED;
-
 	mLastSex = avatar_sex;
 
 	// Check for NaN condition (NaN is detected if a variable doesn't equal itself.

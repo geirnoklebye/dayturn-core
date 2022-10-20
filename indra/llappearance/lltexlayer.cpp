@@ -470,7 +470,6 @@ const LLTexLayerSetBuffer* LLTexLayerSet::getComposite() const
 
 void LLTexLayerSet::gatherMorphMaskAlpha(U8 *data, S32 origin_x, S32 origin_y, S32 width, S32 height, LLRenderTarget* bound_target)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	memset(data, 255, width * height);
 
 	for( layer_list_t::iterator iter = mLayerList.begin(); iter != mLayerList.end(); iter++ )
@@ -485,7 +484,6 @@ void LLTexLayerSet::gatherMorphMaskAlpha(U8 *data, S32 origin_x, S32 origin_y, S
 
 void LLTexLayerSet::renderAlphaMaskTextures(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target, bool forceClear)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	const LLTexLayerSetInfo *info = getInfo();
 	
 	gGL.setColorMask(false, true);
@@ -1529,7 +1527,6 @@ void LLTexLayer::renderMorphMasks(S32 x, S32 y, S32 width, S32 height, const LLC
 
 void LLTexLayer::addAlphaMask(U8 *data, S32 originX, S32 originY, S32 width, S32 height, LLRenderTarget* bound_target)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	S32 size = width * height;
 	const U8* alphaData = getAlphaData();
 	if (!alphaData && hasAlphaParams())
@@ -1872,7 +1869,6 @@ void LLTexLayerStaticImageList::deleteCachedImages()
 // Caches the result to speed identical subsequent requests.
 LLImageTGA* LLTexLayerStaticImageList::getImageTGA(const std::string& file_name)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	const char *namekey = mImageNames.addString(file_name);
 	image_tga_map_t::const_iterator iter = mStaticImageListTGA.find(namekey);
 	if( iter != mStaticImageListTGA.end() )
@@ -1901,7 +1897,6 @@ LLImageTGA* LLTexLayerStaticImageList::getImageTGA(const std::string& file_name)
 // Caches the result to speed identical subsequent requests.
 LLGLTexture* LLTexLayerStaticImageList::getTexture(const std::string& file_name, BOOL is_mask)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	LLPointer<LLGLTexture> tex;
 	const char *namekey = mImageNames.addString(file_name);
 
@@ -1950,7 +1945,6 @@ LLGLTexture* LLTexLayerStaticImageList::getTexture(const std::string& file_name,
 // Returns TRUE if successful.
 BOOL LLTexLayerStaticImageList::loadImageRaw(const std::string& file_name, LLImageRaw* image_raw)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	BOOL success = FALSE;
 	std::string path;
 	path = gDirUtilp->getExpandedFilename(LL_PATH_CHARACTER,file_name);

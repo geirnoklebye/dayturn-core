@@ -161,7 +161,6 @@ bool LLKeyframeMotionParam::onActivate()
 //-----------------------------------------------------------------------------
 bool LLKeyframeMotionParam::onUpdate(F32 time, U8* joint_mask)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	F32 weightFactor = 1.f / (F32)mParameterizedMotions.size();
 
 	// zero out all pose weights
