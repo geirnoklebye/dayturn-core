@@ -483,6 +483,7 @@ void LLFloaterModelPreview::prepareToLoadModel(S32 lod)
 	{
 		// loading physics from file
 		mModelPreview->mPhysicsSearchLOD = lod;
+		mModelPreview->mWarnOfUnmatchedPhyicsMeshes = false;
 	}
 }
 void LLFloaterModelPreview::loadModel(S32 lod)

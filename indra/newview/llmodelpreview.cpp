@@ -86,6 +86,7 @@ static const LLColor4 PREVIEW_DEG_FILL_COL(1.f, 0.f, 0.f, 0.5f);
 static const F32 PREVIEW_DEG_EDGE_WIDTH(3.f);
 static const F32 PREVIEW_DEG_POINT_SIZE(8.f);
 static const F32 PREVIEW_ZOOM_LIMIT(10.f);
+static const std::string DEFAULT_PHYSICS_MESH_NAME = "default_physics_shape";
 
 const F32 SKIN_WEIGHT_CAMERA_DISTANCE = 16.f;
 
@@ -285,7 +286,7 @@ void LLModelPreview::rebuildUploadData()
 
     F32 max_scale = 0.f;
 
-    BOOL legacyMatching = gSavedSettings.getBOOL("ImporterLegacyMatching");
+    bool legacyMatching = gSavedSettings.getbool("ImporterLegacyMatching");
     U32 load_state = 0;
 
     for (LLModelLoader::scene::iterator iter = mBaseScene.begin(); iter != mBaseScene.end(); ++iter)
@@ -431,6 +432,21 @@ void LLModelPreview::rebuildUploadData()
                         LL_INFOS() << out.str() << LL_ENDL;
                         LLFloaterModelPreview::addStringToLog(out, false);
                     }
+                }
+            
+                if (mWarnOfUnmatchedPhyicsMeshes && !lod_model && (i == LLModel::LOD_PHYSICS))
+                {
+                    // Despite the various strategies above, if we don't now have a physics model, we're going to end up with decomposition.
+                    // That's ok, but might not what they wanted. Use default_physics_shape if found.
+                    std::ostringstream out;
+                    out << "No physics model specified for " << instance.mLabel;
+                    if (mDefaultPhysicsShapeP)
+                    {
+                        out << " - using: " << DEFAULT_PHYSICS_MESH_NAME;
+                        lod_model = mDefaultPhysicsShapeP;
+                    }
+                    LL_WARNS() << out.str() << LL_ENDL;
+                    LLFloaterModelPreview::addStringToLog(out, !mDefaultPhysicsShapeP); // Flash log tab if no default.
                 }
 
                 if (lod_model)
@@ -1034,18 +1050,25 @@ void LLModelPreview::loadModelCallback(S32 loaded_lod)
         }
         else
         {
-            BOOL legacyMatching = gSavedSettings.getBOOL("ImporterLegacyMatching");
+            if (loaded_lod == LLModel::LOD_PHYSICS)
+            {   // Explicitly loading physics. See if there is a default mesh.
+                LLMatrix4 ignored_transform; // Each mesh that uses this will supply their own.
+                mDefaultPhysicsShapeP = nullptr;
+                FindModel(mScene[loaded_lod], DEFAULT_PHYSICS_MESH_NAME + getLodSuffix(loaded_lod), mDefaultPhysicsShapeP, ignored_transform);
+                mWarnOfUnmatchedPhyicsMeshes = true;
+            }
+            bool legacyMatching = gSavedSettings.getbool("ImporterLegacyMatching");
             if (!legacyMatching)
             {
                 if (!mBaseModel.empty())
                 {
-                    BOOL name_based = FALSE;
-                    BOOL has_submodels = FALSE;
+                    bool name_based = false;
+                    bool has_submodels = false;
                     for (U32 idx = 0; idx < mBaseModel.size(); ++idx)
                     {
                         if (mBaseModel[idx]->mSubmodelID)
                         { // don't do index-based renaming when the base model has submodels
-                            has_submodels = TRUE;
+                            has_submodels = true;
                             if (mImporterDebug)
                             {
                                 std::ostringstream out;
@@ -1066,12 +1089,12 @@ void LLModelPreview::loadModelCallback(S32 loaded_lod)
                         FindModel(mBaseScene, loaded_name, found_model, transform);
                         if (found_model)
                         { // don't rename correctly named models (even if they are placed in a wrong order)
-                            name_based = TRUE;
+                            name_based = true;
                         }
 
                         if (mModel[loaded_lod][idx]->mSubmodelID)
                         { // don't rename the models when loaded LOD model has submodels
-                            has_submodels = TRUE;
+                            has_submodels = true;
                         }
                     }
 
@@ -1104,7 +1127,6 @@ void LLModelPreview::loadModelCallback(S32 loaded_lod)
                                     LL_WARNS() << out.str() << LL_ENDL;
                                     LLFloaterModelPreview::addStringToLog(out, false);
                                 }
-
                                 mModel[loaded_lod][idx]->mLabel = name;
                             }
                         }
@@ -1905,16 +1927,32 @@ void LLModelPreview::genMeshOptimizerLODs(S32 which_lod, S32 meshopt_mode, U32 d
                     if (sloppy_ratio < 0)
                     {
                         // Sloppy method didn't work, try with smaller decimation values
+                        S32 size_vertices = 0;
+
+                        for (U32 face_idx = 0; face_idx < base->getNumVolumeFaces(); ++face_idx)
+                        {
+                            const LLVolumeFace &face = base->getVolumeFace(face_idx);
+                            size_vertices += face.mNumVertices;
+                        }
+
+                        // Complex models aren't supposed to get here, they are supposed
+                        // to work on a first try of sloppy due to having more viggle room.
+                        // If they didn't, something is likely wrong, no point locking the
+                        // thread in a long calculation that will fail.
+                        const U32 too_many_vertices = 27000;
+                        if (size_vertices > too_many_vertices)
+                        {
+                            LL_WARNS() << "Sloppy optimization method failed for a complex model " << target_model->getName() << LL_ENDL;
+                        }
+                        else
                         {
                             // Find a decimator that does work
                             F32 sloppy_decimation_step = sqrt((F32)decimation); // example: 27->15->9->5->3
                             F32 sloppy_decimator = indices_decimator / sloppy_decimation_step;
-                            U64Microseconds end_time = LLTimer::getTotalTime() + U64Seconds(5);
 
                             while (sloppy_ratio < 0
                                 && sloppy_decimator > precise_ratio
-                                && sloppy_decimator > 1 // precise_ratio isn't supposed to be below 1, but check just in case
-                                && end_time > LLTimer::getTotalTime())
+                                && sloppy_decimator > 1)// precise_ratio isn't supposed to be below 1, but check just in case
                             {
                                 sloppy_ratio = genMeshOptimizerPerModel(base, target_model, sloppy_decimator, lod_error_threshold, MESH_OPTIMIZER_NO_TOPOLOGY);
                                 sloppy_decimator = sloppy_decimator / sloppy_decimation_step;
@@ -2160,21 +2198,17 @@ void LLModelPreview::updateStatusMessages()
         }
     }
 
-	// flag degenerates here rather than deferring to a MAV error later
-	// <FS>
-	//mFMP->childSetVisible("physics_status_message_text", mHasDegenerate); //display or clear
-	//auto degenerateIcon = mFMP->getChild<LLIconCtrl>("physics_status_message_icon");
-	//degenerateIcon->setVisible(mHasDegenerate);
-	// </FS>
-	if (mHasDegenerate)
-	{
-		has_physics_error |= PhysicsError::DEGENERATE;
-		// <FS>
-		//mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_degenerate_triangles"));
-		//LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Error");
-		//degenerateIcon->setImage(img);
-		// </FS>
-	}
+    // flag degenerates here rather than deferring to a MAV error later
+    mFMP->childSetVisible("physics_status_message_text", mHasDegenerate); //display or clear
+    auto degenerateIcon = mFMP->getChild<LLIconCtrl>("physics_status_message_icon");
+    degenerateIcon->setVisible(mHasDegenerate);
+    if (mHasDegenerate)
+    {
+        has_physics_error |= PhysicsError::DEGENERATE;
+        mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_degenerate_triangles"));
+        LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Error");
+        degenerateIcon->setImage(img);
+    }
 
     mFMP->childSetTextArg("submeshes_info", "[SUBMESHES]", llformat("%d", total_submeshes[LLModel::LOD_HIGH]));
 
@@ -2281,102 +2315,43 @@ void LLModelPreview::updateStatusMessages()
     }
 
 
-	//warn if hulls have more than 256 points in them
-	BOOL physExceededVertexLimit = FALSE;
-	for (U32 i = 0; mModelNoErrors && (i < mModel[LLModel::LOD_PHYSICS].size()); ++i)
-	{
-		LLModel* mdl = mModel[LLModel::LOD_PHYSICS][i];
+    //warn if hulls have more than 256 points in them
+    bool physExceededVertexLimit = false;
+    for (U32 i = 0; mModelNoErrors && i < mModel[LLModel::LOD_PHYSICS].size(); ++i)
+    {
+        LLModel* mdl = mModel[LLModel::LOD_PHYSICS][i];
 
-		if (mdl)
-		{
-			// <FS:Beq> Better error handling
-			auto num_hulls = mdl->mPhysics.mHull.size();
-			for (U32 j = 0; j < num_hulls; ++j)
-			{		
-			// </FS:Beq>
-				if (mdl->mPhysics.mHull[j].size() > 256)
-				{
-					physExceededVertexLimit = TRUE;
-					LL_INFOS() << "Physical model " << mdl->mLabel << " exceeds vertex per hull limitations." << LL_ENDL;
-					break;
-				}
-			}
-			// <FS:Beq> Better error handling
-			if (num_hulls > 256) // decomp cannot have more than 256 hulls (http://wiki.secondlife.com/wiki/Mesh/Mesh_physics)
-			{
-				LL_INFOS() << "Physical model " << mdl->mLabel << " exceeds 256 hull limitation." << LL_ENDL;
-				has_physics_error |= PhysicsError::TOOMANYHULLS;
-			}
-			// </FS:Beq>
-		}
-	}
+        if (mdl)
+        {
+            for (U32 j = 0; j < mdl->mPhysics.mHull.size(); ++j)
+            {
+                if (mdl->mPhysics.mHull[j].size() > 256)
+                {
+                    physExceededVertexLimit = true;
+                    LL_INFOS() << "Physical model " << mdl->mLabel << " exceeds vertex per hull limitations." << LL_ENDL;
+                    break;
+                }
+            }
+        }
+    }
 
     if (physExceededVertexLimit)
     {
         has_physics_error |= PhysicsError::TOOMANYVERTSINHULL;
     }
 
-// <FS:Beq> standardise error handling
-	//if (!(has_physics_error & PhysicsError::DEGENERATE)){ // only update this field (incluides clearing it) if it is not already in use.
-	//	mFMP->childSetVisible("physics_status_message_text", physExceededVertexLimit);
-	//	LLIconCtrl* physStatusIcon = mFMP->getChild<LLIconCtrl>("physics_status_message_icon");
-	//	physStatusIcon->setVisible(physExceededVertexLimit);
-	//	if (physExceededVertexLimit)
-	//	{
-	//		mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_vertex_limit_exceeded"));
-	//		LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Warning");
-	//		physStatusIcon->setImage(img);
-	//	}
-	//}
-#ifndef HAVOK_TPV 
-	has_physics_error |= PhysicsError::NOHAVOK;
-#endif 
+    if (!(has_physics_error & PhysicsError::DEGENERATE)){ // only update this field (incluides clearing it) if it is not already in use.
+        mFMP->childSetVisible("physics_status_message_text", physExceededVertexLimit);
+        LLIconCtrl* physStatusIcon = mFMP->getChild<LLIconCtrl>("physics_status_message_icon");
+        physStatusIcon->setVisible(physExceededVertexLimit);
+        if (physExceededVertexLimit)
+        {
+            mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_vertex_limit_exceeded"));
+            LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Warning");
+            physStatusIcon->setImage(img);
+        }
+    }
 
-	auto physStatusIcon = mFMP->getChild<LLIconCtrl>("physics_status_message_icon");
-
-	if (has_physics_error != PhysicsError::NONE)
-	{
-		mFMP->childSetVisible("physics_status_message_text", true); //display or clear
-		physStatusIcon->setVisible(true);
-		// The order here is important. 
-		if (has_physics_error & PhysicsError::TOOMANYHULLS)
-		{
-			mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_hull_limit_exceeded"));
-			LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Error");
-			physStatusIcon->setImage(img);
-		}
-		else if (has_physics_error & PhysicsError::TOOMANYVERTSINHULL)
-		{
-			mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_vertex_limit_exceeded"));
-			LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Error");
-			physStatusIcon->setImage(img);
-		}
-		else if (has_physics_error & PhysicsError::DEGENERATE)
-		{
-			mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_degenerate_triangles"));
-			LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Error");
-			physStatusIcon->setImage(img);
-		}
-		else if (has_physics_error & PhysicsError::NOHAVOK)
-		{
-			mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_no_havok"));
-			LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Warning");
-			physStatusIcon->setImage(img);
-		}
-		else
-		{
-			// This should not happen
-			mFMP->childSetValue("physics_status_message_text", mFMP->getString("phys_status_unknown_error"));
-			LLUIImagePtr img = LLUI::getUIImage("ModelImport_Status_Warning");
-			physStatusIcon->setImage(img);
-		}
-	}
-	else
-	{
-		mFMP->childSetVisible("physics_status_message_text", false); //display or clear
-		physStatusIcon->setVisible(false);
-	}
-// </FS:Beq>
     if (getLoadState() >= LLModelLoader::ERROR_PARSING)
     {
         mModelNoErrors = false;
@@ -2403,10 +2378,8 @@ void LLModelPreview::updateStatusMessages()
             mModelNoErrors = false;
         }
     }
-	// <FS:Beq> Improve the error checking the TO DO here is no longer applicable but not an FS comment so edited to stop it being picked up
-	//if (!mModelNoErrors || mHasDegenerate)
-    if (!gSavedSettings.getBOOL("FSIgnoreClientsideMeshValidation") && (!mModelNoErrors || (has_physics_error > PhysicsError::NOHAVOK))) // block for all cases of phsyics error except NOHAVOK
-	// </FS:Beq>
+
+    if (!mModelNoErrors || mHasDegenerate)
     {
         mFMP->childDisable("ok_btn");
         mFMP->childDisable("calculate_btn");
@@ -2729,8 +2702,6 @@ void LLModelPreview::clearBuffers()
 
 void LLModelPreview::genBuffers(S32 lod, bool include_skin_weights)
 {
-    U32 tri_count = 0;
-    U32 vertex_count = 0;
     U32 mesh_count = 0;
 
 
@@ -2865,10 +2836,7 @@ void LLModelPreview::genBuffers(S32 lod, bool include_skin_weights)
 
             mVertexBuffer[lod][mdl].push_back(vb);
 
-            vertex_count += num_vertices;
-            tri_count += num_indices / 3;
             ++mesh_count;
-
         }
     }
 }
