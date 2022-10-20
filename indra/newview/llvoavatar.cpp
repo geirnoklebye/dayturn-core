@@ -10439,14 +10439,14 @@ void LLVOAvatar::cullAvatarsByPixelArea()
 		 iter != LLCharacter::sInstances.end(); ++iter)
 	{
 		LLVOAvatar* inst = (LLVOAvatar*) *iter;
-		BOOL culled;
+		bool culled;
 		if (inst->isSelf() || inst->isFullyBaked())
 		{
-			culled = FALSE;
+			culled = false;
 		}
 		else 
 		{
-			culled = TRUE;
+			culled = true;
 		}
 
 		if (inst->mCulled != culled)
