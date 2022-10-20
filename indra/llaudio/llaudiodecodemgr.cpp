@@ -30,18 +30,14 @@
 #include "llaudioengine.h"
 #include "lllfsthread.h"
 #include "llfilesystem.h"
-#include "llstring.h"
 #include "lldir.h"
 #include "llendianswizzle.h"
 #include "llassetstorage.h"
-#include "llrefcount.h"
 
 #include "llvorbisencode.h"
 
 #include "vorbis/codec.h"
 #include "vorbis/vorbisfile.h"
-#include <iterator>
-#include <deque>
 
 extern LLAudioEngine *gAudiop;
 

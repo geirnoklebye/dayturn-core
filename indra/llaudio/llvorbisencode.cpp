@@ -29,7 +29,6 @@
 #include "vorbis/vorbisenc.h"
 
 #include "llvorbisencode.h"
-#include "llerror.h"
 #include "llrand.h"
 #include "llmath.h"
 #include "llapr.h"
