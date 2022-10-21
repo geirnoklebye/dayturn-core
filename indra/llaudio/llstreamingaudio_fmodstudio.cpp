@@ -143,7 +143,6 @@ void LLStreamingAudio_FMODSTUDIO::killDeadStreams()
     }
 }
 
-
 void LLStreamingAudio_FMODSTUDIO::start(const std::string& url)
 {
     //if (!mInited)
@@ -203,7 +202,6 @@ void LLStreamingAudio_FMODSTUDIO::update()
     }
     else if (open_state == FMOD_OPENSTATE_ERROR)
     {
-
         LL_INFOS("FMOD") << "State: FMOD_OPENSTATE_ERROR"
             << " Progress: " << U32(progress)
             << " Starving: " << S32(starving)
@@ -212,6 +210,7 @@ void LLStreamingAudio_FMODSTUDIO::update()
         {
             // Retry
             std::string url = mURL;
+            stop(); // might drop mURL, drops mCurrentInternetStreamp
 
             mRetryCount++;
 
@@ -226,7 +225,8 @@ void LLStreamingAudio_FMODSTUDIO::update()
         {
             stop();
         }
-	}
+        return;
+    }
 
     if (mFMODInternetStreamChannelp)
     {
