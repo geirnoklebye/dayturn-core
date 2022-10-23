@@ -313,8 +313,11 @@ public:
 	/*virtual*/ void setVisible(bool visible); // do not override
 	/*virtual*/ void onVisibilityChange ( bool new_visibility ); // do not override
 	
+	bool            canFocusStealFrontmost() const { return mFocusStealsFrontmost; }
+	void            setFocusStealsFrontmost(bool wants_frontmost) { mFocusStealsFrontmost = wants_frontmost; }
+
 	void			setFrontmost(bool take_focus = true, bool restore = true);
-    virtual void	setVisibleAndFrontmost(bool take_focus=true, const LLSD& key = LLSD());
+     virtual void	setVisibleAndFrontmost(bool take_focus=true, const LLSD& key = LLSD());
 	
 	// Defaults to false.
 	virtual bool	canSaveAs() const { return false; }
@@ -481,6 +484,7 @@ private:
 	bool			mCanTearOff;
 	bool			mCanMinimize;
 	bool			mCanClose;
+    bool            mFocusStealsFrontmost = true;	// false if we don't want the currently focused floater to cover this floater without user interaction	
 	bool			mDragOnLeft;
 	bool			mResizable;
 
