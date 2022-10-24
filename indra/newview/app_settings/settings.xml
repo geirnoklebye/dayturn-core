@@ -19623,6 +19623,17 @@
     <key>Value</key>
     <string></string>
   </map>
+  <key>DebugSettingsHideDefault</key>
+  <map>
+    <key>Comment</key>
+    <string>Show non-default settings only in Debug Settings list</string>
+    <key>Persist</key>
+    <integer>0</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>
     <key>FSLegacySearchActionOnTeleport</key>
     <map>
         <key>Comment</key>

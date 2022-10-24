@@ -1490,21 +1490,14 @@ LLScrollListItem* LLScrollListCtrl::getItemByLabel(const std::string& label, boo
 }
 
 
-bool LLScrollListCtrl::selectItemByPrefix(const std::string& target, bool case_sensitive)
+bool LLScrollListCtrl::selectItemByPrefix(const std::string& target, bool case_sensitive, S32 column)
 {
-	return selectItemByPrefix(utf8str_to_wstring(target), case_sensitive);
+	return selectItemByPrefix(utf8str_to_wstring(target), case_sensitive, column);
 }
 
 // Selects first enabled item that has a name where the name's first part matched the target string.
 // Returns false if item not found.
-bool LLScrollListCtrl::selectItemByPrefix(const LLWString& target, bool case_sensitive)
-// <FS:Ansariel> Allow selection by substring match
-{
-	return selectItemByStringMatch(target, true, case_sensitive);
-}
-
-bool LLScrollListCtrl::selectItemByStringMatch(const LLWString& target, bool prefix_match, bool case_sensitive)
-// </FS:Ansariel>
+bool LLScrollListCtrl::selectItemByPrefix(const LLWString& target, bool case_sensitive, S32 column)
 {
 	bool found = false;
 
@@ -1519,7 +1512,7 @@ bool LLScrollListCtrl::selectItemByStringMatch(const LLWString& target, bool pre
 		{
 			LLScrollListItem* item = *iter;
 			// Only select enabled items with matching names
-			LLScrollListCell* cellp = item->getColumn(getSearchColumn());
+			LLScrollListCell* cellp = item->getColumn(column == -1 ? getSearchColumn() : column);
 			bool select = cellp ? item->getEnabled() && ('\0' == cellp->getValue().asString()[0]) : false;
 			if (select)
 			{
@@ -1542,7 +1535,7 @@ bool LLScrollListCtrl::selectItemByStringMatch(const LLWString& target, bool pre
 			LLScrollListItem* item = *iter;
 
 			// Only select enabled items with matching names
-			LLScrollListCell* cellp = item->getColumn(getSearchColumn());
+			LLScrollListCell* cellp = item->getColumn(column == -1 ? getSearchColumn() : column);
 			if (!cellp)
 			{
 				continue;
@@ -1556,19 +1549,8 @@ bool LLScrollListCtrl::selectItemByStringMatch(const LLWString& target, bool pre
 			LLWString trimmed_label = item_label;
 			LLWStringUtil::trim(trimmed_label);
 			
-			// <FS:Ansariel> Allow selection by substring match
-			//BOOL select = item->getEnabled() && trimmed_label.compare(0, target_trimmed.size(), target_trimmed) == 0;
-			bool select;
-			if (prefix_match)
-			{
-				select = item->getEnabled() && trimmed_label.compare(0, target_trimmed.size(), target_trimmed) == 0;
-			}
-			else
-			{
-				select = item->getEnabled() && trimmed_label.find(target_trimmed) != std::string::npos;
-			}
-			// </FS:Ansariel>
-
+			bool select = item->getEnabled() && trimmed_label.compare(0, target_trimmed.size(), target_trimmed) == 0;
+			
 			if (select)
 			{
 				// find offset of matching text (might have leading whitespace)
