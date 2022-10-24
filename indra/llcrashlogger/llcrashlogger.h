@@ -35,9 +35,6 @@
 #include "llcontrol.h"
 #include "llcrashlock.h"
 #include "_mutex.h"
-// [SL:KB] - Patch: Viewer-CrashLookup | Checked: 2011-03-24 (Catznip-2.6.0a) | Added: Catznip-2.6.0a
-#include "llcrashlookup.h"
-// [/SL:KB]
 
 // We shouldn't have to know the exact declaration of CRYPTO_THREADID, but VS
 // 2017 complains if we forward-declare it as simply 'struct CRYPTO_THREADID'.
