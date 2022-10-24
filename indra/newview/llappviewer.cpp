@@ -2675,15 +2675,15 @@ bool LLAppViewer::initConfiguration()
         if (gDirUtilp->fileExists(settings_file_list))
         {
             LL_ERRS() << "Cannot load default configuration file settings_files.xml. "
-                << "Please reinstall viewer from https://secondlife.com/support/downloads/ "
-                << "and contact https://support.secondlife.com if issue persists after reinstall."
+                << "Please reinstall viewer from https://www.dayturn.com/viewer/index.php?resources/ "
+                << "and contact Dayturn support if issue persists after reinstall."
                 << LL_ENDL;
         }
         else
         {
             LL_ERRS() << "Default configuration file settings_files.xml not found. "
-                << "Please reinstall viewer from https://secondlife.com/support/downloads/ "
-                << "and contact https://support.secondlife.com if issue persists after reinstall."
+                << "Please reinstall viewer from https://www.dayturn.com/viewer/index.php?resources/ "
+                << "and contact Dayturn support if issue persists after reinstall.'"
                 << LL_ENDL;
         }
 	}
