@@ -3846,7 +3846,7 @@ void LLAppViewer::writeSystemInfo()
 
 	// <FS:ND> Breakpad merge. Only include SettingsFile if the user selected this in prefs. Patch from Catznip
     // gDebugInfo["SettingsFilename"] = gSavedSettings.getString("ClientSettingsFile");
-	if (gCrashSettings.getBOOL("CrashSubmitSettings"))
+	if (gCrashSettings.getbool("CrashSubmitSettings"))
 		gDebugInfo["SettingsFilename"] = gSavedSettings.getString("ClientSettingsFile");
 	// </FS:ND>
 
@@ -5920,7 +5920,7 @@ void LLAppViewer::handleLoginComplete()
 	
 //	gDebugInfo["SettingsFilename"] = gSavedSettings.getString("ClientSettingsFile");
 // [SL:KB] - Patch: Viewer-CrashReporting | Checked: 2010-11-16 (Catznip-2.6.0a) | Added: Catznip-2.4.0b
-	if (gCrashSettings.getBOOL("CrashSubmitSettings"))
+	if (gCrashSettings.getbool("CrashSubmitSettings"))
 	{
 		// Only include settings.xml if the user consented
 		gDebugInfo["SettingsFilename"] = gSavedSettings.getString("ClientSettingsFile");

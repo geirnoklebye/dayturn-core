@@ -963,7 +963,7 @@ bool idle_startup()
 		LL_INFOS("AppInit") << "Attempting login as: " << userid << LL_ENDL;                                           
 //		gDebugInfo["LoginName"] = userid;                                                                              
 // [SL:KB] - Patch: Viewer-CrashReporting | Checked: 2010-11-16 (Catznip-2.6.0a) | Added: Catznip-2.4.0b
-		if (gCrashSettings.getBOOL("CrashSubmitName"))
+		if (gCrashSettings.getbool("CrashSubmitName"))
 		{
 			// Only include the agent name if the user consented
 			gDebugInfo["LoginName"] = userid;                                                                              
@@ -3504,7 +3504,7 @@ bool process_login_success_response()
 	if(!text.empty()) gAgentID.set(text);
 //	gDebugInfo["AgentID"] = text;
 // [SL:KB] - Patch: Viewer-CrashReporting | Checked: 2010-11-16 (Catznip-2.6.0a) | Added: Catznip-2.4.0b
-	if (gCrashSettings.getBOOL("CrashSubmitName"))
+	if (gCrashSettings.getbool("CrashSubmitName"))
 	{
 		// Only include the agent UUID if the user consented
 		gDebugInfo["AgentID"] = text;

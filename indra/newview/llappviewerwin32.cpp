@@ -140,9 +140,9 @@ namespace
             // sBugSplatSender->sendAdditionalFile(
             //     WCSTR(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "settings.xml")));
 
-            if (gCrashSettings.getBOOL("CrashSubmitLog"))
+            if (gCrashSettings.getbool("CrashSubmitLog"))
                 sBugSplatSender->sendAdditionalFile(  WCSTR(LLError::logFileName()));
-            if (gCrashSettings.getBOOL("CrashSubmitSettings"))
+            if (gCrashSettings.getbool("CrashSubmitSettings"))
                 sBugSplatSender->sendAdditionalFile(  WCSTR(gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "settings.xml")));
 
 
@@ -165,7 +165,7 @@ namespace
             if (gAgentAvatarp)
             {
                 // <FS:ND> Only send avatar name if enabled via prefs
-                if (gCrashSettings.getBOOL("CrashSubmitName"))
+                if (gCrashSettings.getbool("CrashSubmitName"))
                 // </FS:ND>
                 {
                     // user name, when we have it

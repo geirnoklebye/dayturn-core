@@ -3935,13 +3935,13 @@ bool LLPanelPreferenceCrashReports::postBuild()
 	pSendAlwaysAsk->set(CRASH_BEHAVIOR_ASK == nCrashSubmitBehavior);
 
 	LLCheckBoxCtrl* pSendSettings = getChild<LLCheckBoxCtrl>("checkSendSettings");
-	pSendSettings->set(gCrashSettings.getBOOL("CrashSubmitSettings"));
+	pSendSettings->set(gCrashSettings.getbool("CrashSubmitSettings"));
 
 	LLCheckBoxCtrl* pSendLog = getChild<LLCheckBoxCtrl>("checkSendLog");
-	pSendLog->set(gCrashSettings.getBOOL("CrashSubmitLog"));
+	pSendLog->set(gCrashSettings.getbool("CrashSubmitLog"));
 
 	LLCheckBoxCtrl* pSendName = getChild<LLCheckBoxCtrl>("checkSendName");
-	pSendName->set(gCrashSettings.getBOOL("CrashSubmitName"));
+	pSendName->set(gCrashSettings.getbool("CrashSubmitName"));
 
 	getChild<LLTextBox>("textInformation4")->setTextArg("[URL]", getString("PrivacyPolicyUrl"));
 
@@ -3976,13 +3976,13 @@ void LLPanelPreferenceCrashReports::apply()
 		gCrashSettings.setS32("CrashSubmitBehavior", CRASH_BEHAVIOR_NEVER_SEND);
 
 	LLCheckBoxCtrl* pSendSettings = getChild<LLCheckBoxCtrl>("checkSendSettings");
-	gCrashSettings.setBOOL("CrashSubmitSettings", pSendSettings->get());
+	gCrashSettings.setbool("CrashSubmitSettings", pSendSettings->get());
 
 	LLCheckBoxCtrl* pSendLog = getChild<LLCheckBoxCtrl>("checkSendLog");
-	gCrashSettings.setBOOL("CrashSubmitLog", pSendLog->get());
+	gCrashSettings.setbool("CrashSubmitLog", pSendLog->get());
 
 	LLCheckBoxCtrl* pSendName = getChild<LLCheckBoxCtrl>("checkSendName");
-	gCrashSettings.setBOOL("CrashSubmitName", pSendName->get());
+	gCrashSettings.setbool("CrashSubmitName", pSendName->get());
 }
 
 void LLPanelPreferenceCrashReports::cancel()
