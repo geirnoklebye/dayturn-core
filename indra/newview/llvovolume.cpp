@@ -5876,7 +5876,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
             {
                 avatar->addAttachmentOverridesForObject(vobj, NULL, false);
             }
-            
+
             // Standard rigged mesh attachments: 
 			bool rigged = !vobj->isAnimatedObject() && skinInfo && vobj->isAttachment();
             // Animated objects. Have to check for isRiggedMesh() to
@@ -5920,7 +5920,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
                     if (facep->isState(LLFace::RIGGED))
                     { 
                         //face is not rigged but used to be, remove from rigged face pool
-                        LLDrawPoolAvatar* pool = (LLDrawPoolAvatar*) facep->getPool();
+                        LLDrawPoolAvatar* pool = (LLDrawPoolAvatar*)facep->getPool();
                         if (pool)
                         {
                             pool->removeFace(facep);
@@ -6389,7 +6389,6 @@ struct CompareBatchBreakerRigged
         }
     }
 };
-
 
 U32 LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFace** faces, U32 face_count, bool distance_sort, bool batch_textures, bool rigged)
 {
