@@ -410,10 +410,10 @@ void LLAgentListener::startFollowPilot(LLSD const & event_data)
 {
 	LLUUID target_id;
 
-	BOOL allow_flying = TRUE;
+	bool allow_flying = true;
 	if (event_data.has("allow_flying"))
 	{
-		allow_flying = (BOOL) event_data["allow_flying"].asBoolean();
+		allow_flying = event_data["allow_flying"].asBoolean();
 	}
 
 	if (event_data.has("leader_id"))

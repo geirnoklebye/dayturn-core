@@ -282,8 +282,8 @@ static LLAppViewerListener sAppViewerListener(LLAppViewer::instance);
 extern void init_apple_menu(const char* product);
 #endif // LL_DARWIN
 
-extern BOOL gRandomizeFramerate;
-extern BOOL gPeriodicSlowFrame;
+extern bool gRandomizeFramerate;
+extern bool gPeriodicSlowFrame;
 extern bool gDebugGL;
 
 #if LL_DARWIN
@@ -296,8 +296,7 @@ extern bool gRetinaSupport;
 F32 gSimLastTime; // Used in LLAppViewer::init and send_viewer_stats()
 F32 gSimFrames;
 
-BOOL gShowObjectUpdates = FALSE;
-BOOL gUseQuickTime = TRUE;
+bool gShowObjectUpdates = false;
 
 eLastExecEvent gLastExecEvent = LAST_EXEC_NORMAL;
 S32 gLastExecDuration = -1; // (<0 indicates unknown)
@@ -337,7 +336,7 @@ F32 gLogoutMaxTime = LOGOUT_REQUEST_TIME;
 S32 gPendingMetricsUploads = 0;
 
 
-BOOL				gDisconnected = FALSE;
+bool				gDisconnected = false;
 
 // used to restore texture state after a mode switch
 LLFrameTimer	gRestoreGLTimer;
@@ -358,16 +357,16 @@ LLVector3			gRelativeWindVec(0.0, 0.0, 0.0);
 
 U32		gPacketsIn = 0;
 
-BOOL				gPrintMessagesThisFrame = FALSE;
+bool				gPrintMessagesThisFrame = false;
 
-BOOL gRandomizeFramerate = FALSE;
-BOOL gPeriodicSlowFrame = FALSE;
+bool gRandomizeFramerate = false;
+bool gPeriodicSlowFrame = false;
 
-BOOL gCrashOnStartup = FALSE;
-BOOL gLLErrorActivated = FALSE;
-BOOL gLogoutInProgress = FALSE;
+bool gCrashOnStartup = false;
+bool gLLErrorActivated = false;
+bool gLogoutInProgress = false;
 
-BOOL gSimulateMemLeak = FALSE;
+bool gSimulateMemLeak = false;
 
 // We don't want anyone, especially threads working on the graphics pipeline,
 // to have to block due to this WorkQueue being full.
@@ -382,7 +381,7 @@ const std::string START_MARKER_FILE_NAME("Dayturn.start_marker");
 const std::string ERROR_MARKER_FILE_NAME("Dayturn.error_marker");
 const std::string LLERROR_MARKER_FILE_NAME("Dayturn.llerror_marker");
 const std::string LOGOUT_MARKER_FILE_NAME("Dayturn.logout_marker");
-static BOOL gDoDisconnect = FALSE;
+static bool gDoDisconnect = false;
 static std::string gLaunchFileOnQuit;
 
 // Used on Win32 for other apps to identify our window (eg, win_setup)
@@ -563,11 +562,11 @@ static void settings_to_globals()
 	gAgent.setHideGroupTitle(gSavedSettings.getBOOL("RenderHideGroupTitle"));
 
 	gDebugWindowProc = gSavedSettings.getBOOL("DebugWindowProc");
-	gShowObjectUpdates = gSavedSettings.getBOOL("ShowObjectUpdates");
+	gShowObjectUpdates = gSavedSettings.getbool("ShowObjectUpdates");
 	LLWorldMapView::sMapScale = gSavedSettings.getF32("MapScale");
 	
 #if LL_DARWIN
-	gRetinaSupport = gSavedSettings.getBOOL("RenderRetina");
+	gRetinaSupport = gSavedSettings.getbool("RenderRetina");
 #endif
 }
 
@@ -2913,7 +2912,7 @@ bool LLAppViewer::initConfiguration()
 	}
 
 	// If we have specified crash on startup, set the global so we'll trigger the crash at the right time
-	gCrashOnStartup = gSavedSettings.getBOOL("CrashOnStartup");
+	gCrashOnStartup = gSavedSettings.getbool("CrashOnStartup");
 
 	if (gSavedSettings.getbool("LogPerformance"))
 	{
@@ -3132,7 +3131,7 @@ bool LLAppViewer::initConfiguration()
 	// This happens AFTER LLSplashScreen::show(). That may or may not be
 	// important.
 	//
-	if (mSecondInstance && !gSavedSettings.getBOOL("AllowMultipleViewers"))
+	if (mSecondInstance && !gSavedSettings.getbool("AllowMultipleViewers"))
 	{
 		OSMessageBox(
 			LLTrans::getString("MBAlreadyRunning"),
@@ -3719,7 +3718,7 @@ void LLAppViewer::cleanupSavedSettings()
 
 	gSavedSettings.setBOOL("DebugWindowProc", gDebugWindowProc);
 
-	gSavedSettings.setBOOL("ShowObjectUpdates", gShowObjectUpdates);
+	gSavedSettings.setbool("ShowObjectUpdates", gShowObjectUpdates);
 
 	if (gDebugView)
 	{
@@ -4425,7 +4424,7 @@ static bool finish_early_exit(const LLSD& notification, const LLSD& response)
 void LLAppViewer::earlyExit(const std::string& name, const LLSD& substitutions)
 {
    	LL_WARNS() << "app_early_exit: " << name << LL_ENDL;
-	gDoDisconnect = TRUE;
+	gDoDisconnect = true;
 	LLNotificationsUtil::add(name, substitutions, LLSD(), finish_early_exit);
 }
 
@@ -4433,7 +4432,7 @@ void LLAppViewer::earlyExit(const std::string& name, const LLSD& substitutions)
 void LLAppViewer::earlyExitNoNotify()
 {
    	LL_WARNS() << "app_early_exit with no notification: " << LL_ENDL;
-	gDoDisconnect = TRUE;
+	gDoDisconnect = true;
 	finish_early_exit( LLSD(), LLSD() );
 }
 
@@ -4538,7 +4537,7 @@ U32 LLAppViewer::getObjectCacheVersion()
 bool LLAppViewer::initCache()
 {
 	mPurgeCache = false;
-	BOOL read_only = mSecondInstance ? TRUE : FALSE;
+	bool read_only = mSecondInstance ? true : false;
 	LLAppViewer::getTextureCache()->setReadOnly(read_only) ;
 	LLVOCache::initParamSingleton(read_only);
 
@@ -4735,7 +4734,7 @@ void LLAppViewer::forceDisconnect(const std::string& mesg)
 	}
 
 	LLSD args;
-	gDoDisconnect = TRUE;
+	gDoDisconnect = true;
 
 	if (LLStartUp::getStartupState() < STATE_STARTED)
 	{
@@ -5032,12 +5031,11 @@ void LLAppViewer::idle()
 		// When appropriate, update agent location to the simulator.
 		F32 agent_update_time = agent_update_timer.getElapsedTimeF32();
 		F32 agent_force_update_time = mLastAgentForceUpdate + agent_update_time;
-		BOOL force_update = gAgent.controlFlagsDirty()
+		bool force_update = gAgent.controlFlagsDirty()
 							|| (mLastAgentControlFlags != gAgent.getControlFlags())
 							|| (agent_force_update_time > (1.0f / (F32) AGENT_FORCE_UPDATES_PER_SECOND));
 		if (force_update || (agent_update_time > (1.0f / (F32) AGENT_UPDATES_PER_SECOND)))
 		{
-			LL_PROFILE_ZONE_SCOPED_CATEGORY_NETWORK; //LL_RECORD_BLOCK_TIME(FTM_AGENT_UPDATE);
 			// Send avatar and camera info
 			mLastAgentControlFlags = gAgent.getControlFlags();
 			mLastAgentForceUpdate = force_update ? 0 : agent_force_update_time;
@@ -5061,7 +5059,7 @@ void LLAppViewer::idle()
 		// *FIX: (?) SAMANTHA
 		if (viewer_stats_timer.getElapsedTimeF32() >= SEND_STATS_PERIOD && !gDisconnected)
 		{
-			if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
+			if (!gSavedSettings.getbool("KokuaSuppressPeriodicLogging"))
 			{
 				LL_INFOS() << "Transmitting sessions stats" << LL_ENDL;
 			}
@@ -5077,7 +5075,7 @@ void LLAppViewer::idle()
 			object_debug_timer.reset();
 			if (gObjectList.mNumDeadObjectUpdates)
 			{
-				if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
+				if (!gSavedSettings.getbool("KokuaSuppressPeriodicLogging"))
 				{
 					LL_INFOS() << "Dead object updates: " << gObjectList.mNumDeadObjectUpdates << LL_ENDL;
 				}
@@ -5085,7 +5083,7 @@ void LLAppViewer::idle()
 			}
 			if (gObjectList.mNumUnknownUpdates)
 			{
-				if (!gSavedSettings.getBOOL("KokuaSuppressPeriodicLogging"))
+				if (!gSavedSettings.getbool("KokuaSuppressPeriodicLogging"))
 				{
 					LL_INFOS() << "Unknown object updates: " << gObjectList.mNumUnknownUpdates << LL_ENDL;
 				}
@@ -5447,7 +5445,7 @@ void LLAppViewer::sendLogoutRequest()
 	if(!mLogoutRequestSent && gMessageSystem)
 	{
 		//Set internal status variables and marker files before actually starting the logout process
-		gLogoutInProgress = TRUE;
+		gLogoutInProgress = true;
 		if (!mSecondInstance)
 		{
 			mLogoutMarkerFileName = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,LOGOUT_MARKER_FILE_NAME);
@@ -5649,7 +5647,7 @@ void LLAppViewer::idleNetwork()
 		if (gPrintMessagesThisFrame)
 		{
 			LL_INFOS() << "Decoded " << total_decoded << " msgs this frame!" << LL_ENDL;
-			gPrintMessagesThisFrame = FALSE;
+			gPrintMessagesThisFrame = false;
 		}
 	}
 	add(LLStatViewer::NUM_NEW_OBJECTS, gObjectList.mNumNewObjects);
@@ -5753,7 +5751,7 @@ void LLAppViewer::disconnectViewer()
 	LLDestroyClassList::instance().fireCallbacks();
 
 	cleanup_xfer_manager();
-	gDisconnected = TRUE;
+	gDisconnected = true;
 
 	// Pass the connection state to LLUrlEntryParcel not to attempt
 	// parcel info requests while disconnected.
