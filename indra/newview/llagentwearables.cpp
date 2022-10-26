@@ -53,8 +53,6 @@
 #include "llwearablelist.h"
 #include "llfloaterperms.h"
 
-#include <boost/scoped_ptr.hpp>
-
 LLAgentWearables gAgentWearables;
 
 bool LLAgentWearables::mInitialWearablesUpdateReceived = false;
