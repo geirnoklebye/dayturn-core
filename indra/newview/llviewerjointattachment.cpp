@@ -108,7 +108,7 @@ void LLViewerJointAttachment::setupDrawable(LLViewerObject *object)
 		return;
 	if (object->mDrawable->isActive())
 	{
-		object->mDrawable->makeStatic(FALSE);
+		object->mDrawable->makeStatic(false);
 	}
 
 	object->mDrawable->mXform.setParent(getXform()); // LLViewerJointAttachment::lazyAttach
@@ -271,7 +271,7 @@ void LLViewerJointAttachment::removeObject(LLViewerObject *object)
 		//if object is active, make it static
 		if(object->mDrawable->isActive())
 		{
-			object->mDrawable->makeStatic(FALSE);
+			object->mDrawable->makeStatic(false);
 		}
 
 		LLVector3 cur_position = object->getRenderPosition();

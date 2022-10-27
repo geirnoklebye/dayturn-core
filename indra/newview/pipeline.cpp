@@ -1704,14 +1704,12 @@ void LLPipeline::allocDrawable(LLViewerObject *vobj)
 	{
 		drawable->setState(LLDrawable::FORCE_INVISIBLE);
 	}
-	drawable->updateXform(TRUE);
+	drawable->updateXform(true);
 }
 
 
 void LLPipeline::unlinkDrawable(LLDrawable *drawable)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_PIPELINE;
-
 	assertInitialized();
 
 	LLPointer<LLDrawable> drawablep = drawable; // make sure this doesn't get deleted before we are done
@@ -1855,7 +1853,7 @@ void LLPipeline::createObject(LLViewerObject* vobj)
 	if (drawablep->getVOVolume() && RenderAnimateRes)
 	{
 		// fun animated res
-		drawablep->updateXform(TRUE);
+		drawablep->updateXform(true);
 		drawablep->clearState(LLDrawable::MOVE_UNDAMPED);
 		drawablep->setScale(LLVector3(0,0,0));
 		drawablep->makeActive();

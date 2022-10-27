@@ -1190,7 +1190,7 @@ bool LLVOVolume::setVolume(const LLVolumeParams &params_in, const S32 detail, bo
 			if (mDrawable.notNull())
 			{
 				// Undo the damage we did to this matrix
-				mDrawable->updateXform(FALSE);
+				mDrawable->updateXform(false);
 			}
 		}
 	}

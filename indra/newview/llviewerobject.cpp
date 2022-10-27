@@ -1049,7 +1049,7 @@ bool LLViewerObject::setDrawableParent(LLDrawable* parentp)
 	}
 	else if (!mDrawable->isAvatar())
 	{
-		mDrawable->updateXform(TRUE);
+		mDrawable->updateXform(true);
 		/*if (!mDrawable->getSpatialGroup())
 		{
 			mDrawable->movePartition();
