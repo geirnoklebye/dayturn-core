@@ -840,7 +840,6 @@ bool LLVOVolume::isVisible() const
 
 void LLVOVolume::updateTextureVirtualSize(bool forced)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME;
 	// Update the pixel area of all faces
 
     if (mDrawable.isNull())
@@ -1789,7 +1788,6 @@ bool LLVOVolume::setParent(LLViewerObject* parent)
 // NOTE: regenFaces() MUST be followed by genTriangles()!
 void LLVOVolume::regenFaces()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME;
 	// remove existing faces
 	bool count_changed = mNumFaces != getNumTEs();
 	
@@ -2146,9 +2144,7 @@ bool LLVOVolume::lodOrSculptChanged(LLDrawable *drawable, S32 &compiled, S32 &sh
 }
 
 BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
-{
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME;
-	
+{	
 	if (mDrawable->isState(LLDrawable::REBUILD_RIGGED))
 	{
 		updateRiggedVolume();
@@ -3952,7 +3948,6 @@ void LLVOVolume::afterReparent()
 //----------------------------------------------------------------------------
 void LLVOVolume::updateRiggingInfo()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME;
     if (isRiggedMesh())
     {
         const LLMeshSkinInfo* skin = getSkinInfo();
@@ -4599,7 +4594,6 @@ void LLVOVolume::updateSpatialExtents(LLVector4a& newMin, LLVector4a& newMax)
 
 F32 LLVOVolume::getBinRadius()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME;
 	F32 radius;
 	
 	F32 scale = 1.f;
@@ -4999,7 +4993,6 @@ void LLVOVolume::clearRiggedVolume()
 
 void LLVOVolume::updateRiggedVolume(bool force_update)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME;
 	//Update mRiggedVolume to match current animation frame of avatar. 
 	//Also update position/size in octree.  
 
@@ -5037,7 +5030,6 @@ void LLVOVolume::updateRiggedVolume(bool force_update)
 
 void LLRiggedVolume::update(const LLMeshSkinInfo* skin, LLVOAvatar* avatar, const LLVolume* volume)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME;
 	bool copy = false;
 	if (volume->getNumVolumeFaces() != getNumVolumeFaces())
 	{ 
@@ -5347,7 +5339,6 @@ void LLVolumeGeometryManager::freeFaces()
 
 void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep, U32 type)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME;
 	// <FS:Ansariel> Can't do anything about it anyway - stop spamming the log
 	//if (   type == LLRenderPass::PASS_ALPHA 
 	//	&& facep->getTextureEntry()->getMaterialParams().notNull() 
@@ -5706,7 +5697,6 @@ static inline void add_face(T*** list, U32* count, T* face)
 
 void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME;
 	if (group->changeLOD())
 	{
 		group->mLastUpdateDistance = group->mDistance;
@@ -6205,13 +6195,10 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 
 void LLVolumeGeometryManager::rebuildMesh(LLSpatialGroup* group)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME;
 	llassert(group);
 	if (group && group->hasState(LLSpatialGroup::MESH_DIRTY) && !group->hasState(LLSpatialGroup::GEOM_DIRTY))
 	{
 		{
-            LL_PROFILE_ZONE_NAMED("rebuildMesh - gen draw info");
-
             group->mBuilt = 1.f;
 		
 			S32 num_mapped_vertex_buffer = LLVertexBuffer::sMappedCount ;
@@ -6288,7 +6275,6 @@ void LLVolumeGeometryManager::rebuildMesh(LLSpatialGroup* group)
 			}
 
 			{
-                LL_PROFILE_ZONE_NAMED("rebuildMesh - flush");
 				for (LLVertexBuffer** iter = locked_buffer, ** end_iter = locked_buffer+buffer_count; iter != end_iter; ++iter)
 				{
 					(*iter)->flush();
@@ -6517,7 +6503,6 @@ U32 LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFace
 		U32 texture_count = 0;
 
 		{
-            LL_PROFILE_ZONE_NAMED("genDrawInfo - face size");
 			if (batch_textures)
 			{
 				U8 cur_tex = 0;
@@ -7048,8 +7033,6 @@ void LLVolumeGeometryManager::addGeometryCount(LLSpatialGroup* group, U32& verte
 
 void LLGeometryManager::addGeometryCount(LLSpatialGroup* group, U32 &vertex_count, U32 &index_count)
 {	
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME;
-
 	//initialize to default usage for this partition
 	U32 usage = group->getSpatialPartition()->mBufferUsage;
 	
