@@ -1451,7 +1451,7 @@ public:
 	}
 };
 
-void LLSpatialBridge::setVisible(LLCamera& camera_in, std::vector<LLDrawable*>* results, BOOL for_select)
+void LLSpatialBridge::setVisible(LLCamera& camera_in, std::vector<LLDrawable*>* results, bool for_select)
 {
 	if (!gPipeline.hasRenderType(mDrawableType))
 	{
