@@ -230,7 +230,7 @@ public:
 	// later?
 	/*virtual*/ void updateTextures();
 	/*virtual*/ LLDrawable* createDrawable(LLPipeline *pipeline);
-	/*virtual*/ BOOL		updateGeometry(LLDrawable *drawable);
+	/*virtual*/ bool		updateGeometry(LLDrawable *drawable);
 
 	const LLHeavenBody& getSun() const						{ return mSun;  }
 	const LLHeavenBody& getMoon() const						{ return mMoon; }

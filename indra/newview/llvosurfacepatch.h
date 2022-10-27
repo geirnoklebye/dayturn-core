@@ -60,7 +60,7 @@ public:
 
 	/*virtual*/ LLDrawable* createDrawable(LLPipeline *pipeline);
 	/*virtual*/ void		updateGL();
-	/*virtual*/ BOOL        updateGeometry(LLDrawable *drawable);
+	/*virtual*/ bool        updateGeometry(LLDrawable *drawable);
 	/*virtual*/ bool		updateLOD();
 	/*virtual*/ void		updateFaceSize(S32 idx);
 	void getGeometry(LLStrider<LLVector3> &verticesp,

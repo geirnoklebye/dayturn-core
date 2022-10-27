@@ -44,7 +44,7 @@ public:
 	/*virtual*/ void		 idleUpdate(LLAgent &agent, const F64 &time);
 	/*virtual*/ bool		 isActive(void) const;
 	/*virtual*/ LLDrawable * createDrawable(LLPipeline *pipeline);
-	/*virtual*/ BOOL		 updateGeometry(LLDrawable *drawable);
+	/*virtual*/ bool		 updateGeometry(LLDrawable *drawable);
 
 	void drawStars(void);
 	void drawDome(void);

@@ -493,10 +493,8 @@ LLDrawable* LLVOTree::createDrawable(LLPipeline *pipeline)
 const S32 LEAF_INDICES = 24;
 const S32 LEAF_VERTICES = 16;
 
-BOOL LLVOTree::updateGeometry(LLDrawable *drawable)
+bool LLVOTree::updateGeometry(LLDrawable *drawable)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	if(mTrunkLOD >= sMAX_NUM_TREE_LOD_LEVELS) //do not display the tree.
 	{
 		mReferenceBuffer = NULL ;
@@ -505,7 +503,7 @@ BOOL LLVOTree::updateGeometry(LLDrawable *drawable)
 		{
 			facep->setVertexBuffer(NULL);
 		}
-		return TRUE ;
+		return true ;
 	}
 
 	if (mDrawable->getFace(0) &&
@@ -522,7 +520,7 @@ BOOL LLVOTree::updateGeometry(LLDrawable *drawable)
 		S32 lod;
 
 		LLFace *face = drawable->getFace(0);
-		if (!face) return TRUE;
+		if (!face) return true;
 
 		face->mCenterAgent = getPositionAgent();
 		face->mCenterLocal = face->mCenterAgent;
@@ -545,7 +543,7 @@ BOOL LLVOTree::updateGeometry(LLDrawable *drawable)
 				<< max_vertices << " vertices and "
 				<< max_indices << " indices" << LL_ENDL;
 			mReferenceBuffer = NULL; //unref
-			return TRUE;
+			return true;
 		}
 
 		LLStrider<LLVector3> vertices;
@@ -870,7 +868,7 @@ BOOL LLVOTree::updateGeometry(LLDrawable *drawable)
 	//generate tree mesh
 	updateMesh();
 	
-	return TRUE;
+	return true;
 }
 
 void LLVOTree::updateMesh()

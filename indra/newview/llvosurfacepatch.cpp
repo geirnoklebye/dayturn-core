@@ -166,10 +166,8 @@ void LLVOSurfacePatch::updateGL()
 	}
 }
 
-BOOL LLVOSurfacePatch::updateGeometry(LLDrawable *drawable)
+bool LLVOSurfacePatch::updateGeometry(LLDrawable *drawable)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	dirtySpatialGroup(true);
 	
 	S32 min_comp, max_comp, range;

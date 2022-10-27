@@ -7440,17 +7440,16 @@ void LLVOAvatar::updateGL()
 //-----------------------------------------------------------------------------
 // updateGeometry()
 //-----------------------------------------------------------------------------
-BOOL LLVOAvatar::updateGeometry(LLDrawable *drawable)
+bool LLVOAvatar::updateGeometry(LLDrawable *drawable)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 	if (!(gPipeline.hasRenderType(mIsControlAvatar ? LLPipeline::RENDER_TYPE_CONTROL_AV : LLPipeline::RENDER_TYPE_AVATAR)))
 	{
-		return TRUE;
+		return true;
 	}
 	
 	if (!mMeshValid)
 	{
-		return TRUE;
+		return true;
 	}
 
 	if (!drawable)
@@ -7458,7 +7457,7 @@ BOOL LLVOAvatar::updateGeometry(LLDrawable *drawable)
 		LL_ERRS() << "LLVOAvatar::updateGeometry() called with NULL drawable" << LL_ENDL;
 	}
 
-	return TRUE;
+	return true;
 }
 
 //-----------------------------------------------------------------------------

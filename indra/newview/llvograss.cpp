@@ -402,12 +402,8 @@ LLDrawable* LLVOGrass::createDrawable(LLPipeline *pipeline)
 	return mDrawable;
 }
 
-static LLTrace::BlockTimerStatHandle FTM_UPDATE_GRASS("Update Grass");
-
-BOOL LLVOGrass::updateGeometry(LLDrawable *drawable)
+bool LLVOGrass::updateGeometry(LLDrawable *drawable)
 {
-	LL_RECORD_BLOCK_TIME(FTM_UPDATE_GRASS);
-
 	dirtySpatialGroup();
 
 	if(!mNumBlades)//stop rendering grass
@@ -425,7 +421,7 @@ BOOL LLVOGrass::updateGeometry(LLDrawable *drawable)
 	{		
 		plantBlades();
 	}
-	return TRUE;
+	return true;
 }
 
 void LLVOGrass::plantBlades()

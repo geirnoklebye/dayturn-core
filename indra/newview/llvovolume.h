@@ -226,7 +226,7 @@ public:
 												 void* user_data, S32 status, LLExtStat ext_status);
 					
 				void	updateRelativeXform(bool force_identity = false);
-	/*virtual*/ BOOL	updateGeometry(LLDrawable *drawable);
+	/*virtual*/ bool	updateGeometry(LLDrawable *drawable);
 	/*virtual*/ void	updateFaceSize(S32 idx);
 	/*virtual*/ bool	updateLOD();
 				void	updateRadius();

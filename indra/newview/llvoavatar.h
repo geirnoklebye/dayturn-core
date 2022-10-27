@@ -156,7 +156,7 @@ public:
 	/*virtual*/ const  	 	 	LLVector3 getRenderPosition() const;
 	/*virtual*/ void   	 	 	updateDrawable(bool force_damped);
 	/*virtual*/ LLDrawable* 	createDrawable(LLPipeline *pipeline);
-	/*virtual*/ BOOL   	 	 	updateGeometry(LLDrawable *drawable);
+	/*virtual*/ bool   	 	 	updateGeometry(LLDrawable *drawable);
 	/*virtual*/ void   	 	 	setPixelAreaAndAngle(LLAgent &agent);
 	/*virtual*/ void   	 	 	updateRegion(LLViewerRegion *regionp);
 	/*virtual*/ void   	 	 	updateSpatialExtents(LLVector4a& newMin, LLVector4a &newMax);

@@ -202,7 +202,7 @@ public:
 	virtual void boostTexturePriority(BOOL boost_children = TRUE);	// When you just want to boost priority of this object
 	
 	virtual LLDrawable* createDrawable(LLPipeline *pipeline);
-	virtual BOOL		updateGeometry(LLDrawable *drawable);
+	virtual bool		updateGeometry(LLDrawable *drawable);
 	virtual void		updateGL();
 	virtual void		updateFaceSize(S32 idx);
 	virtual bool		updateLOD();

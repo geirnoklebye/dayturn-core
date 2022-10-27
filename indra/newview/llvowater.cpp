@@ -114,9 +114,8 @@ LLDrawable *LLVOWater::createDrawable(LLPipeline *pipeline)
 	return mDrawable;
 }
 
-BOOL LLVOWater::updateGeometry(LLDrawable *drawable)
+bool LLVOWater::updateGeometry(LLDrawable *drawable)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	LLFace *face;
 
 	if (drawable->getNumFaces() < 1)
@@ -127,7 +126,7 @@ BOOL LLVOWater::updateGeometry(LLDrawable *drawable)
 	face = drawable->getFace(0);
 	if (!face)
 	{
-		return TRUE;
+		return true;
 	}
 
 //	LLVector2 uvs[4];

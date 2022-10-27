@@ -960,12 +960,10 @@ void LLDrawable::updateTexture()
 	}
 }
 
-BOOL LLDrawable::updateGeometry(BOOL priority)
+bool LLDrawable::updateGeometry(bool priority)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWABLE
-
 	llassert(mVObjp.notNull());
-	BOOL res = mVObjp && mVObjp->updateGeometry(this);
+	bool res = mVObjp && mVObjp->updateGeometry(this);
 	return res;
 }
 

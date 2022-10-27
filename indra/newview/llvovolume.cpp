@@ -2143,7 +2143,7 @@ bool LLVOVolume::lodOrSculptChanged(LLDrawable *drawable, S32 &compiled, S32 &sh
 	return regen_faces;
 }
 
-BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
+bool LLVOVolume::updateGeometry(LLDrawable *drawable)
 {	
 	if (mDrawable->isState(LLDrawable::REBUILD_RIGGED))
 	{
@@ -2154,7 +2154,7 @@ BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
 
 	if (mVolumeImpl != NULL)
 	{
-		BOOL res;
+		bool res;
 		{
 			res = mVolumeImpl->doUpdateGeometry(drawable);
 		}
@@ -2176,16 +2176,16 @@ BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
 		return true; // No update to complete
 	}
 
-	BOOL compiled = FALSE;
+	S32 compiled = false;
     // This should be true in most cases, unless we're sure no octree update is
     // needed.
-    BOOL should_update_octree_bounds = bool(getRiggedVolume()) || mDrawable->isState(LLDrawable::REBUILD_POSITION) || !mDrawable->getSpatialExtents()->isFinite3();
+    S32 should_update_octree_bounds = bool(getRiggedVolume()) || mDrawable->isState(LLDrawable::REBUILD_POSITION) || !mDrawable->getSpatialExtents()->isFinite3();
 
 	if (mVolumeChanged || mFaceMappingChanged)
 	{
 		dirtySpatialGroup(drawable->isState(LLDrawable::IN_REBUILD_Q1));
 
-		bool was_regen_faces = false;
+		S32 was_regen_faces = false;
         should_update_octree_bounds = true;
 
 		if (mVolumeChanged)

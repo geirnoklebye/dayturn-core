@@ -434,7 +434,7 @@ LLVOSky::LLVOSky(const LLUUID &id, const LLPCode pcode, LLViewerRegion *regionp)
 	mSun.setIntensity(SUN_INTENSITY);
 	mMoon.setIntensity(0.1f * SUN_INTENSITY);
 
-	mHeavenlyBodyUpdated = FALSE ;
+	mHeavenlyBodyUpdated = false ;
 
 	mDrawRefl = 0;
 	mInterpVal = 0.f;
@@ -477,7 +477,7 @@ void LLVOSky::init()
 
 	mInitialized = true;
 
-	mHeavenlyBodyUpdated = FALSE ;
+	mHeavenlyBodyUpdated = false ;
 
     mRainbowMap = LLViewerTextureManager::getFetchedTexture(psky->getRainbowTextureId(), FTT_DEFAULT, TRUE, LLGLTexture::BOOST_UI);
     mHaloMap    = LLViewerTextureManager::getFetchedTexture(psky->getHaloTextureId(),  FTT_DEFAULT, TRUE, LLGLTexture::BOOST_UI);
@@ -968,9 +968,8 @@ void LLVOSky::setBloomTextures(const LLUUID& bloom_texture, const LLUUID& bloom_
     }
 }
 
-BOOL LLVOSky::updateGeometry(LLDrawable *drawable)
+bool LLVOSky::updateGeometry(LLDrawable *drawable)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWABLE;
 	if (mFace[FACE_REFLECTION] == NULL)
 	{
 		LLDrawPoolWater *poolp = (LLDrawPoolWater*) gPipeline.getPool(LLDrawPool::POOL_WATER);
@@ -1070,7 +1069,7 @@ BOOL LLVOSky::updateGeometry(LLDrawable *drawable)
 	const F32 camera_height = mCameraPosAgent.mV[2];
 	const F32 height_above_water = camera_height - water_height;
 
-	bool sun_flag = FALSE;
+	bool sun_flag = false;
 	if (mSun.isVisible())
 	{
         sun_flag = !mMoon.isVisible() || ((look_at * mSun.getDirection()) > 0);
@@ -1085,12 +1084,12 @@ BOOL LLVOSky::updateGeometry(LLDrawable *drawable)
 			}
 
 	LLPipeline::sCompiles++;
-	return TRUE;
+	return true;
 }
 
 bool LLVOSky::updateHeavenlyBodyGeometry(LLDrawable *drawable, F32 scale, const S32 f, LLHeavenBody& hb, const LLVector3 &up, const LLVector3 &right)
 {
-	mHeavenlyBodyUpdated = TRUE ;
+	mHeavenlyBodyUpdated = true ;
 
 	LLStrider<LLVector3> verticesp;
 	LLStrider<LLVector3> normalsp;

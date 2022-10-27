@@ -306,10 +306,8 @@ LLVector3 LLVOPartGroup::getCameraPosition() const
 	return gAgentCamera.getCameraPositionAgent();
 }
 
-BOOL LLVOPartGroup::updateGeometry(LLDrawable *drawable)
+bool LLVOPartGroup::updateGeometry(LLDrawable *drawable)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	dirtySpatialGroup();
 	
 	S32 num_parts = mViewerPartGroupp->getCount();
@@ -334,12 +332,12 @@ BOOL LLVOPartGroup::updateGeometry(LLDrawable *drawable)
 		}
 		drawable->setNumFaces(0, NULL, getTEImage(0));
 		LLPipeline::sCompiles++;
-		return TRUE;
+		return true;
 	}
 
  	if (!(gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_PARTICLES)))
 	{
-		return TRUE;
+		return true;
 	}
 
 	if (num_parts > drawable->getNumFaces())
@@ -477,7 +475,7 @@ BOOL LLVOPartGroup::updateGeometry(LLDrawable *drawable)
 
 	mDrawable->movePartition();
 	LLPipeline::sCompiles++;
-	return TRUE;
+	return true;
 }
 
 

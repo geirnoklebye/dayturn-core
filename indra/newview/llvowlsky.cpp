@@ -142,9 +142,8 @@ void LLVOWLSky::restoreGL()
 	gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_ALL, true);
 }
 
-BOOL LLVOWLSky::updateGeometry(LLDrawable * drawable)
+bool LLVOWLSky::updateGeometry(LLDrawable * drawable)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	LLStrider<LLVector3>	vertices;
 	LLStrider<LLVector2>	texCoords;
 	LLStrider<U16>			indices;
@@ -158,7 +157,7 @@ BOOL LLVOWLSky::updateGeometry(LLDrawable * drawable)
 			LL_WARNS() << "Failed to allocate Vertex Buffer on full screen sky update" << LL_ENDL;
 		}
 
-		BOOL success = mFsSkyVerts->getVertexStrider(vertices)
+		bool success = mFsSkyVerts->getVertexStrider(vertices)
 			        && mFsSkyVerts->getTexCoord0Strider(texCoords)
 			        && mFsSkyVerts->getIndexStrider(indices);
 
@@ -250,7 +249,7 @@ BOOL LLVOWLSky::updateGeometry(LLDrawable * drawable)
 #endif
 
 			// lock the buffer
-			BOOL success = segment->getVertexStrider(vertices)
+			bool success = segment->getVertexStrider(vertices)
 				&& segment->getTexCoord0Strider(texCoords)
 				&& segment->getIndexStrider(indices);
 
@@ -280,7 +279,7 @@ BOOL LLVOWLSky::updateGeometry(LLDrawable * drawable)
 
 	LLPipeline::sCompiles++;
 
-	return TRUE;
+	return true;
 }
 
 void LLVOWLSky::drawStars(void)
