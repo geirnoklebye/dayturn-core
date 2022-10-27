@@ -61,7 +61,7 @@ private:
 	static S32		sCurrent;
 
 public:
-	void bindTexture(BOOL curr = TRUE);
+	void bindTexture(bool curr = true);
 	
 protected:
 	LLSkyTex();
@@ -76,7 +76,7 @@ protected:
 	static S32 getCurrent();
 	static S32 stepCurrent();
 	static S32 getNext();
-	static S32 getWhich(const BOOL curr);
+	static S32 getWhich(const bool curr);
 
 	void initEmpty(const S32 tex);
 	
@@ -116,8 +116,8 @@ protected:
 		return col;
 	}
 
-	LLImageRaw* getImageRaw(BOOL curr=TRUE);
-	void createGLImage(BOOL curr=TRUE);
+	LLImageRaw* getImageRaw(bool curr=true);
+	void createGLImage(S32 curr=true);
 
     bool mIsShiny;
 };

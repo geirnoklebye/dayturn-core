@@ -158,7 +158,7 @@ S32 LLSkyTex::getNext()
     return ((sCurrent+1) & 1);
 }
 
-S32 LLSkyTex::getWhich(const BOOL curr)
+S32 LLSkyTex::getWhich(const bool curr)
 {
     int tex = curr ? sCurrent : getNext();
     return tex;
@@ -209,13 +209,13 @@ void LLSkyTex::createGLImage(S32 which)
 	mTexture[which]->setAddressMode(LLTexUnit::TAM_CLAMP);
 }
 
-void LLSkyTex::bindTexture(BOOL curr)
+void LLSkyTex::bindTexture(bool curr)
 {
     int tex = getWhich(curr);
 	gGL.getTexUnit(0)->bind(mTexture[tex], true);
 }
 
-LLImageRaw* LLSkyTex::getImageRaw(BOOL curr)
+LLImageRaw* LLSkyTex::getImageRaw(bool curr)
 {
     int tex = getWhich(curr);
     return mImageRaw[tex];
@@ -722,7 +722,7 @@ bool LLVOSky::updateSky()
 
         bool is_alm_wl_sky = gPipeline.canUseWindLightShaders();
 
-        int tex = mSkyTex[0].getWhich(TRUE);
+        int tex = mSkyTex[0].getWhich(true);
 
         for (int side = 0; side < NUM_CUBEMAP_FACES; side++)
         {
@@ -731,14 +731,14 @@ bool LLVOSky::updateSky()
 
             if (!is_alm_wl_sky)
             {
-                raw1 = mSkyTex[side].getImageRaw(TRUE);
-                raw2 = mSkyTex[side].getImageRaw(FALSE);
+                raw1 = mSkyTex[side].getImageRaw(true);
+                raw2 = mSkyTex[side].getImageRaw(false);
                 raw2->copy(raw1);
                 mSkyTex[side].createGLImage(tex);
             }
 
-            raw1 = mShinyTex[side].getImageRaw(TRUE);
-            raw2 = mShinyTex[side].getImageRaw(FALSE);
+            raw1 = mShinyTex[side].getImageRaw(true);
+            raw2 = mShinyTex[side].getImageRaw(false);
             raw2->copy(raw1);
             mShinyTex[side].createGLImage(tex);
         }
@@ -1010,7 +1010,7 @@ bool LLVOSky::updateGeometry(LLDrawable *drawable)
 			face->setGeomIndex(0);
 			face->setIndicesIndex(0);
 			LLVertexBuffer* buff = new LLVertexBuffer(LLDrawPoolSky::VERTEX_DATA_MASK, GL_STREAM_DRAW_ARB);
-			buff->allocateBuffer(4, 6, TRUE);
+			buff->allocateBuffer(4, 6, true);
 			face->setVertexBuffer(buff);
 
 			index_offset = face->getGeometry(verticesp,normalsp,texCoordsp, indicesp);
