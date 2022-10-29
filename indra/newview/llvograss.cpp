@@ -703,7 +703,7 @@ void LLGrassPartition::getGeometry(LLSpatialGroup* group)
 
 		S32 idx = draw_vec.size()-1;
 
-		BOOL fullbright = facep->isState(LLFace::FULLBRIGHT);
+		bool fullbright = facep->isState(LLFace::FULLBRIGHT);
 		F32 vsize = facep->getVirtualSize();
 
 		if (idx >= 0 && draw_vec[idx]->mEnd == facep->getGeomIndex()-1 &&

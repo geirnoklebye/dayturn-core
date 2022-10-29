@@ -916,7 +916,7 @@ void LLParticlePartition::getGeometry(LLSpatialGroup* group)
 
 		S32 idx = draw_vec.size()-1;
 
-		BOOL fullbright = facep->isState(LLFace::FULLBRIGHT);
+		bool fullbright = facep->isState(LLFace::FULLBRIGHT);
 		F32 vsize = facep->getVirtualSize();
 
 		bool batched = false;

@@ -5371,7 +5371,7 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 
 	S32 idx = draw_vec.size()-1;
 
-	BOOL fullbright = (type == LLRenderPass::PASS_FULLBRIGHT) ||
+	bool fullbright = (type == LLRenderPass::PASS_FULLBRIGHT) ||
 		(type == LLRenderPass::PASS_INVISIBLE) ||
 		(type == LLRenderPass::PASS_FULLBRIGHT_ALPHA_MASK) ||
 		(type == LLRenderPass::PASS_ALPHA && facep->isState(LLFace::FULLBRIGHT)) ||
