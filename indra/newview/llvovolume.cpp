@@ -5203,11 +5203,11 @@ U32 LLVOVolume::getPartitionType() const
 }
 
 LLVolumePartition::LLVolumePartition(LLViewerRegion* regionp)
-: LLSpatialPartition(LLVOVolume::VERTEX_DATA_MASK, TRUE, GL_DYNAMIC_DRAW_ARB, regionp),
+: LLSpatialPartition(LLVOVolume::VERTEX_DATA_MASK, true, GL_DYNAMIC_DRAW_ARB, regionp),
 LLVolumeGeometryManager()
 {
 	mLODPeriod = 32;
-	mDepthMask = FALSE;
+	mDepthMask = false;
 	mDrawableType = LLPipeline::RENDER_TYPE_VOLUME;
 	mPartitionType = LLViewerRegion::PARTITION_VOLUME;
 	mSlopRatio = 0.25f;
@@ -5215,10 +5215,10 @@ LLVolumeGeometryManager()
 }
 
 LLVolumeBridge::LLVolumeBridge(LLDrawable* drawablep, LLViewerRegion* regionp)
-: LLSpatialBridge(drawablep, TRUE, LLVOVolume::VERTEX_DATA_MASK, regionp),
+: LLSpatialBridge(drawablep, true, LLVOVolume::VERTEX_DATA_MASK, regionp),
 LLVolumeGeometryManager()
 {
-	mDepthMask = FALSE;
+	mDepthMask = false;
 	mLODPeriod = 32;
 	mDrawableType = LLPipeline::RENDER_TYPE_VOLUME;
 	mPartitionType = LLViewerRegion::PARTITION_BRIDGE;

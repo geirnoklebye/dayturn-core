@@ -595,7 +595,7 @@ LLGrassPartition::LLGrassPartition(LLViewerRegion* regionp)
 	mDrawableType = LLPipeline::RENDER_TYPE_GRASS;
 	mPartitionType = LLViewerRegion::PARTITION_GRASS;
 	mLODPeriod = 16;
-	mDepthMask = TRUE;
+	mDepthMask = true;
 	mSlopRatio = 0.1f;
 	mRenderPass = LLRenderPass::PASS_GRASS;
 	mBufferUsage = GL_DYNAMIC_DRAW_ARB;

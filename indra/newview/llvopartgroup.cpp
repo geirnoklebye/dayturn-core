@@ -973,7 +973,7 @@ void LLParticlePartition::getGeometry(LLSpatialGroup* group)
 			info->mBlendFuncDst = bf_dst;
 			info->mBlendFuncSrc = bf_src;
 			info->mHasGlow = has_glow;
-			info->mParticle = TRUE;
+			info->mParticle = true;
 			draw_vec.push_back(info);
 			//for alpha sorting
 			facep->setDrawInfo(info);

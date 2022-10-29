@@ -187,7 +187,7 @@ void LLToolSelectRect::handleRectangleSelection(S32 x, S32 y, MASK mask)
 				LLSpatialPartition* part = region->getSpatialPartition(i);
 				if (part)
 				{	
-					part->cull(*LLViewerCamera::getInstance(), &potentials, TRUE);
+					part->cull(*LLViewerCamera::getInstance(), &potentials, true);
 				}
 			}
 		}

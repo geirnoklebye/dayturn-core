@@ -689,7 +689,7 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 		//Increment drawable frame counter
 		LLDrawable::incrementVisible();
 
-		LLSpatialGroup::sNoDelete = TRUE;
+		LLSpatialGroup::sNoDelete = true;
 		LLTexUnit::sWhiteTexture = LLViewerFetchedTexture::sWhiteImagep->getTexName();
 
 		S32 occlusion = LLPipeline::sUseOcclusion;
@@ -1022,7 +1022,7 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 		}
 
 		
-		LLSpatialGroup::sNoDelete = FALSE;
+		LLSpatialGroup::sNoDelete = false;
 		gPipeline.clearReferences();
 
 		gPipeline.rebuildGroups();
@@ -1104,7 +1104,7 @@ void render_hud_attachments()
 				
 		//cull, sort, and render hud objects
 		static LLCullResult result;
-		LLSpatialGroup::sNoDelete = TRUE;
+		LLSpatialGroup::sNoDelete = true;
 
 		LLViewerCamera::sCurCameraID = LLViewerCamera::CAMERA_WORLD;
 		gPipeline.updateCull(hud_cam, result);
@@ -1131,7 +1131,7 @@ void render_hud_attachments()
 
 		gPipeline.renderGeom(hud_cam);
 
-		LLSpatialGroup::sNoDelete = FALSE;
+		LLSpatialGroup::sNoDelete = false;
 		//gPipeline.clearReferences();
 
 		render_hud_elements();

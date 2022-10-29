@@ -3427,7 +3427,6 @@ void LLPipeline::stateSort(LLSpatialGroup* group, LLCamera& camera)
 
 void LLPipeline::stateSort(LLSpatialBridge* bridge, LLCamera& camera, BOOL fov_changed)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_PIPELINE;
     if (bridge->getSpatialGroup()->changeLOD() || fov_changed)
 	{
 		bool force_update = false;
@@ -3437,7 +3436,6 @@ void LLPipeline::stateSort(LLSpatialBridge* bridge, LLCamera& camera, BOOL fov_c
 
 void LLPipeline::stateSort(LLDrawable* drawablep, LLCamera& camera)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_PIPELINE;
     if (!drawablep
 		|| drawablep->isDead() 
 		|| !hasRenderType(drawablep->getRenderType()))
@@ -3997,7 +3995,7 @@ void LLPipeline::postSort(LLCamera& camera)
 		}
 	}
 
-	//LLSpatialGroup::sNoDelete = FALSE;
+	//LLSpatialGroup::sNoDelete = false;
 	LL_PUSH_CALLSTACKS();
 }
 

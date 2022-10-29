@@ -294,9 +294,9 @@ U32 LLVOVoidWater::getPartitionType() const
 }
 
 LLWaterPartition::LLWaterPartition(LLViewerRegion* regionp)
-: LLSpatialPartition(0, FALSE, GL_DYNAMIC_DRAW_ARB, regionp)
+: LLSpatialPartition(0, false, GL_DYNAMIC_DRAW_ARB, regionp)
 {
-	mInfiniteFarClip = TRUE;
+	mInfiniteFarClip = true;
 	mDrawableType = LLPipeline::RENDER_TYPE_WATER;
 	mPartitionType = LLViewerRegion::PARTITION_WATER;
 }

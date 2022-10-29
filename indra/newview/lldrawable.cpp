@@ -1233,7 +1233,7 @@ LLSpatialPartition* LLDrawable::getSpatialPartition()
 // Spatial Partition Bridging Drawable
 //=======================================
 
-LLSpatialBridge::LLSpatialBridge(LLDrawable* root, BOOL render_by_group, U32 data_mask, LLViewerRegion* regionp) : 
+LLSpatialBridge::LLSpatialBridge(LLDrawable* root, bool render_by_group, U32 data_mask, LLViewerRegion* regionp) : 
 	LLDrawable(root->getVObj(), true),
 	LLSpatialPartition(data_mask, render_by_group, GL_STREAM_DRAW_ARB, regionp)
 {
@@ -1607,7 +1607,7 @@ void LLSpatialBridge::makeActive()
 	LL_ERRS() << "makeActive called on spatial bridge" << LL_ENDL;
 }
 
-void LLSpatialBridge::move(LLDrawable *drawablep, LLSpatialGroup *curp, BOOL immediate)
+void LLSpatialBridge::move(LLDrawable *drawablep, LLSpatialGroup *curp, bool immediate)
 {
 	LLSpatialPartition::move(drawablep, curp, immediate);
 	gPipeline.markMoved(this, FALSE);
