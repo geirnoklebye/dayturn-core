@@ -1191,7 +1191,7 @@ void LLFloaterWorldMap::buildLandmarkIDLists()
 	LLInventoryModel::item_array_t items;
 	LLIsType is_landmark(LLAssetType::AT_LANDMARK);
 	// KKA-946 Add option to just list Favorites instead of all landmarks
-	LLUUID search_folder_id = (gSavedSettings.getBOOL("KokuaWorldmapFavoriteLandmarksOnly") ? gInventory.findCategoryUUIDForType(LLFolderType::FT_FAVORITE) : gInventory.getRootFolderID());
+	LLUUID search_folder_id = (gSavedSettings.getbool("KokuaWorldmapFavoriteLandmarksOnly") ? gInventory.findCategoryUUIDForType(LLFolderType::FT_FAVORITE) : gInventory.getRootFolderID());
 	gInventory.collectDescendentsIf(search_folder_id,
 									cats,
 									items,
@@ -1844,7 +1844,7 @@ void LLFloaterWorldMap::updateSims(bool found_null_sim)
 	if (num_results > 0)
 	{
 		// Ansariel: Let's sort the list to make it more user-friendly
-		list->sortByColumn("sim_name", TRUE);
+		list->sortByColumn("sim_name", true);
 
 		// if match found, highlight it and go
 		if (!match.isUndefined())
@@ -1936,11 +1936,11 @@ void LLFloaterWorldMap::onChangeMaturity()
 	// disable mature / adult events.
 	if (!can_access_mature)
 	{
-		gSavedSettings.setBOOL("ShowMatureEvents", FALSE);
+		gSavedSettings.setbool("ShowMatureEvents", false);
 	}
 	if (!can_access_adult)
 	{
-		gSavedSettings.setBOOL("ShowAdultEvents", FALSE);
+		gSavedSettings.setbool("ShowAdultEvents", false);
 	}
 }
 
@@ -1948,7 +1948,7 @@ void LLFloaterWorldMap::onFocusLost()
 {
 	gViewerWindow->showCursor();
 	LLWorldMapView* map_panel = (LLWorldMapView*)gFloaterWorldMap->mPanel;
-	map_panel->mPanning = FALSE;
+	map_panel->mPanning = false;
 }
 
 LLPanelHideBeacon::LLPanelHideBeacon() :

@@ -171,8 +171,8 @@ void LLWorldMapView::cleanupClass()
 LLWorldMapView::LLWorldMapView()
 :	LLPanel(),
 	mBackgroundColor( LLColor4( OCEAN_RED, OCEAN_GREEN, OCEAN_BLUE, 1.f ) ),
-	mItemPicked(FALSE),
-	mPanning( FALSE ),
+	mItemPicked(false),
+	mPanning(false),
 	mMouseDownPanX( 0 ),
 	mMouseDownPanY( 0 ),
 	mMouseDownX( 0 ),
@@ -870,16 +870,11 @@ void LLWorldMapView::drawItems()
     bool show_mature = mature_enabled && showMatureEvents;
 	bool show_adult = adult_enabled && showAdultEvents;
 
-	// <FS:Ansariel> Performance tweak
-	LLWorldMap* world_map = LLWorldMap::getInstance();
-
 	for (handle_list_t::iterator iter = mVisibleRegions.begin(); iter != mVisibleRegions.end(); ++iter)
 	{
 		U64 handle = *iter;
-		// <FS:Ansariel> Performance tweak
-		//LLSimInfo* info = LLWorldMap::getInstance()->simInfoFromHandle(handle);
-		LLSimInfo* info = world_map->simInfoFromHandle(handle);
-		// </FS:Ansariel>
+		LLSimInfo* info = LLWorldMap::getInstance()->simInfoFromHandle(handle);
+
 		if ((info == NULL) || (info->isDown()))
 		{
 			continue;
@@ -928,16 +923,11 @@ void LLWorldMapView::drawAgents()
 {
 	static LLUIColor map_avatar_color = LLUIColorTable::instance().getColor("MapAvatarColor", LLColor4::white);
 
-	// <FS:Ansariel> Performance tweak
-	LLWorldMap* world_map = LLWorldMap::getInstance();
-
 	for (handle_list_t::iterator iter = mVisibleRegions.begin(); iter != mVisibleRegions.end(); ++iter)
 	{
 		U64 handle = *iter;
-		// <FS:Ansariel> Performance tweak
-		//LLSimInfo* siminfo = LLWorldMap::getInstance()->simInfoFromHandle(handle);
-		LLSimInfo* siminfo = world_map->simInfoFromHandle(handle);
-		// </FS:Ansariel>
+		LLSimInfo* siminfo = LLWorldMap::getInstance()->simInfoFromHandle(handle);
+
 		if ((siminfo == NULL) || (siminfo->isDown()))
 		{
 			continue;
@@ -1594,7 +1584,7 @@ void LLWorldMapView::handleClick(S32 x, S32 y, MASK mask,
 						if (checkItemHit(x, y, event, id, false))
 						{
 							*hit_type = MAP_ITEM_PG_EVENT;
-							mItemPicked = TRUE;
+							mItemPicked = true;
 							gFloaterWorldMap->trackEvent(event);
 							return;
 						}
@@ -1610,7 +1600,7 @@ void LLWorldMapView::handleClick(S32 x, S32 y, MASK mask,
 						if (checkItemHit(x, y, event, id, false))
 						{
 							*hit_type = MAP_ITEM_MATURE_EVENT;
-							mItemPicked = TRUE;
+							mItemPicked = true;
 							gFloaterWorldMap->trackEvent(event);
 							return;
 						}
@@ -1626,7 +1616,7 @@ void LLWorldMapView::handleClick(S32 x, S32 y, MASK mask,
 						if (checkItemHit(x, y, event, id, false))
 						{
 							*hit_type = MAP_ITEM_ADULT_EVENT;
-							mItemPicked = TRUE;
+							mItemPicked = true;
 							gFloaterWorldMap->trackEvent(event);
 							return;
 						}
@@ -1642,7 +1632,7 @@ void LLWorldMapView::handleClick(S32 x, S32 y, MASK mask,
 						if (checkItemHit(x, y, event, id, true))
 						{
 							*hit_type = MAP_ITEM_LAND_FOR_SALE;
-							mItemPicked = TRUE;
+							mItemPicked = true;
 							return;
 						}
 						++it;
@@ -1659,7 +1649,7 @@ void LLWorldMapView::handleClick(S32 x, S32 y, MASK mask,
 							if (checkItemHit(x, y, event, id, true))
 							{
 								*hit_type = MAP_ITEM_LAND_FOR_SALE_ADULT;
-								mItemPicked = TRUE;
+								mItemPicked = true;
 								return;
 							}
 							++it;
@@ -1672,7 +1662,7 @@ void LLWorldMapView::handleClick(S32 x, S32 y, MASK mask,
 
 	// If we get here, we haven't clicked on anything
 	gFloaterWorldMap->trackLocation(pos_global);
-	mItemPicked = FALSE;
+	mItemPicked = false;
 	*id = LLUUID::null;
 	return;
 }
@@ -1706,7 +1696,7 @@ BOOL LLWorldMapView::handleMouseUp( S32 x, S32 y, MASK mask )
 			LLUI::getInstance()->setMousePositionLocal(this, local_x, local_y);
 
 			// finish the pan
-			mPanning = FALSE;
+			mPanning = false;
 			
 			mMouseDownX = 0;
 			mMouseDownY = 0;
@@ -1765,7 +1755,7 @@ bool LLWorldMapView::handleHover( S32 x, S32 y, MASK mask )
 			// just started panning, so hide cursor
 			if (!mPanning)
 			{
-				mPanning = TRUE;
+				mPanning = true;
 				gViewerWindow->hideCursor();
 			}
 

@@ -157,7 +157,7 @@ public:
 
 	static F32		sMapScale;				// scale = size of a region in pixels
 
-	BOOL			mItemPicked;
+	bool			mItemPicked;
 
 	static F32		sPanX;		// in pixels
 	static F32		sPanY;		// in pixels
@@ -168,7 +168,7 @@ public:
 	static bool		sVisibleTilesLoaded;
 
 	// Are we mid-pan from a user drag?
-	BOOL			mPanning;
+	bool			mPanning;
 	S32				mMouseDownPanX;		// value at start of drag
 	S32				mMouseDownPanY;		// value at start of drag
 	S32				mMouseDownX;
