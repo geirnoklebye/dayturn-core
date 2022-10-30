@@ -3018,7 +3018,7 @@ public:
 
 	}
 
-	void visit(const LLOctreeNode<LLVolumeTriangle>* branch)
+    void visit(const LLOctreeNode<LLVolumeTriangle, LLVolumeTriangle*>* branch)
 	{
 		LLVolumeOctreeListener* vl = (LLVolumeOctreeListener*) branch->getListener(0);
 
@@ -3060,7 +3060,7 @@ public:
 			}
 
 			gGL.begin(LLRender::TRIANGLES);
-			for (LLOctreeNode<LLVolumeTriangle>::const_element_iter iter = branch->getDataBegin();
+            for (LLOctreeNode<LLVolumeTriangle, LLVolumeTriangle*>::const_element_iter iter = branch->getDataBegin();
 					iter != branch->getDataEnd();
 					++iter)
 			{
@@ -3777,7 +3777,7 @@ bool LLSpatialPartition::isVisible(const LLVector3& v)
 }
 
 LL_ALIGN_PREFIX(16)
-class LLOctreeIntersect : public LLOctreeTraveler<LLViewerOctreeEntry>
+class LLOctreeIntersect : public LLOctreeTraveler<LLViewerOctreeEntry, LLPointer<LLViewerOctreeEntry>>
 {
 public:
 	LL_ALIGN_16(LLVector4a mStart);
