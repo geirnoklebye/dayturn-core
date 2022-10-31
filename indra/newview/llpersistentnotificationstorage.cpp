@@ -49,8 +49,6 @@ LLPersistentNotificationStorage::~LLPersistentNotificationStorage()
 
 void LLPersistentNotificationStorage::saveNotifications()
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	boost::intrusive_ptr<LLPersistentNotificationChannel> history_channel = boost::dynamic_pointer_cast<LLPersistentNotificationChannel>(LLNotifications::instance().getChannel("Persistent"));
 	if (!history_channel)
 	{
@@ -90,8 +88,6 @@ void LLPersistentNotificationStorage::saveNotifications()
 
 void LLPersistentNotificationStorage::loadNotifications()
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	LL_INFOS("LLPersistentNotificationStorage") << "start loading notifications" << LL_ENDL;
 
 	if (mLoaded)

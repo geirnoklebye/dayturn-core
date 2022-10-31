@@ -582,8 +582,6 @@ void LLMaterialMgr::onPutResponse(bool success, const LLSD& content)
 
 void LLMaterialMgr::onIdle(void*)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	LLMaterialMgr* instancep = LLMaterialMgr::getInstance();
 
 	if (!instancep->mGetQueue.empty())

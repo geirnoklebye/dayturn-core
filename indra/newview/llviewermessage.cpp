@@ -2257,8 +2257,6 @@ protected:
 
 void process_improved_im(LLMessageSystem *msg, void **user_data)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
     LLUUID from_id;
     BOOL from_group;
     LLUUID to_id;
@@ -3356,7 +3354,6 @@ const F32 MAX_HEAD_ROT_QDOT = 0.99999f;			// ~= 0.5 degrees -- if its greater th
 
 void send_agent_update(BOOL force_send, BOOL send_reliable)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	if (gAgent.getTeleportState() != LLAgent::TELEPORT_NONE)
 	{
 		// We don't care if they want to send an agent update, they're not allowed to until the simulator
@@ -3795,8 +3792,6 @@ void process_terse_object_update_improved(LLMessageSystem *mesgsys, void **user_
 
 void process_kill_object(LLMessageSystem *mesgsys, void **user_data)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	LLUUID		id;
 
 	U32 ip = mesgsys->getSenderIP();

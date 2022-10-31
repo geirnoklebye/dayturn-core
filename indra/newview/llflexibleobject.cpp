@@ -92,8 +92,6 @@ LLVolumeImplFlexible::~LLVolumeImplFlexible()
 //static
 void LLVolumeImplFlexible::updateClass()
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	U64 virtual_frame_num = LLTimer::getElapsedSeconds() / SEC_PER_FLEXI_FRAME;
 	for (std::vector<LLVolumeImplFlexible*>::iterator iter = sInstanceList.begin();
 			iter != sInstanceList.end();
@@ -427,7 +425,6 @@ inline S32 log2(S32 x)
 
 void LLVolumeImplFlexible::doFlexibleUpdate()
 {
-    LL_PROFILE_ZONE_SCOPED;
 	LLVolume* volume = mVO->getVolume();
 	LLPath *path = &volume->getPath();
 	if ((mSimulateRes == 0 || !mInitialized) && mVO->mDrawable->isVisible()) 
@@ -723,7 +720,6 @@ void LLVolumeImplFlexible::preRebuild()
 {
 	if (!mUpdated)
 	{
-        LL_PROFILE_ZONE_SCOPED;
 		doFlexibleRebuild(false);
 	}
 }
@@ -752,7 +748,6 @@ void LLVolumeImplFlexible::onSetScale(const LLVector3& scale, bool damped)
 
 bool LLVolumeImplFlexible::doUpdateGeometry(LLDrawable *drawable)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	LLVOVolume *volume = (LLVOVolume*)mVO;
 
 	if (mVO->isAttachment())

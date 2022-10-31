@@ -135,8 +135,6 @@ void LLInventoryItemsList::idle(void* user_data)
 
 void LLInventoryItemsList::refresh()
 {
-    LL_PROFILE_ZONE_SCOPED;
-
     switch (mRefreshState)
     {
     case REFRESH_ALL:

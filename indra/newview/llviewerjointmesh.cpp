@@ -377,8 +377,6 @@ void LLViewerJointMesh::updateFaceData(LLFace *face, F32 pixel_area, bool damp_w
 		return;
 	}
     
-    LL_PROFILE_ZONE_SCOPED;
-
 	LLStrider<LLVector3> verticesp;
 	LLStrider<LLVector3> normalsp;
 	LLStrider<LLVector2> tex_coordsp;

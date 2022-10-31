@@ -326,8 +326,6 @@ LLIOPipe::EStatus LLFilterSD2XMLRPCResponse::process_impl(
 	LLSD& context,
 	LLPumpIO* pump)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	PUMP_DEBUG;
 	// This pipe does not work if it does not have everyting. This
 	// could be addressed by making a stream parser for llsd which
@@ -402,7 +400,6 @@ LLIOPipe::EStatus LLFilterSD2XMLRPCRequest::process_impl(
 	LLSD& context,
 	LLPumpIO* pump)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	// This pipe does not work if it does not have everyting. This
 	// could be addressed by making a stream parser for llsd which
 	// handled partial information.
@@ -606,8 +603,6 @@ LLIOPipe::EStatus LLFilterXMLRPCResponse2LLSD::process_impl(
 	LLSD& context,
 	LLPumpIO* pump)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	PUMP_DEBUG;
 	if(!eos) return STATUS_BREAK;
 	if(!buffer) return STATUS_ERROR;
@@ -690,7 +685,6 @@ LLIOPipe::EStatus LLFilterXMLRPCRequest2LLSD::process_impl(
 	LLSD& context,
 	LLPumpIO* pump)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	PUMP_DEBUG;
 	if(!eos) return STATUS_BREAK;
 	if(!buffer) return STATUS_ERROR;

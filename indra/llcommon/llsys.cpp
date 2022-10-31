@@ -951,8 +951,6 @@ LLMemoryInfo& LLMemoryInfo::refresh()
 
 LLSD LLMemoryInfo::loadStatsMap()
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	// This implementation is derived from stream() code (as of 2011-06-29).
 	Stats stats;
 

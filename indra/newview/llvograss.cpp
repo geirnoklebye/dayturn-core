@@ -659,8 +659,6 @@ void LLGrassPartition::addGeometryCount(LLSpatialGroup* group, U32& vertex_count
 
 void LLGrassPartition::getGeometry(LLSpatialGroup* group)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	std::sort(mFaceList.begin(), mFaceList.end(), LLFace::CompareDistanceGreater());
 
 	U32 index_count = 0;

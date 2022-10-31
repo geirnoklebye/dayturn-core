@@ -507,7 +507,6 @@ bool LLInventoryFilter::checkAgainstClipboard(const LLUUID& object_id) const
 {
 	if (LLClipboard::instance().isCutMode())
 	{
-        LL_PROFILE_ZONE_SCOPED;
 		LLUUID current_id = object_id;
 		LLInventoryObject *current_object = gInventory.getObject(object_id);
 		while (current_id.notNull() && current_object)

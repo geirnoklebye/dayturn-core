@@ -4149,7 +4149,7 @@ void LLAgent::clearTeleportRequest()
 {
     if(LLVoiceClient::instanceExists())
     {
-        LLVoiceClient::getInstance()->setHidden(FALSE);
+        LLVoiceClient::getInstance()->setHidden(false);
     }
 	mTeleportRequest.reset();
     mTPNeedsNeabyChatSeparator = false;
@@ -4179,7 +4179,7 @@ void LLAgent::startTeleportRequest()
     LL_INFOS("Telport") << "Agent handling start teleport request." << LL_ENDL;
     if(LLVoiceClient::instanceExists())
     {
-        LLVoiceClient::getInstance()->setHidden(TRUE);
+        LLVoiceClient::getInstance()->setHidden(true);
     }
 	if (hasPendingTeleportRequest())
 	{
@@ -4316,7 +4316,7 @@ void LLAgent::addTPNearbyChatSeparator()
 
         LLChat chat;
         chat.mFromName = location_name;
-        chat.mMuted = FALSE;
+        chat.mMuted = false;
         chat.mFromID = LLUUID::null;
         chat.mSourceType = CHAT_SOURCE_TELEPORT;
         chat.mChatStyle = CHAT_STYLE_TELEPORT_SEP;
@@ -4951,7 +4951,7 @@ const std::string& LLAgent::getTeleportStateName() const
 void LLAgent::parseTeleportMessages(const std::string& xml_filename)
 {
 	LLXMLNodePtr root;
-	BOOL success = LLUICtrlFactory::getLayeredXMLNode(xml_filename, root);
+	bool success = LLUICtrlFactory::getLayeredXMLNode(xml_filename, root);
 
 	if (!success || !root || !root->hasName( "teleport_messages" ))
 	{

@@ -83,8 +83,6 @@ void LLDrawPoolTree::beginRenderPass(S32 pass)
 
 void LLDrawPoolTree::render(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	if (mDrawFace.empty())
 	{
 		return;
@@ -152,7 +150,6 @@ void LLDrawPoolTree::beginDeferredPass(S32 pass)
 
 void LLDrawPoolTree::renderDeferred(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	render(pass);
 }
 
@@ -168,8 +165,6 @@ void LLDrawPoolTree::endDeferredPass(S32 pass)
 //============================================
 void LLDrawPoolTree::beginShadowPass(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED;
-	
 	glPolygonOffset(gSavedSettings.getF32("RenderDeferredTreeShadowOffset"),
 					gSavedSettings.getF32("RenderDeferredTreeShadowBias"));
 
@@ -187,8 +182,6 @@ void LLDrawPoolTree::renderShadow(S32 pass)
 
 void LLDrawPoolTree::endShadowPass(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED;
-	
 	glPolygonOffset(gSavedSettings.getF32("RenderDeferredSpotShadowOffset"),
 						gSavedSettings.getF32("RenderDeferredSpotShadowBias"));
 	gDeferredTreeShadowProgram.unbind();

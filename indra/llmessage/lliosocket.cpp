@@ -308,7 +308,6 @@ LLIOPipe::EStatus LLIOSocketReader::process_impl(
 	LLSD& context,
 	LLPumpIO* pump)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	PUMP_DEBUG;
 	if(!mSource) return STATUS_PRECONDITION_NOT_MET;
 	if(!mInitialized)
@@ -406,7 +405,6 @@ LLIOPipe::EStatus LLIOSocketWriter::process_impl(
 	LLSD& context,
 	LLPumpIO* pump)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	PUMP_DEBUG;
 	if(!mDestination) return STATUS_PRECONDITION_NOT_MET;
 	if(!mInitialized)
@@ -561,7 +559,6 @@ LLIOPipe::EStatus LLIOServerSocket::process_impl(
 	LLSD& context,
 	LLPumpIO* pump)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	PUMP_DEBUG;
 	if(!pump)
 	{

@@ -51,8 +51,6 @@ bool LLScreenChannel::mWasStartUpToastShown = false;
 
 LLRect LLScreenChannelBase::getChannelRect()
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	if (mFloaterSnapRegion == NULL)
 	{
 		mFloaterSnapRegion = gViewerWindow->getRootView()->getChildView("floater_snap_region");

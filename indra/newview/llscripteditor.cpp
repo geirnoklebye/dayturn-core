@@ -145,7 +145,6 @@ void LLScriptEditor::initKeywords()
 
 void LLScriptEditor::loadKeywords()
 {
-    LL_PROFILE_ZONE_SCOPED;
 	mKeywords.processTokens();
 	
 	segment_vec_t segment_list;
@@ -163,7 +162,6 @@ void LLScriptEditor::updateSegments()
 {
 	if (mReflowIndex < S32_MAX && mKeywords.isLoaded() && mParseOnTheFly)
 	{
-        LL_PROFILE_ZONE_SCOPED;
 		// HACK:  No non-ascii keywords for now
 		segment_vec_t segment_list;
 		mKeywords.findSegments(&segment_list, getWText(), mDefaultColor.get(), *this);

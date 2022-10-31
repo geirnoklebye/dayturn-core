@@ -705,8 +705,6 @@ void LLInventoryPanel::itemChanged(const LLUUID& item_id, U32 mask, const LLInve
 // Called when something changed in the global model (new item, item coming through the wire, rename, move, etc...) (CHUI-849)
 void LLInventoryPanel::modelChanged(U32 mask)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	if (mViewsInitialized != VIEWS_INITIALIZED) return;
 	
 	const LLInventoryModel* model = getModel();
@@ -1938,8 +1936,6 @@ void LLInventoryPanel::removeItemID(const LLUUID& id)
 
 LLFolderViewItem* LLInventoryPanel::getItemByID(const LLUUID& id)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	std::map<LLUUID, LLFolderViewItem*>::iterator map_it;
 	map_it = mItemMap.find(id);
 	if (map_it != mItemMap.end())

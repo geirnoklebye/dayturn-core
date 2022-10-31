@@ -792,8 +792,6 @@ static std::queue<GLuint> sFreeQueries;
 
 U32 LLOcclusionCullingGroup::getNewOcclusionQueryObjectName()
 {
-    LL_PROFILE_ZONE_SCOPED;
-    
     if (sFreeQueries.empty())
     {
         //seed 1024 query names into the free query pool

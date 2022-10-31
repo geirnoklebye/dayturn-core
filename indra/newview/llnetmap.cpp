@@ -179,7 +179,6 @@ void LLNetMap::draw()
     {
         return;
     }
-    LL_PROFILE_ZONE_SCOPED;
  	static LLFrameTimer map_timer;
 	//static LLUIColor map_avatar_color = LLUIColorTable::instance().getColor("MapAvatarColor", LLColor4::white);
 	//static LLUIColor map_avatar_friend_color = LLUIColorTable::instance().getColor("MapAvatarFriendColor", LLColor4::white);

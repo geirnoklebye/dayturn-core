@@ -1014,8 +1014,6 @@ LLVertexBuffer* LLTerrainPartition::createVertexBuffer(U32 type_mask, U32 usage)
 
 void LLTerrainPartition::getGeometry(LLSpatialGroup* group)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	LLVertexBuffer* buffer = group->mVertexBuffer;
 
 	//get vertex buffer striders

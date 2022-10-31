@@ -985,8 +985,6 @@ static void formatDateString(std::string &date_string)
 // static
 void LLGroupMgr::processGroupMembersReply(LLMessageSystem* msg, void** data)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	LL_DEBUGS("GrpMgr") << "LLGroupMgr::processGroupMembersReply" << LL_ENDL;
 	LLUUID agent_id;
 	msg->getUUIDFast(_PREHASH_AgentData, _PREHASH_AgentID, agent_id );
@@ -1093,8 +1091,6 @@ void LLGroupMgr::processGroupMembersReply(LLMessageSystem* msg, void** data)
 //static 
 void LLGroupMgr::processGroupPropertiesReply(LLMessageSystem* msg, void** data)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	LL_DEBUGS("GrpMgr") << "LLGroupMgr::processGroupPropertiesReply" << LL_ENDL;
 	if (!msg)
 	{
@@ -1176,8 +1172,6 @@ void LLGroupMgr::processGroupPropertiesReply(LLMessageSystem* msg, void** data)
 // static
 void LLGroupMgr::processGroupRoleDataReply(LLMessageSystem* msg, void** data)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
     LL_DEBUGS("GrpMgr") << "LLGroupMgr::processGroupRoleDataReply" << LL_ENDL;
 	LLUUID agent_id;
 	msg->getUUIDFast(_PREHASH_AgentData, _PREHASH_AgentID, agent_id );
@@ -1263,8 +1257,6 @@ void LLGroupMgr::processGroupRoleDataReply(LLMessageSystem* msg, void** data)
 // static
 void LLGroupMgr::processGroupRoleMembersReply(LLMessageSystem* msg, void** data)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	LL_DEBUGS("GrpMgr") << "LLGroupMgr::processGroupRoleMembersReply" << LL_ENDL;
 	LLUUID agent_id;
 	msg->getUUIDFast(_PREHASH_AgentData, _PREHASH_AgentID, agent_id );

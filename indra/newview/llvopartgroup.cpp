@@ -753,7 +753,6 @@ LLHUDParticlePartition::LLHUDParticlePartition(LLViewerRegion* regionp) :
 
 void LLParticlePartition::rebuildGeom(LLSpatialGroup* group)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	if (group->isDead() || !group->hasState(LLSpatialGroup::GEOM_DIRTY))
 	{
 		return;
@@ -839,8 +838,6 @@ void LLParticlePartition::addGeometryCount(LLSpatialGroup* group, U32& vertex_co
 
 void LLParticlePartition::getGeometry(LLSpatialGroup* group)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	std::sort(mFaceList.begin(), mFaceList.end(), LLFace::CompareDistanceGreater());
 
 	group->clearDrawMap();

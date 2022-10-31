@@ -86,7 +86,6 @@ public:
 public:
 	LLFace(LLDrawable* drawablep, LLViewerObject* objp)
 	{
-        LL_PROFILE_ZONE_SCOPED;
 		init(drawablep, objp);
 	}
 	~LLFace()  { destroy(); }

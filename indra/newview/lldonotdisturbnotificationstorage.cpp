@@ -98,8 +98,6 @@ void LLDoNotDisturbNotificationStorage::resetDirty()
 
 void LLDoNotDisturbNotificationStorage::saveNotifications()
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	LLNotificationChannelPtr channelPtr = getCommunicationChannel();
 	const LLCommunicationChannel *commChannel = dynamic_cast<LLCommunicationChannel*>(channelPtr.get());
 	llassert(commChannel != NULL);

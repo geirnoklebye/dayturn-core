@@ -1006,7 +1006,6 @@ void LLFastTimerView::printLineStats()
 
 void LLFastTimerView::drawLineGraph()
 {
-    LL_PROFILE_ZONE_SCOPED;
 	//draw line graph history
 	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 	LLLocalClipRect clip(mGraphRect);
@@ -1435,7 +1434,6 @@ void LLFastTimerView::updateTotalTime()
 
 void LLFastTimerView::drawBars()
 {
-    LL_PROFILE_ZONE_SCOPED;
 	LLLocalClipRect clip(mBarRect);
 
 	S32 bar_height = mBarRect.getHeight() / (MAX_VISIBLE_HISTORY + 2);
@@ -1515,7 +1513,6 @@ void LLFastTimerView::drawBars()
 
 F32Seconds LLFastTimerView::updateTimerBarWidths(LLTrace::BlockTimerStatHandle* time_block, TimerBarRow& row, S32 history_index, U32& bar_index)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	const F32Seconds self_time = history_index == -1
 										? mRecording.getPeriodMean(time_block->selfTime(), RUNNING_AVERAGE_WIDTH) 
 										: mRecording.getPrevRecording(history_index).getSum(time_block->selfTime());
@@ -1541,8 +1538,6 @@ F32Seconds LLFastTimerView::updateTimerBarWidths(LLTrace::BlockTimerStatHandle* 
 
 S32 LLFastTimerView::updateTimerBarOffsets(LLTrace::BlockTimerStatHandle* time_block, TimerBarRow& row, S32 timer_bar_index)
 {
-    LL_PROFILE_ZONE_SCOPED;
-
 	TimerBar& timer_bar = row.mBars[timer_bar_index];
 	const F32Seconds bar_time = timer_bar.mTotalTime - timer_bar.mSelfTime;
 	timer_bar.mChildrenStart = timer_bar.mSelfStart + timer_bar.mSelfTime / 2;
@@ -1602,7 +1597,6 @@ S32 LLFastTimerView::updateTimerBarOffsets(LLTrace::BlockTimerStatHandle* time_b
 
 S32 LLFastTimerView::drawBar(LLRect bar_rect, TimerBarRow& row, S32 image_width, S32 image_height, bool hovered, bool visible, S32 bar_index)
 {
-    LL_PROFILE_ZONE_SCOPED;
 	TimerBar& timer_bar = row.mBars[bar_index];
 	LLTrace::BlockTimerStatHandle* time_block = timer_bar.mTimeBlock;
 
