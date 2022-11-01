@@ -70,9 +70,9 @@ set(ADDRESS_SIZE 64)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(DARWIN 1)
   
-  # now we only support Xcode 13.3 or higher using 12.3 (Monterey), with minimum macOS requirement of 10.14 (Mojave)
+  # now we only support Xcode 14.1 or higher using 12.6 (Monterey), with minimum macOS requirement of 10.14 (Mojave)
   set(CMAKE_OSX_ARCHITECTURES "x86_64" )
-  set(XCODE_VERSION 13.4.1)
+  set(XCODE_VERSION 14.1)
   set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
   set(CMAKE_OSX_SYSROOT macosx)
   set(CMAKE_XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.dayturn.viewer")
@@ -88,6 +88,8 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(CMAKE_XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC YES)
   set(CMAKE_XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_WEAK YES)
   set(CMAKE_XCODE_ATTRIBUTE_LLVM_LTO NO)
+  set(CMAKE_XCODE_ATTRIBUTE_DISABLE_MANUAL_TARGET_ORDER_BUILD_WARNING YES)
+  set(CMAKE_XCODE_ATTRIBUTE_GCC_WARN_64_TO_32_BIT_CONVERSION NO)
 
   # we must hard code this to off for now.  xcode's built in signing does not
   # handle embedded app bundles such as CEF and others. Any signing for local
@@ -95,6 +97,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   # released builds
   # https://stackoverflow.com/a/54296008
   # "-" represents "Sign to Run Locally" and empty string represents "Do Not Sign"
+  set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED NO)
   set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "")
   # set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED "YES")
   # set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "Developer ID Application: Geir Noklebye")
