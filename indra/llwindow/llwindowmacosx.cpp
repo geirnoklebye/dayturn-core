@@ -57,8 +57,6 @@ namespace
 // LLWindowMacOSX
 //
 
-BOOL LLWindowMacOSX::sUseMultGL = FALSE;
-
 // Cross-platform bits:
 
 bool check_for_card(const char* RENDERER, const char* bad_card)
@@ -645,23 +643,6 @@ BOOL LLWindowMacOSX::createContext(int x, int y, int width, int height, int bits
 	// Disable vertical sync for swap
     toggleVSync(enable_vsync);
 
-	//enable multi-threaded OpenGL
-	if (sUseMultGL)
-	{
-		CGLError cgl_err;
-		CGLContextObj ctx = CGLGetCurrentContext();
-
-		cgl_err =  CGLEnable( ctx, kCGLCEMPEngine);
-
-		if (cgl_err != kCGLNoError )
-		{
-			LL_DEBUGS("GLInit") << "Multi-threaded OpenGL not available." << LL_ENDL;
-		}
-		else
-		{
-			LL_DEBUGS("GLInit") << "Multi-threaded OpenGL enabled." << LL_ENDL;
-		}
-	}
 	makeFirstResponder(mWindow, mGLView);
     
 	return TRUE;

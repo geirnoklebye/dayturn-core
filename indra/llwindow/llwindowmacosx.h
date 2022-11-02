@@ -230,8 +230,6 @@ protected:
 	bool		mLanguageTextInputAllowed;
 	LLPreeditor*	mPreeditor;
 	
-	static BOOL	sUseMultGL;
-
 	friend class LLWindowManager;
 	
 };
