@@ -79,7 +79,7 @@ documentation and/or software.
 #include <iostream>		// cerr
 
 // how many bytes to grab at a time when checking files
-const int LLMD5::BLOCK_LEN = 4096;
+const size_t LLMD5::BLOCK_LEN = 4096;
 
 
 // LLMD5 simple initialization method
@@ -96,7 +96,8 @@ LLMD5::LLMD5()
 // operation, processing another message block, and updating the
 // context.
 
-void LLMD5::update (const uint1 *input, const uint4 input_length) {
+void LLMD5::update (const uint1 *input, const size_t input_length)
+{
 
   uint4 input_index, buffer_index;
   uint4 buffer_space;                // how much space is left in buffer
@@ -119,13 +120,15 @@ void LLMD5::update (const uint1 *input, const uint4 input_length) {
   buffer_space = 64 - buffer_index;  // how much space is left in buffer
 
   // now, transform each 64-byte piece of the input, bypassing the buffer
-  if (input == NULL || input_length == 0){
+  if (input == NULL || input_length == 0)
+  {
 	  std::cerr << "LLMD5::update:  Invalid input!" << std::endl;
 	  return;
   }
 
   // Transform as many times as possible.
-  if (input_length >= buffer_space) { // ie. we have enough to fill the buffer
+  if (input_length >= buffer_space) 
+  { // ie. we have enough to fill the buffer
     // fill the rest of the buffer and transform
     memcpy(	/* Flawfinder: ignore */
 		buffer + buffer_index,
@@ -152,12 +155,13 @@ void LLMD5::update (const uint1 *input, const uint4 input_length) {
 // MD5 update for files.
 // Like above, except that it works on files (and uses above as a primitive.)
 
-void LLMD5::update(FILE* file){
+void LLMD5::update(FILE* file)
+{
 
   unsigned char buffer[BLOCK_LEN];		/* Flawfinder: ignore */
-  int len;
+  size_t len;
 
-  while ( (len=(int)fread(buffer, 1, BLOCK_LEN, file)) )
+  while ( (len=fread(buffer, 1, BLOCK_LEN, file)) )
     update(buffer, len);
 
   fclose (file);
@@ -167,14 +171,15 @@ void LLMD5::update(FILE* file){
 // MD5 update for istreams.
 // Like update for files; see above.
 
-void LLMD5::update(std::istream& stream){
+void LLMD5::update(std::istream& stream)
+{
 
   unsigned char buffer[BLOCK_LEN];		/* Flawfinder: ignore */
-  int len;
+  size_t len;
 
   while (stream.good()){
     stream.read( (char*)buffer, BLOCK_LEN); 	/* Flawfinder: ignore */		// note that return value of read is unusable.
-    len=(int)stream.gcount();
+    len=stream.gcount();
     update(buffer, len);
   }
 
@@ -189,7 +194,8 @@ void  LLMD5::update(const std::string& s)
 // the message digest and zeroizing the context.
 
 
-void LLMD5::finalize (){
+void LLMD5::finalize ()
+{
 
   unsigned char bits[8];		/* Flawfinder: ignore */
   unsigned int index, padLen;
@@ -199,7 +205,8 @@ void LLMD5::finalize (){
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     };
 
-  if (finalized){
+  if (finalized)
+  {
     std::cerr << "LLMD5::finalize:  Already finalized this digest!" << std::endl;
     return;
   }
@@ -238,7 +245,8 @@ LLMD5::LLMD5(FILE *file){
 
 
 
-LLMD5::LLMD5(std::istream& stream){
+LLMD5::LLMD5(std::istream& stream)
+{
 
   init();  // must called by all constructors
   update (stream);
@@ -336,7 +344,8 @@ bool operator!=(const LLMD5& a, const LLMD5& b)
 
 // PRIVATE METHODS:
 
-void LLMD5::init(){
+void LLMD5::init()
+{
   finalized=0;  // we just started!
 
   // Nothing counted, so count=0
@@ -414,7 +423,8 @@ Rotation is separate from addition to prevent recomputation.
 
 
 // LLMD5 basic transformation. Transforms state based on block.
-void LLMD5::transform (const U8 block[64]){
+void LLMD5::transform (const U8 block[64])
+{
 
   uint4 a = state[0], b = state[1], c = state[2], d = state[3], x[16];
 
@@ -508,11 +518,13 @@ void LLMD5::transform (const U8 block[64]){
 
 // Encodes input (UINT4) into output (unsigned char). Assumes len is
 // a multiple of 4.
-void LLMD5::encode (uint1 *output, const uint4 *input, const uint4 len) {
+void LLMD5::encode (uint1 *output, const uint4 *input, const uint4 len)
+{
 
   unsigned int i, j;
 
-  for (i = 0, j = 0; j < len; i++, j += 4) {
+  for (i = 0, j = 0; j < len; i++, j += 4) 
+  {
     output[j]   = (uint1)  (input[i] & 0xff);
     output[j+1] = (uint1) ((input[i] >> 8) & 0xff);
     output[j+2] = (uint1) ((input[i] >> 16) & 0xff);
@@ -525,8 +537,8 @@ void LLMD5::encode (uint1 *output, const uint4 *input, const uint4 len) {
 
 // Decodes input (unsigned char) into output (UINT4). Assumes len is
 // a multiple of 4.
-void LLMD5::decode (uint4 *output, const uint1 *input, const uint4 len){
-
+void LLMD5::decode (uint4 *output, const uint1 *input, const uint4 len)
+{
   unsigned int i, j;
 
   for (i = 0, j = 0; j < len; i++, j += 4)

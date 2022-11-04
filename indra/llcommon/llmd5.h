@@ -81,12 +81,12 @@ class LL_COMMON_API LLMD5 {
   typedef unsigned      char uint1; // assumes char is 1 word long
 
 // how many bytes to grab at a time when checking files
-  static const int BLOCK_LEN;
+  static const size_t BLOCK_LEN;
 
 public:
 // methods for controlled operation:
   LLMD5              ();  // simple initializer
-  void  update     (const uint1 *input, const uint4 input_length);
+  void  update     (const uint1 *input, size_t input_length);
   void  update     (std::istream& stream);
   void  update     (FILE *file);
   void  update     (const std::string& str);
