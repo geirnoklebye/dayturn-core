@@ -107,7 +107,7 @@ LLPolyMorphData::~LLPolyMorphData()
 bool LLPolyMorphData::loadBinary(LLFILE *fp, LLPolyMeshSharedData *mesh)
 {
 	S32 numVertices;
-	S32 numRead;
+	size_t numRead;
 
 	numRead = fread(&numVertices, sizeof(S32), 1, fp);
 	llendianswizzle(&numVertices, sizeof(S32), 1);
