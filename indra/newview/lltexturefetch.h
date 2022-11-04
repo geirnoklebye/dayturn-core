@@ -114,7 +114,7 @@ public:
 	F32 getTextureBandwidth() { return mTextureBandwidth; }
 	
     // Threads:  T*
-	BOOL isFromLocalCache(const LLUUID& id);
+	bool isFromLocalCache(const LLUUID& id);
 
 	// @return	Magic number giving the internal state of the
 	//			request.  We should make these codes public if we're
@@ -469,7 +469,7 @@ private:
 		S32 mDecodedLevel;
 		S32 mFetchedSize;
 		S32 mDecodedSize;
-		BOOL mNeedsAux;
+		bool mNeedsAux;
 		U32 mCacheHandle;
 		LLPointer<LLImageFormatted> mFormattedImage;
 		LLPointer<LLImageRaw> mRawImage;

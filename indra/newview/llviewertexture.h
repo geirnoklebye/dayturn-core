@@ -372,7 +372,7 @@ public:
 	virtual void processTextureStats() ;
 	F32  calcDecodePriority() ;
 
-	S32 needsAux() const { return mNeedsAux; }
+	bool needsAux() const { return mNeedsAux; }
 
 	// Host we think might have this image, used for baked av textures.
 	void setTargetHost(LLHost host)			{ mTargetHost = host; }

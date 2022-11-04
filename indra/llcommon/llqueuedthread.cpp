@@ -480,10 +480,7 @@ size_t LLQueuedThread::processNextRequest()
 bool LLQueuedThread::runCondition()
 {
 	// mRunCondition must be locked here
-	if (mRequestQueue.empty() && mIdleThread)
-		return false;
-	else
-		return true;
+	return mRequestQueue.empty() && mIdleThread ? false : true;
 }
 
 // virtual

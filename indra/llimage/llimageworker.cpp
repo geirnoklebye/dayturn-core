@@ -64,7 +64,7 @@ size_t LLImageDecodeThread::update(F32 max_time_ms)
 		}
 	}
 	mCreationList.clear();
-	S32 res = LLQueuedThread::update(max_time_ms);
+	auto res = LLQueuedThread::update(max_time_ms);
 	return res;
 }
 

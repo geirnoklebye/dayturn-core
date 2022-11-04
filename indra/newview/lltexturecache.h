@@ -99,7 +99,7 @@ public:
 	protected:
 		LLPointer<LLImageFormatted> mFormattedImage;
 		S32 mImageSize;
-		BOOL mImageLocal;
+		bool mImageLocal;
 	};
 
 	class WriteResponder : public Responder
@@ -116,7 +116,7 @@ public:
 	/*virtual*/ size_t update(F32 max_time_ms);	
 	
 	void purgeCache(ELLPath location, bool remove_dir = true);
-	void setReadOnly(BOOL read_only) ;
+	void setReadOnly(bool read_only) ;
 	S64 initCache(ELLPath location, S64 maxsize, BOOL texture_cache_mismatch);
 
 	handle_t readFromCache(const std::string& local_filename, const LLUUID& id, U32 priority, S32 offset, S32 size,
@@ -214,7 +214,7 @@ private:
 	typedef std::vector<std::pair<LLPointer<Responder>, bool> > responder_list_t;
 	responder_list_t mCompletedList;
 	
-	BOOL mReadOnly;
+	bool mReadOnly;
 	
 	// HEADERS (Include first mip)
 	std::string mHeaderEntriesFileName;

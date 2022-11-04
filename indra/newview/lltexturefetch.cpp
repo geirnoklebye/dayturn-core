@@ -605,7 +605,7 @@ private:
 	BOOL mLoaded;
 	BOOL mDecoded;
 	BOOL mWritten;
-	BOOL mNeedsAux;
+	bool mNeedsAux;
 	BOOL mHaveAllData;
 	BOOL mInLocalCache;
 	BOOL mInCache;
@@ -944,7 +944,7 @@ LLTextureFetchWorker::LLTextureFetchWorker(LLTextureFetch* fetcher,
 	  mDecodeHandle(0),
 	  mDecoded(FALSE),
 	  mWritten(FALSE),
-	  mNeedsAux(FALSE),
+	  mNeedsAux(false),
 	  mHaveAllData(FALSE),
 	  mInLocalCache(FALSE),
 	  mInCache(FALSE),
@@ -3687,9 +3687,9 @@ bool LLTextureFetch::receiveImagePacket(const LLHost& host, const LLUUID& id, U1
 //////////////////////////////////////////////////////////////////////////////
 
 // Threads:  T*
-BOOL LLTextureFetch::isFromLocalCache(const LLUUID& id)
+bool LLTextureFetch::isFromLocalCache(const LLUUID& id)
 {
-	BOOL from_cache = FALSE ;
+	bool from_cache = false ;
 
 	LLTextureFetchWorker* worker = getWorker(id);
 	if (worker)

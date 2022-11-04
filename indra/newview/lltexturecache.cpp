@@ -109,7 +109,7 @@ public:
 		  mOffset(offset),
 		  mImageSize(imagesize),
 		  mImageFormat(IMG_CODEC_J2C),
-		  mImageLocal(FALSE),
+		  mImageLocal(false),
 		  mResponder(responder),
 		  mFileHandle(LLLFSThread::nullHandle()),
 		  mBytesToRead(0),
@@ -154,7 +154,7 @@ protected:
 	S32 mOffset;
 	S32 mImageSize;
 	EImageCodec mImageFormat;
-	BOOL mImageLocal;
+	bool mImageLocal;
 	LLPointer<LLTextureCache::Responder> mResponder;
 	LLLFSThread::handle_t mFileHandle;
 	S32 mBytesToRead;
@@ -210,7 +210,7 @@ bool LLTextureCacheLocalFileWorker::doRead()
 #if USE_LFS_READ
 	if (mFileHandle == LLLFSThread::nullHandle())
 	{
-		mImageLocal = TRUE;
+		mImageLocal = true;
 		mImageSize = local_size;
 		if (!mDataSize || mDataSize + mOffset > local_size)
 		{
@@ -271,7 +271,7 @@ bool LLTextureCacheLocalFileWorker::doRead()
 	else
 	{
 		mImageSize = local_size;
-		mImageLocal = TRUE;
+		mImageLocal = true;
 	}
 	return true;
 #endif
@@ -411,7 +411,7 @@ bool LLTextureCacheRemoteWorker::doRead()
 			else
 			{
 				mImageSize = local_size;
-				mImageLocal = TRUE;
+				mImageLocal = true;
 			}
 		}
 		else
@@ -836,7 +836,7 @@ LLTextureCache::LLTextureCache(bool threaded)
 	  mListMutex(),
 	  mFastCacheMutex(),
 	  mHeaderAPRFile(NULL),
-	  mReadOnly(TRUE), //do not allow to change the texture cache until setReadOnly() is called.
+	  mReadOnly(true), //do not allow to change the texture cache until setReadOnly() is called.
 	  mTexturesSizeTotal(0),
 	  mDoPurge(FALSE),
 	  mFastCachep(NULL),
@@ -1037,7 +1037,7 @@ void LLTextureCache::purgeCache(ELLPath location, bool remove_dir)
 }
 
 //is called in the main thread before initCache(...) is called.
-void LLTextureCache::setReadOnly(BOOL read_only)
+void LLTextureCache::setReadOnly(bool read_only)
 {
 	mReadOnly = read_only ;
 }
@@ -2322,7 +2322,7 @@ bool LLTextureCache::removeFromCache(const LLUUID& id)
 
 LLTextureCache::ReadResponder::ReadResponder()
 	: mImageSize(0),
-	  mImageLocal(FALSE)
+	  mImageLocal(false)
 {
 }
 
