@@ -125,7 +125,7 @@ ThreadRecorder::~ThreadRecorder()
 #endif
 }
 
-TimeBlockTreeNode* ThreadRecorder::getTimeBlockTreeNode( S32 index )
+TimeBlockTreeNode* ThreadRecorder::getTimeBlockTreeNode( size_t index )
 {
 #if LL_TRACE_ENABLED
 	if (0 <= index && index < mNumTimeBlockTreeNodes)
@@ -277,7 +277,6 @@ void ThreadRecorder::pushToParent()
 void ThreadRecorder::pullFromChildren()
 {
 #if LL_TRACE_ENABLED
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 	if (mActiveRecordings.empty()) return;
 
 	{ LLMutexLock lock(&mChildListMutex);

@@ -227,7 +227,6 @@ public:
 
 	void setName(const char* name)
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 		mName = name;
 		setKey(name);
 	}
@@ -236,7 +235,6 @@ public:
 
 	StatType<MemAccumulator::AllocationFacet>& allocations() 
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 		return static_cast<StatType<MemAccumulator::AllocationFacet>&>(*(StatType<MemAccumulator>*)this);
 	}
 
@@ -338,9 +336,8 @@ struct MeasureMem<std::basic_string<T>, IS_MEM_TRACKABLE, IS_BYTES>
 template<typename T>
 inline void claim_alloc(MemStatHandle& measurement, const T& value)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 #if LL_TRACE_ENABLED
-	S32 size = MeasureMem<T>::measureFootprint(value);
+	size_t size = MeasureMem<T>::measureFootprint(value);
 	if(size == 0) return;
 	MemAccumulator& accumulator = measurement.getCurrentAccumulator();
 	accumulator.mSize.sample(accumulator.mSize.hasValue() ? accumulator.mSize.getLastValue() + (F64)size : (F64)size);
@@ -351,9 +348,8 @@ inline void claim_alloc(MemStatHandle& measurement, const T& value)
 template<typename T>
 inline void disclaim_alloc(MemStatHandle& measurement, const T& value)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 #if LL_TRACE_ENABLED
-	S32 size = MeasureMem<T>::measureFootprint(value);
+	size_t size = MeasureMem<T>::measureFootprint(value);
 	if(size == 0) return;
 	MemAccumulator& accumulator = measurement.getCurrentAccumulator();
 	accumulator.mSize.sample(accumulator.mSize.hasValue() ? accumulator.mSize.getLastValue() - (F64)size : -(F64)size);
