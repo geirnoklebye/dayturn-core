@@ -35,7 +35,7 @@
 
 
 // static
-std::string LLBase64::encode(const U8* input, size_t input_size)
+std::string LLBase64::encode(const U8* input, int input_size)
 {
 	std::string output;
 	if (input
