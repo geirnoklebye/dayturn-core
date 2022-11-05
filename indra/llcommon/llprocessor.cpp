@@ -215,12 +215,12 @@ namespace
 		const char* amd_string = "AuthenticAMD";
 		if (LLStringUtil::startsWith(cpu_vendor, intel_string))
 		{
-			U32 composed_family = family + ext_family;
+			int composed_family = family + ext_family;
 			return intel_CPUFamilyName(composed_family);
 		}
 		else if (LLStringUtil::startsWith(cpu_vendor, amd_string))
 		{
-			U32 composed_family = (family == 0xF) 
+			int composed_family = (family == 0xF)
 				? family + ext_family
 				: family;
 			return amd_CPUFamilyName(composed_family);
