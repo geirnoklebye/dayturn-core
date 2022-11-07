@@ -40,7 +40,7 @@ static NSInteger intAtStringIndex(NSArray *array, int index)
     return [(NSString *) array[index] integerValue];
 }
 
-bool LLSysDarwin::getOperatingSystemInfo(long major, long &minor, long &patch)
+bool LLSysDarwin::getOperatingSystemInfo(long &major, long &minor, long &patch)
 {
 	// Mavericks gains a nifty little method for getting OS version, prior to that
 	// we have to (ugh) parse systemversion.plist. :O

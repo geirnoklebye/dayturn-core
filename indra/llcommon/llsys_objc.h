@@ -37,7 +37,7 @@
 
 namespace LLSysDarwin
 {
-bool getOperatingSystemInfo(long major, long &minor, long &patch);
+bool getOperatingSystemInfo(long &major, long &minor, long &patch);
 const char* getPreferredLanguage();
 	
 }
