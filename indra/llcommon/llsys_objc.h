@@ -34,10 +34,10 @@
 #  error "This file should only be included when building on mac!"
 #else
 
+
 namespace LLSysDarwin
 {
-
-bool getOperatingSystemInfo(int &major, int &minor, int &patch);
+bool getOperatingSystemInfo(long major, long &minor, long &patch);
 const char* getPreferredLanguage();
 	
 }

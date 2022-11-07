@@ -281,7 +281,7 @@ LLOSInfo::LLOSInfo() :
 
 		const char * DARWIN_PRODUCT_NAME = "macOS";
 		
-		S32 major_version, minor_version, bugfix_version = 0;
+		long major_version, minor_version, bugfix_version = 0;
 
 		if (LLSysDarwin::getOperatingSystemInfo(major_version, minor_version, bugfix_version))
 		{

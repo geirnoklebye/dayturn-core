@@ -41,7 +41,6 @@ extern MemStatHandle gTraceMemStat;
 
 AccumulatorBufferGroup::AccumulatorBufferGroup() 
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 	claim_alloc(gTraceMemStat, mCounts.capacity() * sizeof(CountAccumulator));
 	claim_alloc(gTraceMemStat, mSamples.capacity() * sizeof(SampleAccumulator));
 	claim_alloc(gTraceMemStat, mEvents.capacity() * sizeof(EventAccumulator));
@@ -56,7 +55,6 @@ AccumulatorBufferGroup::AccumulatorBufferGroup(const AccumulatorBufferGroup& oth
 	mStackTimers(other.mStackTimers),
 	mMemStats(other.mMemStats)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 	claim_alloc(gTraceMemStat, mCounts.capacity() * sizeof(CountAccumulator));
 	claim_alloc(gTraceMemStat, mSamples.capacity() * sizeof(SampleAccumulator));
 	claim_alloc(gTraceMemStat, mEvents.capacity() * sizeof(EventAccumulator));
@@ -66,7 +64,6 @@ AccumulatorBufferGroup::AccumulatorBufferGroup(const AccumulatorBufferGroup& oth
 
 AccumulatorBufferGroup::~AccumulatorBufferGroup()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 	disclaim_alloc(gTraceMemStat, mCounts.capacity() * sizeof(CountAccumulator));
 	disclaim_alloc(gTraceMemStat, mSamples.capacity() * sizeof(SampleAccumulator));
 	disclaim_alloc(gTraceMemStat, mEvents.capacity() * sizeof(EventAccumulator));
@@ -76,7 +73,6 @@ AccumulatorBufferGroup::~AccumulatorBufferGroup()
 
 void AccumulatorBufferGroup::handOffTo(AccumulatorBufferGroup& other)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 	other.mCounts.reset(&mCounts);
 	other.mSamples.reset(&mSamples);
 	other.mEvents.reset(&mEvents);
@@ -86,7 +82,6 @@ void AccumulatorBufferGroup::handOffTo(AccumulatorBufferGroup& other)
 
 void AccumulatorBufferGroup::makeCurrent()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 	mCounts.makeCurrent();
 	mSamples.makeCurrent();
 	mEvents.makeCurrent();
@@ -96,7 +91,7 @@ void AccumulatorBufferGroup::makeCurrent()
 	ThreadRecorder* thread_recorder = get_thread_recorder().get();
 	AccumulatorBuffer<TimeBlockAccumulator>& timer_accumulator_buffer = mStackTimers;
 	// update stacktimer parent pointers
-	for (S32 i = 0, end_i = mStackTimers.size(); i < end_i; i++)
+	for (size_t i = 0, end_i = mStackTimers.size(); i < end_i; i++)
 	{
 		TimeBlockTreeNode* tree_node = thread_recorder->getTimeBlockTreeNode(i);
 		if (tree_node)
@@ -109,7 +104,6 @@ void AccumulatorBufferGroup::makeCurrent()
 //static
 void AccumulatorBufferGroup::clearCurrent()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 	AccumulatorBuffer<CountAccumulator>::clearCurrent();	
 	AccumulatorBuffer<SampleAccumulator>::clearCurrent();
 	AccumulatorBuffer<EventAccumulator>::clearCurrent();
@@ -124,7 +118,6 @@ bool AccumulatorBufferGroup::isCurrent() const
 
 void AccumulatorBufferGroup::append( const AccumulatorBufferGroup& other )
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 	mCounts.addSamples(other.mCounts, SEQUENTIAL);
 	mSamples.addSamples(other.mSamples, SEQUENTIAL);
 	mEvents.addSamples(other.mEvents, SEQUENTIAL);
@@ -134,7 +127,6 @@ void AccumulatorBufferGroup::append( const AccumulatorBufferGroup& other )
 
 void AccumulatorBufferGroup::merge( const AccumulatorBufferGroup& other)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 	mCounts.addSamples(other.mCounts, NON_SEQUENTIAL);
 	mSamples.addSamples(other.mSamples, NON_SEQUENTIAL);
 	mEvents.addSamples(other.mEvents, NON_SEQUENTIAL);
@@ -145,7 +137,6 @@ void AccumulatorBufferGroup::merge( const AccumulatorBufferGroup& other)
 
 void AccumulatorBufferGroup::reset(AccumulatorBufferGroup* other)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 	mCounts.reset(other ? &other->mCounts : NULL);
 	mSamples.reset(other ? &other->mSamples : NULL);
 	mEvents.reset(other ? &other->mEvents : NULL);
@@ -155,7 +146,6 @@ void AccumulatorBufferGroup::reset(AccumulatorBufferGroup* other)
 
 void AccumulatorBufferGroup::sync()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 	if (isCurrent())
 	{
 		F64SecondsImplicit time_stamp = LLTimer::getTotalSeconds();
