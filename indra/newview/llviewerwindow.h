@@ -288,7 +288,7 @@ public:
 		
 
 	// Is window of our application frontmost?
-	BOOL			getActive() const			{ return mActive; }
+	bool			getActive() const			{ return mActive; }
 
 	const std::string&	getInitAlert() { return mInitAlert; }
 	

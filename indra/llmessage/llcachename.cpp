@@ -215,7 +215,7 @@ public:
 	Impl(LLMessageSystem* msg);
 	~Impl();
 
-	BOOL getName(const LLUUID& id, std::string& first, std::string& last);
+	bool getName(const LLUUID& id, std::string& first, std::string& last);
 
 	boost::signals2::connection addPending(const LLUUID& id, const LLCacheNameCallback& callback);
 	void addPending(const LLUUID& id, const LLHost& host);
@@ -402,13 +402,13 @@ void LLCacheName::exportFile(std::ostream& ostr)
 }
 
 
-BOOL LLCacheName::Impl::getName(const LLUUID& id, std::string& first, std::string& last)
+bool LLCacheName::Impl::getName(const LLUUID& id, std::string& first, std::string& last)
 {
 	if(id.isNull())
 	{
 		first = sCacheName["nobody"];
 		last.clear();
-		return TRUE;
+		return true;
 	}
 
 	LLCacheNameEntry* entry = get_ptr_in_map(mCache, id );
@@ -416,7 +416,7 @@ BOOL LLCacheName::Impl::getName(const LLUUID& id, std::string& first, std::strin
 	{
 		first = entry->mFirstName;
 		last =  entry->mLastName;
-		return TRUE;
+		return true;
 	}
 	else
 	{
@@ -426,7 +426,7 @@ BOOL LLCacheName::Impl::getName(const LLUUID& id, std::string& first, std::strin
 		{
 			mAskNameQueue.insert(id);
 		}	
-		return FALSE;
+		return false;
 	}
 
 }

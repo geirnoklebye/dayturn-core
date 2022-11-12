@@ -1,4 +1,4 @@
-﻿/** 
+﻿/**
  * @File llvoavatar.cpp
  * @brief Implementation of LLVOAvatar class which is a derivation of LLViewerObject
  *

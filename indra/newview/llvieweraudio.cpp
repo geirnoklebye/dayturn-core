@@ -425,7 +425,7 @@ void init_audio()
 void audio_update_volume(bool force_update)
 {
 	F32 master_volume = gSavedSettings.getF32("AudioLevelMaster");
-	BOOL mute_audio = gSavedSettings.getBOOL("MuteAudio");
+	bool mute_audio = gSavedSettings.getbool("MuteAudio");
 
 	LLProgressView* progress = gViewerWindow->getProgressView();
 	BOOL progress_view_visible = FALSE;
@@ -435,9 +435,9 @@ void audio_update_volume(bool force_update)
 		progress_view_visible = progress->getVisible();
 	}
 
-	if (!gViewerWindow->getActive() && gSavedSettings.getBOOL("MuteWhenMinimized"))
+	if (!gViewerWindow->getActive() && gSavedSettings.getbool("MuteWhenMinimized"))
 	{
-		mute_audio = TRUE;
+		mute_audio = true;
 	}
 	F32 mute_volume = mute_audio ? 0.0f : 1.0f;
 
@@ -550,11 +550,8 @@ void audio_update_volume(bool force_update)
 		voice_inst->setMicGain(voice_mute ? 0.f : (F32)audioLevelMic);
 		// </FS:Ansariel>
 
-		// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
-		//if (!gViewerWindow->getActive() && (gSavedSettings.getBOOL("MuteWhenMinimized")))
-		static LLCachedControl<bool> muteWhenMinimized(gSavedSettings, "MuteWhenMinimized" , false);
-		if (!gViewerWindow->getActive() && muteWhenMinimized)
-		// </FS:Ansariel>
+
+		if (!gViewerWindow->getActive() && (gSavedSettings.getbool("MuteWhenMinimized")))
 		{
 			voice_inst->setMuteMic(true);
 		}
