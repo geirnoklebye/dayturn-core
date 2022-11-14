@@ -3586,12 +3586,12 @@ bool LLViewerMediaImpl::canPaste() const
 		return false;
 }
 
-void LLViewerMediaImpl::setUpdated(BOOL updated)
+void LLViewerMediaImpl::setUpdated(bool updated)
 {
 	mIsUpdated = updated ;
 }
 
-BOOL LLViewerMediaImpl::isUpdated()
+bool LLViewerMediaImpl::isUpdated()
 {
 	return mIsUpdated ;
 }
