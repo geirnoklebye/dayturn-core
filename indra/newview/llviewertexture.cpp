@@ -3965,7 +3965,7 @@ void LLViewerMediaTexture::switchTexture(U32 ch, LLFace* facep)
 	}
 }
 
-void LLViewerMediaTexture::setPlaying(BOOL playing) 
+void LLViewerMediaTexture::setPlaying(bool playing) 
 {
 	if(!mMediaImplp)
 	{
@@ -3987,7 +3987,7 @@ void LLViewerMediaTexture::setPlaying(BOOL playing)
 		if(findFaces())
 		{
 			//about to update all faces.
-			mMediaImplp->setUpdated(FALSE);
+			mMediaImplp->setUpdated(false);
 		}
 
 		if(mMediaFaceList.empty())//no face pointing to this media

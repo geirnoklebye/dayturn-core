@@ -1673,7 +1673,7 @@ void LLViewerMediaImpl::destroyMediaSource()
 	LLViewerMediaTexture* oldImage = LLViewerTextureManager::findMediaTexture( mTextureId );
 	if (oldImage)
 	{
-		oldImage->setPlaying(FALSE) ;
+		oldImage->setPlaying(false) ;
 	}
 
 	cancelMimeTypeProbe();
@@ -2979,7 +2979,7 @@ bool LLViewerMediaImpl::preMediaTexUpdate(LLViewerMediaTexture*& media_tex, U8*&
             //S32 media_depth = mMediaSource->getTextureDepth();
 
             // Since we're updating this texture, we know it's playing.  Tell the texture to do its replacement magic so it gets rendered.
-            media_tex->setPlaying(TRUE);
+            media_tex->setPlaying(true);
 
             if (mMediaSource->getDirty(&dirty_rect))
             {
@@ -3077,7 +3077,7 @@ LLViewerMediaTexture* LLViewerMediaImpl::updateMediaImage()
         // MEDIAOPT: check to see if size actually changed before doing work
         media_tex->destroyGLTexture();
         // MEDIAOPT: apparently just calling setUseMipMaps(false) doesn't work?
-        media_tex->reinit(FALSE);	// probably not needed
+        media_tex->reinit(false);	// probably not needed
 
         // MEDIAOPT: seems insane that we actually have to make an imageraw then
         // immediately discard it

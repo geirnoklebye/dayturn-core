@@ -623,7 +623,7 @@ public:
 	bool  getUseMipMaps() {return mUseMipMaps ; }
 	void  setUseMipMaps(bool mipmap) ;	
 	
-	void setPlaying(BOOL playing) ;
+	void setPlaying(bool playing) ;
 	bool isPlaying() const {return mIsPlaying;}
 	void setMediaImpl() ;
 
