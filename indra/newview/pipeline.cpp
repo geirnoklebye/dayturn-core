@@ -11196,7 +11196,7 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar, bool preview_avatar)
 
     if (!preview_avatar)
     {
-        avatar->mNeedsImpostorUpdate = FALSE;
+        avatar->mNeedsImpostorUpdate = false;
         avatar->cacheImpostorValues();
         avatar->mLastImpostorUpdateFrameTime = gFrameTimeSeconds;
     }

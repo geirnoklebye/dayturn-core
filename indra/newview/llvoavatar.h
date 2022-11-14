@@ -530,7 +530,7 @@ public:
 	//--------------------------------------------------------------------
 public:
 	/*virtual*/ void	applyMorphMask(U8* tex_data, S32 width, S32 height, S32 num_components, LLAvatarAppearanceDefines::EBakedTextureIndex index = LLAvatarAppearanceDefines::BAKED_NUM_INDICES);
-	BOOL 		morphMaskNeedsUpdate(LLAvatarAppearanceDefines::EBakedTextureIndex index = LLAvatarAppearanceDefines::BAKED_NUM_INDICES);
+	bool 		morphMaskNeedsUpdate(LLAvatarAppearanceDefines::EBakedTextureIndex index = LLAvatarAppearanceDefines::BAKED_NUM_INDICES);
 
 	
 	//--------------------------------------------------------------------
@@ -563,9 +563,9 @@ private:
 	// Impostors
 	//--------------------------------------------------------------------
 public:
-	virtual BOOL isImpostor();
-	BOOL 		shouldImpostor(const F32 rank_factor = 1.0);
-	BOOL 	    needsImpostorUpdate() const;
+	virtual bool isImpostor();
+	bool 		shouldImpostor(const F32 rank_factor = 1.0);
+	bool 	    needsImpostorUpdate() const;
 	const LLVector3& getImpostorOffset() const;
 	const LLVector2& getImpostorDim() const;
 	void 		getImpostorValues(LLVector4a* extents, LLVector3& angle, F32& distance) const;
@@ -574,7 +574,7 @@ public:
 	static void	resetImpostors();
 	static void updateImpostors();
 	LLRenderTarget mImpostor;
-	BOOL		mNeedsImpostorUpdate;
+	bool		mNeedsImpostorUpdate;
 	S32			mLastImpostorUpdateReason;
 	F32SecondsImplicit mLastImpostorUpdateFrameTime;
     const LLVector3*  getLastAnimExtents() const { return mLastAnimExtents; }
@@ -601,7 +601,7 @@ private:
 public:
 	LLVector4	mWindVec;
 	F32			mRipplePhase;
-	BOOL		mBelowWater;
+	bool		mBelowWater;
 private:
 	F32			mWindFreq;
 	LLFrameTimer mRippleTimer;
@@ -720,8 +720,8 @@ public:
 	// Static texture/mesh/baked dictionary
 	//--------------------------------------------------------------------
 public:
-	static BOOL 	isIndexLocalTexture(LLAvatarAppearanceDefines::ETextureIndex i);
-	static BOOL 	isIndexBakedTexture(LLAvatarAppearanceDefines::ETextureIndex i);
+	static bool 	isIndexLocalTexture(LLAvatarAppearanceDefines::ETextureIndex i);
+	static bool 	isIndexBakedTexture(LLAvatarAppearanceDefines::ETextureIndex i);
 
 	//--------------------------------------------------------------------
 	// Messaging
@@ -817,7 +817,7 @@ public:
 	// Appearance morphing
 	//--------------------------------------------------------------------
 public:
-	BOOL			getIsAppearanceAnimating() const { return mAppearanceAnimating; }
+	bool			getIsAppearanceAnimating() const { return mAppearanceAnimating; }
 
 	// True if we are computing our appearance via local compositing
 	// instead of baked textures, as for example during wearable
@@ -831,7 +831,7 @@ public:
 	// FIXME review isUsingLocalAppearance uses, some should be isEditing instead.
 
 private:
-	BOOL			mAppearanceAnimating;
+	bool			mAppearanceAnimating;
 	LLFrameTimer	mAppearanceMorphTimer;
 	F32				mLastAppearanceBlendTime;
 	bool			mIsEditingAppearance; // flag for if we're actively in appearance editing mode
@@ -861,7 +861,7 @@ public:
 public:
 	void 				clampAttachmentPositions();
 	virtual const LLViewerJointAttachment* attachObject(LLViewerObject *viewer_object);
-	virtual BOOL 		detachObject(LLViewerObject *viewer_object);
+	virtual bool 		detachObject(LLViewerObject *viewer_object);
 	static bool		    getRiggedMeshID( LLViewerObject* pVO, LLUUID& mesh_id );
 	void				cleanupAttachedMesh( LLViewerObject* pVO );
 	static LLVOAvatar*  findAvatarFromAttachment(LLViewerObject* obj);
@@ -886,13 +886,13 @@ public:
 	// HUD functions
 	//--------------------------------------------------------------------
 public:
-	BOOL 				hasHUDAttachment() const;
+	bool 				hasHUDAttachment() const;
 	LLBBox 				getHUDBBox() const;
 	void 				resetHUDAttachments();
 	S32					getMaxAttachments() const;
-	BOOL				canAttachMoreObjects(U32 n=1) const;
+	bool				canAttachMoreObjects(U32 n=1) const;
     S32					getMaxAnimatedObjectAttachments() const;
-    BOOL				canAttachMoreAnimatedObjects(U32 n=1) const;
+    bool				canAttachMoreAnimatedObjects(U32 n=1) const;
 protected:
 	U32					getNumAttachments() const; // O(N), not O(1)
 	U32					getNumAnimatedObjectAttachments() const; // O(N), not O(1)

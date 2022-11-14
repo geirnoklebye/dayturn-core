@@ -1130,7 +1130,7 @@ void LLVOAvatarSelf::wearableUpdated(LLWearableType::EType type)
 //-----------------------------------------------------------------------------
 // isWearingAttachment()
 //-----------------------------------------------------------------------------
-BOOL LLVOAvatarSelf::isWearingAttachment(const LLUUID& inv_item_id) const
+bool LLVOAvatarSelf::isWearingAttachment(const LLUUID& inv_item_id) const
 {
 	const LLUUID& base_inv_item_id = gInventory.getLinkedItemID(inv_item_id);
 	for (attachment_map_t::const_iterator iter = mAttachmentPoints.begin(); 
@@ -1140,10 +1140,10 @@ BOOL LLVOAvatarSelf::isWearingAttachment(const LLUUID& inv_item_id) const
 		const LLViewerJointAttachment* attachment = iter->second;
 		if (attachment->getAttachedObject(base_inv_item_id))
 		{
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -1222,7 +1222,7 @@ const LLViewerJointAttachment *LLVOAvatarSelf::attachObject(LLViewerObject *view
 }
 
 //virtual
-BOOL LLVOAvatarSelf::detachObject(LLViewerObject *viewer_object)
+bool LLVOAvatarSelf::detachObject(LLViewerObject *viewer_object)
 {
 	const LLUUID attachment_id = viewer_object->getAttachmentItemID();
 	if ( LLVOAvatar::detachObject(viewer_object) )
@@ -1257,13 +1257,13 @@ BOOL LLVOAvatarSelf::detachObject(LLViewerObject *viewer_object)
 			LLAppearanceMgr::instance().unregisterAttachment(attachment_id);
 		}
 		
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 // static
-BOOL LLVOAvatarSelf::detachAttachmentIntoInventory(const LLUUID &item_id)
+bool LLVOAvatarSelf::detachAttachmentIntoInventory(const LLUUID &item_id)
 {
 	LLInventoryItem* item = gInventory.getItem(item_id);
 	if (item)
@@ -1292,9 +1292,9 @@ BOOL LLVOAvatarSelf::detachAttachmentIntoInventory(const LLUUID &item_id)
 				LLAppearanceMgr::instance().removeCOFItemLinks(item_id);
 			}
 		}
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 U32 LLVOAvatarSelf::getNumWearables(LLAvatarAppearanceDefines::ETextureIndex i) const
@@ -1670,7 +1670,7 @@ void LLVOAvatarSelf::updateComposites()
 // virtual
 S32 LLVOAvatarSelf::getLocalDiscardLevel(ETextureIndex type, U32 wearable_index) const
 {
-	if (!isIndexLocalTexture(type)) return FALSE;
+	if (!isIndexLocalTexture(type)) return 0;
 
 	const LLLocalTextureObject *local_tex_obj = getLocalTextureObject(type, wearable_index);
 	if (local_tex_obj)

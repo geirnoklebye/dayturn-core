@@ -289,12 +289,12 @@ protected:
 	//--------------------------------------------------------------------
 public:
 	void 				updateAttachmentVisibility(U32 camera_mode);
-	BOOL 				isWearingAttachment(const LLUUID& inv_item_id) const;
+	bool 				isWearingAttachment(const LLUUID& inv_item_id) const;
 	LLViewerObject* 	getWornAttachment(const LLUUID& inv_item_id);
 	bool				getAttachedPointName(const LLUUID& inv_item_id, std::string& name) const;
 	/*virtual*/ const LLViewerJointAttachment *attachObject(LLViewerObject *viewer_object);
-	/*virtual*/ BOOL 	detachObject(LLViewerObject *viewer_object);
-	static BOOL			detachAttachmentIntoInventory(const LLUUID& item_id);
+	/*virtual*/ bool 	detachObject(LLViewerObject *viewer_object);
+	static bool			detachAttachmentIntoInventory(const LLUUID& item_id);
 
 	//--------------------------------------------------------------------
 	// HUDs

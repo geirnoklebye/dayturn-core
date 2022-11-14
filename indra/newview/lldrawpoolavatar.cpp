@@ -387,7 +387,7 @@ void LLDrawPoolAvatar::renderShadow(S32 pass)
 		return;
 	}
 	LLVOAvatar::AvatarOverallAppearance oa = avatarp->getOverallAppearance();
-	BOOL impostor = !LLPipeline::sImpostorRender && avatarp->isImpostor();
+	bool impostor = !LLPipeline::sImpostorRender && avatarp->isImpostor();
     if (impostor || (oa == LLVOAvatar::AOA_INVISIBLE))
 	{
         // No shadows for impostored (including jellydolled) or invisible avs.
@@ -898,7 +898,7 @@ void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 		return;
 	}
 
-	BOOL impostor = !LLPipeline::sImpostorRender && avatarp->isImpostor() && !single_avatar;
+	bool impostor = !LLPipeline::sImpostorRender && avatarp->isImpostor() && !single_avatar;
 
 	if (( avatarp->isInMuteList() 
 		  || impostor 

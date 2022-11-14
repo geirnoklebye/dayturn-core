@@ -702,9 +702,9 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mLastImpostorUpdateReason(0),
 	mWindFreq(0.f),
 	mRipplePhase( 0.f ),
-	mBelowWater(FALSE),
+	mBelowWater(false),
 	mLastAppearanceBlendTime(0.f),
-	mAppearanceAnimating(FALSE),
+	mAppearanceAnimating(false),
     mNameIsSet(false),
 	mTitle(),
 	mNameAway(false),
@@ -773,7 +773,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mSpeed = 0.f;
 	setAnimationData("Speed", &mSpeed);
 
-	mNeedsImpostorUpdate = TRUE;
+	mNeedsImpostorUpdate = true;
 	mLastImpostorUpdateReason = 0;
 	mNeedsAnimUpdate = true;
 
@@ -3030,7 +3030,7 @@ void LLVOAvatar::idleUpdateMisc(bool detailed_update)
 		
 			if (angle_diff > F_PI/512.f*distance*mUpdatePeriod)
 			{
-				mNeedsImpostorUpdate = TRUE;
+				mNeedsImpostorUpdate = true;
 				mLastImpostorUpdateReason = 2;
 			}
 		}
@@ -3042,7 +3042,7 @@ void LLVOAvatar::idleUpdateMisc(bool detailed_update)
 			F32 dist_diff = fabsf(distance-mImpostorDistance);
 			if (dist_diff/mImpostorDistance > 0.1f)
 			{
-				mNeedsImpostorUpdate = TRUE;
+				mNeedsImpostorUpdate = true;
 				mLastImpostorUpdateReason = 3;
 			}
 			else
@@ -3055,7 +3055,7 @@ void LLVOAvatar::idleUpdateMisc(bool detailed_update)
 				diff.setSub(ext[1], mImpostorExtents[1]);
 				if (diff.getLength3().getF32() > 0.05f)
 				{
-					mNeedsImpostorUpdate = TRUE;
+					mNeedsImpostorUpdate = true;
 					mLastImpostorUpdateReason = 4;
 				}
 				else
@@ -3063,7 +3063,7 @@ void LLVOAvatar::idleUpdateMisc(bool detailed_update)
 					diff.setSub(ext[0], mImpostorExtents[0]);
 					if (diff.getLength3().getF32() > 0.05f)
 					{
-						mNeedsImpostorUpdate = TRUE;
+						mNeedsImpostorUpdate = true;
 						mLastImpostorUpdateReason = 5;
 					}
 				}
@@ -3092,7 +3092,7 @@ void LLVOAvatar::idleUpdateAppearanceAnimation()
 		F32 appearance_anim_time = mAppearanceMorphTimer.getElapsedTimeF32();
 		if (appearance_anim_time >= APPEARANCE_MORPH_TIME)
 		{
-			mAppearanceAnimating = FALSE;
+			mAppearanceAnimating = false;
 			for (LLVisualParam *param = getFirstVisualParam(); 
 				 param;
 				 param = getNextVisualParam())
@@ -3865,7 +3865,7 @@ void LLVOAvatar::idleUpdateBelowWater()
 	F32 water_height;
 	water_height = getRegion()->getWaterHeight();
 
-	BOOL wasBelowWater = mBelowWater;			// ## Zi: Animation Overrider
+	bool wasBelowWater = mBelowWater;			// ## Zi: Animation Overrider
 
 	mBelowWater =  avatar_height < water_height;
 	// ## Zi: Animation Overrider
@@ -4733,12 +4733,12 @@ bool LLVOAvatar::computeNeedsUpdate()
 	{
 		if (needs_update_by_max_time)
 		{
-			mNeedsImpostorUpdate = TRUE;
+			mNeedsImpostorUpdate = true;
 			mLastImpostorUpdateReason = 11;
 		}
 		else
 		{
-			//mNeedsImpostorUpdate = TRUE;
+			//mNeedsImpostorUpdate = true;
 			//mLastImpostorUpdateReason = 10;
 		}
 	}
@@ -7700,7 +7700,7 @@ S32 LLVOAvatar::getMaxAttachments() const
 // canAttachMoreObjects()
 // Returns true if we can attach <n> more objects.
 //-----------------------------------------------------------------------------
-BOOL LLVOAvatar::canAttachMoreObjects(U32 n) const
+bool LLVOAvatar::canAttachMoreObjects(U32 n) const
 {
 	return (getNumAttachments() + n) <= getMaxAttachments();
 }
@@ -7734,7 +7734,7 @@ S32 LLVOAvatar::getMaxAnimatedObjectAttachments() const
 // canAttachMoreAnimatedObjects()
 // Returns true if we can attach <n> more animated objects.
 //-----------------------------------------------------------------------------
-BOOL LLVOAvatar::canAttachMoreAnimatedObjects(U32 n) const
+bool LLVOAvatar::canAttachMoreAnimatedObjects(U32 n) const
 {
 	return (getNumAnimatedObjectAttachments() + n) <= getMaxAnimatedObjectAttachments();
 }
@@ -7855,7 +7855,7 @@ void LLVOAvatar::cleanupAttachedMesh( LLViewerObject* pVO )
 //-----------------------------------------------------------------------------
 // detachObject()
 //-----------------------------------------------------------------------------
-BOOL LLVOAvatar::detachObject(LLViewerObject *viewer_object)
+bool LLVOAvatar::detachObject(LLViewerObject *viewer_object)
 {
 	for (attachment_map_t::iterator iter = mAttachmentPoints.begin(); 
 		 iter != mAttachmentPoints.end();
@@ -7863,10 +7863,7 @@ BOOL LLVOAvatar::detachObject(LLViewerObject *viewer_object)
 	{
 		LLViewerJointAttachment* attachment = iter->second;
 		
-		// <FS:Ansariel> Possible crash fix
-		//if (attachment->isObjectAttached(viewer_object))
-		if (attachment && attachment->isObjectAttached(viewer_object))
-		// </FS:Ansariel>
+		if (attachment->isObjectAttached(viewer_object))
 		{
             updateVisualComplexity();
             bool is_animated_object = viewer_object->isAnimatedObject();
@@ -7893,7 +7890,7 @@ BOOL LLVOAvatar::detachObject(LLViewerObject *viewer_object)
 			updateMeshVisibility();
 
 			LL_DEBUGS() << "Detaching object " << viewer_object->mID << " from " << attachment->getName() << LL_ENDL;
-			return TRUE;
+			return true;
 		}
 	}
 
@@ -7901,10 +7898,10 @@ BOOL LLVOAvatar::detachObject(LLViewerObject *viewer_object)
 	if (iter != mPendingAttachment.end())
 	{
 		mPendingAttachment.erase(iter);
-		return TRUE;
+		return true;
 	}
 	
-	return FALSE;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -8541,7 +8538,7 @@ bool LLVOAvatar::processFullyLoadedChange(bool loading)
 	if (fully_loaded_changed && !isSelf() && mFullyLoaded && isImpostor())
 	{
 		// Fix for jellydoll initially invisible
-		mNeedsImpostorUpdate = TRUE;
+		mNeedsImpostorUpdate = true;
 		mLastImpostorUpdateReason = 6;
 	}	
 	return changed;
@@ -9042,12 +9039,12 @@ void LLVOAvatar::applyMorphMask(U8* tex_data, S32 width, S32 height, S32 num_com
 	}
 }
 
-// returns TRUE if morph masks are present and not valid for a given baked texture, FALSE otherwise
-BOOL LLVOAvatar::morphMaskNeedsUpdate(LLAvatarAppearanceDefines::EBakedTextureIndex index)
+// returns true if morph masks are present and not valid for a given baked texture, false otherwise
+bool LLVOAvatar::morphMaskNeedsUpdate(LLAvatarAppearanceDefines::EBakedTextureIndex index)
 {
 	if (index >= BAKED_NUM_INDICES)
 	{
-		return FALSE;
+		return false;
 	}
 
 	if (!mBakedTextureDatas[index].mMaskedMorphs.empty())
@@ -9062,11 +9059,11 @@ BOOL LLVOAvatar::morphMaskNeedsUpdate(LLAvatarAppearanceDefines::EBakedTextureIn
 		}
 		else
 		{
-			return FALSE;
+			return false;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -9161,27 +9158,19 @@ void LLVOAvatar::clampAttachmentPositions()
 	}
 }
 
-BOOL LLVOAvatar::hasHUDAttachment() const
+bool LLVOAvatar::hasHUDAttachment() const
 {
 	for (attachment_map_t::const_iterator iter = mAttachmentPoints.begin(); 
 		 iter != mAttachmentPoints.end();
 		 ++iter)
 	{
 		LLViewerJointAttachment* attachment = iter->second;
-
-		// <FS:Ansariel> Possible crash fix
-		if (!attachment)
-		{
-			continue;
-		}
-		// </FS:Ansariel>
-
 		if (attachment->getIsHUDAttachment() && attachment->getNumObjects() > 0)
 		{
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 LLBBox LLVOAvatar::getHUDBBox() const
@@ -9192,10 +9181,7 @@ LLBBox LLVOAvatar::getHUDBBox() const
 		 ++iter)
 	{
 		LLViewerJointAttachment* attachment = iter->second;
-		// <FS:Ansariel> Possible crash fix
-		//if (attachment->getIsHUDAttachment())
-		if (attachment && attachment->getIsHUDAttachment())
-		// </FS:Ansariel>
+		if (attachment->getIsHUDAttachment())
 		{
 			for (LLViewerJointAttachment::attachedobjs_vec_t::iterator attachment_iter = attachment->mAttachedObjects.begin();
 				 attachment_iter != attachment->mAttachedObjects.end();
@@ -10490,7 +10476,7 @@ void LLVOAvatar::startAppearanceAnimation()
 {
 	if(!mAppearanceAnimating)
 	{
-		mAppearanceAnimating = TRUE;
+		mAppearanceAnimating = true;
 		mAppearanceMorphTimer.reset();
 		mLastAppearanceBlendTime = 0.f;
 	}
@@ -10770,12 +10756,12 @@ void LLVOAvatar::updateImpostors()
 }
 
 // virtual
-BOOL LLVOAvatar::isImpostor()
+bool LLVOAvatar::isImpostor()
 {
 	return isVisuallyMuted() || (sLimitNonImpostors && (mUpdatePeriod > 1));
 }
 
-BOOL LLVOAvatar::shouldImpostor(const F32 rank_factor)
+bool LLVOAvatar::shouldImpostor(const F32 rank_factor)
 {
 	if (isSelf())
 	{
@@ -10788,7 +10774,7 @@ BOOL LLVOAvatar::shouldImpostor(const F32 rank_factor)
 	return sLimitNonImpostors && (mVisibilityRank > sMaxNonImpostors * rank_factor);
 }
 
-BOOL LLVOAvatar::needsImpostorUpdate() const
+bool LLVOAvatar::needsImpostorUpdate() const
 {
 	return mNeedsImpostorUpdate;
 }
@@ -11257,7 +11243,7 @@ void LLVOAvatar::calculateUpdateRenderComplexity()
 void LLVOAvatar::setVisualMuteSettings(VisualMuteSettings set)
 {
     mVisuallyMuteSetting = set;
-    mNeedsImpostorUpdate = TRUE;
+    mNeedsImpostorUpdate = true;
 	mLastImpostorUpdateReason = 7;
 
     LLRenderMuteList::getInstance()->saveVisualMuteSetting(getID(), S32(set));
@@ -11339,7 +11325,7 @@ void LLVOAvatar::updateOverallAppearance()
 		mOverallAppearance = new_overall;
 		if (!isSelf())
 		{
-			mNeedsImpostorUpdate = TRUE;
+			mNeedsImpostorUpdate = true;
 			mLastImpostorUpdateReason = 8;
 		}
 		updateMeshVisibility();
@@ -11490,7 +11476,7 @@ void LLVOAvatar::calcMutedAVColor()
 }
 
 // static
-BOOL LLVOAvatar::isIndexLocalTexture(ETextureIndex index)
+bool LLVOAvatar::isIndexLocalTexture(ETextureIndex index)
 {
 	return (index < 0 || index >= TEX_NUM_INDICES)
 		? false
@@ -11498,7 +11484,7 @@ BOOL LLVOAvatar::isIndexLocalTexture(ETextureIndex index)
 }
 
 // static
-BOOL LLVOAvatar::isIndexBakedTexture(ETextureIndex index)
+bool LLVOAvatar::isIndexBakedTexture(ETextureIndex index)
 {
 	return (index < 0 || index >= TEX_NUM_INDICES)
 		? false

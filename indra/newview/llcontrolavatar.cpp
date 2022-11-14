@@ -686,7 +686,7 @@ bool LLControlAvatar::shouldRenderRigged() const
 }
 
 // virtual
-BOOL LLControlAvatar::isImpostor()
+bool LLControlAvatar::isImpostor()
 {
 	// Attached animated objects should match state of their attached av.
 	LLVOAvatar *attached_av = getAttachedAvatar();
