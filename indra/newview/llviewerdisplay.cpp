@@ -1596,7 +1596,7 @@ void render_disconnected_background()
 
 		
 		raw->expandToPowerOfTwo();
-		gDisconnectedImagep = LLViewerTextureManager::getLocalTexture(raw.get(), FALSE );
+		gDisconnectedImagep = LLViewerTextureManager::getLocalTexture(raw.get(), false );
 		gStartTexture = gDisconnectedImagep;
 		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 	}

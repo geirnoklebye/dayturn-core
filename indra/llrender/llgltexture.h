@@ -174,7 +174,7 @@ public:
 	/*virtual*/ void setActive() ;
 	void forceActive() ;
 	void setNoDelete() ;
-	void dontDiscard() { mDontDiscard = 1; mTextureState = NO_DELETE; }
+	void dontDiscard() { mDontDiscard = true; mTextureState = NO_DELETE; }
 	bool getDontDiscard() const { return mDontDiscard; }
 	//-----------------	
 
@@ -199,7 +199,7 @@ protected:
 
 	//GL texture
 	LLPointer<LLImageGL> mGLTexturep ;
-	S8 mDontDiscard;			// Keep full res version of this image (for UI, etc)
+	bool mDontDiscard;			// Keep full res version of this image (for UI, etc)
 
 protected:
 	LLGLTextureState  mTextureState ;

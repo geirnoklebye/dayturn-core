@@ -111,7 +111,6 @@ void LLViewerTextureList::init()
 
 void LLViewerTextureList::doPreloadImages()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	LL_DEBUGS("ViewerImages") << "Preloading images..." << LL_ENDL;
 	
 	llassert_always(mInitialized) ;
@@ -203,7 +202,6 @@ static std::string get_texture_list_name()
 
 void LLViewerTextureList::doPrefetchImages()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	gTextureTimer.start();
 	gTextureTimer.pause();
 
@@ -260,7 +258,6 @@ LLViewerTextureList::~LLViewerTextureList()
 
 void LLViewerTextureList::shutdown()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	// clear out preloads
 	mImagePreloads.clear();
 
@@ -336,7 +333,6 @@ void LLViewerTextureList::shutdown()
 
 void LLViewerTextureList::dump()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	LL_INFOS() << "LLViewerTextureList::dump()" << LL_ENDL;
 	for (image_priority_list_t::iterator it = mImageList.begin(); it != mImageList.end(); ++it)
 	{
@@ -374,14 +370,13 @@ void LLViewerTextureList::restoreGL()
 
 LLViewerFetchedTexture* LLViewerTextureList::getImageFromFile(const std::string& filename,
 												   FTType f_type,
-												   BOOL usemipmaps,
+												   bool usemipmaps,
 												   LLViewerTexture::EBoostLevel boost_priority,
 												   S8 texture_type,
 												   LLGLint internal_format,
 												   LLGLenum primary_format, 
 												   const LLUUID& force_id)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if(!mInitialized)
 	{
 		return NULL ;
@@ -402,14 +397,13 @@ LLViewerFetchedTexture* LLViewerTextureList::getImageFromFile(const std::string&
 
 LLViewerFetchedTexture* LLViewerTextureList::getImageFromUrl(const std::string& url,
 												   FTType f_type,
-												   BOOL usemipmaps,
+												   bool usemipmaps,
 												   LLViewerTexture::EBoostLevel boost_priority,
 												   S8 texture_type,
 												   LLGLint internal_format,
 												   LLGLenum primary_format, 
 												   const LLUUID& force_id)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if(!mInitialized)
 	{
 		return NULL ;
@@ -491,14 +485,13 @@ LLViewerFetchedTexture* LLViewerTextureList::getImageFromUrl(const std::string& 
 
 LLViewerFetchedTexture* LLViewerTextureList::getImage(const LLUUID &image_id,
 												   FTType f_type,
-												   BOOL usemipmaps,
+												   bool usemipmaps,
 												   LLViewerTexture::EBoostLevel boost_priority,
 												   S8 texture_type,
 												   LLGLint internal_format,
 												   LLGLenum primary_format,
 												   LLHost request_from_host)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if(!mInitialized)
 	{
 		return NULL ;
@@ -554,14 +547,13 @@ LLViewerFetchedTexture* LLViewerTextureList::getImage(const LLUUID &image_id,
 //when this function is called, there is no such texture in the gTextureList with image_id.
 LLViewerFetchedTexture* LLViewerTextureList::createImage(const LLUUID &image_id,
 												   FTType f_type,
-												   BOOL usemipmaps,
+												   bool usemipmaps,
 												   LLViewerTexture::EBoostLevel boost_priority,
 												   S8 texture_type,
 												   LLGLint internal_format,
 												   LLGLenum primary_format,
 												   LLHost request_from_host)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	static LLCachedControl<bool> fast_cache_fetching_enabled(gSavedSettings, "FastCacheFetchEnabled", true);
 
 	LLPointer<LLViewerFetchedTexture> imagep ;
@@ -617,7 +609,6 @@ LLViewerFetchedTexture* LLViewerTextureList::createImage(const LLUUID &image_id,
 
 void LLViewerTextureList::findTexturesByID(const LLUUID &image_id, std::vector<LLViewerFetchedTexture*> &output)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
     LLTextureKey search_key(image_id, TEX_LIST_STANDARD);
     uuid_map_t::iterator iter = mUUIDMap.lower_bound(search_key);
     while (iter != mUUIDMap.end() && iter->first.textureId == image_id)
@@ -629,7 +620,6 @@ void LLViewerTextureList::findTexturesByID(const LLUUID &image_id, std::vector<L
 
 LLViewerFetchedTexture *LLViewerTextureList::findImage(const LLTextureKey &search_key)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
     uuid_map_t::iterator iter = mUUIDMap.find(search_key);
     if (iter == mUUIDMap.end())
         return NULL;
@@ -643,7 +633,6 @@ LLViewerFetchedTexture *LLViewerTextureList::findImage(const LLUUID &image_id, E
 
 void LLViewerTextureList::addImageToList(LLViewerFetchedTexture *image)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	assert_main_thread();
 	llassert_always(mInitialized) ;
 	llassert(image);
@@ -663,7 +652,6 @@ void LLViewerTextureList::addImageToList(LLViewerFetchedTexture *image)
 
 void LLViewerTextureList::removeImageFromList(LLViewerFetchedTexture *image)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	assert_main_thread();
 	llassert_always(mInitialized) ;
 	llassert(image);
@@ -712,7 +700,6 @@ void LLViewerTextureList::removeImageFromList(LLViewerFetchedTexture *image)
 
 void LLViewerTextureList::addImage(LLViewerFetchedTexture *new_image, ETexListType tex_type)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if (!new_image)
 	{
 		return;
@@ -736,7 +723,6 @@ void LLViewerTextureList::addImage(LLViewerFetchedTexture *new_image, ETexListTy
 
 void LLViewerTextureList::deleteImage(LLViewerFetchedTexture *image)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if( image)
 	{
 		if (image->hasCallbacks())
@@ -831,7 +817,6 @@ void LLViewerTextureList::updateImages(F32 max_time)
 
 void LLViewerTextureList::clearFetchingRequests()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if (LLAppViewer::getTextureFetch()->getNumRequests() == 0)
 	{
 		return;
@@ -849,7 +834,6 @@ void LLViewerTextureList::clearFetchingRequests()
 
 void LLViewerTextureList::updateImagesDecodePriorities()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	// Update the decode priority for N images each frame
 	{
 		F32 lazy_flush_timeout = 30.f; // stop decoding
@@ -965,7 +949,6 @@ void LLViewerTextureList::updateImagesDecodePriorities()
 
 void LLViewerTextureList::setDebugFetching(LLViewerFetchedTexture* tex, S32 debug_level)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if(!tex->setDebugFetching(debug_level))
 	{
 		return;
@@ -1014,7 +997,6 @@ void LLViewerTextureList::setDebugFetching(LLViewerFetchedTexture* tex, S32 debu
 
 F32 LLViewerTextureList::updateImagesCreateTextures(F32 max_time)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if (gGLManager.mIsDisabled) return 0.0f;
 	
 	//
@@ -1043,7 +1025,6 @@ F32 LLViewerTextureList::updateImagesCreateTextures(F32 max_time)
 
 F32 LLViewerTextureList::updateImagesLoadingFastCache(F32 max_time)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if (gGLManager.mIsDisabled) return 0.0f;
 	if(mFastCacheList.empty())
 	{
@@ -1074,7 +1055,6 @@ F32 LLViewerTextureList::updateImagesLoadingFastCache(F32 max_time)
 
 void LLViewerTextureList::forceImmediateUpdate(LLViewerFetchedTexture* imagep)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if(!imagep)
 	{
 		return ;
@@ -1094,7 +1074,6 @@ void LLViewerTextureList::forceImmediateUpdate(LLViewerFetchedTexture* imagep)
 
 F32 LLViewerTextureList::updateImagesFetchTextures(F32 max_time)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	LLTimer image_op_timer;
 	
 	// Update fetch for N images each frame
@@ -1183,7 +1162,6 @@ void LLViewerTextureList::updateImagesUpdateStats()
 
 void LLViewerTextureList::decodeAllImages(F32 max_time)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	LLTimer timer;
 
 	//loading from fast cache 
@@ -1869,7 +1847,6 @@ LLUIImagePtr LLUIImageList::preloadUIImage(const std::string& name, const std::s
 //static 
 void LLUIImageList::onUIImageLoaded( BOOL success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* src_aux, S32 discard_level, BOOL final, void* user_data )
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if(!success || !user_data) 
 	{
 		return;
@@ -1971,7 +1948,6 @@ struct UIImageDeclarations : public LLInitParam::Block<UIImageDeclarations>
 
 bool LLUIImageList::initFromFile()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	// Look for textures.xml in all the right places. Pass
 	// constraint=LLDir::ALL_SKINS because we want to overlay textures.xml
 	// from all the skins directories.

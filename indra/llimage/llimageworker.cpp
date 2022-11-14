@@ -119,7 +119,6 @@ LLImageDecodeThread::ImageRequest::~ImageRequest()
 // Returns true when done, whether or not decode was successful.
 bool LLImageDecodeThread::ImageRequest::processRequest()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	const F32 decode_time_slice = .1f;
 	bool done = true;
 	if (!mDecodedRaw && mFormattedImage.notNull())

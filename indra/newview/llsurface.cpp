@@ -243,7 +243,7 @@ void LLSurface::createSTexture()
 			}
 		}
 
-		mSTexturep = LLViewerTextureManager::getLocalTexture(raw.get(), FALSE);
+		mSTexturep = LLViewerTextureManager::getLocalTexture(raw.get(), false);
 		mSTexturep->dontDiscard();
 		gGL.getTexUnit(0)->bind(mSTexturep);
 		mSTexturep->setAddressMode(LLTexUnit::TAM_CLAMP);		
@@ -268,7 +268,7 @@ void LLSurface::createWaterTexture()
 			}
 		}		
 		
-		mWaterTexturep = LLViewerTextureManager::getLocalTexture(raw.get(), FALSE);
+		mWaterTexturep = LLViewerTextureManager::getLocalTexture(raw.get(), false);
 		mWaterTexturep->dontDiscard();
 		gGL.getTexUnit(0)->bind(mWaterTexturep);
 		mWaterTexturep->setAddressMode(LLTexUnit::TAM_CLAMP);
@@ -287,7 +287,7 @@ void LLSurface::initTextures()
 	//
 	// Water texture
 	//
-	if (gSavedSettings.getBOOL("RenderWater") )
+	if (gSavedSettings.getbool("RenderWater") )
 	{
 		createWaterTexture();
 		mWaterObjp = (LLVOWater *)gObjectList.createObjectViewer(LLViewerObject::LL_VO_WATER, mRegionp);

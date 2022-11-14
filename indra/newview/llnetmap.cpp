@@ -1264,7 +1264,7 @@ void LLNetMap::renderPropertyLinesForRegion(const LLViewerRegion* region)
 void LLNetMap::createObjectImage()
 {
         if (createImage(mObjectRawImagep)) {
-                mObjectImagep = LLViewerTextureManager::getLocalTexture( mObjectRawImagep.get(), FALSE);
+                mObjectImagep = LLViewerTextureManager::getLocalTexture( mObjectRawImagep.get(), false);
 	}
 
         setScale(mScale);
@@ -1274,7 +1274,7 @@ void LLNetMap::createObjectImage()
 void LLNetMap::createParcelImage()
 {
 	if (createImage(mParcelRawImagep)) {
-		mParcelImagep = LLViewerTextureManager::getLocalTexture(mParcelRawImagep.get(), FALSE);
+		mParcelImagep = LLViewerTextureManager::getLocalTexture(mParcelRawImagep.get(), false);
 	}
 	mUpdateParcelImage = true;
 }

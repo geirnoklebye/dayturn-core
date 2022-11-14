@@ -193,7 +193,7 @@ void LLFloaterAuction::onClickSnapshot(void* data)
 		self->mTransactionID.generate();
 		self->mImageID = self->mTransactionID.makeAssetID(gAgent.getSecureSessionID());
 
-		if(!gSavedSettings.getBOOL("QuietSnapshotsToDisk"))
+		if(!gSavedSettings.getbool("QuietSnapshotsToDisk"))
 		{
 			gViewerWindow->playSnapshotAnimAndSound();
 		}
@@ -215,7 +215,7 @@ void LLFloaterAuction::onClickSnapshot(void* data)
 		LLFileSystem j2c_file(self->mImageID, LLAssetType::AT_TEXTURE, LLFileSystem::WRITE);
 		j2c_file.write(j2c->getData(), j2c->getDataSize());
 
-		self->mImage = LLViewerTextureManager::getLocalTexture((LLImageRaw*)raw, FALSE);
+		self->mImage = LLViewerTextureManager::getLocalTexture((LLImageRaw*)raw, false);
 		gGL.getTexUnit(0)->bind(self->mImage);
 		self->mImage->setAddressMode(LLTexUnit::TAM_CLAMP);
 	}

@@ -513,7 +513,7 @@ void LLPanelNearByMedia::refreshParcelItems()
 	LLViewerMedia* media_inst = LLViewerMedia::getInstance();
 
 	// First Parcel Media: add or remove it as necessary
-	if (gSavedSettings.getBOOL("AudioStreamingMedia") && should_include && media_inst->hasParcelMedia())
+	if (gSavedSettings.getbool("AudioStreamingMedia") && should_include && media_inst->hasParcelMedia())
 	{
 		// Yes, there is parcel media.
 		if (NULL == mParcelMediaItem)
@@ -977,7 +977,7 @@ void LLPanelNearByMedia::updateControls()
 	## Zi: Media/Stream separation */
 	if (selected_media_id == PARCEL_MEDIA_LIST_ITEM_UUID)
 	{
-		if (!media_inst->hasParcelMedia() || !gSavedSettings.getBOOL("AudioStreamingMedia"))
+		if (!media_inst->hasParcelMedia() || !gSavedSettings.getbool("AudioStreamingMedia"))
 		{
 			// disable controls if audio streaming media is disabled from preference
 			showDisabledControls();

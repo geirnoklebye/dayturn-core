@@ -372,7 +372,7 @@ void LLProgressView::loadLogo(const std::string &path,
     raw->expandToPowerOfTwo();
 
     TextureData data;
-    data.mTexturep = LLViewerTextureManager::getLocalTexture(raw.get(), FALSE);
+    data.mTexturep = LLViewerTextureManager::getLocalTexture(raw.get(), false);
     data.mDrawRect = pos_rect;
     data.mClipRect = clip_rect;
     data.mOffsetRect = offset_rect;
@@ -497,7 +497,7 @@ void LLProgressView::initStartTexture(S32 location_id, bool is_in_production)
         {
             // HACK: getLocalTexture allows only power of two dimentions
             raw->expandToPowerOfTwo();
-            gStartTexture = LLViewerTextureManager::getLocalTexture(raw.get(), FALSE);
+            gStartTexture = LLViewerTextureManager::getLocalTexture(raw.get(), false);
         }
     }
 

@@ -1217,7 +1217,7 @@ void LLBumpImageList::onSourceLoaded( BOOL success, LLViewerTexture *src_vi, LLI
                 bump_ptr->ref();
                 auto create_func = [=]()
                 {
-                    img->setUseMipMaps(TRUE);
+                    img->setUseMipMaps(true);
                     // upload dst_image to GPU (greyscale in red channel)
                     img->setExplicitFormat(GL_RED, GL_RED);
 

@@ -3076,7 +3076,7 @@ LLViewerMediaTexture* LLViewerMediaImpl::updateMediaImage()
 
         // MEDIAOPT: check to see if size actually changed before doing work
         media_tex->destroyGLTexture();
-        // MEDIAOPT: apparently just calling setUseMipMaps(FALSE) doesn't work?
+        // MEDIAOPT: apparently just calling setUseMipMaps(false) doesn't work?
         media_tex->reinit(FALSE);	// probably not needed
 
         // MEDIAOPT: seems insane that we actually have to make an imageraw then
