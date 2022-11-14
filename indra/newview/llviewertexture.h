@@ -700,10 +700,10 @@ public:
 	//
 	static LLViewerMediaTexture*      getMediaTexture(const LLUUID& id, bool usemipmaps = true, LLImageGL* gl_image = NULL) ;
 	
-	static LLPointer<LLViewerTexture> getLocalTexture(bool usemipmaps = true, BOOL generate_gl_tex = TRUE);
-	static LLPointer<LLViewerTexture> getLocalTexture(const LLUUID& id, bool usemipmaps, BOOL generate_gl_tex = TRUE) ;
+	static LLPointer<LLViewerTexture> getLocalTexture(bool usemipmaps = true, bool generate_gl_tex = true);
+	static LLPointer<LLViewerTexture> getLocalTexture(const LLUUID& id, bool usemipmaps, bool generate_gl_tex = true) ;
 	static LLPointer<LLViewerTexture> getLocalTexture(const LLImageRaw* raw, bool usemipmaps) ;
-	static LLPointer<LLViewerTexture> getLocalTexture(const U32 width, const U32 height, const U8 components, bool usemipmaps, BOOL generate_gl_tex = TRUE) ;
+	static LLPointer<LLViewerTexture> getLocalTexture(const U32 width, const U32 height, const U8 components, bool usemipmaps, bool generate_gl_tex = true) ;
 
 	static LLViewerFetchedTexture* getFetchedTexture(const LLUUID &image_id,									 
 									 FTType f_type = FTT_DEFAULT,

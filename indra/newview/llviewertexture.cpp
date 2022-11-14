@@ -260,7 +260,7 @@ LLViewerFetchedTexture* LLViewerTextureManager::staticCastToFetchedTexture(LLTex
 	return NULL;
 }
 
-LLPointer<LLViewerTexture> LLViewerTextureManager::getLocalTexture(bool usemipmaps, BOOL generate_gl_tex)
+LLPointer<LLViewerTexture> LLViewerTextureManager::getLocalTexture(bool usemipmaps, bool generate_gl_tex)
 {
 	LLPointer<LLViewerTexture> tex = new LLViewerTexture(usemipmaps);
 	if(generate_gl_tex)
@@ -270,7 +270,7 @@ LLPointer<LLViewerTexture> LLViewerTextureManager::getLocalTexture(bool usemipma
 	}
 	return tex;
 }
-LLPointer<LLViewerTexture> LLViewerTextureManager::getLocalTexture(const LLUUID& id, bool usemipmaps, BOOL generate_gl_tex) 
+LLPointer<LLViewerTexture> LLViewerTextureManager::getLocalTexture(const LLUUID& id, bool usemipmaps, bool generate_gl_tex) 
 {
 	LLPointer<LLViewerTexture> tex = new LLViewerTexture(id, usemipmaps);
 	if(generate_gl_tex)
@@ -286,7 +286,7 @@ LLPointer<LLViewerTexture> LLViewerTextureManager::getLocalTexture(const LLImage
 	tex->setCategory(LLGLTexture::LOCAL);
 	return tex;
 }
-LLPointer<LLViewerTexture> LLViewerTextureManager::getLocalTexture(const U32 width, const U32 height, const U8 components, bool usemipmaps, BOOL generate_gl_tex) 
+LLPointer<LLViewerTexture> LLViewerTextureManager::getLocalTexture(const U32 width, const U32 height, const U8 components, bool usemipmaps, bool generate_gl_tex) 
 {
 	LLPointer<LLViewerTexture> tex = new LLViewerTexture(width, height, components, usemipmaps);
 	if(generate_gl_tex)
@@ -345,12 +345,12 @@ LLViewerFetchedTexture* LLViewerTextureManager::getFetchedTextureFromHost(const 
 // Create a bridge to the viewer texture manager.
 class LLViewerTextureManagerBridge : public LLTextureManagerBridge
 {
-	/*virtual*/ LLPointer<LLGLTexture> getLocalTexture(bool usemipmaps = true, BOOL generate_gl_tex = TRUE)
+	/*virtual*/ LLPointer<LLGLTexture> getLocalTexture(bool usemipmaps = true, bool generate_gl_tex = true)
 	{
 		return LLViewerTextureManager::getLocalTexture(usemipmaps, generate_gl_tex);
 	}
 
-	/*virtual*/ LLPointer<LLGLTexture> getLocalTexture(const U32 width, const U32 height, const U8 components, bool usemipmaps, BOOL generate_gl_tex = TRUE)
+	/*virtual*/ LLPointer<LLGLTexture> getLocalTexture(const U32 width, const U32 height, const U8 components, bool usemipmaps, bool generate_gl_tex = true)
 	{
 		return LLViewerTextureManager::getLocalTexture(width, height, components, usemipmaps, generate_gl_tex);
 	}
