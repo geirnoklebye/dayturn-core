@@ -337,7 +337,6 @@ public:
 	// must return FALSE when the motion is completed.
 	virtual bool onUpdate(F32 time, U8* joint_mask)
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 		F32 nx[2];
 		nx[0]=time*TORSO_NOISE_SPEED;
 		nx[1]=0.0f;
@@ -458,7 +457,6 @@ public:
 	// must return FALSE when the motion is completed.
 	virtual bool onUpdate(F32 time, U8* joint_mask)
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 		mBreatheRate = 1.f;
 
 		F32 breathe_amt = (sinf(mBreatheRate * time) * BREATHE_ROT_MOTION_STRENGTH);
@@ -560,7 +558,6 @@ public:
 	// must return FALSE when the motion is completed.
 	virtual bool onUpdate(F32 time, U8* joint_mask)
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 		mPelvisState->setPosition(LLVector3::zero);
 
 		return true;
@@ -731,11 +728,11 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mVisualComplexityStale(true),
 	mVisuallyMuteSetting(AV_RENDER_NORMALLY),
 	mMutedAVColor(LLColor4::white /* used for "uninitialize" */),
-	mFirstFullyVisible(TRUE),
+	mFirstFullyVisible(true),
 	mFirstUseDelaySeconds(FIRST_APPEARANCE_CLOUD_MIN_DELAY),
-	mFullyLoaded(FALSE),
-	mPreviousFullyLoaded(FALSE),
-	mFullyLoadedInitialized(FALSE),
+	mFullyLoaded(false),
+	mPreviousFullyLoaded(false),
+	mFullyLoadedInitialized(false),
 	mVisualComplexity(VISUAL_COMPLEXITY_UNKNOWN),
 	mLoadedCallbacksPaused(false),
 	mLoadedCallbackTextures(0),
@@ -852,7 +849,7 @@ void LLVOAvatar::debugAvatarRezTime(std::string notification_name, std::string c
 					   << " : " << comment
 					   << LL_ENDL;
 
-	if (gSavedSettings.getBOOL("DebugAvatarRezTime"))
+	if (gSavedSettings.getbool("DebugAvatarRezTime"))
 	{
 		LLSD args;
 		args["EXISTENCE"] = llformat("%d",(U32)mDebugExistenceTimer.getElapsedTimeF32());
@@ -1146,7 +1143,7 @@ void LLVOAvatar::restoreGL()
 {
 	if (!isAgentAvatarValid()) return;
 
-	gAgentAvatarp->setCompositeUpdatesEnabled(TRUE);
+	gAgentAvatarp->setCompositeUpdatesEnabled(true);
 	for (U32 i = 0; i < gAgentAvatarp->mBakedTextureDatas.size(); i++)
 	{
 		gAgentAvatarp->invalidateComposite(gAgentAvatarp->getTexLayerSet(i));
@@ -1415,8 +1412,6 @@ void LLVOAvatar::updateSpatialExtents(LLVector4a& newMin, LLVector4a &newMax)
 
 void LLVOAvatar::calculateSpatialExtents(LLVector4a& newMin, LLVector4a& newMax)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
-
     static LLCachedControl<S32> box_detail_cache(gSavedSettings, "AvatarBoundingBoxComplexity");
     S32 box_detail = box_detail_cache;
     if (getOverallAppearance() != AOA_NORMAL)
@@ -2259,10 +2254,10 @@ void LLVOAvatar::resetSkeleton(bool reset_animations)
 		// Stripped down approximation of
 		// applyParsedAppearanceMessage, but with alternative default
 		// (jellydoll) params
-		setCompositeUpdatesEnabled( FALSE );
+		setCompositeUpdatesEnabled(false);
 		gPipeline.markGLRebuild(this);
 		applyDefaultParams();
-		setCompositeUpdatesEnabled( TRUE );
+		setCompositeUpdatesEnabled(true);
 		updateMeshTextures();
 		updateMeshVisibility();
 	}
@@ -2540,7 +2535,7 @@ U32 LLVOAvatar::processUpdateMessage(LLMessageSystem *mesgsys,
 									 U32 block_num, const EObjectUpdateType update_type,
 									 LLDataPacker *dp)
 {
-	const BOOL has_name = !getNVPair("FirstName");
+	const bool has_name = !getNVPair("FirstName");
 
 	// Do base class updates...
 	U32 retval = LLViewerObject::processUpdateMessage(mesgsys, user_data, block_num, update_type, dp);
@@ -2642,8 +2637,6 @@ void LLVOAvatar::dumpAnimationState()
 //------------------------------------------------------------------------
 void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
-
 	if (isDead())
 	{
 		LL_INFOS() << "Warning!  Idle on dead avatar" << LL_ENDL;
@@ -2899,7 +2892,6 @@ void LLVOAvatar::idleUpdateVoiceVisualizer(bool voice_enabled)
 
 static void override_bbox(LLDrawable* drawable, LLVector4a* extents)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_SPATIAL;
     drawable->setSpatialExtents(extents[0], extents[1]);
     drawable->setPositionGroup(LLVector4a(0, 0, 0));
     drawable->movePartition();
@@ -2907,7 +2899,6 @@ static void override_bbox(LLDrawable* drawable, LLVector4a* extents)
 
 void LLVOAvatar::idleUpdateMisc(bool detailed_update)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 	if (LLVOAvatar::sJointDebug)
 	{
 		LL_INFOS() << getFullname() << ": joint touches: " << LLJoint::sNumTouches << " updates: " << LLJoint::sNumUpdates << LL_ENDL;
@@ -3200,7 +3191,7 @@ void LLVOAvatar::idleUpdateLoadingEffect()
 		{
 			if (mFirstFullyVisible)
 			{
-				mFirstFullyVisible = FALSE;
+				mFirstFullyVisible = false;
 				if (isSelf())
 				{
 					LL_INFOS("Avatar") << avString() << "self isFullyLoaded, mFirstFullyVisible" << LL_ENDL;
@@ -3315,8 +3306,6 @@ void LLVOAvatar::idleUpdateWindEffect()
 
 void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
-
 	// update chat bubble
 	//--------------------------------------------------------------------
 	// draw text label over character's head
@@ -4177,20 +4166,12 @@ void LLVOAvatar::updateDebugText()
 {
     // Leave mDebugText uncleared here, in case a derived class has added some state first
 
-	// <FS:Ansariel> Use cached controls
-	//if (gSavedSettings.getBOOL("DebugAvatarAppearanceMessage"))
-	static LLCachedControl<bool> debug_avatar_appearance_message(gSavedSettings, "DebugAvatarAppearanceMessage");
-	if (debug_avatar_appearance_message)
-	// </FS:Ansariel>
+	if (gSavedSettings.getbool("DebugAvatarAppearanceMessage"))
 	{
         updateAppearanceMessageDebugText();
 	}
 
-	// <FS:Ansariel> Use cached controls
-	//if (gSavedSettings.getBOOL("DebugAvatarCompositeBaked"))
-	static LLCachedControl<bool> debug_avatar_composite_baked(gSavedSettings, "DebugAvatarCompositeBaked");
-	if (debug_avatar_composite_baked)
-	// </FS:Ansariel>
+	if (gSavedSettings.getbool("DebugAvatarCompositeBaked"))
 	{
 		if (!mBakedTextureDebugText.empty())
 			addDebugText(mBakedTextureDebugText);
@@ -4264,24 +4245,24 @@ void LLVOAvatar::updateFootstepSounds()
 
 	if ( gAudiop && isAnyAnimationSignaled(AGENT_FOOTSTEP_ANIMS, NUM_AGENT_FOOTSTEP_ANIMS) )
 	{
-		BOOL playSound = FALSE;
+		bool playSound = false;
 		LLVector3 foot_pos_agent;
 
-		BOOL onGroundLeft = (leftElev <= 0.05f);
-		BOOL onGroundRight = (rightElev <= 0.05f);
+		bool onGroundLeft = (leftElev <= 0.05f);
+		bool onGroundRight = (rightElev <= 0.05f);
 
 		// did left foot hit the ground?
 		if ( onGroundLeft && !mWasOnGroundLeft )
 		{
 			foot_pos_agent = ankle_left_pos_agent;
-			playSound = TRUE;
+			playSound = true;
 		}
 
 		// did right foot hit the ground?
 		if ( onGroundRight && !mWasOnGroundRight )
 	{
 			foot_pos_agent = ankle_right_pos_agent;
-			playSound = TRUE;
+			playSound = true;
 	}
 
 		mWasOnGroundLeft = onGroundLeft;
@@ -4617,7 +4598,7 @@ void LLVOAvatar::updateRootPositionAndRotation(LLAgent& agent, F32 speed, bool w
         LLVector3 normal;
 		resolveHeightGlobal(root_pos, ground_under_pelvis, normal);
 		F32 foot_to_ground = (F32) (root_pos.mdV[VZ] - mPelvisToFoot - ground_under_pelvis.mdV[VZ]);				
-		BOOL in_air = ((!LLWorld::getInstance()->getRegionFromPosGlobal(ground_under_pelvis)) || 
+		bool in_air = ((!LLWorld::getInstance()->getRegionFromPosGlobal(ground_under_pelvis)) || 
 						foot_to_ground > FOOT_GROUND_COLLISION_TOLERANCE);
 
 		if (in_air && !mInAir)
@@ -5177,8 +5158,6 @@ bool LLVOAvatar::shouldAlphaMask()
 //-----------------------------------------------------------------------------
 U32 LLVOAvatar::renderSkinned()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
-
 	U32 num_indices = 0;
 
 	if (!mIsBuilt)
@@ -5716,7 +5695,7 @@ void LLVOAvatar::updateTextures()
 {
 	releaseOldTextures();
 	
-	BOOL render_avatar = TRUE;
+	bool render_avatar = true;
 
 	if (mIsDummy)
 	{
@@ -5725,7 +5704,7 @@ void LLVOAvatar::updateTextures()
 
 	if( isSelf() )
 	{
-		render_avatar = TRUE;
+		render_avatar = true;
 	}
 	else
 	{
@@ -7432,7 +7411,6 @@ void LLVOAvatar::updateGL()
 {
 	if (mMeshTexturesDirty)
 	{
-		LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR
 		updateMeshTextures();
 		mMeshTexturesDirty = false;
 	}
@@ -8209,8 +8187,6 @@ void LLVOAvatar::onGlobalColorChanged(const LLTexGlobalColor* global_color)
 // Do rigged mesh attachments display with this av?
 bool LLVOAvatar::shouldRenderRigged() const
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
-
 	if (getOverallAppearance() == AOA_NORMAL)
 	{
 		return true;
@@ -8523,7 +8499,7 @@ bool LLVOAvatar::processFullyLoadedChange(bool loading)
 		((mFullyLoaded != mPreviousFullyLoaded) ||         // if the value is different from the previous call
 		 (!mFullyLoadedInitialized) ||                     // if we've never been called before
 		 (mFullyLoadedFrameCounter % UPDATE_RATE == 0));   // every now and then issue a change
-	BOOL fully_loaded_changed = (mFullyLoaded != mPreviousFullyLoaded);
+	bool fully_loaded_changed = (mFullyLoaded != mPreviousFullyLoaded);
 
 	mPreviousFullyLoaded = mFullyLoaded;
 	mFullyLoadedInitialized = true;
@@ -8588,7 +8564,7 @@ LLMotion* LLVOAvatar::findMotion(const LLUUID& id) const
 // colorized if using deferred rendering.
 void LLVOAvatar::debugColorizeSubMeshes(U32 i, const LLColor4& color)
 {
-	if (gSavedSettings.getBOOL("DebugAvatarCompositeBaked"))
+	if (gSavedSettings.getbool("DebugAvatarCompositeBaked"))
 	{
 		avatar_joint_mesh_list_t::iterator iter = mBakedTextureDatas[i].mJointMeshes.begin();
 		avatar_joint_mesh_list_t::iterator end  = mBakedTextureDatas[i].mJointMeshes.end();
@@ -8722,7 +8698,6 @@ void LLVOAvatar::updateMeshVisibility()
 // virtual
 void LLVOAvatar::updateMeshTextures()
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR
 	static S32 update_counter = 0;
 	mBakedTextureDebugText.clear();
 	
@@ -9653,15 +9628,15 @@ void LLVOAvatar::applyParsedAppearanceMessage(LLAppearanceMessageContents& conte
 		onFirstTEMessageReceived();
 	}
 
-	setCompositeUpdatesEnabled( FALSE );
+	setCompositeUpdatesEnabled(false);
 	gPipeline.markGLRebuild(this);
 
 	// Apply visual params
 	if( num_params > 1)
 	{
 		//LL_DEBUGS("Avatar") << avString() << " handle visual params, num_params " << num_params << LL_ENDL;
-		BOOL params_changed = FALSE;
-		BOOL interp_params = FALSE;
+		bool params_changed = false;
+		bool interp_params = false;
 		S32 params_changed_count = 0;
 		
 		for( S32 i = 0; i < num_params; i++ )
@@ -9671,7 +9646,7 @@ void LLVOAvatar::applyParsedAppearanceMessage(LLAppearanceMessageContents& conte
 
 			if (slam_params || is_first_appearance_message || (param->getWeight() != newWeight))
 			{
-				params_changed = TRUE;
+				params_changed = true;
 				params_changed_count++;
 
 				if(is_first_appearance_message || slam_params)
@@ -9681,7 +9656,7 @@ void LLVOAvatar::applyParsedAppearanceMessage(LLAppearanceMessageContents& conte
 				}
 				else
 				{
-					interp_params = TRUE;
+					interp_params = true;
 					param->setAnimationTarget(newWeight);
 				}
 			}
@@ -9748,7 +9723,7 @@ void LLVOAvatar::applyParsedAppearanceMessage(LLAppearanceMessageContents& conte
 		setHoverOffset(LLVector3(0.0, 0.0, 0.0));
 	}
 
-	setCompositeUpdatesEnabled( TRUE );
+	setCompositeUpdatesEnabled(true);
 
 	// If all of the avatars are completely baked, release the global image caches to conserve memory.
 	LLVOAvatar::cullAvatarsByPixelArea();
@@ -9801,8 +9776,6 @@ const LLVOAvatar::MatrixPaletteCache& LLVOAvatar::updateSkinInfoMatrixPalette(co
 
     if (entry.mFrame != gFrameCount)
     {
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
-
         entry.mFrame = gFrameCount;
 
         //build matrix palette
@@ -9917,7 +9890,7 @@ void LLVOAvatar::onBakedTextureMasksLoaded( BOOL success, LLViewerFetchedTexture
 				     //LL_INFOS() << "onBakedTextureMasksLoaded for head " << id << " discard = " << discard_level << LL_ENDL;
 					 self->mBakedTextureDatas[BAKED_HEAD].mTexLayerSet->applyMorphMask(aux_src->getData(), aux_src->getWidth(), aux_src->getHeight(), 1);
 					 maskData->mLastDiscardLevel = discard_level; */
-			BOOL found_texture_id = false;
+			bool found_texture_id = false;
 			for (LLAvatarAppearanceDictionary::Textures::const_iterator iter = LLAvatarAppearance::getDictionary()->getTextures().begin();
 				 iter != LLAvatarAppearance::getDictionary()->getTextures().end();
 				 ++iter)
@@ -10600,7 +10573,6 @@ void showRigInfoTabExtents(LLVOAvatar *avatar, LLJointRiggingInfoTab& tab, S32& 
 
 void LLVOAvatar::getAssociatedVolumes(std::vector<LLVOVolume*>& volumes)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 	for ( LLVOAvatar::attachment_map_t::iterator iter = mAttachmentPoints.begin(); iter != mAttachmentPoints.end(); ++iter )
 	{
 		LLViewerJointAttachment* attachment = iter->second;
@@ -10661,8 +10633,6 @@ void LLVOAvatar::getAssociatedVolumes(std::vector<LLVOVolume*>& volumes)
 // virtual
 void LLVOAvatar::updateRiggingInfo()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
-
     LL_DEBUGS("RigSpammish") << getFullname() << " updating rig tab" << LL_ENDL;
 
     std::vector<LLVOVolume*> volumes;
@@ -10845,7 +10815,6 @@ void LLVOAvatar::updateImpostorRendering(U32 newMaxNonImpostorsValue)
 
 void LLVOAvatar::idleUpdateRenderComplexity()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
     if (isControlAvatar())
     {
         LLControlAvatar *cav = dynamic_cast<LLControlAvatar*>(this);
@@ -11381,7 +11350,6 @@ void LLVOAvatar::updateOverallAppearanceAnimations()
 // Based on isVisuallyMuted(), but has 3 possible results.
 LLVOAvatar::AvatarOverallAppearance LLVOAvatar::getOverallAppearance() const
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR;
 	AvatarOverallAppearance result = AOA_NORMAL;
 
 	// Priority order (highest priority first)

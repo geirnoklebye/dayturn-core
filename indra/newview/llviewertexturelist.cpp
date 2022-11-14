@@ -1262,7 +1262,6 @@ BOOL LLViewerTextureList::createUploadFile(const std::string& filename,
 										 const U8 codec,
 										 const S32 max_image_dimentions)
 {	
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	// Load the image
 	LLPointer<LLImageFormatted> image = LLImageFormatted::createFromType(codec);
 	if (image.isNull())
@@ -1316,16 +1315,15 @@ BOOL LLViewerTextureList::createUploadFile(const std::string& filename,
 // note: modifies the argument raw_image!!!!
 LLPointer<LLImageJ2C> LLViewerTextureList::convertToUploadFile(LLPointer<LLImageRaw> raw_image, const S32 max_image_dimentions)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	raw_image->biasedScaleToPowerOfTwo(max_image_dimentions);
 	LLPointer<LLImageJ2C> compressedImage = new LLImageJ2C();
 	
-	if (gSavedSettings.getBOOL("LosslessJ2CUpload") &&
+	if (gSavedSettings.getbool("LosslessJ2CUpload") &&
 		(raw_image->getWidth() * raw_image->getHeight() <= LL_IMAGE_REZ_LOSSLESS_CUTOFF * LL_IMAGE_REZ_LOSSLESS_CUTOFF))
 		compressedImage->setReversible(TRUE);
 	
 
-	if (gSavedSettings.getBOOL("Jpeg2000AdvancedCompression"))
+	if (gSavedSettings.getbool("Jpeg2000AdvancedCompression"))
 	{
 		// This test option will create jpeg2000 images with precincts for each level, RPCL ordering
 		// and PLT markers. The block size is also optionally modifiable.
@@ -1350,7 +1348,6 @@ LLPointer<LLImageJ2C> LLViewerTextureList::convertToUploadFile(LLPointer<LLImage
 // Returns min setting for TextureMemory (in MB)
 S32Megabytes LLViewerTextureList::getMinVideoRamSetting()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	U32Megabytes system_ram = gSysMemory.getPhysicalMemoryKB();
 	//min texture mem sets to 64M if total physical mem is more than 1.5GB
 	return (system_ram > U32Megabytes(1500)) ? S32Megabytes(128) : gMinVideoRam ;
@@ -1363,7 +1360,6 @@ S32Megabytes LLViewerTextureList::getMinVideoRamSetting()
 S32Megabytes LLViewerTextureList::getMaxVideoRamSetting(bool get_recommended, float mem_multiplier, bool clamp_upper_limit /* = true */)
 // </FS:Ansariel>
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	S32Megabytes max_texmem;
 	if (gGLManager.mVRAM != 0)
 	{
@@ -1454,7 +1450,6 @@ const S32Megabytes VIDEO_CARD_FRAMEBUFFER_MEM(12);
 const S32Megabytes MIN_MEM_FOR_NON_TEXTURE(512);
 void LLViewerTextureList::updateMaxResidentTexMem(S32Megabytes mem)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	// Initialize the image pipeline VRAM settings
 	S32Megabytes cur_mem(gSavedSettings.getS32("TextureMemory"));
 	F32 mem_multiplier = gSavedSettings.getF32("RenderTextureMemoryMultiple");
@@ -1592,8 +1587,6 @@ void LLViewerTextureList::receiveImageHeader(LLMessageSystem *msg, void **user_d
 {
 	static LLCachedControl<bool> log_texture_traffic(gSavedSettings,"LogTextureNetworkTraffic", false) ;
 
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
-
 	// Receive image header, copy into image object and decompresses 
 	// if this is a one-packet image. 
 	
@@ -1664,8 +1657,6 @@ void LLViewerTextureList::receiveImagePacket(LLMessageSystem *msg, void **user_d
 {
 	static LLCachedControl<bool> log_texture_traffic(gSavedSettings,"LogTextureNetworkTraffic", false) ;
 
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
-	
 	// Receives image packet, copy into image object,
 	// checks if all packets received, decompresses if so. 
 	
@@ -1737,7 +1728,6 @@ void LLViewerTextureList::receiveImagePacket(LLMessageSystem *msg, void **user_d
 // static
 void LLViewerTextureList::processImageNotInDatabase(LLMessageSystem *msg,void **user_data)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	LLUUID image_id;
 	msg->getUUIDFast(_PREHASH_ImageID, _PREHASH_ID, image_id);
 	
@@ -1770,7 +1760,6 @@ void LLUIImageList::cleanUp()
 
 LLUIImagePtr LLUIImageList::getUIImageByID(const LLUUID& image_id, S32 priority)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	// use id as image name
 	std::string image_name = image_id.asString();
 
@@ -1789,7 +1778,6 @@ LLUIImagePtr LLUIImageList::getUIImageByID(const LLUUID& image_id, S32 priority)
 
 LLUIImagePtr LLUIImageList::getUIImage(const std::string& image_name, S32 priority)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	// look for existing image
 	uuid_ui_image_map_t::iterator found_it = mUIImages.find(image_name);
 	if (found_it != mUIImages.end())
@@ -1807,7 +1795,6 @@ LLUIImagePtr LLUIImageList::loadUIImageByName(const std::string& name, const std
 											  BOOL use_mips, const LLRect& scale_rect, const LLRect& clip_rect, LLViewerTexture::EBoostLevel boost_priority,
 											  LLUIImage::EScaleStyle scale_style)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if (boost_priority == LLGLTexture::BOOST_NONE)
 	{
 		boost_priority = LLGLTexture::BOOST_UI;
@@ -1820,7 +1807,6 @@ LLUIImagePtr LLUIImageList::loadUIImageByID(const LLUUID& id,
 											BOOL use_mips, const LLRect& scale_rect, const LLRect& clip_rect, LLViewerTexture::EBoostLevel boost_priority,
 											LLUIImage::EScaleStyle scale_style)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if (boost_priority == LLGLTexture::BOOST_NONE)
 	{
 		boost_priority = LLGLTexture::BOOST_UI;
@@ -1832,7 +1818,6 @@ LLUIImagePtr LLUIImageList::loadUIImageByID(const LLUUID& id,
 LLUIImagePtr LLUIImageList::loadUIImage(LLViewerFetchedTexture* imagep, const std::string& name, BOOL use_mips, const LLRect& scale_rect, const LLRect& clip_rect,
 										LLUIImage::EScaleStyle scale_style)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	if (!imagep) return NULL;
 
 	imagep->setAddressMode(LLTexUnit::TAM_CLAMP);
@@ -1870,7 +1855,6 @@ LLUIImagePtr LLUIImageList::loadUIImage(LLViewerFetchedTexture* imagep, const st
 
 LLUIImagePtr LLUIImageList::preloadUIImage(const std::string& name, const std::string& filename, BOOL use_mips, const LLRect& scale_rect, const LLRect& clip_rect, LLUIImage::EScaleStyle scale_style)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_TEXTURE;
 	// look for existing image
 	uuid_ui_image_map_t::iterator found_it = mUIImages.find(name);
 	if (found_it != mUIImages.end())
