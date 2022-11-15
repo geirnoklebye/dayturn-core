@@ -191,7 +191,7 @@ void handle_test_load_url(void*);
 //extern BOOL gDebugAvatarRotation;
 extern BOOL gDebugClicks;
 extern BOOL gDebugWindowProc;
-extern BOOL gShaderProfileFrame;
+extern bool gShaderProfileFrame;
 
 //extern BOOL gDebugTextEditorTips;
 //extern BOOL gDebugSelectMgr;
@@ -8563,7 +8563,7 @@ class LLAdvancedClickRenderProfile: public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		gShaderProfileFrame = TRUE;
+		gShaderProfileFrame = true;
 		return true;
 	}
 };

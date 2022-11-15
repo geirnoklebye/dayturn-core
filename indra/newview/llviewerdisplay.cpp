@@ -1037,7 +1037,7 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 
 	if (gShaderProfileFrame)
 	{
-		gShaderProfileFrame = FALSE;
+		gShaderProfileFrame = false;
 		LLGLSLShader::finishProfile();
 	}
 }
