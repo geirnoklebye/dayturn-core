@@ -38,14 +38,14 @@
 
 const U32 LL_IMAGE_REZ_LOSSLESS_CUTOFF = 128;
 
-const BOOL MIPMAP_YES = TRUE;
-const BOOL MIPMAP_NO = FALSE;
+const bool MIPMAP_YES = true;
+const bool MIPMAP_NO = false;
 
-const BOOL GL_TEXTURE_YES = TRUE;
-const BOOL GL_TEXTURE_NO = FALSE;
+const bool GL_TEXTURE_YES = true;
+const bool GL_TEXTURE_NO = false;
 
-const BOOL IMMEDIATE_YES = TRUE;
-const BOOL IMMEDIATE_NO = FALSE;
+const bool IMMEDIATE_YES = true;
+const bool IMMEDIATE_NO = false;
 
 class LLImageJ2C;
 class LLMessageSystem;
@@ -92,7 +92,7 @@ class LLViewerTextureList
 	friend class LLLocalBitmap;
 	
 public:
-    static BOOL createUploadFile(const std::string& filename,
+    static bool createUploadFile(const std::string& filename,
                                  const std::string& out_filename,
                                  const U8 codec,
                                  const S32 max_image_dimentions = LLViewerFetchedTexture::MAX_IMAGE_SIZE_DEFAULT);
@@ -108,7 +108,7 @@ public:
 	void init();
 	void shutdown();
 	void dump();
-	void destroyGL(BOOL save_state = TRUE);
+	void destroyGL(bool save_state = true);
 	void restoreGL();
 	bool isInitialized() const {return mInitialized;}
 
@@ -255,22 +255,22 @@ public:
 
 	bool initFromFile();
 
-	LLPointer<LLUIImage> preloadUIImage(const std::string& name, const std::string& filename, BOOL use_mips, const LLRect& scale_rect, const LLRect& clip_rect, LLUIImage::EScaleStyle stype);
+	LLPointer<LLUIImage> preloadUIImage(const std::string& name, const std::string& filename, bool use_mips, const LLRect& scale_rect, const LLRect& clip_rect, LLUIImage::EScaleStyle stype);
 	
 	static void onUIImageLoaded( BOOL success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* src_aux, S32 discard_level, BOOL final, void* userdata );
 private:
 	LLPointer<LLUIImage> loadUIImageByName(const std::string& name, const std::string& filename,
-		                           BOOL use_mips = FALSE, const LLRect& scale_rect = LLRect::null, 
+		                           bool use_mips = false, const LLRect& scale_rect = LLRect::null, 
 								   const LLRect& clip_rect = LLRect::null,
 		                           LLViewerTexture::EBoostLevel boost_priority = LLGLTexture::BOOST_UI,
 								   LLUIImage::EScaleStyle = LLUIImage::SCALE_INNER);
 	LLPointer<LLUIImage> loadUIImageByID(const LLUUID& id,
-								 BOOL use_mips = FALSE, const LLRect& scale_rect = LLRect::null, 
+								 bool use_mips = false, const LLRect& scale_rect = LLRect::null, 
 								 const LLRect& clip_rect = LLRect::null,
 								 LLViewerTexture::EBoostLevel boost_priority = LLGLTexture::BOOST_UI,
 								 LLUIImage::EScaleStyle = LLUIImage::SCALE_INNER);
 
-	LLPointer<LLUIImage> loadUIImage(LLViewerFetchedTexture* imagep, const std::string& name, BOOL use_mips = FALSE, const LLRect& scale_rect = LLRect::null, const LLRect& clip_rect = LLRect::null, LLUIImage::EScaleStyle = LLUIImage::SCALE_INNER);
+	LLPointer<LLUIImage> loadUIImage(LLViewerFetchedTexture* imagep, const std::string& name, bool use_mips = false, const LLRect& scale_rect = LLRect::null, const LLRect& clip_rect = LLRect::null, LLUIImage::EScaleStyle = LLUIImage::SCALE_INNER);
 
 
 	struct LLUIImageLoadData
@@ -289,10 +289,10 @@ private:
 	std::list< LLPointer<LLViewerFetchedTexture> > mUITextureList ;
 };
 
-const BOOL GLTEXTURE_TRUE = TRUE;
-const BOOL GLTEXTURE_FALSE = FALSE;
-const BOOL MIPMAP_TRUE = TRUE;
-const BOOL MIPMAP_FALSE = FALSE;
+const bool GLTEXTURE_TRUE = true;
+const bool GLTEXTURE_FALSE = false;
+const bool MIPMAP_TRUE = true;
+const bool MIPMAP_FALSE = false;
 
 extern LLViewerTextureList gTextureList;
 
