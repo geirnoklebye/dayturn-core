@@ -1381,7 +1381,7 @@ const std::string& LLIMModel::getHistoryFileName(const LLUUID& session_id) const
 
 
 // TODO get rid of other participant ID
-void LLIMModel::sendTypingState(LLUUID session_id, LLUUID other_participant_id, BOOL typing) 
+void LLIMModel::sendTypingState(LLUUID session_id, LLUUID other_participant_id, bool typing) 
 {
 	std::string name;
 	LLAgentUI::buildFullname(name);
@@ -1735,7 +1735,7 @@ LLUUID LLIMMgr::computeSessionID(
 		}
 	}
 
-	if (gAgent.isInGroup(session_id, TRUE) && (session_id != other_participant_id))
+	if (gAgent.isInGroup(session_id, true) && (session_id != other_participant_id))
 	{
 		LL_WARNS() << "Group session id different from group id: IM type = " << dialog << ", session id = " << session_id << ", group id = " << other_participant_id << LL_ENDL;
 	}
@@ -2310,7 +2310,7 @@ bool LLIncomingCallDialog::postBuild()
     if (!mPayload.isMap() || mPayload.size() == 0)
     {
         LL_INFOS("IMVIEW") << "IncomingCall: invalid argument" << LL_ENDL;
-        return TRUE;
+        return true;
     }
 
 	LLUUID session_id = mPayload["session_id"].asUUID();
@@ -2320,14 +2320,14 @@ bool LLIncomingCallDialog::postBuild()
     if (session_id.isNull() && caller_id.asUUID().isNull())
     {
         LL_INFOS("IMVIEW") << "IncomingCall: invalid ids" << LL_ENDL;
-        return TRUE;
+        return true;
     }
 
     std::string notify_box_type = mPayload["notify_box_type"].asString();
     if (!is_voice_call_type(notify_box_type))
     {
         LL_INFOS("IMVIEW") << "IncomingCall: notify_box_type was not provided" << LL_ENDL;
-        return TRUE;
+        return true;
     }
 	
 	// init notification's lifetime
@@ -2720,7 +2720,7 @@ void LLIMMgr::addMessage(
 	}
 	bool skip_message = false;
 	bool from_linden = LLMuteList::getInstance()->isLinden(from);
-    if (gSavedPerAccountSettings.getBOOL("VoiceCallsFriendsOnly") && !from_linden)
+    if (gSavedPerAccountSettings.getbool("VoiceCallsFriendsOnly") && !from_linden)
 	{
 		// Evaluate if we need to skip this message when that setting is true (default is false)
 		skip_message = (LLAvatarTracker::instance().getBuddyInfo(other_participant_id) == NULL);	// Skip non friends...
@@ -2763,7 +2763,7 @@ void LLIMMgr::addMessage(
 		{
 			LL_INFOS() << "Muting group chat from " << new_session_id.asString() << ": " << fixed_session_name << LL_ENDL;
 
-			if (gSavedSettings.getBOOL("FSReportMutedGroupChat"))
+			if (gSavedSettings.getbool("FSReportMutedGroupChat"))
 			{
 				LLStringUtil::format_map_t args;
 				args["NAME"] = LLSLURL("group", new_session_id, "about").getSLURLString();
@@ -3162,8 +3162,8 @@ void LLIMMgr::inviteToSession(
 
 	if (voice_invite)
 	{
-		bool isRejectGroupCall = (gSavedSettings.getBOOL("VoiceCallsRejectGroup") && (notify_box_type == "VoiceInviteGroup"));
-        bool isRejectNonFriendCall = (gSavedPerAccountSettings.getBOOL("VoiceCallsFriendsOnly") && (LLAvatarTracker::instance().getBuddyInfo(caller_id) == NULL));
+		bool isRejectGroupCall = (gSavedSettings.getbool("VoiceCallsRejectGroup") && (notify_box_type == "VoiceInviteGroup"));
+        bool isRejectNonFriendCall = (gSavedPerAccountSettings.getbool("VoiceCallsFriendsOnly") && (LLAvatarTracker::instance().getBuddyInfo(caller_id) == NULL));
 		if	(isRejectGroupCall || isRejectNonFriendCall || gAgent.isDoNotDisturb())
 		{
 			if (gAgent.isDoNotDisturb() && !isRejectGroupCall && !isRejectNonFriendCall)
@@ -3546,15 +3546,15 @@ void LLIMMgr::noteMutedUsers(const LLUUID& session_id,
 
 void LLIMMgr::processIMTypingStart(const LLUUID& from_id, const EInstantMessage im_type)
 {
-	processIMTypingCore(from_id, im_type, TRUE);
+	processIMTypingCore(from_id, im_type, true);
 }
 
 void LLIMMgr::processIMTypingStop(const LLUUID& from_id, const EInstantMessage im_type)
 {
-	processIMTypingCore(from_id, im_type, FALSE);
+	processIMTypingCore(from_id, im_type, false);
 }
 
-void LLIMMgr::processIMTypingCore(const LLUUID& from_id, const EInstantMessage im_type, BOOL typing)
+void LLIMMgr::processIMTypingCore(const LLUUID& from_id, const EInstantMessage im_type, bool typing)
 {
 	LLUUID session_id = computeSessionID(im_type, from_id);
 	LLFloaterIMSession* im_floater = LLFloaterIMSession::findInstance(session_id);
@@ -3741,7 +3741,7 @@ public:
 			time_t timestamp =
 				(time_t) message_params["timestamp"].asInteger();
 
-			BOOL is_do_not_disturb = gAgent.isDoNotDisturb();
+			bool is_do_not_disturb = gAgent.isDoNotDisturb();
 
 			//don't return if user is muted b/c proper way to ignore a muted user who
 			//initiated an adhoc/group conference is to create then leave the session (see STORM-1731)

@@ -2516,10 +2516,10 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 		chat.mFromName = from_name;
 	}
 
-	BOOL is_do_not_disturb = gAgent.isDoNotDisturb();
+	bool is_do_not_disturb = gAgent.isDoNotDisturb();
 
-	BOOL is_muted = FALSE;
-	BOOL is_linden = FALSE;
+	bool is_muted = false;
+	bool is_linden = false;
 	is_muted = LLMuteList::getInstance()->isMuted(
 		from_id,
 		from_name,
@@ -2572,13 +2572,13 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 		color.setVec(1.f,1.f,1.f,1.f);
 		msg->getStringFast(_PREHASH_ChatData, _PREHASH_Message, mesg);
 
-		BOOL ircstyle = FALSE;
+		bool ircstyle = false;
 
 		// Look for IRC-style emotes here so chatbubbles work
 		std::string prefix = mesg.substr(0, 4);
 		if (prefix == "/me " || prefix == "/me'")
 		{
-			ircstyle = TRUE;
+			ircstyle = true;
 		}
 		chat.mText = mesg;
 

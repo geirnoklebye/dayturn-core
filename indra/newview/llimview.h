@@ -272,7 +272,7 @@ public:
 	static void sendLeaveSession(const LLUUID& session_id, const LLUUID& other_participant_id);
 	static bool sendStartSession(const LLUUID& temp_session_id, const LLUUID& other_participant_id,
 						  const uuid_vec_t& ids, EInstantMessage dialog);
-	static void sendTypingState(LLUUID session_id, LLUUID other_participant_id, BOOL typing);
+	static void sendTypingState(LLUUID session_id, LLUUID other_participant_id, bool typing);
 	static void sendMessage(const std::string& utf8_text, const LLUUID& im_session_id,
 								const LLUUID& other_participant_id, EInstantMessage dialog);
 
@@ -477,7 +477,7 @@ private:
 	void noteOfflineUsers(const LLUUID& session_id, const std::vector<LLUUID>& ids);
 	void noteMutedUsers(const LLUUID& session_id, const std::vector<LLUUID>& ids);
 
-	void processIMTypingCore(const LLUUID& from_id, const EInstantMessage im_type, BOOL typing);
+	void processIMTypingCore(const LLUUID& from_id, const EInstantMessage im_type, bool typing);
 
 	static void onInviteNameLookup(LLSD payload, const LLUUID& id, const LLAvatarName& name);
 
