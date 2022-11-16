@@ -360,7 +360,7 @@ void handle_dump_attachments(void *);
 void handle_dump_avatar_local_textures(void*);
 void handle_debug_avatar_textures(void*);
 void handle_grab_baked_texture(void*);
-BOOL enable_grab_baked_texture(void*);
+bool enable_grab_baked_texture(void*);
 void handle_dump_region_object_cache(void*);
 
 bool enable_save_into_task_inventory(void*);
@@ -7826,7 +7826,7 @@ class LLAttachmentEnableDrop : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		BOOL can_build   = gAgent.isGodlike() || (LLViewerParcelMgr::getInstance()->allowAgentBuild());
+		bool can_build   = gAgent.isGodlike() || (LLViewerParcelMgr::getInstance()->allowAgentBuild());
 
 		//Add an inventory observer to only allow dropping the newly attached item
 		//once it exists in your inventory.  Look at Jira 2422.
@@ -8597,12 +8597,12 @@ class LLToggleShaderControl : public view_listener_t
 
 void menu_toggle_attached_lights(void* user_data)
 {
-	LLPipeline::sRenderAttachedLights = gSavedSettings.getBOOL("RenderAttachedLights");
+	LLPipeline::sRenderAttachedLights = gSavedSettings.getbool("RenderAttachedLights");
 }
 
 void menu_toggle_attached_particles(void* user_data)
 {
-	LLPipeline::sRenderAttachedParticles = gSavedSettings.getBOOL("RenderAttachedParticles");
+	LLPipeline::sRenderAttachedParticles = gSavedSettings.getbool("RenderAttachedParticles");
 }
 
 class LLAdvancedHandleAttachedLightParticles: public view_listener_t
@@ -8612,8 +8612,8 @@ class LLAdvancedHandleAttachedLightParticles: public view_listener_t
 		std::string control_name = userdata.asString();
 
 		// toggle the control
-		gSavedSettings.setBOOL(control_name,
-				       !gSavedSettings.getBOOL(control_name));
+		gSavedSettings.setbool(control_name,
+				       !gSavedSettings.getbool(control_name));
 
 		// update internal flags
 		if (control_name == "RenderAttachedLights")
@@ -9048,14 +9048,14 @@ void handle_grab_baked_texture(void* data)
 	}
 }
 
-BOOL enable_grab_baked_texture(void* data)
+bool enable_grab_baked_texture(void* data)
 {
 	EBakedTextureIndex index = (EBakedTextureIndex)((intptr_t)data);
 	if (isAgentAvatarValid())
 	{
 		return gAgentAvatarp->canGrabBakedTexture(index);
 	}
-	return FALSE;
+	return false;
 }
 
 // Returns a pointer to the avatar give the UUID of the avatar OR of an attachment the avatar is wearing.
