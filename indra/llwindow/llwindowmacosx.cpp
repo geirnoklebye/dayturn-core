@@ -43,7 +43,7 @@
 #include <CoreServices/CoreServices.h>
 #include <CoreGraphics/CGDisplayConfiguration.h>
 
-extern BOOL gDebugWindowProc;
+extern bool gDebugWindowProc;
 bool gRetinaSupport = true;
 
 const S32	BITS_PER_PIXEL = 32;

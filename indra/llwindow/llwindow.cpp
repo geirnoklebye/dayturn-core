@@ -46,8 +46,8 @@
 // Globals
 //
 LLSplashScreen *gSplashScreenp = NULL;
-BOOL gDebugClicks = FALSE;
-BOOL gDebugWindowProc = FALSE;
+bool gDebugClicks = false;
+bool gDebugWindowProc = false;
 
 // <FS:Zi> Allow file: links to open folders, chat history etc. on Linux systems
 //const S32 gURLProtocolWhitelistCount = 5;

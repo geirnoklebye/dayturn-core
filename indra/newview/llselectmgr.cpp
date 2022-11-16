@@ -115,10 +115,10 @@ const S32 MAX_OBJECTS_PER_PACKET = 254;
 // Globals
 //
 
-//BOOL gDebugSelectMgr = FALSE;
+//bool gDebugSelectMgr = false;
 
-//BOOL gHideSelectedObjects = FALSE;
-//BOOL gAllowSelectAvatar = FALSE;
+//bool gHideSelectedObjects = false;
+//bool gAllowSelectAvatar = false;
 
 bool LLSelectMgr::sRectSelectInclusive = true;
 bool LLSelectMgr::sRenderHiddenSelections = true;

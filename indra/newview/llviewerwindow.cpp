@@ -230,7 +230,7 @@ extern bool gIsInSecondLife; //Opensim or SecondLife
 void render_ui(F32 zoom_factor = 1.f, int subfield = 0);
 void swap();
 
-extern BOOL gDebugClicks;
+extern bool gDebugClicks;
 extern bool gDisplaySwapBuffers;
 extern bool gDepthDirty;
 extern bool gResizeScreenTexture;
@@ -240,7 +240,7 @@ LLViewerWindow	*gViewerWindow = NULL;
 LLFrameTimer	gAwayTimer;
 LLFrameTimer	gAwayTriggerTimer;
 
-BOOL			gShowOverlayTitle = FALSE;
+bool			gShowOverlayTitle = false;
 
 LLViewerObject*  gDebugRaycastObject = NULL;
 LLVOPartGroup* gDebugRaycastParticle = NULL;
@@ -2077,7 +2077,7 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	mCurrentMousePoint.mX = getWindowWidthScaled() / 2;
 	mCurrentMousePoint.mY = getWindowHeightScaled() / 2;
 
-	gShowOverlayTitle = gSavedSettings.getBOOL("ShowOverlayTitle");
+	gShowOverlayTitle = gSavedSettings.getbool("ShowOverlayTitle");
 	mOverlayTitle = gSavedSettings.getString("OverlayTitle");
 	// Can't have spaces in settings.ini strings, so use underscores instead and convert them.
 	LLStringUtil::replaceChar(mOverlayTitle, '_', ' ');

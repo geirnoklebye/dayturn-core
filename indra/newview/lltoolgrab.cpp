@@ -65,7 +65,7 @@ const S32 SLOP_DIST_SQ = 4;
 bool gGrabBtnVertical = false;
 bool gGrabBtnSpin = false;
 LLTool* gGrabTransientTool = NULL;
-extern BOOL gDebugClicks;
+extern bool gDebugClicks;
 
 //
 // Methods

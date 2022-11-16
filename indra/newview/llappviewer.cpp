@@ -561,7 +561,7 @@ static void settings_to_globals()
 	gAgentPilot.setQuitAfterRuns(gSavedSettings.getBOOL("StatsQuitAfterRuns"));
 	gAgent.setHideGroupTitle(gSavedSettings.getBOOL("RenderHideGroupTitle"));
 
-	gDebugWindowProc = gSavedSettings.getBOOL("DebugWindowProc");
+	gDebugWindowProc = gSavedSettings.getbool("DebugWindowProc");
 	gShowObjectUpdates = gSavedSettings.getbool("ShowObjectUpdates");
     LLWorldMapView::setScaleSetting(gSavedSettings.getF32("MapScale"));
 	
@@ -3716,7 +3716,7 @@ void LLAppViewer::cleanupSavedSettings()
 
 	gSavedSettings.setBOOL("UseEnergy", TRUE);				// force toggle to turn off, since sends message to simulator
 
-	gSavedSettings.setBOOL("DebugWindowProc", gDebugWindowProc);
+	gSavedSettings.setbool("DebugWindowProc", gDebugWindowProc);
 
 	gSavedSettings.setbool("ShowObjectUpdates", gShowObjectUpdates);
 

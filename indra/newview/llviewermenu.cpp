@@ -186,15 +186,13 @@ void handle_test_load_url(void*);
 //
 // Evil hackish imported globals
 
-//extern BOOL	gHideSelectedObjects;
-//extern BOOL gAllowSelectAvatar;
-//extern BOOL gDebugAvatarRotation;
-extern BOOL gDebugClicks;
-extern BOOL gDebugWindowProc;
+//extern bool	gHideSelectedObjects;
+//extern bool gAllowSelectAvatar;
+extern bool gDebugClicks;
+extern bool gDebugWindowProc;
 extern bool gShaderProfileFrame;
 
-//extern BOOL gDebugTextEditorTips;
-//extern BOOL gDebugSelectMgr;
+//extern bool gDebugSelectMgr;
 
 //
 // Globals
