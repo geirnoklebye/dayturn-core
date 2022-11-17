@@ -290,7 +290,7 @@ public:
 #endif
 
 public:
-	static void initClass(LLWindow* window, S32 num_catagories, BOOL skip_analyze_alpha = false, bool multi_threaded = false); 
+	static void initClass(LLWindow* window, S32 num_catagories, bool skip_analyze_alpha = false, bool multi_threaded = false); 
 	static void cleanupClass() ;
 
 private:

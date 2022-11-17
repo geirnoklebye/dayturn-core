@@ -185,7 +185,7 @@ bool is_little_endian()
 }
 
 //static 
-void LLImageGL::initClass(LLWindow* window, S32 num_catagories, BOOL skip_analyze_alpha /* = false */, bool multi_threaded /* = false */)
+void LLImageGL::initClass(LLWindow* window, S32 num_catagories, bool skip_analyze_alpha /* = false */, bool multi_threaded /* = false */)
 {
 	sSkipAnalyzeAlpha = skip_analyze_alpha;
 
@@ -393,7 +393,7 @@ bool LLImageGL::create(LLPointer<LLImageGL>& dest, const LLImageRaw* imageraw, b
 //----------------------------------------------------------------------------
 
 LLImageGL::LLImageGL(bool usemipmaps)
-:	mSaveData(0), mExternalTexture(FALSE)
+:	mSaveData(0), mExternalTexture(false)
 {
 	init(usemipmaps);
 	setSize(0, 0, 0);
@@ -402,7 +402,7 @@ LLImageGL::LLImageGL(bool usemipmaps)
 }
 
 LLImageGL::LLImageGL(U32 width, U32 height, U8 components, bool usemipmaps)
-:	mSaveData(0), mExternalTexture(FALSE)
+:	mSaveData(0), mExternalTexture(false)
 {
 	llassert( components <= 4 );
 	init(usemipmaps);
@@ -412,7 +412,7 @@ LLImageGL::LLImageGL(U32 width, U32 height, U8 components, bool usemipmaps)
 }
 
 LLImageGL::LLImageGL(const LLImageRaw* imageraw, bool usemipmaps)
-:	mSaveData(0), mExternalTexture(FALSE)
+:	mSaveData(0), mExternalTexture(false)
 {
 	init(usemipmaps);
 	setSize(0, 0, 0);
@@ -1104,7 +1104,7 @@ bool LLImageGL::setSubImage(const U8* datap, S32 data_width, S32 data_height, S3
 	// HACK: allow the caller to explicitly force the fast path (i.e. using glTexSubImage2D here instead of calling setImage) even when updating the full texture.
 	if (!force_fast_update && x_pos == 0 && y_pos == 0 && width == getWidth() && height == getHeight() && data_width == width && data_height == height)
 	{
-		setImage(datap, FALSE, tex_name);
+		setImage(datap, false, tex_name);
 	}
 	else
 	{
@@ -1862,7 +1862,7 @@ void LLImageGL::destroyGLTexture()
 		LLImageGL::deleteTextures(1, &mTexName);
 		mCurrentDiscardLevel = -1 ; //invalidate mCurrentDiscardLevel.
 		mTexName = 0;		
-		mGLTextureCreated = FALSE ;
+		mGLTextureCreated = false ;
 	}
 }
 

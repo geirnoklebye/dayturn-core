@@ -314,8 +314,8 @@ bool font_desc_init_from_xml(LLXMLNodePtr node, LLFontDescriptor& desc)
 			
 			if (child->hasAttribute("load_collection"))
 			{
-				BOOL col = FALSE;
-				child->getAttributeBOOL("load_collection", col);
+				bool col = false;
+				child->getAttribute_bool("load_collection", col);
 				if (col)
 				{
 					desc.getFontCollectionsList().push_back(font_file_name);

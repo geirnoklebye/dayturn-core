@@ -606,12 +606,12 @@ bool LLGLManager::initGL()
 	{
 		mGLVendorShort = "AMD";
 		// *TODO: Fix this?
-		mIsAMD = TRUE;
+		mIsAMD = true;
 	}
 	else if (mGLVendor.find("NVIDIA ") != std::string::npos)
 	{
 		mGLVendorShort = "NVIDIA";
-		mIsNVIDIA = TRUE;
+		mIsNVIDIA = true;
 	}
 	else if (mGLVendor.find("INTEL") != std::string::npos
 #if LL_LINUX
@@ -1453,7 +1453,7 @@ void LLGLManager::initExtensions()
     LL_DEBUGS("RenderInit") << "GL Probe: Got symbols" << LL_ENDL;
 #endif
 
-    mInited = TRUE;
+    mInited = true;
 }
 
 void rotate_quat(LLQuaternion& rotation)
