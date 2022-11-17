@@ -76,7 +76,7 @@ public:
 	/*virtual*/ LLSD getValue() const { return mColor.getValue(); }
 	const LLColor4&	get()							{ return mColor; }
 	
-	void			set(const LLColor4& color, BOOL update_picker = FALSE, BOOL from_event = FALSE);
+	void			set(const LLColor4& color, bool update_picker = false, bool from_event = false);
 	void			setOriginal(const LLColor4& color);
 	void			setValid(bool valid);
 	void			setLabel(const std::string& label);
@@ -87,7 +87,7 @@ public:
 	void			setPreviewCallback(commit_callback_t cb) { mPreviewCallback = cb; }
 	void			setFallbackImage(LLPointer<LLUIImage> image) { mFallbackImage = image; }
 
-	void			showPicker(BOOL take_focus);
+	void			showPicker(bool take_focus);
 
 	/*virtual*/ BOOL	handleMouseDown(S32 x, S32 y, MASK mask);
 	/*virtual*/ BOOL	handleMouseUp(S32 x, S32 y, MASK mask);

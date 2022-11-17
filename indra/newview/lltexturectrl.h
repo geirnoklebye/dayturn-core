@@ -142,7 +142,7 @@ public:
 	virtual LLSD	getValue() const;
 
 	// LLTextureCtrl interface
-	void			showPicker(BOOL take_focus);
+	void			showPicker(bool take_focus);
 	bool			isPickerShown() { return !mFloaterHandle.isDead(); }
 	void			setLabel(const std::string& label);
 	void			setLabelWidth(S32 label_width) {mLabelWidth =label_width;}	

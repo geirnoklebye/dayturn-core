@@ -620,7 +620,7 @@ void LLFloaterPreference::updateDeleteTranscriptsButton()
 
 void LLFloaterPreference::onDoNotDisturbResponseChanged()
 {
-	// set "DoNotDisturbResponseChanged" TRUE if user edited message differs from default, FALSE otherwise
+	// set "DoNotDisturbResponseChanged" true if user edited message differs from default, FALSE otherwise
 	bool response_changed_flag =
 			LLTrans::getString("DoNotDisturbModeResponseDefault")
 					!= getChild<LLUICtrl>("do_not_disturb_response")->getValue().asString();
@@ -1527,7 +1527,7 @@ void LLFloaterPreference::refreshEnabledStateAdvanced()
 	// note, okay here to get from ctrl_deferred as it's twin, ctrl_deferred2 will alway match it
 	enabled = enabled && LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferredSSAO") && (ctrl_deferred->get() ? TRUE : FALSE);
 	
-	ctrl_deferred->set(gSavedSettings.getBOOL("RenderDeferred"));
+	ctrl_deferred->set(gSavedSettings.getbool("RenderDeferred"));
 
 	ctrl_ssao->setEnabled(enabled);
 	ctrl_dof->setEnabled(enabled);
@@ -1629,7 +1629,7 @@ void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("WindLightUseAtmosShaders"))
 	{
 		ctrl_wind_light->setEnabled(false);
-		ctrl_wind_light->setValue(FALSE);
+		ctrl_wind_light->setValue(false);
 
 		sky->setEnabled(false);
 		sky_text->setEnabled(false);
@@ -1640,13 +1640,13 @@ void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 		shadows_text->setEnabled(false);
 		
 		ctrl_ssao->setEnabled(false);
-		ctrl_ssao->setValue(FALSE);
+		ctrl_ssao->setValue(false);
 
 		ctrl_dof->setEnabled(false);
-		ctrl_dof->setValue(FALSE);
+		ctrl_dof->setValue(false);
 
 		ctrl_deferred->setEnabled(false);
-		ctrl_deferred->setValue(FALSE);
+		ctrl_deferred->setValue(false);
 	}
 
 	// disabled deferred
@@ -1657,20 +1657,20 @@ void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 		shadows_text->setEnabled(false);
 		
 		ctrl_ssao->setEnabled(false);
-		ctrl_ssao->setValue(FALSE);
+		ctrl_ssao->setValue(false);
 
 		ctrl_dof->setEnabled(false);
-		ctrl_dof->setValue(FALSE);
+		ctrl_dof->setValue(false);
 
 		ctrl_deferred->setEnabled(false);
-		ctrl_deferred->setValue(FALSE);
+		ctrl_deferred->setValue(false);
 	}
 	
 	// disabled deferred SSAO
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferredSSAO"))
 	{
 		ctrl_ssao->setEnabled(false);
-		ctrl_ssao->setValue(FALSE);
+		ctrl_ssao->setValue(false);
 	}
 	
 	// disabled deferred shadows
@@ -1685,7 +1685,7 @@ void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderReflectionDetail"))
 	{
 		ctrl_reflections->setEnabled(false);
-		ctrl_reflections->setValue(FALSE);
+		ctrl_reflections->setValue(false);
 		reflections_text->setEnabled(false);
 	}
 	
@@ -1693,7 +1693,7 @@ void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderAvatarCloth"))
 	{
 		ctrl_avatar_cloth->setEnabled(false);
-		ctrl_avatar_cloth->setValue(FALSE);
+		ctrl_avatar_cloth->setValue(false);
 	}
 }
 
@@ -1935,7 +1935,7 @@ void LLFloaterPreference::setPersonalInfo(const std::string& visibility)
 	getChildView("chat_font_size")->setEnabled(true);
 	getChildView("conversation_log_combo")->setEnabled(true);
 	getChild<LLUICtrl>("voice_call_friends_only_check")->setEnabled(true);
-	getChild<LLUICtrl>("voice_call_friends_only_check")->setValue(gSavedPerAccountSettings.getBOOL("VoiceCallsFriendsOnly"));
+	getChild<LLUICtrl>("voice_call_friends_only_check")->setValue(gSavedPerAccountSettings.getbool("VoiceCallsFriendsOnly"));
     // <FS:Ansariel> FIRE-18250: Option to disable default eye movement
     getChildView("FSStaticEyes")->setEnabled(true);
     
@@ -2466,7 +2466,7 @@ bool LLPanelPreference::postBuild()
 		ctrl_display_name->setEnabled(use_people_api);
 		if (!use_people_api)
 		{
-			ctrl_display_name->setValue(FALSE);
+			ctrl_display_name->setValue(false);
 		}
 	}
 
@@ -2503,7 +2503,7 @@ bool LLPanelPreference::postBuild()
 	}
 	if (hasChild("music_enabled", true))
 	{
-		getChild<LLCheckBoxCtrl>("music_enabled")->set(gSavedSettings.getBOOL("AudioStreamingMusic"));
+		getChild<LLCheckBoxCtrl>("music_enabled")->set(gSavedSettings.getbool("AudioStreamingMusic"));
 	}
 	if (hasChild("voice_call_friends_only_check", true))
 	{

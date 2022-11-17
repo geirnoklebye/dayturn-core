@@ -123,7 +123,7 @@ bool LLColorSwatchCtrl::handleUnicodeCharHere(llwchar uni_char)
 {
 	if( ' ' == uni_char )
 	{
-		showPicker(TRUE);
+		showPicker(true);
 	}
 	return LLUICtrl::handleUnicodeCharHere(uni_char);
 }
@@ -139,7 +139,7 @@ void LLColorSwatchCtrl::setOriginal(const LLColor4& color)
 	}
 }
 
-void LLColorSwatchCtrl::set(const LLColor4& color, BOOL update_picker, BOOL from_event)
+void LLColorSwatchCtrl::set(const LLColor4& color, bool update_picker, bool from_event)
 {
 	mColor = color; 
 	LLFloaterColorPicker* pickerp = (LLFloaterColorPicker*)mPickerHandle.get();
@@ -186,7 +186,7 @@ BOOL LLColorSwatchCtrl::handleMouseUp(S32 x, S32 y, MASK mask)
 			// after the color picker is closed.
 			setFocus(true);
 
-			showPicker(FALSE);
+			showPicker(false);
 		}
 	}
 
@@ -272,7 +272,7 @@ void LLColorSwatchCtrl::setEnabled(bool enabled)
 
 void LLColorSwatchCtrl::setValue(const LLSD& value)
 {
-	set(LLColor4(value), TRUE, TRUE);
+	set(LLColor4(value), true, true);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -349,7 +349,7 @@ void LLColorSwatchCtrl::setValid(bool valid )
 	}
 }
 
-void LLColorSwatchCtrl::showPicker(BOOL take_focus)
+void LLColorSwatchCtrl::showPicker(bool take_focus)
 {
 	LLFloaterColorPicker* pickerp = (LLFloaterColorPicker*)mPickerHandle.get();
 	if (!pickerp)

@@ -1381,7 +1381,7 @@ void LLTextureCtrl::setLabel(const std::string& label)
 	mCaption->setText(label);
 }
 
-void LLTextureCtrl::showPicker(BOOL take_focus)
+void LLTextureCtrl::showPicker(bool take_focus)
 {
 	// show hourglass cursor when loading inventory window
 	// because inventory construction is slooow
@@ -1491,7 +1491,7 @@ BOOL LLTextureCtrl::handleMouseDown(S32 x, S32 y, MASK mask)
 	{
 		if (!mOpenTexPreview)
 		{
-			showPicker(FALSE);
+			showPicker(false);
 			//grab textures first...
 			LLInventoryModelBackgroundFetch::instance().start(gInventory.findCategoryUUIDForType(LLFolderType::FT_TEXTURE));
 			//...then start full inventory fetch.
@@ -1853,7 +1853,7 @@ bool LLTextureCtrl::handleUnicodeCharHere(llwchar uni_char)
 {
 	if( ' ' == uni_char )
 	{
-		showPicker(TRUE);
+		showPicker(true);
 		return true;
 	}
 	return LLUICtrl::handleUnicodeCharHere(uni_char);
