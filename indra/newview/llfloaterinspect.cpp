@@ -655,7 +655,7 @@ void LLFloaterInspect::onColumnDisplayModeChanged()
 	getResizeLimits(&min_width, &min_height);
 
 	std::string current_sort_col = mObjectList->getSortColumnName();
-	BOOL current_sort_asc = mObjectList->getSortAscending();
+	bool current_sort_asc = mObjectList->getSortAscending();
 	
 	mObjectList->clearRows();
 	mObjectList->clearColumns();

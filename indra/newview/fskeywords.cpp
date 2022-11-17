@@ -51,9 +51,9 @@ FSKeywords::~FSKeywords()
 
 void FSKeywords::updateKeywords()
 {
-	BOOL match_whole_words = gSavedPerAccountSettings.getBOOL("FSKeywordMatchWholeWords");
+	bool match_whole_words = gSavedPerAccountSettings.getbool("FSKeywordMatchWholeWords");
 	std::string s = gSavedPerAccountSettings.getString("FSKeywords");
-	if (!gSavedPerAccountSettings.getBOOL("FSKeywordCaseSensitive"))
+	if (!gSavedPerAccountSettings.getbool("FSKeywordCaseSensitive"))
 	{
 		LLStringUtil::toLower(s);
 	}

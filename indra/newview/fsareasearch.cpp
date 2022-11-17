@@ -1443,7 +1443,7 @@ void FSPanelAreaSearchList::updateResultListColumns()
 	U32 column_config = gSavedSettings.getU32("FSAreaSearchColumnConfig");
 	std::vector<LLScrollListColumn::Params> column_params = mResultList->getColumnInitParams();
 	std::string current_sort_col = mResultList->getSortColumnName();
-	BOOL current_sort_asc = mResultList->getSortAscending();
+	bool current_sort_asc = mResultList->getSortAscending();
 	
 	mResultList->clearColumns();
 	mResultList->updateLayout();

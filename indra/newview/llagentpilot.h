@@ -69,8 +69,8 @@ public:
 	void addWaypoint();
 	void moveCamera();
 
-	void setReplaySession(BOOL new_val) { mReplaySession = new_val; }
-	BOOL getReplaySession() { return mReplaySession; }
+	void setReplaySession(bool new_val) { mReplaySession = new_val; }
+	bool getReplaySession() { return mReplaySession; }
 
 	void setLoop(BOOL new_val) { mLoop = new_val; }
 	BOOL getLoop() { return mLoop; }

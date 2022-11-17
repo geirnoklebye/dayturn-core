@@ -2376,7 +2376,7 @@ bool idle_startup()
 		gAgent.observeFriends();
 		
 		// Start automatic replay if the flag is set.
-		if (gSavedSettings.getBOOL("StatsAutoRun") || gAgentPilot.getReplaySession())
+		if (gSavedSettings.getbool("StatsAutoRun") || gAgentPilot.getReplaySession())
 		{
 			LL_DEBUGS("AppInit") << "Starting automatic playback" << LL_ENDL;
 			gAgentPilot.startPlayback();

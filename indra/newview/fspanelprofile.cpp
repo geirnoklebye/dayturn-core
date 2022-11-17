@@ -361,7 +361,7 @@ void FSPanelProfileSecondLife::onOpen(const LLSD& key)
 	LLUUID avatar_id = getAvatarId();
 	LLAvatarPropertiesProcessor::getInstance()->addObserver(avatar_id, this);
 
-	BOOL own_profile = getSelfProfile();
+	bool own_profile = getSelfProfile();
 	
 	mGroupInviteButton->setVisible(!own_profile);
 	mShowOnMapButton->setVisible(!own_profile);
@@ -1781,7 +1781,7 @@ void FSPanelProfilePicks::processProperties(void* data, EAvatarProcessorType typ
 			mNewButton->setEnabled(canAddNewPick());
 			mDeleteButton->setEnabled(canDeletePick());
 
-			BOOL no_data = !mTabContainer->getTabCount();
+			bool no_data = !mTabContainer->getTabCount();
 			mNoItemsLabel->setVisible(no_data);
 			if (no_data)
 			{

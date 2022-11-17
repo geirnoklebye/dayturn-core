@@ -108,7 +108,7 @@ FSFloaterImport::FSFloaterImport(const LLSD& filename) :
 
 	gIdleCallbacks.addFunction(onIdle, this);
 
-	mSavedSettingShowNewInventory = gSavedSettings.getBOOL("ShowNewInventory");
+	mSavedSettingShowNewInventory = gSavedSettings.getbool("ShowNewInventory");
 }
 
 FSFloaterImport::~FSFloaterImport()
@@ -122,7 +122,7 @@ FSFloaterImport::~FSFloaterImport()
 		mObjectCreatedCallback.disconnect();
 	}
 
-	gSavedSettings.setBOOL("ShowNewInventory", mSavedSettingShowNewInventory);
+	gSavedSettings.setbool("ShowNewInventory", mSavedSettingShowNewInventory);
 }
 
 bool FSFloaterImport::postBuild()
@@ -577,7 +577,7 @@ void FSFloaterImport::onClickBtnImport()
 
 		LL_WARNS("import") << "Nothing in queue, proceding to prim import." << LL_ENDL;
 		// restore setting to allow preview popups.
-		gSavedSettings.setBOOL("ShowNewInventory", mSavedSettingShowNewInventory);
+		gSavedSettings.setbool("ShowNewInventory", mSavedSettingShowNewInventory);
 		importPrims();
 	}
 	else
@@ -1823,7 +1823,7 @@ void FSFloaterImport::popNextAsset()
 	
 	LL_DEBUGS("import") << "Nothing left in upload queue, proceding to prim import." << LL_ENDL;
 	// restore setting to allow preview popups.
-	gSavedSettings.setBOOL("ShowNewInventory", mSavedSettingShowNewInventory);
+	gSavedSettings.setbool("ShowNewInventory", mSavedSettingShowNewInventory);
 	importPrims();
 }
 

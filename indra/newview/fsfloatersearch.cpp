@@ -1628,8 +1628,8 @@ void FSPanelSearchPlaces::processSearchReply(LLMessageSystem* msg, void**)
 	LLUUID		query_id;
 	LLUUID		parcel_id;
 	std::string	name;
-	BOOL		for_sale;
-	BOOL		auction;
+	bool		for_sale;
+	bool		auction;
 	F32			dwell;
 
 	msg->getUUID("AgentData", "AgentID", agent_id);
@@ -1714,8 +1714,8 @@ void FSPanelSearchPlaces::processSearchReply(LLMessageSystem* msg, void**)
 	{
 		msg->getUUID(	"QueryReplies",	"ParcelID",	parcel_id,	i);
 		msg->getString(	"QueryReplies",	"Name",		name,		i);
-		msg->getBOOL(	"QueryReplies",	"ForSale",	for_sale,i);
-		msg->getBOOL(	"QueryReplies",	"Auction",	auction,	i);
+		msg->getbool(	"QueryReplies",	"ForSale",	for_sale,i);
+		msg->getbool(	"QueryReplies",	"Auction",	auction,	i);
 		msg->getF32(	"QueryReplies",	"Dwell",	dwell,		i);
 		if (parcel_id.isNull())
 		{
@@ -2009,8 +2009,8 @@ void FSPanelSearchLand::processSearchReply(LLMessageSystem* msg, void**)
 	std::string	name;
 	std::string	land_sku;
 	std::string	land_type;
-	BOOL		auction;
-	BOOL		for_sale;
+	bool		auction;
+	bool		for_sale;
 	S32			price;
 	S32			area;
 
@@ -2060,8 +2060,8 @@ void FSPanelSearchLand::processSearchReply(LLMessageSystem* msg, void**)
 	{
 		msg->getUUID(	"QueryReplies", "ParcelID",		parcel_id,	i);
 		msg->getString(	"QueryReplies", "Name",			name,		i);
-		msg->getBOOL(	"QueryReplies", "Auction",		auction,	i);
-		msg->getBOOL(	"QueryReplies", "ForSale",		for_sale,	i);
+		msg->getbool(	"QueryReplies", "Auction",		auction,	i);
+		msg->getbool(	"QueryReplies", "ForSale",		for_sale,	i);
 		msg->getS32(	"QueryReplies", "SalePrice",	price,		i);
 		msg->getS32(	"QueryReplies", "ActualArea",	area,		i);
 		if (parcel_id.isNull())
@@ -2255,7 +2255,7 @@ void FSPanelSearchClassifieds::find()
 		return;
 	}
 	U32 category = mClassifiedsCategory->getValue().asInteger();
-	BOOL auto_renew = FALSE;
+	bool auto_renew = false;
 	U32 flags = pack_classified_flags_request(auto_renew, inc_pg, inc_mature, inc_adult);
 
 	mResultsReceived = 0;
