@@ -1270,13 +1270,13 @@ LLWindow::LLWindowResolution* LLWindowMacOSX::getSupportedResolutions(S32 &num_r
 
 				if(bits == BITS_PER_PIXEL && width >= 800 && height >= 600)
 				{
-					BOOL resolution_exists = FALSE;
+					bool resolution_exists = false;
 					for(S32 i = 0; i < mNumSupportedResolutions; i++)
 					{
 						if (mSupportedResolutions[i].mWidth == width &&
 							mSupportedResolutions[i].mHeight == height)
 						{
-							resolution_exists = TRUE;
+							resolution_exists = true;
 						}
 					}
 					if (!resolution_exists)

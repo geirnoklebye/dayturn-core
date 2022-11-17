@@ -139,9 +139,9 @@ LLWearable::EImportResult LLViewerWearable::importStream( std::istream& input_st
 // Avatar parameter and texture definitions can change over time.
 // This function returns true if parameters or textures have been added or removed
 // since this wearable was created.
-BOOL LLViewerWearable::isOldVersion() const
+bool LLViewerWearable::isOldVersion() const
 {
-	if (!isAgentAvatarValid()) return FALSE;
+	if (!isAgentAvatarValid()) return false;
 
 	if( LLWearable::sCurrentDefinitionVersion < mDefinitionVersion )
 	{
@@ -151,7 +151,7 @@ BOOL LLViewerWearable::isOldVersion() const
 
 	if( LLWearable::sCurrentDefinitionVersion != mDefinitionVersion )
 	{
-		return TRUE;
+		return true;
 	}
 
 	S32 param_count = 0;
@@ -164,13 +164,13 @@ BOOL LLViewerWearable::isOldVersion() const
 			param_count++;
 			if( !is_in_map(mVisualParamIndexMap, param->getID() ) )
 			{
-				return TRUE;
+				return true;
 			}
 		}
 	}
 	if( param_count != mVisualParamIndexMap.size() )
 	{
-		return TRUE;
+		return true;
 	}
 
 
@@ -182,16 +182,16 @@ BOOL LLViewerWearable::isOldVersion() const
 			te_count++;
 			if( !is_in_map(mTEMap, te ) )
 			{
-				return TRUE;
+				return true;
 			}
 		}
 	}
 	if( te_count != mTEMap.size() )
 	{
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 // Avatar parameter and texture definitions can change over time.

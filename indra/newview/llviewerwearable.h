@@ -59,7 +59,7 @@ public:
 public:
 
 	bool				isDirty() const;
-	BOOL				isOldVersion() const;
+	bool				isOldVersion() const;
 
 	/*virtual*/ void	writeToAvatar(LLAvatarAppearance *avatarp);
 	void				removeFromAvatar()	{ LLViewerWearable::removeFromAvatar( mType); }

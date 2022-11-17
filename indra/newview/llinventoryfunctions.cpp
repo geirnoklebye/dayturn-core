@@ -736,7 +736,7 @@ bool get_is_category_removable(const LLInventoryModel* model, const LLUUID& id)
 	}
 	// ## Zi: Animation Overrider
 
-	if (!isAgentAvatarValid()) return FALSE;
+	if (!isAgentAvatarValid()) return false;
 
 	const LLInventoryCategory* category = model->getCategory(id);
 	if (!category)

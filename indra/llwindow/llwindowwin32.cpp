@@ -3413,13 +3413,13 @@ LLWindow::LLWindowResolution* LLWindowWin32::getSupportedResolutions(S32 &num_re
 				dev_mode.dmPelsWidth >= 800 &&
 				dev_mode.dmPelsHeight >= 600)
 			{
-				BOOL resolution_exists = FALSE;
+				bool resolution_exists = false;
 				for(S32 i = 0; i < mNumSupportedResolutions; i++)
 				{
 					if (mSupportedResolutions[i].mWidth == dev_mode.dmPelsWidth &&
 						mSupportedResolutions[i].mHeight == dev_mode.dmPelsHeight)
 					{
-						resolution_exists = TRUE;
+						resolution_exists = true;
 					}
 				}
 				if (!resolution_exists)
