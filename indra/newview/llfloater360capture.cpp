@@ -64,7 +64,7 @@ LLFloater360Capture::LLFloater360Capture(const LLSD& key)
     // such time as we ask it not to (the dtor). If we crash or
     // otherwise, exit before this is turned off, the Simulator
     // will take care of cleaning up for us.
-    if (gSavedSettings.getBOOL("360CaptureUseInterestListCap"))
+    if (gSavedSettings.getbool("360CaptureUseInterestListCap"))
     {
         // send everything to us for as long as this floater is open
         const bool send_everything = true;
@@ -84,7 +84,7 @@ LLFloater360Capture::~LLFloater360Capture()
     // Tell the Simulator not to send us everything anymore
     // and revert to the regular "keyhole" frustum of interest
     // list updates.
-    if (!LLApp::isExiting() && gSavedSettings.getBOOL("360CaptureUseInterestListCap"))
+    if (!LLApp::isExiting() && gSavedSettings.getbool("360CaptureUseInterestListCap"))
     {
         const bool send_everything = false;
         changeInterestListMode(send_everything);
@@ -850,7 +850,7 @@ void LLFloater360Capture::freezeWorld(bool enable)
         }
 
         // freeze everything else
-        gSavedSettings.setBOOL("FreezeTime", true);
+        gSavedSettings.setbool("FreezeTime", true);
 
         // disable particle system
         LLViewerPartSim::getInstance()->enable(false);
@@ -868,7 +868,7 @@ void LLFloater360Capture::freezeWorld(bool enable)
         mAvatarPauseHandles.clear();
 
         // thaw everything else
-        gSavedSettings.setBOOL("FreezeTime", false);
+        gSavedSettings.setbool("FreezeTime", false);
 
         //enable particle system
         LLViewerPartSim::getInstance()->enable(true);

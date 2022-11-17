@@ -196,7 +196,7 @@ bool callback_clear_cache(const LLSD& notification, const LLSD& response)
 	if ( option == 0 ) // YES
 	{
 		// flag client texture cache for clearing next time the client runs
-		gSavedSettings.setBOOL("PurgeCacheOnNextStartup", TRUE);
+		gSavedSettings.setbool("PurgeCacheOnNextStartup", true);
 		LLNotificationsUtil::add("CacheWillClear");
 	}
 
@@ -216,7 +216,7 @@ bool callback_clear_browser_cache(const LLSD& notification, const LLSD& response
 		LLNavigationBar::getInstance()->clearHistoryCache();
 		
 		// flag client texture cache for clearing next time the client runs
-		gSavedSettings.setBOOL("PurgeCacheOnNextStartup", TRUE);
+		gSavedSettings.setbool("PurgeCacheOnNextStartup", true);
 		LLNotificationsUtil::add("CacheWillClear");
 
 		LLSearchHistory::getInstance()->clearHistory();
@@ -256,7 +256,7 @@ bool callback_pick_debug_search(const LLSD& notification, const LLSD& response)
 
 void handleNameTagOptionChanged(const LLSD& newvalue)
 {
-	LLAvatarNameCache::getInstance()->setUseUsernames(gSavedSettings.getBOOL("NameTagShowUsernames"));
+	LLAvatarNameCache::getInstance()->setUseUsernames(gSavedSettings.getbool("NameTagShowUsernames"));
 	LLVOAvatar::invalidateNameTags();
 }
 
@@ -551,14 +551,14 @@ bool LLFloaterPreference::postBuild()
 
 void LLFloaterPreference::onStreamMetadataAnnounceChanged()
 {
-	BOOL enable = gSavedSettings.getBOOL("StreamMetadataAnnounceToChat");
+	bool enable = gSavedSettings.getbool("StreamMetadataAnnounceToChat");
 
 	getChild<LLSpinCtrl>("StreamMetadataAnnounceChannel")->setEnabled(enable);
 }
 
 void LLFloaterPreference::onMiniMapChatRingChanged()
 {
-	BOOL enable = gSavedSettings.getBOOL("MiniMapChatRing");
+	bool enable = gSavedSettings.getbool("MiniMapChatRing");
 
 	getChild<LLColorSwatchCtrl>("netmap_chatring_color_swatch")->setEnabled(enable);
 	getChild<LLColorSwatchCtrl>("netmap_shoutring_color_swatch")->setEnabled(enable);
@@ -568,7 +568,7 @@ void LLFloaterPreference::onMiniMapChatRingChanged()
 
 void LLFloaterPreference::onShowLookAtChanged()
 {
-	BOOL enable = gSavedSettings.getBOOL("ShowLookAt");
+	bool enable = gSavedSettings.getbool("ShowLookAt");
 
 	getChild<LLCheckBoxCtrl>("ShowLookAtNames")->setEnabled(enable);
 	getChild<LLCheckBoxCtrl>("ShowLookAtLimited")->setEnabled(enable);
@@ -576,7 +576,7 @@ void LLFloaterPreference::onShowLookAtChanged()
 
 void LLFloaterPreference::onShowPointAtChanged()
 {
-	BOOL enable = gSavedSettings.getBOOL("ShowPointAt");
+	bool enable = gSavedSettings.getbool("ShowPointAt");
 
 	getChild<LLCheckBoxCtrl>("ShowPointAtNames")->setEnabled(enable);
 	getChild<LLCheckBoxCtrl>("ShowPointAtLimited")->setEnabled(enable);
@@ -584,7 +584,7 @@ void LLFloaterPreference::onShowPointAtChanged()
 
 void LLFloaterPreference::onNameTagShowAgeChanged()
 {
-	BOOL enable = gSavedSettings.getBOOL("NameTagShowAge");
+	bool enable = gSavedSettings.getbool("NameTagShowAge");
 
 	getChild<LLSpinCtrl>("NameTagShowAgeLimit")->setEnabled(enable);
 	getChild<LLTextBox>("nametag_show_age_limit_label")->setEnabled(enable);
@@ -625,7 +625,7 @@ void LLFloaterPreference::onDoNotDisturbResponseChanged()
 			LLTrans::getString("DoNotDisturbModeResponseDefault")
 					!= getChild<LLUICtrl>("do_not_disturb_response")->getValue().asString();
 
-	gSavedPerAccountSettings.setBOOL("DoNotDisturbResponseChanged", response_changed_flag );
+	gSavedPerAccountSettings.setbool("DoNotDisturbResponseChanged", response_changed_flag );
 }
 
 LLFloaterPreference::~LLFloaterPreference()
@@ -635,11 +635,11 @@ LLFloaterPreference::~LLFloaterPreference()
 
 void LLFloaterPreference::draw()
 {
-	BOOL has_first_selected = (getChildRef<LLScrollListCtrl>("disabled_popups").getFirstSelected()!=NULL);
-	gSavedSettings.setBOOL("FirstSelectedDisabledPopups", has_first_selected);
+	bool has_first_selected = (getChildRef<LLScrollListCtrl>("disabled_popups").getFirstSelected()!=NULL);
+	gSavedSettings.setbool("FirstSelectedDisabledPopups", has_first_selected);
 	
 	has_first_selected = (getChildRef<LLScrollListCtrl>("enabled_popups").getFirstSelected()!=NULL);
-	gSavedSettings.setBOOL("FirstSelectedEnabledPopups", has_first_selected);
+	gSavedSettings.setbool("FirstSelectedEnabledPopups", has_first_selected);
 	
 	LLFloater::draw();
 }
@@ -689,7 +689,7 @@ void LLFloaterPreference::apply()
 	
 	LLViewerMedia::getInstance()->setCookiesEnabled(getChild<LLUICtrl>("cookies_enabled")->getValue());
 	
-	if (hasChild("web_proxy_enabled", TRUE) &&hasChild("web_proxy_editor", TRUE) && hasChild("web_proxy_port", TRUE))
+	if (hasChild("web_proxy_enabled", true) &&hasChild("web_proxy_editor", true) && hasChild("web_proxy_port", true))
 	{
 		bool proxy_enable = getChild<LLUICtrl>("web_proxy_enabled")->getValue();
 		std::string proxy_address = getChild<LLUICtrl>("web_proxy_editor")->getValue();
@@ -778,7 +778,7 @@ void LLFloaterPreference::onOpen(const LLSD& key)
 {
 
 	// this variable and if that follows it are used to properly handle do not disturb mode response message
-	static bool initialized = FALSE;
+	static bool initialized = false;
 	// if user is logged in and we haven't initialized do not disturb mode response yet, do it
 	if (!initialized && LLStartUp::getStartupState() >= STATE_MISC)
 	{
@@ -788,7 +788,7 @@ void LLFloaterPreference::onOpen(const LLSD& key)
 		// was added into per account settings.
 
 		// initialization should happen once,so setting variable to TRUE
-		initialized = TRUE;
+		initialized = true;
 		// this connection is needed to properly set "DoNotDisturbResponseChanged" setting when user makes changes in
 		// do not disturb response message.
 		gSavedPerAccountSettings.getControl("DoNotDisturbModeResponse")->getSignal()->connect(boost::bind(&LLFloaterPreference::onDoNotDisturbResponseChanged, this));
@@ -802,7 +802,7 @@ void LLFloaterPreference::onOpen(const LLSD& key)
 		{
 			LLUICtrl* child = static_cast<LLUICtrl*>(*iter);
 			LLControlVariable* enabled_control = child->getEnabledControlVariable();
-			BOOL enabled = !enabled_control || enabled_control->getValue().asBoolean();
+			bool enabled = !enabled_control || enabled_control->getValue().asBoolean();
 			child->setEnabled(enabled);
 		}
 		// </FS:Ansariel>
@@ -938,7 +938,7 @@ void LLFloaterPreference::onAvatarImpostorsEnable()
 //static
 void LLFloaterPreference::initDoNotDisturbResponse()
 	{
-		if (!gSavedPerAccountSettings.getBOOL("DoNotDisturbResponseChanged"))
+		if (!gSavedPerAccountSettings.getbool("DoNotDisturbResponseChanged"))
 		{
 			//LLTrans::getString("DoNotDisturbModeResponseDefault") is used here for localization (EXT-5885)
 			gSavedPerAccountSettings.setString("DoNotDisturbModeResponse", LLTrans::getString("DoNotDisturbModeResponseDefault"));
@@ -1457,7 +1457,7 @@ void LLFloaterPreference::handleDynamicTextureMemoryChanged()
 {
 	if (LLViewerTextureList::canUseDynamicTextureMemory())
 	{
-		bool dynamic_tex_mem_enabled = gSavedSettings.getBOOL("FSDynamicTextureMemory");
+		bool dynamic_tex_mem_enabled = gSavedSettings.getbool("FSDynamicTextureMemory");
 		childSetEnabled("FSDynamicTextureMemory", true);
 		childSetEnabled("FSDynamicTextureMemoryMinTextureMemory", dynamic_tex_mem_enabled);
 		childSetEnabled("FSDynamicTextureMemoryCacheReserve", dynamic_tex_mem_enabled);
@@ -1751,7 +1751,7 @@ void LLFloaterPreference::onClickSetSounds()
 {
 	// Disable Enable gesture sounds checkbox if the master sound is disabled 
 	// or if sound effects are disabled.
-	getChild<LLCheckBoxCtrl>("gesture_audio_play_btn")->setEnabled(!gSavedSettings.getBOOL("MuteSounds"));
+	getChild<LLCheckBoxCtrl>("gesture_audio_play_btn")->setEnabled(!gSavedSettings.getbool("MuteSounds"));
 }
 // <FS:PP> FIRE-8190: Preview function for "UI Sounds" Panel
 void LLFloaterPreference::onClickPreviewUISound(const LLSD& ui_sound_id)
@@ -1772,7 +1772,7 @@ void LLFloaterPreference::onClickEnablePopup()
 		LLNotificationTemplatePtr templatep = LLNotifications::instance().getTemplate(*(std::string*)((*itor)->getUserdata()));
 		//gSavedSettings.setWarning(templatep->mName, TRUE);
 		std::string notification_name = templatep->mName;
-		LLUI::getInstance()->mSettingGroups["ignores"]->setBOOL(notification_name, TRUE);
+		LLUI::getInstance()->mSettingGroups["ignores"]->setbool(notification_name, true);
 	}
 	
 	buildPopupLists();
@@ -2459,9 +2459,9 @@ LLPanelPreference::LLPanelPreference()
 bool LLPanelPreference::postBuild()
 {
 	////////////////////// PanelGeneral ///////////////////
-	if (hasChild("display_names_check", TRUE))
+	if (hasChild("display_names_check", true))
 	{
-		BOOL use_people_api = gSavedSettings.getBOOL("UsePeopleAPI");
+		bool use_people_api = gSavedSettings.getbool("UsePeopleAPI");
 		LLCheckBoxCtrl* ctrl_display_name = getChild<LLCheckBoxCtrl>("display_names_check");
 		ctrl_display_name->setEnabled(use_people_api);
 		if (!use_people_api)
@@ -2471,16 +2471,16 @@ bool LLPanelPreference::postBuild()
 	}
 
 	////////////////////// PanelVoice ///////////////////
-	if (hasChild("voice_unavailable", TRUE))
+	if (hasChild("voice_unavailable", true))
 	{
-		BOOL voice_disabled = gSavedSettings.getBOOL("CmdLineDisableVoice");
+		bool voice_disabled = gSavedSettings.getbool("CmdLineDisableVoice");
 		getChildView("voice_unavailable")->setVisible( voice_disabled);
 		getChildView("enable_voice_check")->setVisible( !voice_disabled);
 	}
 	
 	//////////////////////PanelSkins ///////////////////
 	
-	if (hasChild("skin_selection", TRUE))
+	if (hasChild("skin_selection", true))
 	{
 		LLFloaterPreference::refreshSkin(this);
 
@@ -2494,32 +2494,32 @@ bool LLPanelPreference::postBuild()
 	}
 
 	//////////////////////PanelPrivacy ///////////////////
-	if (hasChild("media_enabled", TRUE))
+	if (hasChild("media_enabled", true))
 	{
-		bool media_enabled = gSavedSettings.getBOOL("AudioStreamingMedia");
+		bool media_enabled = gSavedSettings.getbool("AudioStreamingMedia");
 		
 		getChild<LLCheckBoxCtrl>("media_enabled")->set(media_enabled);
 		getChild<LLCheckBoxCtrl>("autoplay_enabled")->setEnabled(media_enabled);
 	}
-	if (hasChild("music_enabled", TRUE))
+	if (hasChild("music_enabled", true))
 	{
 		getChild<LLCheckBoxCtrl>("music_enabled")->set(gSavedSettings.getBOOL("AudioStreamingMusic"));
 	}
-	if (hasChild("voice_call_friends_only_check", TRUE))
+	if (hasChild("voice_call_friends_only_check", true))
 	{
 		getChild<LLCheckBoxCtrl>("voice_call_friends_only_check")->setCommitCallback(boost::bind(&showFriendsOnlyWarning, _1, _2));
 	}
-	if (hasChild("allow_multiple_viewer_check", TRUE))
+	if (hasChild("allow_multiple_viewer_check", true))
 	{
 		getChild<LLCheckBoxCtrl>("allow_multiple_viewer_check")->setCommitCallback(boost::bind(&showMultipleViewersWarning, _1, _2));
 	}
-	if (hasChild("favorites_on_login_check", TRUE))
+	if (hasChild("favorites_on_login_check", true))
 	{
 		getChild<LLCheckBoxCtrl>("favorites_on_login_check")->setCommitCallback(boost::bind(&handleFavoritesOnLoginChanged, _1, _2));
 		bool show_favorites_at_login = LLPanelLogin::getShowFavorites();
 		getChild<LLCheckBoxCtrl>("favorites_on_login_check")->setValue(show_favorites_at_login);
 	}
-	if (hasChild("mute_chb_label", TRUE))
+	if (hasChild("mute_chb_label", true))
 	{
 		getChild<LLTextBox>("mute_chb_label")->setShowCursorHand(false);
 		getChild<LLTextBox>("mute_chb_label")->setSoundFlags(LLView::MOUSE_UP);
@@ -2527,7 +2527,7 @@ bool LLPanelPreference::postBuild()
 	}
 
 	//////////////////////PanelSetup ///////////////////
-	if (hasChild("max_bandwidth", TRUE))
+	if (hasChild("max_bandwidth", true))
 	{
 		mBandWidthUpdater = new LLPanelPreference::Updater(boost::bind(&handleBandwidthChanged, _1), BANDWIDTH_UPDATER_TIMEOUT);
 		gSavedSettings.getControl("ThrottleBandwidthKBPS")->getSignal()->connect(boost::bind(&LLPanelPreference::Updater::update, mBandWidthUpdater, _2));
@@ -2625,7 +2625,7 @@ void LLPanelPreference::showFriendsOnlyWarning(LLUICtrl* checkbox, const LLSD& v
 {
 	if (checkbox)
 	{
-		gSavedPerAccountSettings.setBOOL("VoiceCallsFriendsOnly", checkbox->getValue().asBoolean());
+		gSavedPerAccountSettings.setbool("VoiceCallsFriendsOnly", checkbox->getValue().asBoolean());
 		if (checkbox->getValue())
 		{
 			LLNotificationsUtil::add("FriendsAndGroupsOnly");
@@ -2648,7 +2648,7 @@ void LLPanelPreference::handleFavoritesOnLoginChanged(LLUICtrl* checkbox, const 
 void LLPanelPreference::toggleMuteWhenMinimized()
 {
 	std::string mute("MuteWhenMinimized");
-	gSavedSettings.setBOOL(mute, !gSavedSettings.getBOOL(mute));
+	gSavedSettings.setbool(mute, !gSavedSettings.getbool(mute));
 	LLFloaterPreference* instance = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
 	if (instance)
 	{
@@ -4383,7 +4383,7 @@ void FSPanelPreferenceBackup:: doRestoreSettings(const LLSD& notification, const
 		instance->onBtnOK(LLSD());
 	}
 
-	if (gSavedSettings.getBOOL("RestoreGlobalSettings"))
+	if (gSavedSettings.getbool("RestoreGlobalSettings"))
 	{
 		// Get path and file names to backup and restore settings path
 		std::string global_name = gSavedSettings.getString("ClientSettingsFile");
@@ -4439,7 +4439,7 @@ void FSPanelPreferenceBackup:: doRestoreSettings(const LLSD& notification, const
 		std::string backup_per_account_name = gDirUtilp->getExpandedFilename(LL_PATH_NONE, backup_per_account_folder,
 					LLAppViewer::instance()->getSettingsFilename("Default", "PerAccount"));
 
-		if (gSavedSettings.getBOOL("RestorePerAccountSettings"))
+		if (gSavedSettings.getbool("RestorePerAccountSettings"))
 		{
 			// run restore on per-account controls
 			LL_INFOS("SettingsBackup") << "restoring per account settings" << LL_ENDL;
@@ -4478,7 +4478,7 @@ void FSPanelPreferenceBackup:: doRestoreSettings(const LLSD& notification, const
 		LL_INFOS("SettingsBackup") << "clearing toolbars" << LL_ENDL;
 		gToolBarView->clearToolbars();
 		LL_INFOS("SettingsBackup") << "reloading toolbars" << LL_ENDL;
-		gToolBarView->loadToolbars(FALSE);
+		gToolBarView->loadToolbars(false);
 #ifdef OPENSIM
 		if (LLGridManager::instance().isInOpenSim())
 		{
@@ -4582,7 +4582,7 @@ void FSPanelPreferenceBackup:: doRestoreSettings(const LLSD& notification, const
 		}
 	}
 	// <FS:CR> Set this true so we can update newer settings with their deprecated counterparts on next launch
-	gSavedSettings.setBOOL("FSFirstRunAfterSettingsRestore", TRUE);
+	gSavedSettings.setbool("FSFirstRunAfterSettingsRestore", true);
 	
 	// Tell the user we have finished restoring settings and the viewer must shut down
 	LLNotificationsUtil::add("RestoreFinished", LLSD(), LLSD(), boost::bind(&FSPanelPreferenceBackup::onQuitConfirmed, this, _1, _2));
@@ -4592,7 +4592,7 @@ void FSPanelPreferenceBackup:: doRestoreSettings(const LLSD& notification, const
 void FSPanelPreferenceBackup::onQuitConfirmed(const LLSD& notification,const LLSD& response)
 {
 	// Make sure the viewer will not save any settings on exit, so our copied files will survive
-	LLAppViewer::instance()->setSaveSettingsOnExit(FALSE);
+	LLAppViewer::instance()->setSaveSettingsOnExit(false);
 	// Quit the viewer so all gets saved immediately
 	LL_INFOS("SettingsBackup") << "setting to quit" << LL_ENDL;
 	LLAppViewer::instance()->requestQuit();
@@ -4600,15 +4600,15 @@ void FSPanelPreferenceBackup::onQuitConfirmed(const LLSD& notification,const LLS
 
 void FSPanelPreferenceBackup::onClickSelectAll()
 {
-	doSelect(TRUE);
+	doSelect(true);
 }
 
 void FSPanelPreferenceBackup::onClickDeselectAll()
 {
-	doSelect(FALSE);
+	doSelect(false);
 }
 
-void FSPanelPreferenceBackup::doSelect(BOOL all)
+void FSPanelPreferenceBackup::doSelect(bool all)
 {
 	// Get scroll list control that holds the list of global files
 	LLScrollListCtrl* globalScrollList = getChild<LLScrollListCtrl>("restore_global_files_list");
@@ -4622,7 +4622,7 @@ void FSPanelPreferenceBackup::doSelect(BOOL all)
 	applySelection(globalFoldersScrollList, all);
 }
 
-void FSPanelPreferenceBackup::applySelection(LLScrollListCtrl* control, BOOL all)
+void FSPanelPreferenceBackup::applySelection(LLScrollListCtrl* control, bool all)
 {
 	// Pull out all data
 	std::vector<LLScrollListItem*> itemList = control->getAllData();

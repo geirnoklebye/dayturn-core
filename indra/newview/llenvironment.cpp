@@ -2918,7 +2918,7 @@ void LLEnvironment::saveToSettings()
     }
     bool has_data = false;
 
-    if (gSavedSettings.getBOOL("EnvironmentPersistAcrossLogin"))
+    if (gSavedSettings.getbool("EnvironmentPersistAcrossLogin"))
     {
         DayInstance::ptr_t environment = getEnvironmentInstance(ENV_LOCAL);
         if (environment)
@@ -3045,7 +3045,7 @@ void LLEnvironment::loadSkyWaterFromSettings(const LLSD &env_data, bool &valid, 
 
 bool LLEnvironment::loadFromSettings()
 {
-    if (!gSavedSettings.getBOOL("EnvironmentPersistAcrossLogin"))
+    if (!gSavedSettings.getbool("EnvironmentPersistAcrossLogin"))
     {
         return false;
     }
@@ -3140,8 +3140,8 @@ void LLEnvironment::saveBeaconsState()
 {
     if (mEditorCounter == 0)
     {
-        mShowSunBeacon = gSavedSettings.getBOOL("sunbeacon");
-        mShowMoonBeacon = gSavedSettings.getBOOL("moonbeacon");
+        mShowSunBeacon = gSavedSettings.getbool("sunbeacon");
+        mShowMoonBeacon = gSavedSettings.getbool("moonbeacon");
     }
     ++mEditorCounter;
 }
@@ -3150,8 +3150,8 @@ void LLEnvironment::revertBeaconsState()
     --mEditorCounter;
     if (mEditorCounter == 0)
     {
-        gSavedSettings.setBOOL("sunbeacon", mShowSunBeacon && gSavedSettings.getBOOL("sunbeacon"));
-        gSavedSettings.setBOOL("moonbeacon", mShowMoonBeacon && gSavedSettings.getBOOL("moonbeacon"));
+        gSavedSettings.setbool("sunbeacon", mShowSunBeacon && gSavedSettings.getbool("sunbeacon"));
+        gSavedSettings.setbool("moonbeacon", mShowMoonBeacon && gSavedSettings.getbool("moonbeacon"));
     }
 }
 

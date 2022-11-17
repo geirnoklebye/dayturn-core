@@ -1067,24 +1067,24 @@ void LLPipeline::refreshCachedSettings()
 			&& gSavedSettings.getBOOL("UseOcclusion") 
 			&& gGLManager.mHasOcclusionQuery) ? 2 : 0;
 	
-	WindLightUseAtmosShaders = gSavedSettings.getBOOL("WindLightUseAtmosShaders");
-	RenderDeferred = gSavedSettings.getBOOL("RenderDeferred");
+	WindLightUseAtmosShaders = gSavedSettings.getbool("WindLightUseAtmosShaders");
+	RenderDeferred = gSavedSettings.getbool("RenderDeferred");
 	RenderDeferredSunWash = gSavedSettings.getF32("RenderDeferredSunWash");
 	RenderFSAASamples = gSavedSettings.getU32("RenderFSAASamples");
 	RenderResolutionDivisor = gSavedSettings.getU32("RenderResolutionDivisor");
-	RenderUIBuffer = gSavedSettings.getBOOL("RenderUIBuffer");
+	RenderUIBuffer = gSavedSettings.getbool("RenderUIBuffer");
 	RenderShadowDetail = gSavedSettings.getS32("RenderShadowDetail");
-	RenderDeferredSSAO = gSavedSettings.getBOOL("RenderDeferredSSAO");
+	RenderDeferredSSAO = gSavedSettings.getbool("RenderDeferredSSAO");
 	RenderShadowResolutionScale = gSavedSettings.getF32("RenderShadowResolutionScale");
-	RenderLocalLights = gSavedSettings.getBOOL("RenderLocalLights");
-	RenderDelayCreation = gSavedSettings.getBOOL("RenderDelayCreation");
-	RenderAnimateRes = gSavedSettings.getBOOL("RenderAnimateRes");
-	FreezeTime = gSavedSettings.getBOOL("FreezeTime");
+	RenderLocalLights = gSavedSettings.getbool("RenderLocalLights");
+	RenderDelayCreation = gSavedSettings.getbool("RenderDelayCreation");
+	RenderAnimateRes = gSavedSettings.getbool("RenderAnimateRes");
+	FreezeTime = gSavedSettings.getbool("FreezeTime");
 	DebugBeaconLineWidth = gSavedSettings.getS32("DebugBeaconLineWidth");
 	RenderHighlightBrightness = gSavedSettings.getF32("RenderHighlightBrightness");
 	RenderHighlightColor = gSavedSettings.getColor4("RenderHighlightColor");
 	RenderHighlightThickness = gSavedSettings.getF32("RenderHighlightThickness");
-	RenderSpotLightsInNondeferred = gSavedSettings.getBOOL("RenderSpotLightsInNondeferred");
+	RenderSpotLightsInNondeferred = gSavedSettings.getbool("RenderSpotLightsInNondeferred");
 	PreviewAmbientColor = gSavedSettings.getColor4("PreviewAmbientColor");
 	PreviewDiffuse0 = gSavedSettings.getColor4("PreviewDiffuse0");
 	PreviewSpecular0 = gSavedSettings.getColor4("PreviewSpecular0");
@@ -1104,8 +1104,8 @@ void LLPipeline::refreshCachedSettings()
 	RenderGlowIterations = gSavedSettings.getS32("RenderGlowIterations");
 	RenderGlowWidth = gSavedSettings.getF32("RenderGlowWidth");
 	RenderGlowStrength = gSavedSettings.getF32("RenderGlowStrength");
-	RenderDepthOfField = gSavedSettings.getBOOL("RenderDepthOfField");
-	RenderDepthOfFieldInEditMode = gSavedSettings.getBOOL("RenderDepthOfFieldInEditMode");
+	RenderDepthOfField = gSavedSettings.getbool("RenderDepthOfField");
+	RenderDepthOfFieldInEditMode = gSavedSettings.getbool("RenderDepthOfFieldInEditMode");
 	CameraFocusTransitionTime = gSavedSettings.getF32("CameraFocusTransitionTime");
 	CameraFNumber = gSavedSettings.getF32("CameraFNumber");
 	CameraFocalLength = gSavedSettings.getF32("CameraFocalLength");
@@ -1136,7 +1136,7 @@ void LLPipeline::refreshCachedSettings()
 	RenderShadowSplitExponent = gSavedSettings.getVector3("RenderShadowSplitExponent");
 	RenderShadowErrorCutoff = gSavedSettings.getF32("RenderShadowErrorCutoff");
 	RenderShadowFOVCutoff = gSavedSettings.getF32("RenderShadowFOVCutoff");
-	CameraOffset = gSavedSettings.getBOOL("CameraOffset");
+	CameraOffset = gSavedSettings.getbool("CameraOffset");
 	CameraMaxCoF = gSavedSettings.getF32("CameraMaxCoF");
 	CameraDoFResScale = gSavedSettings.getF32("CameraDoFResScale");
 	RenderAutoHideSurfaceAreaLimit = gSavedSettings.getF32("RenderAutoHideSurfaceAreaLimit");

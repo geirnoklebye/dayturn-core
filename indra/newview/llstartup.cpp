@@ -3073,9 +3073,9 @@ void LLStartUp::initNameCache()
 	// Start cache in not-running state until we figure out if we have
 	// capabilities for display name lookup
 	LLAvatarNameCache* cache_inst = LLAvatarNameCache::getInstance();
-	cache_inst->setUsePeopleAPI(gSavedSettings.getBOOL("UsePeopleAPI"));
-	cache_inst->setUseDisplayNames(gSavedSettings.getBOOL("UseDisplayNames"));
-	cache_inst->setUseUsernames(gSavedSettings.getBOOL("NameTagShowUsernames"));
+	cache_inst->setUsePeopleAPI(gSavedSettings.getbool("UsePeopleAPI"));
+	cache_inst->setUseDisplayNames(gSavedSettings.getbool("UseDisplayNames"));
+	cache_inst->setUseUsernames(gSavedSettings.getbool("NameTagShowUsernames"));
 }
 
 
