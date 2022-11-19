@@ -27,6 +27,7 @@
 #ifndef LL_LLVIEWERTEXTURE_H					
 #define LL_LLVIEWERTEXTURE_H
 
+#include "llatomic.h"
 #include "llgltexture.h"
 #include "lltimer.h"
 #include "llframetimer.h"
@@ -565,7 +566,9 @@ protected:
 	LLFrameTimer mStopFetchingTimer;	// Time since mDecodePriority == 0.f.
 
 	bool  mInImageList;				// true if image is in list (in which case don't reset priority!)
-	bool  mNeedsCreateTexture;	
+	// This needs to be atomic, since it is written both in the main thread
+	// and in the GL image worker thread... HB
+	LLAtomicBool  mNeedsCreateTexture;
 
 	bool   mForSculpt ; //a flag if the texture is used as sculpt data.
 	bool   mIsFetched ; //is loaded from remote or from cache, not generated locally.
