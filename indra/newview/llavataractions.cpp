@@ -815,7 +815,7 @@ namespace action_give_inventory
 	 */
 	static LLInventoryPanel* get_active_inventory_panel()
 	{
-		LLInventoryPanel* active_panel = LLInventoryPanel::getActiveInventoryPanel(FALSE);
+		LLInventoryPanel* active_panel = LLInventoryPanel::getActiveInventoryPanel(false);
 		LLFloater* floater_appearance = LLFloaterReg::findInstance("appearance");
 		if (!active_panel || (floater_appearance && floater_appearance->hasFocus()))
 		{

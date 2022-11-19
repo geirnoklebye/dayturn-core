@@ -1783,7 +1783,7 @@ BOOL is_inventorysp_active()
 }
 
 // static
-LLInventoryPanel* LLInventoryPanel::getActiveInventoryPanel(BOOL auto_open)
+LLInventoryPanel* LLInventoryPanel::getActiveInventoryPanel(bool auto_open)
 {
 	S32 z_min = S32_MAX;
 	LLInventoryPanel* res = NULL;

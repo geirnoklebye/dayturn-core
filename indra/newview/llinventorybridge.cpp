@@ -775,7 +775,6 @@ void LLInvFVBridge::getClipboardEntries(bool show_asset_id,
 	{
 		
 		items.push_back(std::string("Copy Separator"));
-
 		items.push_back(std::string("Copy"));
 		if (!isItemCopyable())
 		{
@@ -892,7 +891,7 @@ void LLInvFVBridge::getClipboardEntries(bool show_asset_id,
 		disabled_items.push_back(std::string("Properties"));
 	}
 
-	LLInventoryPanel *active_panel = LLInventoryPanel::getActiveInventoryPanel(FALSE);
+	LLInventoryPanel *active_panel = LLInventoryPanel::getActiveInventoryPanel(false);
 	if (active_panel && (active_panel->getName() != "All Items"))
 	{
 		items.push_back(std::string("Show in Main Panel"));
@@ -2695,7 +2694,7 @@ bool LLFolderBridge::dragCategoryIntoFolder(LLInventoryCategory* inv_cat,
 
 		if (is_movable)
 		{
-			LLInventoryPanel* active_panel = LLInventoryPanel::getActiveInventoryPanel(FALSE);
+			LLInventoryPanel* active_panel = LLInventoryPanel::getActiveInventoryPanel(false);
 			is_movable = active_panel != NULL;
 
 			// For a folder to pass the filter all its descendants are required to pass.
@@ -3975,13 +3974,13 @@ void LLFolderBridge::perform_pasteFromClipboard()
                             }
                             else
                             {
-								copy_inventory_item(
-												gAgent.getID(),
-												item->getPermissions().getOwner(),
-												item->getUUID(),
-												parent_id,
-												std::string(),
-												LLPointer<LLInventoryCallback>(NULL));
+                                copy_inventory_item(
+                                                    gAgent.getID(),
+                                                    item->getPermissions().getOwner(),
+                                                    item->getUUID(),
+                                                    parent_id,
+                                                    std::string(),
+                                                    LLPointer<LLInventoryCallback>(NULL));
                             }
                         }
                     }
@@ -4149,7 +4148,7 @@ void LLFolderBridge::buildContextMenuOptions(U32 flags, menuentry_vec_t&   items
 	if(trash_id == mUUID)
 	{
 		bool is_recent_panel = false;
-		LLInventoryPanel *active_panel = LLInventoryPanel::getActiveInventoryPanel(FALSE);
+		LLInventoryPanel *active_panel = LLInventoryPanel::getActiveInventoryPanel(false);
 		if (active_panel && (active_panel->getName() == "Recent Items"))
 		{
 			is_recent_panel = true;
@@ -4847,7 +4846,7 @@ static bool can_move_to_outfit(LLInventoryItem* inv_item, bool move_is_into_curr
 {
 	// <FS:ND> FIRE-8434/BUG-988 Viewer crashes when copying and pasting an empty outfit folder
 	if( !inv_item )
-		return FALSE;
+		return false;
 	// </FS:ND>
 
 	LLInventoryType::EType inv_type = inv_item->getInventoryType();
@@ -5181,7 +5180,7 @@ bool LLFolderBridge::dragItemIntoFolder(LLInventoryItem* inv_item,
             accept = dest_folder->acceptItem(inv_item);
         }
         
-		LLInventoryPanel* active_panel = LLInventoryPanel::getActiveInventoryPanel(FALSE);
+		LLInventoryPanel* active_panel = LLInventoryPanel::getActiveInventoryPanel(false);
 
 		// Check whether the item being dragged from active inventory panel
 		// passes the filter of the destination panel.
@@ -5433,7 +5432,7 @@ bool LLFolderBridge::dragItemIntoFolder(LLInventoryItem* inv_item,
 				accept = can_move_to_landmarks(inv_item);
 			}
 
-			LLInventoryPanel* active_panel = LLInventoryPanel::getActiveInventoryPanel(FALSE);
+			LLInventoryPanel* active_panel = LLInventoryPanel::getActiveInventoryPanel(false);
 
 			// Check whether the item being dragged from the library
 			// passes the filter of the destination panel.

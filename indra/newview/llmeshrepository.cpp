@@ -5438,7 +5438,7 @@ void on_new_single_inventory_upload_complete(
 
         // Show the preview panel for textures and sounds to let
         // user know that the image (or snapshot) arrived intact.
-        LLInventoryPanel* panel = LLInventoryPanel::getActiveInventoryPanel(FALSE);
+        LLInventoryPanel* panel = LLInventoryPanel::getActiveInventoryPanel(false);
         if (panel)
         {
 
