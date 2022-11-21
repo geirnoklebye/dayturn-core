@@ -1337,7 +1337,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 		{
 			url = gAgent.getRegion()->getCapability("UpdateScriptAgent");
 			body["item_id"] = inventory_item;
-			if (gSavedSettings.getBOOL("SaveInventoryScriptsAsMono"))
+			if (gSavedSettings.getbool("SaveInventoryScriptsAsMono"))
 			{
 				body["target"] = "mono";
 			}
@@ -2011,7 +2011,7 @@ void uploadCoroutine( LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t &a_httpAdapter
 				LLStatusBar::sendMoneyBalanceRequest();
 
 				// <FS:CR> FIRE-10628 - Option to supress upload cost notification
-				if( gSavedSettings.getBOOL( "FSShowUploadPaymentToast" ) )
+				if( gSavedSettings.getbool( "FSShowUploadPaymentToast" ) )
 				{
 					LLSD args;
 					args[ "AMOUNT" ] = llformat( "%d", upload_price );

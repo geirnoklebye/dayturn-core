@@ -538,11 +538,11 @@ static void settings_to_globals()
 
 	LLSurface::setTextureSize(gSavedSettings.getU32("RegionTextureSize"));
 
-	LLRender::sGLCoreProfile = gSavedSettings.getBOOL("RenderGLContextCoreProfile");
-	LLRender::sNsightDebugSupport = gSavedSettings.getBOOL("RenderNsightDebugSupport");
-	LLVertexBuffer::sUseVAO = gSavedSettings.getBOOL("RenderUseVAO");
-	LLImageGL::sGlobalUseAnisotropic	= gSavedSettings.getBOOL("RenderAnisotropic");
-	LLImageGL::sCompressTextures		= gSavedSettings.getBOOL("RenderCompressTextures");
+	LLRender::sGLCoreProfile = gSavedSettings.getbool("RenderGLContextCoreProfile");
+	LLRender::sNsightDebugSupport = gSavedSettings.getbool("RenderNsightDebugSupport");
+	LLVertexBuffer::sUseVAO = gSavedSettings.getbool("RenderUseVAO");
+	LLImageGL::sGlobalUseAnisotropic	= gSavedSettings.getbool("RenderAnisotropic");
+	LLImageGL::sCompressTextures		= gSavedSettings.getbool("RenderCompressTextures");
 	LLVOVolume::sLODFactor				= llclamp(gSavedSettings.getF32("RenderVolumeLODFactor"), 0.01f, MAX_LOD_FACTOR);
 	LLVOVolume::sDistanceFactor			= 1.f-LLVOVolume::sLODFactor * 0.1f;
 	LLVolumeImplFlexible::sUpdateFactor = gSavedSettings.getF32("RenderFlexTimeFactor");
@@ -558,8 +558,8 @@ static void settings_to_globals()
 	LLSelectMgr::sRenderLightRadius = gSavedSettings.getbool("RenderLightRadius");
 
 	gAgentPilot.setNumRuns(gSavedSettings.getS32("StatsNumRuns"));
-	gAgentPilot.setQuitAfterRuns(gSavedSettings.getBOOL("StatsQuitAfterRuns"));
-	gAgent.setHideGroupTitle(gSavedSettings.getBOOL("RenderHideGroupTitle"));
+	gAgentPilot.setQuitAfterRuns(gSavedSettings.getbool("StatsQuitAfterRuns"));
+	gAgent.setHideGroupTitle(gSavedSettings.getbool("RenderHideGroupTitle"));
 
 	gDebugWindowProc = gSavedSettings.getbool("DebugWindowProc");
 	gShowObjectUpdates = gSavedSettings.getbool("ShowObjectUpdates");
@@ -572,14 +572,14 @@ static void settings_to_globals()
 
 static void settings_modify()
 {
-    LLPipeline::sRenderTransparentWater = gSavedSettings.getBOOL("RenderTransparentWater");
-    LLPipeline::sRenderBump             = gSavedSettings.getBOOL("RenderObjectBump");
-    LLPipeline::sRenderDeferred         = LLPipeline::sRenderBump && gSavedSettings.getBOOL("RenderDeferred");
+    LLPipeline::sRenderTransparentWater = gSavedSettings.getbool("RenderTransparentWater");
+    LLPipeline::sRenderBump             = gSavedSettings.getbool("RenderObjectBump");
+    LLPipeline::sRenderDeferred         = LLPipeline::sRenderBump && gSavedSettings.getbool("RenderDeferred");
     LLRenderTarget::sUseFBO             = LLPipeline::sRenderDeferred;
     LLVOSurfacePatch::sLODFactor        = gSavedSettings.getF32("RenderTerrainLODFactor");
     LLVOSurfacePatch::sLODFactor *= LLVOSurfacePatch::sLODFactor;  // square lod factor to get exponential range of [1,4]
     gDebugGL       = gDebugGLSession || gDebugSession;
-    gDebugPipeline = gSavedSettings.getBOOL("RenderDebugPipeline");
+    gDebugPipeline = gSavedSettings.getbool("RenderDebugPipeline");
 }
 
 class LLFastTimerLogThread : public LLThread
@@ -891,7 +891,7 @@ bool LLAppViewer::init()
     LLMachineID::init();
 
 	{
-		if (gSavedSettings.getBOOL("QAModeMetrics"))
+		if (gSavedSettings.getbool("QAModeMetrics"))
 		{
 			app_metrics_qa_mode = true;
 			app_metrics_interval = METRICS_INTERVAL_QA;
@@ -1082,7 +1082,7 @@ bool LLAppViewer::init()
 	}
 
 	// alert the user if they are using unsupported hardware
-	if(!gSavedSettings.getBOOL("AlertedUnsupportedHardware"))
+	if(!gSavedSettings.getbool("AlertedUnsupportedHardware"))
 	{
 		bool unsupported = false;
 		LLSD args;
@@ -1125,7 +1125,7 @@ bool LLAppViewer::init()
 		if(unsupported)
 		{
 			if(!gSavedSettings.controlExists("WarnUnsupportedHardware")
-				|| gSavedSettings.getBOOL("WarnUnsupportedHardware"))
+				|| gSavedSettings.getbool("WarnUnsupportedHardware"))
 			{
 				args["MINSPECS"] = minSpecs;
 				LLNotificationsUtil::add("UnsupportedHardware", args );
@@ -1217,7 +1217,7 @@ bool LLAppViewer::init()
 	gSimLastTime = gRenderStartTime.getElapsedTimeF32();
 	gSimFrames = (F32)gFrameCount;
 
-    if (gSavedSettings.getBOOL("JoystickEnabled"))
+    if (gSavedSettings.getbool("JoystickEnabled"))
     {
         LLViewerJoystick::getInstance()->init(false);
     }
@@ -1326,7 +1326,7 @@ bool LLAppViewer::init()
         }
     }
 #endif //!LL_LINUX
-	if (gSavedSettings.getBOOL("QAMode") && gSavedSettings.getS32("QAModeEventHostPort") > 0)
+	if (gSavedSettings.getbool("QAMode") && gSavedSettings.getS32("QAModeEventHostPort") > 0)
 	{
 		LL_WARNS("InitInfo") << "QAModeEventHostPort DEPRECATED: "
 							 << "lleventhost no longer supported as a dynamic library"
@@ -2373,7 +2373,7 @@ bool LLAppViewer::initThreads()
 {
 	static const bool enable_threads = true;
 
-	LLImage::initClass(gSavedSettings.getBOOL("TextureNewByteRange"),gSavedSettings.getS32("TextureReverseByteRange"));
+	LLImage::initClass(gSavedSettings.getbool("TextureNewByteRange"),gSavedSettings.getS32("TextureReverseByteRange"));
 
 	LLLFSThread::initClass(enable_threads && false);
 
@@ -2952,13 +2952,13 @@ bool LLAppViewer::initConfiguration()
 		ll_init_fail_log(gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "test_failures.log"));
 	}
 
-    if (gSavedSettings.getBOOL("RenderDebugGLSession"))
+    if (gSavedSettings.getbool("RenderDebugGLSession"))
     {
-        gDebugGLSession = TRUE;
-        gDebugGL = TRUE;
+        gDebugGLSession = true;
+        gDebugGL = true;
         // gDebugGL can cause excessive logging
         // so it's limited to a single session
-        gSavedSettings.setBOOL("RenderDebugGLSession", FALSE);
+        gSavedSettings.setbool("RenderDebugGLSession", false);
     }
 
 	const LLControlVariable* skinfolder = gSavedSettings.getControl("SkinCurrent");
@@ -2971,7 +2971,7 @@ bool LLAppViewer::initConfiguration()
 								 gSavedSettings.getString("Language"));
 	}
 
-	if (gSavedSettings.getBOOL("SpellCheck"))
+	if (gSavedSettings.getbool("SpellCheck"))
 	{
 		std::list<std::string> dict_list;
 		std::string dict_setting = gSavedSettings.getString("SpellCheckDictionary");
@@ -3077,7 +3077,7 @@ bool LLAppViewer::initConfiguration()
 	// out of different directories
 
 	if (start_slurl.isValid() &&
-		(gSavedSettings.getBOOL("SLURLPassToOtherInstance")))
+		(gSavedSettings.getbool("SLURLPassToOtherInstance")))
 	{
 		if (sendURLToOtherInstance(start_slurl.getSLURLString()))
 		{
@@ -3239,7 +3239,7 @@ bool LLAppViewer::initWindow()
 	LL_INFOS("AppInit") << "Initializing window..." << LL_ENDL;
 
 	// store setting in a global for easy access and modification
-	gHeadlessClient = gSavedSettings.getBOOL("HeadlessClient");
+	gHeadlessClient = gSavedSettings.getbool("HeadlessClient");
 
 	// always start windowed
 	BOOL ignorePixelDepth = gSavedSettings.getBOOL("IgnorePixelDepth");
@@ -3522,7 +3522,7 @@ LLSD LLAppViewer::getViewerInfo() const
     info["NET_BANDWITH"] = gSavedSettings.getF32("ThrottleBandwidthKBPS");
     info["LOD_FACTOR"] = gSavedSettings.getF32("RenderVolumeLODFactor");
     info["RENDER_QUALITY"] = (F32)gSavedSettings.getU32("RenderQualityPerformance");
-    info["GPU_SHADERS"] = gSavedSettings.getBOOL("RenderDeferred") ? "Enabled" : "Disabled";
+    info["GPU_SHADERS"] = gSavedSettings.getbool("RenderDeferred") ? "Enabled" : "Disabled";
     info["TEXTURE_MEMORY"] = gSavedSettings.getS32("TextureMemory");
 
 #if LL_DARWIN  
@@ -3851,7 +3851,7 @@ void LLAppViewer::writeSystemInfo()
 	gDebugInfo["ViewerExePath"] = gDirUtilp->getExecutablePathAndName();
 	gDebugInfo["CurrentPath"] = gDirUtilp->getCurPath();
 	gDebugInfo["FirstLogin"] = LLSD::Boolean(gAgent.isFirstLogin());
-	gDebugInfo["FirstRunThisInstall"] = gSavedSettings.getBOOL("FirstRunThisInstall");
+	gDebugInfo["FirstRunThisInstall"] = gSavedSettings.getbool("FirstRunThisInstall");
     gDebugInfo["StartupState"] = LLStartUp::getStartupStateString();
 
     if (gViewerWindow)
@@ -4460,9 +4460,9 @@ void LLAppViewer::migrateCacheDirectory()
 	// Note the absence of \cache on the second path.  James.
 
 	// Only do this once per fresh install of this version.
-	if (gSavedSettings.getBOOL("MigrateCacheDirectory"))
+	if (gSavedSettings.getbool("MigrateCacheDirectory"))
 	{
-		gSavedSettings.setBOOL("MigrateCacheDirectory", FALSE);
+		gSavedSettings.setbool("MigrateCacheDirectory", false);
 
 		std::string old_cache_dir = gDirUtilp->add(gDirUtilp->getOSUserAppDir(), "cache");
 		std::string new_cache_dir = gDirUtilp->getCacheDir(true);
@@ -4554,7 +4554,7 @@ bool LLAppViewer::initCache()
     // note that the maximum size of this cache is defined as a percentage of the 
     // total cache size - the 'CacheSize' pref - for all caches. 
     const uintmax_t disk_cache_size = uintmax_t(cache_total_size * disk_cache_percent / 100);
-	const bool enable_cache_debug_info = gSavedSettings.getBOOL("EnableDiskCacheDebugInfo");
+	const bool enable_cache_debug_info = gSavedSettings.getbool("EnableDiskCacheDebugInfo");
 
 	bool texture_cache_mismatch = false;
 	if (gSavedSettings.getS32("LocalCacheVersion") != LLAppViewer::getTextureCacheVersion()) 
@@ -4572,7 +4572,7 @@ bool LLAppViewer::initCache()
 		if (gSavedSettings.getbool("PurgeCacheOnStartup") ||
 			gSavedSettings.getbool("PurgeCacheOnNextStartup"))
 		{
-			LL_INFOS("AppCache") << "Startup cache purge requested: " << (gSavedSettings.getBOOL("PurgeCacheOnStartup") ? "ALWAYS" : "ONCE") << LL_ENDL;
+			LL_INFOS("AppCache") << "Startup cache purge requested: " << (gSavedSettings.getbool("PurgeCacheOnStartup") ? "ALWAYS" : "ONCE") << LL_ENDL;
 			gSavedSettings.setbool("PurgeCacheOnNextStartup", false);
 			mPurgeCache = true;
 			// STORM-1141 force purgeAllTextures to get called to prevent a crash here. -brad
@@ -5013,7 +5013,7 @@ void LLAppViewer::idle()
 	    // Update simulator agent state
 	    //
 
-		if (gSavedSettings.getBOOL("RotateRight"))
+		if (gSavedSettings.getbool("RotateRight"))
 		{
 			gAgent.moveYaw(-1.f);
 		}
@@ -5567,16 +5567,13 @@ static LLTrace::BlockTimerStatHandle FTM_CHECK_REGION_CIRCUIT("Check Region Circ
 
 void LLAppViewer::idleNetwork()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_NETWORK;
 	pingMainloopTimeout("idleNetwork");
 
 	gObjectList.mNumNewObjects = 0;
 	S32 total_decoded = 0;
 
-	if (!gSavedSettings.getBOOL("SpeedTest"))
+	if (!gSavedSettings.getbool("SpeedTest"))
 	{
-		LL_PROFILE_ZONE_NAMED_CATEGORY_NETWORK("idle network"); //LL_RECORD_BLOCK_TIME(FTM_IDLE_NETWORK); // decode
-
 		LLTimer check_message_timer;
 		//  Read all available packets from network
 		const S64 frame_count = gFrameCount;  // U32->S64
@@ -5950,11 +5947,11 @@ void LLAppViewer::setViewerWindowTitle()
 	//KKA-880 Bugsplat #40 & #41 - protect against calling pre-login which can happen after restoring settings
 	std::string title = "";
 
-	if (gSavedSettings.getBOOL("WindowTitleAvatarName") && gAgentAvatarp) {
+	if (gSavedSettings.getbool("WindowTitleAvatarName") && gAgentAvatarp) {
 		title += gAgentAvatarp->getFullname() + " - ";
 	}
 
-	if (gSavedSettings.getBOOL("WindowTitleGridName") && LLGridManager::getInstance()) {
+	if (gSavedSettings.getbool("WindowTitleGridName") && LLGridManager::getInstance()) {
 		title += LLGridManager::getInstance()->getGridLabel() + " - ";
 	}
 
@@ -5963,17 +5960,13 @@ void LLAppViewer::setViewerWindowTitle()
 //virtual
 void LLAppViewer::setMasterSystemAudioMute(bool mute)
 {
-	gSavedSettings.setBOOL("MuteAudio", mute);
+	gSavedSettings.setbool("MuteAudio", mute);
 }
 
 //virtual
 bool LLAppViewer::getMasterSystemAudioMute()
 {
-	// <FS:Ansariel> Replace frequently called gSavedSettings
-	//return gSavedSettings.getBOOL("MuteAudio");
-	static LLCachedControl<bool> sMuteAudio(gSavedSettings, "MuteAudio");
-	return sMuteAudio;
-	// </FS:Ansariel>
+	return gSavedSettings.getbool("MuteAudio");
 }
 
 //----------------------------------------------------------------------------

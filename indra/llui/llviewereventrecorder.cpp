@@ -44,7 +44,7 @@ LLViewerEventRecorder::LLViewerEventRecorder() {
 
 
 bool LLViewerEventRecorder::displayViewerEventRecorderMenuItems() {
-  return LLUI::getInstance()->mSettingGroups["config"]->getBOOL("ShowEventRecorderMenuItems");
+  return LLUI::getInstance()->mSettingGroups["config"]->getbool("ShowEventRecorderMenuItems");
 }
 
 

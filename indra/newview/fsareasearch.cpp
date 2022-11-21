@@ -167,7 +167,7 @@ bool FSAreaSearch::postBuild()
 {
 	mTab = getChild<LLTabContainer>("area_searchtab");
 	
-	if (!gSavedSettings.getBOOL("FSAreaSearchAdvanced"))
+	if (!gSavedSettings.getbool("FSAreaSearchAdvanced"))
 	{
 		LLPanel* advanced_tab = mTab->getPanelByName("area_search_advanced_panel");
 		if (advanced_tab)

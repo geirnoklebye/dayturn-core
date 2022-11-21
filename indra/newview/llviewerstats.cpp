@@ -645,8 +645,8 @@ void send_viewer_stats(bool include_preferences)
 		LL_INFOS() << "Misc Stats: string_1: " << misc["string_1"] << " string_2: " << misc["string_2"] << LL_ENDL;
 	}
 
-	body["DisplayNamesEnabled"] = gSavedSettings.getBOOL("UseDisplayNames");
-	body["DisplayNamesShowUsername"] = gSavedSettings.getBOOL("NameTagShowUsernames");
+	body["DisplayNamesEnabled"] = gSavedSettings.getbool("UseDisplayNames");
+	body["DisplayNamesShowUsername"] = gSavedSettings.getbool("NameTagShowUsernames");
 
 	// Preferences
 	if (include_preferences)

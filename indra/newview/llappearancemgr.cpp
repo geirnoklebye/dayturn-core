@@ -149,7 +149,7 @@ public:
 	{
 		// support secondlife:///app/appearance/show, but for now we just
 		// make all secondlife:///app/appearance SLapps behave this way
-		if (!LLUI::getInstance()->mSettingGroups["config"]->getBOOL("EnableAppearance"))
+		if (!LLUI::getInstance()->mSettingGroups["config"]->getbool("EnableAppearance"))
 		{
 			LLNotificationsUtil::add("NoAppearance", LLSD(), LLSD(), std::string("SwitchToStandardSkinAndQuit"));
 			return true;
@@ -2192,7 +2192,7 @@ void LLAppearanceMgr::updateCOF(const LLUUID& category, bool append)
 		base_contents["type"] = LLAssetType::AT_LINK_FOLDER; 
 		contents.append(base_contents);
 	}
-	if (gSavedSettings.getBOOL("DebugAvatarAppearanceMessage"))
+	if (gSavedSettings.getbool("DebugAvatarAppearanceMessage"))
 	{
 		dump_sequential_xml(gAgentAvatarp->getFullname() + "_slam_request", contents);
 	}
@@ -3789,7 +3789,7 @@ void LLAppearanceMgr::serverAppearanceUpdateCoro(LLCoreHttpUtil::HttpCoroutineAd
         bRetry = false;
         LLCore::HttpRequest::ptr_t httpRequest(new LLCore::HttpRequest());
 
-        if (gSavedSettings.getBOOL("DebugForceAppearanceRequestFailure"))
+        if (gSavedSettings.getbool("DebugForceAppearanceRequestFailure"))
         {
             cofVersion += 999;
             LL_WARNS("Avatar") << "Forcing version failure on COF Baking" << LL_ENDL;
@@ -3798,7 +3798,7 @@ void LLAppearanceMgr::serverAppearanceUpdateCoro(LLCoreHttpUtil::HttpCoroutineAd
         LL_INFOS("Avatar") << "Requesting bake for COF version " << cofVersion << LL_ENDL;
 
         LLSD postData;
-        if (gSavedSettings.getBOOL("DebugAvatarExperimentalServerAppearanceUpdate"))
+        if (gSavedSettings.getbool("DebugAvatarExperimentalServerAppearanceUpdate"))
         {
             postData = dumpCOF();
         }
@@ -3900,7 +3900,7 @@ void LLAppearanceMgr::serverAppearanceUpdateCoro(LLCoreHttpUtil::HttpCoroutineAd
         }
 
         LL_DEBUGS("Avatar") << "succeeded" << LL_ENDL;
-        if (gSavedSettings.getBOOL("DebugAvatarAppearanceMessage"))
+        if (gSavedSettings.getbool("DebugAvatarAppearanceMessage"))
         {
             dump_sequential_xml(gAgentAvatarp->getFullname() + "_appearance_request_ok", result);
         }

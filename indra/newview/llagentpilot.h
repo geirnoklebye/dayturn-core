@@ -75,7 +75,7 @@ public:
 	void setLoop(BOOL new_val) { mLoop = new_val; }
 	BOOL getLoop() { return mLoop; }
 
-	void setQuitAfterRuns(BOOL quit_val) { mQuitAfterRuns = quit_val; }
+	void setQuitAfterRuns(bool quit_val) { mQuitAfterRuns = quit_val; }
 	void setNumRuns(S32 num_runs) { mNumRuns = num_runs; }
 	
 private:
@@ -86,7 +86,7 @@ private:
 	BOOL 	mReplaySession;
 
 	S32		mNumRuns;
-	BOOL	mQuitAfterRuns;
+	bool	mQuitAfterRuns;
 
 	void setAutopilotTarget(const S32 id);
 

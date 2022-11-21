@@ -690,11 +690,11 @@ bool LLPanelPeople::postBuild()
 	mNearbyList->setNoItemsMsg(getString("no_one_near"));
 	mNearbyList->setNoFilteredItemsMsg(getString("no_one_filtered_near"));
 	mNearbyList->setShowIcons("NearbyListShowIcons");
-	mNearbyList->setShowCompleteName(!gSavedSettings.getBOOL("NearbyListHideUsernames"));
+	mNearbyList->setShowCompleteName(!gSavedSettings.getbool("NearbyListHideUsernames"));
 	//colouring based on contact sets
 	mNearbyList->setUseContactColors(true);
 	mMiniMap = (LLNetMap*)getChildView("Net Map",true);
-	mMiniMap->setToolTipMsg(gSavedSettings.getBOOL("DoubleClickTeleport") ? 
+	mMiniMap->setToolTipMsg(gSavedSettings.getbool("DoubleClickTeleport") ? 
 		getString("AltMiniMapToolTipMsg") :	getString("MiniMapToolTipMsg"));
 //MK
 	mNearbyList->showRange(true); 
@@ -1734,16 +1734,16 @@ void LLPanelPeople::onNearbyViewSortMenuItemClicked(const LLSD& userdata)
 	}
 	else if (chosen_item == "view_usernames")
 	{
-	    bool hide_usernames = !gSavedSettings.getBOOL("NearbyListHideUsernames");
-	    gSavedSettings.setBOOL("NearbyListHideUsernames", hide_usernames);
+	    bool hide_usernames = !gSavedSettings.getbool("NearbyListHideUsernames");
+	    gSavedSettings.setbool("NearbyListHideUsernames", hide_usernames);
 
 	    mNearbyList->setShowCompleteName(!hide_usernames);
 	    mNearbyList->handleDisplayNamesOptionChanged();
 	}
 	else if (chosen_item == "view_login_names") {
-		gSavedSettings.setBOOL(
+		gSavedSettings.setbool(
 			"useCompleteNameInLists",
-			!gSavedSettings.getBOOL("useCompleteNameInLists")
+			!gSavedSettings.getbool("useCompleteNameInLists")
 		);
 
 		mNearbyList->handleDisplayNamesOptionChanged();

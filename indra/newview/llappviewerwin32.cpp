@@ -177,7 +177,7 @@ namespace
                 //<FS:Ansariel> Only include if sending settings file
                 //sBugSplatSender->sendAdditionalFile(
                 //    WCSTR(gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, "settings_per_account.xml")));
-                if (gCrashSettings.getBOOL("CrashSubmitSettings"))
+                if (gCrashSettings.getbool("CrashSubmitSettings"))
                 {
                     sBugSplatSender->sendAdditionalFile(
                         WCSTR(gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, "settings_per_account.xml")));
@@ -931,7 +931,7 @@ bool LLAppViewerWin32::initHardwareTest()
 	{
 		// per DEV-11631 - disable hardware probing for everything
 		// but vram.
-		BOOL vram_only = TRUE;
+		bool vram_only = true;
 
 		LLSplashScreen::update(LLTrans::getString("StartupDetectingHardware"));
 
@@ -939,11 +939,11 @@ bool LLAppViewerWin32::initHardwareTest()
 		gDXHardware.setWriteDebugFunc(write_debug_dx);
 		// <FS:Ansariel> FIRE-15891: Add option to disable WMI check in case of problems
 		//BOOL probe_ok = gDXHardware.getInfo(vram_only);
-		BOOL probe_ok = gDXHardware.getInfo(vram_only, gSavedSettings.getBOOL("FSDisableWMIProbing"));
+		bool probe_ok = gDXHardware.getInfo(vram_only, gSavedSettings.getbool("FSDisableWMIProbing"));
 		// </FS:Ansariel>
 
 		if (!probe_ok
-			&& gWarningSettings.getBOOL("AboutDirectX9"))
+			&& gWarningSettings.getbool("AboutDirectX9"))
 		{
 			LL_WARNS("AppInit") << "DirectX probe failed, alerting user." << LL_ENDL;
 
@@ -961,7 +961,7 @@ bool LLAppViewerWin32::initHardwareTest()
 				LLWeb::loadURLExternal("http://secondlife.com/support/", false);
 				return false;
 			}
-			gWarningSettings.setBOOL("AboutDirectX9", FALSE);
+			gWarningSettings.setbool("AboutDirectX9", false);
 		}
 		LL_DEBUGS("AppInit") << "Done polling DirectX for hardware info" << LL_ENDL;
 

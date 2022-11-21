@@ -978,7 +978,7 @@ public:
 				mFrom = chat.mFromName.substr(0, username_start);
 				user_name->setValue(mFrom);
 
-				if (gSavedSettings.getBOOL("NameTagShowUsernames"))
+				if (gSavedSettings.getbool("NameTagShowUsernames"))
 				{
 					std::string username = chat.mFromName.substr(username_start + 2);
 					username = username.substr(0, username.length() - 1);
@@ -1376,7 +1376,7 @@ private:
 		user_name->setValue(LLSD(av_name.getDisplayName()));
 		user_name->setToolTip(av_name.getUserName());
 
-		if (gSavedSettings.getBOOL("NameTagShowUsernames") &&
+		if (gSavedSettings.getbool("NameTagShowUsernames") &&
 			av_name.useDisplayNames() &&
 			!av_name.isDisplayNameDefault())
 		{

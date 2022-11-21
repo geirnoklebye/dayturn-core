@@ -897,11 +897,11 @@ public:
 	// Group Title
 	//--------------------------------------------------------------------
 public:
-	void			setHideGroupTitle(BOOL hide)	{ mHideGroupTitle = hide; }
-	BOOL			isGroupTitleHidden() const 		{ return mHideGroupTitle; }
+	void			setHideGroupTitle(bool hide)	{ mHideGroupTitle = hide; }
+	bool			isGroupTitleHidden() const 		{ return mHideGroupTitle; }
 private:
 	std::string		mGroupTitle; 					// Honorific, like "Sir"
-	BOOL			mHideGroupTitle;
+	bool			mHideGroupTitle;
 
 	//--------------------------------------------------------------------
 	// Group Powers

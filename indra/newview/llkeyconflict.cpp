@@ -635,7 +635,7 @@ void LLKeyConflictHandler::saveToSettings(bool temporary)
         // Todo: Seems conterintuitive for map floater to share inworld controls,
         // discuss with UI UX engineer if this should just be set to 1 by default
         bool value = canHandleMouse("teleport_to", CLICK_DOUBLELEFT, MASK_NONE);
-        gSavedSettings.setBOOL("DoubleClickTeleport", value);
+        gSavedSettings.setbool("DoubleClickTeleport", value);
     }
 
     if (!temporary)

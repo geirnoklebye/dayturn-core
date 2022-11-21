@@ -4085,7 +4085,7 @@ bool LLAgent::teleportCore(bool is_local)
 
 	// close the map panel so we can see our destination.
 	// we don't close search floater, see EXT-5840.
-	if (!gSavedSettings.getBOOL("FSDoNotHideMapOnTeleport")) // <FS:Ansariel> FIRE-17779: Option to not close world map on teleport
+	if (!gSavedSettings.getbool("FSDoNotHideMapOnTeleport")) // <FS:Ansariel> FIRE-17779: Option to not close world map on teleport
 	{
 		LLFloaterReg::hideInstance("world_map");
 	}
@@ -4297,7 +4297,7 @@ void LLAgent::addTPNearbyChatSeparator()
         return;
     }
     
-    if (gSavedSettings.getBOOL("KokuaSuppressTeleportChat"))
+    if (gSavedSettings.getbool("KokuaSuppressTeleportChat"))
     {
       return;
     }
@@ -4659,7 +4659,7 @@ void LLAgent::stopCurrentAnimations(bool force_keep_script_perms /*= false*/)
 			// <FS:Ansariel> FIRE-12148: Pose stand breaks XPOSE animations
 			!force_keep_script_perms &&
 			// </FS:Ansariel>
-			gSavedSettings.getBOOL("RevokePermsOnStopAnimation"))
+			gSavedSettings.getbool("RevokePermsOnStopAnimation"))
 		{
 			U32 permissions = SCRIPT_PERMISSIONS[SCRIPT_PERMISSION_TRIGGER_ANIMATION].permbit | SCRIPT_PERMISSIONS[SCRIPT_PERMISSION_OVERRIDE_ANIMATIONS].permbit;
 			sendRevokePermissions(mRegionp->getRegionID(), permissions);

@@ -50,13 +50,13 @@ void FSFloaterPoseStand::onOpen(const LLSD& key)
 		return;
 	}
 	
-	if (gSavedPerAccountSettings.getBOOL("UseAO"))
+	if (gSavedPerAccountSettings.getbool("UseAO"))
 	{
-		gSavedPerAccountSettings.setBOOL("UseAO", FALSE);
+		gSavedPerAccountSettings.setbool("UseAO", false);
 		mAOPaused = true;
 	}
 	
-	if (gSavedSettings.getBOOL("FSPoseStandLock")
+	if (gSavedSettings.getbool("FSPoseStandLock")
 		&& !gAgentAvatarp->isSitting())
 //		&& !gAgentAvatarp->isSitting()
 //		&& !gRlvHandler.hasBehaviour(RLV_BHVR_SIT))
@@ -91,9 +91,9 @@ void FSFloaterPoseStand::onClose(bool app_quitting)
 	gAgent.setCustomAnim(false);
 	FSPose::getInstance()->stopPose();
 	gAgent.stopCurrentAnimations(true);
-	if (mAOPaused && !gSavedPerAccountSettings.getBOOL("UseAO"))
+	if (mAOPaused && !gSavedPerAccountSettings.getbool("UseAO"))
 	{
-		gSavedPerAccountSettings.setBOOL("UseAO", TRUE);
+		gSavedPerAccountSettings.setbool("UseAO", true);
 		mAOPaused = false;
 	}
 }

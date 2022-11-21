@@ -923,7 +923,7 @@ static bool needs_tooltip(LLSelectNode* nodep)
 bool LLToolPie::handleTooltipLand(std::string line, std::string tooltip_msg)
 {
 	//  Do not show hover for land unless prefs are set to allow it. 
-	if (!gSavedSettings.getBOOL("ShowLandHoverTip")) return true; 
+	if (!gSavedSettings.getbool("ShowLandHoverTip")) return true; 
 
 	LLViewerParcelMgr::getInstance()->setHoverParcel( mHoverPick.mPosGlobal );
 
@@ -1742,7 +1742,7 @@ bool LLToolPie::handleMediaClick(const LLPickInfo& pick, int button)
 
     viewer_media_t media_impl = LLViewerMedia::getInstance()->getMediaImplFromTextureID(mep->getMediaID());
 
-    if (gSavedSettings.getBOOL("MediaOnAPrimUI"))
+    if (gSavedSettings.getbool("MediaOnAPrimUI"))
     {
         if (!LLViewerMediaFocus::getInstance()->isFocusedOnFace(pick.getObject(), pick.mObjectFace) || media_impl.isNull())
         {
@@ -1796,7 +1796,7 @@ bool LLToolPie::handleMediaDblClick(const LLPickInfo& pick)
 
     viewer_media_t media_impl = LLViewerMedia::getInstance()->getMediaImplFromTextureID(mep->getMediaID());
 
-    if (gSavedSettings.getBOOL("MediaOnAPrimUI"))
+    if (gSavedSettings.getbool("MediaOnAPrimUI"))
     {
         if (!LLViewerMediaFocus::getInstance()->isFocusedOnFace(pick.getObject(), pick.mObjectFace) || media_impl.isNull())
         {
@@ -1847,7 +1847,7 @@ bool LLToolPie::handleMediaHover(const LLPickInfo& pick)
 	
 	const LLMediaEntry* mep = tep->hasMedia() ? tep->getMediaData() : NULL;
 	if (mep
-		&& gSavedSettings.getBOOL("MediaOnAPrimUI"))
+		&& gSavedSettings.getbool("MediaOnAPrimUI"))
 	{		
 		viewer_media_t media_impl = LLViewerMedia::getInstance()->getMediaImplFromTextureID(mep->getMediaID());
 		

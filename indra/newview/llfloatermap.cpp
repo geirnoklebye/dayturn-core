@@ -78,11 +78,11 @@ LLFloaterMap::~LLFloaterMap()
 bool LLFloaterMap::postBuild()
 {
 	mMap = getChild<LLNetMap>("Net Map");
-	if (gSavedSettings.getBOOL("DoubleClickTeleport"))
+	if (gSavedSettings.getbool("DoubleClickTeleport"))
 	{
 		mMap->setToolTipMsg(getString("AltToolTipMsg"));
 	}
-	else if (gSavedSettings.getBOOL("DoubleClickShowWorldMap"))
+	else if (gSavedSettings.getbool("DoubleClickShowWorldMap"))
 	{
 		mMap->setToolTipMsg(getString("ToolTipMsg"));
 	}
