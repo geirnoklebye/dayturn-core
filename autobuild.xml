@@ -784,11 +784,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>91acf823c3f1917e354188f78a3fb4a1</string>
+              <string>8e615ece79fff1bf12771b6eb7e4d09e</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/dayturn/fmodstudio/downloads/fmodstudio-2.02.07-windows-221671407.tar.bz2</string>
+              <string>https://bitbucket.org/dayturn/fmodstudio/downloads/fmodstudio-2.02.10-windows-223271737.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
