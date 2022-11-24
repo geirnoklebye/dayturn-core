@@ -72,8 +72,8 @@ public:
 	void setReplaySession(bool new_val) { mReplaySession = new_val; }
 	bool getReplaySession() { return mReplaySession; }
 
-	void setLoop(BOOL new_val) { mLoop = new_val; }
-	BOOL getLoop() { return mLoop; }
+	void setLoop(bool new_val) { mLoop = new_val; }
+	bool getLoop() { return mLoop; }
 
 	void setQuitAfterRuns(bool quit_val) { mQuitAfterRuns = quit_val; }
 	void setNumRuns(S32 num_runs) { mNumRuns = num_runs; }
@@ -82,8 +82,8 @@ private:
 
 
 
-	BOOL	mLoop;
-	BOOL 	mReplaySession;
+	bool	mLoop;
+	bool 	mReplaySession;
 
 	S32		mNumRuns;
 	bool	mQuitAfterRuns;

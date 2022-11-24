@@ -465,7 +465,7 @@ static bool handleRenderDeferredChanged(const LLSD& newvalue)
 		gPipeline.releaseGLBuffers();
 		gPipeline.createGLBuffers();
 		gPipeline.resetVertexBuffers();
-		if (LLPipeline::sRenderDeferred == (BOOL)LLRenderTarget::sUseFBO)
+		if (LLPipeline::sRenderDeferred == LLRenderTarget::sUseFBO)
 		{
 			LLViewerShaderMgr::instance()->setShaders();
 		}
@@ -535,7 +535,7 @@ bool handleHighResSnapshotChanged(const LLSD& newvalue)
 	// High Res Snapshot active, must uncheck RenderUIInSnapshot
 	if (newvalue.asBoolean())
 	{
-		gSavedSettings.setBOOL( "RenderUIInSnapshot", FALSE );
+		gSavedSettings.setbool( "RenderUIInSnapshot", false );
 	}
 	return true;
 }
@@ -595,7 +595,7 @@ bool handleLoginLocationChanged()
 
 bool handleSpellCheckChanged()
 {
-	if (gSavedSettings.getBOOL("SpellCheck"))
+	if (gSavedSettings.getbool("SpellCheck"))
 	{
 		std::list<std::string> dict_list;
 		std::string dict_setting = gSavedSettings.getString("SpellCheckDictionary");
@@ -630,7 +630,7 @@ bool toggle_show_navigation_panel(const LLSD& newvalue)
 	bool value = newvalue.asBoolean();
 
 	LLNavigationBar::getInstance()->setVisible(value);
-	gSavedSettings.setBOOL("ShowMiniLocationPanel", !value);
+	gSavedSettings.setbool("ShowMiniLocationPanel", !value);
 
 	return true;
 }

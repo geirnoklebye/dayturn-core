@@ -848,7 +848,7 @@ public:
 			ypos += y_inc;
 		}
 		// disable use of glReadPixels which messes up nVidia nSight graphics debugging
-        if (gSavedSettings.getBOOL("DebugShowColor") && !LLRender::sNsightDebugSupport)
+        if (gSavedSettings.getbool("DebugShowColor") && !LLRender::sNsightDebugSupport)
         {
             U8 color[4];
             LLCoordGL coord = gViewerWindow->getCurrentMouse();
