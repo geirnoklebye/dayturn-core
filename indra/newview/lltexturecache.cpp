@@ -838,7 +838,7 @@ LLTextureCache::LLTextureCache(bool threaded)
 	  mHeaderAPRFile(NULL),
 	  mReadOnly(true), //do not allow to change the texture cache until setReadOnly() is called.
 	  mTexturesSizeTotal(0),
-	  mDoPurge(FALSE),
+	  mDoPurge(false),
 	  mFastCachep(NULL),
 	  mFastCachePoolp(NULL),
 	  mFastCachePadBuffer(NULL)
@@ -928,7 +928,7 @@ std::string LLTextureCache::getTextureFileName(const LLUUID& id)
 }
 
 //debug
-BOOL LLTextureCache::isInCache(const LLUUID& id) 
+bool LLTextureCache::isInCache(const LLUUID& id)
 {
 	LLMutexLock lock(&mHeaderMutex);
 	id_map_t::const_iterator iter = mHeaderIDMap.find(id);
@@ -937,7 +937,7 @@ BOOL LLTextureCache::isInCache(const LLUUID& id)
 }
 
 //debug
-BOOL LLTextureCache::isInLocal(const LLUUID& id) 
+bool LLTextureCache::isInLocal(const LLUUID& id)
 {
 	S32 local_size = 0;
 	std::string local_filename;
@@ -949,7 +949,7 @@ BOOL LLTextureCache::isInLocal(const LLUUID& id)
 		local_size = LLAPRFile::size(local_filename, getLocalAPRFilePool());
 		if (local_size > 0)
 		{
-			return TRUE ;
+			return true ;
 		}
 	}
 		
@@ -959,7 +959,7 @@ BOOL LLTextureCache::isInLocal(const LLUUID& id)
 		local_size = LLAPRFile::size(local_filename, getLocalAPRFilePool());
 		if (local_size > 0)
 		{
-			return TRUE ;
+			return true ;
 		}
 	}
 		
@@ -969,11 +969,11 @@ BOOL LLTextureCache::isInLocal(const LLUUID& id)
 		local_size = LLAPRFile::size(local_filename, getLocalAPRFilePool());
 		if (local_size > 0)
 		{
-			return TRUE ;
+			return true ;
 		}
 	}
 		
-	return FALSE ;
+	return false ;
 }
 //////////////////////////////////////////////////////////////////////////////
 
@@ -1044,7 +1044,7 @@ void LLTextureCache::setReadOnly(bool read_only)
 
 // Called in the main thread.
 // Returns the unused amount of max_size if any
-S64 LLTextureCache::initCache(ELLPath location, S64 max_size, BOOL texture_cache_mismatch)
+S64 LLTextureCache::initCache(ELLPath location, S64 max_size, bool texture_cache_mismatch)
 {
 	llassert_always(getPending() == 0) ; //should not start accessing the texture cache before initialized.
 
@@ -1368,7 +1368,7 @@ bool LLTextureCache::updateEntry(S32& idx, Entry& entry, S32 new_image_size, S32
 
 		if (purge)
 		{
-			mDoPurge = TRUE;
+			mDoPurge = true;
 		}
 	}
 

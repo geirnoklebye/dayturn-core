@@ -117,7 +117,7 @@ public:
 	
 	void purgeCache(ELLPath location, bool remove_dir = true);
 	void setReadOnly(bool read_only) ;
-	S64 initCache(ELLPath location, S64 maxsize, BOOL texture_cache_mismatch);
+	S64 initCache(ELLPath location, S64 maxsize, bool texture_cache_mismatch);
 
 	handle_t readFromCache(const std::string& local_filename, const LLUUID& id, U32 priority, S32 offset, S32 size,
 						   ReadResponder* responder);
@@ -146,8 +146,8 @@ public:
 	S64Bytes getMaxUsage() { return S64Bytes(sCacheMaxTexturesSize); }
 	U32 getEntries() { return mHeaderEntriesInfo.mEntries; }
 	U32 getMaxEntries() { return sCacheMaxEntries; };
-	BOOL isInCache(const LLUUID& id) ;
-	BOOL isInLocal(const LLUUID& id) ; //not thread safe at the moment
+	bool isInCache(const LLUUID& id) ;
+	bool isInLocal(const LLUUID& id) ; //not thread safe at the moment
 
 protected:
 	// Accessed by LLTextureCacheWorker
