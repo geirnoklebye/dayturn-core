@@ -1290,7 +1290,7 @@ void LLOutfitGallery::onTexturePickerCommit(LLTextureCtrl::ETexturePickOp op, LL
         }
         else
         {
-            image_item_id = floaterp->findItemID(floaterp->getAssetID(), FALSE, TRUE);
+            image_item_id = floaterp->findItemID(floaterp->getAssetID(), false, true);
             if (image_item_id.isNull())
             {
                 LL_WARNS() << "id or image_item_id is NULL!" << LL_ENDL;

@@ -148,11 +148,11 @@ public:
 	void			setLabelWidth(S32 label_width) {mLabelWidth =label_width;}	
 	const std::string&	getLabel() const							{ return mLabel; }
 
-	void			setAllowNoTexture( BOOL b )					{ mAllowNoTexture = b; }
+	void			setAllowNoTexture( bool b )					{ mAllowNoTexture = b; }
 	bool			getAllowNoTexture() const					{ return mAllowNoTexture; }
 
-	void			setAllowLocalTexture(BOOL b)					{ mAllowLocalTexture = b; }
-	BOOL			getAllowLocalTexture() const					{ return mAllowLocalTexture; }
+	void			setAllowLocalTexture(bool b)					{ mAllowLocalTexture = b; }
+	bool			getAllowLocalTexture() const					{ return mAllowLocalTexture; }
 
 	const LLUUID&	getImageItemID() { return mImageItemID; }
 
@@ -208,12 +208,12 @@ public:
 	 */
 	void setOnTextureSelectedCallback(texture_selected_callback cb);
 
-	void setShowLoadingPlaceholder(BOOL showLoadingPlaceholder);
+	void setShowLoadingPlaceholder(bool showLoadingPlaceholder);
 
 	LLViewerFetchedTexture* getTexture() { return mTexturep; }
     
 	// <FS:Ansariel> Mask texture if desired
-	void setIsMasked(BOOL masked) { mIsMasked = masked; }
+	void setIsMasked(bool masked) { mIsMasked = masked; }
     
 
 	void setBakeTextureEnabled(bool enabled);
@@ -241,24 +241,24 @@ private:
 	LLTextBox*				 	mTentativeLabel;
 	LLTextBox*				 	mCaption;
 	std::string				 	mLabel;
-	BOOL					 	mAllowNoTexture; // If true, the user can select "none" as an option
-	BOOL						mAllowLocalTexture;
+	bool					 	mAllowNoTexture; // If true, the user can select "none" as an option
+	bool						mAllowLocalTexture;
 	PermissionMask			 	mImmediateFilterPermMask;
 	PermissionMask				mDnDFilterPermMask;
 	PermissionMask			 	mNonImmediateFilterPermMask;
-	BOOL					 	mCanApplyImmediately;
-	BOOL					 	mCommitOnSelection;
-	BOOL					 	mNeedsRawImageData;
+	bool					 	mCanApplyImmediately;
+	bool					 	mCommitOnSelection;
+	bool					 	mNeedsRawImageData;
 	LLViewBorder*			 	mBorder;
 	bool					 	mValid;
-	BOOL					 	mShowLoadingPlaceholder;
+	bool					 	mShowLoadingPlaceholder;
 	std::string				 	mLoadingPlaceholderString;
 	S32						 	mLabelWidth;
 	// <FS:Ansariel> Texture preview mode
-	BOOL						mPreviewMode;
+	bool						mPreviewMode; //unused
 
 	// <FS:Ansariel> Mask texture if desired
-	BOOL						mIsMasked;    
+	bool						mIsMasked;    //never accessed
 	bool						mOpenTexPreview;
 	bool						mBakeTextureEnabled;
 };
@@ -278,13 +278,13 @@ public:
 		LLUUID image_asset_id,
 		LLUUID default_image_asset_id,
 		LLUUID blank_image_asset_id,
-		BOOL tentative,
-		BOOL allow_no_texture,
+		bool tentative,
+		bool allow_no_texture,
 		const std::string& label,
 		PermissionMask immediate_filter_perm_mask,
 		PermissionMask dnd_filter_perm_mask,
 		PermissionMask non_immediate_filter_perm_mask,
-		BOOL can_apply_immediately,
+		bool can_apply_immediately,
 		LLUIImagePtr fallback_image_name
 		);
 
@@ -306,7 +306,7 @@ public:
 	void setImageID(const LLUUID& image_asset_id, bool set_selection = true);
 	void updateImageStats();
 	const LLUUID&	getAssetID() { return mImageAssetID; }
-	const LLUUID&	findItemID(const LLUUID& asset_id, BOOL copyable_only, BOOL ignore_library = FALSE);
+	const LLUUID&	findItemID(const LLUUID& asset_id, bool copyable_only, bool ignore_library = false);
 	void			setCanApplyImmediately(bool b);
 
 	void			setActive(bool active);
@@ -366,7 +366,7 @@ protected:
 	LLUUID				mDefaultImageAssetID;
 	LLUUID				mBlankImageAssetID;
 	bool				mTentative;
-	BOOL				mAllowNoTexture;
+	bool				mAllowNoTexture;
 	LLUUID				mSpecialCurrentImageAssetID;  // Used when the asset id has no corresponding texture in the user's inventory.
 	LLUUID				mOriginalImageAssetID;
  	LLUUID				mTransImageAssetID;
@@ -384,11 +384,11 @@ protected:
 	PermissionMask		mImmediateFilterPermMask;
 	PermissionMask		mDnDFilterPermMask;
 	PermissionMask		mNonImmediateFilterPermMask;
-	BOOL				mCanApplyImmediately;
-	BOOL				mNoCopyTextureSelected;
+	bool				mCanApplyImmediately;
+	bool				mNoCopyTextureSelected;
 	F32					mContextConeOpacity;
 	LLSaveFolderState	mSavedFolderState;
-	BOOL				mSelectedItemPinned;
+	bool				mSelectedItemPinned;
 
 	LLComboBox*			mModeSelector;
 	LLScrollListCtrl*	mLocalScrollCtrl;
