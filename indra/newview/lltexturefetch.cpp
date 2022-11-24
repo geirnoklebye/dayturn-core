@@ -414,7 +414,7 @@ public:
 
 	// Threads:  Ttc
 	void callbackCacheRead(bool success, LLImageFormatted* image,
-						   S32 imagesize, BOOL islocal);
+						   S32 imagesize, bool islocal);
 
 	// Threads:  Ttc
 	void callbackCacheWrite(bool success);
@@ -602,13 +602,13 @@ private:
 								mCachedSize;
 	e_request_state mSentRequest;
 	handle_t mDecodeHandle;
-	BOOL mLoaded;
-	BOOL mDecoded;
-	BOOL mWritten;
+	bool mLoaded;
+	bool mDecoded;
+	bool mWritten;
 	bool mNeedsAux;
-	BOOL mHaveAllData;
-	BOOL mInLocalCache;
-	BOOL mInCache;
+	bool mHaveAllData;
+	bool mInLocalCache;
+	bool mInCache;
 	bool                        mCanUseHTTP,
 								mCanUseNET ; //can get from asset server.
 	S32 mRetryAttempt;
@@ -939,15 +939,15 @@ LLTextureFetchWorker::LLTextureFetchWorker(LLTextureFetch* fetcher,
 	  mFileSize(0),
 	  mSkippedStatesTime(0),
 	  mCachedSize(0),
-	  mLoaded(FALSE),
+	  mLoaded(false),
 	  mSentRequest(UNSENT),
 	  mDecodeHandle(0),
-	  mDecoded(FALSE),
-	  mWritten(FALSE),
+	  mDecoded(false),
+	  mWritten(false),
 	  mNeedsAux(false),
-	  mHaveAllData(FALSE),
-	  mInLocalCache(FALSE),
-	  mInCache(FALSE),
+	  mHaveAllData(false),
+	  mInLocalCache(false),
+	  mInCache(false),
 	  mCanUseHTTP(true),
 	  mRetryAttempt(0),
 	  mActiveCount(0),
@@ -1141,7 +1141,7 @@ void LLTextureFetchWorker::resetFormattedData()
 	}
 	mHttpReplySize = 0;
 	mHttpReplyOffset = 0;
-	mHaveAllData = FALSE;
+	mHaveAllData = false;
 }
 
 // Threads:  Tmain
@@ -1217,10 +1217,10 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		mRequestedOffset = 0;
 		mFileSize = 0;
 		mCachedSize = 0;
-		mLoaded = FALSE;
+		mLoaded = false;
 		mSentRequest = UNSENT;
-		mDecoded  = FALSE;
-		mWritten  = FALSE;
+		mDecoded  = false;
+		mWritten  = false;
 		if (mHttpBufferArray)
 		{
 			mHttpBufferArray->release();
@@ -1228,12 +1228,12 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		}
 		mHttpReplySize = 0;
 		mHttpReplyOffset = 0;
-		mHaveAllData = FALSE;
+		mHaveAllData = false;
 		clearPackets(); // TODO: Shouldn't be necessary
 		mCacheReadHandle = LLTextureCache::nullHandle();
 		mCacheWriteHandle = LLTextureCache::nullHandle();
 		setState(LOAD_FROM_TEXTURE_CACHE);
-		mInCache = FALSE;
+		mInCache = false;
 		mDesiredSize = llmax(mDesiredSize, TEXTURE_CACHE_ENTRY_SIZE); // min desired size is TEXTURE_CACHE_ENTRY_SIZE
 		LL_DEBUGS(LOG_TXT) << mID << ": Priority: " << llformat("%8.0f",mImagePriority)
 						   << " Desired Discard: " << mDesiredDiscard << " Desired Size: " << mDesiredSize << LL_ENDL;
@@ -1254,7 +1254,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 				return false;
 			}
 			mFileSize = 0;
-			mLoaded = FALSE;			
+			mLoaded = false;
 
             add(LLTextureFetch::sCacheAttempt, 1.0);
 
@@ -1334,7 +1334,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 								  << ", should be >=0" << LL_ENDL;
 			}
 			setState(DECODE_IMAGE);
-			mInCache = TRUE;
+			mInCache = true;
 			mWriteToCacheState = NOT_WRITE ;
 			LL_DEBUGS(LOG_TXT) << mID << ": Cached. Bytes: " << mFormattedImage->getDataSize()
 							   << " Size: " << llformat("%dx%d",mFormattedImage->getWidth(),mFormattedImage->getHeight())
@@ -1617,7 +1617,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		}
 		
 		mRequestedDeltaTimer.reset();
-		mLoaded = FALSE;
+		mLoaded = false;
 		mGetStatus = LLCore::HttpStatus();
 		mGetReason.clear();
 		LL_DEBUGS(LOG_TXT) << "HTTP GET: " << mID << " Offset: " << mRequestedOffset
@@ -1720,7 +1720,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 				else if (http_not_sat == mGetStatus)
 				{
 					// Allowed, we'll accept whatever data we have as complete.
-					mHaveAllData = TRUE;
+					mHaveAllData = true;
 				}
 				else
 				{
@@ -1925,7 +1925,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		llassert_always(mFormattedImage.notNull());
 		S32 discard = mHaveAllData ? 0 : mLoadedDiscard;
 		U32 image_priority = LLWorkerThread::PRIORITY_NORMAL | mWorkPriority;
-		mDecoded  = FALSE;
+		mDecoded  = false;
 		setState(DECODE_IMAGE_UPDATE);
 		LL_DEBUGS(LOG_TXT) << mID << ": Decoding. Bytes: " << mFormattedImage->getDataSize() << " Discard: " << discard
 						   << " All Data: " << mHaveAllData << LL_ENDL;
@@ -2004,7 +2004,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		llassert_always(datasize);
 		setPriority(LLWorkerThread::PRIORITY_LOW | mWorkPriority); // Set priority first since Responder may change it
 		U32 cache_priority = mWorkPriority;
-		mWritten = FALSE;
+		mWritten = false;
 		setState(WAIT_ON_WRITE);
 		++mCacheWriteCount;
 		CacheWriteResponder* responder = new CacheWriteResponder(mFetcher, mID);
@@ -2315,7 +2315,7 @@ bool LLTextureFetchWorker::processSimulatorPackets()
 			/// We have enough (or all) data
 			if (have_all_data)
 			{
-				mHaveAllData = TRUE;
+				mHaveAllData = true;
 			}
 			S32 cur_size = mFormattedImage->getDataSize();
 			if (buffer_size > cur_size)
@@ -2414,19 +2414,19 @@ S32 LLTextureFetchWorker::callbackHttpGet(LLCore::HttpResponse * response,
 									  << mFileSize << " datasize:  " << mFormattedImage->getDataSize()
 									  << LL_ENDL;
 				}
-				mHaveAllData = TRUE;
+				mHaveAllData = true;
 				llassert_always(mDecodeHandle == 0);
 				mFormattedImage = NULL; // discard any previous data we had
 			}
 			else if (data_size < mRequestedSize)
 			{
-				mHaveAllData = TRUE;
+				mHaveAllData = true;
 			}
 			else if (data_size > mRequestedSize)
 			{
 				// *TODO: This shouldn't be happening any more  (REALLY don't expect this anymore)
 				LL_WARNS(LOG_TXT) << "data_size = " << data_size << " > requested: " << mRequestedSize << LL_ENDL;
-				mHaveAllData = TRUE;
+				mHaveAllData = true;
 				llassert_always(mDecodeHandle == 0);
 				mFormattedImage = NULL; // discard any previous data we had
 			}
@@ -2435,7 +2435,7 @@ S32 LLTextureFetchWorker::callbackHttpGet(LLCore::HttpResponse * response,
 		{
 			// We requested data but received none (and no error),
 			// so presumably we have all of it
-			mHaveAllData = TRUE;
+			mHaveAllData = true;
 		}
 		mRequestedSize = data_size;
 	}
@@ -2444,7 +2444,7 @@ S32 LLTextureFetchWorker::callbackHttpGet(LLCore::HttpResponse * response,
 		mRequestedSize = -1; // error
 	}
 	
-	mLoaded = TRUE;
+	mLoaded = true;
 	setPriority(LLWorkerThread::PRIORITY_HIGH | mWorkPriority);
 
 	if (LLViewerStatsRecorder::instanceExists())
@@ -2459,7 +2459,7 @@ S32 LLTextureFetchWorker::callbackHttpGet(LLCore::HttpResponse * response,
 
 // Threads:  Ttc
 void LLTextureFetchWorker::callbackCacheRead(bool success, LLImageFormatted* image,
-											 S32 imagesize, BOOL islocal)
+											 S32 imagesize, bool islocal)
 {
 	LLMutexLock lock(&mWorkMutex);										// +Mw
 	if (mState != LOAD_FROM_TEXTURE_CACHE)
@@ -2476,10 +2476,10 @@ void LLTextureFetchWorker::callbackCacheRead(bool success, LLImageFormatted* ima
 		mInLocalCache = islocal;
 		if (mFileSize != 0 && mFormattedImage->getDataSize() >= mFileSize)
 		{
-			mHaveAllData = TRUE;
+			mHaveAllData = true;
 		}
 	}
-	mLoaded = TRUE;
+	mLoaded = true;
 	setPriority(LLWorkerThread::PRIORITY_HIGH | mWorkPriority);
 }																		// -Mw
 
@@ -2492,7 +2492,7 @@ void LLTextureFetchWorker::callbackCacheWrite(bool success)
 // 		LL_WARNS(LOG_TXT) << "Write callback for " << mID << " with state = " << mState << LL_ENDL;
 		return;
 	}
-	mWritten = TRUE;
+	mWritten = true;
 	setPriority(LLWorkerThread::PRIORITY_HIGH | mWorkPriority);
 }																		// -Mw
 
@@ -2530,7 +2530,7 @@ void LLTextureFetchWorker::callbackDecoded(bool success, LLImageRaw* raw, LLImag
 		removeFromCache();
 		mDecodedDiscard = -1; // Redundant, here for clarity and paranoia
 	}
-	mDecoded = TRUE;
+	mDecoded = true;
 // 	LL_INFOS(LOG_TXT) << mID << " : DECODE COMPLETE " << LL_ENDL;
 	setPriority(LLWorkerThread::PRIORITY_HIGH | mWorkPriority);
 }																		// -Mw
@@ -2598,7 +2598,7 @@ void LLTextureFetchWorker::recordTextureDone(bool is_http, F64 byte_count)
 LLTextureFetch::LLTextureFetch(LLTextureCache* cache, LLImageDecodeThread* imagedecodethread, bool threaded, bool qa_mode)
 	: LLWorkerThread("TextureFetch", threaded, true),
 	  mDebugCount(0),
-	  mDebugPause(FALSE),
+	  mDebugPause(false),
 	  mPacketCount(0),
 	  mBadPacketCount(0),
 	  mQueueMutex(),
@@ -2622,7 +2622,7 @@ LLTextureFetch::LLTextureFetch(LLTextureCache* cache, LLImageDecodeThread* image
 	  mFetchDebugger(NULL),
 	  mFetchSource(LLTextureFetch::FROM_ALL),
 	  mOriginFetchSource(LLTextureFetch::FROM_ALL),
-	  mFetcherLocked(FALSE),
+	  mFetcherLocked(false),
 	  mTextureInfoMainThread(false)
 {
 	mMaxBandwidth = gSavedSettings.getF32("ThrottleBandwidthKBPS");
@@ -2645,7 +2645,7 @@ LLTextureFetch::LLTextureFetch(LLTextureCache* cache, LLImageDecodeThread* image
 
 	// Conditionally construct debugger object after 'this' is
 	// fully initialized.
-	LLTextureFetchDebugger::sDebuggerEnabled = gSavedSettings.getBOOL("TextureFetchDebuggerEnabled");
+	LLTextureFetchDebugger::sDebuggerEnabled = gSavedSettings.getbool("TextureFetchDebuggerEnabled");
 	if(LLTextureFetchDebugger::isEnabled())
 	{
 		mFetchDebugger = new LLTextureFetchDebugger(this, cache, imagedecodethread) ;
@@ -4173,7 +4173,7 @@ TFReqSendMetrics::doWork(LLTextureFetch * fetcher)
 	
 	mStatsSD["truncated"] = truncate_viewer_metrics(10, mStatsSD);
 
-    if (gSavedSettings.getBOOL("QAModeMetrics"))
+    if (gSavedSettings.getbool("QAModeMetrics"))
     {
         dump_sequential_xml("metric_asset_stats",mStatsSD);
     }
@@ -4317,7 +4317,7 @@ LLTextureFetchDebugger::LLTextureFetchDebugger(LLTextureFetch* fetcher, LLTextur
 LLTextureFetchDebugger::~LLTextureFetchDebugger()
 {
 	mFetchingHistory.clear();
-	mStopDebug = TRUE;
+	mStopDebug = true;
 	tryToStopDebug();
 }
 
@@ -4354,10 +4354,10 @@ void LLTextureFetchDebugger::init()
 	mRefetchedAllData = 0;
 	mRefetchedAllPixels = 0;
 
-	mFreezeHistory = FALSE;
-	mStopDebug = FALSE;
-	mClearHistory = FALSE;
-	mRefetchNonVis = FALSE;
+	mFreezeHistory = false;
+	mStopDebug = false;
+	mClearHistory = false;
+	mRefetchNonVis = false;
 	
 	mNbCurlRequests = 0;
 
@@ -4414,7 +4414,7 @@ void LLTextureFetchDebugger::startDebug()
 {
 	//lock the fetcher
 	mFetcher->lockFetcher(true);
-	mFreezeHistory = TRUE;
+	mFreezeHistory = true;
 	mFetcher->resetLoadSource();
 
 	//clear the current fetching queue
@@ -4547,8 +4547,8 @@ void LLTextureFetchDebugger::tryToStopDebug()
 		//unlock the fetcher
 		mFetcher->lockFetcher(false);
 		mFetcher->resetLoadSource();
-		mFreezeHistory = FALSE;		
-		mStopDebug = FALSE;
+		mFreezeHistory = false;
+		mStopDebug = false;
 
 		if(mClearHistory)
 		{
@@ -4563,7 +4563,7 @@ void LLTextureFetchDebugger::tryToStopDebug()
 //called in the main thread and when the fetching queue is empty
 void LLTextureFetchDebugger::clearHistory()
 {
-	mClearHistory = TRUE;	
+	mClearHistory = true;
 }
 
 void LLTextureFetchDebugger::addHistoryEntry(LLTextureFetchWorker* worker)
@@ -4849,7 +4849,7 @@ bool LLTextureFetchDebugger::processGLCreation(F32 max_time)
 			if(mFetchingHistory[mHistoryListIndex].mID == mTempTexList[mTempIndex]->getID())
 			{
 				mTempTexList[mTempIndex]->createGLTexture(mFetchingHistory[mHistoryListIndex].mDecodedLevel, 
-					mFetchingHistory[mHistoryListIndex].mRawImage, 0, TRUE, mTempTexList[mTempIndex]->getBoostLevel());
+					mFetchingHistory[mHistoryListIndex].mRawImage, 0, true, mTempTexList[mTempIndex]->getBoostLevel());
 				mTempIndex++;
 			}
 		}
@@ -4982,7 +4982,7 @@ void LLTextureFetchDebugger::debugRefetchAllFromCache()
 	mRefetchAllCacheTime = -1.f;
 	mRefetchedAllData = 0;
 	mRefetchedAllPixels = 0;
-	mRefetchNonVis = FALSE;
+	mRefetchNonVis = false;
 }
 
 void LLTextureFetchDebugger::debugRefetchAllFromHTTP()
@@ -4999,7 +4999,7 @@ void LLTextureFetchDebugger::debugRefetchAllFromHTTP()
 	mRefetchAllHTTPTime = -1.f;
 	mRefetchedAllData = 0;
 	mRefetchedAllPixels = 0;
-	mRefetchNonVis = TRUE;
+	mRefetchNonVis = true;
 }
 
 bool LLTextureFetchDebugger::update(F32 max_time)
@@ -5076,7 +5076,7 @@ bool LLTextureFetchDebugger::update(F32 max_time)
 		{
 			if(!mRefetchNonVis)
 			{
-				mRefetchNonVis = TRUE; //start to fetch non-vis
+				mRefetchNonVis = true; //start to fetch non-vis
 				scanRefetchList();
 				break;
 			}
@@ -5086,7 +5086,7 @@ bool LLTextureFetchDebugger::update(F32 max_time)
 			mFetcher->lockFetcher(true);
 			mFetcher->resetLoadSource();
 			mRefetchList.clear();
-			mRefetchNonVis = FALSE;
+			mRefetchNonVis = false;
 		}
 		break;
 	case REFETCH_ALL_HTTP:
@@ -5098,7 +5098,7 @@ bool LLTextureFetchDebugger::update(F32 max_time)
 			mFetcher->lockFetcher(true);
 			mFetcher->resetLoadSource();
 			mRefetchList.clear();
-			mRefetchNonVis = FALSE;
+			mRefetchNonVis = false;
 		}
 		break;
 	default:
@@ -5132,7 +5132,7 @@ void LLTextureFetchDebugger::onCompleted(LLCore::HttpHandle handle, LLCore::Http
 }
 
 void LLTextureFetchDebugger::callbackCacheRead(S32 id, bool success, LLImageFormatted* image,
-						   S32 imagesize, BOOL islocal)
+						   S32 imagesize, bool islocal)
 {
 	if (success)
 	{

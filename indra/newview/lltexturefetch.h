@@ -305,7 +305,7 @@ private:
 public:
 	LLUUID mDebugID;
 	S32 mDebugCount;
-	BOOL mDebugPause;
+	bool mDebugPause;
 	S32 mPacketCount;
 	S32 mBadPacketCount;
 	
@@ -539,10 +539,10 @@ private:
 	U32 mRefetchedAllData;
 	U32 mRefetchedAllPixels;
 
-	BOOL mFreezeHistory;
-	BOOL mStopDebug;
-	BOOL mClearHistory;
-	BOOL mRefetchNonVis;
+	bool mFreezeHistory;
+	bool mStopDebug;
+	bool mClearHistory;
+	bool mRefetchNonVis;
 
 	std::string mHTTPUrl;
 	S32 mNbCurlRequests;
@@ -565,10 +565,10 @@ public:
 	virtual void onCompleted(LLCore::HttpHandle handle, LLCore::HttpResponse * response);
 
 	void startWork(e_debug_state state);
-	void setStopDebug() {mStopDebug = TRUE;}
+	void setStopDebug() {mStopDebug = true;}
 	void tryToStopDebug(); //stop everything
 	void callbackCacheRead(S32 id, bool success, LLImageFormatted* image,
-						   S32 imagesize, BOOL islocal);
+						   S32 imagesize, bool islocal);
 	void callbackCacheWrite(S32 id, bool success);
 	void callbackDecoded(S32 id, bool success, LLImageRaw* raw, LLImageRaw* aux);
 	void callbackHTTP(FetchEntry & fetch, LLCore::HttpResponse * response);
