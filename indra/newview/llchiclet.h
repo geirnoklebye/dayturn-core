@@ -104,8 +104,8 @@ public:
 	{
 		Params()
 		{
-			changeDefault(draw_tooltip, FALSE);
-			changeDefault(mouse_opaque, FALSE);
+			changeDefault(draw_tooltip, false);
+			changeDefault(mouse_opaque, false);
 			changeDefault(default_icon_name, "Generic_Person");
 		};
 	};

@@ -68,12 +68,12 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-LLFloaterColorPicker::LLFloaterColorPicker (LLColorSwatchCtrl* swatch, BOOL show_apply_immediate )
+LLFloaterColorPicker::LLFloaterColorPicker (LLColorSwatchCtrl* swatch, bool show_apply_immediate )
 	: LLFloater(LLSD()),
 	  mComponents			( 3 ),
-	  mMouseDownInLumRegion	( FALSE ),
-	  mMouseDownInHueRegion	( FALSE ),
-	  mMouseDownInSwatch	( FALSE ),
+	  mMouseDownInLumRegion	( false ),
+	  mMouseDownInHueRegion	( false ),
+	  mMouseDownInSwatch	( false ),
 	  // *TODO: Specify this in XML
 	  mRGBViewerImageLeft	( 140 ),
 	  mRGBViewerImageTop	( 356 ),
@@ -99,7 +99,7 @@ LLFloaterColorPicker::LLFloaterColorPicker (LLColorSwatchCtrl* swatch, BOOL show
 	  mPaletteRegionWidth	( mLumRegionLeft + mLumRegionWidth - 10 ),
 	  mPaletteRegionHeight	( 40 ),
 	  mSwatch				( swatch ),
-	  mActive				( TRUE ),
+	  mActive				( true ),
 	  mCanApplyImmediately	( show_apply_immediate ),
 	  mContextConeOpacity	( 0.f ),
       mContextConeInAlpha   ( 0.f ),
@@ -179,7 +179,7 @@ void LLFloaterColorPicker::showUI ()
 	{
 		LLColorSwatchCtrl* swatch = getSwatch ();
 
-		setVisible ( FALSE );
+		setVisible ( false );
 
 		// code that will get switched in for default system color picker
 		if ( swatch )
@@ -470,8 +470,8 @@ void LLFloaterColorPicker::onColorSelect( const LLTextureEntry& te )
 
 void LLFloaterColorPicker::onMouseCaptureLost()
 {
-	setMouseDownInHueRegion(FALSE);
-	setMouseDownInLumRegion(FALSE);
+	setMouseDownInHueRegion(false);
+	setMouseDownInLumRegion(false);
 }
 
 F32 LLFloaterColorPicker::getSwatchTransparency()
@@ -744,7 +744,7 @@ void LLFloaterColorPicker::onTextEntryChanged ( LLUICtrl* ctrl )
 
 //////////////////////////////////////////////////////////////////////////////
 //
-BOOL LLFloaterColorPicker::updateRgbHslFromPoint ( S32 xPosIn, S32 yPosIn )
+bool LLFloaterColorPicker::updateRgbHslFromPoint ( S32 xPosIn, S32 yPosIn )
 {
 	if ( xPosIn >= mRGBViewerImageLeft &&
 		 xPosIn <= mRGBViewerImageLeft + mRGBViewerImageWidth &&
@@ -757,7 +757,7 @@ BOOL LLFloaterColorPicker::updateRgbHslFromPoint ( S32 xPosIn, S32 yPosIn )
 					getCurL () );
 
 		// indicate a value changed
-		return TRUE;
+		return true;
 	}
 	else
 	if ( xPosIn >= mLumRegionLeft &&
@@ -772,10 +772,10 @@ BOOL LLFloaterColorPicker::updateRgbHslFromPoint ( S32 xPosIn, S32 yPosIn )
 					( ( F32 )yPosIn - ( ( F32 )mRGBViewerImageTop - ( F32 )mRGBViewerImageHeight ) ) / ( F32 )mRGBViewerImageHeight );
 
 		// indicate a value changed
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -795,7 +795,7 @@ BOOL LLFloaterColorPicker::handleMouseDown ( S32 x, S32 y, MASK mask )
 	{
 		gFocusMgr.setMouseCapture(this);
 		// mouse button down
-		setMouseDownInHueRegion ( TRUE );
+		setMouseDownInHueRegion (true);
 
 		// update all values based on initial click
 		updateRgbHslFromPoint ( x, y );
@@ -814,7 +814,7 @@ BOOL LLFloaterColorPicker::handleMouseDown ( S32 x, S32 y, MASK mask )
 	{
 		gFocusMgr.setMouseCapture(this);
 		// mouse button down
-		setMouseDownInLumRegion ( TRUE );
+		setMouseDownInLumRegion (true);
 
 		// required by base class
 		return TRUE;
@@ -826,10 +826,10 @@ BOOL LLFloaterColorPicker::handleMouseDown ( S32 x, S32 y, MASK mask )
 						mSwatchRegionLeft + mSwatchRegionWidth,
 						mSwatchRegionTop - mSwatchRegionHeight );
 
-	setMouseDownInSwatch( FALSE );
+	setMouseDownInSwatch(false);
 	if ( swatchRect.pointInRect ( x, y ) )
 	{
-		setMouseDownInSwatch( TRUE );
+		setMouseDownInSwatch(true);
 
 		// required - dont drag windows here.
 		return TRUE;
@@ -1005,8 +1005,8 @@ BOOL LLFloaterColorPicker::handleMouseUp ( S32 x, S32 y, MASK mask )
 	}
 
 	// mouse button not down anymore
-	setMouseDownInHueRegion ( FALSE );
-	setMouseDownInLumRegion ( FALSE );
+	setMouseDownInHueRegion (false);
+	setMouseDownInLumRegion (false);
 
 	// mouse button not down in color swatch anymore
 	mMouseDownInSwatch = false;
@@ -1031,10 +1031,10 @@ void LLFloaterColorPicker::cancelSelection ()
 	LLColorSwatchCtrl::onColorChanged( getSwatch(), LLColorSwatchCtrl::COLOR_CANCEL );
 
 	// hide picker dialog
-	this->setVisible ( FALSE );
+	this->setVisible ( false );
 }
 
-void LLFloaterColorPicker::setMouseDownInHueRegion ( BOOL mouse_down_in_region )
+void LLFloaterColorPicker::setMouseDownInHueRegion ( bool mouse_down_in_region )
 {
 	mMouseDownInHueRegion = mouse_down_in_region;
 	if (mouse_down_in_region)
@@ -1047,7 +1047,7 @@ void LLFloaterColorPicker::setMouseDownInHueRegion ( BOOL mouse_down_in_region )
 	}
 }
 
-void LLFloaterColorPicker::setMouseDownInLumRegion ( BOOL mouse_down_in_region )
+void LLFloaterColorPicker::setMouseDownInLumRegion ( bool mouse_down_in_region )
 {
 	mMouseDownInLumRegion = mouse_down_in_region;
 	if (mouse_down_in_region)
@@ -1060,7 +1060,7 @@ void LLFloaterColorPicker::setMouseDownInLumRegion ( BOOL mouse_down_in_region )
 	}
 }
 
-void LLFloaterColorPicker::setMouseDownInSwatch (BOOL mouse_down_in_swatch)
+void LLFloaterColorPicker::setMouseDownInSwatch (bool mouse_down_in_swatch)
 {
 	mMouseDownInSwatch = mouse_down_in_swatch;
 	if (mouse_down_in_swatch)

@@ -56,7 +56,7 @@ LLSysWellChiclet::Params::Params()
 	, max_displayed_count("max_displayed_count", 99)
 {
 	button.name = "button";
-	button.tab_stop = FALSE;
+	button.tab_stop = false;
 	button.label = LLStringUtil::null;
 }
 

@@ -277,8 +277,8 @@ std::string LLAvatarPropertiesProcessor::paymentInfo(const LLAvatarData* avatar_
 	const S32 LINDEN_EMPLOYEE_INDEX = 3;
 	if (avatar_data->caption_index == LINDEN_EMPLOYEE_INDEX) return "";
 
-	BOOL transacted = (avatar_data->flags & AVATAR_TRANSACTED);
-	BOOL identified = (avatar_data->flags & AVATAR_IDENTIFIED);
+	bool transacted = (avatar_data->flags & AVATAR_TRANSACTED);
+	bool identified = (avatar_data->flags & AVATAR_IDENTIFIED);
 	// Not currently getting set in dataserver/lldataavatar.cpp for privacy considerations
 	//BOOL age_verified = (avatar_data->flags & AVATAR_AGEVERIFIED); 
 

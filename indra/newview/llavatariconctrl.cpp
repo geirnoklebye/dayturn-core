@@ -320,17 +320,17 @@ void LLAvatarIconCtrl::processProperties(void* data, EAvatarProcessorType type)
 void LLAvatarIconCtrl::onAvatarNameCache(const LLUUID& agent_id, const LLAvatarName& av_name)
 {
 	mAvatarNameCacheConnection.disconnect();
-	bool set_tool_tip = FALSE;
+	bool set_tool_tip = false;
 
 	if (agent_id == AUDIO_STREAM_FROM) {
 		mFullName = LLTrans::getString("Audio Stream");
-		set_tool_tip = TRUE;
+		set_tool_tip = true;
 	}
 	else if (agent_id == mAvatarId) {
 		// Most avatar icon controls are next to a UI element that shows
 		// a display name, so only show username.
 		mFullName = av_name.getUserName();
-		set_tool_tip = TRUE;
+		set_tool_tip = true;
 	}
 
 	if (set_tool_tip && mDrawTooltip) {

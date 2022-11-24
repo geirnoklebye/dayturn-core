@@ -93,7 +93,7 @@ LLBuyCurrencyHTMLHandler gBuyCurrencyHTMLHandler;
 // the case where the amount is not requested.
 void LLBuyCurrencyHTML::openCurrencyFloater()
 {
-	if ( gSavedSettings.getBOOL( "QuickBuyCurrency" ) )
+	if ( gSavedSettings.getbool( "QuickBuyCurrency" ) )
 	{
 		// HTML version
 		LLBuyCurrencyHTML::showDialog( false, "", 0 );
@@ -112,7 +112,7 @@ void LLBuyCurrencyHTML::openCurrencyFloater()
 // the case where the amount and a string to display are requested.
 void LLBuyCurrencyHTML::openCurrencyFloater( const std::string& message, S32 sum )
 {
-	if ( gSavedSettings.getBOOL( "QuickBuyCurrency" ) )
+	if ( gSavedSettings.getbool( "QuickBuyCurrency" ) )
 	{
 		// HTML version
 		LLBuyCurrencyHTML::showDialog( true, message, sum );

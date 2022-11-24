@@ -734,9 +734,8 @@ void LLAvatarTracker::processChangeUserRights(LLMessageSystem* msg, void**)
 
 void LLAvatarTracker::processNotify(LLMessageSystem* msg, bool online)
 {
-	LL_PROFILE_ZONE_SCOPED
 	S32 count = msg->getNumberOfBlocksFast(_PREHASH_AgentBlock);
-	BOOL chat_notify = gSavedSettings.getBOOL("ChatOnlineNotification");
+	bool chat_notify = gSavedSettings.getbool("ChatOnlineNotification");
 
 	LL_DEBUGS() << "Received " << count << " online notifications **** " << LL_ENDL;
 	if(count > 0)
@@ -769,14 +768,8 @@ void LLAvatarTracker::processNotify(LLMessageSystem* msg, bool online)
 				// we were tracking someone who went offline
 				deleteTrackingData();
 			}
-		}
-		//[FIX FIRE-3522 : SJ] Notify Online/Offline to Nearby Chat even if chat_notify isnt true
-		
-		// <FS:PP> Attempt to speed up things a little
-		// if(chat_notify||LGGContactSets::getInstance()->notifyForFriend(agent_id)||gSavedSettings.getBOOL("OnlineOfflinetoNearbyChat"))
-		static LLCachedControl<bool> OnlineOfflinetoNearbyChat(gSavedSettings, "OnlineOfflinetoNearbyChat");
-		if(chat_notify || LGGContactSets::getInstance()->notifyForFriend(agent_id) || OnlineOfflinetoNearbyChat)
-		// </FS:PP>
+		}		
+        if(chat_notify)
 		{
 			// Look up the name of this agent for the notification
 			LLAvatarNameCache::get(agent_id,boost::bind(&on_avatar_name_cache_notify,_1, _2, online, payload));

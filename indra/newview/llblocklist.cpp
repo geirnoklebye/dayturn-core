@@ -357,7 +357,7 @@ void LLBlockList::onCustomAction(const LLSD& userdata)
 	}
 }
 
-BOOL LLBlockList::isMenuItemChecked(const LLSD& userdata)
+bool LLBlockList::isMenuItemChecked(const LLSD& userdata)
 {
 	LLBlockedListItem* item = getBlockedItem();
 	if (!item)
