@@ -892,7 +892,7 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 		//	gGL.popMatrix();
 		//}
 
-		LLPipeline::sUnderWaterRender = LLViewerCamera::getInstance()->cameraUnderWater() ? TRUE : FALSE;
+		LLPipeline::sUnderWaterRender = LLViewerCamera::getInstance()->cameraUnderWater() ? true : false;
 
 		LLGLState::checkStates();
 
@@ -1063,7 +1063,7 @@ void render_hud_attachments()
 		LLCamera hud_cam = *LLViewerCamera::getInstance();
 		hud_cam.setOrigin(-1.f,0,0);
 		hud_cam.setAxes(LLVector3(1,0,0), LLVector3(0,1,0), LLVector3(0,0,1));
-		LLViewerCamera::updateFrustumPlanes(hud_cam, TRUE);
+		LLViewerCamera::updateFrustumPlanes(hud_cam, true);
 
 		bool render_particles = gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_PARTICLES) && gSavedSettings.getbool("RenderHUDParticles");
 		

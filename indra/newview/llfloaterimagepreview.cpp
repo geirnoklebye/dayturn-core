@@ -690,7 +690,7 @@ bool LLImagePreviewAvatar::render()
 
 	LLViewerCamera::getInstance()->setAspect((F32)mFullWidth / mFullHeight);
 	LLViewerCamera::getInstance()->setView(LLViewerCamera::getInstance()->getDefaultFOV() / mCameraZoom);
-	LLViewerCamera::getInstance()->setPerspective(FALSE, mOrigin.mX, mOrigin.mY, mFullWidth, mFullHeight, FALSE);
+	LLViewerCamera::getInstance()->setPerspective(false, mOrigin.mX, mOrigin.mY, mFullWidth, mFullHeight, false);
 
 	LLVertexBuffer::unbind();
 	avatarp->updateLOD();
@@ -890,7 +890,7 @@ bool LLImagePreviewSculpted::render()
 
 	LLViewerCamera::getInstance()->setAspect((F32) mFullWidth / mFullHeight);
 	LLViewerCamera::getInstance()->setView(LLViewerCamera::getInstance()->getDefaultFOV() / mCameraZoom);
-	LLViewerCamera::getInstance()->setPerspective(FALSE, mOrigin.mX, mOrigin.mY, mFullWidth, mFullHeight, FALSE);
+	LLViewerCamera::getInstance()->setPerspective(false, mOrigin.mX, mOrigin.mY, mFullWidth, mFullHeight, false);
 
 	const LLVolumeFace &vf = mVolume->getVolumeFace(0);
 	U32 num_indices = vf.mNumIndices;

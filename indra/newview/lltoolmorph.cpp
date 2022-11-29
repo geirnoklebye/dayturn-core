@@ -237,7 +237,7 @@ bool LLVisualParamHint::render()
 		LLVector3::z_axis,	// up
 		target_pos );		// point of interest
 
-	LLViewerCamera::getInstance()->setPerspective(FALSE, mOrigin.mX, mOrigin.mY, mFullWidth, mFullHeight, FALSE);
+	LLViewerCamera::getInstance()->setPerspective(false, mOrigin.mX, mOrigin.mY, mFullWidth, mFullHeight, false);
 
     if (gAgentAvatarp->mDrawable.notNull())
     {

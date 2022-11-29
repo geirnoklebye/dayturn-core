@@ -3341,7 +3341,7 @@ void LLPipeline::stateSort(LLCamera& camera, LLCullResult &result)
 	if (LLViewerCamera::sCurCameraID == LLViewerCamera::CAMERA_WORLD)
 	{
 		LLSpatialGroup* last_group = NULL;
-		BOOL fov_changed = LLViewerCamera::getInstance()->isDefaultFOVChanged();
+		bool fov_changed = LLViewerCamera::getInstance()->isDefaultFOVChanged();
 		for (LLCullResult::bridge_iterator i = sCull->beginVisibleBridge(); i != sCull->endVisibleBridge(); ++i)
 		{
 			LLCullResult::bridge_iterator cur_iter = i;
@@ -9231,7 +9231,7 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
             set_current_modelview(mat);
             gGL.loadMatrix(mat.m);
 
-            LLViewerCamera::updateFrustumPlanes(camera, FALSE, TRUE);
+            LLViewerCamera::updateFrustumPlanes(camera, false, true);
 
             glh::vec3f    origin(0, 0, 0);
             glh::matrix4f inv_mat = mat.inverse();
@@ -10291,7 +10291,7 @@ void LLPipeline::generateSunShadow(LLCamera& camera)
 			shadow_cam = camera;
 			shadow_cam.setFar(16.f);
 	
-			LLViewerCamera::updateFrustumPlanes(shadow_cam, FALSE, FALSE, TRUE);
+			LLViewerCamera::updateFrustumPlanes(shadow_cam, false, false, true);
 
 			LLVector3* frust = shadow_cam.mAgentFrustum;
 
@@ -10596,7 +10596,7 @@ void LLPipeline::generateSunShadow(LLCamera& camera)
 			set_current_modelview(view[j]);
 			set_current_projection(proj[j]);
 
-			LLViewerCamera::updateFrustumPlanes(shadow_cam, FALSE, FALSE, TRUE);
+			LLViewerCamera::updateFrustumPlanes(shadow_cam, false, false, true);
 
 			//shadow_cam.ignoreAgentFrustumPlane(LLCamera::AGENT_PLANE_NEAR);
 			shadow_cam.getAgentPlane(LLCamera::AGENT_PLANE_NEAR).set(shadow_near_clip);
@@ -10762,7 +10762,7 @@ void LLPipeline::generateSunShadow(LLCamera& camera)
 			shadow_cam.setFar(far_clip);
 			shadow_cam.setOrigin(origin);
 
-			LLViewerCamera::updateFrustumPlanes(shadow_cam, FALSE, FALSE, TRUE);
+			LLViewerCamera::updateFrustumPlanes(shadow_cam, false, false, true);
 
 			stop_glerror();
 

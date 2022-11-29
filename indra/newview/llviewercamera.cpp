@@ -189,7 +189,7 @@ void LLViewerCamera::calcProjection(const F32 far_distance) const
 // height.
 
 //static
-void LLViewerCamera::updateFrustumPlanes(LLCamera& camera, BOOL ortho, BOOL zflip, BOOL no_hacks)
+void LLViewerCamera::updateFrustumPlanes(LLCamera& camera, bool ortho, bool zflip, bool no_hacks)
 {
 	GLint* viewport = (GLint*) gGLViewport;
 	F64 model[16];
@@ -285,17 +285,17 @@ void LLViewerCamera::updateFrustumPlanes(LLCamera& camera, BOOL ortho, BOOL zfli
 	camera.calcAgentFrustumPlanes(frust);
 }
 
-void LLViewerCamera::setPerspective(BOOL for_selection,
+void LLViewerCamera::setPerspective(bool for_selection,
 									S32 x, S32 y_from_bot, S32 width, S32 height,
-									BOOL limit_select_distance,
+									bool limit_select_distance,
 									F32 z_near, F32 z_far)
 {
 	F32 fov_y, aspect;
 	fov_y = RAD_TO_DEG * getView();
-	BOOL z_default_far = FALSE;
+	bool z_default_far = false;
 	if (z_far <= 0)
 	{
-		z_default_far = TRUE;
+		z_default_far = true;
 		z_far = getFar();
 	}
 	if (z_near <= 0)
@@ -753,29 +753,29 @@ LLVector3 LLViewerCamera::roundToPixel(const LLVector3 &pos_agent)
 	return pos_agent_rounded;
 }
 
-BOOL LLViewerCamera::cameraUnderWater() const
+bool LLViewerCamera::cameraUnderWater() const
 {
 	if(!gAgent.getRegion())
 	{
-		return FALSE ;
+		return false ;
 	}
 	return getOrigin().mV[VZ] < gAgent.getRegion()->getWaterHeight();
 }
 
-BOOL LLViewerCamera::areVertsVisible(LLViewerObject* volumep, BOOL all_verts)
+bool LLViewerCamera::areVertsVisible(LLViewerObject* volumep, bool all_verts)
 {
 	S32 i, num_faces;
 	LLDrawable* drawablep = volumep->mDrawable;
 
 	if (!drawablep)
 	{
-		return FALSE;
+		return false;
 	}
 
 	LLVolume* volume = volumep->getVolume();
 	if (!volume)
 	{
-		return FALSE;
+		return false;
 	}
 
 	LLVOVolume* vo_volume = (LLVOVolume*) volumep;
@@ -807,7 +807,7 @@ BOOL LLViewerCamera::areVertsVisible(LLViewerObject* volumep, BOOL all_verts)
 				render_mata.affineTransform(t, vec);
 			}
 
-			BOOL in_frustum = pointInFrustum(LLVector3(vec.getF32ptr())) > 0;
+			bool in_frustum = pointInFrustum(LLVector3(vec.getF32ptr())) > 0;
 
 			if (( !in_frustum && all_verts) ||
 				 (in_frustum && !all_verts))
@@ -855,14 +855,14 @@ void LLViewerCamera::setDefaultFOV(F32 vertical_fov_rads)
 	mCosHalfCameraFOV = cosf(mCameraFOVDefault * 0.5f);
 }
 
-BOOL LLViewerCamera::isDefaultFOVChanged()
+bool LLViewerCamera::isDefaultFOVChanged()
 {
 	if(mPrevCameraFOVDefault != mCameraFOVDefault)
 	{
 		mPrevCameraFOVDefault = mCameraFOVDefault;
-		return !gSavedSettings.getBOOL("IgnoreFOVZoomForLODs");
+		return !gSavedSettings.getbool("IgnoreFOVZoomForLODs");
 	}
-	return FALSE;
+	return false;
 }
 
 // static
