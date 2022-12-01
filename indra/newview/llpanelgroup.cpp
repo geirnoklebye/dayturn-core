@@ -65,8 +65,8 @@ static LLPanelInjector<LLPanelGroup> t_panel_group("panel_group_info_sidetray");
 
 LLPanelGroupTab::LLPanelGroupTab()
 	: LLPanel(),
-	  mAllowEdit(TRUE),
-	  mHasModal(FALSE)
+	  mAllowEdit(true),
+	  mHasModal(false)
 {
 	mGroupID = LLUUID::null;
 }
@@ -75,10 +75,10 @@ LLPanelGroupTab::~LLPanelGroupTab()
 {
 }
 
-BOOL LLPanelGroupTab::isVisibleByAgent(LLAgent* agentp)
+bool LLPanelGroupTab::isVisibleByAgent(LLAgent* agentp)
 {
 	//default to being visible
-	return TRUE;
+	return true;
 }
 
 bool LLPanelGroupTab::postBuild()
@@ -89,7 +89,7 @@ bool LLPanelGroupTab::postBuild()
 LLPanelGroup::LLPanelGroup()
 :	LLPanel(),
 	LLGroupMgrObserver( LLUUID() ),
-	mSkipRefresh(FALSE),
+	mSkipRefresh(false),
 	mButtonJoin(NULL)
 {
 	// Set up the factory callbacks.
@@ -516,7 +516,7 @@ bool LLPanelGroup::apply(LLPanelGroupTab* tab)
 			}
 		}
 
-		mSkipRefresh = TRUE;
+		mSkipRefresh = true;
 		return true;
 	}
 		
@@ -569,7 +569,7 @@ void LLPanelGroup::refreshData()
 {
 	if(mSkipRefresh)
 	{
-		mSkipRefresh = FALSE;
+		mSkipRefresh = false;
 		return;
 	}
 	LLGroupMgr::getInstance()->clearGroupData(getID());

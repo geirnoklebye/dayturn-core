@@ -831,7 +831,7 @@ void LLPanelGroupLandMoney::onLandSelectionChanged()
 	mImplementationp->mMapButtonp->setEnabled( mImplementationp->mGroupParcelsp->getItemCount() > 0 );
 }
 
-BOOL LLPanelGroupLandMoney::isVisibleByAgent(LLAgent* agentp)
+bool LLPanelGroupLandMoney::isVisibleByAgent(LLAgent* agentp)
 {
 	return mAllowEdit && agentp->isInGroup(mGroupID);
 }

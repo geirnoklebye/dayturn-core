@@ -126,8 +126,8 @@ LLPanelSnapshotInventory::LLPanelSnapshotInventory()
 // virtual
 bool LLPanelSnapshotInventory::postBuild()
 {
-	getChild<LLSpinCtrl>(getWidthSpinnerName())->setAllowEdit(FALSE);
-	getChild<LLSpinCtrl>(getHeightSpinnerName())->setAllowEdit(FALSE);
+	getChild<LLSpinCtrl>(getWidthSpinnerName())->setAllowEdit(false);
+	getChild<LLSpinCtrl>(getHeightSpinnerName())->setAllowEdit(false);
 
 	getChild<LLUICtrl>(getImageSizeComboName())->setCommitCallback(boost::bind(&LLPanelSnapshotInventory::onResolutionCommit, this, _1));
 	return LLPanelSnapshotInventoryBase::postBuild();

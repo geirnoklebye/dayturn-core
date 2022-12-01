@@ -93,7 +93,7 @@ public:
 	//virtual void update();
 	
 	virtual bool postBuild();
-	virtual BOOL isVisibleByAgent(LLAgent* agentp);
+	virtual bool isVisibleByAgent(LLAgent* agentp);
 
 // [SL:KB] - Patch: Notification-GroupCreateNotice | Checked: 2012-02-16 (Catznip-3.2)
 //	/*virtual*/ S32 notifyParent(const LLSD& sdInfo);

@@ -66,8 +66,8 @@ const S32 DECLINE_TO_STATE = 0;
 
 LLPanelGroupGeneral::LLPanelGroupGeneral()
 :	LLPanelGroupTab(),
-	mChanged(FALSE),
-	mFirstUse(TRUE),
+	mChanged(false),
+	mFirstUse(true),
 	mGroupNameEditor(NULL),
 	mFounderName(NULL),
 	mInsignia(NULL),
@@ -258,7 +258,7 @@ void LLPanelGroupGeneral::onCommitAny(LLUICtrl* ctrl, void* data)
 void LLPanelGroupGeneral::onCommitUserOnly(LLUICtrl* ctrl, void* data)
 {
 	LLPanelGroupGeneral* self = (LLPanelGroupGeneral*)data;
-	self->mChanged = TRUE;
+	self->mChanged = true;
 	self->notifyObservers();
 }
 
@@ -338,9 +338,9 @@ void LLPanelGroupGeneral::activate()
 		LLGroupMgr::getInstance()->sendGroupTitlesRequest(mGroupID);
 		LLGroupMgr::getInstance()->sendGroupPropertiesRequest(mGroupID);
 
-		mFirstUse = FALSE;
+		mFirstUse = false;
 	}
-	mChanged = FALSE;
+	mChanged = false;
 	
 	update(GC_ALL);
 }
@@ -452,14 +452,14 @@ bool LLPanelGroupGeneral::apply(std::string& mesg)
 
 	resetDirty();
 
-	mChanged = FALSE;
+	mChanged = false;
 
 	return true;
 }
 
 void LLPanelGroupGeneral::cancel()
 {
-	mChanged = FALSE;
+	mChanged = false;
 
 	//cancel out all of the click changes to, although since we are
 	//shifting tabs or closing the floater, this need not be done...yet
@@ -680,13 +680,13 @@ void LLPanelGroupGeneral::updateChanged()
 		mCtrlReceiveGroupChat // <exodus/>
 	};
 
-	mChanged = FALSE;
+	mChanged = false;
 
 	for( size_t i=0; i<LL_ARRAY_SIZE(check_list); i++ )
 	{
 		if( check_list[i] && check_list[i]->isDirty() )
 		{
-			mChanged = TRUE;
+			mChanged = true;
 			break;
 		}
 	}

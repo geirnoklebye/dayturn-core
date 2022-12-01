@@ -242,7 +242,7 @@ LLPanelGroupNotices::~LLPanelGroupNotices()
 }
 
 
-BOOL LLPanelGroupNotices::isVisibleByAgent(LLAgent* agentp)
+bool LLPanelGroupNotices::isVisibleByAgent(LLAgent* agentp)
 {
 	return mAllowEdit &&
 		agentp->hasPowerInGroup(mGroupID, GP_NOTICES_SEND | GP_NOTICES_RECEIVE);

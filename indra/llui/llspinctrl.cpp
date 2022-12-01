@@ -62,7 +62,7 @@ LLSpinCtrl::Params::Params()
 LLSpinCtrl::LLSpinCtrl(const LLSpinCtrl::Params& p)
 :	LLF32UICtrl(p),
 	mLabelBox(NULL),
-	mbHasBeenSet( FALSE ),
+	mbHasBeenSet(false),
 	mPrecision(p.decimal_digits),
 	mTextEnabledColor(p.text_enabled_color()),
 	mTextDisabledColor(p.text_disabled_color())
@@ -289,7 +289,7 @@ void LLSpinCtrl::setValue(const LLSD& value )
 	F32 v = (F32)value.asReal();
 	if (getValueF32() != v || !mbHasBeenSet)
 	{
-		mbHasBeenSet = TRUE;
+		mbHasBeenSet = true;
         LLF32UICtrl::setValue(value);
 		
 		if (!mEditor->hasFocus())
@@ -305,7 +305,7 @@ void LLSpinCtrl::forceSetValue(const LLSD& value )
 	F32 v = (F32)value.asReal();
 	if (getValueF32() != v || !mbHasBeenSet)
 	{
-		mbHasBeenSet = TRUE;
+		mbHasBeenSet = true;
         LLF32UICtrl::setValue(value);
 		
 		updateEditor();
@@ -317,7 +317,7 @@ void LLSpinCtrl::clear()
 {
 	setValue(mMinValue);
 	mEditor->clear();
-	mbHasBeenSet = FALSE;
+	mbHasBeenSet = false;
 }
 
 void LLSpinCtrl::updateLabelColor()
@@ -453,7 +453,7 @@ void LLSpinCtrl::setLabel(const LLStringExplicit& label)
 	updateLabelColor();
 }
 
-void LLSpinCtrl::setAllowEdit(BOOL allow_edit)
+void LLSpinCtrl::setAllowEdit(bool allow_edit)
 {
 	mEditor->setEnabled(allow_edit);
 	mAllowEdit = allow_edit;
