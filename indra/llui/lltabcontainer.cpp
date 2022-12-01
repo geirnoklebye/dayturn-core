@@ -74,7 +74,7 @@ public:
 		mTabContainer(c),
 		mTabPanel(p),
 		mButton(b),
-		mOldState(FALSE),
+		mOldState(false),
 		mPlaceholderText(placeholder),
 		mPadding(0),
 		mVisible(true)
@@ -83,7 +83,7 @@ public:
 	LLTabContainer*  mTabContainer;
 	LLPanel*		 mTabPanel;
 	LLButton*		 mButton;
-	BOOL			 mOldState;
+	bool			 mOldState;
 	LLTextBox*		 mPlaceholderText;
 	S32				 mPadding;
 
@@ -231,7 +231,7 @@ LLTabContainer::LLTabContainer(const LLTabContainer::Params& p)
 :	LLPanel(p),
 	mCurrentTabIdx(-1),
 	mTabsHidden(p.hide_tabs),
-	mScrolled(FALSE),
+	mScrolled(false),
 	mScrollPos(0),
 	mScrollPosPixels(0),
 	mMaxScrollPos(0),
@@ -301,7 +301,7 @@ LLTabContainer::~LLTabContainer()
 //virtual
 void LLTabContainer::setValue(const LLSD& value)
 {
-	selectTab((S32) value.asInteger());
+	selectTab((bool) value.asInteger());
 }
 
 //virtual
@@ -430,7 +430,7 @@ void LLTabContainer::draw()
 
 	setScrollPosPixels((S32)lerp((F32)getScrollPosPixels(), (F32)target_pixel_scroll, LLSmoothInterpolation::getInterpolant(0.08f)));
 
-	BOOL has_scroll_arrows = !mHideScrollArrows && !getTabsHidden() && ((mMaxScrollPos > 0) || (mScrollPosPixels > 0));
+	bool has_scroll_arrows = !mHideScrollArrows && !getTabsHidden() && ((mMaxScrollPos > 0) || (mScrollPosPixels > 0));
 	if (!mIsVertical)
 	{
 		mJumpPrevArrowBtn->setVisible( has_scroll_arrows );
@@ -544,7 +544,7 @@ BOOL LLTabContainer::handleMouseDown( S32 x, S32 y, MASK mask )
 {
 	static LLUICachedControl<S32> tabcntrv_pad ("UITabCntrvPad", 0);
 	BOOL handled = FALSE;
-	BOOL has_scroll_arrows = !mHideScrollArrows && (getMaxScrollPos() > 0) && !getTabsHidden();
+	bool has_scroll_arrows = !mHideScrollArrows && (getMaxScrollPos() > 0) && !getTabsHidden();
 
 	if (has_scroll_arrows)
 	{
@@ -660,7 +660,7 @@ bool LLTabContainer::handleHover( S32 x, S32 y, MASK mask )
 BOOL LLTabContainer::handleMouseUp( S32 x, S32 y, MASK mask )
 {
 	BOOL handled = FALSE;
-	BOOL has_scroll_arrows = !mHideScrollArrows && (getMaxScrollPos() > 0)  && !getTabsHidden();
+	bool has_scroll_arrows = !mHideScrollArrows && (getMaxScrollPos() > 0)  && !getTabsHidden();
 
 	S32 local_x = x - getRect().mLeft;
 	S32 local_y = y - getRect().mBottom;
@@ -957,9 +957,9 @@ void LLTabContainer::addTabPanel(const TabPanelParams& panel)
 	const std::string& label = panel.label.isProvided() 
 			? panel.label() 
 			: panel.panel()->getLabel();
-	BOOL select = panel.select_tab(); 
+	bool select = panel.select_tab(); 
 	S32 indent = panel.indent();
-	BOOL placeholder = panel.is_placeholder;
+	bool placeholder = panel.is_placeholder;
 	eInsertionPoint insertion_point = panel.insert_at();
 
 	static LLUICachedControl<S32> tabcntrv_pad ("UITabCntrvPad", 0);
@@ -1317,7 +1317,7 @@ void LLTabContainer::unlockTabs()
 	mLockedTabCount = 0;
 }
 
-void LLTabContainer::enableTabButton(S32 which, BOOL enable)
+void LLTabContainer::enableTabButton(S32 which, bool enable)
 {
 	if (which >= 0 && which < (S32)mTabList.size())
 	{
@@ -1441,10 +1441,10 @@ void LLTabContainer::selectLastTab()
 
 void LLTabContainer::selectNextTab()
 {
-	BOOL tab_has_focus = FALSE;
+	bool tab_has_focus = false;
 	if (mCurrentTabIdx >= 0 && mTabList[mCurrentTabIdx]->mButton->hasFocus())
 	{
-		tab_has_focus = TRUE;
+		tab_has_focus = true;
 	}
 	S32 idx = mCurrentTabIdx+1;
 	if (idx >= (S32)mTabList.size())
@@ -1462,10 +1462,10 @@ void LLTabContainer::selectNextTab()
 
 void LLTabContainer::selectPrevTab()
 {
-	BOOL tab_has_focus = FALSE;
+	bool tab_has_focus = false;
 	if (mCurrentTabIdx >= 0 && mTabList[mCurrentTabIdx]->mButton->hasFocus())
 	{
-		tab_has_focus = TRUE;
+		tab_has_focus = true;
 	}
 	S32 idx = mCurrentTabIdx-1;
 	if (idx < 0)
@@ -1482,7 +1482,7 @@ void LLTabContainer::selectPrevTab()
 	}
 }	
 
-BOOL LLTabContainer::selectTabPanel(LLPanel* child)
+bool LLTabContainer::selectTabPanel(LLPanel* child)
 {
 	S32 idx = 0;
 	for(tuple_list_t::iterator iter = mTabList.begin(); iter != mTabList.end(); ++iter)
@@ -1494,25 +1494,25 @@ BOOL LLTabContainer::selectTabPanel(LLPanel* child)
 		}
 		idx++;
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL LLTabContainer::selectTab(S32 which)
+bool LLTabContainer::selectTab(S32 which)
 {
 	if (which >= getTabCount() || which < 0)
-		return FALSE;
+		return false;
 
 	LLTabTuple* selected_tuple = getTab(which);
 	if (!selected_tuple)
 	{
-		return FALSE;
+		return false;
 	}
 	
 	LLSD cbdata;
 	if (selected_tuple->mTabPanel)
 		cbdata = selected_tuple->mTabPanel->getName();
 
-	BOOL res = FALSE;
+	bool res = false;
 	if( !mValidateSignal || (*mValidateSignal)( this, cbdata ) )
 	{
 		res = setTab(which);
@@ -1526,16 +1526,16 @@ BOOL LLTabContainer::selectTab(S32 which)
 }
 
 // private
-BOOL LLTabContainer::setTab(S32 which)
+bool LLTabContainer::setTab(S32 which)
 {
 	static LLUICachedControl<S32> tabcntr_arrow_btn_size ("UITabCntrArrowBtnSize", 0);
 	LLTabTuple* selected_tuple = getTab(which);
 	if (!selected_tuple)
 	{
-		return FALSE;
+		return false;
 	}
 
-	BOOL is_visible = FALSE;
+	bool is_visible = false;
 	if( selected_tuple->mButton->getEnabled() && selected_tuple->mVisible )
 	{
 		setCurrentPanelIndex(which);
@@ -1544,7 +1544,7 @@ BOOL LLTabContainer::setTab(S32 which)
 		for(tuple_list_t::iterator iter = mTabList.begin(); iter != mTabList.end(); ++iter)
 		{
 			LLTabTuple* tuple = *iter;
-			BOOL is_selected = ( tuple == selected_tuple );
+			bool is_selected = ( tuple == selected_tuple );
             // Although the selected tab must be complete, we may have hollow LLTabTuple tucked in the list
             if (tuple && tuple->mButton)
             {
@@ -1571,11 +1571,11 @@ BOOL LLTabContainer::setTab(S32 which)
 					if( i >= getScrollPos() && i <= getScrollPos() + num_visible)
 					{
 						setCurrentPanelIndex(which);
-						is_visible = TRUE;
+						is_visible = true;
 					}
 					else
 					{
-						is_visible = FALSE;
+						is_visible = false;
 					}
 				}
 				else if (!mHideScrollArrows && getMaxScrollPos() > 0)
@@ -1607,11 +1607,11 @@ BOOL LLTabContainer::setTab(S32 which)
 						setScrollPos(llclamp(getScrollPos(), min_scroll_pos, i));
 						setScrollPos(llmin(getScrollPos(), getMaxScrollPos()));
 					}
-					is_visible = TRUE;
+					is_visible = true;
 				}
 				else
 				{
-					is_visible = TRUE;
+					is_visible = true;
 				}
 			}
 			i++;
@@ -1626,30 +1626,30 @@ BOOL LLTabContainer::setTab(S32 which)
 	return is_visible;
 }
 
-BOOL LLTabContainer::selectTabByName(const std::string& name)
+bool LLTabContainer::selectTabByName(const std::string& name)
 {
 	LLPanel* panel = getPanelByName(name);
 	if (!panel)
 	{
 		LL_WARNS() << "LLTabContainer::selectTabByName(" << name << ") failed" << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 
-	BOOL result = selectTabPanel(panel);
+	bool result = selectTabPanel(panel);
 	return result;
 }
 
-BOOL LLTabContainer::getTabPanelFlashing(LLPanel *child)
+bool LLTabContainer::getTabPanelFlashing(LLPanel *child)
 {
 	LLTabTuple* tuple = getTabByPanel(child);
 	if( tuple )
 	{
 		return tuple->mButton->getFlashing();
 	}
-	return FALSE;
+	return false;
 }
 
-void LLTabContainer::setTabPanelFlashing(LLPanel* child, BOOL state )
+void LLTabContainer::setTabPanelFlashing(LLPanel* child, bool state )
 {
 	LLTabTuple* tuple = getTabByPanel(child);
 	if( tuple )
@@ -1809,7 +1809,7 @@ void LLTabContainer::onNextBtn( const LLSD& data )
 	{
 		scrollNext();
 	}
-	mScrolled = FALSE;
+	mScrolled = false;
 
 	if(mCurrentTabIdx < mTabList.size()-1)
 	{
@@ -1828,7 +1828,7 @@ void LLTabContainer::onNextBtnHeld( const LLSD& data )
 		{
 			selectNextTab();
 		}
-		mScrolled = TRUE;
+		mScrolled = true;
 	}
 }
 
@@ -1838,7 +1838,7 @@ void LLTabContainer::onPrevBtn( const LLSD& data )
 	{
 		scrollPrev();
 	}
-	mScrolled = FALSE;
+	mScrolled = false;
 
 	if(mCurrentTabIdx > 0)
 	{
@@ -1867,7 +1867,7 @@ void LLTabContainer::onPrevBtnHeld( const LLSD& data )
 		{
 			selectPrevTab();
 		}
-		mScrolled = TRUE;
+		mScrolled = true;
 	}
 }
 
@@ -2076,7 +2076,7 @@ void LLTabContainer::insertTuple(LLTabTuple * tuple, eInsertionPoint insertion_p
 void LLTabContainer::updateMaxScrollPos()
 {
 	static LLUICachedControl<S32> tabcntrv_pad ("UITabCntrvPad", 0);
-	BOOL no_scroll = TRUE;
+	bool no_scroll = true;
 	if (mIsVertical)
 	{
 		S32 tab_total_height = (BTN_HEIGHT + tabcntrv_pad) * getTabCount();
@@ -2087,7 +2087,7 @@ void LLTabContainer::updateMaxScrollPos()
 			S32 available_height_with_arrows = getRect().getHeight() - 2*(tabcntrv_arrow_btn_size + 3*tabcntrv_pad) - mNextArrowBtn->getRect().mBottom;
 			S32 additional_needed = tab_total_height - available_height_with_arrows;
 			setMaxScrollPos((S32) ceil(additional_needed / float(BTN_HEIGHT + tabcntrv_pad) ) );
-			no_scroll = FALSE;
+			no_scroll = false;
 		}
 	}
 	else
@@ -2119,7 +2119,7 @@ void LLTabContainer::updateMaxScrollPos()
 			}
 			// in case last tab doesn't actually fit on screen, make it the last scrolling position
 			setMaxScrollPos(llmin(getMaxScrollPos(), getTabCount() - 1));
-			no_scroll = FALSE;
+			no_scroll = false;
 		}
 	}
 	if (no_scroll)
