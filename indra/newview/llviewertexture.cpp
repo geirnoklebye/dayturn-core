@@ -136,7 +136,7 @@ LLLoadedCallbackEntry::LLLoadedCallbackEntry(loaded_callback_func cb,
 					  void* userdata,
 					  LLLoadedCallbackEntry::source_callback_list_t* src_callback_list,
 					  LLViewerFetchedTexture* target,
-					  BOOL pause) 
+					  bool pause)
 	: mCallback(cb),
 	  mLastUsedDiscard(MAX_DISCARD_LEVEL+1),
 	  mDesiredDiscard(discard_level),
@@ -407,12 +407,12 @@ void LLViewerTextureManager::init()
 	imagep->setCachedRawImage(0, image_raw);
 	image_raw = NULL;
 #else
- 	LLViewerFetchedTexture::sDefaultImagep = LLViewerTextureManager::getFetchedTexture(IMG_DEFAULT, TRUE, LLGLTexture::BOOST_UI);
+ 	LLViewerFetchedTexture::sDefaultImagep = LLViewerTextureManager::getFetchedTexture(IMG_DEFAULT, true, LLGLTexture::BOOST_UI);
 #endif
 	LLViewerFetchedTexture::sDefaultImagep->dontDiscard();
 	LLViewerFetchedTexture::sDefaultImagep->setCategory(LLGLTexture::OTHER);
 
- 	LLViewerFetchedTexture::sSmokeImagep = LLViewerTextureManager::getFetchedTexture(IMG_SMOKE, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_UI);
+ 	LLViewerFetchedTexture::sSmokeImagep = LLViewerTextureManager::getFetchedTexture(IMG_SMOKE, FTT_DEFAULT, true, LLGLTexture::BOOST_UI);
 	LLViewerFetchedTexture::sSmokeImagep->setNoDelete();
 
 	image_raw = new LLImageRaw(32,32,3);
@@ -1110,7 +1110,7 @@ void LLViewerFetchedTexture::init(bool firstinit)
 {
 	mOrigWidth = 0;
 	mOrigHeight = 0;
-	mHasAux = FALSE;
+	mHasAux = false;
 	mNeedsAux = false;
 	mRequestedDiscardLevel = -1;
 	mRequestedDownloadPriority = 0.f;
@@ -1119,11 +1119,11 @@ void LLViewerFetchedTexture::init(bool firstinit)
 	mDesiredDiscardLevel = MAX_DISCARD_LEVEL + 1;
 	mMinDesiredDiscardLevel = MAX_DISCARD_LEVEL + 1;
 	
-	mDecodingAux = FALSE;
+	mDecodingAux = false;
 
 	mKnownDrawWidth = 0;
 	mKnownDrawHeight = 0;
-	mKnownDrawSizeChanged = FALSE;
+	mKnownDrawSizeChanged = false;
 
 	if (firstinit)
 	{
@@ -1136,7 +1136,7 @@ void LLViewerFetchedTexture::init(bool firstinit)
 	mIsMissingAsset = false;
 
 	mLoadedCallbackDesiredDiscardLevel = S8_MAX;
-	mPauseLoadedCallBacks = FALSE;
+	mPauseLoadedCallBacks = false;
 
 	mNeedsCreateTexture = false;
 	
@@ -1299,17 +1299,17 @@ bool LLViewerFetchedTexture::isForSculptOnly() const
 	return mForSculpt && !mNeedsGLTexture;
 }
 
-BOOL LLViewerFetchedTexture::isDeleted()  
+bool LLViewerFetchedTexture::isDeleted()  
 { 
 	return mTextureState == DELETED; 
 }
 
-BOOL LLViewerFetchedTexture::isInactive()  
+bool LLViewerFetchedTexture::isInactive()  
 { 
 	return mTextureState == INACTIVE; 
 }
 
-BOOL LLViewerFetchedTexture::isDeletionCandidate()  
+bool LLViewerFetchedTexture::isDeletionCandidate()  
 { 
 	return mTextureState == DELETION_CANDIDATE; 
 }
@@ -1747,7 +1747,7 @@ void LLViewerFetchedTexture::setKnownDrawSize(S32 width, S32 height)
 		mKnownDrawWidth = llmax(mKnownDrawWidth, width);
 		mKnownDrawHeight = llmax(mKnownDrawHeight, height);
 
-		mKnownDrawSizeChanged = TRUE;
+		mKnownDrawSizeChanged = true;
 		mFullyLoaded = false;
 	}
 	addTextureStats((F32)(mKnownDrawWidth * mKnownDrawHeight));
@@ -1814,7 +1814,7 @@ void LLViewerFetchedTexture::processTextureStats()
 				mDesiredDiscardLevel = 	llclamp(mDesiredDiscardLevel, (S8)0, (S8)getMaxDiscardLevel());
 				mDesiredDiscardLevel = llmin(mDesiredDiscardLevel, mMinDesiredDiscardLevel);
 			}
-			mKnownDrawSizeChanged = FALSE;
+			mKnownDrawSizeChanged = false;
 		
 			if(getDiscardLevel() >= 0 && (getDiscardLevel() <= mDesiredDiscardLevel))
 			{
@@ -2202,7 +2202,7 @@ bool LLViewerFetchedTexture::updateFetch()
 		if (mRawImage.notNull()) sRawCount++;
 		if (mAuxRawImage.notNull())
 		{
-			mHasAux = TRUE;
+			mHasAux = true;
 			sAuxCount++;
 		}
 		if (finished)
@@ -2264,7 +2264,7 @@ bool LLViewerFetchedTexture::updateFetch()
                     }
                 }
 
-				return TRUE;
+				return true;
 			}
 			else
 			{
@@ -2530,7 +2530,7 @@ void LLViewerFetchedTexture::setIsMissingAsset(bool is_missing)
 
 void LLViewerFetchedTexture::setLoadedCallback( loaded_callback_func loaded_callback,
 									   S32 discard_level, BOOL keep_imageraw, BOOL needs_aux, void* userdata, 
-									   LLLoadedCallbackEntry::source_callback_list_t* src_callback_list, BOOL pause)
+									   LLLoadedCallbackEntry::source_callback_list_t* src_callback_list, bool pause)
 {
 	//
 	// Don't do ANYTHING here, just add it to the global callback list
@@ -2673,7 +2673,7 @@ void LLViewerFetchedTexture::unpauseLoadedCallbacks(const LLLoadedCallbackEntry:
 {
 	if(!callback_list)
 {
-		mPauseLoadedCallBacks = FALSE;
+		mPauseLoadedCallBacks = false;
 		return;
 	}
 
@@ -2691,7 +2691,7 @@ void LLViewerFetchedTexture::unpauseLoadedCallbacks(const LLLoadedCallbackEntry:
 			}
 		}
 	}
-	mPauseLoadedCallBacks = FALSE ;
+	mPauseLoadedCallBacks = false ;
 	mLastCallBackActiveTime = sCurrentTime ;
 	mForceCallbackFetch = true;
 	if(need_raw)
@@ -2725,7 +2725,7 @@ void LLViewerFetchedTexture::pauseLoadedCallbacks(const LLLoadedCallbackEntry::s
 
 	if(paused)
 	{
-		mPauseLoadedCallBacks = TRUE;//when set, loaded callback is paused.
+		mPauseLoadedCallBacks = true;//when set, loaded callback is paused.
 		resetTextureStats();
 		mSaveRawImage = false;
 	}
@@ -4199,7 +4199,7 @@ void LLTexturePipelineTester::updateTextureBindingStats(const LLViewerTexture* i
 	}
 }
 	
-void LLTexturePipelineTester::updateTextureLoadingStats(const LLViewerFetchedTexture* imagep, const LLImageRaw* raw_imagep, BOOL from_cache) 
+void LLTexturePipelineTester::updateTextureLoadingStats(const LLViewerFetchedTexture* imagep, const LLImageRaw* raw_imagep, bool from_cache) 
 {
 	U32Bytes data_size = (U32Bytes)raw_imagep->getDataSize();
 	mTotalBytesLoaded += data_size;

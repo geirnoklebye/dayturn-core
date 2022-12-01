@@ -80,7 +80,7 @@ public:
 						  void* userdata,
 						  source_callback_list_t* src_callback_list,
 						  LLViewerFetchedTexture* target,
-						  BOOL pause);
+						  bool pause);
 	~LLLoadedCallbackEntry();
 	void removeTexture(LLViewerFetchedTexture* tex) ;
 
@@ -351,7 +351,7 @@ public:
 	// resolution versions.
 	void setLoadedCallback(loaded_callback_func cb,
 						   S32 discard_level, BOOL keep_imageraw, BOOL needs_aux,
-						   void* userdata, LLLoadedCallbackEntry::source_callback_list_t* src_callback_list, BOOL pause = FALSE);
+						   void* userdata, LLLoadedCallbackEntry::source_callback_list_t* src_callback_list, bool pause = false);
 	bool hasCallbacks() { return mLoadedCallbackList.empty() ? false : true; }	
 	void pauseLoadedCallbacks(const LLLoadedCallbackEntry::source_callback_list_t* callback_list);
 	void unpauseLoadedCallbacks(const LLLoadedCallbackEntry::source_callback_list_t* callback_list);
@@ -429,9 +429,9 @@ public:
 
 	const std::string& getUrl() const {return mUrl;}
 	//---------------
-	BOOL isDeleted() ;
-	BOOL isInactive() ;
-	BOOL isDeletionCandidate();
+	bool isDeleted() ;
+	bool isInactive() ;
+	bool isDeletionCandidate();
 	void setDeletionCandidate() ;
 	void setInactive() ;
 	bool getUseDiscard() const { return mUseMipMaps && !mDontDiscard; }	
@@ -504,7 +504,7 @@ protected:
 	// Used for UI textures to not decode, even if we have more data.
 	S32 mKnownDrawWidth;
 	S32	mKnownDrawHeight;
-	BOOL mKnownDrawSizeChanged ;
+	bool mKnownDrawSizeChanged ;
 	std::string mUrl;
 	
 	S32 mRequestedDiscardLevel;
@@ -520,9 +520,9 @@ protected:
 	S8  mMinDesiredDiscardLevel;	// The minimum discard level we'd like to have
 
 	S32  mNeedsAux;					// We need to decode the auxiliary channels
-	S8  mHasAux;                    // We have aux channels
-	S8  mDecodingAux;				// Are we decoding high components
-	S8  mIsRawImageValid;
+	bool  mHasAux;                    // We have aux channels
+	bool  mDecodingAux;				// Are we decoding high components
+	bool  mIsRawImageValid;
 	bool  mHasFetcher;				// We've made a fecth request
 	bool  mIsFetching;				// Fetch request is active
 	bool mCanUseHTTP;              //This texture can be fetched through http if true.
@@ -533,7 +533,7 @@ protected:
 
 	typedef std::list<LLLoadedCallbackEntry*> callback_list_t;
 	S8              mLoadedCallbackDesiredDiscardLevel;
-	BOOL            mPauseLoadedCallBacks;
+	bool            mPauseLoadedCallBacks;
 	callback_list_t mLoadedCallbackList;
 	F32             mLastCallBackActiveTime;
 
@@ -760,7 +760,7 @@ public:
 
 	void update();		
 	void updateTextureBindingStats(const LLViewerTexture* imagep) ;
-	void updateTextureLoadingStats(const LLViewerFetchedTexture* imagep, const LLImageRaw* raw_imagep, BOOL from_cache) ;
+	void updateTextureLoadingStats(const LLViewerFetchedTexture* imagep, const LLImageRaw* raw_imagep, bool from_cache) ;
 	void updateGrayTextureBinding() ;
 	void setStablizingTime() ;
 
