@@ -142,7 +142,7 @@ protected:
 	LLWindowWin32(LLWindowCallbacks* callbacks,
 		const std::string& title, const std::string& name, int x, int y, int width, int height, U32 flags, 
 		bool fullscreen, bool clearBg, bool enable_vsync, bool use_gl,
-		BOOL ignore_pixel_depth, U32 fsaa_samples);
+		bool ignore_pixel_depth, U32 fsaa_samples);
 	~LLWindowWin32();
 
 	void	initCursors();
