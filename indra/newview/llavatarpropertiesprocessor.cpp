@@ -147,6 +147,13 @@ void LLAvatarPropertiesProcessor::sendRequest(const LLUUID& avatar_id, EAvatarPr
 
 void LLAvatarPropertiesProcessor::sendGenericRequest(const LLUUID& avatar_id, EAvatarProcessorType type, const std::string &method)
 {
+ 	// Suppress duplicate requests while waiting for a response from the network
+	if (isPendingRequest(avatar_id, type))
+	{
+		// waiting for a response, don't re-request
+		return;
+	}
+
     // indicate we're going to make a request
     addPendingRequest(avatar_id, type);
 
