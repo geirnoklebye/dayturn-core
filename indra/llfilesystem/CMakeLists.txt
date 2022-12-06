@@ -36,18 +36,6 @@ if (DARWIN)
   LIST(APPEND llfilesystem_HEADER_FILES lldir_mac.h)
 endif (DARWIN)
 
-if (LINUX)
-  LIST(APPEND llfilesystem_SOURCE_FILES lldir_linux.cpp)
-  LIST(APPEND llfilesystem_HEADER_FILES lldir_linux.h)
-
-  if (INSTALL)
-    set_source_files_properties(lldir_linux.cpp
-                                PROPERTIES COMPILE_FLAGS
-                                "-DAPP_RO_DATA_DIR=\\\"${APP_SHARE_DIR}\\\""
-                                )
-  endif (INSTALL)
-endif (LINUX)
-
 if (WINDOWS)
   LIST(APPEND llfilesystem_SOURCE_FILES lldir_win32.cpp)
   LIST(APPEND llfilesystem_HEADER_FILES lldir_win32.h)

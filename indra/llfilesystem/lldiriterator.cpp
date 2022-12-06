@@ -23,9 +23,6 @@
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
-//#ifdef LL_LINUX
-//#pragma GCC diagnostic ignored "-Wunused-variable"
-//#endif
 
 #include "lldiriterator.h"
 #include <string.h>

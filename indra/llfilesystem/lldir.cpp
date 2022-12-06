@@ -62,9 +62,6 @@ LLDir_Win32 gDirUtil;
 #elif LL_DARWIN
 #include "lldir_mac.h"
 LLDir_Mac gDirUtil;
-#else
-#include "lldir_linux.h"
-LLDir_Linux gDirUtil;
 #endif
 
 LLDir *gDirUtilp = (LLDir *)&gDirUtil;
