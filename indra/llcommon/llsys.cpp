@@ -75,20 +75,6 @@ using namespace llsd;
 #	include <mach/task.h>
 #	include <mach/task_info.h>
 #   include "llsys_objc.h"  // <AV:CR>
-
-// disable warnings about Gestalt calls being deprecated
-// until Apple get's on the ball and provides an alternative
-//
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
-#elif LL_LINUX
-#	include <errno.h>
-#	include <sys/utsname.h>
-#	include <unistd.h>
-#	include <sys/sysinfo.h>
-#   include <stdexcept>
-const char MEMINFO_FILE[] = "/proc/meminfo";
-#   include <gnu/libc-version.h>
 #endif
 
 LLCPUInfo gSysCPU;
@@ -322,102 +308,6 @@ LLOSInfo::LLOSInfo() :
 		mOSString = mOSStringSimple;
 	}
 	
-#elif LL_LINUX
-	
-	struct utsname un;
-	if(uname(&un) != -1)
-	{
-		mOSStringSimple.append(un.sysname);
-		mOSStringSimple.append(" ");
-		mOSStringSimple.append(un.release);
-
-		mOSString = mOSStringSimple;
-		mOSString.append(" ");
-		mOSString.append(un.version);
-		mOSString.append(" ");
-		mOSString.append(un.machine);
-
-		// Simplify 'Simple'
-		std::string ostype = mOSStringSimple.substr(0, mOSStringSimple.find_first_of(" ", 0));
-		if (ostype == "Linux")
-		{
-			// Only care about major and minor Linux versions, truncate at second '.'
-			std::string::size_type idx1 = mOSStringSimple.find_first_of(".", 0);
-			std::string::size_type idx2 = (idx1 != std::string::npos) ? mOSStringSimple.find_first_of(".", idx1+1) : std::string::npos;
-			std::string simple = mOSStringSimple.substr(0, idx2);
-			if (simple.length() > 0)
-				mOSStringSimple = simple;
-		}
-	}
-	else
-	{
-		mOSStringSimple.append("Unable to collect OS info");
-		mOSString = mOSStringSimple;
-	}
-
-	const char OS_VERSION_MATCH_EXPRESSION[] = "([0-9]+)\\.([0-9]+)(\\.([0-9]+))?";
-	boost::regex os_version_parse(OS_VERSION_MATCH_EXPRESSION);
-	boost::smatch matched;
-
-	std::string glibc_version(gnu_get_libc_version());
-	if ( ll_regex_match(glibc_version, matched, os_version_parse) )
-	{
-		LL_INFOS("AppInit") << "Using glibc version '" << glibc_version << "' as OS version" << LL_ENDL;
-	
-		std::string version_value;
-
-		if ( matched[1].matched ) // Major version
-		{
-			version_value.assign(matched[1].first, matched[1].second);
-			if (sscanf(version_value.c_str(), "%d", &mMajorVer) != 1)
-			{
-			  LL_WARNS("AppInit") << "failed to parse major version '" << version_value << "' as a number" << LL_ENDL;
-			}
-		}
-		else
-		{
-			LL_ERRS("AppInit")
-				<< "OS version regex '" << OS_VERSION_MATCH_EXPRESSION 
-				<< "' returned true, but major version [1] did not match"
-				<< LL_ENDL;
-		}
-
-		if ( matched[2].matched ) // Minor version
-		{
-			version_value.assign(matched[2].first, matched[2].second);
-			if (sscanf(version_value.c_str(), "%d", &mMinorVer) != 1)
-			{
-			  LL_ERRS("AppInit") << "failed to parse minor version '" << version_value << "' as a number" << LL_ENDL;
-			}
-		}
-		else
-		{
-			LL_ERRS("AppInit")
-				<< "OS version regex '" << OS_VERSION_MATCH_EXPRESSION 
-				<< "' returned true, but minor version [1] did not match"
-				<< LL_ENDL;
-		}
-
-		if ( matched[4].matched ) // Build version (optional) - note that [3] includes the '.'
-		{
-			version_value.assign(matched[4].first, matched[4].second);
-			if (sscanf(version_value.c_str(), "%d", &mBuild) != 1)
-			{
-			  LL_ERRS("AppInit") << "failed to parse build version '" << version_value << "' as a number" << LL_ENDL;
-			}
-		}
-		else
-		{
-			LL_INFOS("AppInit")
-				<< "OS build version not provided; using zero"
-				<< LL_ENDL;
-		}
-	}
-	else
-	{
-		LL_WARNS("AppInit") << "glibc version '" << glibc_version << "' cannot be parsed to three numbers; using all zeros" << LL_ENDL;
-	}
-
 #else
 	
 	struct utsname un;
@@ -523,26 +413,6 @@ const S32 LLOSInfo::getOSBitness() const
 U32 LLOSInfo::getProcessVirtualSizeKB()
 {
 	U32 virtual_size = 0;
-#if LL_LINUX
-#   define STATUS_SIZE 2048	
-	LLFILE* status_filep = LLFile::fopen("/proc/self/status", "rb");
-	if (status_filep)
-	{
-		S32 numRead = 0;		
-		char buff[STATUS_SIZE];		/* Flawfinder: ignore */
-
-		size_t nbytes = fread(buff, 1, STATUS_SIZE-1, status_filep);
-		buff[nbytes] = '\0';
-
-		// All these guys return numbers in KB
-		char *memp = strstr(buff, "VmSize:");
-		if (memp)
-		{
-			numRead += sscanf(memp, "%*s %u", &virtual_size);
-		}
-		fclose(status_filep);
-	}
-#endif
 	return virtual_size;
 }
 
@@ -550,25 +420,6 @@ U32 LLOSInfo::getProcessVirtualSizeKB()
 U32 LLOSInfo::getProcessResidentSizeKB()
 {
 	U32 resident_size = 0;
-#if LL_LINUX
-	LLFILE* status_filep = LLFile::fopen("/proc/self/status", "rb");
-	if (status_filep != NULL)
-	{
-		S32 numRead = 0;
-		char buff[STATUS_SIZE];		/* Flawfinder: ignore */
-
-		size_t nbytes = fread(buff, 1, STATUS_SIZE-1, status_filep);
-		buff[nbytes] = '\0';
-
-		// All these guys return numbers in KB
-		char *memp = strstr(buff, "VmRSS:");
-		if (memp)
-		{
-			numRead += sscanf(memp, "%*s %u", &resident_size);
-		}
-		fclose(status_filep);
-	}
-#endif
 	return resident_size;
 }
 
@@ -795,11 +646,6 @@ U32Kilobytes LLMemoryInfo::getPhysicalMemoryKB() const
 	
 	return U64Bytes(phys);
 
-#elif LL_LINUX
-	U64 phys = 0;
-	phys = (U64)(getpagesize()) * (U64)(get_phys_pages());
-	return U64Bytes(phys);
-
 #else
 	return 0;
 
@@ -832,58 +678,6 @@ void LLMemoryInfo::getAvailableMemoryKB(U32Kilobytes& avail_physical_mem_kb, U32
 	// Pageins:                     2097212.
 	// Pageouts:                      41759.
 	// Object cache: 841598 hits of 7629869 lookups (11% hit rate)
-	avail_physical_mem_kb = (U32Kilobytes)-1 ;
-	avail_virtual_mem_kb = (U32Kilobytes)-1 ;
-
-#elif LL_LINUX
-	// mStatsMap is derived from MEMINFO_FILE:
-	// $ cat /proc/meminfo
-	// MemTotal:        4108424 kB
-	// MemFree:         1244064 kB
-	// Buffers:           85164 kB
-	// Cached:          1990264 kB
-	// SwapCached:            0 kB
-	// Active:          1176648 kB
-	// Inactive:        1427532 kB
-	// Active(anon):     529152 kB
-	// Inactive(anon):    15924 kB
-	// Active(file):     647496 kB
-	// Inactive(file):  1411608 kB
-	// Unevictable:          16 kB
-	// Mlocked:              16 kB
-	// HighTotal:       3266316 kB
-	// HighFree:         721308 kB
-	// LowTotal:         842108 kB
-	// LowFree:          522756 kB
-	// SwapTotal:       6384632 kB
-	// SwapFree:        6384632 kB
-	// Dirty:                28 kB
-	// Writeback:             0 kB
-	// AnonPages:        528820 kB
-	// Mapped:            89472 kB
-	// Shmem:             16324 kB
-	// Slab:             159624 kB
-	// SReclaimable:     145168 kB
-	// SUnreclaim:        14456 kB
-	// KernelStack:        2560 kB
-	// PageTables:         5560 kB
-	// NFS_Unstable:          0 kB
-	// Bounce:                0 kB
-	// WritebackTmp:          0 kB
-	// CommitLimit:     8438844 kB
-	// Committed_AS:    1271596 kB
-	// VmallocTotal:     122880 kB
-	// VmallocUsed:       65252 kB
-	// VmallocChunk:      52356 kB
-	// HardwareCorrupted:     0 kB
-	// HugePages_Total:       0
-	// HugePages_Free:        0
-	// HugePages_Rsvd:        0
-	// HugePages_Surp:        0
-	// Hugepagesize:       2048 kB
-	// DirectMap4k:      434168 kB
-	// DirectMap2M:      477184 kB
-	// (could also run 'free', but easier to read a file than run a program)
 	avail_physical_mem_kb = (U32Kilobytes)-1 ;
 	avail_virtual_mem_kb = (U32Kilobytes)-1 ;
 
@@ -1091,89 +885,6 @@ LLSD LLMemoryInfo::loadStatsMap()
 				stats.add("Basic new thread policy", taskinfo.policy);
 				stats.add("Basic suspend count", taskinfo.suspend_count);
 			}
-	}
-
-#elif LL_LINUX
-	std::ifstream meminfo(MEMINFO_FILE);
-	if (meminfo.is_open())
-	{
-		// MemTotal:		4108424 kB
-		// MemFree:			1244064 kB
-		// Buffers:			  85164 kB
-		// Cached:			1990264 kB
-		// SwapCached:			  0 kB
-		// Active:			1176648 kB
-		// Inactive:		1427532 kB
-		// ...
-		// VmallocTotal:	 122880 kB
-		// VmallocUsed:		  65252 kB
-		// VmallocChunk:	  52356 kB
-		// HardwareCorrupted:	  0 kB
-		// HugePages_Total:		  0
-		// HugePages_Free:		  0
-		// HugePages_Rsvd:		  0
-		// HugePages_Surp:		  0
-		// Hugepagesize:	   2048 kB
-		// DirectMap4k:		 434168 kB
-		// DirectMap2M:		 477184 kB
-
-		// Intentionally don't pass the boost::no_except flag. This
-		// boost::regex object is constructed with a string literal, so it
-		// should be valid every time. If it becomes invalid, we WANT an
-		// exception, hopefully even before the dev checks in.
-		boost::regex stat_rx("(.+): +([0-9]+)( kB)?");
-		boost::smatch matched;
-
-		std::string line;
-		while (std::getline(meminfo, line))
-		{
-			LL_DEBUGS("LLMemoryInfo") << line << LL_ENDL;
-			if (ll_regex_match(line, matched, stat_rx))
-			{
-				// e.g. "MemTotal:		4108424 kB"
-				LLSD::String key(matched[1].first, matched[1].second);
-				LLSD::String value_str(matched[2].first, matched[2].second);
-				LLSD::Integer value(0);
-				try
-				{
-					value = boost::lexical_cast<LLSD::Integer>(value_str);
-				}
-				catch (const boost::bad_lexical_cast&)
-				{
-					//<FS:TS> FIRE-10950: Deal with VM sizes too big to fit in 32 bits
-					//LL_WARNS("LLMemoryInfo") << "couldn't parse '" << value_str
-					//						 << "' in " << MEMINFO_FILE << " line: "
-					//						 << line << LL_ENDL;
-					//continue;
-					U64 bigvalue = 0;
-					try
-					{
-						bigvalue = boost::lexical_cast<U64>(value_str);
-					}
-					catch (const boost::bad_lexical_cast&)
-					{
-						LL_WARNS("LLMemoryInfo") << "couldn't parse '" << value_str
-												<< "' in " << MEMINFO_FILE << " line: "
-												<< line << LL_ENDL;
-						continue;
-					}
-					stats.add(key,bigvalue);
-					continue;
-					//</FS:TS> FIRE-10950
-				}
-				// Store this statistic.
-				stats.add(key, value);
-			}
-			else
-			{
-				LL_WARNS("LLMemoryInfo") << "unrecognized " << MEMINFO_FILE << " line: "
-										 << line << LL_ENDL;
-			}
-		}
-	}
-	else
-	{
-		LL_WARNS("LLMemoryInfo") << "Unable to collect memory information" << LL_ENDL;
 	}
 
 #else

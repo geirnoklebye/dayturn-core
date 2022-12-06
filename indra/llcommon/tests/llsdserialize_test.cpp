@@ -164,9 +164,6 @@ namespace tut
 	template<> template<>
 	void sd_xml_object::test<3>()
 	{
-        #if LL_LINUX
-        skip("Fails on linux. More research needed");
-        #endif
 		// tests with real values.
 		std::string expected;
 
@@ -194,9 +191,6 @@ namespace tut
 	template<> template<>
 	void sd_xml_object::test<4>()
 	{
-        #if LL_LINUX
-        skip("Fails on linux. More research needed");
-        #endif
 		// tests with arrays
 		std::string expected;
 
@@ -1742,7 +1736,7 @@ namespace tut
                 ensure_equals(STRINGIZE(desc << " script terminated with rc " << rc), rc, expect);
             }
 
-#else  // LL_DARWIN, LL_LINUX
+#else  // LL_DARWIN
             LLProcess::Params params;
             params.executable = PYTHON;
             params.args.add(scriptfile.getName());
@@ -1821,9 +1815,6 @@ namespace tut
     template<> template<>
     void TestPythonCompatibleObject::test<3>()
     {
-        #if LL_LINUX
-        skip("Fails on linux. More research needed");
-        #endif
         set_test_name("verify sequence to Python");
 
         LLSD cdata(LLSDArray(17)(3.14)
@@ -1870,9 +1861,6 @@ namespace tut
     template<> template<>
     void TestPythonCompatibleObject::test<4>()
     {
-        #if LL_LINUX
-        skip("Fails on linux. More research needed");
-        #endif
         set_test_name("verify sequence from Python");
 
         // Create an empty data file. This is just a placeholder for our

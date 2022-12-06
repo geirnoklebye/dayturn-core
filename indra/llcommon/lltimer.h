@@ -27,7 +27,7 @@
 #ifndef LL_TIMER_H					
 #define LL_TIMER_H
 
-#if LL_LINUX || LL_DARWIN
+#if LL_DARWIN
 #include <sys/time.h>
 #endif
 #include <limits.h>

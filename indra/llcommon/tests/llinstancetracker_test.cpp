@@ -186,9 +186,6 @@ namespace tut
     template<> template<>
     void object::test<5>()
     {
-        #if LL_LINUX
-        skip("Fails on linux. More research needed");
-        #endif
         std::string desc("delete Keyed with outstanding instance_snapshot");
         set_test_name(desc);
         Keyed* keyed = new Keyed(desc);
@@ -205,9 +202,6 @@ namespace tut
     template<> template<>
     void object::test<6>()
     {
-        #if LL_LINUX
-        skip("Fails on linux. More research needed");
-        #endif
         std::string desc("delete Keyed with outstanding key_snapshot");
         set_test_name(desc);
         Keyed* keyed = new Keyed(desc);
@@ -224,9 +218,6 @@ namespace tut
     template<> template<>
     void object::test<7>()
     {
-        #if LL_LINUX
-        skip("Fails on linux. More research needed");
-        #endif
         set_test_name("delete Unkeyed with outstanding instance_snapshot");
         std::string what;
         Unkeyed* unkeyed = new Unkeyed;

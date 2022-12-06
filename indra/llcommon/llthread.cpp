@@ -36,10 +36,6 @@
 #include "lltracethreadrecorder.h"
 #include "llexception.h"
 
-#if LL_LINUX
-#include <sched.h>
-#endif
-
 
 #ifdef LL_WINDOWS
 const DWORD MS_VC_EXCEPTION=0x406D1388;

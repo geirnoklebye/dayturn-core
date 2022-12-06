@@ -295,7 +295,7 @@ if(LLCOMMON_LINK_SHARED)
   if(NOT ADDRESS_SIZE EQUAL 32)
     if(WINDOWS)
       ##add_definitions(/FIXED:NO)
-    else(WINDOWS) # not windows therefore gcc LINUX and DARWIN
+    else(WINDOWS) # not windows therefore DARWIN
       add_definitions(-fPIC)
     endif(WINDOWS)
   endif(NOT ADDRESS_SIZE EQUAL 32)
