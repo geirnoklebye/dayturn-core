@@ -385,7 +385,6 @@ public:
     virtual void visit(const LLOctreeNode<LLVolumeTriangle, LLVolumeTriangle*>* branch)
 	{ //this is a depth first traversal, so it's safe to assum all children have complete
 		//bounding data
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME
 
 		LLVolumeOctreeListener* node = (LLVolumeOctreeListener*) branch->getListener(0);
 
@@ -824,8 +823,6 @@ S32 LLProfile::getNumPoints(const LLProfileParams& params, bool path_open,F32 de
 bool LLProfile::generate(const LLProfileParams& params, bool path_open,F32 detail, S32 split,
 						 bool is_sculpted, S32 sculpt_size)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME
-
 	if ((!mDirty) && (!is_sculpted))
 	{
 		return false;
@@ -1306,8 +1303,6 @@ S32 LLPath::getNumNGonPoints(const LLPathParams& params, S32 sides, F32 startOff
 
 void LLPath::genNGon(const LLPathParams& params, S32 sides, F32 startOff, F32 end_scale, F32 twist_scale)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME
-
 	// Generates a circular path, starting at (1, 0, 0), counterclockwise along the xz plane.
 	static const F32 tableScale[] = { 1, 1, 1, 0.5f, 0.707107f, 0.53f, 0.525f, 0.5f };
 
@@ -1542,8 +1537,6 @@ S32 LLPath::getNumPoints(const LLPathParams& params, F32 detail)
 bool LLPath::generate(const LLPathParams& params, F32 detail, S32 split,
 					  bool is_sculpted, S32 sculpt_size)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME
-
 	if ((!mDirty) && (!is_sculpted))
 	{
 		return false;
@@ -2116,8 +2109,6 @@ LLVolume::~LLVolume()
 
 bool LLVolume::generate()
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME
-
 	LL_CHECK_MEMORY
 	llassert_always(mProfilep);
 	
@@ -2376,8 +2367,6 @@ bool LLVolumeFace::VertexData::compareNormal(const LLVolumeFace::VertexData& rhs
 
 bool LLVolume::unpackVolumeFaces(std::istream& is, S32 size)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME
-
 	//input stream is now pointing at a zlib compressed block of LLSD
 	//decompress block
 	LLSD mdl;
@@ -2790,8 +2779,6 @@ S32	LLVolume::getNumFaces() const
 
 void LLVolume::createVolumeFaces()
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME
-
 	if (mGenerateSingleFace)
 	{
 		// do nothing
@@ -3757,8 +3744,6 @@ void LLVolume::generateSilhouetteVertices(std::vector<LLVector3> &vertices,
 										  const LLMatrix3& norm_mat_in,
 										  S32 face_mask)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME
-
 	LLMatrix4a mat;
 	mat.loadu(mat_in);
 
@@ -4886,8 +4871,6 @@ void LLVolumeFace::freeData()
 
 bool LLVolumeFace::create(LLVolume* volume, bool partial_build)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME
-
 	//tree for this face is no longer valid
     destroyOctree();
 
@@ -5374,28 +5357,6 @@ bool LLVolumeFace::cacheOptimize()
 	llassert(!mOptimized);
 	mOptimized = true;
 
-	// <FS:ND> FIRE-23370/BUG-8801/MAIN-5060
-	// cacheOptimize will destroy triangles. This is due to LLVCacheVertexData pointing to vertices in the vector vertex_data.
-	// Once vertex_data is sorted (std::sort(triangle_data.begin(), triangle_data.end()) ) this will invalidate those pointers and
-	// LLVCacheVertexData suddenly does point to unrelated vertices. It is an interesting fact that this is no problem for the
-	// windows version.
-	//
-	// To solve the issue with the pointer invalidation it would make sense to use a std::vector< U16 > for triangle indices, sort this
-	// using
-	// std::sort( v.begin(), v.end(), [&triangle_data](U16 rhs, U16 lhs ){ return triangle_data[rhs].mScore > triangle_data[lhs].mScore; }
-	// Then access all LLVCacheTriangleData> via triangle_data[ v[ idx ] ].
-	//
-	// This will help indeed with the destroyed triangles; but the result will still not be perfect and there are problems with alpha due to
-	// what looks like z order.
-	//
-	// It is peculiar that none of this happens when compiling with MSVC.
-	// Sadly for Linux it seems to be a decision between two evils
-	// - Disable cacheOptimize and have correct meshes but potentially a bit of less FPS.
-	// - Enable/fix cacheOptimize, potentially have a bit higher FPS but broken meshes.
-	//
-	// Having meshes correctly seems to be a bit of a lesser evil. Then do some wider testing on different systems to test for any other potential sideeffects.
-	
-#ifndef LL_LINUX
 	LLVCacheLRU cache;
 	
 	if (mNumVertices < 3 || mNumIndices < 3)
@@ -5639,15 +5600,11 @@ bool LLVolumeFace::cacheOptimize()
 	//std::string result = llformat("ACMR pre/post: %.3f/%.3f  --  %d triangles %d breaks", pre_acmr, post_acmr, mNumIndices/3, breaks);
 	//LL_INFOS() << result << LL_ENDL;
 
-#endif // <FS:ND/>
-
 	return true;
 }
 
 void LLVolumeFace::createOctree(F32 scaler, const LLVector4a& center, const LLVector4a& size)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME
-
     if (getOctree())
 	{
 		return;
@@ -6449,8 +6406,6 @@ void CalculateTangentArray(U32 vertexCount, const LLVector4a *vertex, const LLVe
 
 void LLVolumeFace::createTangents()
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME
-
 	if (!mTangents)
 	{
 		allocateTangents(mNumVertices);
@@ -6665,8 +6620,6 @@ void LLVolumeFace::fillFromLegacyData(std::vector<LLVolumeFace::VertexData>& v, 
 
 bool LLVolumeFace::createSide(LLVolume* volume, bool partial_build)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME
-
 	LL_CHECK_MEMORY
 	bool flat = mTypeMask & FLAT_MASK;
 
@@ -7181,8 +7134,6 @@ bool LLVolumeFace::createSide(LLVolume* volume, bool partial_build)
 void CalculateTangentArray(U32 vertexCount, const LLVector4a *vertex, const LLVector4a *normal,
         const LLVector2 *texcoord, U32 triangleCount, const U16* index_array, LLVector4a *tangent)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_VOLUME
-
     //LLVector4a *tan1 = new LLVector4a[vertexCount * 2];
 	LLVector4a* tan1 = (LLVector4a*) ll_aligned_malloc_16(vertexCount*2*sizeof(LLVector4a));
 	// new(tan1) LLVector4a;

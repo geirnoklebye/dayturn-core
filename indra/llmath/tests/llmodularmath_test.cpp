@@ -27,10 +27,6 @@
  */
  
 #include "linden_common.h"
-#if LL_LINUX && (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 49000
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-function"
-#endif
 #include "../llmodularmath.h"
 #include "../test/lltut.h"
 
@@ -76,6 +72,4 @@ namespace tut
 		ensure_equals("diff(0xABCDEF, 0xABCDEF, 24)", result, 0);
 	}	
 }
-#if LL_LINUX && (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 49000
-#pragma GCC diagnostic pop
-#endif
+

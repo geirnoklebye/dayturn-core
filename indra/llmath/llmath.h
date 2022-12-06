@@ -44,9 +44,6 @@
 #include <float.h>
 #define llisnan(val)	_isnan(val)
 #define llfinite(val)	_finite(val)
-#elif (LL_LINUX && __GNUC__ <= 2)
-#define llisnan(val)	isnan(val)
-#define llfinite(val)	isfinite(val)
 #else
 #define llisnan(val)	std::isnan(val)
 #define llfinite(val)	std::isfinite(val)
@@ -219,15 +216,6 @@ inline S32 ll_round(const F32 val)
 		S32 ret_val;
 		_asm fld	val
 		_asm fistp	ret_val;
-		return ret_val;
-	#elif LL_LINUX
-		// Note: assumes that the floating point control word is set
-		// to rounding mode (the default)
-		S32 ret_val;
-		__asm__ __volatile__( "flds %1    \n\t"
-							  "fistpl %0  \n\t"
-							  : "=m" (ret_val)
-							  : "m" (val) );
 		return ret_val;
 	#else
 		return llfloor(val + 0.5f);
