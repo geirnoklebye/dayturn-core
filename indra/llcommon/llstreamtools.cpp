@@ -388,7 +388,6 @@ void replace_newlines_with_whitespace(std::string& line)
 // erases any double-quote characters in 'line'
 void remove_double_quotes(std::string& line)
 {
-	size_t index = 0;
 	auto line_size = line.size();
 	for (size_t index = 0; index < line_size; )
 	{
