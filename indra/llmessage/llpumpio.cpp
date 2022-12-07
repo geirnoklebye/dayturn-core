@@ -40,13 +40,6 @@
 // These should not be enabled in production, but they can be
 // intensely useful during development for finding certain kinds of
 // bugs.
-#if LL_LINUX
-//#define LL_DEBUG_PIPE_TYPE_IN_PUMP 1
-//#define LL_DEBUG_POLL_FILE_DESCRIPTORS 1
-#if LL_DEBUG_POLL_FILE_DESCRIPTORS
-#include "apr_portable.h"
-#endif
-#endif
 
 #if LL_DEBUG_PIPE_TYPE_IN_PUMP
 #include <typeinfo>

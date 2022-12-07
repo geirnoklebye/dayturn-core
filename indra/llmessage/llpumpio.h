@@ -30,9 +30,6 @@
 #define LL_LLPUMPIO_H
 
 #include <set>
-#if LL_LINUX  // needed for PATH_MAX in APR.
-#include <sys/param.h>
-#endif
 
 #include "apr_pools.h"
 #include "llbuffer.h"
