@@ -49,8 +49,8 @@ lang_country_variant_from_envstring(const char *str,
                                     char **lang,
                                     char **country,
                                     char **variant) {
-  int end = 0;
-  int start;
+  size_t end = 0;
+  size_t start;
 
   /* get lang, if any */
   start = end;
@@ -59,7 +59,7 @@ lang_country_variant_from_envstring(const char *str,
   }
   if (start != end) {
     int i;
-    int len = end - start;
+    size_t len = end - start;
     char *s = (char*)malloc(len + 1);
     for (i=0; i<len; ++i) {
       s[i] = tolower(str[start + i]);
@@ -81,7 +81,7 @@ lang_country_variant_from_envstring(const char *str,
   }
   if (start != end) {
     int i;
-    int len = end - start;
+    size_t len = end - start;
     char *s = (char*)malloc(len + 1);
     for (i=0; i<len; ++i) {
       s[i] = toupper(str[start + i]);
@@ -103,7 +103,7 @@ lang_country_variant_from_envstring(const char *str,
   }
   if (start != end) {
     int i;
-    int len = end - start;
+    size_t len = end - start;
     char *s = (char*)malloc(len + 1);
     for (i=0; i<len; ++i) {
       s[i] = str[start + i];
