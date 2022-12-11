@@ -156,7 +156,7 @@ LLMatrix4 gGLObliqueProjectionInverse;
 
 std::list<LLGLUpdate*> LLGLUpdate::sGLQ;
 
-#if (LL_WINDOWS || LL_LINUX)  && !LL_MESA_HEADLESS
+#if (LL_WINDOWS && !LL_MESA_HEADLESS)
 
 #if LL_WINDOWS
 PFNGLGETSTRINGIPROC glGetStringi = NULL;
@@ -317,26 +317,6 @@ PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = NULL;
 #endif
 
 // vertex shader prototypes
-#if LL_LINUX
-PFNGLVERTEXATTRIB1DARBPROC glVertexAttrib1dARB = NULL;
-PFNGLVERTEXATTRIB1DVARBPROC glVertexAttrib1dvARB = NULL;
-PFNGLVERTEXATTRIB1FARBPROC glVertexAttrib1fARB = NULL;
-PFNGLVERTEXATTRIB1FVARBPROC glVertexAttrib1fvARB = NULL;
-PFNGLVERTEXATTRIB1SARBPROC glVertexAttrib1sARB = NULL;
-PFNGLVERTEXATTRIB1SVARBPROC glVertexAttrib1svARB = NULL;
-PFNGLVERTEXATTRIB2DARBPROC glVertexAttrib2dARB = NULL;
-PFNGLVERTEXATTRIB2DVARBPROC glVertexAttrib2dvARB = NULL;
-PFNGLVERTEXATTRIB2FARBPROC glVertexAttrib2fARB = NULL;
-PFNGLVERTEXATTRIB2FVARBPROC glVertexAttrib2fvARB = NULL;
-PFNGLVERTEXATTRIB2SARBPROC glVertexAttrib2sARB = NULL;
-PFNGLVERTEXATTRIB2SVARBPROC glVertexAttrib2svARB = NULL;
-PFNGLVERTEXATTRIB3DARBPROC glVertexAttrib3dARB = NULL;
-PFNGLVERTEXATTRIB3DVARBPROC glVertexAttrib3dvARB = NULL;
-PFNGLVERTEXATTRIB3FARBPROC glVertexAttrib3fARB = NULL;
-PFNGLVERTEXATTRIB3FVARBPROC glVertexAttrib3fvARB = NULL;
-PFNGLVERTEXATTRIB3SARBPROC glVertexAttrib3sARB = NULL;
-PFNGLVERTEXATTRIB3SVARBPROC glVertexAttrib3svARB = NULL;
-#endif // LL_LINUX
 PFNGLVERTEXATTRIB4NBVARBPROC glVertexAttrib4nbvARB = NULL;
 PFNGLVERTEXATTRIB4NIVARBPROC glVertexAttrib4nivARB = NULL;
 PFNGLVERTEXATTRIB4NSVARBPROC glVertexAttrib4nsvARB = NULL;
@@ -344,45 +324,6 @@ PFNGLVERTEXATTRIB4NUBARBPROC glVertexAttrib4nubARB = NULL;
 PFNGLVERTEXATTRIB4NUBVARBPROC glVertexAttrib4nubvARB = NULL;
 PFNGLVERTEXATTRIB4NUIVARBPROC glVertexAttrib4nuivARB = NULL;
 PFNGLVERTEXATTRIB4NUSVARBPROC glVertexAttrib4nusvARB = NULL;
-#if LL_LINUX
-PFNGLVERTEXATTRIB4BVARBPROC glVertexAttrib4bvARB = NULL;
-PFNGLVERTEXATTRIB4DARBPROC glVertexAttrib4dARB = NULL;
-PFNGLVERTEXATTRIB4DVARBPROC glVertexAttrib4dvARB = NULL;
-PFNGLVERTEXATTRIB4FARBPROC glVertexAttrib4fARB = NULL;
-PFNGLVERTEXATTRIB4FVARBPROC glVertexAttrib4fvARB = NULL;
-PFNGLVERTEXATTRIB4IVARBPROC glVertexAttrib4ivARB = NULL;
-PFNGLVERTEXATTRIB4SARBPROC glVertexAttrib4sARB = NULL;
-PFNGLVERTEXATTRIB4SVARBPROC glVertexAttrib4svARB = NULL;
-PFNGLVERTEXATTRIB4UBVARBPROC glVertexAttrib4ubvARB = NULL;
-PFNGLVERTEXATTRIB4UIVARBPROC glVertexAttrib4uivARB = NULL;
-PFNGLVERTEXATTRIB4USVARBPROC glVertexAttrib4usvARB = NULL;
-PFNGLVERTEXATTRIBPOINTERARBPROC glVertexAttribPointerARB = NULL;
-PFNGLENABLEVERTEXATTRIBARRAYARBPROC glEnableVertexAttribArrayARB = NULL;
-PFNGLDISABLEVERTEXATTRIBARRAYARBPROC glDisableVertexAttribArrayARB = NULL;
-PFNGLPROGRAMSTRINGARBPROC glProgramStringARB = NULL;
-PFNGLBINDPROGRAMARBPROC glBindProgramARB = NULL;
-PFNGLDELETEPROGRAMSARBPROC glDeleteProgramsARB = NULL;
-PFNGLGENPROGRAMSARBPROC glGenProgramsARB = NULL;
-PFNGLPROGRAMENVPARAMETER4DARBPROC glProgramEnvParameter4dARB = NULL;
-PFNGLPROGRAMENVPARAMETER4DVARBPROC glProgramEnvParameter4dvARB = NULL;
-PFNGLPROGRAMENVPARAMETER4FARBPROC glProgramEnvParameter4fARB = NULL;
-PFNGLPROGRAMENVPARAMETER4FVARBPROC glProgramEnvParameter4fvARB = NULL;
-PFNGLPROGRAMLOCALPARAMETER4DARBPROC glProgramLocalParameter4dARB = NULL;
-PFNGLPROGRAMLOCALPARAMETER4DVARBPROC glProgramLocalParameter4dvARB = NULL;
-PFNGLPROGRAMLOCALPARAMETER4FARBPROC glProgramLocalParameter4fARB = NULL;
-PFNGLPROGRAMLOCALPARAMETER4FVARBPROC glProgramLocalParameter4fvARB = NULL;
-PFNGLGETPROGRAMENVPARAMETERDVARBPROC glGetProgramEnvParameterdvARB = NULL;
-PFNGLGETPROGRAMENVPARAMETERFVARBPROC glGetProgramEnvParameterfvARB = NULL;
-PFNGLGETPROGRAMLOCALPARAMETERDVARBPROC glGetProgramLocalParameterdvARB = NULL;
-PFNGLGETPROGRAMLOCALPARAMETERFVARBPROC glGetProgramLocalParameterfvARB = NULL;
-PFNGLGETPROGRAMIVARBPROC glGetProgramivARB = NULL;
-PFNGLGETPROGRAMSTRINGARBPROC glGetProgramStringARB = NULL;
-PFNGLGETVERTEXATTRIBDVARBPROC glGetVertexAttribdvARB = NULL;
-PFNGLGETVERTEXATTRIBFVARBPROC glGetVertexAttribfvARB = NULL;
-PFNGLGETVERTEXATTRIBIVARBPROC glGetVertexAttribivARB = NULL;
-PFNGLGETVERTEXATTRIBPOINTERVARBPROC glGetVertexAttribPointervARB = NULL;
-PFNGLISPROGRAMARBPROC glIsProgramARB = NULL;
-#endif // LL_LINUX
 PFNGLBINDATTRIBLOCATIONARBPROC glBindAttribLocationARB = NULL;
 PFNGLGETACTIVEATTRIBARBPROC glGetActiveAttribARB = NULL;
 PFNGLGETATTRIBLOCATIONARBPROC glGetAttribLocationARB = NULL;
@@ -392,13 +333,6 @@ PFNWGLGETGPUIDSAMDPROC				wglGetGPUIDsAMD = NULL;
 PFNWGLGETGPUINFOAMDPROC				wglGetGPUInfoAMD = NULL;
 PFNWGLSWAPINTERVALEXTPROC			wglSwapIntervalEXT = NULL;
 #endif
-
-#if LL_LINUX_NV_GL_HEADERS
-// linux nvidia headers.  these define these differently to mesa's.  ugh.
-PFNGLACTIVETEXTUREARBPROC glActiveTextureARB = NULL;
-PFNGLCLIENTACTIVETEXTUREARBPROC glClientActiveTextureARB = NULL;
-PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements = NULL;
-#endif // LL_LINUX_NV_GL_HEADERS
 #endif
 
 LLGLManager gGLManager;
@@ -613,13 +547,7 @@ bool LLGLManager::initGL()
 		mGLVendorShort = "NVIDIA";
 		mIsNVIDIA = true;
 	}
-	else if (mGLVendor.find("INTEL") != std::string::npos
-#if LL_LINUX
-		 // The Mesa-based drivers put this in the Renderer string,
-		 // not the Vendor string.
-		 || mGLRenderer.find("INTEL") != std::string::npos
-#endif //LL_LINUX
-		 )
+	else if (mGLVendor.find("INTEL") != std::string::npos)
 	{
 		mGLVendorShort = "INTEL";
 		mIsIntel = true;
@@ -1068,69 +996,6 @@ void LLGLManager::initExtensions()
 	mHasPointParameters = ExtensionExists("GL_ARB_point_parameters", gGLHExts.mSysExts);
 #endif
 #endif
-
-#if LL_LINUX
-	LL_INFOS() << "initExtensions() checking shell variables to adjust features..." << LL_ENDL;
-	// Our extension support for the Linux Client is very young with some
-	// potential driver gotchas, so offer a semi-secret way to turn it off.
-	if (getenv("LL_GL_NOEXT"))
-	{
-		//mHasMultitexture = FALSE; // NEEDED!
-		mHasDepthClamp = false;
-		mHasARBEnvCombine = false;
-		mHasCompressedTextures = false;
-		mHasVertexBufferObject = false;
-		mHasFramebufferObject = false;
-		mHasDrawBuffers = false;
-		mHasBlendFuncSeparate = false;
-		mHasMipMapGeneration = false;
-		mHasSeparateSpecularColor = false;
-		mHasAnisotropic = false;
-		mHasCubeMap = false;
-		mHasOcclusionQuery = false;
-		mHasPointParameters = false;
-		LL_WARNS("RenderInit") << "GL extension support DISABLED via LL_GL_NOEXT" << LL_ENDL;
-	}
-	else if (getenv("LL_GL_BASICEXT"))	/* Flawfinder: ignore */
-	{
-		// This switch attempts to turn off all support for exotic
-		// extensions which I believe correspond to fatal driver
-		// bug reports.  This should be the default until we get a
-		// proper blacklist/whitelist on Linux.
-		mHasMipMapGeneration = false;
-		mHasAnisotropic = false;
-		//mHasCubeMap = false; // apparently fatal on Intel 915 & similar
-		//mHasOcclusionQuery = false; // source of many ATI system hangs
-		mHasBlendFuncSeparate = false;
-		LL_WARNS("RenderInit") << "GL extension support forced to SIMPLE level via LL_GL_BASICEXT" << LL_ENDL;
-	}
-	if (getenv("LL_GL_BLACKLIST"))	/* Flawfinder: ignore */
-	{
-		// This lets advanced troubleshooters disable specific
-		// GL extensions to isolate problems with their hardware.
-		// SL-28126
-		const char *const blacklist = getenv("LL_GL_BLACKLIST");	/* Flawfinder: ignore */
-		LL_WARNS("RenderInit") << "GL extension support partially disabled via LL_GL_BLACKLIST: " << blacklist << LL_ENDL;
-		if (strchr(blacklist,'a')) mHasARBEnvCombine = false;
-		if (strchr(blacklist,'b')) mHasCompressedTextures = false;
-		if (strchr(blacklist,'c')) mHasVertexBufferObject = false;
-		if (strchr(blacklist,'d')) mHasMipMapGeneration = false;//S
-// 		if (strchr(blacklist,'f')) mHasNVVertexArrayRange = FALSE;//S
-// 		if (strchr(blacklist,'g')) mHasNVFence = FALSE;//S
-		if (strchr(blacklist,'h')) mHasSeparateSpecularColor = false;
-		if (strchr(blacklist,'i')) mHasAnisotropic = false;//S
-		if (strchr(blacklist,'j')) mHasCubeMap = false;//S
-// 		if (strchr(blacklist,'k')) mHasATIVAO = FALSE;//S
-		if (strchr(blacklist,'l')) mHasOcclusionQuery = false;
-		if (strchr(blacklist,'p')) mHasPointParameters = false;//S
-		if (strchr(blacklist,'q')) mHasFramebufferObject = false;//S
-		if (strchr(blacklist,'r')) mHasDrawBuffers = faøse;//S
-		if (strchr(blacklist,'s')) mHasTextureRectangle = false;
-		if (strchr(blacklist,'t')) mHasBlendFuncSeparate = false;//S
-		if (strchr(blacklist,'u')) mHasDepthClamp = false;
-		
-	}
-#endif // LL_LINUX
 	
 	if (!mHasMultitexture)
 	{
@@ -1189,7 +1054,7 @@ void LLGLManager::initExtensions()
 	glGetIntegerv(GL_MAX_ELEMENTS_INDICES, (GLint*) &mGLMaxIndexRange);
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, (GLint*) &mGLMaxTextureSize);
 
-#if (LL_WINDOWS || LL_LINUX) && !LL_MESA_HEADLESS
+#if (LL_WINDOWS && !LL_MESA_HEADLESS)
 	LL_DEBUGS("RenderInit") << "GL Probe: Getting symbols" << LL_ENDL;
 	if (mHasVertexBufferObject)
 	{
@@ -1288,20 +1153,13 @@ void LLGLManager::initExtensions()
 		glDebugMessageCallbackARB = (PFNGLDEBUGMESSAGECALLBACKARBPROC) GLH_EXT_GET_PROC_ADDRESS("glDebugMessageCallbackARB");
 		glGetDebugMessageLogARB = (PFNGLGETDEBUGMESSAGELOGARBPROC) GLH_EXT_GET_PROC_ADDRESS("glGetDebugMessageLogARB");
 	}
-#if (!LL_LINUX) || LL_LINUX_NV_GL_HEADERS
-	// This is expected to be a static symbol on Linux GL implementations, except if we use the nvidia headers - bah
+
 	glDrawRangeElements = (PFNGLDRAWRANGEELEMENTSPROC)GLH_EXT_GET_PROC_ADDRESS("glDrawRangeElements");
 	if (!glDrawRangeElements)
 	{
 		mGLMaxVertexRange = 0;
 		mGLMaxIndexRange = 0;
 	}
-#endif // !LL_LINUX || LL_LINUX_NV_GL_HEADERS
-#if LL_LINUX_NV_GL_HEADERS
-	// nvidia headers are critically different from mesa-esque
- 	glActiveTextureARB = (PFNGLACTIVETEXTUREARBPROC)GLH_EXT_GET_PROC_ADDRESS("glActiveTextureARB");
- 	glClientActiveTextureARB = (PFNGLCLIENTACTIVETEXTUREARBPROC)GLH_EXT_GET_PROC_ADDRESS("glClientActiveTextureARB");
-#endif // LL_LINUX_NV_GL_HEADERS
 
 	if (mHasOcclusionQuery)
 	{

@@ -276,8 +276,6 @@ std::string currentOsName()
 	return "Windows";
 #elif LL_DARWIN
 	return "Mac";
-#elif LL_SDL || LL_MESA_HEADLESS
-	return "Linux";
 #else
 	return "";
 #endif
