@@ -72,7 +72,7 @@ bool LLFloaterLandHoldings::postBuild()
 
 	// Grant list
 	LLScrollListCtrl* grant_list = getChild<LLScrollListCtrl>("grant list");
-	grant_list->sortByColumnIndex(0, TRUE);
+	grant_list->sortByColumnIndex(0, true);
 	grant_list->setDoubleClickCallback(onGrantList, this);
 
 	S32 count = gAgent.mGroups.size();

@@ -146,7 +146,7 @@ public:
 
 	void			sortByName(bool ascending = true); // Sort the entries in the combobox by name
 
-	// Select current item by name using selectItemByLabel.  Returns FALSE if not found.
+	// Select current item by name using selectItemByLabel.  Returns false if not found.
 	bool			setSimple(const LLStringExplicit& name);
 	// Get name of current item. Returns an empty string if not found.
 	const std::string	getSimple() const;

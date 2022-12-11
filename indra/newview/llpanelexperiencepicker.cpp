@@ -368,7 +368,7 @@ void LLPanelExperiencePicker::filterContent()
 	{
 		getChildView(BTN_OK)->setEnabled(true);
 		search_results->setEnabled(true);
-		search_results->sortByColumnIndex(1, TRUE);
+		search_results->sortByColumnIndex(1, true);
 		std::string text = getChild<LLUICtrl>(TEXT_EDIT)->getValue().asString();
 		if (!search_results->selectItemByLabel(text, true, 1))
 		{

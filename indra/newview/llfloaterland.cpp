@@ -1243,7 +1243,7 @@ bool LLPanelLandObjects::postBuild()
 
 	mOwnerList = getChild<LLNameListCtrl>("owner list");
 	mOwnerList->setIsFriendCallback(LLAvatarActions::isFriend);
-	mOwnerList->sortByColumnIndex(3, FALSE);
+	mOwnerList->sortByColumnIndex(3, false);
 	childSetCommitCallback("owner list", onCommitList, this);
 	mOwnerList->setDoubleClickCallback(onDoubleClickOwner, this);
 	mOwnerList->setContextMenu(LLScrollListCtrl::MENU_AVATAR);
@@ -2464,14 +2464,14 @@ bool LLPanelLandAccess::postBuild()
 	mListAccess = getChild<LLNameListCtrl>("AccessList");
 	if (mListAccess)
 	{
-		mListAccess->sortByColumnIndex(0, TRUE); // ascending
+		mListAccess->sortByColumnIndex(0, true); // ascending
 		mListAccess->setContextMenu(LLScrollListCtrl::MENU_AVATAR);
 	}
 
 	mListBanned = getChild<LLNameListCtrl>("BannedList");
 	if (mListBanned)
 	{
-		mListBanned->sortByColumnIndex(0, TRUE); // ascending
+		mListBanned->sortByColumnIndex(0, true); // ascending
 		mListBanned->setContextMenu(LLScrollListCtrl::MENU_AVATAR);
 		mListBanned->setAlternateSort();
 	}

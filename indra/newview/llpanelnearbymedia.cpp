@@ -156,8 +156,8 @@ bool LLPanelNearByMedia::postBuild()
 	mPlayingString = getString("playing_suffix");
 	
 	mMediaList->setDoubleClickCallback(onZoomMedia, this);
-	mMediaList->sortByColumnIndex(PROXIMITY_COLUMN, TRUE);
-	mMediaList->sortByColumnIndex(VISIBILITY_COLUMN, FALSE);
+	mMediaList->sortByColumnIndex(PROXIMITY_COLUMN, true);
+	mMediaList->sortByColumnIndex(VISIBILITY_COLUMN, false);
 	
 	refreshList();
 	updateControls();
