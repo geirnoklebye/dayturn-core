@@ -51,14 +51,6 @@ extern "C" {
 # include "fontconfig/fontconfig.h"
 }
 
-#if LL_LINUX
-// not necessarily available on random SDL platforms, so #if LL_LINUX
-// for execv(), waitpid(), fork()
-# include <unistd.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-#endif // LL_LINUX
-
 extern bool gDebugWindowProc;
 
 const S32 MAX_NUM_RESOLUTIONS = 200;
@@ -1601,96 +1593,6 @@ U32 LLWindowSDL::SDLCheckGrabbyKeys(SDLKey keysym, bool gain)
 
 void check_vm_bloat()
 {
-#if LL_LINUX
-	// watch our own VM and RSS sizes, warn if we bloated rapidly
-	static const std::string STATS_FILE = "/proc/self/stat";
-	FILE *fp = fopen(STATS_FILE.c_str(), "r");
-	if (fp)
-	{
-		static long long last_vm_size = 0;
-		static long long last_rss_size = 0;
-		const long long significant_vm_difference = 250 * 1024*1024;
-		const long long significant_rss_difference = 50 * 1024*1024;
-		long long this_vm_size = 0;
-		long long this_rss_size = 0;
-
-		ssize_t res;
-		size_t dummy;
-		char *ptr = NULL;
-		for (int i=0; i<22; ++i) // parse past the values we don't want
-		{
-			res = getdelim(&ptr, &dummy, ' ', fp);
-			if (-1 == res)
-			{
-				LL_WARNS() << "Unable to parse " << STATS_FILE << LL_ENDL;
-				goto finally;
-			}
-			free(ptr);
-			ptr = NULL;
-		}
-		// 23rd space-delimited entry is vsize
-		res = getdelim(&ptr, &dummy, ' ', fp);
-		llassert(ptr);
-		if (-1 == res)
-		{
-			LL_WARNS() << "Unable to parse " << STATS_FILE << LL_ENDL;
-			goto finally;
-		}
-		this_vm_size = atoll(ptr);
-		free(ptr);
-		ptr = NULL;
-		// 24th space-delimited entry is RSS
-		res = getdelim(&ptr, &dummy, ' ', fp);
-		llassert(ptr);
-		if (-1 == res)
-		{
-			LL_WARNS() << "Unable to parse " << STATS_FILE << LL_ENDL;
-			goto finally;
-		}
-		this_rss_size = getpagesize() * atoll(ptr);
-		free(ptr);
-		ptr = NULL;
-
-		LL_INFOS() << "VM SIZE IS NOW " << (this_vm_size/(1024*1024)) << " MB, RSS SIZE IS NOW " << (this_rss_size/(1024*1024)) << " MB" << LL_ENDL;
-
-		if (llabs(last_vm_size - this_vm_size) >
-		    significant_vm_difference)
-		{
-			if (this_vm_size > last_vm_size)
-			{
-				LL_WARNS() << "VM size grew by " << (this_vm_size - last_vm_size)/(1024*1024) << " MB in last frame" << LL_ENDL;
-			}
-			else
-			{
-				LL_INFOS() << "VM size shrank by " << (last_vm_size - this_vm_size)/(1024*1024) << " MB in last frame" << LL_ENDL;
-			}
-		}
-
-		if (llabs(last_rss_size - this_rss_size) >
-		    significant_rss_difference)
-		{
-			if (this_rss_size > last_rss_size)
-			{
-				LL_WARNS() << "RSS size grew by " << (this_rss_size - last_rss_size)/(1024*1024) << " MB in last frame" << LL_ENDL;
-			}
-			else
-			{
-				LL_INFOS() << "RSS size shrank by " << (last_rss_size - this_rss_size)/(1024*1024) << " MB in last frame" << LL_ENDL;
-			}
-		}
-
-		last_rss_size = this_rss_size;
-		last_vm_size = this_vm_size;
-
-finally:
-		if (NULL != ptr)
-		{
-			free(ptr);
-			ptr = NULL;
-		}
-		fclose(fp);
-	}
-#endif // LL_LINUX
 }
 
 
@@ -2477,38 +2379,6 @@ bool LLWindowSDL::dialogColorPicker( F32 *r, F32 *g, F32 *b)
 }
 #endif // LL_GTK
 
-#if LL_LINUX
-// extracted from spawnWebBrowser for clarity and to eliminate
-//  compiler confusion regarding close(int fd) vs. LLWindow::close()
-void exec_cmd(const std::string& cmd, const std::string& arg)
-{
-	char* const argv[] = {(char*)cmd.c_str(), (char*)arg.c_str(), NULL};
-	fflush(NULL);
-	pid_t pid = fork();
-	if (pid == 0)
-	{ // child
-		// disconnect from stdin/stdout/stderr, or child will
-		// keep our output pipe undesirably alive if it outlives us.
-		close(0);
-		close(1);
-		close(2);
-		// end ourself by running the command
-		execv(cmd.c_str(), argv);	/* Flawfinder: ignore */
-		// if execv returns at all, there was a problem.
-		LL_WARNS() << "execv failure when trying to start " << cmd << LL_ENDL;
-		_exit(1); // _exit because we don't want atexit() clean-up!
-	} else {
-		if (pid > 0)
-		{
-			// parent - wait for child to die
-			int childExitStatus;
-			waitpid(pid, &childExitStatus, 0);
-		} else {
-			LL_WARNS() << "fork failure." << LL_ENDL;
-		}
-	}
-}
-#endif
 
 // Open a URL with the user's default web browser.
 // Must begin with protocol identifier.
@@ -2532,27 +2402,6 @@ void LLWindowSDL::spawnWebBrowser(const std::string& escaped_url, bool async)
 	}
 
 	LL_INFOS() << "spawn_web_browser: " << escaped_url << LL_ENDL;
-	
-#if LL_LINUX
-# if LL_X11
-	if (mSDL_Display)
-	{
-		maybe_lock_display();
-		// Just in case - before forking.
-		XSync(mSDL_Display, False);
-		maybe_unlock_display();
-	}
-# endif // LL_X11
-
-	std::string cmd, arg;
-	cmd  = gDirUtilp->getAppRODataDir();
-	cmd += gDirUtilp->getDirDelimiter();
-	cmd += "etc";
-	cmd += gDirUtilp->getDirDelimiter();
-	cmd += "launch_url.sh";
-	arg = escaped_url;
-	exec_cmd(cmd, arg);
-#endif // LL_LINUX
 
 	LL_INFOS() << "spawn_web_browser returning." << LL_ENDL;
 }
