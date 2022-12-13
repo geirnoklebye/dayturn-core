@@ -1067,7 +1067,7 @@ void LLVOAvatarSelf::updateAttachmentVisibility(U32 camera_mode)
 		// </FS:Ansariel>
 		if (attachment->getIsHUDAttachment())
 		{
-			attachment->setAttachmentVisibility(TRUE);
+			attachment->setAttachmentVisibility(true);
 		}
 		else
 		{
@@ -1076,15 +1076,15 @@ void LLVOAvatarSelf::updateAttachmentVisibility(U32 camera_mode)
 				case CAMERA_MODE_MOUSELOOK:
 					if (LLVOAvatar::sVisibleInFirstPerson && attachment->getVisibleInFirstPerson())
 					{
-						attachment->setAttachmentVisibility(TRUE);
+						attachment->setAttachmentVisibility(true);
 					}
 					else
 					{
-						attachment->setAttachmentVisibility(FALSE);
+						attachment->setAttachmentVisibility(false);
 					}
 					break;
 				default:
-					attachment->setAttachmentVisibility(TRUE);
+					attachment->setAttachmentVisibility(true);
 					break;
 			}
 		}

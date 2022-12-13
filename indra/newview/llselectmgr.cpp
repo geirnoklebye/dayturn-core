@@ -8141,7 +8141,7 @@ bool LLSelectMgr::selectionMove(const LLVector3& displ,
 		
 		if (enable_pos && enable_rot && obj->mDrawable.notNull())
 		{
-			gPipeline.markMoved(obj->mDrawable, TRUE);
+			gPipeline.markMoved(obj->mDrawable, true);
 		}
 	}
 	

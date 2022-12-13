@@ -116,7 +116,7 @@ public:
 	bool getVisible() { return mVisible; }
 	BOOL getHidden() const { return mHidden; }
 	void setHidden( BOOL hide ) { mHidden = hide; }
-	void setOnHUDAttachment(BOOL on_hud) { mOnHUDAttachment = on_hud; }
+	void setOnHUDAttachment(bool on_hud) { mOnHUDAttachment = on_hud; }
 	void shift(const LLVector3& offset);
 
 	static void shiftAll(const LLVector3& offset);

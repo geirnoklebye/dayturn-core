@@ -1044,7 +1044,7 @@ bool LLViewerObject::setDrawableParent(LLDrawable* parentp)
 		|| (parentp && parentp->isActive()))
 	{
 		// *TODO we should not be relying on setDrawable parent to call markMoved
-		gPipeline.markMoved(mDrawable, FALSE);
+		gPipeline.markMoved(mDrawable, false);
 	}
 	else if (!mDrawable->isAvatar())
 	{
@@ -1059,7 +1059,7 @@ bool LLViewerObject::setDrawableParent(LLDrawable* parentp)
 }
 
 // Show or hide particles, icon and HUD
-void LLViewerObject::hideExtraDisplayItems( BOOL hidden )
+void LLViewerObject::hideExtraDisplayItems( bool hidden )
 {
 	if( mPartSourcep.notNull() )
 	{
@@ -1296,7 +1296,7 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 					setMaterial(material);
 					if (mDrawable.notNull())
 					{
-						gPipeline.markMoved(mDrawable, FALSE); // undamped
+						gPipeline.markMoved(mDrawable, false); // undamped
 					}
 				}
 				setClickAction(click_action);
@@ -1829,7 +1829,7 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 					setMaterial(material);
 					if (mDrawable.notNull())
 					{
-						gPipeline.markMoved(mDrawable, FALSE); // undamped
+						gPipeline.markMoved(mDrawable, false); // undamped
 					}
 				}
 				dp->unpackU8(click_action, "ClickAction");
@@ -2096,7 +2096,7 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 							// make sure this object gets a non-damped update
 							if (sent_parentp->mDrawable.notNull())
 							{
-								gPipeline.markMoved(sent_parentp->mDrawable, FALSE); // undamped
+								gPipeline.markMoved(sent_parentp->mDrawable, false); // undamped
 							}
 						}
 					}
@@ -2106,7 +2106,7 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 					}
 					
 					// Show particles, icon and HUD
-					hideExtraDisplayItems( FALSE );
+					hideExtraDisplayItems( false );
 
 					setChanged(MOVED | SILHOUETTE);
 				}
@@ -2133,7 +2133,7 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 					gObjectList.orphanize(this, parent_id, ip, port);
 
 					// Hide particles, icon and HUD
-					hideExtraDisplayItems( TRUE );
+					hideExtraDisplayItems( true );
 				}
 			}
 		}
@@ -2251,7 +2251,7 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 					sent_parentp->setChanged(MOVED | SILHOUETTE);
 					if (sent_parentp->mDrawable.notNull())
 					{
-						gPipeline.markMoved(sent_parentp->mDrawable, FALSE); // undamped
+						gPipeline.markMoved(sent_parentp->mDrawable, false); // undamped
 					}
 				}
 				else if (!sent_parentp)
@@ -2287,7 +2287,7 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 						if (mDrawable.notNull())
 						{
 							// make sure this object gets a non-damped update
-							gPipeline.markMoved(mDrawable, FALSE); // undamped
+							gPipeline.markMoved(mDrawable, false); // undamped
 						}
 					}
 				}

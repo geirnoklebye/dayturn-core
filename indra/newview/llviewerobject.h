@@ -758,7 +758,7 @@ protected:
 	BOOL setData(const U8 *datap, const U32 data_size);
 
 	// Hide or show HUD, icon and particles
-	void	hideExtraDisplayItems( BOOL hidden );
+	void	hideExtraDisplayItems( bool hidden );
 
 	//////////////////////////
 	//

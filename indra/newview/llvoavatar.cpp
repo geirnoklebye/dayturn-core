@@ -2339,7 +2339,7 @@ void LLVOAvatar::releaseMeshData()
 		if (attachment && !attachment->getIsHUDAttachment())
 		// </FS:Ansariel>
 		{
-			attachment->setAttachmentVisibility(FALSE);
+			attachment->setAttachmentVisibility(false);
 		}
 	}
 	mMeshValid = false;
@@ -2368,7 +2368,7 @@ void LLVOAvatar::restoreMeshData()
 		LLViewerJointAttachment* attachment = iter->second;
 		if (!attachment->getIsHUDAttachment())
 		{
-			attachment->setAttachmentVisibility(TRUE);
+			attachment->setAttachmentVisibility(true);
 		}
 	}
 
@@ -3069,7 +3069,7 @@ void LLVOAvatar::idleUpdateMisc(bool detailed_update)
 		//force a move if sitting on an active object
 		if (getParent() && ((LLViewerObject*) getParent())->mDrawable->isActive())
 		{
-			gPipeline.markMoved(mDrawable, TRUE);
+			gPipeline.markMoved(mDrawable, true);
 		}
     }
 }
@@ -7944,7 +7944,7 @@ void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 	mDrawable->mXform.setPosition(rel_pos);
 	mDrawable->mXform.setRotation(mDrawable->getWorldRotation() * inv_obj_rot);
 
-	gPipeline.markMoved(mDrawable, TRUE);
+	gPipeline.markMoved(mDrawable, true);
 	// Notice that removing sitDown() from here causes avatars sitting on
 	// objects to be not rendered for new arrivals. See EXT-6835 and EXT-1655.
 	sitDown(true);
@@ -8004,7 +8004,7 @@ void LLVOAvatar::getOffObject()
 	mDrawable->mXform.setPosition(cur_position_world);
 	mDrawable->mXform.setRotation(cur_rotation_world);	
 	
-	gPipeline.markMoved(mDrawable, TRUE);
+	gPipeline.markMoved(mDrawable, true);
 
 	sitDown(false);
 

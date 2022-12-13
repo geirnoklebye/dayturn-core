@@ -2381,7 +2381,7 @@ void LLViewerObjectList::findOrphans(LLViewerObject* objectp, U32 ip, U32 port)
 			}
 
 			// Make certain particles, icon and HUD aren't hidden
-			childp->hideExtraDisplayItems( FALSE );
+			childp->hideExtraDisplayItems( false );
 
 			objectp->addChild(childp);
 			orphans_found = true;
