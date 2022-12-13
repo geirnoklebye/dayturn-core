@@ -97,8 +97,6 @@ enum {
 	MI_HOLE_COUNT
 };
 
-const F32 MAX_ATTACHMENT_DIST = 3.5f; // meters
-
 //static const std::string LEGACY_FULLBRIGHT_DESC =LLTrans::getString("Fullbright");
 
 bool	LLPanelObject::postBuild()
