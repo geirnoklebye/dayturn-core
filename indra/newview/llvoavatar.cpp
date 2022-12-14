@@ -10994,7 +10994,7 @@ void LLVOAvatar::accountRenderComplexityForObject(
                     && attached_object->mDrawable)
                 {
                     textures.clear();
-                    BOOL is_rigged_mesh = attached_object->isRiggedMesh();
+                    bool is_rigged_mesh = attached_object->isRiggedMesh();
         mAttachmentSurfaceArea += attached_object->recursiveGetScaledSurfaceArea();
 
                     const LLVOVolume* volume = attached_object->mDrawable->getVOVolume();
