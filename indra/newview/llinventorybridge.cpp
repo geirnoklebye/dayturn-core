@@ -646,7 +646,7 @@ bool LLInvFVBridge::isClipboardPasteableAsLink() const
 
             if (gInventory.isObjectDescendentOf(item->getUUID(), gInventory.getLibraryRootFolderID()))
             {
-                return FALSE;
+                return false;
             }
 		}
 		const LLViewerInventoryCategory *cat = model->getCategory(objects.at(i));
