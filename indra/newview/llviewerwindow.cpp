@@ -497,7 +497,7 @@ public:
 
 		clearText();
 		
-		if (gSavedSettings.getBOOL("DebugShowTime"))
+		if (gSavedSettings.getbool("DebugShowTime"))
 		{
 			{
 			const U32 y_inc2 = 15;
@@ -518,7 +518,7 @@ public:
 		}
 		}
 		
-		if (gSavedSettings.getBOOL("DebugShowMemory"))
+		if (gSavedSettings.getbool("DebugShowMemory"))
 		{
 			addText(xpos, ypos,
 					STRINGIZE("Memory: " << (LLMemory::getCurrentRSS() / 1024) << " (KB)"));
@@ -611,7 +611,7 @@ public:
 			ypos += y_inc;
 		}*/
 		
-		if (gSavedSettings.getBOOL("DebugShowRenderInfo"))
+		if (gSavedSettings.getbool("DebugShowRenderInfo"))
 		{
 			LLTrace::Recording& last_frame_recording = LLTrace::get_frame_recording().getLastRecording();
 
@@ -787,7 +787,7 @@ public:
 				LLVertexBuffer::sSetCount = LLImageGL::sUniqueCount = 
 				gPipeline.mNumVisibleNodes = LLPipeline::sVisibleLightCount = 0;
 		}
-		if (gSavedSettings.getBOOL("DebugShowAvatarRenderInfo"))
+		if (gSavedSettings.getbool("DebugShowAvatarRenderInfo"))
 		{
 			std::map<std::string, LLVOAvatar*> sorted_avs;
 			
@@ -822,7 +822,7 @@ public:
 				av_iter++;
 			}
 		}
-		if (gSavedSettings.getBOOL("DebugShowRenderMatrices"))
+		if (gSavedSettings.getbool("DebugShowRenderMatrices"))
 		{
 			char camera_lines[8][32];
 			memset(camera_lines, ' ', sizeof(camera_lines));
@@ -940,7 +940,7 @@ public:
 			}
 		}				
 
-		if (gSavedSettings.getBOOL("DebugShowTextureInfo"))
+		if (gSavedSettings.getbool("DebugShowTextureInfo"))
 		{
 			LLViewerObject* objectp = NULL ;
 			
@@ -1274,8 +1274,8 @@ LLWindowCallbacks::DragNDropResult LLViewerWindow::handleDragNDrop( LLWindow *wi
 {
 	LLWindowCallbacks::DragNDropResult result = LLWindowCallbacks::DND_NONE;
 
-	const bool prim_media_dnd_enabled = gSavedSettings.getBOOL("PrimMediaDragNDrop");
-	const bool slurl_dnd_enabled = gSavedSettings.getBOOL("SLURLDragNDrop");
+	const bool prim_media_dnd_enabled = gSavedSettings.getbool("PrimMediaDragNDrop");
+	const bool slurl_dnd_enabled = gSavedSettings.getbool("SLURLDragNDrop");
 	
 	if ( prim_media_dnd_enabled || slurl_dnd_enabled )
 	{
@@ -1895,7 +1895,7 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	mAlertsChannel.reset(new LLNotificationsUI::LLViewerAlertHandler("VW_alerts", "alert"));
 	mModalAlertsChannel.reset(new LLNotificationsUI::LLViewerAlertHandler("VW_alertmodal", "alertmodal"));
 
-	bool ignore = gSavedSettings.getBOOL("IgnoreAllNotifications");
+	bool ignore = gSavedSettings.getbool("IgnoreAllNotifications");
 	LLNotifications::instance().setIgnoreAllNotifications(ignore);
 	if (ignore)
 	{
@@ -1917,10 +1917,10 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 		p.title, p.name, p.x, p.y, p.width, p.height, 0,
 		p.fullscreen, 
 		gHeadlessClient,
-		gSavedSettings.getBOOL("RenderVSyncEnable"),
+		gSavedSettings.getbool("RenderVSyncEnable"),
 		!gHeadlessClient,
 		p.ignore_pixel_depth,
-		gSavedSettings.getBOOL("RenderDeferred") ? 0 : gSavedSettings.getU32("RenderFSAASamples")); //don't use window level anti-aliasing if FBOs are enabled
+		gSavedSettings.getbool("RenderDeferred") ? 0 : gSavedSettings.getU32("RenderFSAASamples")); //don't use window level anti-aliasing if FBOs are enabled
 
 	if (NULL == mWindow)
 	{
@@ -2004,9 +2004,9 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderVBOEnable") ||
 		!gGLManager.mHasVertexBufferObject)
 	{
-		gSavedSettings.setBOOL("RenderVBOEnable", FALSE);
+		gSavedSettings.setbool("RenderVBOEnable", false);
 	}
-	LLVertexBuffer::initClass(gSavedSettings.getBOOL("RenderVBOEnable"), gSavedSettings.getBOOL("RenderVBOMappingDisable"));
+	LLVertexBuffer::initClass(gSavedSettings.getbool("RenderVBOEnable"), gSavedSettings.getbool("RenderVBOMappingDisable"));
 	LL_INFOS("RenderInit") << "LLVertexBuffer initialization done." << LL_ENDL ;
 	gGL.init(true);
 
@@ -2059,7 +2059,7 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 		
 	// Init the image list.  Must happen after GL is initialized and before the images that
 	// LLViewerWindow needs are requested.
-    LLImageGL::initClass(mWindow, LLViewerTexture::MAX_GL_IMAGE_CATEGORY, false, gSavedSettings.getBOOL("RenderGLMultiThreaded"));
+    LLImageGL::initClass(mWindow, LLViewerTexture::MAX_GL_IMAGE_CATEGORY, false, gSavedSettings.getbool("RenderGLMultiThreaded"));
 	gTextureList.init();
 	LLViewerTextureManager::init() ;
 	gBumpImageList.init();
@@ -2190,7 +2190,7 @@ void LLViewerWindow::initBase()
 #if  !LL_RELEASE_FOR_DOWNLOAD
 	RecordToChatConsole::getInstance()->startRecorder();
 #else
-	if(gSavedSettings.getBOOL("QAMode"))
+	if(gSavedSettings.getbool("QAMode"))
 	{
 		RecordToChatConsole::getInstance()->startRecorder();
 	}
@@ -2891,7 +2891,7 @@ bool LLViewerWindow::handleKeyUp(KEY key, MASK mask)
 			return true;
 		}
 		else {
-			LL_DEBUGS() << "LLviewerWindow::handleKeyUp - in 'traverse up' - no loops seen... just called keyboard_focus->handleKeyUp an it returned FALSE" << LL_ENDL;
+			LL_DEBUGS() << "LLviewerWindow::handleKeyUp - in 'traverse up' - no loops seen... just called keyboard_focus->handleKeyUp an it returned false" << LL_ENDL;
 		}
 	}
 
@@ -3094,7 +3094,7 @@ bool LLViewerWindow::handleKey(KEY key, MASK mask)
 			LLViewerEventRecorder::instance().logKeyEvent(key,mask); 
 			return true;
 		} else {
-			LL_DEBUGS() << "LLviewerWindow::handleKey - in 'traverse up' - no loops seen... just called keyboard_focus->handleKey an it returned FALSE" << LL_ENDL;
+			LL_DEBUGS() << "LLviewerWindow::handleKey - in 'traverse up' - no loops seen... just called keyboard_focus->handleKey an it returned false" << LL_ENDL;
 		}
 	}
 
@@ -3129,7 +3129,7 @@ bool LLViewerWindow::handleKey(KEY key, MASK mask)
 		gSavedSettings.getS32("LetterKeysFocusChatBar") && !gAgentCamera.cameraMouselook() && 
 		!keyboard_focus && key < 0x80 && (mask == MASK_NONE || mask == MASK_SHIFT) )
 	{
-		bool prefer_kokua_chatbar = gSavedSettings.getBOOL("KokuaUseChatBarWhenStartingLocalChat");
+		bool prefer_kokua_chatbar = gSavedSettings.getbool("KokuaUseChatBarWhenStartingLocalChat");
 		KokuaChatBar* chat_bar = LLFloaterReg::findTypedInstance<KokuaChatBar>("kokua_chatbar");
 
 		if (chat_bar && chat_bar->getVisible() && prefer_kokua_chatbar)
@@ -3354,7 +3354,7 @@ void LLViewerWindow::clearPopups()
 
 void LLViewerWindow::moveCursorToCenter()
 {
-	if (! gSavedSettings.getBOOL("DisableMouseWarp"))
+	if (! gSavedSettings.getbool("DisableMouseWarp"))
 	{
 		S32 x = getWorldViewWidthScaled() / 2;
 		S32 y = getWorldViewHeightScaled() / 2;
@@ -5222,7 +5222,7 @@ bool LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 	}
 	else if(image_width != image_buffer_x || image_height != image_buffer_y)
 	{
-		ret = raw->scale( image_width, image_height, FALSE );  
+		ret = raw->scale( image_width, image_height, false );  
 	}
 	
 
@@ -5264,7 +5264,7 @@ bool LLViewerWindow::simpleSnapshot(LLImageRaw* raw, S32 image_width, S32 image_
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     setCursor(UI_CURSOR_WAIT);
 
-    BOOL prev_draw_ui = gPipeline.hasRenderDebugFeatureMask(LLPipeline::RENDER_DEBUG_FEATURE_UI) ? TRUE : FALSE;
+    bool prev_draw_ui = gPipeline.hasRenderDebugFeatureMask(LLPipeline::RENDER_DEBUG_FEATURE_UI) ? true : false;
     if (prev_draw_ui != false)
     {
         LLPipeline::toggleRenderDebugFeature(LLPipeline::RENDER_DEBUG_FEATURE_UI);
@@ -5935,7 +5935,7 @@ void LLViewerWindow::reshapeStatusBarContainer()
     S32 new_height = status_bar_container->getRect().getHeight();
     S32 new_width = status_bar_container->getRect().getWidth();
 
-    if (gSavedSettings.getBOOL("ShowNavbarNavigationPanel"))
+    if (gSavedSettings.getbool("ShowNavbarNavigationPanel"))
     {
         // Navigation bar is outside visible area, expand status_bar_container to show it
         new_height += nav_bar_container->getRect().getHeight();
@@ -5945,7 +5945,7 @@ void LLViewerWindow::reshapeStatusBarContainer()
         // collapse status_bar_container
         new_height -= nav_bar_container->getRect().getHeight();
     }
-    status_bar_container->reshape(new_width, new_height, TRUE);
+    status_bar_container->reshape(new_width, new_height, true);
 }
 //----------------------------------------------------------------------------
 
