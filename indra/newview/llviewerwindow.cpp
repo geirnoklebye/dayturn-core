@@ -2285,11 +2285,6 @@ void LLViewerWindow::initWorldUI()
 	{
 		navbar->setVisible(false);
 	}
-    else
-    {
-        reshapeStatusBarContainer();
-    }
-
 
 	// Top Info bar
 	LLPanel* topinfo_bar_container = getRootView()->getChild<LLPanel>("topinfo_bar_container");
@@ -5925,27 +5920,6 @@ LLRect LLViewerWindow::getChatConsoleRect()
 	}
 
 	return console_rect;
-}
-
-void LLViewerWindow::reshapeStatusBarContainer()
-{
-    LLPanel* status_bar_container = getRootView()->getChild<LLPanel>("status_bar_container");
-    LLView* nav_bar_container = getRootView()->getChild<LLView>("nav_bar_container");
-
-    S32 new_height = status_bar_container->getRect().getHeight();
-    S32 new_width = status_bar_container->getRect().getWidth();
-
-    if (gSavedSettings.getbool("ShowNavbarNavigationPanel"))
-    {
-        // Navigation bar is outside visible area, expand status_bar_container to show it
-        new_height += nav_bar_container->getRect().getHeight();
-    }
-    else
-    {
-        // collapse status_bar_container
-        new_height -= nav_bar_container->getRect().getHeight();
-    }
-    status_bar_container->reshape(new_width, new_height, true);
 }
 //----------------------------------------------------------------------------
 
