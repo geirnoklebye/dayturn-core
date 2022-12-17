@@ -1,3 +1,0 @@
-[bugtraq "jira"]
-  url = https://kokua.atlassian.net/projects/KKA/issues/KKA-%BUGID%
-  logRegex = KKA-(\\d+)
