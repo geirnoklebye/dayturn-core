@@ -60,7 +60,7 @@ public:
 	};
 
     ~LLDrawPoolAvatar();
-    /*virtual*/ BOOL isDead();
+    /*virtual*/ bool isDead();
 
 typedef enum
 	{
@@ -77,10 +77,6 @@ typedef enum
 	LLDrawPoolAvatar(U32 type);
 
 	static LLMatrix4& getModelView();
-	//<FS:Beq> per frame cache 
-	static LLMatrix4a* getCacheSkinningMats(LLDrawable* drawable, const LLMeshSkinInfo* skin, U32 count,
-	                                        LLVOAvatar* avatar);
-	//</FS:Beq>
 
 	/*virtual*/ S32  getNumPasses();
 	/*virtual*/ void beginRenderPass(S32 pass);
@@ -124,8 +120,8 @@ typedef enum
 
 	void renderAvatars(LLVOAvatar *single_avatar, S32 pass = -1); // renders only one avatar if single_avatar is not null.
 
-	static BOOL sSkipOpaque;
-	static BOOL sSkipTransparent;
+	static bool sSkipOpaque;
+	static bool sSkipTransparent;
     static S32  sShadowPass;
 	static S32 sDiffuseChannel;
 	static F32 sMinimumAlpha;
@@ -146,5 +142,5 @@ extern S32 AVATAR_OFFSET_TEX1;
 extern S32 AVATAR_VERTEX_BYTES;
 const S32 AVATAR_BUFFER_ELEMENTS = 8192; // Needs to be enough to store all avatar vertices.
 
-extern BOOL gAvatarEmbossBumpMap;
+extern bool gAvatarEmbossBumpMap;
 #endif // LL_LLDRAWPOOLAVATAR_H

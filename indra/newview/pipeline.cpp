@@ -5505,8 +5505,6 @@ void LLPipeline::renderDebug()
 
 void LLPipeline::rebuildPools()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_PIPELINE;
-
 	assertInitialized();
 
 	S32 max_count = mPools.size();

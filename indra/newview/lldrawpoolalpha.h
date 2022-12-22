@@ -65,7 +65,7 @@ public:
 	void renderAlphaHighlight(U32 mask);
     bool uploadMatrixPalette(const LLDrawInfo& params);
 
-	static BOOL sShowDebugAlpha;
+	static bool sShowDebugAlpha;
 
 private:
 	LLGLSLShader* target_shader;

@@ -78,7 +78,7 @@ public:
 	LLDrawPool(const U32 type);
 	virtual ~LLDrawPool();
 
-	virtual BOOL isDead() = 0;
+	virtual bool isDead() = 0;
 
 	S32 getId() const { return mId; }
 	U32 getType() const { return mType; }
@@ -109,12 +109,12 @@ public:
 	virtual void render(S32 pass = 0) = 0;
 	virtual void prerender() = 0;
 	virtual U32 getVertexDataMask() = 0;
-	virtual BOOL verify() const { return TRUE; }		// Verify that all data in the draw pool is correct!
+	virtual bool verify() const { return true; }		// Verify that all data in the draw pool is correct!
 	virtual S32 getShaderLevel() const { return mShaderLevel; }
 	
 	static LLDrawPool* createPool(const U32 type, LLViewerTexture *tex0 = NULL);
 	virtual LLViewerTexture* getTexture() = 0;
-	virtual BOOL isFacePool() { return FALSE; }
+	virtual bool isFacePool() { return false; }
 	virtual void resetDrawOrders() = 0;
 
 protected:
@@ -197,7 +197,7 @@ public:
 	virtual ~LLRenderPass();
 	/*virtual*/ LLViewerTexture* getDebugTexture() { return NULL; }
 	LLViewerTexture* getTexture() { return NULL; }
-	BOOL isDead() { return FALSE; }
+	bool isDead() { return false; }
 	void resetDrawOrders() { }
 
 	static void applyModelMatrix(const LLDrawInfo& params);
@@ -226,7 +226,7 @@ public:
 	LLFacePool(const U32 type);
 	virtual ~LLFacePool();
 	
-	BOOL isDead() { return mReferences.empty(); }
+	bool isDead() { return mReferences.empty(); }
 	
 	virtual LLViewerTexture *getTexture();
 	virtual void dirtyTextures(const std::set<LLViewerFetchedTexture*>& textures);
@@ -235,7 +235,7 @@ public:
 	virtual BOOL addFace(LLFace *face);
 	virtual BOOL removeFace(LLFace *face);
 
-	virtual BOOL verify() const;		// Verify that all data in the draw pool is correct!
+	virtual bool verify() const;		// Verify that all data in the draw pool is correct!
 	
 	virtual void resetDrawOrders();
 	void resetAll();
@@ -249,7 +249,7 @@ public:
 
 	void printDebugInfo() const;
 	
-	BOOL isFacePool() { return TRUE; }
+	bool isFacePool() { return true; }
 
 	friend class LLFace;
 	friend class LLPipeline;

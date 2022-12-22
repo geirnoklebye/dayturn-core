@@ -327,9 +327,9 @@ void LLFacePool::addFaceReference(LLFace *facep)
 	}
 }
 
-BOOL LLFacePool::verify() const
+bool LLFacePool::verify() const
 {
-	BOOL ok = TRUE;
+	bool ok = true;
 	
 	for (std::vector<LLFace*>::const_iterator iter = mDrawFace.begin();
 		 iter != mDrawFace.end(); iter++)
@@ -339,11 +339,11 @@ BOOL LLFacePool::verify() const
 		{
 			LL_INFOS() << "Face in wrong pool!" << LL_ENDL;
 			facep->printDebugInfo();
-			ok = FALSE;
+			ok = false;
 		}
 		else if (!facep->verify())
 		{
-			ok = FALSE;
+			ok = false;
 		}
 	}
 

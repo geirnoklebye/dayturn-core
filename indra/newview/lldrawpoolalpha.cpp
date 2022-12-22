@@ -50,7 +50,7 @@
 #include "llglcommonfunc.h"
 #include "llvoavatar.h"
 
-BOOL LLDrawPoolAlpha::sShowDebugAlpha = FALSE;
+bool LLDrawPoolAlpha::sShowDebugAlpha = false;
 
 #define current_shader (LLGLSLShader::sCurBoundShaderPtr)
 
