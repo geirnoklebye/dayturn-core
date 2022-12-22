@@ -116,7 +116,7 @@ protected:
 	LLTimer			mKeyLevelTimer[KEY_COUNT];	// Time since level was set
 	S32				mKeyLevelFrameCount[KEY_COUNT];	// Frames since level was set
 	bool			mKeyLevel[KEY_COUNT];		// Levels
-	BOOL			mKeyRepeated[KEY_COUNT];	// Key was repeated
+	bool			mKeyRepeated[KEY_COUNT];	// Key was repeated
 	bool			mKeyUp[KEY_COUNT];			// Up edge
 	bool			mKeyDown[KEY_COUNT];		// Down edge
 	KEY				mCurTranslatedKey;

@@ -162,17 +162,17 @@ void LLKeyboardSDL::resetMaskKeys()
 
 	if(mask & KMOD_SHIFT)
 	{
-		mKeyLevel[KEY_SHIFT] = TRUE;
+		mKeyLevel[KEY_SHIFT] = true;
 	}
 
 	if(mask & KMOD_CTRL)
 	{
-		mKeyLevel[KEY_CONTROL] = TRUE;
+		mKeyLevel[KEY_CONTROL] = true;
 	}
 
 	if(mask & KMOD_ALT)
 	{
-		mKeyLevel[KEY_ALT] = TRUE;
+		mKeyLevel[KEY_ALT] = true;
 	}
 }
 
@@ -300,8 +300,8 @@ void LLKeyboardSDL::scanKeyboard()
 	// Reset edges for next frame
 	for (S32 key = 0; key < KEY_COUNT; key++)
 	{
-		mKeyUp[key] = FALSE;
-		mKeyDown[key] = FALSE;
+		mKeyUp[key] = false;
+		mKeyDown[key] = false;
 		if (mKeyLevel[key])
 		{
 			mKeyLevelFrameCount[key]++;

@@ -69,8 +69,8 @@ void LLKeyboardHeadless::scanKeyboard()
 	// Reset edges for next frame
 	for (S32 key = 0; key < KEY_COUNT; key++)
 	{
-		mKeyUp[key] = FALSE;
-		mKeyDown[key] = FALSE;
+		mKeyUp[key] = false;
+		mKeyDown[key] = false;
 		if (mKeyLevel[key])
 		{
 			mKeyLevelFrameCount[key]++;

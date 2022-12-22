@@ -155,9 +155,9 @@ void LLKeyboard::resetKeyDownAndHandle()
     {
         if (mKeyLevel[i])
         {
-            mKeyDown[i] = FALSE;
-            mKeyLevel[i] = FALSE;
-            mKeyUp[i] = TRUE;
+            mKeyDown[i] = false;
+            mKeyLevel[i] = false;
+            mKeyUp[i] = true;
             mCurTranslatedKey = (KEY)i;
             mCallbacks->handleTranslatedKeyUp(i, mask);
         }

@@ -152,17 +152,17 @@ void LLKeyboardWin32::resetMaskKeys()
 	// bit to indicate that the key is down.
 	if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
 	{
-		mKeyLevel[KEY_SHIFT] = TRUE;
+		mKeyLevel[KEY_SHIFT] = true;
 	}
 
 	if (GetAsyncKeyState(VK_CONTROL) & 0x8000)
 	{
-		mKeyLevel[KEY_CONTROL] = TRUE;
+		mKeyLevel[KEY_CONTROL] = true;
 	}
 
 	if (GetAsyncKeyState(VK_MENU) & 0x8000)
 	{
-		mKeyLevel[KEY_ALT] = TRUE;
+		mKeyLevel[KEY_ALT] = true;
 	}
 }
 
@@ -285,8 +285,8 @@ void LLKeyboardWin32::scanKeyboard()
 	// Reset edges for next frame
 	for (key = 0; key < KEY_COUNT; key++)
 	{
-		mKeyUp[key] = FALSE;
-		mKeyDown[key] = FALSE;
+		mKeyUp[key] = false;
+		mKeyDown[key] = false;
 		if (mKeyLevel[key])
 		{
 			mKeyLevelFrameCount[key]++;
