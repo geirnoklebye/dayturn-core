@@ -413,8 +413,8 @@ void LLVOCacheEntry::updateDebugSettings()
     //the number of frames invisible objects stay in memory
     static LLCachedControl<U32> inv_obj_time(gSavedSettings,"NonvisibleObjectsInMemoryTime");
     static const U32 MIN_FRAMES = 10;
-    static const U32 MAX_FRAMES = 64;
-    const U32 clamped_frames = inv_obj_time ? llclamp((U32) inv_obj_time, MIN_FRAMES, MAX_FRAMES) : MAX_FRAMES; // [10, 64], with zero => 64
+    static const U32 MAX_FRAMES = 180;
+    const U32 clamped_frames = inv_obj_time ? llclamp((U32) inv_obj_time, MIN_FRAMES, MAX_FRAMES) : MAX_FRAMES; // [10, 180], with zero => 180
     sMinFrameRange = MIN_FRAMES + ((clamped_frames - MIN_FRAMES) * adjust_factor);
 }
 
