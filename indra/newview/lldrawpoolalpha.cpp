@@ -843,7 +843,7 @@ bool LLDrawPoolAlpha::uploadMatrixPalette(const LLDrawInfo& params)
 
     LLGLSLShader::sCurBoundShaderPtr->uniformMatrix3x4fv(LLViewerShaderMgr::AVATAR_MATRIX,
         count,
-        FALSE,
+        GL_FALSE,
         (GLfloat*)&(mpc.mGLMp[0]));
 
     return true;

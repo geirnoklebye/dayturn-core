@@ -256,7 +256,7 @@ void LLDrawPoolMaterials::pushMaterialsBatch(LLDrawInfo& params, U32 mask, bool 
 
         mShader->uniformMatrix3x4fv(LLViewerShaderMgr::AVATAR_MATRIX,
             count,
-            FALSE,
+            GL_FALSE,
             (GLfloat*)&(mpc.mGLMp[0]));
     }
 
