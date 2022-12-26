@@ -833,7 +833,7 @@ bool LLDrawPoolAlpha::uploadMatrixPalette(const LLDrawInfo& params)
         return false;
     }
     const LLVOAvatar::MatrixPaletteCache& mpc = params.mAvatar.get()->updateSkinInfoMatrixPalette(params.mSkinInfo);
-    U32 count = mpc.mMatrixPalette.size();
+    long count = mpc.mMatrixPalette.size();
 
     if (count == 0)
     {

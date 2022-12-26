@@ -246,7 +246,7 @@ void LLDrawPoolMaterials::pushMaterialsBatch(LLDrawInfo& params, U32 mask, bool 
     if (rigged && params.mAvatar.notNull())
     {
         const LLVOAvatar::MatrixPaletteCache& mpc = params.mAvatar->updateSkinInfoMatrixPalette(params.mSkinInfo);
-        U32 count = mpc.mMatrixPalette.size();
+        long count = mpc.mMatrixPalette.size();
 
         if (count == 0)
         {
