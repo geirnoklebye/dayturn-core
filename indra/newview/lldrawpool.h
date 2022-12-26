@@ -83,8 +83,8 @@ public:
 	S32 getId() const { return mId; }
 	U32 getType() const { return mType; }
 
-	BOOL getSkipRenderFlag() const { return mSkipRender;}
-	void setSkipRenderFlag( BOOL flag ) { mSkipRender = flag; }
+	bool getSkipRenderFlag() const { return mSkipRender;}
+	void setSkipRenderFlag( bool flag ) { mSkipRender = flag; }
 
 	virtual LLViewerTexture *getDebugTexture();
 	virtual void beginRenderPass( S32 pass );
@@ -121,7 +121,7 @@ protected:
 	S32 mShaderLevel;
 	S32	mId;
 	U32 mType;				// Type of draw pool
-	BOOL mSkipRender;
+	bool mSkipRender;
 };
 
 class LLRenderPass : public LLDrawPool
@@ -232,8 +232,8 @@ public:
 	virtual void dirtyTextures(const std::set<LLViewerFetchedTexture*>& textures);
 
 	virtual void enqueue(LLFace *face);
-	virtual BOOL addFace(LLFace *face);
-	virtual BOOL removeFace(LLFace *face);
+	virtual bool addFace(LLFace *face);
+	virtual bool removeFace(LLFace *face);
 
 	virtual bool verify() const;		// Verify that all data in the draw pool is correct!
 	
@@ -265,24 +265,24 @@ public:
 		LLOverrideFaceColor(LLDrawPool* pool)
 			: mOverride(sOverrideFaceColor), mPool(pool)
 		{
-			sOverrideFaceColor = TRUE;
+			sOverrideFaceColor = true;
 		}
 		LLOverrideFaceColor(LLDrawPool* pool, const LLColor4& color)
 			: mOverride(sOverrideFaceColor), mPool(pool)
 		{
-			sOverrideFaceColor = TRUE;
+			sOverrideFaceColor = true;
 			setColor(color);
 		}
 		LLOverrideFaceColor(LLDrawPool* pool, const LLColor4U& color)
 			: mOverride(sOverrideFaceColor), mPool(pool)
 		{
-			sOverrideFaceColor = TRUE;
+			sOverrideFaceColor = true;
 			setColor(color);
 		}
 		LLOverrideFaceColor(LLDrawPool* pool, F32 r, F32 g, F32 b, F32 a)
 			: mOverride(sOverrideFaceColor), mPool(pool)
 		{
-			sOverrideFaceColor = TRUE;
+			sOverrideFaceColor = true;
 			setColor(r, g, b, a);
 		}
 		~LLOverrideFaceColor()
@@ -292,9 +292,9 @@ public:
 		void setColor(const LLColor4& color);
 		void setColor(const LLColor4U& color);
 		void setColor(F32 r, F32 g, F32 b, F32 a);
-		BOOL mOverride;
+		bool mOverride;
 		LLDrawPool* mPool;
-		static BOOL sOverrideFaceColor;
+		static bool sOverrideFaceColor;
 	};
 };
 

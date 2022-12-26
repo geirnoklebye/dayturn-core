@@ -276,20 +276,20 @@ void LLFacePool::enqueue(LLFace* facep)
 }
 
 // virtual
-BOOL LLFacePool::addFace(LLFace *facep)
+bool LLFacePool::addFace(LLFace *facep)
 {
 	addFaceReference(facep);
-	return TRUE;
+	return true;
 }
 
 // virtual
-BOOL LLFacePool::removeFace(LLFace *facep)
+bool LLFacePool::removeFace(LLFace *facep)
 {
 	removeFaceReference(facep);
 
 	vector_replace_with_last(mDrawFace, facep);
 
-	return TRUE;
+	return true;
 }
 
 // Not absolutely sure if we should be resetting all of the chained pools as well - djs
@@ -355,7 +355,7 @@ void LLFacePool::printDebugInfo() const
 	LL_INFOS() << "Pool " << this << " Type: " << getType() << LL_ENDL;
 }
 
-BOOL LLFacePool::LLOverrideFaceColor::sOverrideFaceColor = FALSE;
+bool LLFacePool::LLOverrideFaceColor::sOverrideFaceColor = false;
 
 void LLFacePool::LLOverrideFaceColor::setColor(const LLColor4& color)
 {
@@ -389,7 +389,6 @@ LLRenderPass::~LLRenderPass()
 
 void LLRenderPass::renderGroup(LLSpatialGroup* group, U32 type, U32 mask, BOOL texture)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
 	LLSpatialGroup::drawmap_elem_t& draw_info = group->mDrawMap[type];
 	
 	for (LLSpatialGroup::drawmap_elem_t::iterator k = draw_info.begin(); k != draw_info.end(); ++k)	
@@ -404,7 +403,6 @@ void LLRenderPass::renderGroup(LLSpatialGroup* group, U32 type, U32 mask, BOOL t
 
 void LLRenderPass::renderRiggedGroup(LLSpatialGroup* group, U32 type, U32 mask, BOOL texture)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
     LLSpatialGroup::drawmap_elem_t& draw_info = group->mDrawMap[type];
     LLVOAvatar* lastAvatar = nullptr;
     U64 lastMeshId = 0;
@@ -429,8 +427,7 @@ void LLRenderPass::renderRiggedGroup(LLSpatialGroup* group, U32 type, U32 mask, 
 
 void LLRenderPass::pushBatches(U32 type, U32 mask, BOOL texture, BOOL batch_textures)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
-	for (LLCullResult::drawinfo_iterator i = gPipeline.beginRenderMap(type); i != gPipeline.endRenderMap(type); ++i)	
+	for (LLCullResult::drawinfo_iterator i = gPipeline.beginRenderMap(type); i != gPipeline.endRenderMap(type); ++i)
 	{
 		LLDrawInfo* pparams = *i;
 		if (pparams) 
@@ -442,7 +439,6 @@ void LLRenderPass::pushBatches(U32 type, U32 mask, BOOL texture, BOOL batch_text
 
 void LLRenderPass::pushRiggedBatches(U32 type, U32 mask, BOOL texture, BOOL batch_textures)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
     LLVOAvatar* lastAvatar = nullptr;
     U64 lastMeshId = 0;
     mask |= LLVertexBuffer::MAP_WEIGHT4;
@@ -465,8 +461,7 @@ void LLRenderPass::pushRiggedBatches(U32 type, U32 mask, BOOL texture, BOOL batc
 
 void LLRenderPass::pushMaskBatches(U32 type, U32 mask, BOOL texture, BOOL batch_textures)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
-	for (LLCullResult::drawinfo_iterator i = gPipeline.beginRenderMap(type); i != gPipeline.endRenderMap(type); ++i)	
+	for (LLCullResult::drawinfo_iterator i = gPipeline.beginRenderMap(type); i != gPipeline.endRenderMap(type); ++i)
 	{
 		LLDrawInfo* pparams = *i;
 		if (pparams) 
@@ -479,7 +474,6 @@ void LLRenderPass::pushMaskBatches(U32 type, U32 mask, BOOL texture, BOOL batch_
 
 void LLRenderPass::pushRiggedMaskBatches(U32 type, U32 mask, BOOL texture, BOOL batch_textures)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
     LLVOAvatar* lastAvatar = nullptr;
     U64 lastMeshId = 0;
     for (LLCullResult::drawinfo_iterator i = gPipeline.beginRenderMap(type); i != gPipeline.endRenderMap(type); ++i)
@@ -525,7 +519,6 @@ void LLRenderPass::applyModelMatrix(const LLDrawInfo& params)
 
 void LLRenderPass::pushBatch(LLDrawInfo& params, U32 mask, BOOL texture, BOOL batch_textures)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
     if (!params.mCount)
     {
         return;
