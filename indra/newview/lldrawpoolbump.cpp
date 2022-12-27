@@ -354,11 +354,11 @@ void LLDrawPoolBump::renderShiny()
 		{
             if (mRigged)
             {
-                LLRenderPass::pushRiggedBatches(LLRenderPass::PASS_SHINY_RIGGED, sVertexMask | LLVertexBuffer::MAP_TEXTURE_INDEX, TRUE, TRUE);
+                LLRenderPass::pushRiggedBatches(LLRenderPass::PASS_SHINY_RIGGED, sVertexMask | LLVertexBuffer::MAP_TEXTURE_INDEX, true, true);
             }
             else
             {
-                LLRenderPass::pushBatches(LLRenderPass::PASS_SHINY, sVertexMask | LLVertexBuffer::MAP_TEXTURE_INDEX, TRUE, TRUE);
+                LLRenderPass::pushBatches(LLRenderPass::PASS_SHINY, sVertexMask | LLVertexBuffer::MAP_TEXTURE_INDEX, true, true);
             }
 		}
 		else
@@ -499,11 +499,11 @@ void LLDrawPoolBump::renderFullbrightShiny()
 		{
             if (mRigged)
             {
-                LLRenderPass::pushRiggedBatches(LLRenderPass::PASS_FULLBRIGHT_SHINY_RIGGED, sVertexMask | LLVertexBuffer::MAP_TEXTURE_INDEX, TRUE, TRUE);
+                LLRenderPass::pushRiggedBatches(LLRenderPass::PASS_FULLBRIGHT_SHINY_RIGGED, sVertexMask | LLVertexBuffer::MAP_TEXTURE_INDEX, true, true);
             }
             else
             {
-                LLRenderPass::pushBatches(LLRenderPass::PASS_FULLBRIGHT_SHINY, sVertexMask | LLVertexBuffer::MAP_TEXTURE_INDEX, TRUE, TRUE);
+                LLRenderPass::pushBatches(LLRenderPass::PASS_FULLBRIGHT_SHINY, sVertexMask | LLVertexBuffer::MAP_TEXTURE_INDEX, true, true);
             }
 		}
 		else
@@ -522,8 +522,6 @@ void LLDrawPoolBump::renderFullbrightShiny()
 
 void LLDrawPoolBump::endFullbrightShiny()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_SHINY);
-
 	LLCubeMap* cube_map = gSky.mVOSkyp ? gSky.mVOSkyp->getCubeMap() : NULL;
 	if( cube_map )
 	{
@@ -724,11 +722,11 @@ void LLDrawPoolBump::renderDeferred(S32 pass)
                     avatar = params.mAvatar;
                     skin = params.mSkinInfo->mHash;
                 }
-                pushBatch(params, mask | LLVertexBuffer::MAP_WEIGHT4, TRUE, FALSE);
+                pushBatch(params, mask | LLVertexBuffer::MAP_WEIGHT4, true, false);
             }
             else
             {
-                pushBatch(params, mask, TRUE, FALSE);
+                pushBatch(params, mask, true, false);
             }
         }
 
@@ -1354,14 +1352,13 @@ void LLDrawPoolBump::renderBump(U32 type, U32 mask)
                     }
                 }
             }
-			pushBatch(params, mask, FALSE);
+			pushBatch(params, mask, false);
 		}
 	}
 }
 
-void LLDrawPoolBump::pushBatch(LLDrawInfo& params, U32 mask, BOOL texture, BOOL batch_textures)
+void LLDrawPoolBump::pushBatch(LLDrawInfo& params, U32 mask, bool texture, bool batch_textures)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
 	applyModelMatrix(params);
 
 	bool tex_setup = false;
@@ -1447,7 +1444,7 @@ void LLDrawPoolInvisible::render(S32 pass)
 	U32 invisi_mask = LLVertexBuffer::MAP_VERTEX;
 	glStencilMask(0);
 	gGL.setColorMask(false, false);
-	pushBatches(LLRenderPass::PASS_INVISIBLE, invisi_mask, FALSE);
+	pushBatches(LLRenderPass::PASS_INVISIBLE, invisi_mask, false);
 	gGL.setColorMask(true, false);
 	glStencilMask(0xFFFFFFFF);
 

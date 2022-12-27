@@ -425,7 +425,7 @@ void LLRenderPass::renderRiggedGroup(LLSpatialGroup* group, U32 type, U32 mask, 
     }
 }
 
-void LLRenderPass::pushBatches(U32 type, U32 mask, BOOL texture, BOOL batch_textures)
+void LLRenderPass::pushBatches(U32 type, U32 mask, bool texture, bool batch_textures)
 {
 	for (LLCullResult::drawinfo_iterator i = gPipeline.beginRenderMap(type); i != gPipeline.endRenderMap(type); ++i)
 	{
@@ -437,7 +437,7 @@ void LLRenderPass::pushBatches(U32 type, U32 mask, BOOL texture, BOOL batch_text
 	}
 }
 
-void LLRenderPass::pushRiggedBatches(U32 type, U32 mask, BOOL texture, BOOL batch_textures)
+void LLRenderPass::pushRiggedBatches(U32 type, U32 mask, bool texture, bool batch_textures)
 {
     LLVOAvatar* lastAvatar = nullptr;
     U64 lastMeshId = 0;
@@ -459,7 +459,7 @@ void LLRenderPass::pushRiggedBatches(U32 type, U32 mask, BOOL texture, BOOL batc
     }
 }
 
-void LLRenderPass::pushMaskBatches(U32 type, U32 mask, BOOL texture, BOOL batch_textures)
+void LLRenderPass::pushMaskBatches(U32 type, U32 mask, bool texture, bool batch_textures)
 {
 	for (LLCullResult::drawinfo_iterator i = gPipeline.beginRenderMap(type); i != gPipeline.endRenderMap(type); ++i)
 	{
@@ -472,7 +472,7 @@ void LLRenderPass::pushMaskBatches(U32 type, U32 mask, BOOL texture, BOOL batch_
 	}
 }
 
-void LLRenderPass::pushRiggedMaskBatches(U32 type, U32 mask, BOOL texture, BOOL batch_textures)
+void LLRenderPass::pushRiggedMaskBatches(U32 type, U32 mask, bool texture, bool batch_textures)
 {
     LLVOAvatar* lastAvatar = nullptr;
     U64 lastMeshId = 0;
@@ -517,7 +517,7 @@ void LLRenderPass::applyModelMatrix(const LLDrawInfo& params)
 	}
 }
 
-void LLRenderPass::pushBatch(LLDrawInfo& params, U32 mask, BOOL texture, BOOL batch_textures)
+void LLRenderPass::pushBatch(LLDrawInfo& params, U32 mask, bool texture, bool batch_textures)
 {
     if (!params.mCount)
     {

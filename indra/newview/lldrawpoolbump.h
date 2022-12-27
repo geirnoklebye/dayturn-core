@@ -33,6 +33,7 @@
 #include "lluuid.h"
 
 #include <unordered_map>
+#include "llrendertarget.h"
 
 class LLImageRaw;
 class LLSpatialGroup;
@@ -55,7 +56,7 @@ public:
 	virtual void render(S32 pass = 0) override;
 	virtual S32	 getNumPasses() override;
 	/*virtual*/ void prerender() override;
-	void pushBatch(LLDrawInfo& params, U32 mask, BOOL texture, BOOL batch_textures = FALSE) override;
+	void pushBatch(LLDrawInfo& params, U32 mask, bool texture, bool batch_textures = false) override;
 
 	void renderBump(U32 type, U32 mask);
 	void renderGroup(LLSpatialGroup* group, U32 type, U32 mask, BOOL texture) override;

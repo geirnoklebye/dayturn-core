@@ -201,11 +201,11 @@ public:
 	void resetDrawOrders() { }
 
 	static void applyModelMatrix(const LLDrawInfo& params);
-	virtual void pushBatches(U32 type, U32 mask, BOOL texture = TRUE, BOOL batch_textures = FALSE);
-    virtual void pushRiggedBatches(U32 type, U32 mask, BOOL texture = TRUE, BOOL batch_textures = FALSE);
-	virtual void pushMaskBatches(U32 type, U32 mask, BOOL texture = TRUE, BOOL batch_textures = FALSE);
-    virtual void pushRiggedMaskBatches(U32 type, U32 mask, BOOL texture = TRUE, BOOL batch_textures = FALSE);
-	virtual void pushBatch(LLDrawInfo& params, U32 mask, BOOL texture, BOOL batch_textures = FALSE);
+	virtual void pushBatches(U32 type, U32 mask, bool texture = true, bool batch_textures = false);
+    virtual void pushRiggedBatches(U32 type, U32 mask, bool texture = true, bool batch_textures = false);
+	virtual void pushMaskBatches(U32 type, U32 mask, bool texture = true, bool batch_textures = false);
+    virtual void pushRiggedMaskBatches(U32 type, U32 mask, bool texture = true, bool batch_textures = false);
+	virtual void pushBatch(LLDrawInfo& params, U32 mask, bool texture, bool batch_textures = false);
     static bool uploadMatrixPalette(LLDrawInfo& params);
     static bool uploadMatrixPalette(LLVOAvatar* avatar, LLMeshSkinInfo* skinInfo);
 	virtual void renderGroup(LLSpatialGroup* group, U32 type, U32 mask, BOOL texture = TRUE);
