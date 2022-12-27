@@ -208,8 +208,8 @@ public:
 	virtual void pushBatch(LLDrawInfo& params, U32 mask, bool texture, bool batch_textures = false);
     static bool uploadMatrixPalette(LLDrawInfo& params);
     static bool uploadMatrixPalette(LLVOAvatar* avatar, LLMeshSkinInfo* skinInfo);
-	virtual void renderGroup(LLSpatialGroup* group, U32 type, U32 mask, BOOL texture = TRUE);
-    virtual void renderRiggedGroup(LLSpatialGroup* group, U32 type, U32 mask, BOOL texture = TRUE);
+	virtual void renderGroup(LLSpatialGroup* group, U32 type, U32 mask, bool texture = true);
+    virtual void renderRiggedGroup(LLSpatialGroup* group, U32 type, U32 mask, bool texture = true);
 };
 
 class LLFacePool : public LLDrawPool

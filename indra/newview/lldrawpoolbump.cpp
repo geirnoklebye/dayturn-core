@@ -535,7 +535,7 @@ void LLDrawPoolBump::endFullbrightShiny()
 	mShiny = FALSE;
 }
 
-void LLDrawPoolBump::renderGroup(LLSpatialGroup* group, U32 type, U32 mask, BOOL texture = TRUE)
+void LLDrawPoolBump::renderGroup(LLSpatialGroup* group, U32 type, U32 mask, bool texture = true)
 {					
 	LLSpatialGroup::drawmap_elem_t& draw_info = group->mDrawMap[type];	
 	

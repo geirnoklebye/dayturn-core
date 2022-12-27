@@ -59,7 +59,7 @@ public:
 	void pushBatch(LLDrawInfo& params, U32 mask, bool texture, bool batch_textures = false) override;
 
 	void renderBump(U32 type, U32 mask);
-	void renderGroup(LLSpatialGroup* group, U32 type, U32 mask, BOOL texture) override;
+	void renderGroup(LLSpatialGroup* group, U32 type, U32 mask, bool texture) override;
 		
 	S32 numBumpPasses();
 	

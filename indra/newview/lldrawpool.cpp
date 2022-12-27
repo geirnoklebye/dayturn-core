@@ -387,7 +387,7 @@ LLRenderPass::~LLRenderPass()
 
 }
 
-void LLRenderPass::renderGroup(LLSpatialGroup* group, U32 type, U32 mask, BOOL texture)
+void LLRenderPass::renderGroup(LLSpatialGroup* group, U32 type, U32 mask, bool texture)
 {
 	LLSpatialGroup::drawmap_elem_t& draw_info = group->mDrawMap[type];
 	
@@ -401,7 +401,7 @@ void LLRenderPass::renderGroup(LLSpatialGroup* group, U32 type, U32 mask, BOOL t
 	}
 }
 
-void LLRenderPass::renderRiggedGroup(LLSpatialGroup* group, U32 type, U32 mask, BOOL texture)
+void LLRenderPass::renderRiggedGroup(LLSpatialGroup* group, U32 type, U32 mask, bool texture)
 {
     LLSpatialGroup::drawmap_elem_t& draw_info = group->mDrawMap[type];
     LLVOAvatar* lastAvatar = nullptr;
