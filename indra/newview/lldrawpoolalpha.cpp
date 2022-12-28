@@ -159,7 +159,7 @@ void LLDrawPoolAlpha::renderPostDeferred(S32 pass)
     forwardRender();
 
     // final pass, render to depth for depth of field effects
-    if (!LLPipeline::sImpostorRender && gSavedSettings.getBOOL("RenderDepthOfField"))
+    if (!LLPipeline::sImpostorRender && gSavedSettings.getbool("RenderDepthOfField"))
     { 
         //update depth buffer sampler
         gPipeline.mScreen.flush();
@@ -203,8 +203,6 @@ static void prepare_forward_shader(LLGLSLShader* shader, F32 minimum_alpha)
 
 void LLDrawPoolAlpha::render(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
-
     simple_shader = (LLPipeline::sImpostorRender) ? &gObjectSimpleImpostorProgram :
         (LLPipeline::sUnderWaterRender) ? &gObjectSimpleWaterProgram : &gObjectSimpleAlphaMaskProgram;
 
@@ -529,9 +527,8 @@ void LLDrawPoolAlpha::renderRiggedEmissives(U32 mask, std::vector<LLDrawInfo*>& 
 
 void LLDrawPoolAlpha::renderAlpha(U32 mask, bool depth_only, bool rigged)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
-    BOOL initialized_lighting = FALSE;
-	BOOL light_enabled = TRUE;
+    bool initialized_lighting = false;
+	bool light_enabled = true;
 
     LLVOAvatar* lastAvatar = nullptr;
     U64 lastMeshId = 0;
@@ -553,7 +550,6 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, bool depth_only, bool rigged)
 
     for (LLCullResult::sg_iterator i = begin; i != end; ++i)
 	{
-        LL_PROFILE_ZONE_NAMED_CATEGORY_DRAWPOOL("renderAlpha - group");
 		LLSpatialGroup* group = *i;
 		llassert(group);
 		llassert(group->getSpatialPartition());
@@ -583,8 +579,6 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, bool depth_only, bool rigged)
                 {
                     continue;
                 }
-
-                LL_PROFILE_ZONE_NAMED_CATEGORY_DRAWPOOL("ra - push batch")
 
                 U32 have_mask = params.mVertexBuffer->getTypeMask() & mask;
 				if (have_mask != mask)
@@ -624,18 +618,18 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, bool depth_only, bool rigged)
 					// Turn off lighting if it hasn't already been so.
 					if (light_enabled || !initialized_lighting)
 					{
-						initialized_lighting = TRUE;
+						initialized_lighting = true;
 						target_shader = fullbright_shader;
 
-						light_enabled = FALSE;
+						light_enabled = false;
 					}
 				}
 				// Turn on lighting if it isn't already.
 				else if (!light_enabled || !initialized_lighting)
 				{
-					initialized_lighting = TRUE;
+					initialized_lighting = true;
 					target_shader = simple_shader;
-					light_enabled = TRUE;
+					light_enabled = true;
 				}
 
 				if (deferred_render && mat)
@@ -843,7 +837,7 @@ bool LLDrawPoolAlpha::uploadMatrixPalette(const LLDrawInfo& params)
     LLGLSLShader::sCurBoundShaderPtr->uniformMatrix3x4fv(LLViewerShaderMgr::AVATAR_MATRIX,
         count,
         GL_FALSE,
-        (GLfloat*)&(mpc.mGLMp[0]));
+        &(mpc.mGLMp[0]));
 
     return true;
 }
