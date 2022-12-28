@@ -54,7 +54,7 @@ bool LLDrawPoolAlpha::sShowDebugAlpha = false;
 
 #define current_shader (LLGLSLShader::sCurBoundShaderPtr)
 
-static BOOL deferred_render = FALSE;
+static bool deferred_render = false;
 
 // minimum alpha before discarding a fragment
 static const F32 MINIMUM_ALPHA = 0.004f; // ~ 1/255
@@ -132,8 +132,7 @@ static void prepare_alpha_shader(LLGLSLShader* shader, bool textureGamma, bool d
 
 void LLDrawPoolAlpha::renderPostDeferred(S32 pass) 
 { 
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
-    deferred_render = TRUE;
+    deferred_render = true;
 
     // prepare shaders
     emissive_shader = (LLPipeline::sRenderDeferred)   ? &gDeferredEmissiveProgram    :
@@ -185,7 +184,7 @@ void LLDrawPoolAlpha::renderPostDeferred(S32 pass)
         gGL.setColorMask(true, false);
     }
 
-    deferred_render = FALSE;
+    deferred_render = false;
 }
 
 //set some generic parameters for forward (non-deferred) rendering

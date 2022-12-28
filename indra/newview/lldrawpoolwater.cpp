@@ -50,7 +50,7 @@
 #include "llsettingssky.h"
 #include "llsettingswater.h"
 
-BOOL deferred_render = FALSE;
+bool deferred_render = false;
 
 BOOL LLDrawPoolWater::sSkipScreenCopy = FALSE;
 BOOL LLDrawPoolWater::sNeedsReflectionUpdate = TRUE;
@@ -120,13 +120,13 @@ S32 LLDrawPoolWater::getNumPasses()
 void LLDrawPoolWater::beginPostDeferredPass(S32 pass)
 {
 	beginRenderPass(pass);
-	deferred_render = TRUE;
+	deferred_render = true;
 }
 
 void LLDrawPoolWater::endPostDeferredPass(S32 pass)
 {
 	endRenderPass(pass);
-	deferred_render = FALSE;
+	deferred_render = false;
 }
 
 //===============================
@@ -143,9 +143,9 @@ void LLDrawPoolWater::renderDeferred(S32 pass)
         return;
     }
 
-	deferred_render = TRUE;
+	deferred_render = true;
 	renderWater();
-	deferred_render = FALSE;
+	deferred_render = false;
 }
 
 //=========================================
@@ -472,7 +472,6 @@ void LLDrawPoolWater::renderReflection(LLFace* face)
 
 void LLDrawPoolWater::renderWater()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
     if (!deferred_render)
     {
         gGL.setColorMask(true, true);
