@@ -44,10 +44,10 @@ class LLViewerFetchedTexture;
 class LLDrawPoolBump : public LLRenderPass
 {
 protected :
-	LLDrawPoolBump(const U32 type):LLRenderPass(type) { mShiny = FALSE; }
+	LLDrawPoolBump(const U32 type):LLRenderPass(type) { mShiny = false; }
 public:
 	static U32 sVertexMask;
-	BOOL mShiny;
+	bool mShiny;
 	
 	virtual U32 getVertexDataMask() override { return sVertexMask; }
 
@@ -84,11 +84,11 @@ public:
     virtual S32 getNumPostDeferredPasses() override { return 1; }
 	/*virtual*/ void renderPostDeferred(S32 pass) override;
 
-	static BOOL bindBumpMap(LLDrawInfo& params, S32 channel = -2);
-	static BOOL bindBumpMap(LLFace* face, S32 channel = -2);
+	static bool bindBumpMap(LLDrawInfo& params, S32 channel = -2);
+	static bool bindBumpMap(LLFace* face, S32 channel = -2);
 
 private:
-	static BOOL bindBumpMap(U8 bump_code, LLViewerTexture* tex, F32 vsize, S32 channel);
+	static bool bindBumpMap(U8 bump_code, LLViewerTexture* tex, F32 vsize, S32 channel);
     bool mRigged = false; // if true, doing a rigged pass
 
 };
