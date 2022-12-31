@@ -28,13 +28,14 @@
 
 #include <cfloat>
 #include <climits>
+#include <cstdint>
 
-typedef signed char			S8;
-typedef unsigned char			U8;
-typedef signed short			S16;
-typedef unsigned short			U16;
+typedef int8_t				S8;
+typedef uint8_t				U8;
+typedef signed short		S16;
+typedef unsigned short		U16;
 typedef signed int			S32;
-typedef unsigned int			U32;
+typedef unsigned int		U32;
 
 #if LL_WINDOWS
 // https://docs.microsoft.com/en-us/cpp/build/reference/zc-wchar-t-wchar-t-is-native-type
