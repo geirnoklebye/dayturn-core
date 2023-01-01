@@ -180,7 +180,7 @@ void LLFloaterProfileTexture::loadAsset(const LLUUID &image_id)
     if ((mImage->getFullWidth() * mImage->getFullHeight()) == 0)
     {
         mImage->setLoadedCallback(LLFloaterProfileTexture::onTextureLoaded,
-            0, TRUE, FALSE, new LLHandle<LLFloater>(getHandle()), &mCallbackTextureList);
+            0, true, false, new LLHandle<LLFloater>(getHandle()), &mCallbackTextureList);
 
         mImage->setBoostLevel(LLGLTexture::BOOST_PREVIEW);
         mAssetStatus = LLPreview::PREVIEW_ASSET_LOADING;
@@ -196,12 +196,12 @@ void LLFloaterProfileTexture::loadAsset(const LLUUID &image_id)
 
 // static
 void LLFloaterProfileTexture::onTextureLoaded(
-    BOOL success,
+    bool success,
     LLViewerFetchedTexture *src_vi,
     LLImageRaw* src,
     LLImageRaw* aux_src,
     S32 discard_level,
-    BOOL final,
+    bool final,
     void* userdata)
 {
     LLHandle<LLFloater>* handle = (LLHandle<LLFloater>*)userdata;

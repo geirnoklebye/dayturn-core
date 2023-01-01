@@ -132,7 +132,7 @@ const F64 log_2 = log(2.0);
 
 LLLoadedCallbackEntry::LLLoadedCallbackEntry(loaded_callback_func cb,
 					  S32 discard_level,
-					  BOOL need_imageraw, // Needs image raw for the callback
+					  bool need_imageraw, // Needs image raw for the callback
 					  void* userdata,
 					  LLLoadedCallbackEntry::source_callback_list_t* src_callback_list,
 					  LLViewerFetchedTexture* target,
@@ -2529,7 +2529,7 @@ void LLViewerFetchedTexture::setIsMissingAsset(bool is_missing)
 }
 
 void LLViewerFetchedTexture::setLoadedCallback( loaded_callback_func loaded_callback,
-									   S32 discard_level, BOOL keep_imageraw, BOOL needs_aux, void* userdata, 
+									   S32 discard_level, bool keep_imageraw, bool needs_aux, void* userdata, 
 									   LLLoadedCallbackEntry::source_callback_list_t* src_callback_list, bool pause)
 {
 	//

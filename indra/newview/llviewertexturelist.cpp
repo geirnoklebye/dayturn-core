@@ -1850,7 +1850,7 @@ LLUIImagePtr LLUIImageList::loadUIImage(LLViewerFetchedTexture* imagep, const st
 		datap->mImageScaleRegion = scale_rect;
 		datap->mImageClipRegion = clip_rect;
 
-		imagep->setLoadedCallback(onUIImageLoaded, 0, FALSE, FALSE, datap, NULL);
+		imagep->setLoadedCallback(onUIImageLoaded, 0, false, false, datap, NULL);
 	}
 	return new_imagep;
 }
@@ -1869,7 +1869,7 @@ LLUIImagePtr LLUIImageList::preloadUIImage(const std::string& name, const std::s
 }
 
 //static 
-void LLUIImageList::onUIImageLoaded( BOOL success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* src_aux, S32 discard_level, BOOL final, void* user_data )
+void LLUIImageList::onUIImageLoaded(bool success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* src_aux, S32 discard_level, bool final, void* user_data )
 {
 	if(!success || !user_data) 
 	{

@@ -1287,7 +1287,7 @@ void LLPanelProfileSecondLife::fillAgeData(const LLDate &born_on)
     getChild<LLUICtrl>("user_age")->setValue(register_date);
 }
 
-void LLPanelProfileSecondLife::onImageLoaded(BOOL success, LLViewerFetchedTexture *imagep)
+void LLPanelProfileSecondLife::onImageLoaded(bool success, LLViewerFetchedTexture *imagep)
 {
     LLRect imageRect = mSecondLifePicLayout->getRect();
     if (!success || imagep->getFullWidth() == imagep->getFullHeight())
@@ -1302,12 +1302,12 @@ void LLPanelProfileSecondLife::onImageLoaded(BOOL success, LLViewerFetchedTextur
 }
 
 //static
-void LLPanelProfileSecondLife::onImageLoaded(BOOL success,
+void LLPanelProfileSecondLife::onImageLoaded(bool success,
                                              LLViewerFetchedTexture *src_vi,
                                              LLImageRaw* src,
                                              LLImageRaw* aux_src,
                                              S32 discard_level,
-                                             BOOL final,
+                                             bool final,
                                              void* userdata)
 {
     if (!userdata) return;

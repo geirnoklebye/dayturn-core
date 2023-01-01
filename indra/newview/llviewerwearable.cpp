@@ -126,9 +126,9 @@ LLWearable::EImportResult LLViewerWearable::importStream( std::istream& input_st
 		}
 
 		LLViewerFetchedTexture* image = LLViewerTextureManager::getFetchedTexture( textureid );
-		if(gSavedSettings.getBOOL("DebugAvatarLocalTexLoadedTime"))
+		if(gSavedSettings.getbool("DebugAvatarLocalTexLoadedTime"))
 		{
-			image->setLoadedCallback(LLVOAvatarSelf::debugOnTimingLocalTexLoaded,0,TRUE,FALSE, new LLVOAvatarSelf::LLAvatarTexData(textureid, (LLAvatarAppearanceDefines::ETextureIndex)te), NULL);
+			image->setLoadedCallback(LLVOAvatarSelf::debugOnTimingLocalTexLoaded,0,true,false, new LLVOAvatarSelf::LLAvatarTexData(textureid, (LLAvatarAppearanceDefines::ETextureIndex)te), NULL);
 		}
 	}
 

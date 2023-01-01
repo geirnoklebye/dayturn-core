@@ -1304,7 +1304,7 @@ U32 LLVOAvatarSelf::getNumWearables(LLAvatarAppearanceDefines::ETextureIndex i) 
 }
 
 // virtual
-void LLVOAvatarSelf::localTextureLoaded(BOOL success, LLViewerFetchedTexture *src_vi, LLImageRaw* src_raw, LLImageRaw* aux_src, S32 discard_level, BOOL final, void* userdata)
+void LLVOAvatarSelf::localTextureLoaded(bool success, LLViewerFetchedTexture *src_vi, LLImageRaw* src_raw, LLImageRaw* aux_src, S32 discard_level, bool final, void* userdata)
 {	
 
 	const LLUUID& src_id = src_vi->getID();
@@ -1786,7 +1786,7 @@ void LLVOAvatarSelf::setLocalTexture(ETextureIndex type, LLViewerTexture* src_te
 				}
 				else
 				{					
-					tex->setLoadedCallback(onLocalTextureLoaded, desired_discard, TRUE, FALSE, new LLAvatarTexData(getID(), type), NULL);
+					tex->setLoadedCallback(onLocalTextureLoaded, desired_discard, true, false, new LLAvatarTexData(getID(), type), NULL);
 				}
 			}
 			tex->setMinDiscardLevel(desired_discard);
@@ -1875,7 +1875,7 @@ void LLVOAvatarSelf::dumpLocalTextures() const
 // onLocalTextureLoaded()
 //-----------------------------------------------------------------------------
 
-void LLVOAvatarSelf::onLocalTextureLoaded(BOOL success, LLViewerFetchedTexture *src_vi, LLImageRaw* src_raw, LLImageRaw* aux_src, S32 discard_level, BOOL final, void* userdata)
+void LLVOAvatarSelf::onLocalTextureLoaded(bool success, LLViewerFetchedTexture *src_vi, LLImageRaw* src_raw, LLImageRaw* aux_src, S32 discard_level, bool final, void* userdata)
 {
 	LLAvatarTexData *data = (LLAvatarTexData *)userdata;
 	LLVOAvatarSelf *self = (LLVOAvatarSelf *)gObjectList.findObject(data->mAvatarID);
@@ -2015,7 +2015,7 @@ bool LLVOAvatarSelf::getIsCloud() const
 }
 
 /*static*/
-void LLVOAvatarSelf::debugOnTimingLocalTexLoaded(BOOL success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* aux_src, S32 discard_level, BOOL final, void* userdata)
+void LLVOAvatarSelf::debugOnTimingLocalTexLoaded(bool success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* aux_src, S32 discard_level, bool final, void* userdata)
 {
 	if (gAgentAvatarp.notNull())
 	{

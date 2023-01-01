@@ -60,7 +60,7 @@ class LLViewerMediaTexture ;
 class LLTexturePipelineTester ;
 
 
-typedef	void	(*loaded_callback_func)( BOOL success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* src_aux, S32 discard_level, BOOL final, void* userdata );
+typedef	void	(*loaded_callback_func)( bool success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* src_aux, S32 discard_level, bool final, void* userdata );
 
 class LLFileSystem;
 class LLMessageSystem;
@@ -76,7 +76,7 @@ public:
 public:
 	LLLoadedCallbackEntry(loaded_callback_func cb,
 						  S32 discard_level,
-						  BOOL need_imageraw, // Needs image raw for the callback
+						  bool need_imageraw, // Needs image raw for the callback
 						  void* userdata,
 						  source_callback_list_t* src_callback_list,
 						  LLViewerFetchedTexture* target,
@@ -87,7 +87,7 @@ public:
 	loaded_callback_func	mCallback;
 	S32						mLastUsedDiscard;
 	S32						mDesiredDiscard;
-	BOOL					mNeedsImageRaw;
+	bool					mNeedsImageRaw;
 	bool                    mPaused;
 	void*					mUserData;
 	source_callback_list_t* mSourceCallbackList;
@@ -350,7 +350,7 @@ public:
 	// Set callbacks to get called when the image gets updated with higher 
 	// resolution versions.
 	void setLoadedCallback(loaded_callback_func cb,
-						   S32 discard_level, BOOL keep_imageraw, BOOL needs_aux,
+						   S32 discard_level, bool keep_imageraw, bool needs_aux,
 						   void* userdata, LLLoadedCallbackEntry::source_callback_list_t* src_callback_list, bool pause = false);
 	bool hasCallbacks() { return mLoadedCallbackList.empty() ? false : true; }	
 	void pauseLoadedCallbacks(const LLLoadedCallbackEntry::source_callback_list_t* callback_list);

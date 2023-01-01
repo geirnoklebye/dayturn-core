@@ -666,7 +666,7 @@ bool FSFloaterObjectExport::exportTexture(const LLUUID& texture_id)
 }
 
 // static
-void FSFloaterObjectExport::onImageLoaded(BOOL success, LLViewerFetchedTexture* src_vi, LLImageRaw* src, LLImageRaw* aux_src, S32 discard_level, BOOL final, void* userdata)
+void FSFloaterObjectExport::onImageLoaded(bool success, LLViewerFetchedTexture* src_vi, LLImageRaw* src, LLImageRaw* aux_src, S32 discard_level, bool final, void* userdata)
 {
 	if(final && success)
 	{

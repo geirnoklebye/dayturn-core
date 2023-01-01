@@ -163,7 +163,7 @@ void LLStandardBumpmap::addstandard()
 		gStandardBumpmapList[LLStandardBumpmap::sStandardBumpmapCount].mImage = 
 			LLViewerTextureManager::getFetchedTexture(LLUUID(bump_image_id));	
 		gStandardBumpmapList[LLStandardBumpmap::sStandardBumpmapCount].mImage->setBoostLevel(LLGLTexture::LOCAL) ;
-		gStandardBumpmapList[LLStandardBumpmap::sStandardBumpmapCount].mImage->setLoadedCallback(LLBumpImageList::onSourceStandardLoaded, 0, TRUE, FALSE, NULL, NULL );
+		gStandardBumpmapList[LLStandardBumpmap::sStandardBumpmapCount].mImage->setLoadedCallback(LLBumpImageList::onSourceStandardLoaded, 0, true, false, NULL, NULL );
 		gStandardBumpmapList[LLStandardBumpmap::sStandardBumpmapCount].mImage->forceToSaveRawImage(0, 30.f) ;
 		LLStandardBumpmap::sStandardBumpmapCount++;
 	}
@@ -881,7 +881,7 @@ LLViewerTexture* LLBumpImageList::getBrightnessDarknessImage(LLViewerFetchedText
 	LLViewerTexture* bump = NULL;
 	
 	bump_image_map_t* entries_list = NULL;
-	void (*callback_func)( BOOL success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* aux_src, S32 discard_level, BOOL final, void* userdata ) = NULL;
+	void (*callback_func)( bool success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* aux_src, S32 discard_level, bool final, void* userdata ) = NULL;
 
 	switch( bump_code )
 	{
@@ -916,7 +916,7 @@ LLViewerTexture* LLBumpImageList::getBrightnessDarknessImage(LLViewerFetchedText
 			//(LLPipeline::sRenderDeferred && bump->getComponents() != 4))
 		{
 			src_image->setBoostLevel(LLGLTexture::BOOST_BUMP) ;
-			src_image->setLoadedCallback( callback_func, 0, TRUE, FALSE, new LLUUID(src_image->getID()), NULL );
+			src_image->setLoadedCallback( callback_func, 0, true, false, new LLUUID(src_image->getID()), NULL );
 			src_image->forceToSaveRawImage(0) ;
 		}
 	}
@@ -926,7 +926,7 @@ LLViewerTexture* LLBumpImageList::getBrightnessDarknessImage(LLViewerFetchedText
 
 
 // static
-void LLBumpImageList::onSourceBrightnessLoaded( BOOL success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* aux_src, S32 discard_level, BOOL final, void* userdata )
+void LLBumpImageList::onSourceBrightnessLoaded( bool success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* aux_src, S32 discard_level, bool final, void* userdata )
 {
 	LLUUID* source_asset_id = (LLUUID*)userdata;
 	LLBumpImageList::onSourceLoaded( success, src_vi, src, *source_asset_id, BE_BRIGHTNESS );
@@ -937,7 +937,7 @@ void LLBumpImageList::onSourceBrightnessLoaded( BOOL success, LLViewerFetchedTex
 }
 
 // static
-void LLBumpImageList::onSourceDarknessLoaded( BOOL success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* aux_src, S32 discard_level, BOOL final, void* userdata )
+void LLBumpImageList::onSourceDarknessLoaded( bool success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* aux_src, S32 discard_level, bool final, void* userdata )
 {
 	LLUUID* source_asset_id = (LLUUID*)userdata;
 	LLBumpImageList::onSourceLoaded( success, src_vi, src, *source_asset_id, BE_DARKNESS );
@@ -947,7 +947,7 @@ void LLBumpImageList::onSourceDarknessLoaded( BOOL success, LLViewerFetchedTextu
 	}
 }
 
-void LLBumpImageList::onSourceStandardLoaded( BOOL success, LLViewerFetchedTexture* src_vi, LLImageRaw* src, LLImageRaw* aux_src, S32 discard_level, BOOL final, void* userdata)
+void LLBumpImageList::onSourceStandardLoaded( bool success, LLViewerFetchedTexture* src_vi, LLImageRaw* src, LLImageRaw* aux_src, S32 discard_level, bool final, void* userdata)
 {
 	if (success && LLPipeline::sRenderDeferred)
 	{
@@ -1018,7 +1018,7 @@ void LLBumpImageList::generateNormalMapFromAlpha(LLImageRaw* src, LLImageRaw* nr
 }
 
 // static
-void LLBumpImageList::onSourceLoaded( BOOL success, LLViewerTexture *src_vi, LLImageRaw* src, LLUUID& source_asset_id, EBumpEffect bump_code )
+void LLBumpImageList::onSourceLoaded( bool success, LLViewerTexture *src_vi, LLImageRaw* src, LLUUID& source_asset_id, EBumpEffect bump_code )
 {
 	if( success )
 	{
