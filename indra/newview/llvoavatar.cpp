@@ -8788,7 +8788,7 @@ void LLVOAvatar::updateMeshTextures()
 		{
 			// use last known good layer (no new one)
 			LLViewerFetchedTexture* baked_img = LLViewerTextureManager::getFetchedTexture(mBakedTextureDatas[i].mLastTextureID);
-			mBakedTextureDatas[i].mIsUsed = TRUE;
+			mBakedTextureDatas[i].mIsUsed = true;
 
 			debugColorizeSubMeshes(i,LLColor4::red);
 	
@@ -8820,7 +8820,7 @@ void LLVOAvatar::updateMeshTextures()
 			}
 			else
 			{
-				mBakedTextureDatas[i].mIsLoaded = FALSE;
+				mBakedTextureDatas[i].mIsLoaded = false;
 				if ( (baked_img->getID() != IMG_INVISIBLE) &&
 					 ((i == BAKED_HEAD) || (i == BAKED_UPPER) || (i == BAKED_LOWER)) )
 				{			
@@ -8846,7 +8846,7 @@ void LLVOAvatar::updateMeshTextures()
 
 			layerset->createComposite();
 			layerset->setUpdatesEnabled(true);
-			mBakedTextureDatas[i].mIsUsed = FALSE;
+			mBakedTextureDatas[i].mIsUsed = false;
 
 			avatar_joint_mesh_list_t::iterator iter = mBakedTextureDatas[i].mJointMeshes.begin();
 			avatar_joint_mesh_list_t::iterator end  = mBakedTextureDatas[i].mJointMeshes.end();

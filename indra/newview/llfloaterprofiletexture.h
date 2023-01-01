@@ -70,7 +70,7 @@ private:
     F32 mContextConeOpacity;
     S32 mLastHeight;
     S32 mLastWidth;
-    BOOL mUpdateDimensions;
+    bool mUpdateDimensions;
 
     LLHandle<LLView> mOwnerHandle;
     LLIconCtrl* mProfileIcon;

@@ -99,7 +99,7 @@ void LLFloaterProfileTexture::updateDimensions()
     {
         mAssetStatus = LLPreview::PREVIEW_ASSET_LOADED;
         // Asset has been fully loaded
-        mUpdateDimensions = TRUE;
+        mUpdateDimensions = true;
     }
 
     mLastHeight = img_height;
@@ -108,7 +108,7 @@ void LLFloaterProfileTexture::updateDimensions()
     // Reshape the floater only when required
     if (mUpdateDimensions)
     {
-        mUpdateDimensions = FALSE;
+        mUpdateDimensions = false;
 
         LLRect old_floater_rect = getRect();
         LLRect old_image_rect = mProfileIcon->getRect();
@@ -190,7 +190,7 @@ void LLFloaterProfileTexture::loadAsset(const LLUUID &image_id)
         mAssetStatus = LLPreview::PREVIEW_ASSET_LOADED;
     }
 
-    mUpdateDimensions = TRUE;
+    mUpdateDimensions = true;
     updateDimensions();
 }
 
