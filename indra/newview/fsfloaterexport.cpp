@@ -880,8 +880,8 @@ void FSFloaterObjectExport::onLoadComplete(const LLUUID& asset_uuid, LLAssetType
 		}
 		std::string name;
 		std::string description;
-		S32 i;
-		S32 count = gesture->mSteps.size();
+		size_t i;
+		size_t count = gesture->mSteps.size();
 		for (i = 0; i < count; ++i)
 		{
 			LLGestureStep* step = gesture->mSteps[i];
