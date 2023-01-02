@@ -53,8 +53,8 @@ KokuaChatBar::~KokuaChatBar()
 bool KokuaChatBar::postBuild()
 {
 	mInputEditor = getChild<LLChatEntry>("kc_chat_editor");
-	mInputEditor->setCommitOnFocusLost( FALSE );
-	mInputEditor->setPassDelete(TRUE);
+	mInputEditor->setCommitOnFocusLost(false);
+	mInputEditor->setPassDelete(true);
 	mInputEditor->setFont(LLViewerChat::getChatFont());
 	mInputEditor->setAutoreplaceCallback(boost::bind(&LLAutoReplace::autoreplaceCallback, LLAutoReplace::getInstance(), _1, _2, _3, _4, _5));
 	mInputEditor->setCommitCallback(boost::bind(&KokuaChatBar::onChatBoxCommit, this));

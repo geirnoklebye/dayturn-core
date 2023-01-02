@@ -53,7 +53,7 @@
 
 KokuaFloaterBulkRename::KokuaFloaterBulkRename(const LLSD& seed) 
 :	LLFloater(seed),
-	mDone(FALSE)
+	mDone(false)
 {
 	mID.generate();
 	mCommitCallbackRegistrar.add("BulkRename.Ok",		boost::bind(&KokuaFloaterBulkRename::onOkBtn, this));
@@ -66,16 +66,16 @@ KokuaFloaterBulkRename::KokuaFloaterBulkRename(const LLSD& seed)
 bool KokuaFloaterBulkRename::postBuild()
 {
 	//with these being named BulkChange rather than BulkPermissions I'm inclined to not create my own set for renaming
-	mBulkChangeIncludeAnimations = gSavedSettings.getBOOL("BulkChangeIncludeAnimations");
-	mBulkChangeIncludeBodyParts = gSavedSettings.getBOOL("BulkChangeIncludeBodyParts");
-	mBulkChangeIncludeClothing = gSavedSettings.getBOOL("BulkChangeIncludeClothing");
-	mBulkChangeIncludeGestures = gSavedSettings.getBOOL("BulkChangeIncludeGestures");
-	mBulkChangeIncludeNotecards = gSavedSettings.getBOOL("BulkChangeIncludeNotecards");
-	mBulkChangeIncludeObjects = gSavedSettings.getBOOL("BulkChangeIncludeObjects");
-	mBulkChangeIncludeScripts = gSavedSettings.getBOOL("BulkChangeIncludeScripts");
-	mBulkChangeIncludeSounds = gSavedSettings.getBOOL("BulkChangeIncludeSounds");
-	mBulkChangeIncludeTextures = gSavedSettings.getBOOL("BulkChangeIncludeTextures");
-	mBulkChangeIncludeSettings = gSavedSettings.getBOOL("BulkChangeIncludeSettings");
+	mBulkChangeIncludeAnimations = gSavedSettings.getbool("BulkChangeIncludeAnimations");
+	mBulkChangeIncludeBodyParts = gSavedSettings.getbool("BulkChangeIncludeBodyParts");
+	mBulkChangeIncludeClothing = gSavedSettings.getbool("BulkChangeIncludeClothing");
+	mBulkChangeIncludeGestures = gSavedSettings.getbool("BulkChangeIncludeGestures");
+	mBulkChangeIncludeNotecards = gSavedSettings.getbool("BulkChangeIncludeNotecards");
+	mBulkChangeIncludeObjects = gSavedSettings.getbool("BulkChangeIncludeObjects");
+	mBulkChangeIncludeScripts = gSavedSettings.getbool("BulkChangeIncludeScripts");
+	mBulkChangeIncludeSounds = gSavedSettings.getbool("BulkChangeIncludeSounds");
+	mBulkChangeIncludeTextures = gSavedSettings.getbool("BulkChangeIncludeTextures");
+	mBulkChangeIncludeSettings = gSavedSettings.getbool("BulkChangeIncludeSettings");
 
 	return true;
 }
@@ -109,7 +109,7 @@ void KokuaFloaterBulkRename::doApply()
 	}
 	else
 	{
-		mDone = FALSE;
+		mDone = false;
 		if (!start())
 		{
 			LL_WARNS() << "Unexpected bulk permission change failure." << LL_ENDL;
@@ -169,20 +169,20 @@ void KokuaFloaterBulkRename::onApplyBtn()
 
 void KokuaFloaterBulkRename::onCloseBtn()
 {
-	gSavedSettings.setBOOL("BulkChangeIncludeAnimations", mBulkChangeIncludeAnimations);
-	gSavedSettings.setBOOL("BulkChangeIncludeBodyParts", mBulkChangeIncludeBodyParts);
-	gSavedSettings.setBOOL("BulkChangeIncludeClothing", mBulkChangeIncludeClothing);
-	gSavedSettings.setBOOL("BulkChangeIncludeGestures", mBulkChangeIncludeGestures);
-	gSavedSettings.setBOOL("BulkChangeIncludeNotecards", mBulkChangeIncludeNotecards);
-	gSavedSettings.setBOOL("BulkChangeIncludeObjects", mBulkChangeIncludeObjects);
-	gSavedSettings.setBOOL("BulkChangeIncludeScripts", mBulkChangeIncludeScripts);
-	gSavedSettings.setBOOL("BulkChangeIncludeSounds", mBulkChangeIncludeSounds);
-	gSavedSettings.setBOOL("BulkChangeIncludeTextures", mBulkChangeIncludeTextures);
-	gSavedSettings.setBOOL("BulkChangeIncludeSettings", mBulkChangeIncludeSettings);
+	gSavedSettings.setbool("BulkChangeIncludeAnimations", mBulkChangeIncludeAnimations);
+	gSavedSettings.setbool("BulkChangeIncludeBodyParts", mBulkChangeIncludeBodyParts);
+	gSavedSettings.setbool("BulkChangeIncludeClothing", mBulkChangeIncludeClothing);
+	gSavedSettings.setbool("BulkChangeIncludeGestures", mBulkChangeIncludeGestures);
+	gSavedSettings.setbool("BulkChangeIncludeNotecards", mBulkChangeIncludeNotecards);
+	gSavedSettings.setbool("BulkChangeIncludeObjects", mBulkChangeIncludeObjects);
+	gSavedSettings.setbool("BulkChangeIncludeScripts", mBulkChangeIncludeScripts);
+	gSavedSettings.setbool("BulkChangeIncludeSounds", mBulkChangeIncludeSounds);
+	gSavedSettings.setbool("BulkChangeIncludeTextures", mBulkChangeIncludeTextures);
+	gSavedSettings.setbool("BulkChangeIncludeSettings", mBulkChangeIncludeSettings);
 	closeFloater();
 }
 
-BOOL KokuaFloaterBulkRename::start()
+bool KokuaFloaterBulkRename::start()
 {
 	mSearchRegExp = getChild<LLUICtrl>("search_term")->getValue().asString();
 	//LL_INFOS() << "Search term is " << mSearchRegExp << LL_ENDL;
@@ -194,10 +194,10 @@ BOOL KokuaFloaterBulkRename::start()
 }
 
 // Go to the next object and start if found. Returns false if no objects left, true otherwise.
-BOOL KokuaFloaterBulkRename::nextObject()
+bool KokuaFloaterBulkRename::nextObject()
 {
 	S32 count;
-	BOOL successful_start = FALSE;
+	bool successful_start = false;
 	do
 	{
 		count = mObjectIDs.size();
@@ -213,17 +213,17 @@ BOOL KokuaFloaterBulkRename::nextObject()
 	if(isDone() && !mDone)
 	{
 		getChild<LLScrollListCtrl>("queue output")->addCommentText(getString("done_text"));
-		mDone = TRUE;
+		mDone = true;
 	}
 	return successful_start;
 }
 
 // Pop the top object off of the queue.
 // Return TRUE if the queue has started, otherwise FALSE.
-BOOL KokuaFloaterBulkRename::popNext()
+bool KokuaFloaterBulkRename::popNext()
 {
 	// get the head element from the container, and attempt to get its inventory.
-	BOOL rv = FALSE;
+	bool rv = false;
 	S32 count = mObjectIDs.size();
 	if(mCurrentObjectID.isNull() && (count > 0))
 	{
@@ -237,7 +237,7 @@ BOOL KokuaFloaterBulkRename::popNext()
 			LLUUID* id = new LLUUID(mID);
 			registerVOInventoryListener(obj,id);
 			requestVOInventory();
-			rv = TRUE;
+			rv = true;
 		}
 		else
 		{
@@ -248,18 +248,18 @@ BOOL KokuaFloaterBulkRename::popNext()
 }
 
 
-void KokuaFloaterBulkRename::doCheckUncheckAll(BOOL check)
+void KokuaFloaterBulkRename::doCheckUncheckAll(bool check)
 {
-	gSavedSettings.setBOOL("BulkChangeIncludeAnimations", check);
-	gSavedSettings.setBOOL("BulkChangeIncludeBodyParts" , check);
-	gSavedSettings.setBOOL("BulkChangeIncludeClothing"  , check);
-	gSavedSettings.setBOOL("BulkChangeIncludeGestures"  , check);
-	gSavedSettings.setBOOL("BulkChangeIncludeNotecards" , check);
-	gSavedSettings.setBOOL("BulkChangeIncludeObjects"   , check);
-	gSavedSettings.setBOOL("BulkChangeIncludeScripts"   , check);
-	gSavedSettings.setBOOL("BulkChangeIncludeSounds"    , check);
-	gSavedSettings.setBOOL("BulkChangeIncludeTextures"  , check);
-	gSavedSettings.setBOOL("BulkChangeIncludeSettings"  , check);
+	gSavedSettings.setbool("BulkChangeIncludeAnimations", check);
+	gSavedSettings.setbool("BulkChangeIncludeBodyParts" , check);
+	gSavedSettings.setbool("BulkChangeIncludeClothing"  , check);
+	gSavedSettings.setbool("BulkChangeIncludeGestures"  , check);
+	gSavedSettings.setbool("BulkChangeIncludeNotecards" , check);
+	gSavedSettings.setbool("BulkChangeIncludeObjects"   , check);
+	gSavedSettings.setbool("BulkChangeIncludeScripts"   , check);
+	gSavedSettings.setbool("BulkChangeIncludeSounds"    , check);
+	gSavedSettings.setbool("BulkChangeIncludeTextures"  , check);
+	gSavedSettings.setbool("BulkChangeIncludeSettings"  , check);
 }
 
 
@@ -273,16 +273,16 @@ void KokuaFloaterBulkRename::handleInventory(LLViewerObject* viewer_obj, LLInven
 	{
 		LLAssetType::EType asstype = (*it)->getType();
 		if(
-			( asstype == LLAssetType::AT_ANIMATION && gSavedSettings.getBOOL("BulkChangeIncludeAnimations")) ||
-			( asstype == LLAssetType::AT_BODYPART  && gSavedSettings.getBOOL("BulkChangeIncludeBodyParts" )) ||
-			( asstype == LLAssetType::AT_CLOTHING  && gSavedSettings.getBOOL("BulkChangeIncludeClothing"  )) ||
-			( asstype == LLAssetType::AT_GESTURE   && gSavedSettings.getBOOL("BulkChangeIncludeGestures"  )) ||
-			( asstype == LLAssetType::AT_NOTECARD  && gSavedSettings.getBOOL("BulkChangeIncludeNotecards" )) ||
-			( asstype == LLAssetType::AT_OBJECT    && gSavedSettings.getBOOL("BulkChangeIncludeObjects"   )) ||
-			( asstype == LLAssetType::AT_LSL_TEXT  && gSavedSettings.getBOOL("BulkChangeIncludeScripts"   )) ||
-			( asstype == LLAssetType::AT_SOUND     && gSavedSettings.getBOOL("BulkChangeIncludeSounds"    )) ||
-			( asstype == LLAssetType::AT_SETTINGS  && gSavedSettings.getBOOL("BulkChangeIncludeSettings"  )) ||
-			( asstype == LLAssetType::AT_TEXTURE   && gSavedSettings.getBOOL("BulkChangeIncludeTextures"  )))
+			( asstype == LLAssetType::AT_ANIMATION && gSavedSettings.getbool("BulkChangeIncludeAnimations")) ||
+			( asstype == LLAssetType::AT_BODYPART  && gSavedSettings.getbool("BulkChangeIncludeBodyParts" )) ||
+			( asstype == LLAssetType::AT_CLOTHING  && gSavedSettings.getbool("BulkChangeIncludeClothing"  )) ||
+			( asstype == LLAssetType::AT_GESTURE   && gSavedSettings.getbool("BulkChangeIncludeGestures"  )) ||
+			( asstype == LLAssetType::AT_NOTECARD  && gSavedSettings.getbool("BulkChangeIncludeNotecards" )) ||
+			( asstype == LLAssetType::AT_OBJECT    && gSavedSettings.getbool("BulkChangeIncludeObjects"   )) ||
+			( asstype == LLAssetType::AT_LSL_TEXT  && gSavedSettings.getbool("BulkChangeIncludeScripts"   )) ||
+			( asstype == LLAssetType::AT_SOUND     && gSavedSettings.getbool("BulkChangeIncludeSounds"    )) ||
+			( asstype == LLAssetType::AT_SETTINGS  && gSavedSettings.getbool("BulkChangeIncludeSettings"  )) ||
+			( asstype == LLAssetType::AT_TEXTURE   && gSavedSettings.getbool("BulkChangeIncludeTextures"  )))
 		{
 			LLViewerObject* object = gObjectList.findObject(viewer_obj->getID());
 
