@@ -2348,7 +2348,7 @@ void LLTextEditor::setCursorAndScrollToEnd()
 	endOfDoc();
 }
 
-void LLTextEditor::getCurrentLineAndColumn( S32* line, S32* col, BOOL include_wordwrap ) 
+void LLTextEditor::getCurrentLineAndColumn( S32* line, S32* col, bool include_wordwrap ) 
 { 
 	*line = getLineNumFromDocIndex(mCursorPos, include_wordwrap);
 	*col = getLineOffsetFromDocIndex(mCursorPos, include_wordwrap);

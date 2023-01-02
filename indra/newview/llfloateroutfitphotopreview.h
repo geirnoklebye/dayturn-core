@@ -68,9 +68,9 @@ private:
 
 	// This is stored off in a member variable, because the save-as
 	// button and drag and drop functionality need to know.
-	BOOL mUpdateDimensions;
+	bool mUpdateDimensions;
 
-	BOOL mExceedLimits;
+	bool mExceedLimits;
 
 	LLLoadedCallbackEntry::source_callback_list_t mCallbackTextureList ;
 };

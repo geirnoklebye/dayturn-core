@@ -148,7 +148,7 @@ void LLFloaterGotoLine::onGotoBoxCommit()
 
             S32 rownew = 0;
             S32 columnnew = 0;
-            mEditorCore->mEditor->getCurrentLineAndColumn( &rownew, &columnnew, FALSE );  // don't include wordwrap
+            mEditorCore->mEditor->getCurrentLineAndColumn( &rownew, &columnnew, false );  // don't include wordwrap
             if (rownew == row && columnnew == column)
             {
                 mEditorCore->mEditor->deselect();

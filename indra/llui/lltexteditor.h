@@ -189,7 +189,7 @@ public:
 
 	void			setCursorAndScrollToEnd();
 
-	void			getCurrentLineAndColumn( S32* line, S32* col, BOOL include_wordwrap );
+	void			getCurrentLineAndColumn( S32* line, S32* col, bool include_wordwrap );
 
 	// Hacky methods to make it into a word-wrapping, potentially scrolling,
 	// read-only text box.

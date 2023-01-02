@@ -86,18 +86,18 @@ private:
 	S32                 mImageOldBoostLevel;
 	std::string			mSaveFileName;
 	LLFrameTimer		mSavedFileTimer;
-	BOOL				mLoadingFullImage;
-	BOOL                mShowKeepDiscard;
-	BOOL                mCopyToInv;
+	bool				mLoadingFullImage;
+	bool                mShowKeepDiscard;
+	bool                mCopyToInv;
 
 	// Save the image once it's loaded.
-	BOOL                mPreviewToSave;
+	bool                mPreviewToSave;
 
 	// This is stored off in a member variable, because the save-as
 	// button and drag and drop functionality need to know.
-	BOOL mIsCopyable;
-	BOOL mIsFullPerm;
-	BOOL mUpdateDimensions;
+	bool mIsCopyable;
+	bool mIsFullPerm;
+	bool mUpdateDimensions;
 	S32 mLastHeight;
 	S32 mLastWidth;
 	F32 mAspectRatio;	

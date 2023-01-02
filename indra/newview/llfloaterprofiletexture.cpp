@@ -41,7 +41,7 @@
 
 LLFloaterProfileTexture::LLFloaterProfileTexture(LLView* owner)
     : LLFloater(LLSD())
-    , mUpdateDimensions(TRUE)
+    , mUpdateDimensions(true)
     , mLastHeight(0)
     , mLastWidth(0)
     , mImage(NULL)
@@ -211,7 +211,7 @@ void LLFloaterProfileTexture::onTextureLoaded(
         LLFloaterProfileTexture* floater = static_cast<LLFloaterProfileTexture*>(handle->get());
         if (floater && success)
         {
-            floater->mUpdateDimensions = TRUE;
+            floater->mUpdateDimensions = true;
             floater->updateDimensions();
         }
     }

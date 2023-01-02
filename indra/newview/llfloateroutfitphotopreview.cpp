@@ -60,7 +60,7 @@ const S32 CLIENT_RECT_VPAD = 4;
 
 LLFloaterOutfitPhotoPreview::LLFloaterOutfitPhotoPreview(const LLSD& key)
 	: LLPreview(key),
-	  mUpdateDimensions(TRUE),
+	  mUpdateDimensions(true),
 	  mImage(NULL),
 	  mOutfitID(LLUUID()),
 	  mImageOldBoostLevel(LLGLTexture::BOOST_NONE),
@@ -172,7 +172,7 @@ void LLFloaterOutfitPhotoPreview::updateDimensions()
 	if (mAssetStatus != PREVIEW_ASSET_LOADED)
 	{
 		mAssetStatus = PREVIEW_ASSET_LOADED;
-		mUpdateDimensions = TRUE;
+		mUpdateDimensions = true;
 	}
 	
 	getChild<LLUICtrl>("dimensions")->setTextArg("[WIDTH]",  llformat("%d", mImage->getFullWidth()));
@@ -197,7 +197,7 @@ void LLFloaterOutfitPhotoPreview::updateDimensions()
 
 	if (mUpdateDimensions)
 	{
-		mUpdateDimensions = FALSE;
+		mUpdateDimensions = false;
 
 		reshape(getRect().getWidth(), getRect().getHeight());
 		gFloaterView->adjustToFitScreen(this, false);
@@ -215,7 +215,7 @@ void LLFloaterOutfitPhotoPreview::loadAsset()
 	mImage->setBoostLevel(LLGLTexture::BOOST_PREVIEW);
 	mImage->forceToSaveRawImage(0) ;
 	mAssetStatus = PREVIEW_ASSET_LOADING;
-	mUpdateDimensions = TRUE;
+	mUpdateDimensions = true;
 	updateDimensions();
 }
 

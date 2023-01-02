@@ -477,7 +477,7 @@ bool LLScriptEdCore::postBuild()
 	onFontChanged();
 	// </FS:Ansariel>
 	childSetCommitCallback("lsl errors", &LLScriptEdCore::onErrorList, this);
-	childSetAction("Save_btn", boost::bind(&LLScriptEdCore::doSave,this,FALSE));
+	childSetAction("Save_btn", boost::bind(&LLScriptEdCore::doSave,this,false));
 	childSetAction("Edit_btn", boost::bind(&LLScriptEdCore::openInExternalEditor, this));
 
 	initMenu();
@@ -532,7 +532,7 @@ void LLScriptEdCore::initMenu()
 	LLMenuItemCallGL* menuItem;
 	
 	menuItem = getChild<LLMenuItemCallGL>("Save");
-	menuItem->setClickCallback(boost::bind(&LLScriptEdCore::doSave, this, FALSE));
+	menuItem->setClickCallback(boost::bind(&LLScriptEdCore::doSave, this, false));
 	menuItem->setEnableCallback(boost::bind(&LLScriptEdCore::hasChanged, this));
 	
 	menuItem = getChild<LLMenuItemCallGL>("Revert All Changes");
@@ -700,7 +700,7 @@ void LLScriptEdCore::draw()
 	{
 		S32 line = 0;
 		S32 column = 0;
-		mEditor->getCurrentLineAndColumn( &line, &column, FALSE );  // don't include wordwrap
+		mEditor->getCurrentLineAndColumn( &line, &column, false );  // don't include wordwrap
 		LLStringUtil::format_map_t args;
 		std::string cursor_pos;
 		args["[LINE]"] = llformat ("%d", line);
@@ -901,7 +901,7 @@ bool LLScriptEdCore::handleSaveChangesDialog(const LLSD& notification, const LLS
 	{
 	case 0:  // "Yes"
 		// close after saving
-			doSave( TRUE );
+			doSave( true );
 		break;
 
 	case 1:  // "No"
@@ -938,7 +938,7 @@ void LLScriptEdCore::onBtnDynamicHelp()
 		live_help_floater->childSetAction("fwd_btn", onClickForward, this);
 
 		LLMediaCtrl* browser = live_help_floater->getChild<LLMediaCtrl>("lsl_guide_html");
-		browser->setAlwaysRefresh(TRUE);
+		browser->setAlwaysRefresh(true);
 
 		LLComboBox* help_combo = live_help_floater->getChild<LLComboBox>("history_combo");
 		LLKeywordToken *token;
@@ -1213,7 +1213,7 @@ bool LLScriptEdCore::handleKeyHere(KEY key, MASK mask)
 		if(mSaveCallback)
 		{
 			// don't close after saving
-			mSaveCallback(mUserdata, FALSE);
+			mSaveCallback(mUserdata, false);
 		}
 
 		return true;
@@ -1289,7 +1289,7 @@ void LLScriptEdCore::saveScriptToFile(const std::vector<std::string>& filenames,
 		llofstream fout(filename.c_str());
 		fout << (scriptText);
 		fout.close();
-		self->mSaveCallback(self->mUserdata, FALSE);
+		self->mSaveCallback(self->mUserdata, false);
 	}
 }
 
@@ -1303,7 +1303,7 @@ bool LLScriptEdCore::canLoadOrSaveToFile( void* userdata )
 bool LLScriptEdCore::enableSaveToFileMenu(void* userdata)
 {
 	LLScriptEdCore* self = (LLScriptEdCore*)userdata;
-	if (!self || !self->mEditor) return FALSE;
+	if (!self || !self->mEditor) return false;
 	return self->mEditor->canLoadOrSaveToFile();
 }
 
@@ -1311,7 +1311,7 @@ bool LLScriptEdCore::enableSaveToFileMenu(void* userdata)
 bool LLScriptEdCore::enableLoadFromFileMenu(void* userdata)
 {
 	LLScriptEdCore* self = (LLScriptEdCore*)userdata;
-	return (self && self->mEditor) ? self->mEditor->canLoadOrSaveToFile() : FALSE;
+	return (self && self->mEditor) ? self->mEditor->canLoadOrSaveToFile() : false;
 }
 
 LLUUID LLScriptEdCore::getAssociatedExperience()const
@@ -1600,7 +1600,7 @@ void LLPreviewLSL::draw()
 	if(!item)
 	{
 		setTitle(LLTrans::getString("ScriptWasDeleted"));
-		mScriptEd->setItemRemoved(TRUE);
+		mScriptEd->setItemRemoved(true);
 	}
 
 	LLPreview::draw();
@@ -1683,7 +1683,7 @@ void LLPreviewLSL::loadAsset()
 	else
 	{
 		mScriptEd->setScriptText(std::string(HELLO_LSL), true);
-		mScriptEd->setEnableEditing(TRUE);
+		mScriptEd->setEnableEditing(true);
 		mAssetStatus = PREVIEW_ASSET_LOADED;
 	}
 }
@@ -2213,7 +2213,7 @@ void LLLiveLSLEditor::onLoadComplete(const LLUUID& asset_id,
 		if( LL_ERR_NOERR == status )
 		{
 			instance->loadScriptText(asset_id, type);
-			instance->mScriptEd->setEnableEditing(TRUE);
+			instance->mScriptEd->setEnableEditing(true);
 			instance->mAssetStatus = PREVIEW_ASSET_LOADED;
             instance->mScriptEd->setAssetID(asset_id);
 		}
@@ -2469,7 +2469,7 @@ void LLLiveLSLEditor::saveIfNeeded(bool sync /*= true*/)
     mPendingUploads = 0;
 
     // save the script
-    mScriptEd->enableSave(FALSE);
+    mScriptEd->enableSave(false);
     mScriptEd->mEditor->makePristine();
     mScriptEd->mErrorList->deleteAllItems();
 
