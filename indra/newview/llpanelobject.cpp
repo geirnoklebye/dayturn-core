@@ -968,18 +968,18 @@ void LLPanelObject::getState( )
 	mLabelSkew		->setEnabled( enabled );
 	mSpinSkew		->setEnabled( enabled );
 
-	getChildView("scale_hole")->setVisible( FALSE);
-	getChildView("scale_taper")->setVisible( FALSE);
+	getChildView("scale_hole")->setVisible(false);
+	getChildView("scale_taper")->setVisible(false);
 	if (top_size_x_visible || top_size_y_visible)
 	{
 		if (size_is_hole)
 		{
-			getChildView("scale_hole")->setVisible( TRUE);
+			getChildView("scale_hole")->setVisible(true);
 			getChildView("scale_hole")->setEnabled(enabled);
 		}
 		else
 		{
-			getChildView("scale_taper")->setVisible( TRUE);
+			getChildView("scale_taper")->setVisible(true);
 			getChildView("scale_taper")->setEnabled(enabled);
 		}
 	}
@@ -991,26 +991,26 @@ void LLPanelObject::getState( )
 	mSpinShearX		->setEnabled( enabled );
 	mSpinShearY		->setEnabled( enabled );
 
-	getChildView("advanced_cut")->setVisible( FALSE);
-	getChildView("advanced_dimple")->setVisible( FALSE);
-	getChildView("advanced_slice")->setVisible( FALSE);
+	getChildView("advanced_cut")->setVisible(false);
+	getChildView("advanced_dimple")->setVisible(false);
+	getChildView("advanced_slice")->setVisible(false);
 
 	if (advanced_cut_visible)
 	{
 		if (advanced_is_dimple)
 		{
-			getChildView("advanced_dimple")->setVisible( TRUE);
+			getChildView("advanced_dimple")->setVisible(true);
 			getChildView("advanced_dimple")->setEnabled(enabled);
 		}
 
 		else if (advanced_is_slice)
 		{
-			getChildView("advanced_slice")->setVisible( TRUE);
+			getChildView("advanced_slice")->setVisible(true);
 			getChildView("advanced_slice")->setEnabled(enabled);
 		}
 		else
 		{
-			getChildView("advanced_cut")->setVisible( TRUE);
+			getChildView("advanced_cut")->setVisible(true);
 			getChildView("advanced_cut")->setEnabled(enabled);
 		}
 	}

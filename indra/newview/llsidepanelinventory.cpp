@@ -368,7 +368,7 @@ void LLSidepanelInventory::enableInbox(bool enabled)
 	LLLayoutPanel * inbox_layout_panel = getChild<LLLayoutPanel>(INBOX_LAYOUT_PANEL_NAME);
 	// <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
 	//inbox_layout_panel->setVisible(enabled);
-	inbox_layout_panel->setVisible(enabled && (!gSavedSettings.getBOOL("FSShowInboxFolder") || gSavedSettings.getBOOL("FSAlwaysShowInboxButton")));
+	inbox_layout_panel->setVisible(enabled && (!gSavedSettings.getbool("FSShowInboxFolder") || gSavedSettings.getbool("FSAlwaysShowInboxButton")));
 }
 
 // <FS:Ansariel> Optional hiding of Received Items folder aka Inbox

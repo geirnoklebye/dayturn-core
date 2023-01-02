@@ -422,7 +422,7 @@ bool LLFloaterTexturePicker::postBuild()
 
 
 	childSetCommitCallback("show_folders_check", onShowFolders, this);
-	getChildView("show_folders_check")->setVisible( FALSE);
+	getChildView("show_folders_check")->setVisible(false);
 
 	mFilterEdit = getChild<LLFilterEditor>("inventory search editor");
 	mFilterEdit->setCommitCallback(boost::bind(&LLFloaterTexturePicker::onFilterEdit, this, _2));
@@ -832,23 +832,23 @@ void LLFloaterTexturePicker::onModeSelect(LLUICtrl* ctrl, void *userdata)
 	LLFloaterTexturePicker* self = (LLFloaterTexturePicker*) userdata;
     int index = self->mModeSelector->getValue().asInteger();
 
-	self->getChild<LLButton>("Default")->setVisible(index == 0 ? TRUE : FALSE);
-	self->getChild<LLButton>("Blank")->setVisible(index == 0 ? TRUE : FALSE);
-	self->getChild<LLButton>("Trans")->setVisible(index == 0 ? TRUE : FALSE);
-	self->getChild<LLButton>("None")->setVisible(index == 0 ? TRUE : FALSE);
-	self->getChild<LLButton>("Pipette")->setVisible(index == 0 ? TRUE : FALSE);
-	self->getChild<LLFilterEditor>("inventory search editor")->setVisible(index == 0 ? TRUE : FALSE);
-	self->getChild<LLInventoryPanel>("inventory panel")->setVisible(index == 0 ? TRUE : FALSE);
+	self->getChild<LLButton>("Default")->setVisible(index == 0 ? true : false);
+	self->getChild<LLButton>("Blank")->setVisible(index == 0 ? true : false);
+	self->getChild<LLButton>("Trans")->setVisible(index == 0 ? true : false);
+	self->getChild<LLButton>("None")->setVisible(index == 0 ? true : false);
+	self->getChild<LLButton>("Pipette")->setVisible(index == 0 ? true : false);
+	self->getChild<LLFilterEditor>("inventory search editor")->setVisible(index == 0 ? true : false);
+	self->getChild<LLInventoryPanel>("inventory panel")->setVisible(index == 0 ? true : false);
 
 	/*self->getChild<LLCheckBox>("show_folders_check")->setVisible(mode);
 	  no idea under which conditions the above is even shown, needs testing. */
 
-	self->getChild<LLButton>("l_add_btn")->setVisible(index == 1 ? TRUE : FALSE);
-	self->getChild<LLButton>("l_rem_btn")->setVisible(index == 1 ? TRUE : FALSE);
-	self->getChild<LLButton>("l_upl_btn")->setVisible(index == 1 ? TRUE : FALSE);
-	self->getChild<LLScrollListCtrl>("l_name_list")->setVisible(index == 1 ? TRUE : FALSE);
+	self->getChild<LLButton>("l_add_btn")->setVisible(index == 1 ? true : false);
+	self->getChild<LLButton>("l_rem_btn")->setVisible(index == 1 ? true : false);
+	self->getChild<LLButton>("l_upl_btn")->setVisible(index == 1 ? true : false);
+	self->getChild<LLScrollListCtrl>("l_name_list")->setVisible(index == 1 ? true : false);
 
-	self->getChild<LLComboBox>("l_bake_use_texture_combo_box")->setVisible(index == 2 ? TRUE : FALSE);
+	self->getChild<LLComboBox>("l_bake_use_texture_combo_box")->setVisible(index == 2 ? true : false);
 	self->getChild<LLCheckBoxCtrl>("hide_base_mesh_region")->setVisible(false);// index == 2 ? TRUE : FALSE);
 
 	if (index == 2)

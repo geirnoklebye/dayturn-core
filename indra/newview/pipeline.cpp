@@ -3483,7 +3483,7 @@ void LLPipeline::stateSort(LLDrawable* drawablep, LLCamera& camera)
 	{
 		if (!drawablep->isState(LLDrawable::INVISIBLE|LLDrawable::FORCE_INVISIBLE))
 		{
-			drawablep->setVisible(camera, NULL, FALSE);
+			drawablep->setVisible(camera, NULL, false);
 		}
 	}
 

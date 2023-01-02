@@ -331,7 +331,7 @@ void LLFloaterIMSession::initIMFloater()
 	mTypingStart = LLTrans::getString("IM_typing_start_string");
 
 	// Show control panel in torn off floaters only.
-	mParticipantListPanel->setVisible(!getHost() && gSavedSettings.getBOOL("IMShowControlPanel"));
+	mParticipantListPanel->setVisible(!getHost() && gSavedSettings.getbool("IMShowControlPanel"));
 
 	// Disable input editor if session cannot accept text
 	if ( mSession && !mSession->mTextIMPossible )

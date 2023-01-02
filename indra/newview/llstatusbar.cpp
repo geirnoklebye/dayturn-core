@@ -415,7 +415,7 @@ void LLStatusBar::setVisibleForMouselook(bool visible)
 	mDrawDistancePanel->setVisible(visible && show_draw_distance);
 	mStatisticsPanel->setVisible(visible && net_stats_visible);
 	mFPSPanel->setVisible(visible && fps_stats_visible);
-	mSearchPanel->setVisible(visible && gSavedSettings.getBOOL("MenuSearch"));
+	mSearchPanel->setVisible(visible && gSavedSettings.getbool("MenuSearch"));
 	setBackgroundVisible(visible);
 	mIconPresetsCamera->setVisible(visible);
 	mIconPresetsGraphic->setVisible(visible);

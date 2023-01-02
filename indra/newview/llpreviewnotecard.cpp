@@ -90,7 +90,7 @@ bool LLPreviewNotecard::postBuild()
 	mEditor->makePristine();
 
 	childSetAction("Save", onClickSave, this);
-	getChildView("lock")->setVisible( FALSE);	
+	getChildView("lock")->setVisible(false);	
 
 	childSetAction("Delete", onClickDelete, this);
 	getChildView("Delete")->setEnabled(false);
@@ -333,7 +333,7 @@ void LLPreviewNotecard::loadAsset()
 		if(!allow_modify)
 		{
 			editor->setEnabled(false);
-			getChildView("lock")->setVisible( TRUE);
+			getChildView("lock")->setVisible(true);
 			getChildView("Edit")->setEnabled(false);
 		}
 
@@ -622,7 +622,7 @@ bool LLPreviewNotecard::saveIfNeeded(LLInventoryItem* copyitem, bool sync)
 				gAssetStorage->storeAssetData(tid, LLAssetType::AT_NOTECARD,
 												&onSaveComplete,
 												(void*)info,
-												FALSE);
+												false);
 				return true;
 			}
 			else // !gAssetStorage

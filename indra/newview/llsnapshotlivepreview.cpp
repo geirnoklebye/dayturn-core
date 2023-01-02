@@ -742,7 +742,7 @@ BOOL LLSnapshotLivePreview::onIdle( void* snapshot_preview )
             previewp->generateThumbnailImage(TRUE) ;
         }
         previewp->getWindow()->decBusyCount();
-        previewp->setVisible(gSavedSettings.getBOOL("UseFreezeFrame") && previewp->mAllowFullScreenPreview); // only show fullscreen preview when in freeze frame mode
+        previewp->setVisible(gSavedSettings.getbool("UseFreezeFrame") && previewp->mAllowFullScreenPreview); // only show fullscreen preview when in freeze frame mode
         previewp->mSnapshotActive = FALSE;
         LL_DEBUGS("Snapshot") << "done creating snapshot" << LL_ENDL;
     }

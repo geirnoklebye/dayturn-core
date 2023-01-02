@@ -2000,7 +2000,7 @@ void LLPanelProfileWeb::updateData()
     {
         setIsLoading();
 
-        mWebBrowser->setVisible(TRUE);
+        mWebBrowser->setVisible(true);
         mPerformanceTimer.start();
         mWebBrowser->navigateTo(mURLWebProfile, HTTP_CONTENT_TEXT_HTML);
     }

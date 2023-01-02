@@ -216,11 +216,11 @@ void LLPanelProfileClassifieds::onOpen(const LLSD& key)
     bool own_profile = getSelfProfile();
     if (own_profile)
     {
-        mNewButton->setVisible(TRUE);
-        mNewButton->setEnabled(FALSE);
+        mNewButton->setVisible(true);
+        mNewButton->setEnabled(false);
 
-        mDeleteButton->setVisible(TRUE);
-        mDeleteButton->setEnabled(FALSE);
+        mDeleteButton->setVisible(true);
+        mDeleteButton->setEnabled(false);
     }
 
     childSetVisible("buttons_header", own_profile);
@@ -241,7 +241,7 @@ void LLPanelProfileClassifieds::selectClassified(const LLUUID& classified_id, bo
                     mTabContainer->selectTabPanel(classified_panel);
                     if (edit)
                     {
-                        classified_panel->setEditMode(TRUE);
+                        classified_panel->setEditMode(true);
                     }
                     break;
                 }
@@ -259,7 +259,7 @@ void LLPanelProfileClassifieds::createClassified()
 {
     if (getIsLoaded())
     {
-        mNoItemsLabel->setVisible(FALSE);
+        mNoItemsLabel->setVisible(false);
         LLPanelProfileClassified* classified_panel = LLPanelProfileClassified::create();
         classified_panel->onOpen(LLSD());
         mTabContainer->addTabPanel(
@@ -290,7 +290,7 @@ bool LLPanelProfileClassifieds::postBuild()
 
 void LLPanelProfileClassifieds::onClickNewBtn()
 {
-    mNoItemsLabel->setVisible(FALSE);
+    mNoItemsLabel->setVisible(false);
     LLPanelProfileClassified* classified_panel = LLPanelProfileClassified::create();
     classified_panel->onOpen(LLSD());
     mTabContainer->addTabPanel(
@@ -339,7 +339,7 @@ void LLPanelProfileClassifieds::callbackDeleteClassified(const LLSD& notificatio
 
         updateButtons();
 
-        BOOL no_data = !mTabContainer->getTabCount();
+        bool no_data = !mTabContainer->getTabCount();
         mNoItemsLabel->setVisible(no_data);
     }
 }
@@ -449,7 +449,7 @@ void LLPanelProfileClassifieds::updateData()
     {
         setIsLoading();
         mNoItemsLabel->setValue(LLTrans::getString("PicksClassifiedsLoadingText"));
-        mNoItemsLabel->setVisible(TRUE);
+        mNoItemsLabel->setVisible(true);
 
         LLAvatarPropertiesProcessor::getInstance()->sendAvatarClassifiedsRequest(avatar_id);
     }
@@ -693,7 +693,7 @@ void LLPanelProfileClassified::onOpen(const LLSD& key)
 
         mSaveButton->setLabelArg("[LABEL]", getString("publish_label"));
 
-        setEditMode(TRUE);
+        setEditMode(true);
         enableSave(true);
         enableEditing(true);
         resetDirty();
@@ -766,7 +766,7 @@ void LLPanelProfileClassified::processProperties(void* data, EAvatarProcessorTyp
         if (mIsNewWithErrors)
         {
             // We just published it
-            setEditMode(FALSE);
+            setEditMode(false);
         }
         mIsNewWithErrors = false;
         mIsNew = false;
@@ -814,13 +814,13 @@ void LLPanelProfileClassified::processProperties(void* data, EAvatarProcessorTyp
 
         if (mEditOnLoad)
         {
-            setEditMode(TRUE);
+            setEditMode(true);
         }
     }
 
 }
 
-void LLPanelProfileClassified::setEditMode(BOOL edit_mode)
+void LLPanelProfileClassified::setEditMode(bool edit_mode)
 {
     mEditMode = edit_mode;
 
@@ -893,7 +893,7 @@ void LLPanelProfileClassified::resetControls()
 
 void LLPanelProfileClassified::onEditClick()
 {
-    setEditMode(TRUE);
+    setEditMode(true);
 }
 
 void LLPanelProfileClassified::onCancelClick()
@@ -916,7 +916,7 @@ void LLPanelProfileClassified::onCancelClick()
 
     setInfoLoaded(false);
 
-    setEditMode(FALSE);
+    setEditMode(false);
 }
 
 void LLPanelProfileClassified::onSaveClick()
@@ -1003,8 +1003,8 @@ void LLPanelProfileClassified::resetData()
     getChild<LLUICtrl>("click_through_text")->setValue(LLStringUtil::null);
     mEditButton->setValue(LLStringUtil::null);
     getChild<LLUICtrl>("creation_date")->setValue(LLStringUtil::null);
-    mContentTypeM->setVisible(FALSE);
-    mContentTypeG->setVisible(FALSE);
+    mContentTypeM->setVisible(false);
+    mContentTypeG->setVisible(false);
 }
 
 void LLPanelProfileClassified::setClassifiedName(const std::string& name)
@@ -1394,7 +1394,7 @@ void LLPanelProfileClassified::doSave()
 
     if (!isNew() && !isNewWithErrors())
     {
-        setEditMode(FALSE);
+        setEditMode(false);
         return;
     }
 
@@ -1444,12 +1444,12 @@ void LLPanelProfileClassified::notifyInvalidName()
 
 void LLPanelProfileClassified::onTexturePickerMouseEnter()
 {
-    mEditIcon->setVisible(TRUE);
+    mEditIcon->setVisible(true);
 }
 
 void LLPanelProfileClassified::onTexturePickerMouseLeave()
 {
-    mEditIcon->setVisible(FALSE);
+    mEditIcon->setVisible(false);
 }
 
 void LLPanelProfileClassified::onTextureSelected()

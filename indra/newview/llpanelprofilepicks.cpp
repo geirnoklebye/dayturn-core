@@ -138,11 +138,11 @@ void LLPanelProfilePicks::onOpen(const LLSD& key)
     bool own_profile = getSelfProfile();
     if (own_profile)
     {
-        mNewButton->setVisible(TRUE);
-        mNewButton->setEnabled(FALSE);
+        mNewButton->setVisible(true);
+        mNewButton->setEnabled(false);
 
-        mDeleteButton->setVisible(TRUE);
-        mDeleteButton->setEnabled(FALSE);
+        mDeleteButton->setVisible(true);
+        mDeleteButton->setEnabled(false);
     }
 
     childSetVisible("buttons_header", own_profile);
@@ -154,7 +154,7 @@ void LLPanelProfilePicks::createPick(const LLPickData &data)
     {
         if (canAddNewPick())
         {
-            mNoItemsLabel->setVisible(FALSE);
+            mNoItemsLabel->setVisible(false);
             LLPanelProfilePick* pick_panel = LLPanelProfilePick::create();
             pick_panel->setAvatarId(getAvatarId());
             pick_panel->processProperties(&data);
@@ -216,7 +216,7 @@ bool LLPanelProfilePicks::postBuild()
 
 void LLPanelProfilePicks::onClickNewBtn()
 {
-    mNoItemsLabel->setVisible(FALSE);
+    mNoItemsLabel->setVisible(false);
     LLPanelProfilePick* pick_panel = LLPanelProfilePick::create();
     pick_panel->setAvatarId(getAvatarId());
     mTabContainer->addTabPanel(
@@ -406,7 +406,7 @@ void LLPanelProfilePicks::updateData()
     if (!getIsLoaded())
     {
         mNoItemsLabel->setValue(LLTrans::getString("PicksClassifiedsLoadingText"));
-        mNoItemsLabel->setVisible(TRUE);
+        mNoItemsLabel->setVisible(true);
     }
 }
 
@@ -534,7 +534,7 @@ void LLPanelProfilePick::setAvatarId(const LLUUID& avatar_id)
     {
         mPickName->setEnabled(TRUE);
         mPickDescription->setEnabled(TRUE);
-        mSetCurrentLocationButton->setVisible(TRUE);
+        mSetCurrentLocationButton->setVisible(true);
     }
     else
     {

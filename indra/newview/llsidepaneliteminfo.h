@@ -52,7 +52,7 @@ public:
 
 	void setObjectID(const LLUUID& object_id);
 	void setItemID(const LLUUID& item_id);
-	void setEditMode(BOOL edit);
+	void setEditMode(bool edit);
 
 	const LLUUID& getObjectID() const;
 	const LLUUID& getItemID() const;
