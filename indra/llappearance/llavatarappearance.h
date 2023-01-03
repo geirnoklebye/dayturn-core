@@ -382,7 +382,7 @@ protected:
 
 		struct LLAvatarMeshInfo
 		{
-			typedef std::pair<LLViewerVisualParamInfo*,BOOL> morph_info_pair_t; // LLPolyMorphTargetInfo stored here
+			typedef std::pair<LLViewerVisualParamInfo*,bool> morph_info_pair_t; // LLPolyMorphTargetInfo stored here
 			typedef std::vector<morph_info_pair_t> morph_info_list_t;
 
 			LLAvatarMeshInfo() : mLOD(0), mMinPixelArea(.1f) {}

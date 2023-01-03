@@ -257,7 +257,6 @@ bool LLTexLayerParamAlpha::getSkip() const
 		return true;
 	}
 
-	return false;
 }
 
 
@@ -295,7 +294,7 @@ bool LLTexLayerParamAlpha::render(S32 x, S32 y, S32 width, S32 height)
 			// Don't load the image file until we actually need it the first time.  Like now.
 			mStaticImageTGA = LLTexLayerStaticImageList::getInstance()->getImageTGA(info->mStaticImageFileName);  
 			// We now have something in one of our caches
-			LLTexLayerSet::sHasCaches |= mStaticImageTGA.notNull() ? true : false;
+			LLTexLayerSet::sHasCaches |= mStaticImageTGA.notNull();
 
 			if (mStaticImageTGA.isNull())
 			{
@@ -375,8 +374,8 @@ bool LLTexLayerParamAlpha::render(S32 x, S32 y, S32 width, S32 height)
 // LLTexLayerParamAlphaInfo
 //-----------------------------------------------------------------------------
 LLTexLayerParamAlphaInfo::LLTexLayerParamAlphaInfo() :
-	mMultiplyBlend(FALSE),
-	mSkipIfZeroWeight(FALSE),
+	mMultiplyBlend(false),
+	mSkipIfZeroWeight(false),
 	mDomain(0.f)
 {
 }
@@ -405,10 +404,10 @@ bool LLTexLayerParamAlphaInfo::parseXml(LLXmlTreeNode* node)
 //	}
 	
 	static LLStdStringHandle multiply_blend_string = LLXmlTree::addAttributeString("multiply_blend");
-	param_alpha_node->getFastAttributeBOOL(multiply_blend_string, mMultiplyBlend);
+	param_alpha_node->getFastAttributebool(multiply_blend_string, mMultiplyBlend);
 
 	static LLStdStringHandle skip_if_zero_string = LLXmlTree::addAttributeString("skip_if_zero");
-	param_alpha_node->getFastAttributeBOOL(skip_if_zero_string, mSkipIfZeroWeight);
+	param_alpha_node->getFastAttributebool(skip_if_zero_string, mSkipIfZeroWeight);
 
 	static LLStdStringHandle domain_string = LLXmlTree::addAttributeString("domain");
 	param_alpha_node->getFastAttributeF32(domain_string, mDomain);

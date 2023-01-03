@@ -470,7 +470,7 @@ const LLTexLayerSetBuffer* LLTexLayerSet::getComposite() const
 
 void LLTexLayerSet::gatherMorphMaskAlpha(U8 *data, S32 origin_x, S32 origin_y, S32 width, S32 height, LLRenderTarget* bound_target)
 {
-	memset(data, 255, width * height);
+	memset(data, 255, static_cast<size_t>(width * height));
 
 	for( layer_list_t::iterator iter = mLayerList.begin(); iter != mLayerList.end(); iter++ )
 	{

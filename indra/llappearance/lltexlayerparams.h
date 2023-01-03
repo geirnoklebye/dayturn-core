@@ -124,8 +124,8 @@ public:
 
 private:
 	std::string				mStaticImageFileName;
-	BOOL					mMultiplyBlend;
-	BOOL					mSkipIfZeroWeight;
+	bool					mMultiplyBlend;
+	bool					mSkipIfZeroWeight;
 	F32						mDomain;
 };
 //
