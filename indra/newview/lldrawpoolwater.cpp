@@ -52,9 +52,9 @@
 
 bool deferred_render = false;
 
-BOOL LLDrawPoolWater::sSkipScreenCopy = FALSE;
-BOOL LLDrawPoolWater::sNeedsReflectionUpdate = TRUE;
-BOOL LLDrawPoolWater::sNeedsDistortionUpdate = TRUE;
+bool LLDrawPoolWater::sSkipScreenCopy = false;
+bool LLDrawPoolWater::sNeedsReflectionUpdate = true;
+bool LLDrawPoolWater::sNeedsDistortionUpdate = true;
 F32 LLDrawPoolWater::sWaterFogEnd = 0.f;
 
 LLDrawPoolWater::LLDrawPoolWater() : LLFacePool(POOL_WATER)
@@ -134,7 +134,7 @@ void LLDrawPoolWater::endPostDeferredPass(S32 pass)
 //===============================
 void LLDrawPoolWater::renderDeferred(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_WATER);
+    //LL_RECORD_BLOCK_TIME(FTM_RENDER_WATER);
 
     if (!LLPipeline::sRenderTransparentWater)
     {
@@ -152,7 +152,7 @@ void LLDrawPoolWater::renderDeferred(S32 pass)
 
 void LLDrawPoolWater::render(S32 pass)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_WATER);
+	//LL_RECORD_BLOCK_TIME(FTM_RENDER_WATER);
 	if (mDrawFace.empty() || LLDrawable::getCurrentFrame() <= 1)
 	{
 		return;
@@ -334,7 +334,6 @@ void LLDrawPoolWater::render(S32 pass)
 // for low end hardware
 void LLDrawPoolWater::renderOpaqueLegacyWater()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
     LLVOSky *voskyp = gSky.mVOSkyp;
 
     if (voskyp == NULL)
@@ -443,7 +442,6 @@ void LLDrawPoolWater::renderOpaqueLegacyWater()
 
 void LLDrawPoolWater::renderReflection(LLFace* face)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
 	LLVOSky *voskyp = gSky.mVOSkyp;
 
 	if (!voskyp)
@@ -488,7 +486,7 @@ void LLDrawPoolWater::renderWater()
     LLVector3              light_dir       = environment.getLightDirection();
     bool                   sun_up          = environment.getIsSunUp();
     bool                   moon_up         = environment.getIsMoonUp();
-    bool                   has_normal_mips = gSavedSettings.getBOOL("RenderWaterMipNormal");
+    bool                   has_normal_mips = gSavedSettings.getbool("RenderWaterMipNormal");
     bool                   underwater      = LLViewerCamera::getInstance()->cameraUnderWater();
 
     if (sun_up)
@@ -591,7 +589,7 @@ void LLDrawPoolWater::renderWater()
             if (shader->getUniformLocation(LLShaderMgr::DEFERRED_NORM_MATRIX) >= 0)
             {
                 glh::matrix4f norm_mat = get_current_modelview().inverse().transpose();
-                shader->uniformMatrix4fv(LLShaderMgr::DEFERRED_NORM_MATRIX, 1, FALSE, norm_mat.m);
+                shader->uniformMatrix4fv(LLShaderMgr::DEFERRED_NORM_MATRIX, 1, GL_FALSE, norm_mat.m);
             }
         }
 
@@ -674,8 +672,8 @@ void LLDrawPoolWater::renderWater()
                 // Note non-void water being drawn, updates required
                 if (!edge)  // SL-16461 remove !LLPipeline::sUseOcclusion check
                 {
-                    sNeedsReflectionUpdate = TRUE;
-                    sNeedsDistortionUpdate = TRUE;
+                    sNeedsReflectionUpdate = true;
+                    sNeedsDistortionUpdate = true;
                 }
             }
         }

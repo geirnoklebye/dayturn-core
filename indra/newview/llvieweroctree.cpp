@@ -1145,8 +1145,8 @@ void LLOcclusionCullingGroup::checkOcclusion()
                     // (If occlusion is disabled, these are set within LLDrawPoolWater::render)
                     if (query_result > 0)
                     {
-                        LLDrawPoolWater::sNeedsReflectionUpdate = TRUE;
-                        LLDrawPoolWater::sNeedsDistortionUpdate = TRUE;
+                        LLDrawPoolWater::sNeedsReflectionUpdate = true;
+                        LLDrawPoolWater::sNeedsDistortionUpdate = true;
                     }
                 }
 #endif

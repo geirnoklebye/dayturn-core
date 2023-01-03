@@ -54,8 +54,6 @@ S32 LLDrawPoolMaterials::getNumDeferredPasses()
 
 void LLDrawPoolMaterials::beginDeferredPass(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_MATERIAL;
-
     bool rigged = false;
     if (pass >= 12)
     { 
@@ -114,8 +112,6 @@ void LLDrawPoolMaterials::beginDeferredPass(S32 pass)
 
 void LLDrawPoolMaterials::endDeferredPass(S32 pass)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_MATERIAL;
-
 	mShader->unbind();
 
 	LLRenderPass::endRenderPass(pass);
@@ -123,7 +119,6 @@ void LLDrawPoolMaterials::endDeferredPass(S32 pass)
 
 void LLDrawPoolMaterials::renderDeferred(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_MATERIAL;
 	static const U32 type_list[] = 
 	{
 		LLRenderPass::PASS_MATERIAL,
@@ -186,10 +181,7 @@ void LLDrawPoolMaterials::renderDeferred(S32 pass)
 		mShader->setMinimumAlpha(params.mAlphaMaskCutoff);
 		mShader->uniform1f(LLShaderMgr::EMISSIVE_BRIGHTNESS, params.mFullbright ? 1.f : 0.f);
 
-        {
-            LL_PROFILE_ZONE_SCOPED_CATEGORY_MATERIAL;
-            pushMaterialsBatch(params, mask, rigged);
-        }
+        pushMaterialsBatch(params, mask, rigged);
 	}
 }
 
@@ -205,7 +197,6 @@ void LLDrawPoolMaterials::bindNormalMap(LLViewerTexture* tex)
 
 void LLDrawPoolMaterials::pushMaterialsBatch(LLDrawInfo& params, U32 mask, bool rigged)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_MATERIAL;
 	applyModelMatrix(params);
 	
 	bool tex_setup = false;

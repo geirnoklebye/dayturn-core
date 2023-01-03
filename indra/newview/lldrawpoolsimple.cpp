@@ -79,13 +79,13 @@ static void setup_fullbright_shader(LLGLSLShader* shader)
 
 void LLDrawPoolGlow::renderPostDeferred(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_GLOW);
+    //LL_RECORD_BLOCK_TIME(FTM_RENDER_GLOW);
     render(&gDeferredEmissiveProgram);
 }
 
 void LLDrawPoolGlow::render(LLGLSLShader* shader)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_GLOW);
+    //LL_RECORD_BLOCK_TIME(FTM_RENDER_GLOW);
 	LLGLEnable blend(GL_BLEND);
 	LLGLDisable test(GL_ALPHA_TEST);
 	gGL.flush();
@@ -117,7 +117,6 @@ S32 LLDrawPoolGlow::getNumPasses()
 
 void LLDrawPoolGlow::render(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
     LLGLSLShader* shader = LLPipeline::sUnderWaterRender ? &gObjectEmissiveWaterProgram : &gObjectEmissiveProgram;
     render(shader);
 }
@@ -139,7 +138,7 @@ S32 LLDrawPoolSimple::getNumPasses()
 
 void LLDrawPoolSimple::render(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_SIMPLE);
+    //LL_RECORD_BLOCK_TIME(FTM_RENDER_SIMPLE);
 
 	LLGLDisable blend(GL_BLEND);
 	
@@ -328,7 +327,7 @@ void LLDrawPoolGrass::prerender()
 
 void LLDrawPoolGrass::beginRenderPass(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_GRASS);
+    //LL_RECORD_BLOCK_TIME(FTM_RENDER_GRASS);
 	stop_glerror();
 
 	if (LLPipeline::sUnderWaterRender)
@@ -362,7 +361,7 @@ void LLDrawPoolGrass::beginRenderPass(S32 pass)
 
 void LLDrawPoolGrass::endRenderPass(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_GRASS);
+    //LL_RECORD_BLOCK_TIME(FTM_RENDER_GRASS);
 	LLRenderPass::endRenderPass(pass);
 
 	if (mShaderLevel > 0)
@@ -400,24 +399,21 @@ void LLDrawPoolGrass::endDeferredPass(S32 pass)
 
 void LLDrawPoolGrass::renderDeferred(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL;
+	//LL_RECORD_BLOCK_TIME(FTM_RENDER_GRASS_DEFERRED);
+	gDeferredNonIndexedDiffuseAlphaMaskProgram.bind();
+	gDeferredNonIndexedDiffuseAlphaMaskProgram.setMinimumAlpha(0.5f);
+
+	if (LLPipeline::sRenderingHUDs)
 	{
-		//LL_RECORD_BLOCK_TIME(FTM_RENDER_GRASS_DEFERRED);
-		gDeferredNonIndexedDiffuseAlphaMaskProgram.bind();
-		gDeferredNonIndexedDiffuseAlphaMaskProgram.setMinimumAlpha(0.5f);
+		gDeferredNonIndexedDiffuseAlphaMaskProgram.uniform1i(LLShaderMgr::NO_ATMO, 1);
+	}
+	else
+	{
+		gDeferredNonIndexedDiffuseAlphaMaskProgram.uniform1i(LLShaderMgr::NO_ATMO, 0);
+	}
 
-        if (LLPipeline::sRenderingHUDs)
-	    {
-		    gDeferredNonIndexedDiffuseAlphaMaskProgram.uniform1i(LLShaderMgr::NO_ATMO, 1);
-	    }
-	    else
-	    {
-		    gDeferredNonIndexedDiffuseAlphaMaskProgram.uniform1i(LLShaderMgr::NO_ATMO, 0);
-	    }
-
-		//render grass
-		LLRenderPass::pushBatches(LLRenderPass::PASS_GRASS, getVertexDataMask());
-	}			
+	//render grass
+	LLRenderPass::pushBatches(LLRenderPass::PASS_GRASS, getVertexDataMask());
 }
 
 
@@ -435,7 +431,7 @@ void LLDrawPoolFullbright::prerender()
 
 void LLDrawPoolFullbright::renderPostDeferred(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_FULLBRIGHT);
+    //LL_RECORD_BLOCK_TIME(FTM_RENDER_FULLBRIGHT);
 
     LLGLSLShader* shader = nullptr;
     if (LLPipeline::sUnderWaterRender)
@@ -501,7 +497,7 @@ S32 LLDrawPoolFullbright::getNumPasses()
 
 void LLDrawPoolFullbrightAlphaMask::renderPostDeferred(S32 pass)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWPOOL; //LL_RECORD_BLOCK_TIME(FTM_RENDER_FULLBRIGHT);
+    //LL_RECORD_BLOCK_TIME(FTM_RENDER_FULLBRIGHT);
     
     LLGLSLShader* shader = nullptr;
     if (LLPipeline::sRenderingHUDs)

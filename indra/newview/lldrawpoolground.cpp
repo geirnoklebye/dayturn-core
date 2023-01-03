@@ -53,7 +53,7 @@ void LLDrawPoolGround::prerender()
 
 void LLDrawPoolGround::render(S32 pass)
 {
-	if (mDrawFace.empty() || !gSavedSettings.getBOOL("RenderGround"))
+	if (mDrawFace.empty() || !gSavedSettings.getbool("RenderGround"))
 	{
 		return;
 	}	

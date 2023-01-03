@@ -152,7 +152,7 @@ void LLDrawable::unload()
 {
 	LLVOVolume *pVVol = getVOVolume();
 	pVVol->setNoLOD();
-	pVVol->markForUpdate(TRUE);
+	pVVol->markForUpdate(true);
 }
 
 // static
@@ -314,8 +314,6 @@ S32 LLDrawable::findReferences(LLDrawable *drawablep)
 
 LLFace*	LLDrawable::addFace(LLFacePool *poolp, LLViewerTexture *texturep)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWABLE
-	
 	LLFace *face;
 	{
 		face = new LLFace(this, mVObjp);
@@ -342,8 +340,6 @@ LLFace*	LLDrawable::addFace(LLFacePool *poolp, LLViewerTexture *texturep)
 
 LLFace*	LLDrawable::addFace(const LLTextureEntry *te, LLViewerTexture *texturep)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWABLE
-
 	LLFace *face;
 
 	face = new LLFace(this, mVObjp);
@@ -365,8 +361,6 @@ LLFace*	LLDrawable::addFace(const LLTextureEntry *te, LLViewerTexture *texturep)
 
 LLFace*	LLDrawable::addFace(const LLTextureEntry *te, LLViewerTexture *texturep, LLViewerTexture *normalp)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWABLE
-
 	LLFace *face;
 	face = new LLFace(this, mVObjp);
 	
@@ -1148,8 +1142,6 @@ void LLDrawable::setGroup(LLViewerOctreeGroup *groupp)
 */
 LLSpatialPartition* LLDrawable::getSpatialPartition()
 { 
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWABLE
-
 	LLSpatialPartition* retval = NULL;
 
 	if (!mVObjp || 
@@ -1472,8 +1464,8 @@ void LLSpatialBridge::setVisible(LLCamera& camera_in, std::vector<LLDrawable*>* 
 			av = objparent->mDrawable;
 			LLSpatialGroup* group = av->getSpatialGroup();
 
-			BOOL impostor = FALSE;
-			BOOL loaded = FALSE;
+			bool impostor = false;
+			bool loaded = false;
 			if (objparent->isAvatar())
 			{
 				LLVOAvatar* avatarp = (LLVOAvatar*) objparent;
@@ -1550,8 +1542,6 @@ void LLSpatialBridge::setVisible(LLCamera& camera_in, std::vector<LLDrawable*>* 
 
 void LLSpatialBridge::updateDistance(LLCamera& camera_in, bool force_update)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_DRAWABLE
-
 	if (mDrawable == NULL)
 	{
 		markDead();
@@ -1624,7 +1614,7 @@ bool LLSpatialBridge::updateMove()
 	mOctree->balance();
 	if (part)
 	{
-		part->move(this, getSpatialGroup(), TRUE);
+		part->move(this, getSpatialGroup(), true);
 	}
 	return true;
 }
@@ -1741,7 +1731,7 @@ LLDrawable* LLDrawable::getRoot()
 }
 
 LLBridgePartition::LLBridgePartition(LLViewerRegion* regionp)
-: LLSpatialPartition(0, FALSE, 0, regionp) 
+: LLSpatialPartition(0, false, 0, regionp) 
 { 
 	mDrawableType = LLPipeline::RENDER_TYPE_VOLUME; 
 	mPartitionType = LLViewerRegion::PARTITION_BRIDGE;
