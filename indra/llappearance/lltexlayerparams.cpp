@@ -257,6 +257,7 @@ bool LLTexLayerParamAlpha::getSkip() const
 		return true;
 	}
 
+    return false;
 }
 
 
