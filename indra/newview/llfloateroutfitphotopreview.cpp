@@ -64,7 +64,7 @@ LLFloaterOutfitPhotoPreview::LLFloaterOutfitPhotoPreview(const LLSD& key)
 	  mImage(NULL),
 	  mOutfitID(LLUUID()),
 	  mImageOldBoostLevel(LLGLTexture::BOOST_NONE),
-	  mExceedLimits(FALSE)
+	  mExceedLimits(false)
 {
 	updateImageID();
 }
@@ -181,11 +181,11 @@ void LLFloaterOutfitPhotoPreview::updateDimensions()
 	if ((mImage->getFullWidth() <= MAX_OUTFIT_PHOTO_WIDTH) && (mImage->getFullHeight() <= MAX_OUTFIT_PHOTO_HEIGHT))
 	{
 		getChild<LLButton>("ok_btn")->setEnabled(true);
-		mExceedLimits = FALSE;
+		mExceedLimits = false;
 	}
 	else
 	{
-		mExceedLimits = TRUE;
+		mExceedLimits = true;
 		LLStringUtil::format_map_t args;
 		args["MAX_WIDTH"] = llformat("%d", MAX_OUTFIT_PHOTO_WIDTH);
 		args["MAX_HEIGHT"] = llformat("%d", MAX_OUTFIT_PHOTO_HEIGHT);
