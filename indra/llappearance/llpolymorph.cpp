@@ -256,7 +256,7 @@ void LLPolyMorphData::freeData()
 // LLPolyMorphTargetInfo()
 //-----------------------------------------------------------------------------
 LLPolyMorphTargetInfo::LLPolyMorphTargetInfo()
-	: mIsClothingMorph(FALSE)
+	: mIsClothingMorph(false)
 {
 }
 
@@ -276,7 +276,7 @@ bool LLPolyMorphTargetInfo::parseXml(LLXmlTreeNode* node)
 	}
 
 	static LLStdStringHandle clothing_morph_string = LLXmlTree::addAttributeString("clothing_morph");
-	node->getFastAttributeBOOL(clothing_morph_string, mIsClothingMorph);
+	node->getFastAttributebool(clothing_morph_string, mIsClothingMorph);
 
 	LLXmlTreeNode *paramNode = node->getChildByName("param_morph");
 

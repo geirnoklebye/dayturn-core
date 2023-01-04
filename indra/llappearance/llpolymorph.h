@@ -133,7 +133,7 @@ public:
 
 protected:
 	std::string		mMorphName;
-	S32			mIsClothingMorph;
+	bool			mIsClothingMorph;
 	typedef std::vector<LLPolyVolumeMorphInfo> volume_info_list_t;
 	volume_info_list_t mVolumeInfoList;	
 };
