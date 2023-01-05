@@ -709,20 +709,20 @@ public:
 
 	// returns whether the given host is on a trusted circuit
 	// Note:DaveH/Babbage some trusted messages can be received without a circuit
-	BOOL    getCircuitTrust(const LLHost &host);
+	bool    getCircuitTrust(const LLHost &host);
 	
-	void	setCircuitAllowTimeout(const LLHost &host, BOOL allow);
+	void	setCircuitAllowTimeout(const LLHost &host, bool allow);
 	void	setCircuitTimeoutCallback(const LLHost &host, void (*callback_func)(const LLHost &host, void *user_data), void *user_data);
 
-	BOOL	checkCircuitBlocked(const U32 circuit);
-	BOOL	checkCircuitAlive(const U32 circuit);
-	BOOL	checkCircuitAlive(const LLHost &host);
+	bool	checkCircuitBlocked(const U32 circuit);
+	bool	checkCircuitAlive(const U32 circuit);
+	bool	checkCircuitAlive(const LLHost &host);
 	void	setCircuitProtection(BOOL b_protect);
 	U32		findCircuitCode(const LLHost &host);
 	LLHost	findHost(const U32 circuit_code);
 	void	sanityCheck();
 
-	BOOL	has(const char *blockname) const;
+	bool	has(const char *blockname) const;
 	S32		getNumberOfBlocksFast(const char *blockname) const;
 	S32		getNumberOfBlocks(const char *blockname) const;
 	S32		getSizeFast(const char *blockname, const char *varname) const;

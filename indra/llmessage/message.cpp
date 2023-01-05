@@ -1499,7 +1499,7 @@ void LLMessageSystem::getCircuitInfo(LLSD& info) const
 }
 
 // returns whether the given host is on a trusted circuit
-BOOL    LLMessageSystem::getCircuitTrust(const LLHost &host)
+bool    LLMessageSystem::getCircuitTrust(const LLHost &host)
 {
 	LLCircuitData *cdp = mCircuitInfo.findCircuit(host);
 	if (cdp)
@@ -1507,7 +1507,7 @@ BOOL    LLMessageSystem::getCircuitTrust(const LLHost &host)
 		return cdp->getTrusted();
 	}
 
-	return FALSE;
+	return false;
 }
 
 // Activate a circuit, and set its trust level (TRUE if trusted,
@@ -1573,7 +1573,7 @@ void LLMessageSystem::disableCircuit(const LLHost &host)
 }
 
 
-void LLMessageSystem::setCircuitAllowTimeout(const LLHost &host, BOOL allow)
+void LLMessageSystem::setCircuitAllowTimeout(const LLHost &host, bool allow)
 {
 	LLCircuitData *cdp = mCircuitInfo.findCircuit(host);
 	if (cdp)
@@ -1592,14 +1592,14 @@ void LLMessageSystem::setCircuitTimeoutCallback(const LLHost &host, void (*callb
 }
 
 
-BOOL LLMessageSystem::checkCircuitBlocked(const U32 circuit)
+bool LLMessageSystem::checkCircuitBlocked(const U32 circuit)
 {
 	LLHost host = findHost(circuit);
 
 	if (!host.isOk())
 	{
 		LL_DEBUGS("Messaging") << "checkCircuitBlocked: Unknown circuit " << circuit << LL_ENDL;
-		return TRUE;
+		return true;
 	}
 
 	LLCircuitData *cdp = mCircuitInfo.findCircuit(host);
@@ -1610,18 +1610,18 @@ BOOL LLMessageSystem::checkCircuitBlocked(const U32 circuit)
 	else
 	{
 		LL_INFOS("Messaging") << "checkCircuitBlocked(circuit): Unknown host - " << host << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 }
 
-BOOL LLMessageSystem::checkCircuitAlive(const U32 circuit)
+bool LLMessageSystem::checkCircuitAlive(const U32 circuit)
 {
 	LLHost host = findHost(circuit);
 
 	if (!host.isOk())
 	{
 		LL_DEBUGS("Messaging") << "checkCircuitAlive: Unknown circuit " << circuit << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 
 	LLCircuitData *cdp = mCircuitInfo.findCircuit(host);
@@ -1632,11 +1632,11 @@ BOOL LLMessageSystem::checkCircuitAlive(const U32 circuit)
 	else
 	{
 		LL_INFOS("Messaging") << "checkCircuitAlive(circuit): Unknown host - " << host << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 }
 
-BOOL LLMessageSystem::checkCircuitAlive(const LLHost &host)
+bool LLMessageSystem::checkCircuitAlive(const LLHost &host)
 {
 	LLCircuitData *cdp = mCircuitInfo.findCircuit(host);
 	if (cdp)
@@ -1646,7 +1646,7 @@ BOOL LLMessageSystem::checkCircuitAlive(const LLHost &host)
 	else
 	{
 		LL_DEBUGS("Messaging") << "checkCircuitAlive(host): Unknown host - " << host << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 }
 
@@ -3932,7 +3932,7 @@ void LLMessageSystem::getString(const char *block, const char *var,
 				  blocknum);
 }
 
-BOOL	LLMessageSystem::has(const char *blockname) const
+bool	LLMessageSystem::has(const char *blockname) const
 {
 	return getNumberOfBlocks(blockname) > 0;
 }
