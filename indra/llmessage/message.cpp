@@ -150,7 +150,7 @@ void LLMessageSystem::init()
 	// initialize member variables
 	mVerboseLog = FALSE;
 
-	mbError = FALSE;
+	mbError = false;
 	mErrorCode = 0;
 	mSendReliable = FALSE;
 
@@ -239,7 +239,7 @@ LLMessageSystem::LLMessageSystem(const std::string& filename, U32 port,
 	S32 error = start_net(mSocket, mPort);
 	if (error != 0)
 	{
-		mbError = TRUE;
+		mbError = true;
 		mErrorCode = error;
 	}
 //	LL_DEBUGS("Messaging") <<  << "*** port: " << mPort << LL_ENDL;
@@ -288,7 +288,7 @@ void LLMessageSystem::loadTemplateFile(const std::string& filename, bool failure
 	if(filename.empty())
 	{
 		LL_ERRS("Messaging") << "No template filename specified" << LL_ENDL;
-		mbError = TRUE;
+		mbError = true;
 		return;
 	}
 
@@ -300,7 +300,7 @@ void LLMessageSystem::loadTemplateFile(const std::string& filename, bool failure
 		} else {
 			LL_WARNS("Messaging") << "Failed to open template: " << filename << LL_ENDL;
 		}
-		mbError = TRUE;
+		mbError = true;
 		return;
 	}
 	
@@ -359,7 +359,7 @@ void LLMessageSystem::clearReceiveState()
 }
 
 
-BOOL LLMessageSystem::poll(F32 seconds)
+bool LLMessageSystem::poll(F32 seconds)
 {
 	S32 num_socks;
 	apr_status_t status;
@@ -370,11 +370,11 @@ BOOL LLMessageSystem::poll(F32 seconds)
 	}
 	if (num_socks)
 	{
-		return TRUE;
+		return true;
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 }
 
@@ -481,10 +481,10 @@ LLCircuitData* LLMessageSystem::findCircuit(const LLHost& host,
 // Returns TRUE if a valid, on-circuit message has been received.
 // Requiring a non-const LockMessageChecker reference ensures that
 // mMessageReader has been set to mTemplateMessageReader.
-BOOL LLMessageSystem::checkMessages(LockMessageChecker&, S64 frame_count )
+bool LLMessageSystem::checkMessages(LockMessageChecker&, S64 frame_count )
 {
 	// Pump 
-	BOOL	valid_packet = FALSE;
+	bool	valid_packet = false;
 
 	LLTransferTargetVFile::updateQueue();
 	
@@ -503,8 +503,8 @@ BOOL LLMessageSystem::checkMessages(LockMessageChecker&, S64 frame_count )
 	{
 		clearReceiveState();
 		
-		BOOL recv_reliable = FALSE;
-		BOOL recv_resent = FALSE;
+		bool recv_reliable = false;
+		bool recv_resent = false;
 		S32 acks = 0;
 		S32 true_rcv_size = 0;
 
@@ -528,7 +528,7 @@ BOOL LLMessageSystem::checkMessages(LockMessageChecker&, S64 frame_count )
 				callExceptionFunc(MX_PACKET_TOO_SHORT);
 			}
 			// no data in packet receive buffer
-			valid_packet = FALSE;
+			valid_packet = false;
 		}
 		else
 		{
@@ -551,7 +551,7 @@ BOOL LLMessageSystem::checkMessages(LockMessageChecker&, S64 frame_count )
 					LL_WARNS("Messaging") << "Malformed packet received. Packet size "
 						<< receive_size << " with invalid no. of acks " << acks
 						<< LL_ENDL;
-					valid_packet = FALSE;
+					valid_packet = false;
 					continue;
 				}
 			}
@@ -590,11 +590,11 @@ BOOL LLMessageSystem::checkMessages(LockMessageChecker&, S64 frame_count )
 
 			if (buffer[0] & LL_RELIABLE_FLAG)
 			{
-				recv_reliable = TRUE;
+				recv_reliable = true;
 			}
 			if (buffer[0] & LL_RESENT_FLAG)
 			{
-				recv_resent = TRUE;
+				recv_resent = true;
 				if (cdp && cdp->isDuplicateResend(mCurrentRecvPacketID))
 				{
 					// We need to ACK here to suppress
@@ -632,7 +632,7 @@ BOOL LLMessageSystem::checkMessages(LockMessageChecker&, S64 frame_count )
 						LL_INFOS("Messaging") << str.str() << LL_ENDL;
 					}
 					mPacketsIn++;
-					valid_packet = FALSE;
+					valid_packet = false;
 					continue;
 				}
 			}
@@ -661,7 +661,7 @@ BOOL LLMessageSystem::checkMessages(LockMessageChecker&, S64 frame_count )
 			{
 				logMsgFromInvalidCircuit( host, recv_reliable );
 				clearReceiveState();
-				valid_packet = FALSE;
+				valid_packet = false;
 			}
 
 			if(
@@ -674,7 +674,7 @@ BOOL LLMessageSystem::checkMessages(LockMessageChecker&, S64 frame_count )
 				clearReceiveState();
 
 				sendDenyTrustedCircuit(host);
-				valid_packet = FALSE;
+				valid_packet = false;
 			}
 
 			if( valid_packet )
@@ -2457,13 +2457,13 @@ bool start_messaging_system(
 	if (!gMessageSystem)
 	{
 		LL_ERRS("AppInit") << "Messaging system initialization failed." << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 
 	// bail if system encountered an error.
 	if(!gMessageSystem->isOK())
 	{
-		return FALSE;
+		return false;
 	}
 
 	if (b_dump_prehash_file)
@@ -2514,7 +2514,7 @@ bool start_messaging_system(
 	// Initialize the transfer manager
 	gTransferManager.init();
 
-	return TRUE;
+	return true;
 }
 
 void LLMessageSystem::startLogging()
@@ -3006,14 +3006,14 @@ void LLMessageSystem::setTimingFunc(msg_timing_callback func, void* data)
 	mTimingCallbackData = data;
 }
 
-BOOL LLMessageSystem::isCircuitCodeKnown(U32 code) const
+bool LLMessageSystem::isCircuitCodeKnown(U32 code) const
 {
 	if(mCircuitCodes.find(code) == mCircuitCodes.end())
-		return FALSE;
-	return TRUE;
+		return false;
+	return true;
 }
 
-BOOL LLMessageSystem::isMessageFast(const char *msg)
+bool LLMessageSystem::isMessageFast(const char *msg)
 {
 	return msg == mMessageReader->getMessageName();
 }

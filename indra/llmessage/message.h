@@ -365,7 +365,7 @@ public:
 
 	~LLMessageSystem();
 
-	BOOL isOK() const { return !mbError; }
+	bool isOK() const { return !mbError; }
 	S32 getErrorCode() const { return mErrorCode; }
 
 	// Read file and build message templates filename must point to a
@@ -402,18 +402,18 @@ public:
 	}
 
 	// This method returns true if the code is in the circuit codes map.
-	BOOL isCircuitCodeKnown(U32 code) const;
+	bool isCircuitCodeKnown(U32 code) const;
 
 	// usually called in response to an AddCircuitCode message, but
 	// may also be called by the login process.
 	bool addCircuitCode(U32 code, const LLUUID& session_id);
 
-	BOOL	poll(F32 seconds); // Number of seconds that we want to block waiting for data, returns if data was received
-	BOOL	checkMessages(LockMessageChecker&, S64 frame_count = 0 );
+	bool	poll(F32 seconds); // Number of seconds that we want to block waiting for data, returns if data was received
+	bool	checkMessages(LockMessageChecker&, S64 frame_count = 0 );
 	void	processAcks(LockMessageChecker&, F32 collect_time = 0.f);
 
-	BOOL	isMessageFast(const char *msg);
-	BOOL	isMessage(const char *msg)
+	bool	isMessageFast(const char *msg);
+	bool	isMessage(const char *msg)
 	{
 		return isMessageFast(LLMessageStringTable::getInstance()->getString(msg));
 	}
@@ -859,7 +859,7 @@ private:
 
 	// Must be valid during decode
 	
-	BOOL	mbError;
+	bool	mbError;
 	S32	mErrorCode;
 
 	F64Seconds										mResendDumpTime; // The last time we dumped resends
@@ -882,7 +882,7 @@ private:
 	LLTimer mMessageSystemTimer;
 
 	static F32 mTimeDecodesSpamThreshold;  // If mTimeDecodes is on, all this many seconds for each msg decode before spamming
-	static BOOL mTimeDecodes;  // Measure time for all message decodes if TRUE;
+	static bool mTimeDecodes;  // Measure time for all message decodes if true;
 
 	msg_timing_callback mTimingCallback;
 	void* mTimingCallbackData;
