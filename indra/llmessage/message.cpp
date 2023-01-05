@@ -3354,7 +3354,7 @@ void LLMessageSystem::dumpPacketToLog()
 
 
 //static
-U64Microseconds LLMessageSystem::getMessageTimeUsecs(const BOOL update)
+U64Microseconds LLMessageSystem::getMessageTimeUsecs(const bool update)
 {
 	if (gMessageSystem)
 	{
@@ -3371,7 +3371,7 @@ U64Microseconds LLMessageSystem::getMessageTimeUsecs(const BOOL update)
 }
 
 //static
-F64Seconds LLMessageSystem::getMessageTimeSeconds(const BOOL update)
+F64Seconds LLMessageSystem::getMessageTimeSeconds(const bool update)
 {
 	if (gMessageSystem)
 	{
@@ -3978,7 +3978,7 @@ S32 LLMessageSystem::getReceiveSize() const
 }
 
 //static 
-void LLMessageSystem::setTimeDecodes( BOOL b )
+void LLMessageSystem::setTimeDecodes(bool b)
 {
 	LLMessageReader::setTimeDecodes(b);
 }

@@ -759,10 +759,10 @@ public:
 	void setMaxMessageTime(const F32 seconds);	// Max time to process messages before warning and dumping (neg to disable)
 	void setMaxMessageCounts(const S32 num);	// Max number of messages before dumping (neg to disable)
 	
-	static U64Microseconds getMessageTimeUsecs(const BOOL update = FALSE);	// Get the current message system time in microseconds
-	static F64Seconds getMessageTimeSeconds(const BOOL update = FALSE); // Get the current message system time in seconds
+	static U64Microseconds getMessageTimeUsecs(const bool update = false);	// Get the current message system time in microseconds
+	static F64Seconds getMessageTimeSeconds(const bool update = false); // Get the current message system time in seconds
 
-	static void setTimeDecodes(BOOL b);
+	static void setTimeDecodes(bool b);
 	static void setTimeDecodesSpamThreshold(F32 seconds); 
 
 	// message handlers internal to the message systesm
