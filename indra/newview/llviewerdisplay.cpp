@@ -236,6 +236,150 @@ void display_stats()
     }
 }
 
+static void update_tp_display(bool minimized)
+{
+	static LLCachedControl<F32> teleport_arrival_delay(gSavedSettings, "TeleportArrivalDelay");
+	static LLCachedControl<F32> teleport_local_delay(gSavedSettings, "TeleportLocalDelay");
+
+	S32 attach_count = 0;
+	if (isAgentAvatarValid())
+	{
+		attach_count = gAgentAvatarp->getAttachmentCount();
+	}
+	F32 teleport_save_time = TELEPORT_EXPIRY + TELEPORT_EXPIRY_PER_ATTACHMENT * attach_count;
+	F32 teleport_elapsed = gTeleportDisplayTimer.getElapsedTimeF32();
+	F32 teleport_percent = teleport_elapsed * (100.f / teleport_save_time);
+	if (gAgent.getTeleportState() != LLAgent::TELEPORT_START && teleport_percent > 100.f)
+	{
+		// Give up.  Don't keep the UI locked forever.
+		LL_WARNS("Teleport") << "Giving up on teleport. elapsed time " << teleport_elapsed << " exceeds max time " << teleport_save_time << LL_ENDL;
+		gAgent.setTeleportState(LLAgent::TELEPORT_NONE);
+		gAgent.setTeleportMessage(std::string());
+	}
+
+	// Make sure the TP progress panel gets hidden in case the viewer window
+	// is minimized *during* a TP. HB
+	if (minimized)
+	{
+		gViewerWindow->setShowProgress(false);
+	}
+
+	const std::string& message = gAgent.getTeleportMessage();
+	switch (gAgent.getTeleportState())
+	{
+		case LLAgent::TELEPORT_PENDING:
+		{
+			gTeleportDisplayTimer.reset();
+			const std::string& msg = LLAgent::sTeleportProgressMessages["pending"];
+			if (!minimized)
+			{
+				gViewerWindow->setShowProgress(true);
+				gViewerWindow->setProgressPercent(llmin(teleport_percent, 0.0f));
+				gViewerWindow->setProgressString(msg);
+			}
+			gAgent.setTeleportMessage(msg);
+			break;
+		}
+
+		case LLAgent::TELEPORT_START:
+		{
+			// Transition to REQUESTED.  Viewer has sent some kind
+			// of TeleportRequest to the source simulator
+			gTeleportDisplayTimer.reset();
+			const std::string& msg = LLAgent::sTeleportProgressMessages["requesting"];
+			LL_INFOS("Teleport") << "A teleport request has been sent, setting state to TELEPORT_REQUESTED" << LL_ENDL;
+			gAgent.setTeleportState(LLAgent::TELEPORT_REQUESTED);
+			gAgent.setTeleportMessage(msg);
+			if (!minimized)
+			{
+				gViewerWindow->setShowProgress(true);
+				gViewerWindow->setProgressPercent(llmin(teleport_percent, 0.0f));
+				gViewerWindow->setProgressString(msg);
+				gViewerWindow->setProgressMessage(gAgent.mMOTD);
+			}
+			break;
+		}
+
+		case LLAgent::TELEPORT_REQUESTED:
+			// Waiting for source simulator to respond
+			if (!minimized)
+			{
+				gViewerWindow->setProgressPercent(llmin(teleport_percent, 37.5f));
+				gViewerWindow->setProgressString(message);
+			}
+			break;
+
+		case LLAgent::TELEPORT_MOVING:
+			// Viewer has received destination location from source simulator
+			if (!minimized)
+			{
+				gViewerWindow->setProgressPercent(llmin(teleport_percent, 75.f));
+				gViewerWindow->setProgressString(message);
+			}
+			break;
+
+		case LLAgent::TELEPORT_START_ARRIVAL:
+			// Transition to ARRIVING.  Viewer has received avatar update, etc.,
+			// from destination simulator
+			gTeleportArrivalTimer.reset();
+			LL_INFOS("Teleport") << "Changing state to TELEPORT_ARRIVING" << LL_ENDL;
+			gAgent.setTeleportState(LLAgent::TELEPORT_ARRIVING);
+			gAgent.setTeleportMessage(LLAgent::sTeleportProgressMessages["arriving"]);
+			gAgent.sheduleTeleportIM();
+			gTextureList.mForceResetTextureStats = true;
+			gAgentCamera.resetView(true, true);			
+			if (!minimized)
+			{
+				gViewerWindow->setProgressCancelButtonVisible(false, LLTrans::getString("Cancel"));
+				gViewerWindow->setProgressPercent(75.f);
+			}
+			break;
+
+		case LLAgent::TELEPORT_ARRIVING:
+		// Make the user wait while content "pre-caches"
+		{
+			F32 arrival_fraction = (gTeleportArrivalTimer.getElapsedTimeF32() / teleport_arrival_delay());
+			if (arrival_fraction > 1.f)
+			{
+				arrival_fraction = 1.f;
+				//LLFirstUse::useTeleport();
+				LL_INFOS("Teleport") << "arrival_fraction is " << arrival_fraction << " changing state to TELEPORT_NONE" << LL_ENDL;
+				gAgent.setTeleportState(LLAgent::TELEPORT_NONE);
+			}
+			if (!minimized)
+			{
+				gViewerWindow->setProgressCancelButtonVisible(false, LLTrans::getString("Cancel"));
+				gViewerWindow->setProgressPercent(arrival_fraction * 25.f + 75.f);
+				gViewerWindow->setProgressString(message);
+			}
+			break;
+		}
+
+		case LLAgent::TELEPORT_LOCAL:
+		// Short delay when teleporting in the same sim (progress screen active but not shown - did not
+		// fall-through from TELEPORT_START)
+		{
+			if (gTeleportDisplayTimer.getElapsedTimeF32() > teleport_local_delay())
+			{
+				//LLFirstUse::useTeleport();
+				LL_INFOS("Teleport") << "State is local and gTeleportDisplayTimer " << gTeleportDisplayTimer.getElapsedTimeF32()
+									 << " exceeds teleport_local_delete " << teleport_local_delay
+									 << "; setting state to TELEPORT_NONE"
+									 << LL_ENDL;
+				gAgent.setTeleportState(LLAgent::TELEPORT_NONE);
+			}
+			break;
+		}
+
+		case LLAgent::TELEPORT_NONE:
+			// No teleport in progress
+			gViewerWindow->setShowProgress(false);
+			gTeleportDisplay = false;
+	}
+}
+
+
+
 static LLTrace::BlockTimerStatHandle FTM_PICK("Picking");
 static LLTrace::BlockTimerStatHandle FTM_RENDER("Render");
 static LLTrace::BlockTimerStatHandle FTM_RENDER_HUD("Render HUD");
