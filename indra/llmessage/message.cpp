@@ -148,7 +148,7 @@ static const char* nullToEmpty(const char* s)
 void LLMessageSystem::init()
 {
 	// initialize member variables
-	mVerboseLog = FALSE;
+	mVerboseLog = false;
 
 	mbError = false;
 	mErrorCode = 0;
@@ -940,7 +940,7 @@ void LLMessageSystem::nextBlock(const char *blockname)
 	nextBlockFast(LLMessageStringTable::getInstance()->getString(blockname));
 }
 
-BOOL LLMessageSystem::isSendFull(const char* blockname)
+bool LLMessageSystem::isSendFull(const char* blockname)
 {
 	char* stringTableName = NULL;
 	if(NULL != blockname)
@@ -950,7 +950,7 @@ BOOL LLMessageSystem::isSendFull(const char* blockname)
 	return isSendFullFast(stringTableName);
 }
 
-BOOL LLMessageSystem::isSendFullFast(const char* blockname)
+bool LLMessageSystem::isSendFullFast(const char* blockname)
 {
 	return mMessageBuilder->isMessageFull(blockname);
 }
@@ -958,7 +958,7 @@ BOOL LLMessageSystem::isSendFullFast(const char* blockname)
 
 // blow away the last block of a message, return FALSE if that leaves no blocks or there wasn't a block to remove
 // TODO: Babbage: Remove this horror.
-BOOL LLMessageSystem::removeLastBlock()
+bool LLMessageSystem::removeLastBlock()
 {
 	return mMessageBuilder->removeLastBlock();
 }
@@ -2519,7 +2519,7 @@ bool start_messaging_system(
 
 void LLMessageSystem::startLogging()
 {
-	mVerboseLog = TRUE;
+	mVerboseLog = true;
 	std::ostringstream str;
 	str << "START MESSAGE LOG" << std::endl;
 	str << "Legend:" << std::endl;
@@ -2533,7 +2533,7 @@ void LLMessageSystem::stopLogging()
 {
 	if(mVerboseLog)
 	{
-		mVerboseLog = FALSE;
+		mVerboseLog = false;
 		LL_INFOS("Messaging") << "END MESSAGE LOG" << LL_ENDL;
 	}
 }
@@ -2712,7 +2712,7 @@ void LLMessageSystem::dumpReceiveCounts()
 
 
 
-BOOL LLMessageSystem::isClear() const
+bool LLMessageSystem::isClear() const
 {
 	return mMessageBuilder->isClear();
 }
@@ -2754,7 +2754,7 @@ S32 LLMessageSystem::zeroCodeAdjustCurrentSendTotal()
 			0);
 	}
 	// TODO: babbage: remove this horror
-	mMessageBuilder->setBuilt(FALSE);
+	mMessageBuilder->setBuilt(false);
 
 	S32 count = mSendSize;
 	

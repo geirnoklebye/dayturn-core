@@ -44,8 +44,8 @@ LLSDMessageBuilder::LLSDMessageBuilder() :
 	mCurrentBlock(NULL),
 	mCurrentMessageName(""),
 	mCurrentBlockName(""),
-	mbSBuilt(FALSE),
-	mbSClear(TRUE)
+	mbSBuilt(false),
+	mbSClear(true)
 {
 }
 
@@ -58,8 +58,8 @@ LLSDMessageBuilder::~LLSDMessageBuilder()
 // virtual
 void LLSDMessageBuilder::newMessage(const char* name)
 {
-	mbSBuilt = FALSE;
-	mbSClear = FALSE;
+	mbSBuilt = false;
+	mbSClear = false;
 
 	mCurrentMessage = LLSD::emptyMap();
 	mCurrentMessageName = (char*)name;
@@ -68,8 +68,8 @@ void LLSDMessageBuilder::newMessage(const char* name)
 // virtual
 void LLSDMessageBuilder::clearMessage()
 {
-	mbSBuilt = FALSE;
-	mbSClear = TRUE;
+	mbSBuilt = false;
+	mbSClear = true;
 
 	mCurrentMessage = LLSD::emptyMap();
 	mCurrentMessageName = "";
@@ -96,10 +96,10 @@ void LLSDMessageBuilder::nextBlock(const char* blockname)
 }
 
 // TODO: Remove this horror...
-BOOL LLSDMessageBuilder::removeLastBlock()
+bool LLSDMessageBuilder::removeLastBlock()
 {
 	/* TODO: finish implementing this */
-	return FALSE;
+	return false;
 }
 
 void LLSDMessageBuilder::addBinaryData(
@@ -218,9 +218,9 @@ void LLSDMessageBuilder::compressMessage(U8*& buf_ptr, U32& buffer_length)
 {
 }
 
-BOOL LLSDMessageBuilder::isMessageFull(const char* blockname) const
+bool LLSDMessageBuilder::isMessageFull(const char* blockname) const
 {
-	return FALSE;
+	return false;
 }
 
 U32 LLSDMessageBuilder::buildMessage(U8*, U32, U8)
@@ -400,13 +400,13 @@ const LLSD& LLSDMessageBuilder::getMessage() const
 }
 
 //virtual
-void LLSDMessageBuilder::setBuilt(BOOL b) { mbSBuilt = b; }
+void LLSDMessageBuilder::setBuilt(bool b) { mbSBuilt = b; }
 
 //virtual 
-BOOL LLSDMessageBuilder::isBuilt() const {return mbSBuilt;}
+bool LLSDMessageBuilder::isBuilt() const {return mbSBuilt;}
 
 //virtual 
-BOOL LLSDMessageBuilder::isClear() const {return mbSClear;}
+bool LLSDMessageBuilder::isClear() const {return mbSClear;}
 
 //virtual 
 S32 LLSDMessageBuilder::getMessageSize()

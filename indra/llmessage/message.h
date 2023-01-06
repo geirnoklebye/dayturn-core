@@ -69,7 +69,7 @@ public:
 	char *getString(const char *str);
 
 	U32	 mUsed;
-	BOOL mEmpty[MESSAGE_NUMBER_OF_HASH_BUCKETS];
+	bool mEmpty[MESSAGE_NUMBER_OF_HASH_BUCKETS];
 	char mString[MESSAGE_NUMBER_OF_HASH_BUCKETS][MESSAGE_MAX_STRINGS_LENGTH];	/* Flawfinder: ignore */
 };
 
@@ -291,7 +291,7 @@ class LLMessageSystem : public LLMessageSenderInterface
 	LLReliablePacketParams		mReliablePacketParams;
 
 	// Set this flag to TRUE when you want *very* verbose logs.
-	BOOL						mVerboseLog;
+	bool						mVerboseLog;
 
 	F32                         mMessageFileVersionNumber;
 
@@ -491,7 +491,7 @@ public:
 	void	addF32(	const char *varname, F32 f);						// typed, checks storage space
 	void	addS32Fast(	const char *varname, S32 s);						// typed, checks storage space
 	void	addS32(	const char *varname, S32 s);						// typed, checks storage space
-	void addU32Fast(	const char *varname, U32 u);						// typed, checks storage space
+	void    addU32Fast(	const char *varname, U32 u);						// typed, checks storage space
 	void	addU32(	const char *varname, U32 u);						// typed, checks storage space
 	void	addU64Fast(	const char *varname, U64 lu);						// typed, checks storage space
 	void	addU64(	const char *varname, U64 lu);						// typed, checks storage space
@@ -523,10 +523,10 @@ public:
 	// you need to go to the next block type or need to start a new
 	// message. Specify the current blockname to check block counts,
 	// otherwise the method only checks against MTU.
-	BOOL isSendFull(const char* blockname = NULL);
-	BOOL isSendFullFast(const char* blockname = NULL);
+	bool isSendFull(const char* blockname = NULL);
+	bool isSendFullFast(const char* blockname = NULL);
 
-	BOOL removeLastBlock();
+	bool removeLastBlock();
 
 	//void	buildMessage();
 
@@ -735,7 +735,7 @@ public:
 	void	dumpReceiveCounts();				// dumps receive count for each message type to LL_INFOS()
 	void	dumpCircuitInfo();					// Circuit information to LL_INFOS()
 
-	BOOL	isClear() const;					// returns mbSClear;
+	bool	isClear() const;					// returns mbSClear;
 	S32 	flush(const LLHost &host);
 
 	U32		getListenPort( void ) const;
