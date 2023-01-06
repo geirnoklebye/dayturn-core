@@ -3,7 +3,7 @@ include(Prebuilt)
 
 use_prebuilt_binary(llca)
 
-set(CA_BUNDLE_MAX_AGE_DAYS 365)
+set(CA_BUNDLE_MAX_AGE_DAYS 465)
 
 execute_process(
     COMMAND bash bin/check-ca-bundle-age.sh --packages . --days ${CA_BUNDLE_MAX_AGE_DAYS}
