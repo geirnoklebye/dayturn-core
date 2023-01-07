@@ -309,7 +309,7 @@ public:
 	S32					mSystemVersionServer;
 	U32					mVersionFlags;
 
-	BOOL				mbProtected;
+	bool				mbProtected;
 
 	U32					mNumberHighFreqMessages;
 	U32					mNumberMediumFreqMessages;
@@ -342,7 +342,7 @@ public:
 	S64					mTotalBytesIn;		    // total size of all uncompressed packets in
 	S64					mTotalBytesOut;		    // total size of all uncompressed packets out
 
-	BOOL                mSendReliable;              // does the outgoing message require a pos ack?
+	bool                mSendReliable;              // does the outgoing message require a pos ack?
 
 	LLCircuit 	 		mCircuitInfo;
 	F64Seconds			mCircuitPrintTime;	    // used to print circuit debug info every couple minutes
@@ -383,9 +383,9 @@ public:
 
 	// Set a callback function for a message system exception.
 	void setExceptionFunc(EMessageException exception, msg_exception_callback func, void* data = NULL);
-	// Call the specified exception func, and return TRUE if a
-	// function was found and called. Otherwise return FALSE.
-	BOOL callExceptionFunc(EMessageException exception);
+	// Call the specified exception func, and return true if a
+	// function was found and called. Otherwise return false.
+	bool callExceptionFunc(EMessageException exception);
 
 	// Set a function that will be called once per packet processed with the 
 	// hashed message name and the time spent in the processing handler function
@@ -543,7 +543,7 @@ public:
 	// Use this one if you DON'T want automatic ping-based retry.
 	S32	sendReliable(	const LLHost &host, 
 							S32 retries, 
-							BOOL ping_based_retries,
+							bool ping_based_retries,
 							F32Seconds timeout, 
 							void (*callback)(void **,S32), 
 							void ** callback_data);
@@ -563,7 +563,7 @@ public:
 	S32 forwardReliable(
 		const LLHost &host, 
 		S32 retries, 
-		BOOL ping_based_timeout,
+		bool ping_based_timeout,
 		F32Seconds timeout, 
 		void (*callback)(void **,S32), 
 		void ** callback_data);
@@ -574,7 +574,7 @@ private:
 	S32		sendMessage(const LLHost &host, const char* name,
 						const LLSD& message);
 public:
-	// BOOL	decodeData(const U8 *buffer, const LLHost &host);
+	// bool	decodeData(const U8 *buffer, const LLHost &host);
 
 	/**
 	gets binary data from the current message.
@@ -656,7 +656,7 @@ public:
 
 	U32 getOurCircuitCode();
 	
-	void	enableCircuit(const LLHost &host, BOOL trusted);
+	void	enableCircuit(const LLHost &host, bool trusted);
 	void	disableCircuit(const LLHost &host);
 	
 	// Use this to establish trust on startup and in response to
@@ -717,7 +717,7 @@ public:
 	bool	checkCircuitBlocked(const U32 circuit);
 	bool	checkCircuitAlive(const U32 circuit);
 	bool	checkCircuitAlive(const LLHost &host);
-	void	setCircuitProtection(BOOL b_protect);
+	void	setCircuitProtection(bool b_protect);
 	U32		findCircuitCode(const LLHost &host);
 	LLHost	findHost(const U32 circuit_code);
 	void	sanityCheck();
@@ -836,11 +836,11 @@ private:
 	LLUUID mSessionID;
 	
 	void	addTemplate(LLMessageTemplate *templatep);
-	BOOL		decodeTemplate( const U8* buffer, S32 buffer_size, LLMessageTemplate** msg_template );
+	bool		decodeTemplate( const U8* buffer, S32 buffer_size, LLMessageTemplate** msg_template );
 
-	void		logMsgFromInvalidCircuit( const LLHost& sender, BOOL recv_reliable );
+	void		logMsgFromInvalidCircuit( const LLHost& sender, bool recv_reliable );
 	void		logTrustedMsgFromUntrustedCircuit( const LLHost& sender );
-	void		logValidMsg(LLCircuitData *cdp, const LLHost& sender, BOOL recv_reliable, BOOL recv_resent, BOOL recv_acks );
+	void		logValidMsg(LLCircuitData *cdp, const LLHost& sender, bool recv_reliable, bool recv_resent, bool recv_acks );
 	void		logRanOffEndOfPacket( const LLHost& sender );
 
 	class LLMessageCountInfo
@@ -848,7 +848,7 @@ private:
 	public:
 		U32 mMessageNum;
 		U32 mMessageBytes;
-		BOOL mInvalid;
+		bool mInvalid;
 	};
 
 	LLMessagePollInfo						*mPollInfop;

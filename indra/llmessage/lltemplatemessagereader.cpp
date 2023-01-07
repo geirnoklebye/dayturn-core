@@ -558,7 +558,7 @@ void LLTemplateMessageReader::logRanOffEndOfPacket( const LLHost& host, const S3
 static LLTrace::BlockTimerStatHandle FTM_PROCESS_MESSAGES("Process Messages");
 
 // decode a given message
-BOOL LLTemplateMessageReader::decodeData(const U8* buffer, const LLHost& sender )
+bool LLTemplateMessageReader::decodeData(const U8* buffer, const LLHost& sender )
 {
     LL_RECORD_BLOCK_TIME(FTM_PROCESS_MESSAGES);
 
@@ -619,7 +619,7 @@ BOOL LLTemplateMessageReader::decodeData(const U8* buffer, const LLHost& sender 
 		else
 		{
 			LL_ERRS() << "Unknown block type" << LL_ENDL;
-			return FALSE;
+			return false;
 		}
 
 		LLMsgBlkData* cur_data_block = NULL;
@@ -725,7 +725,7 @@ BOOL LLTemplateMessageReader::decodeData(const U8* buffer, const LLHost& sender 
 		&& !mCurrentRMessageTemplate->mMemberBlocks.empty())
 	{
 		LL_DEBUGS() << "Empty message '" << mCurrentRMessageTemplate->mName << "' (no blocks)" << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 
 	{
@@ -774,7 +774,7 @@ BOOL LLTemplateMessageReader::decodeData(const U8* buffer, const LLHost& sender 
 			}
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 bool LLTemplateMessageReader::validateMessage(const U8* buffer,
@@ -813,7 +813,7 @@ bool LLTemplateMessageReader::validateMessage(const U8* buffer,
 	return valid;
 }
 
-BOOL LLTemplateMessageReader::readMessage(const U8* buffer, 
+bool LLTemplateMessageReader::readMessage(const U8* buffer,
 										  const LLHost& sender)
 {
 	return decodeData(buffer, sender);

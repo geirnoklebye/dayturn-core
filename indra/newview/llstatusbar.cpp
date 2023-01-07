@@ -493,7 +493,7 @@ void LLStatusBar::sendMoneyBalanceRequest()
     }
     // Double amount of retries due to this request initially happening during busy stage
     // Ideally this should be turned into a capability
-    gMessageSystem->sendReliable(gAgent.getRegionHost(), LL_DEFAULT_RELIABLE_RETRIES * 2, TRUE, LL_PING_BASED_TIMEOUT_DUMMY, NULL, NULL);
+    gMessageSystem->sendReliable(gAgent.getRegionHost(), LL_DEFAULT_RELIABLE_RETRIES * 2, true, LL_PING_BASED_TIMEOUT_DUMMY, NULL, NULL);
 }
 
 

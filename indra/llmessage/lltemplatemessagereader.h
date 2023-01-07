@@ -102,7 +102,7 @@ public:
 
 	bool validateMessage(const U8* buffer, S32 buffer_size,
 						 const LLHost& sender, bool trusted = false);
-	BOOL readMessage(const U8* buffer, const LLHost& sender);
+	bool readMessage(const U8* buffer, const LLHost& sender);
 
 	bool isTrusted() const;
 	bool isBanned(bool trusted_source) const;
@@ -118,7 +118,7 @@ private:
 
 	void logRanOffEndOfPacket( const LLHost& host, const S32 where, const S32 wanted );
 
-	BOOL decodeData(const U8* buffer, const LLHost& sender );
+	bool decodeData(const U8* buffer, const LLHost& sender );
 
 	S32	mReceiveSize;
 	LLMessageTemplate* mCurrentRMessageTemplate;

@@ -152,7 +152,7 @@ void LLMessageSystem::init()
 
 	mbError = false;
 	mErrorCode = 0;
-	mSendReliable = FALSE;
+	mSendReliable = false;
 
 	mUnackedListDepth = 0;
 	mUnackedListSize = 0;
@@ -214,7 +214,7 @@ LLMessageSystem::LLMessageSystem(const std::string& filename, U32 port,
 	mVersionFlags = 0x0;
 
 	// default to not accepting packets from not alive circuits
-	mbProtected = TRUE;
+	mbProtected = true;
 
 	// default to blocking trusted connections on a public interface if one is specified
 	mBlockUntrustedInterface = true;
@@ -465,7 +465,7 @@ LLCircuitData* LLMessageSystem::findCircuit(const LLHost& host,
 			else
 			{
 				// wake up the circuit
-				cdp->setAlive(TRUE);
+				cdp->setAlive(true);
 				
 				if(resetPacketId)
 				{
@@ -478,7 +478,7 @@ LLCircuitData* LLMessageSystem::findCircuit(const LLHost& host,
 	return cdp;
 }
 
-// Returns TRUE if a valid, on-circuit message has been received.
+// Returns true if a valid, on-circuit message has been received.
 // Requiring a non-const LockMessageChecker reference ensures that
 // mMessageReader has been set to mTemplateMessageReader.
 bool LLMessageSystem::checkMessages(LockMessageChecker&, S64 frame_count )
@@ -679,7 +679,7 @@ bool LLMessageSystem::checkMessages(LockMessageChecker&, S64 frame_count )
 
 			if( valid_packet )
 			{
-				logValidMsg(cdp, host, recv_reliable, recv_resent, (BOOL)(acks>0) );
+				logValidMsg(cdp, host, recv_reliable, recv_resent, (acks>0) );
 				valid_packet = mTemplateMessageReader->readMessage(buffer, host);
 			}
 
@@ -765,7 +765,7 @@ void LLMessageSystem::processAcks(LockMessageChecker&, F32 collect_time)
 		}
 	}
 
-	BOOL dump = FALSE;
+	bool dump = false;
 	{
 		// Check the status of circuits
 		mCircuitInfo.updateWatchDogTimers(this);
@@ -790,17 +790,17 @@ void LLMessageSystem::processAcks(LockMessageChecker&, F32 collect_time)
 		{
 			if (mNumMessageCounts >= mMaxMessageCounts)
 			{
-				dump = TRUE;
+				dump = true;
 			}
 		}
 
 		if (mMaxMessageTime >= F32Seconds(0.f))
 		{
 			// This is one of the only places where we're required to get REAL message system time.
-			mReceiveTime = getMessageTimeSeconds(TRUE) - mMessageCountTime;
+			mReceiveTime = getMessageTimeSeconds(true) - mMessageCountTime;
 			if (mReceiveTime > mMaxMessageTime)
 			{
-				dump = TRUE;
+				dump = true;
 			}
 		}
 	}
@@ -830,7 +830,7 @@ void LLMessageSystem::copyMessageReceivedToSend()
 	{
 		mMessageBuilder = mLLSDMessageBuilder;
 	}
-	mSendReliable = FALSE;
+	mSendReliable = false;
 	mMessageBuilder->newMessage(mMessageReader->getMessageName());
 	mMessageReader->copyToBuilder(*mMessageBuilder);
 }
@@ -925,7 +925,7 @@ S32 LLMessageSystem::sendMessage(const LLHost &host, LLStoredMessagePtr message)
 
 void LLMessageSystem::clearMessage()
 {
-	mSendReliable = FALSE;
+	mSendReliable = false;
 	mMessageBuilder->clearMessage();
 }
 
@@ -956,7 +956,7 @@ bool LLMessageSystem::isSendFullFast(const char* blockname)
 }
 
 
-// blow away the last block of a message, return FALSE if that leaves no blocks or there wasn't a block to remove
+// blow away the last block of a message, return false if that leaves no blocks or there wasn't a block to remove
 // TODO: Babbage: Remove this horror.
 bool LLMessageSystem::removeLastBlock()
 {
@@ -965,7 +965,7 @@ bool LLMessageSystem::removeLastBlock()
 
 S32 LLMessageSystem::sendReliable(const LLHost &host)
 {
-	return sendReliable(host, LL_DEFAULT_RELIABLE_RETRIES, TRUE, LL_PING_BASED_TIMEOUT_DUMMY, NULL, NULL);
+	return sendReliable(host, LL_DEFAULT_RELIABLE_RETRIES, true, LL_PING_BASED_TIMEOUT_DUMMY, NULL, NULL);
 }
 
 
@@ -985,14 +985,14 @@ S32 LLMessageSystem::sendSemiReliable(const LLHost &host, void (*callback)(void 
 	}
 
 	const S32 retries = 0;
-	const BOOL ping_based_timeout = FALSE;
+	const bool ping_based_timeout = false;
 	return sendReliable(host, retries, ping_based_timeout, timeout, callback, callback_data);
 }
 
 // send the message via a UDP packet
 S32 LLMessageSystem::sendReliable(	const LLHost &host, 
 									S32 retries, 
-									BOOL ping_based_timeout,
+									bool ping_based_timeout,
 									F32Seconds timeout, 
 									void (*callback)(void **,S32), 
 									void ** callback_data)
@@ -1010,7 +1010,7 @@ S32 LLMessageSystem::sendReliable(	const LLHost &host,
 	    }
 	}
 
-	mSendReliable = TRUE;
+	mSendReliable = true;
 	mReliablePacketParams.set(host, retries, ping_based_timeout, timeout, 
 		callback, callback_data, 
 		const_cast<char*>(mMessageBuilder->getMessageName()));
@@ -1037,7 +1037,7 @@ void LLMessageSystem::forwardReliable(const U32 circuit_code)
 
 S32 LLMessageSystem::forwardReliable(	const LLHost &host, 
 										S32 retries, 
-										BOOL ping_based_timeout,
+										bool ping_based_timeout,
 										F32Seconds timeout, 
 										void (*callback)(void **,S32), 
 										void ** callback_data)
@@ -1064,9 +1064,9 @@ S32 LLMessageSystem::flushSemiReliable(const LLHost &host, void (*callback)(void
 	S32 send_bytes = 0;
 	if (mMessageBuilder->getMessageSize())
 	{
-		mSendReliable = TRUE;
+		mSendReliable = true;
 		// No need for ping-based retry as not going to retry
-		mReliablePacketParams.set(host, 0, FALSE, timeout, callback, 
+		mReliablePacketParams.set(host, 0, false, timeout, callback, 
 								  callback_data, 
 								  const_cast<char*>(mMessageBuilder->getMessageName()));
 		send_bytes = sendMessage(host);
@@ -1166,7 +1166,7 @@ S32 LLMessageSystem::sendMessage(const LLHost &host)
             host.getUntrustedSimulatorCap(), 
             mLLSDMessageBuilder->getMessageName(), message, cb));
 
-		mSendReliable = FALSE;
+		mSendReliable = false;
 		mReliablePacketParams.clear();
 		return 1;
 	}
@@ -1215,7 +1215,7 @@ S32 LLMessageSystem::sendMessage(const LLHost &host)
 	// tack packet acks onto the end of this message
 	S32 space_left = (MTUBYTES - buffer_length) / sizeof(TPACKETID); // space left for packet ids
 	S32 ack_count = (S32)cdp->mAcks.size();
-	BOOL is_ack_appended = FALSE;
+	bool is_ack_appended = false;
 	std::vector<TPACKETID> acks;
 	if((space_left > 0) && (ack_count > 0) && 
 	   (mMessageBuilder->getMessageName() != _PREHASH_PacketAck))
@@ -1266,10 +1266,10 @@ S32 LLMessageSystem::sendMessage(const LLHost &host)
 		// tack the count in the final byte
 		U8 count = (U8)append_ack_count;
 		buf_ptr[buffer_length++] = count;
-		is_ack_appended = TRUE;
+		is_ack_appended = true;
 	}
 
-	BOOL success;
+	bool success;
 	success = mPacketRing.sendPacket(mSocket, (char *)buf_ptr, buffer_length, host);
 
 	if (!success)
@@ -1304,12 +1304,12 @@ S32 LLMessageSystem::sendMessage(const LLHost &host)
 	mPacketsOut++;
 	mTotalBytesOut += buffer_length;
 	
-	mSendReliable = FALSE;
+	mSendReliable = false;
 	mReliablePacketParams.clear();
 	return buffer_length;
 }
 
-void LLMessageSystem::logMsgFromInvalidCircuit( const LLHost& host, BOOL recv_reliable )
+void LLMessageSystem::logMsgFromInvalidCircuit( const LLHost& host, bool recv_reliable )
 {
 	if(mVerboseLog)
 	{
@@ -1336,7 +1336,7 @@ void LLMessageSystem::logMsgFromInvalidCircuit( const LLHost& host, BOOL recv_re
 		// TODO: babbage: work out if we need these
 		// mMessageCountList[mNumMessageCounts].mMessageNum = mCurrentRMessageTemplate->mMessageNumber;
 		mMessageCountList[mNumMessageCounts].mMessageBytes = mMessageReader->getMessageSize();
-		mMessageCountList[mNumMessageCounts].mInvalid = TRUE;
+		mMessageCountList[mNumMessageCounts].mInvalid = true;
 		mNumMessageCounts++;
 	}
 }
@@ -1389,12 +1389,12 @@ void LLMessageSystem::logTrustedMsgFromUntrustedCircuit( const LLHost& host )
 		//	= mCurrentRMessageTemplate->mMessageNumber;
 		mMessageCountList[mNumMessageCounts].mMessageBytes
 			= mMessageReader->getMessageSize();
-		mMessageCountList[mNumMessageCounts].mInvalid = TRUE;
+		mMessageCountList[mNumMessageCounts].mInvalid = true;
 		mNumMessageCounts++;
 	}
 }
 
-void LLMessageSystem::logValidMsg(LLCircuitData *cdp, const LLHost& host, BOOL recv_reliable, BOOL recv_resent, BOOL recv_acks )
+void LLMessageSystem::logValidMsg(LLCircuitData *cdp, const LLHost& host, bool recv_reliable, bool recv_resent, bool recv_acks )
 {
 	if (mNumMessageCounts >= MAX_MESSAGE_COUNT_NUM)
 	{
@@ -1405,7 +1405,7 @@ void LLMessageSystem::logValidMsg(LLCircuitData *cdp, const LLHost& host, BOOL r
 		// TODO: babbage: work out if we need these
 		//mMessageCountList[mNumMessageCounts].mMessageNum = mCurrentRMessageTemplate->mMessageNumber;
 		mMessageCountList[mNumMessageCounts].mMessageBytes = mMessageReader->getMessageSize();
-		mMessageCountList[mNumMessageCounts].mInvalid = FALSE;
+		mMessageCountList[mNumMessageCounts].mInvalid = false;
 		mNumMessageCounts++;
 	}
 
@@ -1510,9 +1510,9 @@ bool    LLMessageSystem::getCircuitTrust(const LLHost &host)
 	return false;
 }
 
-// Activate a circuit, and set its trust level (TRUE if trusted,
-// FALSE if not).
-void LLMessageSystem::enableCircuit(const LLHost &host, BOOL trusted)
+// Activate a circuit, and set its trust level (true if trusted,
+// false if not).
+void LLMessageSystem::enableCircuit(const LLHost &host, bool trusted)
 {
 	LLCircuitData *cdp = mCircuitInfo.findCircuit(host);
 	if (!cdp)
@@ -1521,7 +1521,7 @@ void LLMessageSystem::enableCircuit(const LLHost &host, BOOL trusted)
 	}
 	else
 	{
-		cdp->setAlive(TRUE);
+		cdp->setAlive(true);
 	}
 	cdp->setTrusted(trusted);
 }
@@ -1651,7 +1651,7 @@ bool LLMessageSystem::checkCircuitAlive(const LLHost &host)
 }
 
 
-void LLMessageSystem::setCircuitProtection(BOOL b_protect)
+void LLMessageSystem::setCircuitProtection(bool b_protect)
 {
 	mbProtected = b_protect;
 }
@@ -1779,7 +1779,7 @@ void	open_circuit(LLMessageSystem *msgsystem, void** /*user_data*/)
 	msgsystem->getIPPortFast(_PREHASH_CircuitInfo, _PREHASH_Port, port);
 
 	// By default, OpenCircuit's are untrusted
-	msgsystem->enableCircuit(LLHost(ip, port), FALSE);
+	msgsystem->enableCircuit(LLHost(ip, port), false);
 }
 
 void	close_circuit(LLMessageSystem *msgsystem, void** /*user_data*/)
@@ -1944,9 +1944,9 @@ void LLMessageSystem::processUseCircuitCode(LLMessageSystem* msg,
 		// passed the circuit code and session id check, so we will go
 		// ahead and persist the ID associated.
 		LLCircuitData *cdp = msg->mCircuitInfo.findCircuit(msg->getSender());
-		BOOL had_circuit_already = cdp ? TRUE : FALSE;
+		bool had_circuit_already = cdp ? true : false;
 
-		msg->enableCircuit(msg->getSender(), FALSE);
+		msg->enableCircuit(msg->getSender(), false);
 		cdp = msg->mCircuitInfo.findCircuit(msg->getSender());
 		if(cdp)
 		{
@@ -1970,7 +1970,7 @@ void LLMessageSystem::processUseCircuitCode(LLMessageSystem* msg,
 			// doesn't get properly duplicate suppressed.  Not a BIG deal, but it's somewhat confusing
 			// (and bad from a state point of view).  DJS 9/23/04
 			//
-			cdp->checkPacketInID(gMessageSystem->mCurrentRecvPacketID, FALSE ); // Since this is the first message on the circuit, by definition it's not resent.
+			cdp->checkPacketInID(gMessageSystem->mCurrentRecvPacketID, false ); // Since this is the first message on the circuit, by definition it's not resent.
 		}
 
 		msg->mIPPortToCircuitCode[ip_port_in] = circuit_code_in;
@@ -2288,7 +2288,7 @@ void process_create_trusted_circuit(LLMessageSystem *msg, void **)
 	their_digest[MD5HEX_STR_SIZE - 1] = '\0';
 	if(msg->isMatchingDigestForWindowAndUUIDs(their_digest, TRUST_TIME_WINDOW, local_id, remote_id))
 	{
-		cdp->setTrusted(TRUE);
+		cdp->setTrusted(true);
 		LL_INFOS("Messaging") << "Trusted digest from " << msg->getSender() << LL_ENDL;
 		return;
 	}
@@ -2978,12 +2978,12 @@ void LLMessageSystem::setExceptionFunc(EMessageException e,
 	}
 }
 
-BOOL LLMessageSystem::callExceptionFunc(EMessageException exception)
+bool LLMessageSystem::callExceptionFunc(EMessageException exception)
 {
 	callbacks_t::iterator it = mExceptionCallbacks.find(exception);
 	if(it == mExceptionCallbacks.end())
 	{
-		return FALSE;
+		return false;
 	}
 
 	exception_t& ex = it->second;
@@ -2992,12 +2992,12 @@ BOOL LLMessageSystem::callExceptionFunc(EMessageException exception)
 	if (!ex_cb)
 	{
 		LL_WARNS("Messaging") << "LLMessageSystem::callExceptionFunc: bad message exception callback." << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 
 	(ex_cb)(this, ex.second, exception);
 
-	return TRUE;
+	return true;
 }
 
 void LLMessageSystem::setTimingFunc(msg_timing_callback func, void* data)
@@ -3428,7 +3428,7 @@ void LLMessageSystem::newMessageFast(const char *name)
 			mMessageBuilder = mTemplateMessageBuilder;
 		}
 	}
-	mSendReliable = FALSE;
+	mSendReliable = false;
 	mMessageBuilder->newMessage(name);
 }
 	

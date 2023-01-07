@@ -1650,7 +1650,7 @@ bool idle_startup()
 		msg->sendReliable(
 			gFirstSim,
 			gSavedSettings.getS32("UseCircuitCodeMaxRetries"),
-			FALSE,
+			false,
 			(F32Seconds)gSavedSettings.getF32("UseCircuitCodeTimeout"),
 			use_circuit_callback,
 			NULL);
