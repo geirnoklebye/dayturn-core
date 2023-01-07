@@ -718,7 +718,7 @@ void LLPanelRegionTools::setParentEstateID(U32 id)
 
 void LLPanelRegionTools::setCheckFlags(U64 flags)
 {
-	getChild<LLUICtrl>("check prelude")->setValue(is_prelude(flags) ? TRUE : FALSE);
+	getChild<LLUICtrl>("check prelude")->setValue(is_prelude(flags) ? true : false);
 	getChild<LLUICtrl>("check fixed sun")->setValue(flags & REGION_FLAGS_SUN_FIXED ? TRUE : FALSE);
 	getChild<LLUICtrl>("check reset home")->setValue(flags & REGION_FLAGS_RESET_HOME_ON_TELEPORT ? TRUE : FALSE);
 	getChild<LLUICtrl>("check damage")->setValue(flags & REGION_FLAGS_ALLOW_DAMAGE ? TRUE : FALSE);
