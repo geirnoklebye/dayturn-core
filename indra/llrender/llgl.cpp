@@ -634,6 +634,43 @@ bool LLGLManager::initGL()
 	}
 #endif
 
+#if LL_DARWIN
+	if (mGLVendor.find("APPLE") != std::string::npos)
+	{
+		if (mGLRenderer.find("Apple M1"))
+		{
+			mVRAM = 1024;
+			LL_INFOS("RenderInit") << "Setting VRAM for Apple M1 to: " << mVRAM << LL_ENDL;
+		}
+		else if (mGLRenderer.find("Apple M2"))
+		{
+			mVRAM = 1024;
+			LL_INFOS("RenderInit") << "Setting VRAM for Apple M2 to: " << mVRAM << LL_ENDL;
+		}
+	}
+	else if (mGLVendor.substr(0,4) == "ATI ")
+	{
+		mVRAM = 1024;
+		LL_INFOS("RenderInit") << "Setting VRAM for ATI to: " << mVRAM << LL_ENDL;
+	}
+	else if (mGLVendor.find("INTEL") != std::string::npos)
+	{
+		mVRAM = 768;
+		LL_INFOS("RenderInit") << "Setting VRAM for Intel integrated graphics to: " << mVRAM << LL_ENDL;
+	}
+	else if (mGLVendor.find("NVIDIA") != std::string::npos)
+	{
+		mVRAM = 512;
+		LL_INFOS("RenderInit") << "Setting VRAM for NVIDIA to: " << mVRAM << LL_ENDL;
+	}
+	else
+	{
+		mVRAM = 512;
+		LL_INFOS("RenderInit") << "Setting VRAM to: " << mVRAM << LL_ENDL;
+	}
+#endif
+
+
 	if (mVRAM < 256 && old_vram > 0)
 	{
 		// fall back to old method
