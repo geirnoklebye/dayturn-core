@@ -4,7 +4,7 @@
 # other commands to guarantee full compatibility
 # with the version specified
 ## 3.8 added VS_DEBUGGER_WORKING_DIRECTORY support
-cmake_minimum_required(VERSION 3.8.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.19.0 FATAL_ERROR)
 
 # As of XCode 12 this no longer defaults sensibly - adopt the fix implemented in CMake 3.18.1
 set(CMAKE_OSX_ARCHITECTURES $(NATIVE_ARCH_ACTUAL) CACHE STRING "Set arch to actual" FORCE)
