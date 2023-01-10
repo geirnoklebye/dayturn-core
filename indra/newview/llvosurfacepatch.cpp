@@ -885,7 +885,7 @@ bool LLVOSurfacePatch::lineSegmentIntersect(const LLVector4a& start, const LLVec
 
 	if (!lineSegmentBoundingBox(start, end))
 	{
-		return FALSE;
+		return false;
 	}
 
 	LLVector4a da;
@@ -906,7 +906,7 @@ bool LLVOSurfacePatch::lineSegmentIntersect(const LLVector4a& start, const LLVec
 	if (mRegionp->getLandHeightRegion(origin) > origin.mV[2])
 	{
 		//origin is under ground, treat as no intersection
-		return FALSE;
+		return false;
 	}
 
 	//step one meter at a time until intersection point found
@@ -964,7 +964,7 @@ bool LLVOSurfacePatch::lineSegmentIntersect(const LLVector4a& start, const LLVec
 					normal->load3((mRegionp->getLand().resolveNormalGlobal(mRegionp->getPosGlobalFromRegion(sample))).mV);
 				}
 
-				return TRUE;
+				return true;
 			}
 		}
 
@@ -976,7 +976,7 @@ bool LLVOSurfacePatch::lineSegmentIntersect(const LLVector4a& start, const LLVec
 	}
 
 
-	return FALSE;
+	return false;
 }
 
 void LLVOSurfacePatch::updateSpatialExtents(LLVector4a& newMin, LLVector4a &newMax)

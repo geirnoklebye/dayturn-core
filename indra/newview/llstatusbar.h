@@ -98,7 +98,7 @@ public:
 	S32 getSquareMetersLeft() const;
 
 	LLPanelNearByMedia* getNearbyMediaPanel() { return mPanelNearByMedia; }
-    BOOL getAudioStreamEnabled() const;
+    bool getAudioStreamEnabled() const;
    	// <FS:Zi> External toggles for media and streams
 	void toggleMedia(bool enable);
 	void toggleStream(bool enable);
@@ -160,7 +160,7 @@ private:
 	S32				mHealth;
 	S32				mSquareMetersCredit;
 	S32				mSquareMetersCommitted;
-	BOOL			mAudioStreamEnabled;
+	bool			mAudioStreamEnabled;
 	LLFrameTimer*	mBalanceTimer;
 	LLFrameTimer*	mHealthTimer;
 	LLPanelPresetsCameraPulldown* mPanelPresetsCameraPulldown;

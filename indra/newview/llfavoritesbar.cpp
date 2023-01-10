@@ -1475,7 +1475,7 @@ void LLFavoritesBarCtrl::onEndDrag()
 {
 	mEndDragConnection.disconnect();
 
-	showDragMarker(FALSE);
+	showDragMarker(false);
 	mDragItemId = LLUUID::null;
 	LLView::getWindow()->setCursor(UI_CURSOR_ARROW);
 }

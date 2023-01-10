@@ -79,7 +79,7 @@ bool LLGiveable::operator()(LLInventoryCategory* cat, LLInventoryItem* item)
 		   !item->getPermissions().allowOperationBy(PERM_TRANSFER,
 							    gAgent.getID()))
 		{
-			allowed = FALSE;
+			allowed = false;
 		}
 		if (allowed &&
 		   !item->getPermissions().allowCopyBy(gAgent.getID()))

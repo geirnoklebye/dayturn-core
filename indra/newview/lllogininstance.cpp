@@ -445,7 +445,7 @@ void LLLoginInstance::handleLoginFailure(const LLSD& event)
 
         if (gViewerWindow)
         {
-            gViewerWindow->setShowProgress(FALSE);
+            gViewerWindow->setShowProgress(false);
         }
 
         LLSD args(llsd::map( "MESSAGE", LLTrans::getString(response["message_id"]) ));

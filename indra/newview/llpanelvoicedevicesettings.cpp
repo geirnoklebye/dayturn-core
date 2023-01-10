@@ -50,7 +50,7 @@ LLPanelVoiceDeviceSettings::LLPanelVoiceDeviceSettings()
 	mCtrlOutputDevices = NULL;
 	mInputDevice = gSavedSettings.getString("VoiceInputAudioDevice");
 	mOutputDevice = gSavedSettings.getString("VoiceOutputAudioDevice");
-	mDevicesUpdated = FALSE;  //obsolete
+	mDevicesUpdated = false;  //obsolete
 	mUseTuningMode = true;
 
 	// grab "live" mic volume level

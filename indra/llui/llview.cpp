@@ -997,7 +997,7 @@ bool LLView::handleKeyUp(KEY key, MASK mask, bool called_from_parent)
 	if (!handled && !called_from_parent && mParentView)
 	{
 		// Upward traversal
-		handled = mParentView->handleKeyUp(key, mask, FALSE);
+		handled = mParentView->handleKeyUp(key, mask, false);
 	}
 	return handled;
 }
@@ -1041,7 +1041,7 @@ bool LLView::handleUnicodeChar(llwchar uni_char, bool called_from_parent)
 	if (!handled && !called_from_parent && mParentView)
 	{
 		// Upward traversal
-		handled = mParentView->handleUnicodeChar(uni_char, FALSE);
+		handled = mParentView->handleUnicodeChar(uni_char, false);
 	}
 
 	if (handled)

@@ -341,7 +341,7 @@ const bool check_file_extension(const std::string& filename, LLFilePicker::ELoad
 		//now grab the set of valid file extensions
 		std::string valid_extensions = build_extensions_string(type);
 
-		BOOL ext_valid = FALSE;
+		bool ext_valid = false;
 		
 		typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
 		boost::char_separator<char> sep(" ");
@@ -352,7 +352,7 @@ const bool check_file_extension(const std::string& filename, LLFilePicker::ELoad
 		//and compare them to the extension of the file
 		//to be uploaded
 		for( token_iter = tokens.begin();
-			 token_iter != tokens.end() && ext_valid != TRUE;
+			 token_iter != tokens.end() && ext_valid != true;
 			 ++token_iter)
 		{
 			const std::string& cur_token = *token_iter;
@@ -361,11 +361,11 @@ const bool check_file_extension(const std::string& filename, LLFilePicker::ELoad
 			{
 				//valid extension
 				//or the acceptable extension is any
-				ext_valid = TRUE;
+				ext_valid = true;
 			}
 		}//end for (loop over all tokens)
 
-		if (ext_valid == FALSE)
+		if (ext_valid == false)
 		{
 			//should only get here if the extension exists
 			//but is invalid

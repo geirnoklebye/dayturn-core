@@ -3779,7 +3779,7 @@ bool LLPanelRegionEnvironment::postBuild()
     LLEstateInfoModel& estate_info = LLEstateInfoModel::instance();
 
     if (!LLPanelEnvironmentInfo::postBuild())
-        return FALSE;
+        return false;
 
     getChild<LLUICtrl>(BTN_USEDEFAULT)->setLabelArg("[USEDEFAULT]", getString(STR_LABEL_USEDEFAULT));
     getChild<LLUICtrl>(CHK_ALLOWOVERRIDE)->setVisible(true);

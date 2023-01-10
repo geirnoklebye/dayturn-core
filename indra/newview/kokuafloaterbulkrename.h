@@ -48,7 +48,7 @@ private:
 	KokuaFloaterBulkRename(const LLSD& seed);	
 	virtual ~KokuaFloaterBulkRename() {}
 
-	bool start(); // returns true if the queue has started, otherwise FALSE.
+	bool start(); // returns true if the queue has started, otherwise false.
 	bool nextObject();
 	bool popNext();
 

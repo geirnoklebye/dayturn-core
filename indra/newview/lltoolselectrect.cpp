@@ -175,7 +175,7 @@ void LLToolSelectRect::draw()
 			llmax(mDragStartY, mDragEndY),
 			llmax(mDragStartX, mDragEndX),
 			llmin(mDragStartY, mDragEndY),
-			FALSE);
+			false);
 		if (gKeyboard->currentMask(TRUE) == MASK_CONTROL)
 		{
 			gGL.color4f(1.f, 0.f, 0.f, 0.1f);

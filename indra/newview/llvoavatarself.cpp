@@ -324,20 +324,20 @@ void LLVOAvatarSelf::markDead()
 }
 
 
-BOOL LLVOAvatarSelf::loadAvatarSelf()
+bool LLVOAvatarSelf::loadAvatarSelf()
 {
-	BOOL success = TRUE;
+	bool success = true;
 	// avatar_skeleton.xml
 	if (!buildSkeletonSelf(sAvatarSkeletonInfo))
 	{
 		LL_WARNS() << "avatar file: buildSkeleton() failed" << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 
 	return success;
 }
 
-BOOL LLVOAvatarSelf::buildSkeletonSelf(const LLAvatarSkeletonInfo *info)
+bool LLVOAvatarSelf::buildSkeletonSelf(const LLAvatarSkeletonInfo *info)
 {
 	// add special-purpose "screen" joint
 	mScreenp = new LLViewerJoint("mScreen", NULL);
@@ -353,7 +353,7 @@ BOOL LLVOAvatarSelf::buildSkeletonSelf(const LLAvatarSkeletonInfo *info)
 	return true;
 }
 
-BOOL LLVOAvatarSelf::buildMenus()
+bool LLVOAvatarSelf::buildMenus()
 {
 	//-------------------------------------------------------------------------
 	// build the attach and detach menus
@@ -656,7 +656,7 @@ BOOL LLVOAvatarSelf::buildMenus()
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 void LLVOAvatarSelf::cleanup()

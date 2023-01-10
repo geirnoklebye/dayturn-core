@@ -542,7 +542,7 @@ bool FloaterAO::newSetCallback(const LLSD& notification, const LLSD& response)
 		LLSD args;
 		args["AO_SET_NAME"] = newSetName;
 		LLNotificationsUtil::add("NewAOCantContainNonASCII", args);
-		return FALSE;
+		return false;
 	}
 
 	if (option == 0)

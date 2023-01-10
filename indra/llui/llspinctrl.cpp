@@ -350,7 +350,7 @@ void LLSpinCtrl::updateEditor()
 
 void LLSpinCtrl::onEditorCommit( const LLSD& data )
 {
-	BOOL success = FALSE;
+	bool success = false;
 	
 	if( mEditor->evaluateFloat() )
 	{
@@ -366,7 +366,7 @@ void LLSpinCtrl::onEditorCommit( const LLSD& data )
 		setValue(val);
 		if( !mValidateSignal || (*mValidateSignal)( this, val ) )
 		{
-			success = TRUE;
+			success = true;
 			onCommit();
 		}
 		else

@@ -1490,7 +1490,7 @@ bool LLImageRaw::scale( S32 new_width, S32 new_height, bool scale_image_data )
         
 		// <FS:ND> Handle out of memory situations a bit more graceful than a crash
 		if( !new_buffer )
-			return FALSE;
+			return false;
 		// </FS:ND>
 
         for( S32 row = 0; row <	new_height;	row++ )

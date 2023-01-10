@@ -358,7 +358,7 @@ bool LLPanelPlaces::postBuild()
 	mPlaceProfile = findChild<LLPanelPlaceProfile>("panel_place_profile");
 	mLandmarkInfo = findChild<LLPanelLandmarkInfo>("panel_landmark_info");
 	if (!mPlaceProfile || !mLandmarkInfo)
-		return FALSE;
+		return false;
 
 	mPlaceProfileBackBtn = mPlaceProfile->getChild<LLButton>("back_btn");
 	mPlaceProfileBackBtn->setClickedCallback(boost::bind(&LLPanelPlaces::onBackButtonClicked, this));

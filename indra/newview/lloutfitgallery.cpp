@@ -1355,13 +1355,13 @@ void LLOutfitGallery::onSelectPhoto(LLUUID selected_outfit_id)
                 getPhotoAssetId(selected_outfit_id),
                 getPhotoAssetId(selected_outfit_id),
                 getPhotoAssetId(selected_outfit_id),
-                FALSE,
-                TRUE,
+                false,
+                true,
                 "SELECT PHOTO",
                 PERM_NONE,
                 PERM_NONE,
                 PERM_NONE,
-                FALSE,
+                false,
                 NULL);
 
             mFloaterHandle = floaterp->getHandle();

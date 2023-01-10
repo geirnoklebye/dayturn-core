@@ -781,7 +781,7 @@ bool idle_startup()
 
 		// Go to the next startup state
 		LLStartUp::setStartupState( STATE_BROWSER_INIT );
-		return FALSE;
+		return false;
 	}
 
 	
@@ -794,7 +794,7 @@ bool idle_startup()
 		// LLViewerMedia::initBrowser();
 		show_release_notes_if_required();
 		LLStartUp::setStartupState( STATE_LOGIN_SHOW );
-		return FALSE;
+		return false;
 	}
 
 
@@ -889,7 +889,7 @@ bool idle_startup()
 #endif
         display_startup();
         timeout.reset();
-		return FALSE;
+		return false;
 	}
 
 	if (STATE_LOGIN_WAIT == LLStartUp::getStartupState())
@@ -905,7 +905,7 @@ bool idle_startup()
 		// display() function will be the one to run display_startup()
 		// Sleep so we don't spin the CPU
 		ms_sleep(1);
-		return FALSE;
+		return false;
 	}
 
 	if (STATE_LOGIN_CLEANUP == LLStartUp::getStartupState())
@@ -921,7 +921,7 @@ bool idle_startup()
 			// could then change the preferences to fix the issue.
 
 			LLStartUp::setStartupState(STATE_LOGIN_SHOW);
-			return FALSE;
+			return false;
 		}
 
 		// reset the values that could have come in from a slurl
@@ -1079,7 +1079,7 @@ bool idle_startup()
 
 		LLStartUp::setStartupState( STATE_LOGIN_AUTH_INIT );
 
-		return FALSE;
+		return false;
 	}
 
 	if(STATE_LOGIN_AUTH_INIT == LLStartUp::getStartupState())
@@ -1105,7 +1105,7 @@ bool idle_startup()
 		login->connect(gUserCredential);
 
 		LLStartUp::setStartupState( STATE_LOGIN_CURL_UNSTUCK );
-		return FALSE;
+		return false;
 	}
 
 	if(STATE_LOGIN_CURL_UNSTUCK == LLStartUp::getStartupState())
@@ -1116,7 +1116,7 @@ bool idle_startup()
 		set_startup_status(progress, auth_desc, auth_message);
 
 		LLStartUp::setStartupState( STATE_LOGIN_PROCESS_RESPONSE );
-		return FALSE;
+		return false;
 	}
 
 	if(STATE_LOGIN_PROCESS_RESPONSE == LLStartUp::getStartupState()) 
@@ -1305,10 +1305,10 @@ bool idle_startup()
 				LLNotificationsUtil::add("ErrorMessage", args, LLSD(), login_alert_done);
 				transition_back_to_login_panel(emsg.str());
 				show_connect_box = true;
-				return FALSE;
+				return false;
 			}
 		}
-		return FALSE;
+		return false;
 	}
 
 	//---------------------------------------------------------------------
@@ -1411,7 +1411,7 @@ bool idle_startup()
 
 		LLStartUp::setStartupState( STATE_MULTIMEDIA_INIT );
 
-		return FALSE;
+		return false;
 	}
 
 
@@ -1424,7 +1424,7 @@ bool idle_startup()
 		LLStartUp::multimediaInit();
 		LLStartUp::setStartupState( STATE_FONT_INIT );
 		display_startup();
-		return FALSE;
+		return false;
 	}
 
 	// Loading fonts takes several seconds
@@ -1433,7 +1433,7 @@ bool idle_startup()
 		LLStartUp::fontInit();
 		LLStartUp::setStartupState( STATE_SEED_GRANTED_WAIT );
 		display_startup();
-		return FALSE;
+		return false;
 	}
 
 	//---------------------------------------------------------------------
@@ -1461,7 +1461,7 @@ bool idle_startup()
 			}
 		}
 		display_startup();
-		return FALSE;
+		return false;
 	}
 
 
@@ -1658,7 +1658,7 @@ bool idle_startup()
 		timeout.reset();
 		display_startup();
 
-		return FALSE;
+		return false;
 	}
 
 	//---------------------------------------------------------------------
@@ -1681,7 +1681,7 @@ bool idle_startup()
 			lmc.processAcks();
 		}
 		display_startup();
-		return FALSE;
+		return false;
 	}
 
 	//---------------------------------------------------------------------
@@ -1721,7 +1721,7 @@ bool idle_startup()
 
 		timeout.reset();
 		display_startup();
-		return FALSE;
+		return false;
 	}
 
 	//---------------------------------------------------------------------
@@ -1772,7 +1772,7 @@ bool idle_startup()
 			}
 			reset_login();
 		}
-		return FALSE;
+		return false;
 	}
 
 	//---------------------------------------------------------------------
@@ -1986,7 +1986,7 @@ bool idle_startup()
 		LLStartUp::setStartupState( STATE_MISC );
 		display_startup();
 
-		return FALSE;
+		return false;
 	}
 
 
@@ -2217,7 +2217,7 @@ bool idle_startup()
 
 		LLStartUp::setStartupState( STATE_PRECACHE );
 		timeout.reset();
-		return FALSE;
+		return false;
 	}
 
 	if (STATE_PRECACHE == LLStartUp::getStartupState())
@@ -2276,7 +2276,7 @@ bool idle_startup()
 			display_startup();
 		}
 		
-		return TRUE;
+		return true;
 	}
 
 	if (STATE_WEARABLES_WAIT == LLStartUp::getStartupState())
@@ -2322,7 +2322,7 @@ bool idle_startup()
 			{
 				LL_DEBUGS("Avatar") << "avatar fully loaded" << LL_ENDL;
 				LLStartUp::setStartupState( STATE_CLEANUP );
-				return TRUE;
+				return true;
 			}
 		}
 		else
@@ -2333,11 +2333,11 @@ bool idle_startup()
 				// We have our clothing, proceed.
 				LL_DEBUGS("Avatar") << "wearables loaded" << LL_ENDL;
 				LLStartUp::setStartupState( STATE_CLEANUP );
-				return TRUE;
+				return true;
 			}
 		}
 		//fall through this frame to STATE_CLEANUP
-		return TRUE; //do like fall throughs just adding another cycle seems safer
+		return true; //do like fall throughs just adding another cycle seems safer
 	}
 
 	if (STATE_CLEANUP == LLStartUp::getStartupState())
@@ -2440,7 +2440,7 @@ bool idle_startup()
 		return true;
 	}
 
-	return TRUE;
+	return true;
 }
 
 //

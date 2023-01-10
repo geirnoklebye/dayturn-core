@@ -95,7 +95,7 @@ public:
 	virtual void pasteLinkFromClipboard() { }
 	virtual void buildContextMenu(LLMenuGL& menu, U32 flags) { }
 	virtual bool isUpToDate() const { return true; }
-	virtual bool hasChildren() const { return FALSE; }
+	virtual bool hasChildren() const { return false; }
     virtual void addChild(LLFolderViewModelItem* child);
 
 	virtual bool potentiallyVisible() { return true; }
@@ -120,7 +120,7 @@ public:
 	// This method will be called to determine if a drop can be
 	// performed, and will set drop to TRUE if a drop is
 	// requested. 
-	// Returns TRUE if a drop is possible/happened, FALSE otherwise.
+	// Returns true if a drop is possible/happened, false otherwise.
 	virtual bool dragOrDrop(MASK mask, bool drop,
 							EDragAndDropType cargo_type,
 							void* cargo_data,

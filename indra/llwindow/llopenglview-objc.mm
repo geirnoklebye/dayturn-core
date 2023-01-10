@@ -666,7 +666,7 @@ attributedStringInfo getSegments(NSAttributedString *str)
 {
 	[[self inputContext] discardMarkedText];
 	resetPreedit();
-	mHasMarkedText = FALSE;
+	mHasMarkedText = false;
 }
 
 // We don't support attributed strings.
@@ -706,7 +706,7 @@ attributedStringInfo getSegments(NSAttributedString *str)
 		{
 			handleUnicodeCharacter([aString characterAtIndex:i]);
 		}
-		mHasMarkedText = FALSE;
+		mHasMarkedText = false;
 	}
 }
 

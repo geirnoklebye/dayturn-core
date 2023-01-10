@@ -338,7 +338,7 @@ bool			gRestoreGL = false;
 bool			gUseWireframe = false;
 
 //use for remember deferred mode in wireframe switch
-bool			gInitialDeferredModeForWireframe = FALSE;
+bool			gInitialDeferredModeForWireframe = false;
 
 LLMemoryInfo gSysMemory;
 U64Bytes gMemoryAllocated(0); // updated in display_stats() in llviewerdisplay.cpp
@@ -3704,9 +3704,9 @@ std::string LLAppViewer::getViewerInfoString(bool default_string) const
 
 void LLAppViewer::cleanupSavedSettings()
 {
-	gSavedSettings.setBOOL("MouseSun", FALSE);
+	gSavedSettings.setbool("MouseSun", false);
 
-	gSavedSettings.setBOOL("UseEnergy", TRUE);				// force toggle to turn off, since sends message to simulator
+	gSavedSettings.setbool("UseEnergy", true);				// force toggle to turn off, since sends message to simulator
 
 	gSavedSettings.setbool("DebugWindowProc", gDebugWindowProc);
 

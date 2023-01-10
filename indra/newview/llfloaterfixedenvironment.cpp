@@ -404,7 +404,7 @@ LLFloaterFixedEnvironmentWater::LLFloaterFixedEnvironmentWater(const LLSD &key):
 bool LLFloaterFixedEnvironmentWater::postBuild()
 {
     if (!LLFloaterFixedEnvironment::postBuild())
-        return FALSE;
+        return false;
 
     LLPanelSettingsWater * panel;
     panel = new LLPanelSettingsWaterMainTab;
@@ -471,7 +471,7 @@ LLFloaterFixedEnvironmentSky::LLFloaterFixedEnvironmentSky(const LLSD &key) :
 bool LLFloaterFixedEnvironmentSky::postBuild()
 {
     if (!LLFloaterFixedEnvironment::postBuild())
-        return FALSE;
+        return false;
 
     LLPanelSettingsSky * panel;
     panel = new LLPanelSettingsSkyAtmosTab;

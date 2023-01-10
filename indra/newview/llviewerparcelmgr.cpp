@@ -1989,7 +1989,7 @@ void LLViewerParcelMgr::optionallyStartMusic(const std::string &music_url, const
             //    || (!nearby_media_panel && tentative_autoplay))
 		    if (gStatusBar->getAudioStreamEnabled() ||
 		    // or they have expressed no opinion in the UI, but have autoplay on...
-                     (gSavedSettings.getBOOL("FSParcelMusicAutoPlay")
+                     (gSavedSettings.getbool("FSParcelMusicAutoPlay")
 		    // </FS>
                      && tentative_autoplay))
             {
@@ -2023,7 +2023,7 @@ void LLViewerParcelMgr::optionallyStartMusic(const std::string &music_url, const
 		//     gSavedSettings.getBOOL(LLViewerMedia::AUTO_PLAY_MEDIA_SETTING) &&
 		else if (gStatusBar->getAudioStreamEnabled() ||
 		    // or they have expressed no opinion in the UI, but have autoplay on...
-			(gSavedSettings.getBOOL("FSParcelMusicAutoPlay")
+			(gSavedSettings.getbool("FSParcelMusicAutoPlay")
 		// </FS>
                      && autoplay_mode == 1
                      && tentative_autoplay))

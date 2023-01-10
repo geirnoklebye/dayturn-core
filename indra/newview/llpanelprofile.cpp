@@ -1858,13 +1858,13 @@ void LLPanelProfileSecondLife::onShowTexturePicker()
                 mImageId,
                 LLUUID::null,
                 mImageId,
-                FALSE,
-                FALSE,
+                false,
+                false,
                 "SELECT PHOTO",
                 PERM_NONE,
                 PERM_NONE,
                 PERM_NONE,
-                FALSE,
+                false,
                 NULL);
 
             mFloaterTexturePickerHandle = texture_floaterp->getHandle();
@@ -2132,7 +2132,7 @@ void LLPanelProfileFirstLife::onOpen(const LLSD& key)
     if (!getSelfProfile())
     {
         // Otherwise as the only focusable element it will be selected
-        mDescriptionEdit->setTabStop(FALSE);
+        mDescriptionEdit->setTabStop(false);
     }
 
     resetData();
@@ -2199,13 +2199,13 @@ void LLPanelProfileFirstLife::onChangePhoto()
                 mImageId,
                 LLUUID::null,
                 mImageId,
-                FALSE,
-                FALSE,
+                false,
+                false,
                 "SELECT PHOTO",
                 PERM_NONE,
                 PERM_NONE,
                 PERM_NONE,
-                FALSE,
+                false,
                 NULL);
 
             mFloaterTexturePickerHandle = texture_floaterp->getHandle();

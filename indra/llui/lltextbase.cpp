@@ -210,7 +210,7 @@ LLTextBase::LLTextBase(const LLTextBase::Params &p)
 	mSelectedBGColor(p.bg_selected_color),
 	mReflowIndex(S32_MAX),
 	mCursorPos( 0 ),
-	mScrollNeeded(FALSE),
+	mScrollNeeded(false),
 	mDesiredXPixel(-1),
 	mHPad(p.h_pad),
 	mVPad(p.v_pad),
@@ -305,7 +305,7 @@ void LLTextBase::initFromParams(const LLTextBase::Params& p)
 
 bool LLTextBase::truncate()
 {
-	BOOL did_truncate = FALSE;
+	bool did_truncate = false;
 
 	// First rough check - if we're less than 1/4th the size, we're OK
 	if (getLength() >= S32(mMaxTextByteLength / 4))
@@ -332,7 +332,7 @@ bool LLTextBase::truncate()
 			LLWString text = utf8str_to_wstring( temp_utf8_text );
 			// remove extra bit of current string, to preserve formatting, etc.
 			removeStringNoUndo(text.size(), getWText().size() - text.size());
-			did_truncate = TRUE;
+			did_truncate = true;
 		}
 	}
 
@@ -1583,7 +1583,7 @@ void LLTextBase::updateScrollFromCursor()
 	{
 		return;
 	}
-	mScrollNeeded = FALSE; 
+	mScrollNeeded = false; 
 
 	// scroll so that the cursor is at the top of the page
 	LLRect scroller_doc_window = getVisibleDocumentRect();

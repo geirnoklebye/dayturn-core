@@ -837,7 +837,7 @@ bool LLComboBox::handleKeyHere(KEY key, MASK mask)
 			// don't show list and don't eat key input when committing
 			// free-form text entry with RETURN since user already knows
             // what they are trying to select
-			return FALSE;
+			return false;
 		}
 		// if selection has changed, pop open list
 		else if (mList->getLastSelectedItem() != last_selected_item 

@@ -60,9 +60,9 @@ public:
 	void					cleanup();
 protected:
 	/*virtual*/ bool		loadAvatar();
-	BOOL					loadAvatarSelf();
-	BOOL					buildSkeletonSelf(const LLAvatarSkeletonInfo *info);
-	BOOL					buildMenus();
+	bool					loadAvatarSelf();
+	bool					buildSkeletonSelf(const LLAvatarSkeletonInfo *info);
+	bool					buildMenus();
 
 /**                    Initialization
  **                                                                            **

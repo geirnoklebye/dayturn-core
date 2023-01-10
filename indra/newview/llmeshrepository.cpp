@@ -2286,8 +2286,8 @@ void LLMeshUploadThread::wholeModelToLLSD(LLSD& dest, bool include_textures)
 				mUploadSkin,
 				mUploadJoints,
                 mLockScaleIfJointPosition,
-				FALSE,
-				FALSE,
+				false,
+				false,
 				data.mBaseModel->mSubmodelID);
 
 			data.mAssetData = ostr.str();
@@ -2441,8 +2441,8 @@ void LLMeshUploadThread::wholeModelToLLSD(LLSD& dest, bool include_textures)
 				mUploadSkin,
 				mUploadJoints,
                 mLockScaleIfJointPosition,
-				FALSE,
-				FALSE,
+				false,
+				false,
 				data.mBaseModel->mSubmodelID);
 
 			data.mAssetData = ostr.str();

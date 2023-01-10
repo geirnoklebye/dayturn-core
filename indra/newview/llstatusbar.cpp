@@ -125,7 +125,7 @@ LLStatusBar::LLStatusBar(const LLRect& rect)
 	mHealth(100),
 	mSquareMetersCredit(0),
 	mSquareMetersCommitted(0),
-	mAudioStreamEnabled(FALSE),	// ## Zi: Media/Stream separation
+	mAudioStreamEnabled(false),	// ## Zi: Media/Stream separation
 	mMediaToggle(NULL),
 	mMouseEnterVolumeConnection(),
 	mMouseEnterNearbyMediaConnection(),    
@@ -766,7 +766,7 @@ void LLStatusBar::onClickStreamToggle(void* data)
 	status_bar->mAudioStreamEnabled = enable;
 }
 
-BOOL LLStatusBar::getAudioStreamEnabled() const
+bool LLStatusBar::getAudioStreamEnabled() const
 {
 	return mAudioStreamEnabled;
 }

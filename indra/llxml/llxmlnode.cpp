@@ -575,7 +575,7 @@ bool LLXMLNode::updateNode(
 	if (!node || !update_node)
 	{
 		LL_WARNS() << "Node invalid" << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 
 	//update the node value
@@ -647,7 +647,7 @@ bool LLXMLNode::updateNode(
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 // static

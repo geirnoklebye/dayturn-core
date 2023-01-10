@@ -85,7 +85,7 @@
 #include <boost/algorithm/string.hpp>
 
 #ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-BOOL 				gHackGodmode = FALSE;
+bool 	gHackGodmode = false;
 #endif
 
 // Should you contemplate changing the name "Global", please first grep for

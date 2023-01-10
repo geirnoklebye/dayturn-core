@@ -947,7 +947,7 @@ void set_default_permissions(LLViewerInventoryItem* item, std::string perm_type)
 
 		item->setPermissions(perm);
 
-		item->updateServer(FALSE);
+		item->updateServer(false);
 	}
 }
 
@@ -2216,7 +2216,7 @@ bool LLViewerInventoryItem::regenerateLink()
 	{
 	    LLViewerInventoryItem *item = (*item_iter);
 		item->setAssetUUID(target_item_id);
-		item->updateServer(FALSE);
+		item->updateServer(false);
 		gInventory.addChangedMask(LLInventoryObserver::REBUILD, item->getUUID());
 	}
 	gInventory.notifyObservers();

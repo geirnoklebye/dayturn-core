@@ -50,7 +50,7 @@ void ll_init_apr()
 
 	if(!LLAPRFile::sAPRFilePoolp)
 	{
-		LLAPRFile::sAPRFilePoolp = new LLVolatileAPRPool(FALSE) ;
+		LLAPRFile::sAPRFilePoolp = new LLVolatileAPRPool(false) ;
 	}
 
 	gAPRInitialized = true;

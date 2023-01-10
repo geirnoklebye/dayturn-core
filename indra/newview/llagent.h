@@ -868,7 +868,7 @@ private:
 
 public:
 	const LLUUID	&getGroupID() const			{ return mGroupID; }
-	// Get group information by group_id, or FALSE if not in group.
+	// Get group information by group_id, or false if not in group.
 	bool 			getGroupData(const LLUUID& group_id, LLGroupData& data) const;
 	// Get just the agent's contribution to the given group.
 	S32 			getGroupContribution(const LLUUID& group_id) const;

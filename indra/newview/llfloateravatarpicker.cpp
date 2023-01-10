@@ -157,7 +157,7 @@ bool LLFloaterAvatarPicker::postBuild()
 	getChild<LLTabContainer>("ResidentChooserTabs")->setCommitCallback(
 		boost::bind(&LLFloaterAvatarPicker::onTabChanged, this));
 	
-	setAllowMultiple(FALSE);
+	setAllowMultiple(false);
 	
 	center();
 	

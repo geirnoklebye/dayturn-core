@@ -715,7 +715,7 @@ void LLNetMap::drawRing(const F32 radius, const LLVector3 pos_map, const LLUICol
 	glMatrixMode(GL_MODELVIEW);
 	gGL.pushMatrix();
 	gGL.translatef((F32)pos_map.mV[VX], (F32)pos_map.mV[VY], 0.f);
-	gl_ring(radius_pixels, WIDTH_PIXELS, colour, colour, CIRCLE_STEPS, FALSE);
+	gl_ring(radius_pixels, WIDTH_PIXELS, colour, colour, CIRCLE_STEPS, false);
 	gGL.popMatrix();
 }
 

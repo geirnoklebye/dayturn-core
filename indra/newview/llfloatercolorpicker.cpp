@@ -525,7 +525,7 @@ void LLFloaterColorPicker::draw()
 				 mRGBViewerImageLeft + mRGBViewerImageWidth + 1,
 				 mRGBViewerImageTop,
 				 LLColor4 ( 0.0f, 0.0f, 0.0f, alpha ),
-				 FALSE );
+				 false );
 
 	// draw luminance slider
 	for ( S32 y = 0; y < mLumRegionHeight; ++y )
@@ -547,7 +547,7 @@ void LLFloaterColorPicker::draw()
 	gl_triangle_2d ( startX, startY,
 			startX + mLumMarkerSize, startY - mLumMarkerSize,
 				startX + mLumMarkerSize, startY + mLumMarkerSize,
-					LLColor4 ( 0.75f, 0.75f, 0.75f, 1.0f ), TRUE );
+					LLColor4 ( 0.75f, 0.75f, 0.75f, 1.0f ), true );
 
 	// draw luminance slider outline
 	gl_rect_2d ( mLumRegionLeft,
@@ -555,7 +555,7 @@ void LLFloaterColorPicker::draw()
 				 mLumRegionLeft + mLumRegionWidth + 1,
 				 mLumRegionTop,
 				 LLColor4 ( 0.0f, 0.0f, 0.0f, 1.0f ),
-				 FALSE );
+				 false );
 
 	// draw selected color swatch
 	gl_rect_2d ( mSwatchRegionLeft,
@@ -563,7 +563,7 @@ void LLFloaterColorPicker::draw()
 				 mSwatchRegionLeft + mSwatchRegionWidth,
 				 mSwatchRegionTop,
 				 LLColor4 ( getCurR (), getCurG (), getCurB (), alpha ),
-				 TRUE );
+				 true );
 
 	// draw selected color swatch outline
 	gl_rect_2d ( mSwatchRegionLeft,
@@ -571,7 +571,7 @@ void LLFloaterColorPicker::draw()
 				 mSwatchRegionLeft + mSwatchRegionWidth + 1,
 				 mSwatchRegionTop,
 				 LLColor4 ( 0.0f, 0.0f, 0.0f, 1.0f ),
-				 FALSE );
+				 false );
 
 	// color palette code is a little more involved so break it out into its' own method
 	drawPalette ();

@@ -53,7 +53,7 @@
 
 LLFloaterBulkPermission::LLFloaterBulkPermission(const LLSD& seed) 
 :	LLFloater(seed),
-	mDone(FALSE)
+	mDone(false)
 {
 	mID.generate();
 	mCommitCallbackRegistrar.add("BulkPermission.Ok",		boost::bind(&LLFloaterBulkPermission::onOkBtn, this));
@@ -118,7 +118,7 @@ void LLFloaterBulkPermission::doApply()
 	}
 	else
 	{
-		mDone = FALSE;
+		mDone = false;
 		if (!start())
 		{
 			LL_WARNS() << "Unexpected bulk permission change failure." << LL_ENDL;
@@ -242,7 +242,7 @@ bool LLFloaterBulkPermission::nextObject()
 }
 
 // Pop the top object off of the queue.
-// Return TRUE if the queue has started, otherwise FALSE.
+// Return true if the queue has started, otherwise false.
 bool LLFloaterBulkPermission::popNext()
 {
 	// get the head element from the container, and attempt to get its inventory.

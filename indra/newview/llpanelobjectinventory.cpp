@@ -491,7 +491,7 @@ bool LLTaskInvFVBridge::startDrag(EDragAndDropType* type, LLUUID* id) const
                     // due to a race condition and possible exploit where
                     // attached objects do not update their inventory items
                     // when their contents are manipulated
-                    return FALSE;
+                    return false;
 				}
 				if((can_copy && perm.allowTransferTo(gAgent.getID()))
 				   || object->permYouOwner())
@@ -662,7 +662,7 @@ bool LLTaskCategoryBridge::hasChildren() const
 {
 	// return TRUE if we have or do know know if we have children.
 	// *FIX: For now, return FALSE - we will know for sure soon enough.
-	return FALSE;
+	return false;
 }
 
 void LLTaskCategoryBridge::openItem()

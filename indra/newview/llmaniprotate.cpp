@@ -746,13 +746,13 @@ void LLManipRotate::renderActiveRing( F32 radius, F32 width, const LLColor4& fro
 {
 	LLGLEnable cull_face(GL_CULL_FACE);
 	{
-		gl_ring(radius, width, back_color, back_color * 0.5f, CIRCLE_STEPS, FALSE);
-		gl_ring(radius, width, back_color, back_color * 0.5f, CIRCLE_STEPS, TRUE);
+		gl_ring(radius, width, back_color, back_color * 0.5f, CIRCLE_STEPS, false);
+		gl_ring(radius, width, back_color, back_color * 0.5f, CIRCLE_STEPS, true);
 	}
 	{
 		LLGLDepthTest gls_depth(GL_FALSE);
-		gl_ring(radius, width, front_color, front_color * 0.5f, CIRCLE_STEPS, FALSE);
-		gl_ring(radius, width, front_color, front_color * 0.5f, CIRCLE_STEPS, TRUE);
+		gl_ring(radius, width, front_color, front_color * 0.5f, CIRCLE_STEPS, false);
+		gl_ring(radius, width, front_color, front_color * 0.5f, CIRCLE_STEPS, true);
 	}
 }
 

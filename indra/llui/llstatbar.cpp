@@ -239,20 +239,20 @@ BOOL LLStatBar::handleMouseDown(S32 x, S32 y, MASK mask)
 		{
 			if (mDisplayHistory || mOrientation == HORIZONTAL)
 			{
-				mDisplayBar = FALSE;
-				mDisplayHistory = FALSE;
+				mDisplayBar = false;
+				mDisplayHistory = false;
 			}
 			else
 			{
-				mDisplayHistory = TRUE;
+				mDisplayHistory = true;
 			}
 		}
 		else
 		{
-			mDisplayBar = TRUE;
+			mDisplayBar = true;
 			if (mOrientation == HORIZONTAL)
 			{
-				mDisplayHistory = TRUE;
+				mDisplayHistory = true;
 			}
 		}
 		LLView* parent = getParent();

@@ -767,7 +767,7 @@ bool _cert_subdomain_wildcard_match(const std::string& subdomain,
 	if(subdomain.substr(0, wildcard_pos) != wildcard.substr(0, wildcard_pos))
 	{
 		// the first portions of the strings didn't match
-		return FALSE;
+		return false;
 	}
 	
 	// as the portion of the wildcard string before the * matched, we need to check the
@@ -983,7 +983,7 @@ void _validateCert(int validation_policy,
 bool _verify_signature(LLPointer<LLCertificate> parent, 
 					   LLPointer<LLCertificate> child)
 {
-	bool verify_result = FALSE; 
+	bool verify_result = false; 
 	LLSD cert1, cert2;
 	parent->getLLSD(cert1);
 	child->getLLSD(cert2);

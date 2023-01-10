@@ -101,7 +101,7 @@ public:
     /*virtual*/ bool hasItemSelected();
     /*virtual*/ bool canWearSelected();
 
-    /*virtual*/ bool getHasExpandableFolders() { return FALSE; }
+    /*virtual*/ bool getHasExpandableFolders() { return false; }
 
     void updateMessageVisibility();
     bool hasDefaultImage(const LLUUID& outfit_cat_id);

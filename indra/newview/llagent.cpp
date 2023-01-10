@@ -368,7 +368,7 @@ bool LLAgent::isMicrophoneOn(const LLSD& sdname)
 //-----------------------------------------------------------------------------
 LLAgent::LLAgent() :
 	mGroupPowers(0),
-	mHideGroupTitle(FALSE),
+	mHideGroupTitle(false),
 	mGroupID(),
 
 	mInitialized(false),

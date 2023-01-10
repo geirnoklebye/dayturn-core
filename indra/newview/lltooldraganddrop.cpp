@@ -950,7 +950,7 @@ bool LLToolDragAndDrop::handleDropTextureProtections(LLViewerObject* hit_obj,
 		LLSD args;
 		args["ERROR_MESSAGE"] = "Unable to add texture.\nPlease wait a few seconds and try again.";
 		LLNotificationsUtil::add("ErrorMessage", args);
-		return FALSE;
+		return false;
 	}
 	if (hit_obj->getInventoryItemByAsset(item->getAssetUUID()))
 	{

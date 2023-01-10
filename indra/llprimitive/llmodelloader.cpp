@@ -75,7 +75,7 @@ void stretch_extents(LLModel* model, LLMatrix4a& mat, LLVector4a& min, LLVector4
 
 			if (first_transform)
 			{
-				first_transform = FALSE;
+				first_transform = 0;
 				min = max = v;
 			}
 			else

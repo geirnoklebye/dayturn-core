@@ -78,7 +78,7 @@ LLFloaterSettingsPicker::LLFloaterSettingsPicker(LLView * owner, LLUUID initial_
     mOwnerHandle = owner->getHandle();
 
     buildFromFile(FLOATER_DEFINITION_XML);
-    setCanMinimize(FALSE);
+    setCanMinimize(false);
 }
 
 

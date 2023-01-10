@@ -239,14 +239,14 @@ void LLFloaterAuction::onClickStartAuction(void* data)
 		gAssetStorage->storeAssetData(self->mTransactionID, LLAssetType::AT_IMAGE_TGA,
 									&auction_tga_upload_done,
 									(void*)name,
-									FALSE);
+									false);
 		self->getWindow()->incBusyCount();
 
 		std::string* j2c_name = new std::string(parcel_name.asString());
 		gAssetStorage->storeAssetData(self->mTransactionID, LLAssetType::AT_TEXTURE,
 								   &auction_j2c_upload_done,
 								   (void*)j2c_name,
-								   FALSE);
+								   false);
 		self->getWindow()->incBusyCount();
 
 		LLNotificationsUtil::add("UploadingAuctionSnapshot");

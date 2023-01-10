@@ -99,18 +99,18 @@ void LLFloaterOpenObject::refresh()
 	mPanelInventoryObject->refresh();
 
 	std::string name = "";
-	BOOL enabled = FALSE;
+	bool enabled = false;
 
 	LLSelectNode* node = mObjectSelection->getFirstRootNode();
 	if (node) 
 	{
 		name = node->mName;
-		enabled = TRUE;
+		enabled = true;
 	}
 	else
 	{
 		name = "";
-		enabled = FALSE;
+		enabled = false;
 	}
 	
 	getChild<LLUICtrl>("object_name")->setTextArg("[DESC]", name);

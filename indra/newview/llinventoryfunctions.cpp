@@ -2039,40 +2039,40 @@ bool LLIsType::operator()(LLInventoryCategory* cat, LLInventoryItem* item)
 {
 	if(mType == LLAssetType::AT_CATEGORY)
 	{
-		if(cat) return TRUE;
+		if(cat) return true;
 	}
 	if(item)
 	{
-		if(item->getType() == mType) return TRUE;
+		if(item->getType() == mType) return true;
 	}
-	return FALSE;
+	return false;
 }
 
 bool LLIsNotType::operator()(LLInventoryCategory* cat, LLInventoryItem* item)
 {
 	if(mType == LLAssetType::AT_CATEGORY)
 	{
-		if(cat) return FALSE;
+		if(cat) return false;
 	}
 	if(item)
 	{
-		if(item->getType() == mType) return FALSE;
-		else return TRUE;
+		if(item->getType() == mType) return false;
+		else return true;
 	}
-	return TRUE;
+	return true;
 }
 
 bool LLIsOfAssetType::operator()(LLInventoryCategory* cat, LLInventoryItem* item)
 {
 	if(mType == LLAssetType::AT_CATEGORY)
 	{
-		if(cat) return TRUE;
+		if(cat) return true;
 	}
 	if(item)
 	{
-		if(item->getActualType() == mType) return TRUE;
+		if(item->getActualType() == mType) return true;
 	}
-	return FALSE;
+	return false;
 }
 
 bool LLIsValidItemLink::operator()(LLInventoryCategory* cat, LLInventoryItem* item)
@@ -2088,7 +2088,7 @@ bool LLIsTypeWithPermissions::operator()(LLInventoryCategory* cat, LLInventoryIt
 	{
 		if(cat) 
 		{
-			return TRUE;
+			return true;
 		}
 	}
 	if(item)
@@ -2098,11 +2098,11 @@ bool LLIsTypeWithPermissions::operator()(LLInventoryCategory* cat, LLInventoryIt
 			LLPermissions perm = item->getPermissions();
 			if ((perm.getMaskBase() & mPerm) == mPerm)
 			{
-				return TRUE;
+				return true;
 			}
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 bool LLBuddyCollector::operator()(LLInventoryCategory* cat,
@@ -2146,10 +2146,10 @@ bool LLParticularBuddyCollector::operator()(LLInventoryCategory* cat,
 		if((LLAssetType::AT_CALLINGCARD == item->getType())
 		   && (item->getCreatorUUID() == mBuddyID))
 		{
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -2201,10 +2201,10 @@ bool LLFindWearables::operator()(LLInventoryCategory* cat,
 		if((item->getType() == LLAssetType::AT_CLOTHING)
 		   || (item->getType() == LLAssetType::AT_BODYPART))
 		{
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 LLFindWearablesEx::LLFindWearablesEx(bool is_worn, bool include_body_parts)

@@ -1580,7 +1580,7 @@ void LLTextEditor::pasteTextWithLinebreaks(LLWString & clean_string)
 	{
 		std::basic_string<llwchar> str = std::basic_string<llwchar>(clean_string,start,clean_string.length()-start-1);
 		setCursorPos(mCursorPos + insert(mCursorPos, str, TRUE, LLTextSegmentPtr()));
-		addLineBreakChar(FALSE);
+		addLineBreakChar(false);
 	}
 	else if (pos != start)
 	//if (pos != start)

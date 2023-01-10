@@ -231,12 +231,12 @@ void LLControlVariable::setValue(const LLSD& new_value, bool saved_value)
 	
 	LLSD storable_value = getComparableValue(new_value);
 	LLSD original_value = getValue();
-	bool value_changed = llsd_compare(original_value, storable_value) == FALSE;
+	bool value_changed = llsd_compare(original_value, storable_value) == false;
 	if(saved_value)
 	{
     	// If we're going to save this value, return to default but don't fire
 		resetToDefault(false);
-	    if (llsd_compare(mValues.back(), storable_value) == FALSE)
+	    if (llsd_compare(mValues.back(), storable_value) == false)
 	    {
 		    mValues.push_back(storable_value);
 	    }
@@ -246,7 +246,7 @@ void LLControlVariable::setValue(const LLSD& new_value, bool saved_value)
         // This is an unsaved value. Its needs to reside at
         // mValues[2] (or greater). It must not affect 
         // the result of getSaveValue()
-	    if (llsd_compare(mValues.back(), storable_value) == FALSE)
+	    if (llsd_compare(mValues.back(), storable_value) == false)
 	    {
             while(mValues.size() > 2)
             {
@@ -281,7 +281,7 @@ void LLControlVariable::setDefaultValue(const LLSD& value)
 
 	LLSD comparable_value = getComparableValue(value);
 	LLSD original_value = getValue();
-	bool value_changed = (llsd_compare(original_value, comparable_value) == FALSE);
+	bool value_changed = (llsd_compare(original_value, comparable_value) == false);
 	resetToDefault(false);
 	mValues[0] = comparable_value;
 	if(value_changed)
@@ -1454,7 +1454,7 @@ bool convert_from_llsd<bool>(const LLSD& sd, eControlType type, const std::strin
 	else
 	{
 		CONTROL_ERRS << "Invalid BOOL value for " << control_name << ": " << LLControlGroup::typeEnumToString(type) << " " << sd << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 }
 

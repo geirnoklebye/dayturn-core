@@ -1547,7 +1547,7 @@ bool LLVOVolume::calcLOD()
         if (distance <= 0.f || radius <= 0.f)
         {
             LL_DEBUGS("DynamicBox","CalcLOD") << "avatar distance/radius uninitialized, skipping" << LL_ENDL;
-            return FALSE;
+            return false;
         }
 	}
 	else
@@ -1557,7 +1557,7 @@ bool LLVOVolume::calcLOD()
         if (distance <= 0.f || radius <= 0.f)
         {
             LL_DEBUGS("DynamicBox","CalcLOD") << "non-avatar distance/radius uninitialized, skipping" << LL_ENDL;
-            return FALSE;
+            return false;
         }
 	}
 	

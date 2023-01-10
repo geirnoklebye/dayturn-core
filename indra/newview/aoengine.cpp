@@ -291,7 +291,7 @@ void AOEngine::checkBelowWater(bool yes)
 	}
 
 	// find animation id to stop when transitioning
-	LLUUID id = override(mLastMotion, FALSE);
+	LLUUID id = override(mLastMotion, false);
 	if (id.isNull())
 	{
 		// no animation in overrider for this state, use Linden Lab motion
@@ -1071,7 +1071,7 @@ bool AOEngine::findForeignItems(const LLUUID& uuid) const
 	// KKA-934 crash avoidance
 	if (!cats || !items)
 	{
-		return FALSE;
+		return false;
 	}
 
 	for (S32 index = 0; index < cats->size(); ++index)
@@ -2358,7 +2358,7 @@ bool AOTimerCollection::tick()
 		AOEngine::instance().processImport(true);
 	}
 
-// always return FALSE or the LLEventTimer will be deleted -> crash
+// always return false or the LLEventTimer will be deleted -> crash
 	return false;
 }
 

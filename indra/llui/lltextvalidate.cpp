@@ -57,7 +57,7 @@ namespace LLTextValidate
 	{
 		LLLocale locale(LLLocale::USER_LOCALE);
 
-		bool success = TRUE;
+		bool success = true;
 		LLWString trimmed = str;
 		LLWStringUtil::trim(trimmed);
 		S32 len = trimmed.length();
@@ -72,7 +72,7 @@ namespace LLTextValidate
 			{
 				if( (decimal_point != trimmed[i] ) && !LLStringOps::isDigit( trimmed[i] ) )
 				{
-					success = FALSE;
+					success = false;
 					break;
 				}
 			}
@@ -89,7 +89,7 @@ namespace LLTextValidate
 	{
 		LLLocale locale(LLLocale::USER_LOCALE);
 
-		bool success = TRUE;
+		bool success = true;
 		LLWString trimmed = str;
 		LLWStringUtil::trim(trimmed);
 		S32 len = trimmed.length();
@@ -110,7 +110,7 @@ namespace LLTextValidate
 			{
 				if( (decimal_point != trimmed[i] ) && !LLStringOps::isDigit( trimmed[i] ) )
 				{
-					success = FALSE;
+					success = false;
 					break;
 				}
 			}
@@ -127,7 +127,7 @@ namespace LLTextValidate
 	{
 		LLLocale locale(LLLocale::USER_LOCALE);
 
-		bool success = TRUE;
+		bool success = true;
 		LLWString trimmed = str;
 		LLWStringUtil::trim(trimmed);
 		S32 len = trimmed.length();
@@ -145,7 +145,7 @@ namespace LLTextValidate
 			{
 				if( !LLStringOps::isDigit( trimmed[i] ) )
 				{
-					success = FALSE;
+					success = false;
 					break;
 				}
 			}
@@ -161,19 +161,19 @@ namespace LLTextValidate
 		LLWString trimmed = str;
 		LLWStringUtil::trim(trimmed);
 		S32 len = trimmed.length();
-		bool success = TRUE;
+		bool success = true;
 		if(0 < len)
 		{
 			if(('-' == trimmed[0]) || ('0' == trimmed[0]))
 			{
-				success = FALSE;
+				success = false;
 			}
 			S32 i = 0;
 			while(success && (i < len))
 			{
 				if(!LLStringOps::isDigit(trimmed[i++]))
 				{
-					success = FALSE;
+					success = false;
 				}
 			}
 		}
@@ -182,7 +182,7 @@ namespace LLTextValidate
 			S32 val = strtol(wstring_to_utf8str(trimmed).c_str(), NULL, 10);
 			if (val <= 0)
 			{
-				success = FALSE;
+				success = false;
 			}
 		}
 		return success;
@@ -195,19 +195,19 @@ namespace LLTextValidate
 		LLWString trimmed = str;
 		LLWStringUtil::trim(trimmed);
 		S32 len = trimmed.length();
-		bool success = TRUE;
+		bool success = true;
 		if(0 < len)
 		{
 			if('-' == trimmed[0])
 			{
-				success = FALSE;
+				success = false;
 			}
 			S32 i = 0;
 			while(success && (i < len))
 			{
 				if(!LLStringOps::isDigit(trimmed[i++]))
 				{
-					success = FALSE;
+					success = false;
 				}
 			}
 		}
@@ -216,7 +216,7 @@ namespace LLTextValidate
 			S32 val = strtol(wstring_to_utf8str(trimmed).c_str(), NULL, 10);
 			if (val < 0)
 			{
-				success = FALSE;
+				success = false;
 			}
 		}
 		return success;
@@ -228,19 +228,19 @@ namespace LLTextValidate
 
 		LLWString test_str = str;
 		S32 len = test_str.length();
-		bool success = TRUE;
+		bool success = true;
 		if(0 < len)
 		{
 			if('-' == test_str[0])
 			{
-				success = FALSE;
+				success = false;
 			}
 			S32 i = 0;
 			while(success && (i < len))
 			{
 				if(!LLStringOps::isDigit(test_str[i]) || LLStringOps::isSpace(test_str[i++]))
 				{
-					success = FALSE;
+					success = false;
 				}
 			}
 		}
@@ -249,7 +249,7 @@ namespace LLTextValidate
 			S32 val = strtol(wstring_to_utf8str(test_str).c_str(), NULL, 10);
 			if (val < 0)
 			{
-				success = FALSE;
+				success = false;
 			}
 		}
 		return success;
@@ -259,14 +259,14 @@ namespace LLTextValidate
 	{
 		LLLocale locale(LLLocale::USER_LOCALE);
 
-		bool rv = TRUE;
+		bool rv = true;
 		S32 len = str.length();
 		if(len == 0) return rv;
 		while(len--)
 		{
 			if( !LLStringOps::isAlnum((char)str[len]) )
 			{
-				rv = FALSE;
+				rv = false;
 				break;
 			}
 		}
@@ -277,14 +277,14 @@ namespace LLTextValidate
 	{
 		LLLocale locale(LLLocale::USER_LOCALE);
 
-		bool rv = TRUE;
+		bool rv = true;
 		S32 len = str.length();
 		if(len == 0) return rv;
 		while(len--)
 		{
 			if(!(LLStringOps::isAlnum((char)str[len]) || (' ' == str[len])))
 			{
-				rv = FALSE;
+				rv = false;
 				break;
 			}
 		}
@@ -296,7 +296,7 @@ namespace LLTextValidate
 	// inventory item names, parcel names, object names, etc.
 	bool validateASCIIPrintableNoPipe(const LLWString &str)
 	{
-		bool rv = TRUE;
+		bool rv = true;
 		S32 len = str.length();
 		if(len == 0) return rv;
 		while(len--)
@@ -306,14 +306,14 @@ namespace LLTextValidate
 				|| wc > 0x7f
 				|| wc == '|')
 			{
-				rv = FALSE;
+				rv = false;
 				break;
 			}
 			if(!(wc == ' '
 				 || LLStringOps::isAlnum((char)wc)
 				 || LLStringOps::isPunct((char)wc) ) )
 			{
-				rv = FALSE;
+				rv = false;
 				break;
 			}
 		}
@@ -324,7 +324,7 @@ namespace LLTextValidate
 	// Used for avatar names
 	bool validateASCIIPrintableNoSpace(const LLWString &str)
 	{
-		bool rv = TRUE;
+		bool rv = true;
 		S32 len = str.length();
 		if(len == 0) return rv;
 		while(len--)
@@ -334,13 +334,13 @@ namespace LLTextValidate
 				|| wc > 0x7f
 				|| LLStringOps::isSpace(wc))
 			{
-				rv = FALSE;
+				rv = false;
 				break;
 			}
 			if( !(LLStringOps::isAlnum((char)str[len]) ||
 				  LLStringOps::isPunct((char)str[len]) ) )
 			{
-				rv = FALSE;
+				rv = false;
 				break;
 			}
 		}
@@ -349,13 +349,13 @@ namespace LLTextValidate
 
 	bool validateASCII(const LLWString &str)
 	{
-		bool rv = TRUE;
+		bool rv = true;
 		S32 len = str.length();
 		while(len--)
 		{
 			if (str[len] < 0x20 || str[len] > 0x7f)
 			{
-				rv = FALSE;
+				rv = false;
 				break;
 			}
 		}
@@ -366,7 +366,7 @@ namespace LLTextValidate
 	{
 		if (LLStringOps::isSpace(str[0]))
 		{
-			return FALSE;
+			return false;
 		}
 		return validateASCII(str);
 	}
@@ -375,13 +375,13 @@ namespace LLTextValidate
 	// Example is landmark description in Places SP.
 	bool validateASCIIWithNewLine(const LLWString &str)
 	{
-		bool rv = TRUE;
+		bool rv = true;
 		S32 len = str.length();
 		while(len--)
 		{
 			if ((str[len] < 0x20 && str[len] != 0xA) || str[len] > 0x7f)
 			{
-				rv = FALSE;
+				rv = false;
 				break;
 			}
 		}

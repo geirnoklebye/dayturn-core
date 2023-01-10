@@ -57,9 +57,9 @@ struct CompareAttributes
 	bool operator()(const LLStringTableEntry* const lhs, const LLStringTableEntry* const rhs) const
 	{	
 		if (lhs == NULL)
-			return TRUE;
+			return true;
 		if (rhs == NULL)
-			return FALSE;
+			return false;
 
 		return strcmp(lhs->mString, rhs->mString) < 0;
 	}

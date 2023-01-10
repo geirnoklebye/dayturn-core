@@ -163,7 +163,7 @@ void LLPanelGroupBulkBan::submit()
 	// remove already banned users and yourself from request.
 	std::vector<LLAvatarName> banned_avatar_names;
 	std::vector<LLAvatarName> out_of_limit_names;
-	bool banning_self = FALSE;
+	bool banning_self = false;
 	std::vector<LLUUID>::iterator conflict = std::find(banned_agent_list.begin(), banned_agent_list.end(), gAgent.getID());
 	if (conflict != banned_agent_list.end())
 	{

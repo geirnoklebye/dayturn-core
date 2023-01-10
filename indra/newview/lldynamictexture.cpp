@@ -85,7 +85,7 @@ S8 LLViewerDynamicTexture::getType() const
 void LLViewerDynamicTexture::generateGLTexture()
 {
 	LLViewerTexture::generateGLTexture() ;
-	generateGLTexture(-1, 0, 0, FALSE);
+	generateGLTexture(-1, 0, 0, false);
 }
 
 void LLViewerDynamicTexture::generateGLTexture(LLGLint internal_format, LLGLenum primary_format, LLGLenum type_format, BOOL swap_bytes)
