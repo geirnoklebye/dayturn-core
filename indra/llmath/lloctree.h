@@ -34,10 +34,6 @@
 
 #define OCT_ERRS LL_WARNS("OctreeErrors")
 
-#define OCTREE_DEBUG_COLOR_REMOVE   0x0000FF // r
-#define OCTREE_DEBUG_COLOR_INSERT   0x00FF00 // g
-#define OCTREE_DEBUG_COLOR_BALANCE  0xFF0000 // b
-
 extern U32 gOctreeMaxCapacity;
 extern float gOctreeMinSize;
 
@@ -310,7 +306,6 @@ public:
 	
 	virtual bool insert(T* data)
 	{
-        //LL_PROFILE_ZONE_NAMED_COLOR("Octree::insert()",OCTREE_DEBUG_COLOR_INSERT);
 
 		if (data == NULL || data->getBinIndex() != -1)
 		{
@@ -449,8 +444,6 @@ public:
 
 	bool remove(T* data)
 	{
-        //LL_PROFILE_ZONE_NAMED_COLOR("Octree::remove()", OCTREE_DEBUG_COLOR_REMOVE);
-
 		S32 i = data->getBinIndex();
 
         if (i >= 0 && i < getElementCount())
@@ -687,8 +680,6 @@ public:
 	
 	bool balance() override
 	{	
-        //LL_PROFILE_ZONE_NAMED_COLOR("Octree::balance()",OCTREE_DEBUG_COLOR_BALANCE);
-
 		if (this->getChildCount() == 1 && 
 			!(this->mChild[0]->isLeaf()) &&
 			this->mChild[0]->getElementCount() == 0)

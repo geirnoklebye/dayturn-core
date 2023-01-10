@@ -44,7 +44,6 @@ LLMutex::~LLMutex()
 
 void LLMutex::lock()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD
 	if(isSelfLocked())
 	{ //redundant lock
 		mCount++;
@@ -66,7 +65,6 @@ void LLMutex::lock()
 
 void LLMutex::unlock()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD
 	if (mCount > 0)
 	{ //not the root unlock
 		mCount--;
@@ -87,7 +85,6 @@ void LLMutex::unlock()
 
 bool LLMutex::isLocked()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD
 	if (!mMutex.try_lock())
 	{
 		return true;
@@ -111,7 +108,6 @@ LLThread::id_t LLMutex::lockingThread() const
 
 bool LLMutex::trylock()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD
 	if(isSelfLocked())
 	{ //redundant lock
 		mCount++;
@@ -150,20 +146,17 @@ LLCondition::~LLCondition()
 
 void LLCondition::wait()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD
 	std::unique_lock< std::mutex > lock(mMutex);
 	mCond.wait(lock);
 }
 
 void LLCondition::signal()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD
 	mCond.notify_one();
 }
 
 void LLCondition::broadcast()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD
 	mCond.notify_all();
 }
 
@@ -173,7 +166,6 @@ LLMutexTrylock::LLMutexTrylock(LLMutex* mutex)
     : mMutex(mutex),
     mLocked(false)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD
     if (mMutex)
         mLocked = mMutex->trylock();
 }
@@ -182,7 +174,6 @@ LLMutexTrylock::LLMutexTrylock(LLMutex* mutex, U32 aTries, U32 delay_ms)
     : mMutex(mutex),
     mLocked(false)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD
     if (!mMutex)
         return;
 
@@ -197,7 +188,6 @@ LLMutexTrylock::LLMutexTrylock(LLMutex* mutex, U32 aTries, U32 delay_ms)
 
 LLMutexTrylock::~LLMutexTrylock()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD
     if (mMutex && mLocked)
         mMutex->unlock();
 }
@@ -209,7 +199,6 @@ LLMutexTrylock::~LLMutexTrylock()
 //
 LLScopedLock::LLScopedLock(std::mutex* mutex) : mMutex(mutex)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD
 	if(mutex)
 	{
 		mutex->lock();
@@ -228,7 +217,6 @@ LLScopedLock::~LLScopedLock()
 
 void LLScopedLock::unlock()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD
 	if(mLocked)
 	{
 		mMutex->unlock();

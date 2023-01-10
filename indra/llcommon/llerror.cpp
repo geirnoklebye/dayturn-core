@@ -109,7 +109,6 @@ namespace {
 		virtual void recordMessage(LLError::ELevel level,
 									const std::string& message) override
 		{
-            LL_PROFILE_ZONE_SCOPED_CATEGORY_LOGGING
 			int syslogPriority = LOG_CRIT;
 			switch (level) {
 				case LLError::LEVEL_DEBUG:	syslogPriority = LOG_DEBUG;	break;
@@ -167,7 +166,6 @@ namespace {
         virtual void recordMessage(LLError::ELevel level,
                                     const std::string& message) override
         {
-            LL_PROFILE_ZONE_SCOPED_CATEGORY_LOGGING
             if (LLError::getAlwaysFlush())
             {
                 mFile << message << std::endl;
@@ -263,7 +261,6 @@ namespace {
 			}
             else
             {
-                LL_PROFILE_ZONE_NAMED("fprintf");
                  fprintf(stderr, "%s\n", message.c_str());
             }
 		}
@@ -335,7 +332,6 @@ namespace {
 		virtual void recordMessage(LLError::ELevel level,
 								   const std::string& message) override
 		{
-            LL_PROFILE_ZONE_SCOPED_CATEGORY_LOGGING
 			debugger_print(message);
 		}
 	};

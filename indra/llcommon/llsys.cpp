@@ -733,7 +733,6 @@ LLSD LLMemoryInfo::getStatsMap() const
 
 LLMemoryInfo& LLMemoryInfo::refresh()
 {
-	LL_PROFILE_ZONE_SCOPED
 	mStatsMap = loadStatsMap();
 
 	LL_DEBUGS("LLMemoryInfo") << "Populated mStatsMap:\n";

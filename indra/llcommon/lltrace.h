@@ -240,7 +240,6 @@ public:
 
 	StatType<MemAccumulator::DeallocationFacet>& deallocations() 
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 		return static_cast<StatType<MemAccumulator::DeallocationFacet>&>(*(StatType<MemAccumulator>*)this);
 	}
 };
@@ -262,7 +261,6 @@ struct MeasureMem<T, typename T::mem_trackable_tag_t, IS_BYTES>
 {
 	static size_t measureFootprint(const T& value)
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 		return sizeof(T) + value.getMemFootprint();
 	}
 };
@@ -272,7 +270,6 @@ struct MeasureMem<T, IS_MEM_TRACKABLE, typename T::is_unit_t>
 {
 	static size_t measureFootprint(const T& value)
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 		return U32Bytes(value).value();
 	}
 };
@@ -282,7 +279,6 @@ struct MeasureMem<T*, IS_MEM_TRACKABLE, IS_BYTES>
 {
 	static size_t measureFootprint(const T* value)
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 		if (!value)
 		{
 			return 0;
@@ -327,7 +323,6 @@ struct MeasureMem<std::basic_string<T>, IS_MEM_TRACKABLE, IS_BYTES>
 {
 	static size_t measureFootprint(const std::basic_string<T>& value)
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_STATS;
 		return value.capacity() * sizeof(T);
 	}
 };

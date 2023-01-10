@@ -400,7 +400,6 @@ namespace
 	
 	ImplMap& ImplMap::makeMap(LLSD::Impl*& var)
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_LLSD;
 		if (shared())
 		{
 			ImplMap* i = new ImplMap(mData);
@@ -415,21 +414,18 @@ namespace
 	
 	bool ImplMap::has(const LLSD::String& k) const
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_LLSD;
 		DataMap::const_iterator i = mData.find(k);
 		return i != mData.end();
 	}
 	
 	LLSD ImplMap::get(const LLSD::String& k) const
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_LLSD;
 		DataMap::const_iterator i = mData.find(k);
 		return (i != mData.end()) ? i->second : LLSD();
 	}
 
 	LLSD ImplMap::getKeys() const
 	{ 
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_LLSD;
 		LLSD keys = LLSD::emptyArray();
 		DataMap::const_iterator iter = mData.begin();
 		while (iter != mData.end())
@@ -442,13 +438,11 @@ namespace
 
 	void ImplMap::insert(const LLSD::String& k, const LLSD& v)
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_LLSD;
 		mData.insert(DataMap::value_type(k, v));
 	}
 	
 	void ImplMap::erase(const LLSD::String& k)
 	{
-        LL_PROFILE_ZONE_SCOPED_CATEGORY_LLSD;
 		mData.erase(k);
 	}
 	
@@ -690,7 +684,6 @@ const LLSD::Impl& LLSD::Impl::safe(const Impl* impl)
 
 ImplMap& LLSD::Impl::makeMap(Impl*& var)
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_LLSD;
 	ImplMap* im = new ImplMap;
 	reset(var, im);
 	return *im;
@@ -896,12 +889,10 @@ void LLSD::erase(const String& k)		{ makeMap(impl).erase(k); }
 
 LLSD& LLSD::operator[](const String& k)
 { 
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_LLSD;
     return makeMap(impl).ref(k); 
 }
 const LLSD& LLSD::operator[](const String& k) const
 { 
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_LLSD;
     return safe(impl).ref(k); 
 }
 
@@ -928,12 +919,10 @@ void LLSD::erase(Integer i)				{ makeArray(impl).erase(i); }
 
 LLSD& LLSD::operator[](Integer i)
 { 
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_LLSD;
     return makeArray(impl).ref(i); 
 }
 const LLSD& LLSD::operator[](Integer i) const
 { 
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_LLSD;
     return safe(impl).ref(i);
 }
 

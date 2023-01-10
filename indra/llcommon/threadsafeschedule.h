@@ -329,7 +329,6 @@ namespace LL
         bool tryPopUntil(const std::chrono::time_point<Clock, Duration>& until,
                          DataTuple& tuple)
         {
-            LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD;
             TimeTuple tt;
             if (! tryPopUntil(until, tt))
                 return false;
@@ -342,7 +341,6 @@ namespace LL
         bool tryPopUntil(const std::chrono::time_point<Clock, Duration>& until,
                          typename std::tuple_element<1, TimeTuple>::type& value)
         {
-            LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD;
             TimeTuple tt;
             if (! tryPopUntil(until, tt))
                 return false;
@@ -366,7 +364,6 @@ namespace LL
         // considering whether to deliver the current head element
         bool canPop(const TimeTuple& head) const override
         {
-            LL_PROFILE_ZONE_SCOPED_CATEGORY_THREAD;
             // an item with a future timestamp isn't yet ready to pop
             // (should we add some slop for overhead?)
             return std::get<0>(head) <= Clock::now();
