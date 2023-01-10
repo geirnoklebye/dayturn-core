@@ -202,7 +202,7 @@ bool update_avatar_rez_metrics()
 
 void LLVOAvatarSelf::initInstance()
 {
-	BOOL status = TRUE;
+	bool status = TRUE;
 	// creates hud joint(mScreen) among other things
 	status &= loadAvatarSelf();
 
