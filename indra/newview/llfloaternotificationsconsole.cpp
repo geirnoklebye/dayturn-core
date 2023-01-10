@@ -250,7 +250,7 @@ bool LLFloaterNotification::postBuild()
 	LLNotificationFormPtr form(mNote->getForm());
 	if(!form)
 	{
-		return TRUE;
+		return true;
 	}
 
 	responses_combo->setCommitCallback(onCommitResponse, this);

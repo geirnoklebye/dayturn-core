@@ -2646,7 +2646,7 @@ void LLSelectMgr::selectionTexScaleAutofit(F32 repeats_per_meter)
 				U32 s_axis, t_axis;
 				if (!LLPrimitive::getTESTAxes(te, &s_axis, &t_axis))
 				{
-					return TRUE;
+					return true;
 				}
 
 				F32 new_s = object->getScale().mV[s_axis] * mRepeatsPerMeter;

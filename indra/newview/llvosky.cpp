@@ -659,7 +659,7 @@ void LLVOSky::idleUpdate(LLAgent &agent, const F64 &time)
 
 void LLVOSky::forceSkyUpdate()
 {
-    mForceUpdate = TRUE;
+    mForceUpdate = true;
     m_lastAtmosphericsVars = {};
     mCubeMapUpdateStage = -1;
 }
@@ -671,12 +671,12 @@ bool LLVOSky::updateSky()
 	if (mDead || !(gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_SKY)))
 	{
 		// It's dead.  Don't update it.
-		return TRUE;
+		return true;
 	}
 
 	if (gGLManager.mIsDisabled)
 	{
-		return TRUE;
+		return true;
 	}
 
     LL_PROFILE_ZONE_SCOPED_CATEGORY_ENVIRONMENT;
@@ -695,8 +695,8 @@ bool LLVOSky::updateSky()
     if (!mCubeMap)
 	{
         mCubeMapUpdateStage = NUM_CUBEMAP_FACES;
-        mForceUpdate = FALSE;
-        return TRUE;
+        mForceUpdate = false;
+        return true;
 	}
 
     if (mCubeMapUpdateStage < 0)
@@ -712,12 +712,11 @@ bool LLVOSky::updateSky()
             // start updating cube map sides
             updateFog(LLViewerCamera::getInstance()->getFar());
             mCubeMapUpdateStage = 0;
-            mForceUpdate = FALSE;
+            mForceUpdate = false;
 		}
 	}
     else if (mCubeMapUpdateStage == NUM_CUBEMAP_FACES)
 	{
-        LL_PROFILE_ZONE_NAMED("updateSky - forced");
         LLSkyTex::stepCurrent();
 
         bool is_alm_wl_sky = gPipeline.canUseWindLightShaders();
@@ -763,8 +762,8 @@ bool LLVOSky::updateSky()
 
         m_lastAtmosphericsVars = m_atmosphericsVars;
 
-        mNeedUpdate = FALSE;
-        mForceUpdate = FALSE;
+        mNeedUpdate = false;
+        mForceUpdate = false;
 
         mForceUpdateThrottle.setTimerExpirySec(UPDATE_EXPRY);
         gPipeline.markRebuild(gSky.mVOGroundp->mDrawable, LLDrawable::REBUILD_ALL, true);
@@ -778,7 +777,6 @@ bool LLVOSky::updateSky()
     // run 0 to 5 faces, each face in own frame
     else if (mCubeMapUpdateStage >= 0 && mCubeMapUpdateStage < NUM_CUBEMAP_FACES)
 	{
-        LL_PROFILE_ZONE_NAMED("updateSky - create");
         S32 side = mCubeMapUpdateStage;
         // CPU hungry part, createSkyTexture() is math heavy
         // Prior to EEP it was mostly per tile, but since EPP it is per face.
@@ -792,7 +790,7 @@ bool LLVOSky::updateSky()
         mCubeMapUpdateStage++;
     }
 
-	return TRUE;
+	return true;
 }
 
 void LLVOSky::updateTextures()

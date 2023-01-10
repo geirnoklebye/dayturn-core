@@ -270,7 +270,7 @@ public:
 	/*virtual*/ bool			handleHover(S32 x, S32 y, MASK mask)
 	{
 		LLUI::getInstance()->getWindow()->setCursor(UI_CURSOR_HAND);
-		return TRUE;
+		return true;
 	}
 	virtual bool				handleToolTip(S32 x, S32 y, MASK mask )
 	{ 

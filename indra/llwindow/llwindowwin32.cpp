@@ -2242,7 +2242,7 @@ LRESULT CALLBACK LLWindowWin32::mainWindowProc(HWND h_wnd, UINT u_msg, WPARAM w_
             {
                 WINDOW_IMP_POST(window_imp->mCallbacks->handleDeviceChange(window_imp));
                 
-                return TRUE;
+                return 1;
             }
             break;
         }

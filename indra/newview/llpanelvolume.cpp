@@ -578,7 +578,7 @@ void LLPanelVolume::getState( )
 bool LLPanelVolume::precommitValidate( const LLSD& data )
 {
 	// TODO: Richard will fill this in later.  
-	return TRUE; // FALSE means that validation failed and new value should not be commited.
+	return true; // false means that validation failed and new value should not be commited.
 }
 
 

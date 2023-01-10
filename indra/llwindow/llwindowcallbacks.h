@@ -41,7 +41,7 @@ public:
 	virtual BOOL handleMouseDown(LLWindow *window,  LLCoordGL pos, MASK mask);
 	virtual BOOL handleMouseUp(LLWindow *window,  LLCoordGL pos, MASK mask);
 	virtual void handleMouseLeave(LLWindow *window);
-	// return TRUE to allow window to close, which will then cause handleQuit to be called
+	// return true to allow window to close, which will then cause handleQuit to be called
 	virtual bool handleCloseRequest(LLWindow *window);
 	// window is about to be destroyed, clean up your business
 	virtual void handleQuit(LLWindow *window);

@@ -2927,7 +2927,7 @@ bool LLViewerWindow::handleKey(KEY key, MASK mask)
         //don't switch to mouselook if any floater has focus
         if ((key == KEY_MOUSELOOK) && !(mask & (MASK_CONTROL | MASK_ALT)))
         {
-            return TRUE;
+            return true;
         }
 
         LLUICtrl* cur_focus = dynamic_cast<LLUICtrl*>(keyboard_focus);

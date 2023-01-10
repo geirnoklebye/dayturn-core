@@ -579,5 +579,5 @@ bool LLThrottleGroup::dynamicAdjust()
 			}
 		}
 	}
-	return TRUE;
+	return true;
 }

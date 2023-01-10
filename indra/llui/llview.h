@@ -212,7 +212,7 @@ public:
 	virtual ~LLView();
 
 	// Some UI widgets need to be added as controls.  Others need to
-	// be added as regular view children.  isCtrl should return TRUE
+	// be added as regular view children.  isCtrl should return true
 	// if a widget needs to be added as a ctrl
 	virtual bool isCtrl() const;
 

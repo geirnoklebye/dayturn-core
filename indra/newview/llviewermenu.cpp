@@ -4456,7 +4456,7 @@ class LLEnableEditPhysics : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		//return gAgentWearables.isWearableModifiable(LLWearableType::WT_SHAPE, 0);
-		return TRUE;
+		return true;
 	}
 };
 

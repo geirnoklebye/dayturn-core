@@ -900,7 +900,7 @@ bool LLView::handleToolTip(S32 x, S32 y, MASK mask)
 	// TS: Don't bother with a tooltip unless the app itself has focus.
 	if (!gFocusMgr.getAppHasFocus())
 	{
-		return TRUE;
+		return true;
 	}
 
 	// parents provide tooltips first, which are optionally

@@ -1705,7 +1705,7 @@ bool LLDrawable::isAnimating() const
 
 	/*if (!isRoot() && !mVObjp->getAngularVelocity().isExactlyZero())
 	{ //target omega
-		return TRUE;
+		return true;
 	}*/
 
 	return false;

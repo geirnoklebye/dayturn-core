@@ -343,7 +343,7 @@ bool FSFloaterSearch::postBuild()
 		mTabContainer->selectFirstTab();
 	}
 
-	return TRUE;
+	return true;
 }
 
 void FSFloaterSearch::onTabChange()

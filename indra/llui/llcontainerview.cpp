@@ -60,7 +60,7 @@ bool LLContainerView::postBuild()
 {
 	setDisplayChildren(mDisplayChildren);
 	reshape(getRect().getWidth(), getRect().getHeight(), false);
-	return TRUE;
+	return true;
 }
 
 bool LLContainerView::addChild(LLView* child, S32 tab_group)

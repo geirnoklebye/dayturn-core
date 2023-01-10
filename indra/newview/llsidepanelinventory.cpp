@@ -272,7 +272,7 @@ bool LLSidepanelInventory::postBuild()
 	// Update the verbs buttons state.
 	updateVerbs();
 
-	return TRUE;
+	return true;
 }
 
 void LLSidepanelInventory::updateInbox()

@@ -574,7 +574,7 @@ class LLFileUploadModel : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
         LLFloaterModelPreview::showModelPreview();
-        return TRUE;
+        return true;
 	}
 };
 	

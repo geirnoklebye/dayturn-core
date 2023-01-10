@@ -342,7 +342,7 @@ bool LLPanelDeletableWearableListItem::postBuild()
 	setWidgetsVisible(false);
 	reshapeWidgets();
 
-	return TRUE;
+	return true;
 }
 
 
@@ -415,7 +415,7 @@ bool LLPanelDummyClothingListItem::postBuild()
 	setWidgetsVisible(false);
 	reshapeWidgets();
 
-	return TRUE;
+	return true;
 }
 
 LLWearableType::EType LLPanelDummyClothingListItem::getWearableType() const

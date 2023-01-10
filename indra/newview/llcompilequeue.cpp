@@ -634,7 +634,7 @@ bool LLFloaterCompileQueue::startQueue()
 
             LLCoreHttpUtil::HttpCoroutineAdapter::callbackHttpGet(lookup_url,
                 success, failure);
-            return TRUE;
+            return true;
         }
     }
 
