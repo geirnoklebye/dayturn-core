@@ -164,7 +164,7 @@ void LLTransferSourceAsset::packParams(LLDataPacker& dp) const
 	mParams.packParams(dp);
 }
 
-BOOL LLTransferSourceAsset::unpackParams(LLDataPacker &dp)
+bool LLTransferSourceAsset::unpackParams(LLDataPacker &dp)
 {
 	//LL_INFOS() << "LLTransferSourceAsset::unpackParams" << LL_ENDL;
 	return mParams.unpackParams(dp);
@@ -240,7 +240,7 @@ void LLTransferSourceParamsAsset::packParams(LLDataPacker &dp) const
 }
 
 
-BOOL LLTransferSourceParamsAsset::unpackParams(LLDataPacker &dp)
+bool LLTransferSourceParamsAsset::unpackParams(LLDataPacker &dp)
 {
 	S32 tmp_at;
 
@@ -249,6 +249,6 @@ BOOL LLTransferSourceParamsAsset::unpackParams(LLDataPacker &dp)
 
 	mAssetType = (LLAssetType::EType)tmp_at;
 
-	return TRUE;
+	return true;
 }
 

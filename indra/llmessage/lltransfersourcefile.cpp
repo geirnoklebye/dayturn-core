@@ -141,7 +141,7 @@ void LLTransferSourceFile::packParams(LLDataPacker& dp) const
 	mParams.packParams(dp);
 }
 
-BOOL LLTransferSourceFile::unpackParams(LLDataPacker &dp)
+bool LLTransferSourceFile::unpackParams(LLDataPacker &dp)
 {
 	//LL_INFOS() << "LLTransferSourceFile::unpackParams" << LL_ENDL;
 	return mParams.unpackParams(dp);
@@ -162,7 +162,7 @@ void LLTransferSourceParamsFile::packParams(LLDataPacker &dp) const
 }
 
 
-BOOL LLTransferSourceParamsFile::unpackParams(LLDataPacker &dp)
+bool LLTransferSourceParamsFile::unpackParams(LLDataPacker &dp)
 {
 	dp.unpackString(mFilename, "Filename");
 	U8 delete_flag;
@@ -170,5 +170,5 @@ BOOL LLTransferSourceParamsFile::unpackParams(LLDataPacker &dp)
 	mDeleteOnCompletion = delete_flag;
 
 	LL_INFOS() << "Unpacked filename: " << mFilename << LL_ENDL;
-	return TRUE;
+	return true;
 }

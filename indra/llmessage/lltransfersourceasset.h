@@ -38,7 +38,7 @@ public:
 	LLTransferSourceParamsAsset();
 	virtual ~LLTransferSourceParamsAsset() {}
 	/*virtual*/ void packParams(LLDataPacker &dp) const;
-	/*virtual*/ BOOL unpackParams(LLDataPacker &dp);
+	/*virtual*/ bool unpackParams(LLDataPacker &dp);
 
 	void setAsset(const LLUUID &asset_id, const LLAssetType::EType asset_type);
 
@@ -69,7 +69,7 @@ protected:
 	/*virtual*/ void completionCallback(const LLTSCode status);
 
 	virtual void packParams(LLDataPacker& dp) const;
-	/*virtual*/ BOOL unpackParams(LLDataPacker &dp);
+	/*virtual*/ bool unpackParams(LLDataPacker &dp);
 
 protected:
 	LLTransferSourceParamsAsset mParams;

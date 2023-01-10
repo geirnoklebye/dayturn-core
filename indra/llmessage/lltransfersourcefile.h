@@ -35,7 +35,7 @@ public:
 	LLTransferSourceParamsFile();
 	virtual ~LLTransferSourceParamsFile() {}
 	/*virtual*/ void packParams(LLDataPacker &dp) const;
-	/*virtual*/ BOOL unpackParams(LLDataPacker &dp);
+	/*virtual*/ bool unpackParams(LLDataPacker &dp);
 
 	void setFilename(const std::string &filename)		{ mFilename = filename; }
 	std::string getFilename() const					{ return mFilename; }
@@ -65,7 +65,7 @@ protected:
 	/*virtual*/ void completionCallback(const LLTSCode status);
 
 	virtual void packParams(LLDataPacker& dp) const;
-	/*virtual*/ BOOL unpackParams(LLDataPacker &dp);
+	/*virtual*/ bool unpackParams(LLDataPacker &dp);
 
 protected:
 	LLTransferSourceParamsFile mParams;
