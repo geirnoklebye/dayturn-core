@@ -62,8 +62,8 @@ const U32	FOLLOWS_TOP		= 0x10;
 const U32	FOLLOWS_BOTTOM	= 0x20;
 const U32	FOLLOWS_ALL		= 0x33;
 
-const BOOL	MOUSE_OPAQUE = TRUE;
-const BOOL	NOT_MOUSE_OPAQUE = FALSE;
+const bool	MOUSE_OPAQUE = true;
+const bool	NOT_MOUSE_OPAQUE = false;
 
 const U32 GL_NAME_UI_RESERVED = 2;
 
@@ -372,8 +372,8 @@ public:
 	virtual void	reshape(S32 width, S32 height, bool called_from_parent = true);
 	virtual void	translate( S32 x, S32 y );
 	void			setOrigin( S32 x, S32 y )	{ mRect.translate( x - mRect.mLeft, y - mRect.mBottom ); }
-	BOOL			translateIntoRect( const LLRect& constraint, S32 min_overlap_pixels = S32_MAX);
-	BOOL			translateIntoRectWithExclusion( const LLRect& inside, const LLRect& exclude, S32 min_overlap_pixels = S32_MAX);
+	bool			translateIntoRect( const LLRect& constraint, S32 min_overlap_pixels = S32_MAX);
+	bool			translateIntoRectWithExclusion( const LLRect& inside, const LLRect& exclude, S32 min_overlap_pixels = S32_MAX);
 	void			centerWithin(const LLRect& bounds);
 
 	void	setShape(const LLRect& new_rect, bool by_user = false);

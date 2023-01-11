@@ -1785,21 +1785,21 @@ LLCoordGL getNeededTranslation(const LLRect& input, const LLRect& constraint, S3
 // Moves the view so that it is entirely inside of constraint.
 // If the view will not fit because it's too big, aligns with the top and left.
 // (Why top and left?  That's where the drag bars are for floaters.)
-BOOL LLView::translateIntoRect(const LLRect& constraint, S32 min_overlap_pixels)
+bool LLView::translateIntoRect(const LLRect& constraint, S32 min_overlap_pixels)
 {
 	LLCoordGL translation = getNeededTranslation(getRect(), constraint, min_overlap_pixels);
 
 	if (translation.mX != 0 || translation.mY != 0)
 	{
 		translate(translation.mX, translation.mY);
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 // move this view into "inside" but not onto "exclude"
 // NOTE: if this view is already contained in "inside", we ignore the "exclude" rect
-BOOL LLView::translateIntoRectWithExclusion( const LLRect& inside, const LLRect& exclude, S32 min_overlap_pixels)
+bool LLView::translateIntoRectWithExclusion( const LLRect& inside, const LLRect& exclude, S32 min_overlap_pixels)
 {
 	LLCoordGL translation = getNeededTranslation(getRect(), inside, min_overlap_pixels);
 	
@@ -1835,9 +1835,9 @@ BOOL LLView::translateIntoRectWithExclusion( const LLRect& inside, const LLRect&
 			}
 		}
 
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
