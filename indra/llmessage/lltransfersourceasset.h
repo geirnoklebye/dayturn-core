@@ -65,7 +65,7 @@ protected:
 									  const S32 max_bytes,
 									  U8 **datap,
 									  S32 &returned_bytes,
-									  BOOL &delete_returned);
+									  bool &delete_returned);
 	/*virtual*/ void completionCallback(const LLTSCode status);
 
 	virtual void packParams(LLDataPacker& dp) const;

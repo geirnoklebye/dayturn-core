@@ -91,7 +91,7 @@ LLTSCode LLTransferSourceAsset::dataCallback(const S32 packet_id,
 											const S32 max_bytes,
 											U8 **data_handle,
 											S32 &returned_bytes,
-											BOOL &delete_returned)
+											bool &delete_returned)
 {
 	//LL_INFOS() << "LLTransferSourceAsset::dataCallback" << LL_ENDL;
 	if (!mGotResponse)
@@ -120,7 +120,7 @@ LLTSCode LLTransferSourceAsset::dataCallback(const S32 packet_id,
 		return LLTS_ERROR;
 	}
 	
-	delete_returned = TRUE;
+	delete_returned = true;
 	U8 *tmpp = new U8[max_bytes];
 	*data_handle = tmpp;
 	if (!vf.read(tmpp, max_bytes))		/* Flawfinder: Ignore */
@@ -129,7 +129,7 @@ LLTSCode LLTransferSourceAsset::dataCallback(const S32 packet_id,
 		delete[] tmpp;
 		*data_handle = NULL;
 		returned_bytes = 0;
-		delete_returned = FALSE;
+		delete_returned = false;
 		return LLTS_ERROR;
 	}
 
@@ -144,7 +144,7 @@ LLTSCode LLTransferSourceAsset::dataCallback(const S32 packet_id,
 			delete[] tmpp;
 			*data_handle = NULL;
 			returned_bytes = 0;
-			delete_returned = FALSE;
+			delete_returned = false;
 		}
 		return LLTS_DONE;
 	}

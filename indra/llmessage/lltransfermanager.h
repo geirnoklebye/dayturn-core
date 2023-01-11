@@ -138,7 +138,7 @@ public:
 	void addTransferBitsOut(const LLTransferChannelType tctype, const S32 bits)	{ mTransferBitsOut[tctype] += bits; }
 protected:
 	LLTransferConnection		*getTransferConnection(const LLHost &host);
-	BOOL						removeTransferConnection(const LLHost &host);
+	bool						removeTransferConnection(const LLHost &host);
 
 protected:
 	// Convenient typedefs
@@ -300,7 +300,7 @@ protected:
 										 const S32 max_bytes,
 										 U8 **datap,
 										 S32 &returned_bytes,
-										 BOOL &delete_returned) = 0;
+										 bool &delete_returned) = 0;
 
 	// The completionCallback is GUARANTEED to be called before the destructor.
 	virtual void			completionCallback(const LLTSCode status) = 0;
@@ -408,8 +408,8 @@ protected:
 	virtual S32				getNextPacketID()						{ return mLastPacketID + 1; }
 	virtual void			setLastPacketID(const S32 packet_id)	{ mLastPacketID = packet_id; }
 	void					setSize(const S32 size)					{ mSize = size; }
-	void					setGotInfo(const BOOL got_info)			{ mGotInfo = got_info; }
-	BOOL					gotInfo() const							{ return mGotInfo; }
+	void					setGotInfo(const bool got_info)			{ mGotInfo = got_info; }
+	bool					gotInfo() const							{ return mGotInfo; }
 
 	bool addDelayedPacket(
 		const S32 packet_id,
@@ -425,7 +425,7 @@ protected:
 	LLTransferSourceType mSourceType;
 	LLUUID					mID;
 	LLTransferTargetChannel *mChannelp;
-	BOOL					mGotInfo;
+	bool					mGotInfo;
 	S32						mSize;
 	S32						mLastPacketID;
 

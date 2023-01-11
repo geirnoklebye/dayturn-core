@@ -791,7 +791,7 @@ void LLTransferSourceChannel::updateTransfers()
 		LLTransferSource *tsp = iter->second;
 		U8 *datap = NULL;
 		S32 data_size = 0;
-		BOOL delete_data = FALSE;
+		bool delete_data = false;
 		S32 packet_id = 0;
 		S32 sent_bytes = 0;
 		LLTSCode status = LLTS_OK;
@@ -1207,7 +1207,7 @@ LLTransferTarget::LLTransferTarget(
 	mSourceType(source_type),
 	mID(transfer_id),
 	mChannelp(NULL),
-	mGotInfo(FALSE),
+	mGotInfo(false),
 	mSize(0),
 	mLastPacketID(-1)
 {
