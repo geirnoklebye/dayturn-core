@@ -4318,7 +4318,7 @@ BOOL LLContextMenu::handleRightMouseDown(S32 x, S32 y, MASK mask)
 	S32 local_x = x - getRect().mLeft;
 	S32 local_y = y - getRect().mBottom;
 
-	BOOL clicked_in_menu = pointInView(local_x, local_y) ;
+	bool clicked_in_menu = pointInView(local_x, local_y) ;
 
 	// grab mouse if right clicking anywhere within pie (even deadzone in middle), to detect drag outside of pie
 	if (clicked_in_menu)

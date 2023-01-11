@@ -344,7 +344,7 @@ public:
 	template<class _Pr3> void sortChildren(_Pr3 _Pred) { mChildList.sort(_Pred); }
 	bool		hasAncestor(const LLView* parentp) const;
 	bool		hasChild(const std::string& childname, bool recurse = false) const;
-	BOOL 		childHasKeyboardFocus( const std::string& childname ) const;
+	bool 		childHasKeyboardFocus( const std::string& childname ) const;
 	
 	// these iterators are used for collapsing various tree traversals into for loops
 	typedef LLTreeDFSIter<LLView, child_list_const_iter_t> tree_iterator_t;
@@ -407,9 +407,9 @@ public:
 		HIT_TEST_IGNORE_BOUNDING_RECT
 	}EHitTestType;
 
-	BOOL parentPointInView(S32 x, S32 y, EHitTestType type = HIT_TEST_USE_BOUNDING_RECT) const;
-	BOOL pointInView(S32 x, S32 y, EHitTestType type = HIT_TEST_USE_BOUNDING_RECT) const;
-	BOOL blockMouseEvent(S32 x, S32 y) const;
+	bool parentPointInView(S32 x, S32 y, EHitTestType type = HIT_TEST_USE_BOUNDING_RECT) const;
+	bool pointInView(S32 x, S32 y, EHitTestType type = HIT_TEST_USE_BOUNDING_RECT) const;
+	bool blockMouseEvent(S32 x, S32 y) const;
 
 	// See LLMouseHandler virtuals for screenPointToLocal and localPointToScreen
 	bool localPointToOtherView( S32 x, S32 y, S32 *other_x, S32 *other_y, const LLView* other_view) const;

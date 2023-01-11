@@ -71,7 +71,7 @@ public:
 	// llview functionality
 	virtual void draw();
 	
-	static BOOL getBevelFromAttribute(LLXMLNodePtr node, LLViewBorder::EBevel& bevel_style);
+	static bool getBevelFromAttribute(LLXMLNodePtr node, LLViewBorder::EBevel& bevel_style);
 
 	void		setBorderWidth(S32 width)			{ mBorderWidth = width; }
 	S32			getBorderWidth() const				{ return mBorderWidth; }

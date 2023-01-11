@@ -239,7 +239,7 @@ void LLViewBorder::drawTwoPixelLines()
 	gl_line_2d(left+1, bottom+1, right-1, bottom+1);
 }
 
-BOOL LLViewBorder::getBevelFromAttribute(LLXMLNodePtr node, LLViewBorder::EBevel& bevel_style)
+bool LLViewBorder::getBevelFromAttribute(LLXMLNodePtr node, LLViewBorder::EBevel& bevel_style)
 {
 	if (node->hasAttribute("bevel_style"))
 	{
@@ -263,8 +263,8 @@ BOOL LLViewBorder::getBevelFromAttribute(LLXMLNodePtr node, LLViewBorder::EBevel
 		{
 			bevel_style = LLViewBorder::BEVEL_BRIGHT;
 		}
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 

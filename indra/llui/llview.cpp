@@ -1586,7 +1586,7 @@ bool LLView::hasAncestor(const LLView* parentp) const
 
 //-----------------------------------------------------------------------------
 
-BOOL LLView::childHasKeyboardFocus( const std::string& childname ) const
+bool LLView::childHasKeyboardFocus( const std::string& childname ) const
 {
 	LLView *focus = dynamic_cast<LLView *>(gFocusMgr.getKeyboardFocus());
 	
@@ -1594,13 +1594,13 @@ BOOL LLView::childHasKeyboardFocus( const std::string& childname ) const
 	{
 		if (focus->getName() == childname)
 		{
-			return TRUE;
+			return true;
 		}
 		
 		focus = focus->getParent();
 	}
 	
-	return FALSE;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -1645,21 +1645,21 @@ LLView* LLView::findChildView(const std::string& name, bool recurse) const
 	return NULL;
 }
 
-BOOL LLView::parentPointInView(S32 x, S32 y, EHitTestType type) const 
+bool LLView::parentPointInView(S32 x, S32 y, EHitTestType type) const 
 { 
 	return (getUseBoundingRect() && type == HIT_TEST_USE_BOUNDING_RECT)
 		? mBoundingRect.pointInRect( x, y ) 
 		: mRect.pointInRect( x, y ); 
 }
 
-BOOL LLView::pointInView(S32 x, S32 y, EHitTestType type) const 
+bool LLView::pointInView(S32 x, S32 y, EHitTestType type) const 
 { 
 	return (getUseBoundingRect() && type == HIT_TEST_USE_BOUNDING_RECT)
 		? mBoundingRect.pointInRect( x + mRect.mLeft, y + mRect.mBottom ) 
 		: mRect.localPointInRect( x, y ); 
 }
 
-BOOL LLView::blockMouseEvent(S32 x, S32 y) const
+bool LLView::blockMouseEvent(S32 x, S32 y) const
 {
 	return mMouseOpaque && pointInView(x, y, HIT_TEST_IGNORE_BOUNDING_RECT);
 }
