@@ -821,6 +821,12 @@ void LLInvFVBridge::getClipboardEntries(bool show_asset_id,
 			{
 				disabled_items.push_back(std::string("Find Original"));
 			}
+
+            items.push_back(std::string("Cut"));
+            if (!isItemMovable() || !isItemRemovable())
+            {
+                disabled_items.push_back(std::string("Cut"));
+            }
 		}
 		else
 		{
