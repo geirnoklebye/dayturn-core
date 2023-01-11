@@ -4875,7 +4875,7 @@ BOOL LLVivoxVoiceClient::isSessionCallBackPossible(const LLUUID &session_id)
 // Currently this will be false only for PSTN P2P calls.
 BOOL LLVivoxVoiceClient::isSessionTextIMPossible(const LLUUID &session_id)
 {
-	bool result = TRUE;
+	bool result = true;
     sessionStatePtr_t session(findSession(session_id));
 	
 	if(session != NULL)

@@ -177,7 +177,7 @@ public:
 	LLSD getSaveValue() const;
 
 	void set(const LLSD& val)	{ setValue(val); }
-	void setValue(const LLSD& value, bool saved_value = TRUE);
+	void setValue(const LLSD& value, bool saved_value = true);
 	void setDefaultValue(const LLSD& value);
 	void setPersist(ePersist);
 	void setBackupable(bool state);		// <FS:Zi> Backup Settings

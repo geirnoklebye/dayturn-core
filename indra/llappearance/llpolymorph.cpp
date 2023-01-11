@@ -782,7 +782,7 @@ LLPolyVertexMask::~LLPolyVertexMask()
 void LLPolyVertexMask::generateMask(U8 *maskTextureData, S32 width, S32 height, S32 num_components, bool invert, LLVector4a *clothing_weights)
 {
 // RN debug output that uses Image Debugger (http://www.cs.unc.edu/~baxter/projects/imdebug/)
-//	bool debugImg = FALSE;
+//	bool debugImg = false;
 //	if (debugImg)
 //	{
 //		if (invert)

@@ -48,7 +48,7 @@ public:
 	LLUndoBuffer( LLUndoAction (*create_func()), S32 initial_count );
 	virtual ~LLUndoBuffer();
 
-	LLUndoAction *getNextAction(bool setClusterBegin = TRUE);
+	LLUndoAction *getNextAction(bool setClusterBegin = true);
 	bool undoAction();
 	bool redoAction();
 	bool canUndo() { return (mNextAction != mFirstAction); }
