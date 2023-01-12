@@ -607,7 +607,7 @@ bool idle_startup()
 			F32 xfer_throttle_bps = gSavedSettings.getF32("XferThrottle");
 			if (xfer_throttle_bps > 1.f)
 			{
-				gXferManager->setUseAckThrottling(TRUE);
+				gXferManager->setUseAckThrottling(true);
 				gXferManager->setAckThrottleBPS(xfer_throttle_bps);
 			}
 			gAssetStorage = new LLViewerAssetStorage(msg, gXferManager);
