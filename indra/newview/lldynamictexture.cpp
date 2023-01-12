@@ -50,8 +50,8 @@ S32 LLViewerDynamicTexture::sNumRenders = 0;
 //-----------------------------------------------------------------------------
 // LLViewerDynamicTexture()
 //-----------------------------------------------------------------------------
-LLViewerDynamicTexture::LLViewerDynamicTexture(S32 width, S32 height, S32 components, EOrder order, BOOL clamp) : 
-	LLViewerTexture(width, height, components, FALSE),
+LLViewerDynamicTexture::LLViewerDynamicTexture(S32 width, S32 height, S32 components, EOrder order, bool clamp) :
+	LLViewerTexture(width, height, components, false),
 	mClamp(clamp)
 {
 	llassert((1 <= components) && (components <= 4));
@@ -204,12 +204,12 @@ void LLViewerDynamicTexture::postRender(bool success)
 // updateDynamicTextures()
 // Calls update on each dynamic texture.  Calls each group in order: "first," then "middle," then "last."
 //-----------------------------------------------------------------------------
-BOOL LLViewerDynamicTexture::updateAllInstances()
+bool LLViewerDynamicTexture::updateAllInstances()
 {
 	sNumRenders = 0;
 	if (gGLManager.mIsDisabled)
 	{
-		return TRUE;
+		return true;
 	}
 
 	bool use_fbo = gPipeline.mBake.isComplete() && !gGLManager.mIsAMD;
@@ -223,8 +223,8 @@ BOOL LLViewerDynamicTexture::updateAllInstances()
 	LLGLSLShader::bindNoShader();
 	LLVertexBuffer::unbind();
 	
-	BOOL result = FALSE;
-	BOOL ret = FALSE ;
+	bool result = false;
+	bool ret = false ;
 	for( S32 order = 0; order < ORDER_COUNT; order++ )
 	{
 		for (instance_list_t::iterator iter = LLViewerDynamicTexture::sInstances[order].begin();
@@ -239,11 +239,11 @@ BOOL LLViewerDynamicTexture::updateAllInstances()
 				gGL.color4f(1,1,1,1);
                 dynamicTexture->setBoundTarget(use_fbo ? &gPipeline.mBake : nullptr);
 				dynamicTexture->preRender();	// Must be called outside of startRender()
-				result = FALSE;
+				result = false;
 				if (dynamicTexture->render())
 				{
-					ret = TRUE ;
-					result = TRUE;
+					ret = true ;
+					result = true;
 					sNumRenders++;
 				}
 				gGL.flush();

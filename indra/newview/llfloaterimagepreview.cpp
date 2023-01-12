@@ -563,7 +563,7 @@ void LLFloaterImagePreview::onMouseCaptureLostImagePreview(LLMouseHandler* handl
 //-----------------------------------------------------------------------------
 // LLImagePreviewAvatar
 //-----------------------------------------------------------------------------
-LLImagePreviewAvatar::LLImagePreviewAvatar(S32 width, S32 height) : LLViewerDynamicTexture(width, height, 3, ORDER_MIDDLE, FALSE)
+LLImagePreviewAvatar::LLImagePreviewAvatar(S32 width, S32 height) : LLViewerDynamicTexture(width, height, 3, ORDER_MIDDLE, false)
 {
 	mNeedsUpdate = true;
 	mTargetJoint = NULL;
@@ -752,7 +752,7 @@ void LLImagePreviewAvatar::pan(F32 right, F32 up)
 // LLImagePreviewSculpted
 //-----------------------------------------------------------------------------
 
-LLImagePreviewSculpted::LLImagePreviewSculpted(S32 width, S32 height) : LLViewerDynamicTexture(width, height, 3, ORDER_MIDDLE, FALSE)
+LLImagePreviewSculpted::LLImagePreviewSculpted(S32 width, S32 height) : LLViewerDynamicTexture(width, height, 3, ORDER_MIDDLE, false)
 {
 	mNeedsUpdate = true;
 	mCameraDistance = 0.f;

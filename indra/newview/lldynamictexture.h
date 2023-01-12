@@ -60,7 +60,7 @@ public:
 					 S32 height,
 					 S32 components,		// = 4,
 					 EOrder order,			// = ORDER_MIDDLE,
-					 BOOL clamp);
+					 bool clamp);
 	
 	/*virtual*/ S8 getType() const ;
 
@@ -77,7 +77,7 @@ public:
 	virtual void restoreGLTexture() {}
 	virtual void destroyGLTexture() {}
 
-	static BOOL	updateAllInstances();
+	static bool	updateAllInstances();
 	static void destroyGL() ;
 	static void restoreGL() ;
 
@@ -88,7 +88,7 @@ protected:
 	void generateGLTexture(LLGLint internal_format, LLGLenum primary_format, LLGLenum type_format, BOOL swap_bytes = FALSE);
 
 protected:
-	BOOL mClamp;
+	bool mClamp;
 	LLCoordGL mOrigin;
 	LL_ALIGN_16(LLCamera mCamera);
 	

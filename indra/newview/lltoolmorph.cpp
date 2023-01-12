@@ -78,7 +78,7 @@ LLVisualParamHint::LLVisualParamHint(
 	F32 param_weight,
 	LLJoint* jointp)
 	:
-	LLViewerDynamicTexture(width, height, 3, LLViewerDynamicTexture::ORDER_MIDDLE, TRUE ),
+	LLViewerDynamicTexture(width, height, 3, LLViewerDynamicTexture::ORDER_MIDDLE, true ),
 	mNeedsUpdate(true),
 	mIsVisible(false),
 	mJointMesh( mesh ),
@@ -297,7 +297,7 @@ void LLVisualParamHint::draw(F32 alpha)
 //-----------------------------------------------------------------------------
 // LLVisualParamReset()
 //-----------------------------------------------------------------------------
-LLVisualParamReset::LLVisualParamReset() : LLViewerDynamicTexture(1, 1, 1, ORDER_RESET, FALSE)
+LLVisualParamReset::LLVisualParamReset() : LLViewerDynamicTexture(1, 1, 1, ORDER_RESET, false)
 {	
 }
 
