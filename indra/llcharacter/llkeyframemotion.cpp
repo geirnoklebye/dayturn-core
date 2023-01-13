@@ -66,7 +66,7 @@ static F32 MAX_CONSTRAINTS = 10;
 //-----------------------------------------------------------------------------
 LLKeyframeMotion::JointMotionList::JointMotionList()
 	: mDuration(0.f),
-	  mLoop(false),
+	  mLoop(0),
 	  mLoopInPoint(0.f),
 	  mLoopOutPoint(0.f),
 	  mEaseInDuration(0.f),
