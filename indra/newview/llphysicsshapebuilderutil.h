@@ -47,6 +47,7 @@ const F32 SHAPE_BUILDER_ENTRY_SNAP_SCALE_BIN_SIZE = 0.15f;
 const F32 SHAPE_BUILDER_ENTRY_SNAP_PARAMETER_BIN_SIZE = 0.010f;
 const F32 SHAPE_BUILDER_CONVEXIFICATION_SIZE = 2.f * COLLISION_TOLERANCE;
 const F32 SHAPE_BUILDER_MIN_GEOMETRY_SIZE = 0.5f * COLLISION_TOLERANCE;
+const F32 SHAPE_BUILDER_USER_MESH_CONVEXIFICATION_SIZE = 0.5f;
 
 class LLPhysicsVolumeParams : public LLVolumeParams
 {
@@ -134,7 +135,7 @@ public:
 		LLVector3	mCenter;
 	};
 
-	static void determinePhysicsShape( const LLPhysicsVolumeParams& volume_params, const LLVector3& scale, PhysicsShapeSpecification& specOut );
+	static void determinePhysicsShape( const LLPhysicsVolumeParams& volume_params, const LLVector3& scale, bool hasDecomp, PhysicsShapeSpecification& specOut );
 };
 
 #endif //LL_PHYSICS_SHAPE_BUILDER_H
