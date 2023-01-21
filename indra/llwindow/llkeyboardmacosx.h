@@ -53,7 +53,7 @@ public:
 	
 protected:
 	MASK	updateModifiers(const U32 mask);
-	void	setModifierKeyLevel( KEY key, BOOL new_state );
+	void	setModifierKeyLevel( KEY key, bool new_state );
 	bool	translateNumpadKey( const U16 os_key, KEY *translated_key );
 	U16		inverseTranslateNumpadKey(const KEY translated_key);
 private:

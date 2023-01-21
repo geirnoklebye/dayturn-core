@@ -306,14 +306,14 @@ S32 LLKeyboard::getKeyElapsedFrameCount(KEY key)
 }
 
 // static
-BOOL LLKeyboard::keyFromString(const std::string& str, KEY *key)
+bool LLKeyboard::keyFromString(const std::string& str, KEY *key)
 {
 	std::string instring(str);
 	size_t length = instring.size();
 
 	if (length < 1)
 	{
-		return FALSE;
+		return false;
 	}
 	if (length == 1)
 	{
@@ -326,7 +326,7 @@ BOOL LLKeyboard::keyFromString(const std::string& str, KEY *key)
 			('{' <= ch && ch <= '~'))   // {|}~
 		{
 			*key = ch;
-			return TRUE;
+			return true;
 		}
 	}
 
@@ -335,10 +335,10 @@ BOOL LLKeyboard::keyFromString(const std::string& str, KEY *key)
 	if (res != 0)
 	{
 		*key = res;
-		return TRUE;
+		return true;
 	}
 	LL_WARNS() << "keyFromString failed: " << str << LL_ENDL;
-	return FALSE;
+	return false;
 }
 
 
@@ -435,52 +435,52 @@ std::string LLKeyboard::stringFromAccelerator( MASK accel_mask, KEY key )
 
 
 //static
-BOOL LLKeyboard::maskFromString(const std::string& str, MASK *mask)
+bool LLKeyboard::maskFromString(const std::string& str, MASK *mask)
 {
 	std::string instring(str);
 	if (instring == "NONE")
 	{
 		*mask = MASK_NONE;
-		return TRUE;
+		return true;
 	}
 	else if (instring == "SHIFT")
 	{
 		*mask = MASK_SHIFT;
-		return TRUE;
+		return true;
 	}
 	else if (instring == "CTL")
 	{
 		*mask = MASK_CONTROL;
-		return TRUE;
+		return true;
 	}
 	else if (instring == "ALT")
 	{
 		*mask = MASK_ALT;
-		return TRUE;
+		return true;
 	}
 	else if (instring == "CTL_SHIFT")
 	{
 		*mask = MASK_CONTROL | MASK_SHIFT;
-		return TRUE;
+		return true;
 	}
 	else if (instring == "ALT_SHIFT")
 	{
 		*mask = MASK_ALT | MASK_SHIFT;
-		return TRUE;
+		return true;
 	}
 	else if (instring == "CTL_ALT")
 	{
 		*mask = MASK_CONTROL | MASK_ALT;
-		return TRUE;
+		return true;
 	}
 	else if (instring == "CTL_ALT_SHIFT")
 	{
 		*mask = MASK_CONTROL | MASK_ALT | MASK_SHIFT;
-		return TRUE;
+		return true;
 	}
 	else 
 	{
-		return FALSE;
+		return false;
 	}
 }
 
