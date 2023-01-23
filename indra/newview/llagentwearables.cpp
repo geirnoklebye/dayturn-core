@@ -1432,7 +1432,7 @@ void LLAgentWearables::userAttachMultipleAttachments(LLInventoryModel::item_arra
         ++it)
     {
 		const LLInventoryItem* item = *it;
-        LLAttachmentsMgr::instance().addAttachmentRequest(item->getLinkedUUID(), 0, TRUE);
+        LLAttachmentsMgr::instance().addAttachmentRequest(item->getLinkedUUID(), 0, true);
     }
 }
 
