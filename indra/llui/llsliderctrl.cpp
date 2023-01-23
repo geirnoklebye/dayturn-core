@@ -209,7 +209,7 @@ void LLSliderCtrl::onEditorGainFocus( LLFocusableElement* caller, void *userdata
 }
 
 
-void LLSliderCtrl::setValue(F32 v, BOOL from_event)
+void LLSliderCtrl::setValue(F32 v, bool from_event)
 {
 	mSlider->setValue( v, from_event );
 	mValue = mSlider->getValueF32();
@@ -318,7 +318,7 @@ void LLSliderCtrl::onEditorCommit( LLUICtrl* ctrl, const LLSD& userdata )
 	if (!self)
 		return;
 
-	BOOL success = FALSE;
+	bool success = false;
 	F32 val = self->mValue;
 	F32 saved_val = self->mValue;
 
@@ -332,7 +332,7 @@ void LLSliderCtrl::onEditorCommit( LLUICtrl* ctrl, const LLSD& userdata )
 			self->setValue( val );  // set the value temporarily so that the callback can retrieve it.
 			if( !self->mValidateSignal || (*(self->mValidateSignal))( self, val ) )
 			{
-				success = TRUE;
+				success = true;
 			}
 		}
 	}
@@ -361,14 +361,14 @@ void LLSliderCtrl::onSliderCommit( LLUICtrl* ctrl, const LLSD& userdata )
 	if (!self)
 		return;
 
-	BOOL success = FALSE;
+	bool success = false;
 	F32 saved_val = self->mValue;
 	F32 new_val = self->mSlider->getValueF32();
 
 	self->mValue = new_val;  // set the value temporarily so that the callback can retrieve it.
 	if( !self->mValidateSignal || (*(self->mValidateSignal))( self, new_val ) )
 	{
-		success = TRUE;
+		success = true;
 	}
 
 	if( success )
