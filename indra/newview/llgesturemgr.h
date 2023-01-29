@@ -84,7 +84,7 @@ public:
 	// user_gesture_active table, which isn't necessary on login.
 	// deactivate_similar will cause other gestures with the same trigger phrase
 	// or keybinding to be deactivated.
-	void activateGestureWithAsset(const LLUUID& item_id, const LLUUID& asset_id, BOOL inform_server, BOOL deactivate_similar);
+	void activateGestureWithAsset(const LLUUID& item_id, const LLUUID& asset_id, bool inform_server, bool deactivate_similar);
 
 	// Takes gesture out of active list and deletes it.
 	void deactivateGesture(const LLUUID& item_id);

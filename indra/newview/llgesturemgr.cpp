@@ -142,8 +142,8 @@ void LLGestureMgr::activateGesture(const LLUUID& item_id)
 	mLoadingCount = 1;
 	mDeactivateSimilarNames.clear();
 
-	const BOOL inform_server = TRUE;
-	const BOOL deactivate_similar = FALSE; 
+	const bool inform_server = true;
+	const bool deactivate_similar = false; 
 	activateGestureWithAsset(item_id, asset_id, inform_server, deactivate_similar);
 }
 
@@ -182,8 +182,8 @@ void LLGestureMgr::activateGestures(LLViewerInventoryItem::item_array_t& items)
 		}
 
 		// Don't inform server, we'll do that in bulk
-		const BOOL no_inform_server = FALSE;
-		const BOOL deactivate_similar = TRUE;
+		const bool no_inform_server = false;
+		const bool deactivate_similar = true;
 		activateGestureWithAsset(item->getUUID(), item->getAssetUUID(),
 								 no_inform_server,
 								 deactivate_similar);
@@ -246,8 +246,8 @@ struct LLLoadInfo
  */
 void LLGestureMgr::activateGestureWithAsset(const LLUUID& item_id,
 												const LLUUID& asset_id,
-												BOOL inform_server,
-												BOOL deactivate_similar)
+												bool inform_server,
+												bool deactivate_similar)
 {
 	const LLUUID& base_item_id = gInventory.getLinkedItemID(item_id);
 
@@ -1050,8 +1050,8 @@ void LLGestureMgr::onLoadComplete(const LLUUID& asset_uuid,
 	LLLoadInfo* info = (LLLoadInfo*)user_data;
 
 	LLUUID item_id = info->mItemID;
-	BOOL inform_server = info->mInformServer;
-	BOOL deactivate_similar = info->mDeactivateSimilar;
+	bool inform_server = info->mInformServer;
+	bool deactivate_similar = info->mDeactivateSimilar;
 
 	delete info;
 	info = NULL;

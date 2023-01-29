@@ -2115,8 +2115,8 @@ bool idle_startup()
 				if (item_id.notNull() && asset_id.notNull())
 				{
 					// Could schedule and delay these for later.
-					const BOOL no_inform_server = FALSE;
-					const BOOL no_deactivate_similar = FALSE;
+					const bool no_inform_server = false;
+					const bool no_deactivate_similar = false;
 					LLGestureMgr::instance().activateGestureWithAsset(item_id, asset_id,
 										 no_inform_server,
 										 no_deactivate_similar);

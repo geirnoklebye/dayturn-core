@@ -498,8 +498,8 @@ void LLFloaterGesture::onClickPlay()
 	if(!LLGestureMgr::instance().isGestureActive(item_id))
 	{
 		// we need to inform server about gesture activating to be consistent with LLPreviewGesture and  LLGestureComboList.
-		BOOL inform_server = TRUE;
-		BOOL deactivate_similar = FALSE;
+		bool inform_server = true;
+		bool deactivate_similar = false;
 		LLGestureMgr::instance().setGestureLoadedCallback(item_id, boost::bind(&LLFloaterGesture::playGesture, this, item_id));
 		LLViewerInventoryItem *item = gInventory.getItem(item_id);
 		llassert(item);

@@ -317,10 +317,10 @@ void LLFloaterCamera::onOpen(const LLSD& key)
 		updateState();
 	else
 		toPrevMode();
-	mClosed = FALSE;
+	mClosed = false;
 
 	populatePresetCombo();
-	doResize(gSavedSettings.getBOOL("KokuaCameraPresetsHidden"));
+	doResize(gSavedSettings.getbool("KokuaCameraPresetsHidden"));
 }
 
 void LLFloaterCamera::onClose(bool app_quitting)
@@ -339,14 +339,14 @@ void LLFloaterCamera::onClose(bool app_quitting)
 		mPrevMode = CAMERA_CTRL_MODE_PAN;
 
 	switchMode(CAMERA_CTRL_MODE_PAN);
-	mClosed = TRUE;
+	mClosed = true;
 
 	gAgent.setMovementLocked(false);
 }
 
 LLFloaterCamera::LLFloaterCamera(const LLSD& val)
 :	LLFloater(val),
-	mClosed(FALSE),
+	mClosed(false),
 	mUseFlatUI(false),
 	mCurrMode(CAMERA_CTRL_MODE_PAN),
 	mPrevMode(CAMERA_CTRL_MODE_PAN)
@@ -603,7 +603,7 @@ void LLFloaterCamera::doResize(bool reduced)
 	{
 		camera_floater->reshape(FLOATERCAMERA_MAX_WIDTH, camera_floater->getRect().getHeight());
 	}
-	gSavedSettings.setBOOL("KokuaCameraPresetsHidden",reduced);
+	gSavedSettings.setbool("KokuaCameraPresetsHidden",reduced);
 }
 
 /*static*/

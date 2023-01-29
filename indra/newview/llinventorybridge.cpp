@@ -6326,8 +6326,8 @@ void LLGestureBridge::performAction(LLInventoryModel* model, std::string action)
 		if(!LLGestureMgr::instance().isGestureActive(mUUID))
 		{
 			// we need to inform server about gesture activating to be consistent with LLPreviewGesture and  LLGestureComboList.
-			BOOL inform_server = TRUE;
-			BOOL deactivate_similar = FALSE;
+			bool inform_server = true;
+			bool deactivate_similar = false;
 			LLGestureMgr::instance().setGestureLoadedCallback(mUUID, boost::bind(&LLGestureBridge::playGesture, mUUID));
 			LLViewerInventoryItem* item = gInventory.getItem(mUUID);
 			llassert(item);

@@ -360,7 +360,7 @@ bool LLBreastMotion::onUpdate(F32 time, U8* joint_mask)
 	// the graphics LOD settings.
 	
 	// For non-self, if the avatar is small enough visually, then don't update.
-	const BOOL is_self = (dynamic_cast<LLVOAvatarSelf *>(this) != NULL);
+	const bool is_self = (dynamic_cast<LLVOAvatarSelf *>(this) != NULL);
 	if (!is_self)
 	{
 		const F32 area_for_max_settings = 0.0;
