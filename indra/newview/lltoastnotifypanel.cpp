@@ -65,7 +65,7 @@ void LLToastNotifyPanel::addDefaultButton()
 {
 	LLSD form_element;
 	form_element.with("name", "OK").with("text", LLTrans::getString("ok")).with("default", true);
-	LLButton* ok_btn = createButton(form_element, FALSE);
+	LLButton* ok_btn = createButton(form_element, false);
 	LLRect new_btn_rect(ok_btn->getRect());
 
 	new_btn_rect.setOriginAndSize(llabs(getRect().getWidth() - BUTTON_WIDTH)/ 2, BOTTOM_PAD,
@@ -76,7 +76,7 @@ void LLToastNotifyPanel::addDefaultButton()
 	mNumButtons = 1;
 	mAddedDefaultBtn = true;
 }
-LLButton* LLToastNotifyPanel::createButton(const LLSD& form_element, BOOL is_option)
+LLButton* LLToastNotifyPanel::createButton(const LLSD& form_element, bool is_option)
 {
 	InstanceAndS32* userdata = new InstanceAndS32;
 	userdata->mSelf = this;
@@ -89,7 +89,7 @@ LLButton* LLToastNotifyPanel::createButton(const LLSD& form_element, BOOL is_opt
 	const LLFontGL* font = make_small_btn ? sFontSmall: sFont; // for block and ignore buttons in script dialog
 	if (mIsScriptDialog && !make_small_btn)
 	{
-		if (gSavedSettings.getBOOL("KokuaSmallScriptDialogButtonFont")) font=sFontSmall;
+		if (gSavedSettings.getbool("KokuaSmallScriptDialogButtonFont")) font=sFontSmall;
 		else font=sFont;
 	}
 	p.name = form_element["name"].asString();
@@ -332,7 +332,7 @@ void LLToastNotifyPanel::init( LLRect rect, bool show_images )
         mTextBox = getChild<LLTextEditor>("text_editor_box");
 		if (mIsScriptDialog)
 		{
-		 	if (gSavedSettings.getBOOL("KokuaSmallScriptDialogTextFont")) mTextBox->setFont(sFontSmall);
+		 	if (gSavedSettings.getbool("KokuaSmallScriptDialogTextFont")) mTextBox->setFont(sFontSmall);
 			else mTextBox->setFont(sFont);
 		}  
     }
@@ -369,7 +369,7 @@ void LLToastNotifyPanel::init( LLRect rect, bool show_images )
                 // a textbox pretending to be a button.
                 continue;
             }
-            LLButton* new_button = createButton(form_element, TRUE);
+            LLButton* new_button = createButton(form_element, true);
             buttons_width += new_button->getRect().getWidth();
             S32 index = form_element["index"].asInteger();
             buttons.push_back(index_button_pair_t(index,new_button));
