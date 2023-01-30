@@ -68,7 +68,7 @@ void LLToastLifeTimer::restart()
 	mEventTimer.reset();
 }
 
-BOOL LLToastLifeTimer::getStarted()
+bool LLToastLifeTimer::getStarted()
 {
 	return mEventTimer.getStarted();
 }
@@ -125,7 +125,7 @@ LLToast::LLToast(const LLToast::Params& p)
 
 	mWrapperPanel = getChild<LLPanel>("wrapper_panel");
 
-	setBackgroundOpaque(TRUE); // *TODO: obsolete
+	setBackgroundOpaque(true); // *TODO: obsolete
 	updateTransparency();
 
 	if(p.panel())

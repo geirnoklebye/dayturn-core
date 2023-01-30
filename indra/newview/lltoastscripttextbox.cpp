@@ -71,14 +71,14 @@ LLToastScriptTextbox::LLToastScriptTextbox(const LLNotificationPtr& notification
 
 	LLStyle::Params style;
 	style.font = pMessageText->getFont();
-	pMessageText->appendText(message, TRUE, style);
+	pMessageText->appendText(message, true, style);
 
 	//submit button
 	LLButton* pSubmitBtn = getChild<LLButton>("btn_submit");
 	pSubmitBtn->setClickedCallback((boost::bind(&LLToastScriptTextbox::onClickSubmit, this)));
 	setDefaultBtn(pSubmitBtn);
 	
-	if (gSavedSettings.getBOOL("KokuaSmallScriptDialogButtonFont"))
+	if (gSavedSettings.getbool("KokuaSmallScriptDialogButtonFont"))
 	{
 		getChild<LLButton>("ignore_btn")->setFont(sFontSmall);
 		pSubmitBtn->setFont(sFontSmall);

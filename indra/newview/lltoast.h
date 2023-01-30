@@ -56,7 +56,7 @@ public:
 	void stop();
 	void start();
 	void restart();
-	BOOL getStarted();
+	bool getStarted();
 	void setPeriod(F32 period);
 	F32 getRemainingTimeF32();
 
@@ -108,7 +108,7 @@ public:
 	static void updateClass();
 	static void cleanupToasts();
 
-	static BOOL isAlertToastShown() { return sModalToastsList.size() > 0; }
+	static bool isAlertToastShown() { return sModalToastsList.size() > 0; }
 
 	LLToast(const LLToast::Params& p);
 	virtual ~LLToast();

@@ -332,7 +332,7 @@ private:
 	void updateLayoutAsNeeded();
 	void createButtons();
 	void resizeButtonsInRow(std::vector<LLToolBarButton*>& buttons_in_row, S32 max_row_girth);
-	BOOL isSettingChecked(const LLSD& userdata);
+	bool isSettingChecked(const LLSD& userdata);
 	void onSettingEnable(const LLSD& userdata);
 	void onRemoveSelectedCommand();
 

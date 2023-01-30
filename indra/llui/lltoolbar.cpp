@@ -502,9 +502,9 @@ BOOL LLToolBar::handleRightMouseDown(S32 x, S32 y, MASK mask)
 	return handle_it_here;
 }
 
-BOOL LLToolBar::isSettingChecked(const LLSD& userdata)
+bool LLToolBar::isSettingChecked(const LLSD& userdata)
 {
-	BOOL retval = FALSE;
+	bool retval = false;
 
 	const std::string setting_name = userdata.asString();
 

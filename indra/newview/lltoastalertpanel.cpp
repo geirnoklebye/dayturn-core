@@ -432,7 +432,7 @@ LLToastAlertPanel::~LLToastAlertPanel()
 	}
 }
 
-BOOL LLToastAlertPanel::hasTitleBar() const
+bool LLToastAlertPanel::hasTitleBar() const
 {
 	// *TODO: check necessity of this code
 	/*
@@ -457,22 +457,22 @@ bool LLToastAlertPanel::handleKeyHere(KEY key, MASK mask )
 	}
 	else if (KEY_RIGHT == key)
 	{
-		LLToastPanel::focusNextItem(FALSE);
+		LLToastPanel::focusNextItem(false);
 		return true;
 	}
 	else if (KEY_LEFT == key)
 	{
-		LLToastPanel::focusPrevItem(FALSE);
+		LLToastPanel::focusPrevItem(false);
 		return true;
 	}
 	else if (KEY_TAB == key && mask == MASK_NONE)
 	{
-		LLToastPanel::focusNextItem(FALSE);
+		LLToastPanel::focusNextItem(false);
 		return true;
 	}
 	else if (KEY_TAB == key && mask == MASK_SHIFT)
 	{
-		LLToastPanel::focusPrevItem(FALSE);
+		LLToastPanel::focusPrevItem(false);
 		return true;
 	}
 	else

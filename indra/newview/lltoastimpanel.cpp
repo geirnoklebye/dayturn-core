@@ -76,10 +76,10 @@ LLToastIMPanel::LLToastIMPanel(LLToastIMPanel::Params &p) :	LLToastPanel(p.notif
 		mMessage->clear();
 		
 		style_params.font.style ="ITALIC";
-		mMessage->appendText(p.from, FALSE, style_params);
+		mMessage->appendText(p.from, false, style_params);
 
 		style_params.font.style = "ITALIC";
-		mMessage->appendText(p.message.substr(3), FALSE, style_params);
+		mMessage->appendText(p.message.substr(3), false, style_params);
 	}
 	else
 	{

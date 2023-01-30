@@ -224,7 +224,7 @@ bool LLCheckBoxToastPanel::setCheckBox(const std::string& check_title,
     dialog_height += LINE_HEIGHT * lines.size();
     dialog_height += LINE_HEIGHT / 2;
 
-    LLToastPanel::reshape(dialog_width, dialog_height, FALSE);
+    LLToastPanel::reshape(dialog_width, dialog_height, false);
 
     S32 msg_x = (LLToastPanel::getRect().getWidth() - max_msg_width) / 2;
 
