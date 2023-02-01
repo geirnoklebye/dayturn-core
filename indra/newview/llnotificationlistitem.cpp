@@ -99,7 +99,7 @@ bool LLNotificationListItem::postBuild()
     mExpandedHeight = (S32)atoi(expanded_height_str.c_str());
     mCondensedHeight = (S32)atoi(condensed_height_str.c_str());
     
-    setExpanded(FALSE);
+    setExpanded(false);
 
     return rv;
 }
@@ -208,12 +208,12 @@ std::set<std::string> LLNotificationListItem::getTransactionTypes()
 
 void LLNotificationListItem::onClickExpandBtn()
 {
-    setExpanded(TRUE);
+    setExpanded(true);
 }
 
 void LLNotificationListItem::onClickCondenseBtn()
 {
-    setExpanded(FALSE);
+    setExpanded(false);
 }
 
 void LLNotificationListItem::reshapeNotification()
@@ -225,7 +225,7 @@ void LLNotificationListItem::reshapeNotification()
     }
 }
 
-void LLNotificationListItem::setExpanded(BOOL value)
+void LLNotificationListItem::setExpanded(bool value)
 {
     mCondensedViewPanel->setVisible(!value);
     mExpandedViewPanel->setVisible(value);

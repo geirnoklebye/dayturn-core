@@ -273,7 +273,7 @@ bool LLFloaterAnimPreview::postBuild()
 LLFloaterScriptPreview::LLFloaterScriptPreview(const LLSD& filename )
 	: LLFloaterNameDesc(filename)
 {
-	mIsText = TRUE;
+	mIsText = true;
 }
 
 bool LLFloaterScriptPreview::postBuild()

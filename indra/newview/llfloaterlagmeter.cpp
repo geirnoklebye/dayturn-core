@@ -365,14 +365,14 @@ void LLFloaterLagMeter::updateControls(bool shrink)
 //	self->mShrunk = !self->mShrunk;
 }
 
-BOOL LLFloaterLagMeter::isShrunk()
+bool LLFloaterLagMeter::isShrunk()
 {
-	return gSavedSettings.getBOOL("LagMeterShrunk");
+	return gSavedSettings.getbool("LagMeterShrunk");
 }
 
 void LLFloaterLagMeter::onClickShrink()  // toggle "LagMeterShrunk"
 {
 	bool shrunk = isShrunk();
 	updateControls(!shrunk);
-	gSavedSettings.setBOOL("LagMeterShrunk", !shrunk);
+	gSavedSettings.setbool("LagMeterShrunk", !shrunk);
 }

@@ -2850,7 +2850,7 @@ void LLPanelLandAccess::onCommitAny(LLUICtrl *ctrl, void *userdata)
 	}
 
 	// Extract data from UI
-	BOOL public_access = self->getChild<LLUICtrl>("public_access")->getValue().asBoolean();
+	bool public_access = self->getChild<LLUICtrl>("public_access")->getValue().asBoolean();
     bool use_access_group = self->getChild<LLUICtrl>("GroupCheck")->getValue().asBoolean();
 	if (use_access_group)
 	{

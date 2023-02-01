@@ -701,7 +701,7 @@ std::vector<std::string>* LLFilePicker::navOpenFilterProc(ELoadFilter filter) //
 bool	LLFilePicker::doNavChooseDialog(ELoadFilter filter)
 {
 	// if local file browsing is turned off, return without opening dialog
-	if ( check_local_file_access_enabled() == false )
+	if (!check_local_file_access_enabled())
 	{
 		return false;
 	}

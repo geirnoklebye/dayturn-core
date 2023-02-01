@@ -137,10 +137,10 @@ void LLFloaterLandHoldings::draw()
 void LLFloaterLandHoldings::refresh()
 {
 	LLCtrlSelectionInterface *list = childGetSelectionInterface("parcel list");
-	BOOL enable_btns = FALSE;
+	bool enable_btns = false;
 	if (list && list->getFirstSelectedIndex()> -1)
 	{
-		enable_btns = TRUE;
+		enable_btns = true;
 	}
 
 	getChildView("Teleport")->setEnabled(enable_btns);

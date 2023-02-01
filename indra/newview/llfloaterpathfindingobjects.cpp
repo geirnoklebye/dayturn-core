@@ -501,7 +501,7 @@ void LLFloaterPathfindingObjects::showFloaterWithSelectionObjects()
 	setFocus(true);
 }
 
-BOOL LLFloaterPathfindingObjects::isShowBeacons() const
+bool LLFloaterPathfindingObjects::isShowBeacons() const
 {
 	return mShowBeaconCheckBox->get();
 }

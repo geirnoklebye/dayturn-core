@@ -1113,7 +1113,7 @@ void LLFloaterIMSession::processSessionUpdate(const LLSD& session_update)
 	if ( false && session_update.has("moderated_mode") &&
 		 session_update["moderated_mode"].has("voice") )
 	{
-		BOOL voice_moderated = session_update["moderated_mode"]["voice"];
+		bool voice_moderated = session_update["moderated_mode"]["voice"];
 		const std::string session_label = LLIMModel::instance().getName(mSessionID);
 
 		if (voice_moderated)

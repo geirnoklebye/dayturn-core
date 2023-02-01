@@ -1657,7 +1657,7 @@ void LLFloaterModelPreview::onUpload(void* user_data)
 	bool upload_joint_positions = mp->childGetValue("upload_joints").asBoolean();
     bool lock_scale_if_joint_position = mp->childGetValue("lock_scale_if_joint_position").asBoolean();
 
-	if (gSavedSettings.getBOOL("MeshImportUseSLM"))
+	if (gSavedSettings.getbool("MeshImportUseSLM"))
 	{
         mp->mModelPreview->saveUploadData(upload_skinweights, upload_joint_positions, lock_scale_if_joint_position);
     }

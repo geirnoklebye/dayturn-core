@@ -356,7 +356,7 @@ void LLFloaterNotificationsTabbed::collapseAllOnCurrentTab()
     {
         LLNotificationListItem* notify_item = dynamic_cast<LLNotificationListItem*>(*iter);
         if (notify_item)
-            notify_item->setExpanded(FALSE);
+            notify_item->setExpanded(false);
     }
 }
 
@@ -411,7 +411,7 @@ void LLFloaterNotificationsTabbed::onItemClick(LLNotificationListItem* item)
     }
     else
     {
-        item->setExpanded(TRUE);
+        item->setExpanded(true);
     }
 }
 

@@ -429,7 +429,7 @@ void LLVolumeImplFlexible::doFlexibleUpdate()
 	LLPath *path = &volume->getPath();
 	if ((mSimulateRes == 0 || !mInitialized) && mVO->mDrawable->isVisible()) 
 	{
-		bool force_update = mSimulateRes == 0 ? true : false;
+		bool force_update = mSimulateRes == 0;
 		doIdleUpdate();
 
 		if (!force_update || !gPipeline.hasRenderDebugFeatureMask(LLPipeline::RENDER_DEBUG_FEATURE_FLEXIBLE))

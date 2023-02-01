@@ -310,94 +310,94 @@ LLHandle<LLFloaterPathfindingConsole> LLFloaterPathfindingConsole::getInstanceHa
 	return sInstanceHandle;
 }
 
-BOOL LLFloaterPathfindingConsole::isRenderNavMesh() const
+bool LLFloaterPathfindingConsole::isRenderNavMesh() const
 {
 	return mShowNavMeshCheckBox->get();
 }
 
-void LLFloaterPathfindingConsole::setRenderNavMesh(BOOL pIsRenderNavMesh)
+void LLFloaterPathfindingConsole::setRenderNavMesh(bool pIsRenderNavMesh)
 {
 	mShowNavMeshCheckBox->set(pIsRenderNavMesh);
 	setNavMeshRenderState();
 }
 
-BOOL LLFloaterPathfindingConsole::isRenderWalkables() const
+bool LLFloaterPathfindingConsole::isRenderWalkables() const
 {
 	return mShowWalkablesCheckBox->get();
 }
 
-void LLFloaterPathfindingConsole::setRenderWalkables(BOOL pIsRenderWalkables)
+void LLFloaterPathfindingConsole::setRenderWalkables(bool pIsRenderWalkables)
 {
 	mShowWalkablesCheckBox->set(pIsRenderWalkables);
 }
 
-BOOL LLFloaterPathfindingConsole::isRenderStaticObstacles() const
+bool LLFloaterPathfindingConsole::isRenderStaticObstacles() const
 {
 	return mShowStaticObstaclesCheckBox->get();
 }
 
-void LLFloaterPathfindingConsole::setRenderStaticObstacles(BOOL pIsRenderStaticObstacles)
+void LLFloaterPathfindingConsole::setRenderStaticObstacles(bool pIsRenderStaticObstacles)
 {
 	mShowStaticObstaclesCheckBox->set(pIsRenderStaticObstacles);
 }
 
-BOOL LLFloaterPathfindingConsole::isRenderMaterialVolumes() const
+bool LLFloaterPathfindingConsole::isRenderMaterialVolumes() const
 {
 	return mShowMaterialVolumesCheckBox->get();
 }
 
-void LLFloaterPathfindingConsole::setRenderMaterialVolumes(BOOL pIsRenderMaterialVolumes)
+void LLFloaterPathfindingConsole::setRenderMaterialVolumes(bool pIsRenderMaterialVolumes)
 {
 	mShowMaterialVolumesCheckBox->set(pIsRenderMaterialVolumes);
 }
 
-BOOL LLFloaterPathfindingConsole::isRenderExclusionVolumes() const
+bool LLFloaterPathfindingConsole::isRenderExclusionVolumes() const
 {
 	return mShowExclusionVolumesCheckBox->get();
 }
 
-void LLFloaterPathfindingConsole::setRenderExclusionVolumes(BOOL pIsRenderExclusionVolumes)
+void LLFloaterPathfindingConsole::setRenderExclusionVolumes(bool pIsRenderExclusionVolumes)
 {
 	mShowExclusionVolumesCheckBox->set(pIsRenderExclusionVolumes);
 }
 
-BOOL LLFloaterPathfindingConsole::isRenderWorld() const
+bool LLFloaterPathfindingConsole::isRenderWorld() const
 {
 	return mShowWorldCheckBox->get();
 }
 
-void LLFloaterPathfindingConsole::setRenderWorld(BOOL pIsRenderWorld)
+void LLFloaterPathfindingConsole::setRenderWorld(bool pIsRenderWorld)
 {
 	mShowWorldCheckBox->set(pIsRenderWorld);
 	setWorldRenderState();
 }
 
-BOOL LLFloaterPathfindingConsole::isRenderWorldMovablesOnly() const
+bool LLFloaterPathfindingConsole::isRenderWorldMovablesOnly() const
 {
 	return (mShowWorldCheckBox->get() && mShowWorldMovablesOnlyCheckBox->get());
 }
 
-void LLFloaterPathfindingConsole::setRenderWorldMovablesOnly(BOOL pIsRenderWorldMovablesOnly)
+void LLFloaterPathfindingConsole::setRenderWorldMovablesOnly(bool pIsRenderWorldMovablesOnly)
 {
 	mShowWorldMovablesOnlyCheckBox->set(pIsRenderWorldMovablesOnly);
 }
 
-BOOL LLFloaterPathfindingConsole::isRenderWaterPlane() const
+bool LLFloaterPathfindingConsole::isRenderWaterPlane() const
 {
 	return mShowRenderWaterPlaneCheckBox->get();
 }
 
-void LLFloaterPathfindingConsole::setRenderWaterPlane(BOOL pIsRenderWaterPlane)
+void LLFloaterPathfindingConsole::setRenderWaterPlane(bool pIsRenderWaterPlane)
 {
 	mShowRenderWaterPlaneCheckBox->set(pIsRenderWaterPlane);
 }
 
-BOOL LLFloaterPathfindingConsole::isRenderXRay() const
+bool LLFloaterPathfindingConsole::isRenderXRay() const
 {
 	return mShowXRayCheckBox->get();
 }
 
-void LLFloaterPathfindingConsole::setRenderXRay(BOOL pIsRenderXRay)
+void LLFloaterPathfindingConsole::setRenderXRay(bool pIsRenderXRay)
 {
 	mShowXRayCheckBox->set(pIsRenderXRay);
 }
@@ -616,8 +616,8 @@ void LLFloaterPathfindingConsole::handleNavMeshZoneStatus(LLPathfindingNavMeshZo
 void LLFloaterPathfindingConsole::onRegionBoundaryCross()
 {	
 	initializeNavMeshZoneForCurrentRegion();	
-	setRenderWorld(TRUE);
-	setRenderWorldMovablesOnly(FALSE);
+	setRenderWorld(true);
+	setRenderWorldMovablesOnly(false);
 }
 
 void LLFloaterPathfindingConsole::onPathEvent()
@@ -657,15 +657,15 @@ void LLFloaterPathfindingConsole::onPathEvent()
 void LLFloaterPathfindingConsole::setDefaultInputs()
 {
 	mViewTestTabContainer->selectTab(XUI_VIEW_TAB_INDEX);
-	setRenderWorld(TRUE);
-	setRenderWorldMovablesOnly(FALSE);
-	setRenderNavMesh(FALSE);
-	setRenderWalkables(FALSE);
-	setRenderMaterialVolumes(FALSE);
-	setRenderStaticObstacles(FALSE);
-	setRenderExclusionVolumes(FALSE);
-	setRenderWaterPlane(FALSE);
-	setRenderXRay(FALSE);
+	setRenderWorld(true);
+	setRenderWorldMovablesOnly(false);
+	setRenderNavMesh(false);
+	setRenderWalkables(false);
+	setRenderMaterialVolumes(false);
+	setRenderStaticObstacles(false);
+	setRenderExclusionVolumes(false);
+	setRenderWaterPlane(false);
+	setRenderXRay(false);
 }
 
 void LLFloaterPathfindingConsole::setConsoleState(EConsoleState pConsoleState)
@@ -678,18 +678,18 @@ void LLFloaterPathfindingConsole::setConsoleState(EConsoleState pConsoleState)
 
 void LLFloaterPathfindingConsole::setWorldRenderState()
 {
-	BOOL renderWorld = isRenderWorld();
+	bool renderWorld = isRenderWorld();
 
 	mShowWorldMovablesOnlyCheckBox->setEnabled(renderWorld && mShowWorldCheckBox->getEnabled());
 	if (!renderWorld)
 	{
-		mShowWorldMovablesOnlyCheckBox->set(FALSE);
+		mShowWorldMovablesOnlyCheckBox->set(false);
 	}
 }
 
 void LLFloaterPathfindingConsole::setNavMeshRenderState()
 {
-	BOOL renderNavMesh = isRenderNavMesh();
+	bool renderNavMesh = isRenderNavMesh();
 
 	mShowNavMeshWalkabilityLabel->setEnabled(renderNavMesh);
 	mShowNavMeshWalkabilityComboBox->setEnabled(renderNavMesh);
@@ -1078,7 +1078,7 @@ void LLFloaterPathfindingConsole::updatePathTestStatus()
 }
 
 
-BOOL LLFloaterPathfindingConsole::isRenderAnyShapes() const
+bool LLFloaterPathfindingConsole::isRenderAnyShapes() const
 {
 	return (isRenderWalkables() || isRenderStaticObstacles() ||
 		isRenderMaterialVolumes() ||  isRenderExclusionVolumes());
