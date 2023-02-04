@@ -102,7 +102,7 @@ LLPanelWearableOutfitItem::Params::Params()
 {
 }
 
-BOOL LLPanelWearableOutfitItem::postBuild()
+bool LLPanelWearableOutfitItem::postBuild()
 {
     LLPanelWearableListItem::postBuild();
     
@@ -119,10 +119,10 @@ BOOL LLPanelWearableOutfitItem::postBuild()
         setWidgetsVisible(false);
         reshapeWidgets();
     }
-    return TRUE;
+    return true;
 }
 
-BOOL LLPanelWearableOutfitItem::handleDoubleClick(S32 x, S32 y, MASK mask)
+bool LLPanelWearableOutfitItem::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
     if(!mShowWidgets)
     {
@@ -137,7 +137,7 @@ BOOL LLPanelWearableOutfitItem::handleDoubleClick(S32 x, S32 y, MASK mask)
     {
         onAddWearable();
     }
-    return TRUE;
+    return true;
 }
 
 void LLPanelWearableOutfitItem::onAddWearable()

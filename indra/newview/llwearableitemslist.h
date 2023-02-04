@@ -83,8 +83,8 @@ public:
         Params();
     };
 
-    BOOL postBuild();
-    BOOL handleDoubleClick(S32 x, S32 y, MASK mask);
+    bool postBuild();
+    bool handleDoubleClick(S32 x, S32 y, MASK mask);
 
 	static LLPanelWearableOutfitItem* create(LLViewerInventoryItem* item,
 											 bool worn_indication_enabled,
