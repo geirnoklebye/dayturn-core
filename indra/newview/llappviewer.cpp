@@ -1629,7 +1629,7 @@ bool LLAppViewer::doFrame()
 					LL_PROFILE_ZONE_NAMED_CATEGORY_APP( "df Snapshot" )
 					pingMainloopTimeout("Main:Snapshot");
 					LLFloaterSnapshot::update(); // take snapshots
-					LLFloaterOutfitSnapshot::update();
+                	LLFloaterSimpleOutfitSnapshot::update();
 					gGLActive = false;
 			}
 		}
