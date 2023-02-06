@@ -3139,7 +3139,7 @@ bool LLAppViewer::initConfiguration()
 		LLControlVariable* disable_voice = gSavedSettings.getControl("CmdLineDisableVoice");
 		if(disable_voice)
 		{
-			const BOOL DO_NOT_PERSIST = FALSE;
+			const bool DO_NOT_PERSIST = false;
 			disable_voice->setValue(LLSD(TRUE), DO_NOT_PERSIST);
 		}
 	}
@@ -3235,7 +3235,7 @@ bool LLAppViewer::initWindow()
 	gHeadlessClient = gSavedSettings.getbool("HeadlessClient");
 
 	// always start windowed
-	BOOL ignorePixelDepth = gSavedSettings.getBOOL("IgnorePixelDepth");
+	bool ignorePixelDepth = gSavedSettings.getbool("IgnorePixelDepth");
 
 	LLViewerWindow::Params window_params;
 	window_params
@@ -3247,7 +3247,7 @@ bool LLAppViewer::initWindow()
 		.height(gSavedSettings.getU32("WindowHeight"))
 		.min_width(gSavedSettings.getU32("MinWindowWidth"))
 		.min_height(gSavedSettings.getU32("MinWindowHeight"))
-		.fullscreen(gSavedSettings.getBOOL("FullScreen"))
+		.fullscreen(gSavedSettings.getbool("FullScreen"))
 		.ignore_pixel_depth(ignorePixelDepth)
 		.first_run(mIsFirstRun);
 
@@ -3928,7 +3928,7 @@ void LLAppViewer::handleViewerCrash()
 	{
 		return;
 	}
-	pApp->mReportedCrash = TRUE;
+	pApp->mReportedCrash = true;
 
 	// Insert crash host url (url to post crash log to) if configured.
 	std::string crashHostUrl = gSavedSettings.get<std::string>("CrashHostUrl");
@@ -4750,7 +4750,7 @@ void LLAppViewer::badNetworkHandler()
 	// Flush all of our caches on exit in the case of disconnect due to
 	// invalid packets.
 
-	mPurgeCacheOnExit = TRUE;
+	mPurgeCacheOnExit = true;
 
 	std::ostringstream message;
 	message <<
@@ -4911,7 +4911,6 @@ static LLTrace::BlockTimerStatHandle FTM_HUD_EFFECTS("HUD Effects");
 ///////////////////////////////////////////////////////
 void LLAppViewer::idle()
 {
-    LL_PROFILE_ZONE_SCOPED_CATEGORY_APP;
 	pingMainloopTimeout("Main:Idle");
 
 	// Update frame timers
@@ -4997,7 +4996,7 @@ void LLAppViewer::idle()
 
 	if (!gDisconnected)
 	{
-		LL_PROFILE_ZONE_NAMED_CATEGORY_NETWORK("network"); //LL_RECORD_BLOCK_TIME(FTM_NETWORK);
+		//LL_RECORD_BLOCK_TIME(FTM_NETWORK);
 		// Update spaceserver timeinfo
 	    LLWorld::getInstance()->setSpaceTimeUSec(LLWorld::getInstance()->getSpaceTimeUSec() + LLUnits::Seconds::fromValue(dt_raw));
 
@@ -5013,7 +5012,7 @@ void LLAppViewer::idle()
 		}
 
 		{
-			LL_RECORD_BLOCK_TIME(FTM_AGENT_AUTOPILOT);
+			//LL_RECORD_BLOCK_TIME(FTM_AGENT_AUTOPILOT);
 			// Handle automatic walking towards points
 			gAgentPilot.updateTarget();
 			gAgent.autoPilot(&yaw);
@@ -5088,7 +5087,7 @@ void LLAppViewer::idle()
 
 	if (!gDisconnected)
 	{
-		LL_RECORD_BLOCK_TIME(FTM_NETWORK);
+		//LL_RECORD_BLOCK_TIME(FTM_NETWORK);
 
 	    ////////////////////////////////////////////////
 	    //
@@ -5172,14 +5171,14 @@ void LLAppViewer::idle()
 
 	{
 		// Handle pending gesture processing
-		LL_RECORD_BLOCK_TIME(FTM_AGENT_POSITION);
+		//LL_RECORD_BLOCK_TIME(FTM_AGENT_POSITION);
 		LLGestureMgr::instance().update();
 
 		gAgent.updateAgentPosition(gFrameDTClamped, yaw, current_mouse.mX, current_mouse.mY);
 	}
 
 	{
-		LL_RECORD_BLOCK_TIME(FTM_OBJECTLIST_UPDATE);
+		//LL_RECORD_BLOCK_TIME(FTM_OBJECTLIST_UPDATE);
 
         if (!(logoutRequestSent() && hasSavedFinalSnapshot()))
 		{
@@ -5194,13 +5193,13 @@ void LLAppViewer::idle()
 	//
 
 	{
-		LL_RECORD_BLOCK_TIME(FTM_CLEANUP);
+		//LL_RECORD_BLOCK_TIME(FTM_CLEANUP);
 		{
-			LL_RECORD_BLOCK_TIME(FTM_CLEANUP_OBJECTS);
+			//LL_RECORD_BLOCK_TIME(FTM_CLEANUP_OBJECTS);
 			gObjectList.cleanDeadObjects();
 		}
 		{
-			LL_RECORD_BLOCK_TIME(FTM_CLEANUP_DRAWABLES);
+			//LL_RECORD_BLOCK_TIME(FTM_CLEANUP_DRAWABLES);
 			LLDrawable::cleanupDeadDrawables();
 		}
 	}
@@ -5219,7 +5218,7 @@ void LLAppViewer::idle()
 	//
 
 	{
-		LL_RECORD_BLOCK_TIME(FTM_HUD_EFFECTS);
+		//LL_RECORD_BLOCK_TIME(FTM_HUD_EFFECTS);
 		LLSelectMgr::getInstance()->updateEffects();
 		LLHUDManager::getInstance()->cleanupEffects();
 		LLHUDManager::getInstance()->sendEffects();
@@ -5231,7 +5230,7 @@ void LLAppViewer::idle()
 	//
 
 	{
-		LL_RECORD_BLOCK_TIME(FTM_NETWORK);
+		//LL_RECORD_BLOCK_TIME(FTM_NETWORK);
 		gVLManager.unpackData();
 	}
 
@@ -5243,7 +5242,7 @@ void LLAppViewer::idle()
 	LLWorld::getInstance()->updateVisibilities();
 	{
 		const F32 max_region_update_time = .001f; // 1ms
-		LL_RECORD_BLOCK_TIME(FTM_REGION_UPDATE);
+		//LL_RECORD_BLOCK_TIME(FTM_REGION_UPDATE);
 		LLWorld::getInstance()->updateRegions(max_region_update_time);
 	}
 
@@ -5280,7 +5279,7 @@ void LLAppViewer::idle()
 	//
 
 	{
-		LL_PROFILE_ZONE_NAMED_CATEGORY_APP("world update"); //LL_RECORD_BLOCK_TIME(FTM_WORLD_UPDATE);
+        //LL_RECORD_BLOCK_TIME(FTM_WORLD_UPDATE);
 		gPipeline.updateMove();
 	}
 
@@ -5313,7 +5312,7 @@ void LLAppViewer::idle()
 
 	// objects and camera should be in sync, do LOD calculations now
 	{
-		LL_RECORD_BLOCK_TIME(FTM_LOD_UPDATE);
+		//LL_RECORD_BLOCK_TIME(FTM_LOD_UPDATE);
 		gObjectList.updateApparentAngles(gAgent);
 	}
 
@@ -5321,7 +5320,7 @@ void LLAppViewer::idle()
 	LLAvatarRenderInfoAccountant::getInstance()->idle();
 
 	{
-		LL_PROFILE_ZONE_NAMED_CATEGORY_APP("audio update"); //LL_RECORD_BLOCK_TIME(FTM_AUDIO_UPDATE);
+        //LL_RECORD_BLOCK_TIME(FTM_AUDIO_UPDATE);
 
 		if (gAudiop)
 		{
