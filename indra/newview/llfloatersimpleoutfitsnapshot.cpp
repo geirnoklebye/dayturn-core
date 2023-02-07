@@ -105,8 +105,8 @@ void LLFloaterSimpleOutfitSnapshot::Impl::updateResolution(void* data)
         if (original_width != width || original_height != height)
         {
             // hide old preview as the aspect ratio could be wrong
-            checkAutoSnapshot(previewp, FALSE);
-            previewp->updateSnapshot(TRUE);
+            checkAutoSnapshot(previewp, false);
+            previewp->updateSnapshot(true);
         }
     }
 }
@@ -176,7 +176,7 @@ bool LLFloaterSimpleOutfitSnapshot::postBuild()
     impl->setAdvanced(true);
     impl->setSkipReshaping(true);
 
-    previewp->mKeepAspectRatio = FALSE;
+    previewp->mKeepAspectRatio = false;
     previewp->setThumbnailPlaceholderRect(getThumbnailPlaceholderRect());
     previewp->setAllowRenderUI(false);
 
@@ -238,12 +238,12 @@ void LLFloaterSimpleOutfitSnapshot::onOpen(const LLSD& key)
     LLSnapshotLivePreview* preview = getPreviewView();
     if (preview)
     {
-        preview->updateSnapshot(TRUE);
+        preview->updateSnapshot(true);
     }
-    focusFirstItem(FALSE);
-    gSnapshotFloaterView->setEnabled(TRUE);
-    gSnapshotFloaterView->setVisible(TRUE);
-    gSnapshotFloaterView->adjustToFitScreen(this, FALSE);
+    focusFirstItem(false);
+    gSnapshotFloaterView->setEnabled(true);
+    gSnapshotFloaterView->setVisible(true);
+    gSnapshotFloaterView->adjustToFitScreen(this, false);
 
     impl->updateControls(this);
     impl->setStatus(ImplBase::STATUS_READY);
@@ -312,7 +312,7 @@ void LLFloaterSimpleOutfitSnapshot::saveTexture()
     {
         mOutfitGallery->onBeforeOutfitSnapshotSave();
     }
-    previewp->saveTexture(TRUE, getOutfitID().asString());
+    previewp->saveTexture(true, getOutfitID().asString());
     if (mOutfitGallery)
     {
         mOutfitGallery->onAfterOutfitSnapshotSave();
