@@ -30,7 +30,6 @@
 #include "llfasttimer.h"
 #include "llsd.h"
 #include "lltrans.h"
-#include "tea.h"
 
 LLTrace::BlockTimerStatHandle FTM_UI_STRING("UI String");
 
@@ -138,12 +137,6 @@ void LLUIString::updateResult() const
 		combined_args.insert(mArgs->begin(), mArgs->end());
 	}
 	LLStringUtil::format(mResult, combined_args);
-
-	// <FS:AW opensim currency support>
-	// Impact on lag: at average frame time 15.9 ms
-	// FTM_UI_STRING 0.01ms both with/without wrapCurrency
-	Tea::wrapCurrency(mResult);
-	// </FS:AW opensim currency support>
 }
 
 void LLUIString::updateWResult() const
