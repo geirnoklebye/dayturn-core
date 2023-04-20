@@ -76,10 +76,10 @@
 	</combo_box>
 	<panel>
 		<text name="streaming cost">
-			Resource Cost: [COST]
+			Resource Cost: L$[COST]
 		</text>
 		<text name="physics cost">
-			Physics Cost: [COST]
+			Physics Cost: L$[COST]
 		</text>
 		<text name="upload fee">
 			Upload Fee: N/A

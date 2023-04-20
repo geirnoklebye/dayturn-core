@@ -346,7 +346,7 @@ Si no quieres que este rol siga teniendo dichas capacidades, deshabilítalas inm
 		<usetemplate ignoretext="Confirmar antes de soltar anexados" name="okcancelignore" notext="No" yestext="Sí"/>
 	</notification>
 	<notification name="JoinGroupCanAfford">
-		Entrar a este grupo cuesta [COST] L$.
+		Entrar a este grupo cuesta L$[COST].
 ¿Quieres hacerlo??
 		<usetemplate name="okcancelbuttons" notext="Cancelar" yestext="Entrar"/>
 	</notification>
@@ -356,7 +356,7 @@ Si no quieres que este rol siga teniendo dichas capacidades, deshabilítalas inm
 		<usetemplate name="okcancelbuttons" notext="Cancelar" yestext="Entrar"/>
 	</notification>
 	<notification name="JoinGroupCannotAfford">
-		Entrar a este grupo cuesta [COST] L$.
+		Entrar a este grupo cuesta L$[COST].
 No tienes dinero suficiente para entrar.
 	</notification>
 	<notification name="CreateGroupCost">
@@ -400,7 +400,7 @@ El grupo ya no admite más miembros.
 		<usetemplate name="okbutton" yestext="Aceptar"/>
 	</notification>
 	<notification name="LandBuyPass">
-		Por [COST] L$ puedes entrar a este terreno (&apos;[PARCEL_NAME]&apos;) durante [TIME] horas. ¿Comprar un pase?
+		Por L$[COST] puedes entrar a este terreno (&apos;[PARCEL_NAME]&apos;) durante [TIME] horas. ¿Comprar un pase?
 		<usetemplate name="okcancelbuttons" notext="Cancelar" yestext="OK"/>
 	</notification>
 	<notification name="SalePriceRestriction">
@@ -506,10 +506,10 @@ debes estar dentro de ella.
 		Necesitas L$[COST] para subir este objeto.
 	</notification>
 	<notification name="ErrorPhotoCannotAfford">
-		Necesitas [COST] L$ para guardar una foto en el inventario. Puedes comprar L$ o bien guardar la foto en tu equipo.
+		Necesitas L$[COST] para guardar una foto en el inventario. Puedes comprar L$ o bien guardar la foto en tu equipo.
 	</notification>
 	<notification name="ErrorTextureCannotAfford">
-		Necesitas [COST] L$ para guardar una textura en el inventario. Puedes comprar L$ o bien guardar la foto en tu equipo.
+		Necesitas L$[COST] para guardar una textura en el inventario. Puedes comprar L$ o bien guardar la foto en tu equipo.
 	</notification>
 	<notification name="ErrorUploadingPostcard">
 		Hubo un problema al enviar la foto por la siguiente razón: [REASON]

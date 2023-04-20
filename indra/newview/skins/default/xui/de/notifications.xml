@@ -356,7 +356,7 @@ Möchten Sie fortfahren?
 		<usetemplate ignoretext="Bestätigen, bevor Anhänge fallen gelassen werden" name="okcancelignore" notext="Nein" yestext="Ja"/>
 	</notification>
 	<notification name="JoinGroupCanAfford">
-		Der Beitritt zu dieser Gruppe kostet [COST] L$.
+		Der Beitritt zu dieser Gruppe kostet L$[COST].
 Fortfahren?
 		<usetemplate name="okcancelbuttons" notext="Abbrechen" yestext="Beitreten"/>
 	</notification>
@@ -366,7 +366,7 @@ Fortfahren?
 		<usetemplate name="okcancelbuttons" notext="Abbrechen" yestext="Beitreten"/>
 	</notification>
 	<notification name="JoinGroupCannotAfford">
-		Der Beitritt zu dieser Gruppe kostet [COST] L$.
+		Der Beitritt zu dieser Gruppe kostet L$[COST].
 Sie haben nicht genug L$, um dieser Gruppe beizutreten.
 	</notification>
 	<notification name="CreateGroupCost">
@@ -410,7 +410,7 @@ Die Gruppe steht für freie Registrierungen nicht mehr zur Verfügung.
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="LandBuyPass">
-		Sie können dieses Land („[PARCEL_NAME]“) für [COST] L$
+		Sie können dieses Land („[PARCEL_NAME]“) für L$[COST]
 [TIME] Stunden lang betreten.  Pass kaufen?
 		<usetemplate name="okcancelbuttons" notext="Abbrechen" yestext="OK"/>
 	</notification>

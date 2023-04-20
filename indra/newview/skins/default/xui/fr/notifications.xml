@@ -349,7 +349,7 @@ Voulez-vous vraiment continuer ?
 		<usetemplate ignoretext="Confirmer avant d&apos;abandonner les éléments joints" name="okcancelignore" notext="Non" yestext="Oui"/>
 	</notification>
 	<notification name="JoinGroupCanAfford">
-		Rejoindre ce groupe coûte [COST] L$.
+		Rejoindre ce groupe coûte L$[COST].
 Voulez-vous continuer ?
 		<usetemplate name="okcancelbuttons" notext="Annuler" yestext="Rejoindre"/>
 	</notification>
@@ -359,7 +359,7 @@ Souhaitez-vous continuer ?
 		<usetemplate name="okcancelbuttons" notext="Annuler" yestext="Fusionner"/>
 	</notification>
 	<notification name="JoinGroupCannotAfford">
-		Rejoindre ce groupe coûte [COST] L$.
+		Rejoindre ce groupe coûte L$[COST].
 Vous n&apos;avez pas suffisamment de L$ pour rejoindre ce groupe.
 	</notification>
 	<notification name="CreateGroupCost">
@@ -403,23 +403,23 @@ Le groupe n&apos;accepte plus de nouveaux adhérents.
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="LandBuyPass">
-		Pour [COST] L$ vous pouvez pénétrer sur ce terrain ([PARCEL_NAME]) et y rester [TIME] heures. Acheter un pass ?
+		Pour L$[COST] vous pouvez pénétrer sur ce terrain ([PARCEL_NAME]) et y rester [TIME] heures. Acheter un pass ?
 		<usetemplate name="okcancelbuttons" notext="Annuler" yestext="OK"/>
 	</notification>
 	<notification name="SalePriceRestriction">
 		Pour rendre l&apos;annonce disponible à tous, le prix de vente doit être supérieur à 0 L$.
-Si le prix de vente est de 0 L$, vous devez choisir un acheteur spécifique.
+Si le prix de vente est de L$0, vous devez choisir un acheteur spécifique.
 	</notification>
 	<notification name="ConfirmLandSaleChange">
 		Le terrain sélectionné, de [LAND_SIZE] m², est mis en vente.
-Votre prix de vente sera de [SALE_PRICE] L$ et la vente sera disponible à [NAME].
+Votre prix de vente sera de L$[SALE_PRICE] et la vente sera disponible à [NAME].
 		<usetemplate name="okcancelbuttons" notext="Annuler" yestext="OK"/>
 	</notification>
 	<notification name="ConfirmLandSaleToAnyoneChange">
 		ATTENTION : en cliquant sur Vendre à n&apos;importe qui, vous rendez votre terrain disponible à toute la communauté de [SECOND_LIFE], même aux personnes qui ne sont pas dans cette région.
 
 Le terrain sélectionné, de [LAND_SIZE] m², est mis en vente.
-Votre prix de vente sera de [SALE_PRICE]L$ et la vente sera disponible à [NAME].
+Votre prix de vente sera de L$[SALE_PRICE] et la vente sera disponible à [NAME].
 		<usetemplate name="okcancelbuttons" notext="Annuler" yestext="OK"/>
 	</notification>
 	<notification name="ReturnObjectsDeededToGroup">

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <menu_bar name="Main Menu">
     <menu label="Datei"  name="File">
-        <menu_item_call label="Bild ([COST])..."   name="Upload Image"/>
-        <menu_item_call label="Sound ([COST])..."   name="Upload Sound"/>
-        <menu_item_call label="Animation ([COST])..."  name="Upload Animation"/>
+        <menu_item_call label="Bild (L$[COST])..."   name="Upload Image"/>
+        <menu_item_call label="Sound (L$[COST])..."   name="Upload Sound"/>
+        <menu_item_call label="Animation (L$[COST])..."  name="Upload Animation"/>
         <menu_item_call label="Mesh Modell..."  name="Upload Model"/>
-        <menu_item_call label="Mehrfach-Hochladen ([COST] pro Datei)..."  name="Bulk Upload"/>
+        <menu_item_call label="Mehrfach-Hochladen (L$[COST] pro Datei)..."  name="Bulk Upload"/>
         <menu_item_call label="Linkset importieren"  name="import linkset"/>
         <menu_item_call label="Foto"  name="Snapshot"/>
         <menu_item_call label="Foto auf Datenträger"  name="Snapshot to Disk"/>
