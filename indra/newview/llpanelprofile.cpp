@@ -755,11 +755,11 @@ void LLFloaterProfilePermissions::fillRightsData()
     {
         S32 rights = relation->getRightsGrantedTo();
 
-        BOOL see_online = LLRelationship::GRANT_ONLINE_STATUS & rights ? TRUE : FALSE;
+        bool see_online = LLRelationship::GRANT_ONLINE_STATUS & rights ? true : false;
         mOnlineStatus->setValue(see_online);
         mMapRights->setEnabled(see_online);
-        mMapRights->setValue(LLRelationship::GRANT_MAP_LOCATION & rights ? TRUE : FALSE);
-        mEditObjectRights->setValue(LLRelationship::GRANT_MODIFY_OBJECTS & rights ? TRUE : FALSE);
+        mMapRights->setValue(LLRelationship::GRANT_MAP_LOCATION & rights ? true : false);
+        mEditObjectRights->setValue(LLRelationship::GRANT_MODIFY_OBJECTS & rights ? true : false);
     }
     else
     {
@@ -774,7 +774,7 @@ void LLFloaterProfilePermissions::rightsConfirmationCallback(const LLSD& notific
     S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
     if (option != 0) // canceled
     {
-        mEditObjectRights->setValue(mEditObjectRights->getValue().asBoolean() ? FALSE : TRUE);
+        mEditObjectRights->setValue(mEditObjectRights->getValue().asBoolean() ? false : true);
     }
     else
     {
@@ -800,7 +800,7 @@ void LLFloaterProfilePermissions::onCommitSeeOnlineRights()
         if (relation)
         {
             S32 rights = relation->getRightsGrantedTo();
-            mMapRights->setValue(LLRelationship::GRANT_MAP_LOCATION & rights ? TRUE : FALSE);
+            mMapRights->setValue(LLRelationship::GRANT_MAP_LOCATION & rights ? true : false);
         }
         else
         {
@@ -944,7 +944,7 @@ void LLPanelProfileSecondLife::onOpen(const LLSD& key)
 
     LLUUID avatar_id = getAvatarId();
 
-    BOOL own_profile = getSelfProfile();
+    bool own_profile = getSelfProfile();
 
     mGroupList->setShowNone(!own_profile);
 
@@ -981,7 +981,7 @@ void LLPanelProfileSecondLife::onOpen(const LLSD& key)
 
     if (!own_profile)
     {
-        mVoiceStatus = LLAvatarActions::canCall() && (LLAvatarActions::isFriend(avatar_id) ? LLAvatarTracker::instance().isBuddyOnline(avatar_id) : TRUE);
+        mVoiceStatus = LLAvatarActions::canCall() && (LLAvatarActions::isFriend(avatar_id) ? LLAvatarTracker::instance().isBuddyOnline(avatar_id) : true);
         updateOnlineStatus();
         fillRightsData();
     }
@@ -1229,7 +1229,7 @@ void LLPanelProfileSecondLife::fillCommonData(const LLAvatarData* avatar_data)
     if (getSelfProfile())
     {
         mAllowPublish = avatar_data->flags & AVATAR_ALLOW_PUBLISH;
-        mShowInSearchCombo->setValue((BOOL)mAllowPublish);
+        mShowInSearchCombo->setValue(mAllowPublish);
     }
 }
 
@@ -1268,48 +1268,48 @@ void LLPanelProfileSecondLife::fillAccountStatus(const LLAvatarData* avatar_data
     {
         getChild<LLUICtrl>("badge_icon")->setValue("Profile_Badge_Linden");
         getChild<LLUICtrl>("badge_text")->setValue(getString("BadgeLinden"));
-        childSetVisible("badge_layout", TRUE);
-        childSetVisible("partner_spacer_layout", FALSE);
+        childSetVisible("badge_layout", true);
+        childSetVisible("partner_spacer_layout", false);
     }
     else if (avatar_data->born_on < sl_release)
     {
         getChild<LLUICtrl>("badge_icon")->setValue("Profile_Badge_Beta");
         getChild<LLUICtrl>("badge_text")->setValue(getString("BadgeBeta"));
-        childSetVisible("badge_layout", TRUE);
-        childSetVisible("partner_spacer_layout", FALSE);
+        childSetVisible("badge_layout", true);
+        childSetVisible("partner_spacer_layout", false);
     }
     else if (customer_lower == "beta_lifetime")
     {
         getChild<LLUICtrl>("badge_icon")->setValue("Profile_Badge_Beta_Lifetime");
         getChild<LLUICtrl>("badge_text")->setValue(getString("BadgeBetaLifetime"));
-        childSetVisible("badge_layout", TRUE);
-        childSetVisible("partner_spacer_layout", FALSE);
+        childSetVisible("badge_layout", true);
+        childSetVisible("partner_spacer_layout", false);
     }
     else if (customer_lower == "lifetime")
     {
         getChild<LLUICtrl>("badge_icon")->setValue("Profile_Badge_Lifetime");
         getChild<LLUICtrl>("badge_text")->setValue(getString("BadgeLifetime"));
-        childSetVisible("badge_layout", TRUE);
-        childSetVisible("partner_spacer_layout", FALSE);
+        childSetVisible("badge_layout", true);
+        childSetVisible("partner_spacer_layout", false);
     }
     else if (customer_lower == "secondlifetime_premium")
     {
         getChild<LLUICtrl>("badge_icon")->setValue("Profile_Badge_Premium_Lifetime");
         getChild<LLUICtrl>("badge_text")->setValue(getString("BadgePremiumLifetime"));
-        childSetVisible("badge_layout", TRUE);
-        childSetVisible("partner_spacer_layout", FALSE);
+        childSetVisible("badge_layout", true);
+        childSetVisible("partner_spacer_layout", false);
     }
     else if (customer_lower == "secondlifetime_premium_plus")
     {
         getChild<LLUICtrl>("badge_icon")->setValue("Profile_Badge_Pplus_Lifetime");
         getChild<LLUICtrl>("badge_text")->setValue(getString("BadgePremiumPlusLifetime"));
-        childSetVisible("badge_layout", TRUE);
-        childSetVisible("partner_spacer_layout", FALSE);
+        childSetVisible("badge_layout", true);
+        childSetVisible("partner_spacer_layout", false);
     }
     else
     {
-        childSetVisible("badge_layout", FALSE);
-        childSetVisible("partner_spacer_layout", TRUE);
+        childSetVisible("badge_layout", false);
+        childSetVisible("partner_spacer_layout", false);
     }
 }
 
@@ -1431,7 +1431,7 @@ void LLPanelProfileSecondLife::onChange(EStatusType status, const std::string &c
         return;
     }
 
-    mVoiceStatus = LLAvatarActions::canCall() && (LLAvatarActions::isFriend(getAvatarId()) ? LLAvatarTracker::instance().isBuddyOnline(getAvatarId()) : TRUE);
+    mVoiceStatus = LLAvatarActions::canCall() && (LLAvatarActions::isFriend(getAvatarId()) ? LLAvatarTracker::instance().isBuddyOnline(getAvatarId()) : true);
 }
 
 void LLPanelProfileSecondLife::setAvatarId(const LLUUID& avatar_id)
