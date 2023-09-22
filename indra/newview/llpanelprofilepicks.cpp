@@ -94,12 +94,6 @@ public:
             return true;
         }
 
-        if (!LLUI::getInstance()->mSettingGroups["config"]->getbool("EnablePicks"))
-        {
-            LLNotificationsUtil::add("NoPicks", LLSD(), LLSD(), std::string("SwitchToStandardSkinAndQuit"));
-            return true;
-        }
-
         // handle app/pick/create urls first
         if (params.size() == 1 && params[0].asString() == "create")
         {
