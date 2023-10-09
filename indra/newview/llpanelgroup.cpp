@@ -1,24 +1,24 @@
-/** 
+/**
  * @file llpanelgroup.cpp
  *
  * $LicenseInfo:firstyear=2006&license=viewerlgpl$
  * Second Life Viewer Source Code
  * Copyright (C) 2010, Linden Research, Inc.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation;
  * version 2.1 of the License only.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- * 
+ *
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
@@ -43,7 +43,7 @@
 #include "llfloater.h"
 #include "llgroupactions.h"
 
-#include "llagent.h" 
+#include "llagent.h"
 
 #include "llsidetraypanelcontainer.h"
 
@@ -120,30 +120,40 @@ void LLPanelGroup::onOpen(const LLSD& key)
 		return;
 	}
 
-	std::string str_action = key["action"];
+    std::string str_action = key["action"];
 
-	if(str_action == "refresh")
-	{
-		if(mID == group_id || group_id == LLUUID::null)
-			refreshData();
-	}
-	else if(str_action == "close")
-	{
-		onBackBtnClick();
-	}
-	else if(str_action == "refresh_notices")
-	{
-		LLPanelGroupNotices* panel_notices = findChild<LLPanelGroupNotices>("group_notices_tab_panel");
-		if(panel_notices)
-			panel_notices->refreshNotices();
-	}
+    if(str_action == "refresh")
+    {
+        if(mID == group_id || group_id == LLUUID::null)
+            refreshData();
+    }
+    else if(str_action == "close")
+    {
+        onBackBtnClick();
+    }
+    else if(str_action == "refresh_notices")
+    {
+        LLPanelGroupNotices* panel_notices = findChild<LLPanelGroupNotices>("group_notices_tab_panel");
+        if(panel_notices)
+            panel_notices->refreshNotices();
+    }
+    if (str_action == "show_notices")
+    {
+        setGroupID(group_id);
+
+        LLAccordionCtrl *tab_ctrl = getChild<LLAccordionCtrl>("groups_accordion");
+        tab_ctrl->collapseAllTabs();
+        getChild<LLAccordionCtrlTab>("group_notices_tab")->setDisplayChildren(true);
+        tab_ctrl->arrange();
+    }
+
 // [SL:KB] - Patch: Notification-GroupCreateNotice | Checked: 2012-02-16 (Catznip-3.2)
-	else if(str_action == "view_notices")
-	{
-		setGroupID(group_id);
-		getChild<LLAccordionCtrl>("groups_accordion")->expandTab("group_notices_tab");
-		return;
-	}
+    else if(str_action == "view_notices")
+    {
+        setGroupID(group_id);
+        getChild<LLAccordionCtrl>("groups_accordion")->expandTab("group_notices_tab");
+        return;
+    }
 // [/SL:KB]
 }
 
@@ -215,8 +225,8 @@ bool LLPanelGroup::postBuild()
 	LLVoiceClient::getInstance()->addObserver(this);
   //KKA-839 Get the call button set right
   childSetEnabled("btn_call", LLVoiceClient::getInstance()->canCall());
-	
-	return true;
+
+    return true;
 }
 
 void LLPanelGroup::reposButton(const std::string& name)

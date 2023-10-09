@@ -303,6 +303,7 @@ void LLGroupList::addNewItem(const LLUUID& id, const std::string& name, const LL
 
 	item->getChildView("info_btn")->setVisible( false);
 	item->getChildView("profile_btn")->setVisible( false);
+    item->getChildView("notices_btn")->setVisible(false);
 	item->setGroupIconVisible(mShowIcons);
     if (!mShowIcons)
     {
@@ -432,6 +433,7 @@ mGroupIcon(nullptr),
 mGroupNameBox(nullptr),
 mInfoBtn(nullptr),
 mProfileBtn(nullptr),
+mNoticesBtn(nullptr),
 mVisibilityHideBtn(nullptr),
 mVisibilityShowBtn(nullptr),
 mGroupID(LLUUID::null),
@@ -463,6 +465,9 @@ bool  LLGroupListItem::postBuild()
 
     mProfileBtn = getChild<LLButton>("profile_btn");
     mProfileBtn->setClickedCallback([this](LLUICtrl *, const LLSD &) { onProfileBtnClick(); });
+
+    mNoticesBtn = getChild<LLButton>("notices_btn");
+    mNoticesBtn->setClickedCallback([this](LLUICtrl *, const LLSD &) { onNoticesBtnClick(); });
 
     mVisibilityHideBtn = findChild<LLButton>("visibility_hide_btn");
     if (mVisibilityHideBtn)
@@ -499,6 +504,7 @@ void LLGroupListItem::onMouseEnter(S32 x, S32 y, MASK mask)
 	{
 		mInfoBtn->setVisible(true);
         mProfileBtn->setVisible(true);
+        mNoticesBtn->setVisible(true);
         if (mForAgent && mVisibilityHideBtn)
         {
             LLGroupData agent_gdatap;
@@ -518,6 +524,7 @@ void LLGroupListItem::onMouseLeave(S32 x, S32 y, MASK mask)
 	getChildView("hovered_icon")->setVisible( false);
 	mInfoBtn->setVisible(false);
     mProfileBtn->setVisible(false);
+    mNoticesBtn->setVisible(false);
     if (mVisibilityHideBtn)
     {
         mVisibilityHideBtn->setVisible(false);
@@ -610,6 +617,11 @@ void LLGroupListItem::onInfoBtnClick()
 void LLGroupListItem::onProfileBtnClick()
 {
 	LLGroupActions::show(mGroupID);
+}
+
+void LLGroupListItem::onNoticesBtnClick()
+{
+    LLGroupActions::show(mGroupID, true);
 }
 
 void LLGroupListItem::onVisibilityBtnClick(bool new_visibility)
