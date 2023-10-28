@@ -29,7 +29,6 @@ include(LLCoreHttp)
 include(LLImage)
 include(LLImageJ2COJ)
 include(LLInventory)
-include(LLKDU)
 include(LLLogin)
 include(LLMath)
 include(LLMeshOptimizer)
@@ -84,7 +83,6 @@ include_directories(
     ${LLCOREHTTP_INCLUDE_DIRS}
     ${LLPHYSICS_INCLUDE_DIRS}
     ${LLIMAGE_INCLUDE_DIRS}
-    ${LLKDU_INCLUDE_DIRS}
     ${LLINVENTORY_INCLUDE_DIRS}
     ${LLMATH_INCLUDE_DIRS}
     ${LLMESHOPTIMIZER_INCLUDE_DIRS}
