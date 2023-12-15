@@ -2358,16 +2358,18 @@ void LLMeshUploadThread::wholeModelToLLSD(LLSD& dest, bool include_textures)
 				std::stringstream texture_str;
 				if (texture != NULL && include_textures && mUploadTextures)
 				{
-					if(texture->hasSavedRawImage())
-					{											
+					if (texture->hasSavedRawImage())
+					{
+						LLImageDataLock lock(texture->getSavedRawImage());
+
 						LLPointer<LLImageJ2C> upload_file =
 							LLViewerTextureList::convertToUploadFile(texture->getSavedRawImage());
 
 						if (!upload_file.isNull() && upload_file->getDataSize())
 						{
-						texture_str.write((const char*) upload_file->getData(), upload_file->getDataSize());
+							texture_str.write((const char*) upload_file->getData(), upload_file->getDataSize());
+						}
 					}
-				}
 				}
 
 				if (texture != NULL &&
@@ -2512,16 +2514,18 @@ void LLMeshUploadThread::wholeModelToLLSD(LLSD& dest, bool include_textures)
 				std::stringstream texture_str;
 				if (texture != NULL && include_textures && mUploadTextures)
 				{
-					if(texture->hasSavedRawImage())
-					{											
+					if (texture->hasSavedRawImage())
+					{
+						LLImageDataLock lock(texture->getSavedRawImage());
+
 						LLPointer<LLImageJ2C> upload_file =
 							LLViewerTextureList::convertToUploadFile(texture->getSavedRawImage());
 
 						if (!upload_file.isNull() && upload_file->getDataSize())
 						{
-						texture_str.write((const char*) upload_file->getData(), upload_file->getDataSize());
+							texture_str.write((const char*) upload_file->getData(), upload_file->getDataSize());
+						}
 					}
-				}
 				}
 
 				if (texture != NULL &&

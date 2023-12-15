@@ -102,6 +102,7 @@ protected:
 
 	void setPixel(const LLColor4U &col, const S32 i, const S32 j)
 	{
+		LLImageDataSharedLock lock(mImageRaw[sCurrent]);
 		S32 offset = (i * SKYTEX_RESOLUTION + j) * SKYTEX_COMPONENTS;
 		U32* pix = (U32*) &(mImageRaw[sCurrent]->getData()[offset]);
 		*pix = col.asRGBA();
@@ -110,6 +111,7 @@ protected:
 	LLColor4U getPixel(const S32 i, const S32 j)
 	{
 		LLColor4U col;
+		LLImageDataSharedLock lock(mImageRaw[sCurrent]);
 		S32 offset = (i * SKYTEX_RESOLUTION + j) * SKYTEX_COMPONENTS;
 		U32* pix = (U32*) &(mImageRaw[sCurrent]->getData()[offset]);
 		col.fromRGBA( *pix );

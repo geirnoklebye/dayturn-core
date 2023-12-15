@@ -3212,6 +3212,8 @@ void LLViewerFetchedTexture::saveRawImage()
 		return;
 	}
 
+    LLImageDataSharedLock lock(mRawImage);
+
 	mSavedRawDiscardLevel = mRawDiscardLevel;
     if (mBoostLevel == LLGLTexture::BOOST_ICON)
     {

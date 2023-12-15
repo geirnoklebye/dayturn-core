@@ -1324,7 +1324,7 @@ LLPointer<LLImageJ2C> LLViewerTextureList::convertToUploadFile(LLPointer<LLImage
 	
 	if (gSavedSettings.getbool("LosslessJ2CUpload") &&
 		(raw_image->getWidth() * raw_image->getHeight() <= LL_IMAGE_REZ_LOSSLESS_CUTOFF * LL_IMAGE_REZ_LOSSLESS_CUTOFF))
-		compressedImage->setReversible(TRUE);
+		compressedImage->setReversible(true);
 	
 
 	if (gSavedSettings.getbool("Jpeg2000AdvancedCompression"))

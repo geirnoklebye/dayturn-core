@@ -4418,13 +4418,13 @@ void renderOnePhysicsShape(LLViewerObject* objectp)
 	LLPhysicsShapeBuilderUtil::PhysicsShapeSpecification physics_spec;
 	LLUUID mesh_id;
 	LLModel::Decomposition* decomp = nullptr;
-	bool hasConvexDecomp = FALSE;
+	bool hasConvexDecomp = false;
 
 	// If we are a mesh and the mesh has a hul decomp (is analysed) then set hasDecomp to true
 	if (vovolume->isMesh()){
 		mesh_id = volume_params.getSculptID();
 		decomp = gMeshRepo.getDecomposition(mesh_id);
-		if (decomp && !decomp->mHull.empty()){ hasConvexDecomp = TRUE; }
+		if (decomp && !decomp->mHull.empty()){ hasConvexDecomp = true; }
 	}
 
 	LLPhysicsShapeBuilderUtil::determinePhysicsShape(physics_params, vovolume->getScale(), hasConvexDecomp, physics_spec);
@@ -5606,6 +5606,7 @@ bool LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 	{
 		return false;
 	}
+
 	//check if there is enough memory for the snapshot image
 	if(image_width * image_height > (1 << 22)) //if snapshot image is larger than 2K by 2K
 	{
@@ -5729,6 +5730,9 @@ bool LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 		image_buffer_x = llfloor(snapshot_width  * scale_factor) ;
 		image_buffer_y = llfloor(snapshot_height * scale_factor) ;
 	}
+
+	LLImageDataLock lock(raw);
+
 	if ((image_buffer_x > 0) && (image_buffer_y > 0))
 	{
 		raw->resize(image_buffer_x, image_buffer_y, 3);
@@ -5987,6 +5991,8 @@ bool LLViewerWindow::simpleSnapshot(LLImageRaw* raw, S32 image_width, S32 image_
         display(do_rebuild, zoom, subfield, for_snapshot);
     }
 
+    LLImageDataSharedLock lock(raw);
+
     glReadPixels(
         0, 0,
         image_width,
@@ -6134,7 +6140,7 @@ void LLViewerWindow::setup2DViewport(S32 x_offset, S32 y_offset)
 void LLViewerWindow::setup3DRender()
 {
 	// setup perspective camera
-	LLViewerCamera::getInstance()->setPerspective(NOT_FOR_SELECTION, mWorldViewRectRaw.mLeft, mWorldViewRectRaw.mBottom,  mWorldViewRectRaw.getWidth(), mWorldViewRectRaw.getHeight(), FALSE, LLViewerCamera::getInstance()->getNear(), MAX_FAR_CLIP*2.f);
+	LLViewerCamera::getInstance()->setPerspective(NOT_FOR_SELECTION, mWorldViewRectRaw.mLeft, mWorldViewRectRaw.mBottom,  mWorldViewRectRaw.getWidth(), mWorldViewRectRaw.getHeight(), false, LLViewerCamera::getInstance()->getNear(), MAX_FAR_CLIP*2.f);
 	setup3DViewport();
 }
 
