@@ -1773,6 +1773,7 @@ list(APPEND viewer_SOURCE_FILES ${viewer_XUI_FILES})
 
 set(viewer_APPSETTINGS_FILES
     app_settings/anim.ini
+    app_settings/autoreplace.xml
     app_settings/cmd_line.xml
     app_settings/commands.xml
     app_settings/grass.xml
