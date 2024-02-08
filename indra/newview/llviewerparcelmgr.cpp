@@ -1324,7 +1324,6 @@ const std::string& LLViewerParcelMgr::getAgentParcelName() const
 	return mAgentParcel->getName();
 }
 
-
 const S32 LLViewerParcelMgr::getAgentParcelId() const
 {
     if (mAgentParcel)
@@ -1588,7 +1587,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
     }
 
     // Decide where the data will go.
-    LLParcel* parcel = NULL;
+	LLParcel* parcel = nullptr;
     if (sequence_id == SELECTED_PARCEL_SEQ_ID)
     {
         // ...selected parcels report this sequence id
@@ -2004,21 +2003,15 @@ void LLViewerParcelMgr::optionallyStartMusic(const std::string &music_url, const
 		static LLCachedControl<bool> tentative_autoplay(gSavedSettings, "MediaTentativeAutoPlay", true);
 		// only play music when you enter a new parcel if the UI control for this
 		// was not *explicitly* stopped by the user. (part of SL-4878)
-		// <FS> Media/Stream separation
-		//LLPanelNearByMedia* nearby_media_panel = gStatusBar->getNearbyMediaPanel();
+		LLPanelNearByMedia* nearby_media_panel = gStatusBar->getNearbyMediaPanel();
         LLViewerAudio* viewer_audio = LLViewerAudio::getInstance();
 
         // ask mode //todo constants
         if (autoplay_mode == 2)
         {
             // if user set media to play - ask
-            //if ((nearby_media_panel && nearby_media_panel->getParcelAudioAutoStart())
-            //    || (!nearby_media_panel && tentative_autoplay))
-		    if (gStatusBar->getAudioStreamEnabled() ||
-		    // or they have expressed no opinion in the UI, but have autoplay on...
-                     (gSavedSettings.getbool("FSParcelMusicAutoPlay")
-		    // </FS>
-                     && tentative_autoplay))
+            if ((nearby_media_panel && nearby_media_panel->getParcelAudioAutoStart())
+                || (!nearby_media_panel && tentative_autoplay))
             {
                 // user did not stop audio
                 if (switched_parcel || music_url != viewer_audio->getNextStreamURI())
@@ -2043,15 +2036,10 @@ void LLViewerParcelMgr::optionallyStartMusic(const std::string &music_url, const
             }
         }
         // autoplay
-		//if ((nearby_media_panel &&
-		//     nearby_media_panel->getParcelAudioAutoStart()) ||
-		//    // or they have expressed no opinion in the UI, but have autoplay on...
-		//    (!nearby_media_panel &&
-		//     gSavedSettings.getbool(LLViewerMedia::AUTO_PLAY_MEDIA_SETTING) &&
-		else if (gStatusBar->getAudioStreamEnabled() ||
+        else if ((nearby_media_panel
+                  && nearby_media_panel->getParcelAudioAutoStart())
 		    // or they have expressed no opinion in the UI, but have autoplay on...
-			(gSavedSettings.getbool("FSParcelMusicAutoPlay")
-		// </FS>
+                 || (!nearby_media_panel
                      && autoplay_mode == 1
                      && tentative_autoplay))
 		{
