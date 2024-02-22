@@ -163,9 +163,9 @@ void LLGroupList::draw()
 }
 
 // virtual
-BOOL LLGroupList::handleRightMouseDown(S32 x, S32 y, MASK mask)
+bool LLGroupList::handleRightMouseDown(S32 x, S32 y, MASK mask)
 {
-	BOOL handled = LLUICtrl::handleRightMouseDown(x, y, mask);
+	bool handled = LLUICtrl::handleRightMouseDown(x, y, mask);
 
     if (mForAgent)
     {

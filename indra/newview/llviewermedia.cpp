@@ -2368,7 +2368,7 @@ void LLViewerMediaImpl::onMouseCaptureLost()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-BOOL LLViewerMediaImpl::handleMouseUp(S32 x, S32 y, MASK mask)
+bool LLViewerMediaImpl::handleMouseUp(S32 x, S32 y, MASK mask)
 {
 	// NOTE: this is called when the mouse is released when we have capture.
 	// Due to the way mouse coordinates are mapped to the object, we can't use the x and y coordinates that come in with the event.
@@ -2379,7 +2379,7 @@ BOOL LLViewerMediaImpl::handleMouseUp(S32 x, S32 y, MASK mask)
 		gFocusMgr.setMouseCapture( NULL );
 	}
 
-	return TRUE;
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
