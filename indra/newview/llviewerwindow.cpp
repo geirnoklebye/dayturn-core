@@ -4447,7 +4447,7 @@ void renderOnePhysicsShape(LLViewerObject* objectp)
 		if (decomp && !decomp->mHull.empty()){ hasConvexDecomp = true; }
 	}
 
-	LLPhysicsShapeBuilderUtil::determinePhysicsShape(physics_params, vovolume->getScale(), hasConvexDecomp, physics_spec);
+	LLPhysicsShapeBuilderUtil::determinePhysicsShape(physics_params, vovolume->getScale(), physics_spec);
 
 	U32 physicsShapeType = physics_spec.getType();
 	/*
