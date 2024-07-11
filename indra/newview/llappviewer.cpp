@@ -5328,7 +5328,7 @@ void LLAppViewer::sendLogoutRequest()
 
 		gLogoutTimer.reset();
 		gLogoutMaxTime = LOGOUT_REQUEST_TIME;
-		mLogoutRequestSent = TRUE;
+		mLogoutRequestSent = true;
 
 		if(LLVoiceClient::instanceExists())
 		{
