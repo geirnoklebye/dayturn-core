@@ -1035,7 +1035,7 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 		//	gGL.popMatrix();
 		//}
 
-		LLPipeline::sUnderWaterRender = LLViewerCamera::getInstance()->cameraUnderWater() ? true : false;
+		LLPipeline::sUnderWaterRender = LLViewerCamera::getInstance()->cameraUnderWater();
 
 		LLGLState::checkStates();
 
@@ -1083,7 +1083,7 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 				gOcclusionProgram.bind();
 				for (U32 i = 0; i < num_types; i++)
 				{
-					gPipeline.renderObjects(types[i], LLVertexBuffer::MAP_VERTEX, FALSE);
+					gPipeline.renderObjects(types[i], LLVertexBuffer::MAP_VERTEX, false);
 				}
 
 				gOcclusionProgram.unbind();
@@ -1097,7 +1097,7 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 			}
 			else
 			{
-				gPipeline.renderGeom(*LLViewerCamera::getInstance(), TRUE);
+				gPipeline.renderGeom(*LLViewerCamera::getInstance(), true);
 			}
 			
 			gGL.setColorMask(true, true);
@@ -1141,7 +1141,7 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 			gPipeline.renderDeferredLighting(&gPipeline.mScreen);
 		}
 
-		LLPipeline::sUnderWaterRender = FALSE;
+		LLPipeline::sUnderWaterRender = false;
 
 		{
 			//capture the frame buffer.
@@ -1169,7 +1169,7 @@ void display(bool rebuild, F32 zoom_factor, int subfield, bool for_snapshot)
 	if (LLPipeline::sRenderFrameTest)
 	{
 		send_agent_resume();
-		LLPipeline::sRenderFrameTest = FALSE;
+		LLPipeline::sRenderFrameTest = false;
 	}
 
 	display_stats();
