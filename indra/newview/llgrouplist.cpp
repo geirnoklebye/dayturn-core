@@ -71,11 +71,11 @@ public:
 
     /*virtual*/ bool compare(const LLPanel* item1, const LLPanel* item2) const
     {
-        const LLGroupListItem* group_item1 = static_cast<const LLGroupListItem*>(item1);
+        const LLGroupListItem* group_item1 = dynamic_cast<const LLGroupListItem*>(item1);
         std::string name1 = group_item1->getGroupName();
         bool item1_shared = gAgent.isInGroup(group_item1->getGroupID(), true);
 
-        const LLGroupListItem* group_item2 = static_cast<const LLGroupListItem*>(item2);
+        const LLGroupListItem* group_item2 = dynamic_cast<const LLGroupListItem*>(item2);
         std::string name2 = group_item2->getGroupName();
         bool item2_shared = gAgent.isInGroup(group_item2->getGroupID(), true);
 
