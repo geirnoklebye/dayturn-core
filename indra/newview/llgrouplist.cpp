@@ -428,12 +428,12 @@ bool LLGroupList::onContextMenuItemEnable(const LLSD& userdata)
 
 LLGroupListItem::LLGroupListItem(bool for_agent, bool show_icons)
 :	LLPanel(),
-mGroupIcon(NULL),
-mGroupNameBox(NULL),
-mInfoBtn(NULL),
-mProfileBtn(NULL),
-mVisibilityHideBtn(NULL),
-mVisibilityShowBtn(NULL),
+mGroupIcon(nullptr),
+mGroupNameBox(nullptr),
+mInfoBtn(nullptr),
+mProfileBtn(nullptr),
+mVisibilityHideBtn(nullptr),
+mVisibilityShowBtn(nullptr),
 mGroupID(LLUUID::null),
 mForAgent(for_agent)
 {

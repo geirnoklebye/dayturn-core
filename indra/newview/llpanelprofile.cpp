@@ -1070,12 +1070,12 @@ void LLPanelProfileSecondLife::processProfileProperties(const LLAvatarData* avat
 {
     LLUUID avatar_id = getAvatarId();
     const LLRelationship* relationship = LLAvatarTracker::instance().getBuddyInfo(getAvatarId());
-    if ((relationship != NULL || gAgent.isGodlike()) && !getSelfProfile())
+    if ((relationship != nullptr || gAgent.isGodlike()) && !getSelfProfile())
     {
         // Relies onto friend observer to get information about online status updates.
         // Once SL-17506 gets implemented, condition might need to become:
         // (gAgent.isGodlike() || isRightGrantedFrom || flags & AVATAR_ONLINE)
-        processOnlineStatus(relationship != NULL,
+        processOnlineStatus(relationship != nullptr,
                             gAgent.isGodlike() || relationship->isRightGrantedFrom(LLRelationship::GRANT_ONLINE_STATUS),
                             (avatar_data->flags & AVATAR_ONLINE));
     }
@@ -1470,7 +1470,7 @@ void LLPanelProfileSecondLife::setAvatarId(const LLUUID& avatar_id)
 void LLPanelProfileSecondLife::updateOnlineStatus()
 {
     const LLRelationship* relationship = LLAvatarTracker::instance().getBuddyInfo(getAvatarId());
-    if (relationship != NULL)
+    if (relationship != nullptr)
     {
         // For friend let check if he allowed me to see his status
         bool online = relationship->isOnline();
@@ -2064,7 +2064,7 @@ void LLPanelProfileSecondLife::onCommitProfileImage(const LLUUID& id)
 
 LLPanelProfileWeb::LLPanelProfileWeb()
  : LLPanelProfileTab()
- , mWebBrowser(NULL)
+ , mWebBrowser(nullptr)
  , mAvatarNameCacheConnection()
 {
 }

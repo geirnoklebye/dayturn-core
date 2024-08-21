@@ -162,7 +162,7 @@ public:
 	U32		getFileSize();
 	bool	serialize(LLDataPacker& dp) const;
 	bool	deserialize(LLDataPacker& dp, const LLUUID& asset_id, bool allow_invalid_joints = true);
-	bool	isLoaded() { return mJointMotionList != NULL; }
+	bool	isLoaded() { return mJointMotionList != nullptr; }
     bool	dumpToFile(const std::string& name);
 
 
@@ -221,7 +221,7 @@ protected:
 			mConstraintTargetType(CONSTRAINT_TARGET_TYPE_BODY),
 			mSourceConstraintVolume(0),
 			mTargetConstraintVolume(0),
-			mJointStateIndices(NULL)
+			mJointStateIndices(nullptr)
 		{ };
 		~JointConstraintSharedData() { delete [] mJointStateIndices; }
 
