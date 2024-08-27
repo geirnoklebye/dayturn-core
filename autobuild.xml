@@ -318,16 +318,16 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>625494a97908683a81926f2035c0d534</string>
+              <string>8f97525263e7bcf58befd3df2ee19f91</string>
               <key>url</key>
-              <string>https://bitbucket.org/dayturn/3p-dictionaries/downloads/dictionaries-1.202309181444-darwin-202309181444.tar.bz2</string>
+              <string>https://bitbucket.org/dayturn/dayturn-viewer-libs/downloads/dictionaries-1.a01bb6c-common-a01bb6c.tar.bz2</string>
             </map>
             <key>name</key>
             <string>common</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.202309181444</string>
+        <string>1.a01bb6c</string>
       </map>
       <key>dullahan</key>
       <map>
