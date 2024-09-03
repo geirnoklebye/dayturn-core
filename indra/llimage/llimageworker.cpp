@@ -119,17 +119,9 @@ LLImageDecodeThread::ImageRequest::~ImageRequest()
 // Returns true when done, whether or not decode was successful.
 bool LLImageDecodeThread::ImageRequest::processRequest()
 {
-	if (mFormattedImage.isNull())
-		return true;
-
 	const F32 decode_time_slice = .1f;
 	bool done = true;
-
-	LLImageDataLock lockFormatted(mFormattedImage);
-	LLImageDataLock lockDecodedRaw(mDecodedImageRaw);
-	LLImageDataLock lockDecodedAux(mDecodedImageAux);
-
-	if (!mDecodedRaw)
+	if (!mDecodedRaw && mFormattedImage.notNull())
 	{
 		// Decode primary channels
 		if (mDecodedImageRaw.isNull())
@@ -151,12 +143,18 @@ bool LLImageDecodeThread::ImageRequest::processRequest()
 											  mFormattedImage->getHeight(),
 											  mFormattedImage->getComponents());
 		}
-
+//MK
+		// Seems it's likely to crash here when there are too many textures, or when the memory is full
+		if (mFormattedImage.isNull() || mDecodedImageRaw.isNull())
+		{
+			return true; // done (failed)
+		}
+//mk
 		done = mFormattedImage->decode(mDecodedImageRaw, decode_time_slice); // 1ms
 		// some decoders are removing data when task is complete and there were errors
 		mDecodedRaw = done && mDecodedImageRaw->getData();
 	}
-	if (done && mNeedsAux && !mDecodedAux)
+	if (done && mNeedsAux && !mDecodedAux && mFormattedImage.notNull())
 	{
 		// Decode aux channel
 		if (!mDecodedImageAux)

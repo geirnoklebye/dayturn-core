@@ -87,10 +87,7 @@ LLImageFilter::~LLImageFilter()
 void LLImageFilter::executeFilter(LLPointer<LLImageRaw> raw_image)
 {
     mImage = raw_image;
-
-    LLImageDataLock lock(mImage);
-
-
+    
 	//std::cout << "Filter : size = " << mFilterData.size() << std::endl;
 	for (S32 i = 0; i < mFilterData.size(); ++i)
 	{

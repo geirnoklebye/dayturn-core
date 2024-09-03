@@ -73,6 +73,8 @@ public:
 	static void		errorEmitMessage(j_common_ptr cinfo, int msg_level);
 	static void		errorOutputMessage(j_common_ptr cinfo);
 
+	static bool		decompress(LLImageJPEG* imagep);
+
 protected:
 	U8*				mOutputBuffer;		// temp buffer used during encoding
 	S32				mOutputBufferSize;	// bytes in mOuputBuffer

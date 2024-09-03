@@ -166,7 +166,6 @@ S32 LLSkyTex::getWhich(const bool curr)
 
 void LLSkyTex::initEmpty(const S32 tex)
 {
-	LLImageDataLock lock(mImageRaw[tex]);
 	U8* data = mImageRaw[tex]->getData();
 	for (S32 i = 0; i < SKYTEX_RESOLUTION; ++i)
 	{
@@ -188,8 +187,7 @@ void LLSkyTex::initEmpty(const S32 tex)
 
 void LLSkyTex::create()
 {
-	LLImageDataSharedLock lock(mImageRaw[sCurrent]);
-	const U8* data = mImageRaw[sCurrent]->getData();
+	U8* data = mImageRaw[sCurrent]->getData();
 	for (S32 i = 0; i < SKYTEX_RESOLUTION; ++i)
 	{
 		for (S32 j = 0; j < SKYTEX_RESOLUTION; ++j)

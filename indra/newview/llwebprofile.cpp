@@ -243,12 +243,10 @@ LLCore::BufferArray::ptr_t LLWebProfile::buildPostData(const LLSD &data, LLPoint
         << "Content-Disposition: form-data; name=\"file\"; filename=\"snapshot.png\"\r\n"
         << "Content-Type: image/png\r\n\r\n";
 
-    LLImageDataSharedLock lock(image);
-
     // Insert the image data.
     //char *datap = (char *)(image->getData());
     //bas.write(datap, image->getDataSize());
-    const U8* image_data = image->getData();
+    U8* image_data = image->getData();
     for (S32 i = 0; i < image->getDataSize(); ++i)
     {
         bas << image_data[i];

@@ -1812,8 +1812,6 @@ bool LLImageGL::readBackRaw(S32 discard_level, LLImageRaw* imageraw, bool compre
 	}
 	//-----------------------------------------------------------------------------------------------
 
-	LLImageDataLock lock(imageraw);
-
 	if (is_compressed)
 	{
 		LLGLint glbytes;

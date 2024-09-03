@@ -203,7 +203,7 @@ public:
 	void						renderAlphaMaskTextures(S32 x, S32 y, S32 width, S32 height, LLRenderTarget* bound_target = nullptr, bool forceClear = false);
 
 	bool						isBodyRegion(const std::string& region) const;
-	void						applyMorphMask(const U8* tex_data, S32 width, S32 height, S32 num_components);
+	void						applyMorphMask(U8* tex_data, S32 width, S32 height, S32 num_components);
 	bool						isMorphValid() const;
 	virtual void				requestUpdate() = 0;
 	void						invalidateMorphMasks();

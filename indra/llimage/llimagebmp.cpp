@@ -96,8 +96,6 @@ bool LLImageBMP::updateData()
 {
 	resetLastError();
 
-	LLImageDataLock lock(this);
-
 	// Check to make sure that this instance has been initialized with data
 	U8* mdata = getData();
 	if (!mdata || (0 == getDataSize()))
@@ -339,11 +337,8 @@ bool LLImageBMP::decode(LLImageRaw* raw_image, F32 decode_time)
 	
 	resetLastError();
 
-	LLImageDataLock lockIn(this);
-	LLImageDataLock lockOut(raw_image);
-
 	// Check to make sure that this instance has been initialized with data
-	const U8* mdata = getData();
+	U8* mdata = getData();
 	if (!mdata || (0 == getDataSize()))
 	{
 		setLastError("llimagebmp trying to decode an image with no data!");
@@ -356,7 +351,7 @@ bool LLImageBMP::decode(LLImageRaw* raw_image, F32 decode_time)
 		return false;
 	}
 
-	const U8* src = mdata + mBitmapOffset;
+	U8* src = mdata + mBitmapOffset;
 	U8* dst = raw_image->getData();
 
 	bool success = false;
@@ -403,7 +398,7 @@ U32 LLImageBMP::countTrailingZeros( U32 m )
 }
 
 
-bool LLImageBMP::decodeColorMask16( U8* dst, const U8* src )
+bool LLImageBMP::decodeColorMask16( U8* dst, U8* src )
 {
 	llassert( 16 == mBitsPerPixel );
 
@@ -439,7 +434,7 @@ bool LLImageBMP::decodeColorMask16( U8* dst, const U8* src )
 	return true;
 }
 
-bool LLImageBMP::decodeColorMask32( U8* dst, const U8* src )
+bool LLImageBMP::decodeColorMask32( U8* dst, U8* src )
 {
 	// Note: alpha is not supported
 
@@ -483,7 +478,7 @@ bool LLImageBMP::decodeColorMask32( U8* dst, const U8* src )
 }
 
 
-bool LLImageBMP::decodeColorTable8( U8* dst, const U8* src )
+bool LLImageBMP::decodeColorTable8( U8* dst, U8* src )
 {
 	llassert( (8 == mBitsPerPixel) && (mColorPaletteColors >= 256) );
 
@@ -513,7 +508,7 @@ bool LLImageBMP::decodeColorTable8( U8* dst, const U8* src )
 }
 
 
-bool LLImageBMP::decodeTruecolor24( U8* dst, const U8* src )
+bool LLImageBMP::decodeTruecolor24( U8* dst, U8* src )
 {
 	llassert( 24 == mBitsPerPixel );
 	llassert( 3 == getComponents() );
@@ -546,9 +541,6 @@ bool LLImageBMP::encode(const LLImageRaw* raw_image, F32 encode_time)
 	llassert_always(raw_image);
 	
 	resetLastError();
-
-	LLImageDataSharedLock lockIn(raw_image);
-	LLImageDataLock lockOut(this);
 
 	S32 src_components = raw_image->getComponents();
 	S32 dst_components =  ( src_components < 3 ) ? 1 : 3;
