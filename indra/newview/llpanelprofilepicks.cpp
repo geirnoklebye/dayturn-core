@@ -81,11 +81,7 @@ public:
         }
 
         const std::string verb = params[0].asString();
-        if (verb == "create")
-        {
-            return false;
-        }
-        return true;
+        return !(verb == "create");
     }
 
     bool handle(const LLSD& params,
@@ -547,25 +543,25 @@ void LLPanelProfilePick::setAvatarId(const LLUUID& avatar_id)
         setSnapshotId(snapshot_id);
         setPickLocation(createLocationText(getLocationNotice(), pick_name, region_name, getPosGlobal()));
 
-        enableSaveButton(TRUE);
+        enableSaveButton(true);
     }
     else
     {
         LLAvatarPropertiesProcessor::getInstance()->sendPickInfoRequest(getAvatarId(), getPickId());
 
-        enableSaveButton(FALSE);
+        enableSaveButton(false);
     }
 
     resetDirty();
 
     if (getSelfProfile())
     {
-        mPickName->setEnabled(TRUE);
-        mPickDescription->setEnabled(TRUE);
+        mPickName->setEnabled(true);
+        mPickDescription->setEnabled(true);
     }
     else
     {
-        mSnapshotCtrl->setEnabled(FALSE);
+        mSnapshotCtrl->setEnabled(false);
     }
 }
 
@@ -588,12 +584,12 @@ bool LLPanelProfilePick::postBuild()
     mCancelButton->setCommitCallback(boost::bind(&LLPanelProfilePick::onClickCancel, this));
 
     mPickName->setKeystrokeCallback(boost::bind(&LLPanelProfilePick::onPickChanged, this, _1), NULL);
-    mPickName->setEnabled(FALSE);
+    mPickName->setEnabled(false);
 
     mPickDescription->setKeystrokeCallback(boost::bind(&LLPanelProfilePick::onPickChanged, this, _1));
     mPickDescription->setFocusReceivedCallback(boost::bind(&LLPanelProfilePick::onDescriptionFocusReceived, this));
 
-    getChild<LLUICtrl>("pick_location")->setEnabled(FALSE);
+    getChild<LLUICtrl>("pick_location")->setEnabled(false);
 
     return true;
 }
@@ -633,7 +629,7 @@ void LLPanelProfilePick::processProperties(const LLPickData* pick_info)
     setSnapshotId(pick_info->snapshot_id);
     if (!getSelfProfile())
     {
-        mSnapshotCtrl->setEnabled(FALSE);
+        mSnapshotCtrl->setEnabled(false);
     }
     setPickName(pick_info->name);
     setPickDesc(pick_info->desc);
@@ -661,7 +657,7 @@ void LLPanelProfilePick::apply()
 void LLPanelProfilePick::setSnapshotId(const LLUUID& id)
 {
     mSnapshotCtrl->setImageAssetID(id);
-    mSnapshotCtrl->setValid(TRUE);
+    mSnapshotCtrl->setValid(true);
 }
 
 void LLPanelProfilePick::setPickName(const std::string& name)
@@ -699,7 +695,7 @@ void LLPanelProfilePick::onClickTeleport()
     }
 }
 
-void LLPanelProfilePick::enableSaveButton(BOOL enable)
+void LLPanelProfilePick::enableSaveButton(bool enable)
 {
     childSetVisible("save_changes_lp", enable);
 
@@ -710,7 +706,7 @@ void LLPanelProfilePick::enableSaveButton(BOOL enable)
 
 void LLPanelProfilePick::onSnapshotChanged()
 {
-    enableSaveButton(TRUE);
+    enableSaveButton(true);
 }
 
 void LLPanelProfilePick::onPickChanged(LLUICtrl* ctrl)
@@ -735,16 +731,12 @@ void LLPanelProfilePick::resetDirty()
 
 bool LLPanelProfilePick::isDirty() const
 {
-    if (mNewPick
-        || LLPanel::isDirty()
-        || mLocationChanged
-        || mSnapshotCtrl->isDirty()
-        || mPickName->isDirty()
-        || mPickDescription->isDirty())
-    {
-        return true;
-    }
-    return false;
+    return mNewPick
+            || LLPanel::isDirty()
+            || mLocationChanged
+            || mSnapshotCtrl->isDirty()
+            || mPickName->isDirty()
+            || mPickDescription->isDirty();
 }
 
 void LLPanelProfilePick::onClickSave()
@@ -758,7 +750,7 @@ void LLPanelProfilePick::onClickCancel()
 {
     LLAvatarPropertiesProcessor::getInstance()->sendPickInfoRequest(getAvatarId(), getPickId());
     mLocationChanged = false;
-    enableSaveButton(FALSE);
+    enableSaveButton(false);
 }
 
 std::string LLPanelProfilePick::getLocationNotice()
