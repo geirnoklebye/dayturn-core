@@ -804,14 +804,14 @@ void LLPanelProfilePick::sendUpdate()
     pick_data.creator_id = gAgentID;;
 
     //legacy var  need to be deleted
-    pick_data.top_pick = FALSE;
+    pick_data.top_pick = false;
     pick_data.parcel_id = mParcelId;
     pick_data.name = getPickName();
     pick_data.desc = mPickDescription->getValue().asString();
     pick_data.snapshot_id = mSnapshotCtrl->getImageAssetID();
     pick_data.pos_global = getPosGlobal();
     pick_data.sort_order = 0;
-    pick_data.enabled = TRUE;
+    pick_data.enabled = true;
 
     LLAvatarPropertiesProcessor::getInstance()->sendPickInfoUpdate(&pick_data);
 
