@@ -920,7 +920,7 @@ void LLViewerMedia::setAllMediaEnabled(bool val)
 {
 	// Set "tentative" autoplay first.  We need to do this here or else
 	// re-enabling won't start up the media below.
-	gSavedSettings.setBOOL("MediaTentativeAutoPlay", val);
+	gSavedSettings.setbool("MediaTentativeAutoPlay", val);
 
 	// Then
 	impl_list::iterator iter = sViewerMediaImplList.begin();
@@ -975,7 +975,7 @@ void LLViewerMedia::setAllMediaPaused(bool val)
 {
     // Set "tentative" autoplay first.  We need to do this here or else
     // re-enabling won't start up the media below.
-    gSavedSettings.setBOOL("MediaTentativeAutoPlay", !val);
+    gSavedSettings.setbool("MediaTentativeAutoPlay", !val);
 
     // Then
     impl_list::iterator iter = sViewerMediaImplList.begin();
@@ -1493,7 +1493,7 @@ std::string LLViewerMedia::getParcelAudioURL()
 void LLViewerMedia::onTeleportFinished()
 {
 	// On teleport, clear this setting (i.e. set it to true)
-	gSavedSettings.setBOOL("MediaTentativeAutoPlay", true);
+	gSavedSettings.setbool("MediaTentativeAutoPlay", true);
 
 	LLViewerMediaImpl::sMimeTypesFailed.clear();
 }
