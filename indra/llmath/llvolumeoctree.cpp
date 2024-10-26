@@ -139,7 +139,7 @@ void LLOctreeTriangleRayIntersect::visit(const LLOctreeNode<LLVolumeTriangle, LL
 				*mClosestT = t;
 				mHitFace = true;
 
-				if (mIntersection != NULL)
+				if (mIntersection != nullptr)
 				{
 					LLVector4a intersect = mDir;
 					intersect.mul(*mClosestT);
@@ -151,7 +151,7 @@ void LLOctreeTriangleRayIntersect::visit(const LLOctreeNode<LLVolumeTriangle, LL
 				U32 idx1 = tri->mIndex[1];
 				U32 idx2 = tri->mIndex[2];
 
-				if (mTexCoord != NULL)
+				if (mTexCoord != nullptr)
 				{
 					LLVector2* tc = (LLVector2*) mFace->mTexCoords;
 					*mTexCoord = ((1.f - a - b)  * tc[idx0] +
@@ -160,7 +160,7 @@ void LLOctreeTriangleRayIntersect::visit(const LLOctreeNode<LLVolumeTriangle, LL
 
 				}
 
-				if (mNormal != NULL)
+				if (mNormal != nullptr)
 				{
 					LLVector4a* norm = mFace->mNormals;
 								
@@ -180,7 +180,7 @@ void LLOctreeTriangleRayIntersect::visit(const LLOctreeNode<LLVolumeTriangle, LL
 					*mNormal		= n1; 
 				}
 
-				if (mTangent != NULL)
+				if (mTangent != nullptr)
 				{
 					LLVector4a* tangents = mFace->mTangents;
 								
