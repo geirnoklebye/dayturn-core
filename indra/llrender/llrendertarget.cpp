@@ -30,7 +30,7 @@
 #include "llrender.h"
 #include "llgl.h"
 
-LLRenderTarget* LLRenderTarget::sBoundTarget = nullptr;
+LLRenderTarget* LLRenderTarget::sBoundTarget = NULL;
 U32 LLRenderTarget::sBytesAllocated = 0;
 
 void check_framebuffer_status()
@@ -462,7 +462,7 @@ void LLRenderTarget::release()
 	
 	mResX = mResY = 0;
 
-	sBoundTarget = nullptr;
+	sBoundTarget = NULL;
 }
 
 void LLRenderTarget::bindTarget()
