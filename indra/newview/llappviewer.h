@@ -429,7 +429,6 @@ extern bool gIsInSecondLife; //Opensim or SecondLife
 extern LLVector3 gWindVec;
 extern LLVector3 gRelativeWindVec;
 extern U32	gPacketsIn;
-extern bool gPrintMessagesThisFrame;
 
 extern LLUUID gBlackSquareID;
 
