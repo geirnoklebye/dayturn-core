@@ -5708,6 +5708,7 @@ void LLAppViewer::idleNetwork()
 	// Retransmit unacknowledged packets.
 	gXferManager->retransmitUnackedPackets();
 	gAssetStorage->checkForTimeouts();
+    gViewerThrottle.setBufferLoadRate(gMessageSystem->getBufferLoadRate());
 	gViewerThrottle.updateDynamicThrottle();
 
 	// Check that the circuit between the viewer and the agent's current
