@@ -597,8 +597,6 @@ private:
 	LLVector3	mLastAnimExtents[2];  
 	LLVector3	mLastAnimBasePos;
 	
-	LLCachedControl<bool> mRenderUnloadedAvatar;
-
 	//--------------------------------------------------------------------
 	// Wind rippling in clothes
 	//--------------------------------------------------------------------
