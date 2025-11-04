@@ -217,6 +217,7 @@ private:
     LLUUID				mImageId;
 
 	boost::signals2::connection	mAvatarNameCacheConnection;
+    boost::signals2::connection mMenuNameCacheConnection;
 };
 
 
