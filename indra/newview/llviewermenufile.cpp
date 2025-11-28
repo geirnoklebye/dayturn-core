@@ -920,7 +920,7 @@ void upload_done_callback(
 	LLResourceData* data = (LLResourceData*)user_data;
 	S32 expected_upload_cost = data ? data->mExpectedUploadCost : 0;
 	//LLAssetType::EType pref_loc = data->mPreferredLocation;
-	BOOL is_balance_sufficient = TRUE;
+	bool is_balance_sufficient = true;
 
 	if(data)
 	{
@@ -938,7 +938,7 @@ void upload_done_callback(
 				if(!(can_afford_transaction(expected_upload_cost)))
 				{
 					LLBuyCurrencyHTML::openCurrencyFloater( "", expected_upload_cost );
-					is_balance_sufficient = FALSE;
+					is_balance_sufficient = false;
 				}
 				else if(region)
 				{
@@ -1099,7 +1099,7 @@ void upload_new_resource(
 			data->mAssetInfo.mType,
 			asset_callback,
 			(void*)data,
-			FALSE);
+			false);
 	}
 }
 

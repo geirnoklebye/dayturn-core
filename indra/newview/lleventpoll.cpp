@@ -93,7 +93,7 @@ namespace Details
     {
         LLAppCoreHttp & app_core_http(LLAppViewer::instance()->getAppCoreHttp());
 
-        mHttpRequest = LLCore::HttpRequest::ptr_t(new LLCore::HttpRequest);
+        mHttpRequest = std::make_shared<LLCore::HttpRequest>();
         mHttpPolicy = app_core_http.getPolicy(LLAppCoreHttp::AP_LONG_POLL);
         mSenderIp = sender.getIPandPort();
     }
@@ -146,7 +146,7 @@ namespace Details
 
     void LLEventPollImpl::eventPollCoro(std::string url)
     {
-        LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t httpAdapter(new LLCoreHttpUtil::HttpCoroutineAdapter("EventPoller", mHttpPolicy));
+        LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t httpAdapter = std::make_shared<LLCoreHttpUtil::HttpCoroutineAdapter>("EventPoller", mHttpPolicy);
         LLSD acknowledge;
         int errorCount = 0;
         int counter = mCounter; // saved on the stack for logging. 
