@@ -931,10 +931,8 @@ void LLAccordionCtrl::collapseAllTabs()
 {
     if (mAccordionTabs.size() > 0)
     {
-        for (size_t i = 0; i < mAccordionTabs.size(); ++i)
+        for (LLAccordionCtrlTab* tab : mAccordionTabs)
         {
-            LLAccordionCtrlTab *tab = mAccordionTabs[i];
-
             if (tab->getDisplayChildren())
             {
                 tab->setDisplayChildren(false);
