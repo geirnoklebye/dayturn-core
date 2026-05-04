@@ -854,7 +854,6 @@ void LLViewerParcelOverlay::setDirty()
 
 void LLViewerParcelOverlay::updateGL()
 {
-	LL_PROFILE_ZONE_SCOPED
 	updateOverlayTexture();
 }
 
