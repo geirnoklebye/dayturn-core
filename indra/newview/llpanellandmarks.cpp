@@ -506,18 +506,18 @@ void LLLandmarksPanel::initListCommandsHandlers()
     {
         mGearLandmarkMenu->setVisibilityChangeCallback(boost::bind(&LLLandmarksPanel::onMenuVisibilityChange, this, _1, _2));
         // show menus even if all items are disabled
-        mGearLandmarkMenu->setAlwaysShowMenu(TRUE);
+        mGearLandmarkMenu->setAlwaysShowMenu(true);
     } // Else corrupted files?
 
     if (mGearFolderMenu)
     {
         mGearFolderMenu->setVisibilityChangeCallback(boost::bind(&LLLandmarksPanel::onMenuVisibilityChange, this, _1, _2));
-        mGearFolderMenu->setAlwaysShowMenu(TRUE);
+        mGearFolderMenu->setAlwaysShowMenu(true);
     }
 
     if (mAddMenu)
     {
-        mAddMenu->setAlwaysShowMenu(TRUE);
+        mAddMenu->setAlwaysShowMenu(true);
     }
 }
 
@@ -1050,7 +1050,7 @@ bool LLLandmarksPanel::canItemBeModified(const std::string& command_name, LLFold
 	return can_be_modified;
 }
 
-bool LLLandmarksPanel::handleDragAndDropToTrash(BOOL drop, EDragAndDropType cargo_type, void* cargo_data , EAcceptance* accept)
+bool LLLandmarksPanel::handleDragAndDropToTrash(bool drop, EDragAndDropType cargo_type, void* cargo_data , EAcceptance* accept)
 {
 	*accept = ACCEPT_NO;
 
@@ -1108,7 +1108,7 @@ void LLLandmarksPanel::doShowOnMap(LLLandmark* landmark)
 
     if (mGearLandmarkMenu)
     {
-        mGearLandmarkMenu->setItemEnabled("show_on_map", TRUE);
+        mGearLandmarkMenu->setItemEnabled("show_on_map", true);
     }
 }
 
