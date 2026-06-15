@@ -159,7 +159,7 @@ void LLAgentWearables::dump()
 		for (U32 j=0; j<count; j++)
 		{
 			LLViewerWearable* wearable = getViewerWearable((LLWearableType::EType)i,j);
-			if (wearable == NULL)
+			if (wearable == nullptr)
 			{
 				LL_INFOS() << "    " << j << " NULL wearable" << LL_ENDL;
 			}
@@ -530,7 +530,7 @@ bool LLAgentWearables::isWearableCopyable(LLWearableType::EType type, U32 index)
 LLInventoryItem* LLAgentWearables::getWearableInventoryItem(LLWearableType::EType type, U32 index)
 {
 	LLUUID item_id = getWearableItemID(type,index);
-	LLInventoryItem* item = NULL;
+	LLInventoryItem* item = nullptr;
 	if (item_id.notNull())
 	{
 		item = gInventory.getItem(item_id);
@@ -552,7 +552,7 @@ const LLViewerWearable* LLAgentWearables::getWearableFromItemID(const LLUUID& it
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 LLViewerWearable* LLAgentWearables::getWearableFromItemID(const LLUUID& item_id)
@@ -569,7 +569,7 @@ LLViewerWearable* LLAgentWearables::getWearableFromItemID(const LLUUID& item_id)
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 LLViewerWearable*	LLAgentWearables::getWearableFromAssetID(const LLUUID& asset_id) 
@@ -585,7 +585,7 @@ LLViewerWearable*	LLAgentWearables::getWearableFromAssetID(const LLUUID& asset_i
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 LLViewerWearable* LLAgentWearables::getViewerWearable(const LLWearableType::EType type, U32 index /*= 0*/)

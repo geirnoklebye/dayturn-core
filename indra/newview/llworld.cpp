@@ -732,7 +732,7 @@ LLViewerRegion* LLWorld::getRegion(const LLHost &host)
 			return regionp;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 LLViewerRegion* LLWorld::getRegionFromPosAgent(const LLVector3 &pos)
@@ -751,7 +751,7 @@ LLViewerRegion* LLWorld::getRegionFromPosGlobal(const LLVector3d &pos)
 			return regionp;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 
@@ -835,7 +835,7 @@ LLViewerRegion* LLWorld::getRegionFromHandle(const U64 &handle)
 			return regionp;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 LLViewerRegion* LLWorld::getRegionFromID(const LLUUID& region_id)
@@ -849,7 +849,7 @@ LLViewerRegion* LLWorld::getRegionFromID(const LLUUID& region_id)
 			return regionp;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 void LLWorld::updateAgentOffset(const LLVector3d &offset_global)
@@ -915,7 +915,7 @@ LLViewerRegion* LLWorld::resolveRegionAgent(LLVector3 &pos_region, const LLVecto
 		return regionp;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 
@@ -951,7 +951,7 @@ F32 LLWorld::resolveStepHeightGlobal(const LLVOAvatar* avatarp, const LLVector3d
 	// initialize return value to null
 	if (viewerObjectPtr)
 	{
-		*viewerObjectPtr = NULL;
+		*viewerObjectPtr = nullptr;
 	}
 
 	LLViewerRegion *regionp = getRegionFromPosGlobal(point_a);
@@ -1014,7 +1014,7 @@ LLSurfacePatch * LLWorld::resolveLandPatchGlobal(const LLVector3d &pos_global)
 	LLViewerRegion *regionp = getRegionFromPosGlobal(pos_global);
 	if (!regionp)
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	return regionp->getLand().resolvePatchGlobal(pos_global);
@@ -1235,7 +1235,7 @@ void LLWorld::printPacketsLost()
 	LL_INFOS() << "Simulators:" << LL_ENDL;
 	LL_INFOS() << "----------" << LL_ENDL;
 
-	LLCircuitData *cdp = NULL;
+	LLCircuitData *cdp = nullptr;
 	for (region_list_t::iterator iter = mActiveRegionList.begin();
 		 iter != mActiveRegionList.end(); ++iter)
 	{
@@ -1766,7 +1766,7 @@ void LLWorld::getAvatars(uuid_vec_t* avatar_ids, std::vector<LLVector3d>* positi
 {
 	F32 radius_squared = radius * radius;
 	
-	if(avatar_ids != NULL)
+	if(avatar_ids != nullptr)
 	{
 		avatar_ids->clear();
 	}
@@ -1793,7 +1793,7 @@ void LLWorld::getAvatars(uuid_vec_t* avatar_ids, std::vector<LLVector3d>* positi
 				{
 					positions->push_back(pos_global);
 				}
-				if(avatar_ids !=NULL)
+				if(avatar_ids !=nullptr)
 				{
 					avatar_ids->push_back(uuid);
 				}
@@ -1814,7 +1814,7 @@ void LLWorld::getAvatars(uuid_vec_t* avatar_ids, std::vector<LLVector3d>* positi
 			{
 				LLUUID uuid = regionp->mMapAvatarIDs.at(i);
 				// if this avatar doesn't already exist in the list, add it
-				if(uuid.notNull() && avatar_ids != NULL && std::find(avatar_ids->begin(), avatar_ids->end(), uuid) == avatar_ids->end())
+				if(uuid.notNull() && avatar_ids != nullptr && std::find(avatar_ids->begin(), avatar_ids->end(), uuid) == avatar_ids->end())
 				{
 					if (positions != NULL)
 					{

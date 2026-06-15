@@ -643,7 +643,7 @@ LLViewerRegion::LLViewerRegion(const U64 &handle,
 	mBitsReceived(0.f),
 	mPacketsReceived(0.f),
 	mDead(false),
-	mLastVisitedEntry(NULL),
+	mLastVisitedEntry(nullptr),
 	mInvisibilityCheckHistory(-1),
 	mPaused(false),
 	mRegionCacheHitCount(0),
@@ -653,7 +653,7 @@ LLViewerRegion::LLViewerRegion(const U64 &handle,
 	mImpl->mOriginGlobal = from_region_handle(handle); 
 	updateRenderMatrix();
 
-	mImpl->mLandp = new LLSurface('l', NULL);
+	mImpl->mLandp = new LLSurface('l', nullptr);
 
 	// Create the composition layer for the surface
 	mImpl->mCompositionp =
@@ -751,7 +751,7 @@ LLViewerRegion::~LLViewerRegion()
     }
 
 	delete mImpl;
-	mImpl = NULL;
+	mImpl = nullptr;
 	for (tex_matrix_t::iterator i = mWorldMapTiles.begin(), iend = mWorldMapTiles.end(); i != iend; ++i)
 		(*i)->setBoostLevel(LLViewerTexture::BOOST_NONE);
 }
@@ -1129,7 +1129,7 @@ void LLViewerRegion::killCacheEntry(LLVOCacheEntry* entry, bool for_rendering)
 	else if(entry->getNumOfChildren() > 0)//remove children from cache if has any
 	{
 		LLVOCacheEntry* child = entry->getChild();
-		while(child != NULL)
+		while(child != nullptr)
 		{
 			killCacheEntry(child, for_rendering);
 			child = entry->getChild();
@@ -1188,7 +1188,7 @@ void LLViewerRegion::removeActiveCacheEntry(LLVOCacheEntry* entry, LLDrawable* d
 	}
 
 	//shift to the local regional space from agent space
-	if(drawablep != NULL && drawablep->getVObj().notNull())
+	if(drawablep != nullptr && drawablep->getVObj().notNull())
 	{
 		const LLVector3& pos = drawablep->getVObj()->getPositionRegion();
 		LLVector4a shift;
@@ -1312,9 +1312,9 @@ void LLViewerRegion::addVisibleChildCacheEntry(LLVOCacheEntry* parent, LLVOCache
 	else if(parent && parent->getNumOfChildren() > 0) //add all children
 	{
 		child = parent->getChild();
-		while(child != NULL)
+		while(child != nullptr)
 		{
-			addVisibleChildCacheEntry(NULL, child);
+			addVisibleChildCacheEntry(nullptr, child);
 			child = parent->getChild();
 		}
 	}
@@ -1488,7 +1488,7 @@ void LLViewerRegion::clearCachedVisibleObjects()
 	}
 
 	//remove all visible entries.
-	mLastVisitedEntry = NULL;
+	mLastVisitedEntry = nullptr;
 	std::vector<LLDrawable*> delete_list;
 	for(LLVOCacheEntry::vocache_entry_set_t::iterator iter = mImpl->mActiveSet.begin();
 		iter != mImpl->mActiveSet.end(); ++iter)
@@ -1696,7 +1696,7 @@ void LLViewerRegion::killInvisibleObjects(F32 max_time)
 
 	if(iter == mImpl->mActiveSet.end())
 	{
-		mLastVisitedEntry = NULL;
+		mLastVisitedEntry = nullptr;
 	}
 	else
 	{
@@ -1775,10 +1775,10 @@ LLViewerObject* LLViewerRegion::addNewObject(LLVOCacheEntry* entry)
 			mImpl->mVisibleEntries.erase(entry);
 			entry->setState(LLVOCacheEntry::INACTIVE);
 		}
-		return NULL;
+		return nullptr;
 	}
 
-	LLViewerObject* obj = NULL;
+	LLViewerObject* obj = nullptr;
 	if(!entry->getEntry()->hasDrawable()) //not added to the rendering pipeline yet
 	{
 		//add the object
@@ -1802,7 +1802,7 @@ LLViewerObject* LLViewerRegion::addNewObject(LLVOCacheEntry* entry)
 			//server should soon send update message to remove one region for this object.
 
 			LL_WARNS() << "Entry: " << entry->getLocalID() << " exists in two regions at the same time." << LL_ENDL;
-			return NULL;
+			return nullptr;
 		}
 		
 		LL_WARNS() << "Entry: " << entry->getLocalID() << " in rendering pipeline but not set to be active." << LL_ENDL;
@@ -2400,7 +2400,7 @@ void LLViewerRegion::decodeBoundingInfo(LLVOCacheEntry* entry)
 
 	if(!entry->getEntry())
 	{
-		entry->setOctreeEntry(NULL);
+		entry->setOctreeEntry(nullptr);
 	}
 		
 	if(entry->getEntry()->hasDrawable()) //already in the rendering pipeline
@@ -2486,7 +2486,7 @@ void LLViewerRegion::decodeBoundingInfo(LLVOCacheEntry* entry)
 				if(isNonCacheableObjectCreated(parent_id))
 				{
 					//parent is visible, so is the child.
-					addVisibleChildCacheEntry(NULL, entry);
+					addVisibleChildCacheEntry(nullptr, entry);
 				}
 				else
 				{
@@ -2630,7 +2630,7 @@ LLVOCacheEntry* LLViewerRegion::getCacheEntryForOctree(U32 local_id)
 {
 	if(!sVOCacheCullingEnabled)
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	LLVOCacheEntry* entry = getCacheEntry(local_id);
@@ -2652,7 +2652,7 @@ LLVOCacheEntry* LLViewerRegion::getCacheEntry(U32 local_id, bool valid)
 			return iter->second;
 		}
 	}
-	return NULL;
+	return nullptr;
 	}
 
 void LLViewerRegion::addCacheMiss(U32 id, LLViewerRegion::eCacheMissType miss_type)
@@ -3171,7 +3171,7 @@ void LLViewerRegion::setSeedCapability(const std::string& url)
     }
 	
 	delete mImpl->mEventPoll;
-	mImpl->mEventPoll = NULL;
+	mImpl->mEventPoll = nullptr;
 	
 	mImpl->mCapabilities.clear();
 	setCapability("Seed", url);
@@ -3198,7 +3198,7 @@ void LLViewerRegion::setCapability(const std::string& name, const std::string& u
 	if(name == "EventQueueGet")
 	{
 		delete mImpl->mEventPoll;
-		mImpl->mEventPoll = NULL;
+		mImpl->mEventPoll = nullptr;
 		mImpl->mEventPoll = new LLEventPoll(url, getHost());
 	}
 	else if(name == "UntrustedSimulatorMessage")
@@ -3352,7 +3352,7 @@ LLSpatialPartition* LLViewerRegion::getSpatialPartition(U32 type)
 	{
 		return (LLSpatialPartition*)mImpl->mObjectPartition[type];
 	}
-	return NULL;
+	return nullptr;
 }
 
 LLVOCachePartition* LLViewerRegion::getVOCachePartition()
@@ -3361,7 +3361,7 @@ LLVOCachePartition* LLViewerRegion::getVOCachePartition()
 	{
 		return (LLVOCachePartition*)mImpl->mObjectPartition[PARTITION_VO_CACHE];
 	}
-	return NULL;
+	return nullptr;
 }
 
 // the viewer can not yet distinquish between normal- and estate-owned objects
@@ -3371,7 +3371,7 @@ const U64 ALLOW_RETURN_ENCROACHING_OBJECT = REGION_FLAGS_ALLOW_RETURN_ENCROACHIN
 
 bool LLViewerRegion::objectIsReturnable(const LLVector3& pos, const std::vector<LLBBox>& boxes) const
 {
-	return (mParcelOverlay != NULL)
+	return (mParcelOverlay != nullptr)
 		&& (mParcelOverlay->isOwnedSelf(pos)
 			|| mParcelOverlay->isOwnedGroup(pos)
 			|| (getRegionFlag(ALLOW_RETURN_ENCROACHING_OBJECT)

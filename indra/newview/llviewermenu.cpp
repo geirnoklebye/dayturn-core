@@ -373,7 +373,7 @@ public:
 	virtual void changed();
 };
 
-static LLMenuParcelObserver* gMenuParcelObserver = NULL;
+static LLMenuParcelObserver* gMenuParcelObserver = nullptr;
 
 static LLUIListener sUIListener;
 
@@ -670,15 +670,15 @@ class LLAdvancedDumpInfoToConsole : public view_listener_t
 		std::string info_type = userdata.asString();
 		if ("region" == info_type)
 		{
-			handle_region_dump_settings(NULL);
+			handle_region_dump_settings(nullptr);
 		}
 		else if ("group" == info_type)
 		{
-			handle_dump_group_info(NULL);
+			handle_dump_group_info(nullptr);
 		}
 		else if ("capabilities" == info_type)
 		{
-			handle_dump_capabilities_info(NULL);
+			handle_dump_capabilities_info(nullptr);
 		}
 		return true;
 	}
@@ -751,7 +751,7 @@ class LLAdvancedClearGroupCache : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		LLGroupMgr::debugClearAllGroups(NULL);
+		LLGroupMgr::debugClearAllGroups(nullptr);
 		return true;
 	}
 };
@@ -1251,7 +1251,7 @@ class LLAdvancedSelectedTextureInfo : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_selected_texture_info(NULL);
+		handle_selected_texture_info(nullptr);
 		return true;
 	}
 };
@@ -1306,7 +1306,7 @@ class LLAdvancedDumpScriptedCamera : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_dump_followcam(NULL);
+		handle_dump_followcam(nullptr);
 		return true;
 }
 };
@@ -1374,7 +1374,7 @@ class LLAdvancedBuyCurrencyTest : public view_listener_t
 	{
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_buy_currency_test(NULL);
+		handle_buy_currency_test(nullptr);
 		return true;
 	}
 };
@@ -1389,7 +1389,7 @@ class LLAdvancedDumpSelectMgr : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		dump_select_mgr(NULL);
+		dump_select_mgr(nullptr);
 		return true;
 	}
 };
@@ -1405,7 +1405,7 @@ class LLAdvancedDumpInventory : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		dump_inventory(NULL);
+		dump_inventory(nullptr);
 		return true;
 	}
 };
@@ -1420,7 +1420,7 @@ class LLAdvancedPrintSelectedObjectInfo : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		print_object_info(NULL);
+		print_object_info(nullptr);
 		return true;
 	}
 };
@@ -1436,7 +1436,7 @@ class LLAdvancedPrintAgentInfo : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		print_agent_nvpairs(NULL);
+		print_agent_nvpairs(nullptr);
 		return true;
 	}
 };
@@ -1510,7 +1510,7 @@ class LLAdvancedToggleXUINameTooltips : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		toggle_show_xui_names(NULL);
+		toggle_show_xui_names(nullptr);
 		return true;
 	}
 };
@@ -1519,7 +1519,7 @@ class LLAdvancedCheckXUINameTooltips : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		bool new_value = check_show_xui_names(NULL);
+		bool new_value = check_show_xui_names(nullptr);
 		return new_value;
 	}
 };
@@ -1620,7 +1620,7 @@ class LLAdvancedToggleXUINames : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		toggle_show_xui_names(NULL);
+		toggle_show_xui_names(nullptr);
 		return true;
 	}
 };
@@ -1629,7 +1629,7 @@ class LLAdvancedCheckXUINames : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		bool new_value = check_show_xui_names(NULL);
+		bool new_value = check_show_xui_names(nullptr);
 		return new_value;
 	}
 };
@@ -1746,7 +1746,7 @@ class LLAdvancedAppearanceToXML : public view_listener_t
 	{
 		std::string emptyname;
         LLViewerObject *obj = LLSelectMgr::getInstance()->getSelection()->getPrimaryObject();
-        LLVOAvatar *avatar = NULL;
+        LLVOAvatar *avatar = nullptr;
         if (obj)
         {
             if (obj->isAvatar())
@@ -1788,7 +1788,7 @@ class LLAdvancedToggleCharacterGeometry : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_god_request_avatar_geometry(NULL);
+		handle_god_request_avatar_geometry(nullptr);
 		return true;
 }
 };
@@ -1802,7 +1802,7 @@ class LLAdvancedTestMale : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_test_male(NULL);
+		handle_test_male(nullptr);
 		return true;
 	}
 };
@@ -1812,7 +1812,7 @@ class LLAdvancedTestFemale : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_test_female(NULL);
+		handle_test_female(nullptr);
 		return true;
 	}
 };
@@ -1821,7 +1821,7 @@ class LLAdvancedForceParamsToDefault : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		LLAgent::clearVisualParams(NULL);
+		LLAgent::clearVisualParams(nullptr);
 		return true;
 	}
 };
@@ -1885,7 +1885,7 @@ class LLAdvancedReloadVertexShader : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		reload_vertex_shader(NULL);
+		reload_vertex_shader(nullptr);
 		return true;
 	}
 };
@@ -1999,7 +1999,7 @@ class LLAdvancedDumpAttachments : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_dump_attachments(NULL);
+		handle_dump_attachments(nullptr);
 		return true;
 	}
 };
@@ -2015,7 +2015,7 @@ class LLAdvancedRebakeTextures : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_rebake_textures(NULL);
+		handle_rebake_textures(nullptr);
 		return true;
 	}
 };
@@ -2039,7 +2039,7 @@ class LLAdvancedDebugAvatarTextures : public view_listener_t
 	{
 		if (gAgent.isGodlike())
 		{
-			handle_debug_avatar_textures(NULL);
+			handle_debug_avatar_textures(nullptr);
 		}
 		return true;
 	}
@@ -2072,7 +2072,7 @@ class LLAdvancedEnableMessageLog : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_viewer_enable_message_log(NULL);
+		handle_viewer_enable_message_log(nullptr);
 		return true;
 	}
 };
@@ -2081,7 +2081,7 @@ class LLAdvancedDisableMessageLog : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_viewer_disable_message_log(NULL);
+		handle_viewer_disable_message_log(nullptr);
 		return true;
 	}
 };
@@ -2257,7 +2257,7 @@ class LLAdvancedCompressImage : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_compress_image(NULL);
+		handle_compress_image(nullptr);
 		return true;
 	}
 };
@@ -2313,7 +2313,7 @@ class LLAdvancedToggleViewAdminOptions : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_admin_override_toggle(NULL);
+		handle_admin_override_toggle(nullptr);
 		return true;
 	}
 };
@@ -2322,7 +2322,7 @@ class LLAdvancedToggleVisualLeakDetector : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_visual_leak_detector_toggle(NULL);
+		handle_visual_leak_detector_toggle(nullptr);
 		return true;
 	}
 };
@@ -2331,7 +2331,7 @@ class LLAdvancedCheckViewAdminOptions : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		bool new_value = check_admin_override(NULL) || gAgent.isGodlike();
+		bool new_value = check_admin_override(nullptr) || gAgent.isGodlike();
 		return new_value;
 	}
 };
@@ -2417,7 +2417,7 @@ class LLAdvancedRequestAdminStatus : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_god_mode(NULL);
+		handle_god_mode(nullptr);
 		return true;
 	}
 };
@@ -2426,7 +2426,7 @@ class LLAdvancedLeaveAdminStatus : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_leave_god_mode(NULL);
+		handle_leave_god_mode(nullptr);
 		return true;
 	}
 };
@@ -2448,7 +2448,7 @@ class LLAdvancedForceErrorLlerror : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		force_error_llerror(NULL);
+		force_error_llerror(nullptr);
 		return true;
 	}
 };
@@ -2466,7 +2466,7 @@ class LLAdvancedForceErrorBadMemoryAccess : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		force_error_bad_memory_access(NULL);
+		force_error_bad_memory_access(nullptr);
 		return true;
 	}
 };
@@ -2491,7 +2491,7 @@ class LLAdvancedForceErrorInfiniteLoop : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		force_error_infinite_loop(NULL);
+		force_error_infinite_loop(nullptr);
 		return true;
 	}
 };
@@ -2500,7 +2500,7 @@ class LLAdvancedForceErrorSoftwareException : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		force_error_software_exception(NULL);
+		force_error_software_exception(nullptr);
 		return true;
 	}
 };
@@ -2534,7 +2534,7 @@ class LLAdvancedForceErrorDriverCrash : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		force_error_driver_crash(NULL);
+		force_error_driver_crash(nullptr);
 		return true;
 	}
 };
@@ -2561,7 +2561,7 @@ class LLAdvancedForceErrorDisconnectViewer : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_disconnect_viewer(NULL);
+		handle_disconnect_viewer(nullptr);
 		return true;
 }
 };
@@ -2573,7 +2573,7 @@ class LLAdvancedHandleToggleHackedGodmode : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_toggle_hacked_godmode(NULL);
+		handle_toggle_hacked_godmode(nullptr);
 		return true;
 	}
 };
@@ -2582,7 +2582,7 @@ class LLAdvancedCheckToggleHackedGodmode : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		check_toggle_hacked_godmode(NULL);
+		check_toggle_hacked_godmode(nullptr);
 		return true;
 	}
 };
@@ -2591,7 +2591,7 @@ class LLAdvancedEnableToggleHackedGodmode : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		bool new_value = enable_toggle_hacked_godmode(NULL);
+		bool new_value = enable_toggle_hacked_godmode(nullptr);
 		return new_value;
 	}
 };
@@ -2644,7 +2644,7 @@ class LLAdminForceTakeCopy : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		force_take_copy(NULL);
+		force_take_copy(nullptr);
 		return true;
 	}
 };
@@ -2653,7 +2653,7 @@ class LLAdminHandleObjectOwnerSelf : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_object_owner_self(NULL);
+		handle_object_owner_self(nullptr);
 		return true;
 	}
 };
@@ -2661,7 +2661,7 @@ class LLAdminHandleObjectOwnerPermissive : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_object_owner_permissive(NULL);
+		handle_object_owner_permissive(nullptr);
 		return true;
 	}
 };
@@ -2670,7 +2670,7 @@ class LLAdminHandleForceDelete : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_force_delete(NULL);
+		handle_force_delete(nullptr);
 		return true;
 	}
 };
@@ -2679,7 +2679,7 @@ class LLAdminHandleObjectLock : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_object_lock(NULL);
+		handle_object_lock(nullptr);
 		return true;
 	}
 };
@@ -2688,7 +2688,7 @@ class LLAdminHandleObjectAssetIDs: public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_object_asset_ids(NULL);
+		handle_object_asset_ids(nullptr);
 		return true;
 	}	
 };
@@ -2698,7 +2698,7 @@ class LLAdminHandleForceParcelOwnerToMe: public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_force_parcel_owner_to_me(NULL);
+		handle_force_parcel_owner_to_me(nullptr);
 		return true;
 	}
 };
@@ -2706,7 +2706,7 @@ class LLAdminHandleForceParcelToContent: public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_force_parcel_to_content(NULL);
+		handle_force_parcel_to_content(nullptr);
 		return true;
 	}
 };
@@ -2714,7 +2714,7 @@ class LLAdminHandleClaimPublicLand: public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_claim_public_land(NULL);
+		handle_claim_public_land(nullptr);
 		return true;
 	}
 };
@@ -2724,7 +2724,7 @@ class LLAdminHandleRegionDumpTempAssetData: public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_region_dump_temp_asset_data(NULL);
+		handle_region_dump_temp_asset_data(nullptr);
 		return true;
 	}
 };
@@ -2734,7 +2734,7 @@ class LLAdminOnSaveState: public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		LLPanelRegionTools::onSaveState(NULL);
+		LLPanelRegionTools::onSaveState(nullptr);
 		return true;
 }
 };
@@ -2746,37 +2746,37 @@ class LLAdminOnSaveState: public view_listener_t
 void cleanup_menus()
 {
 	delete gMenuParcelObserver;
-	gMenuParcelObserver = NULL;
+	gMenuParcelObserver = nullptr;
 
 	delete gMenuAvatarSelf;
-	gMenuAvatarSelf = NULL;
+	gMenuAvatarSelf = nullptr;
 
 	delete gMenuAvatarOther;
-	gMenuAvatarOther = NULL;
+	gMenuAvatarOther = nullptr;
 
 	delete gMenuObject;
-	gMenuObject = NULL;
+	gMenuObject = nullptr;
 
 	delete gMenuAttachmentSelf;
-	gMenuAttachmentSelf = NULL;
+	gMenuAttachmentSelf = nullptr;
 
 	delete gMenuAttachmentOther;
-	gMenuAttachmentSelf = NULL;
+	gMenuAttachmentSelf = nullptr;
 
 	delete gMenuLand;
-	gMenuLand = NULL;
+	gMenuLand = nullptr;
 
 	delete gMenuMuteParticle;
-	gMenuMuteParticle = NULL;
+	gMenuMuteParticle = nullptr;
 
 	delete gMenuBarView;
-	gMenuBarView = NULL;
+	gMenuBarView = nullptr;
 
 	delete gPopupMenuView;
-	gPopupMenuView = NULL;
+	gPopupMenuView = nullptr;
 
 	delete gMenuHolder;
-	gMenuHolder = NULL;
+	gMenuHolder = nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -3039,7 +3039,7 @@ bool enable_object_inspect()
 {
     LLObjectSelectionHandle selection = LLSelectMgr::getInstance()->getSelection();
     LLViewerObject* selected_objectp = selection->getFirstRootObject();
-    return selected_objectp != NULL;
+    return selected_objectp != nullptr;
 }
 
 bool enable_object_open()
@@ -3281,7 +3281,7 @@ class LLLandEnableBuyPass : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		bool new_value = LLPanelLandGeneral::enableBuyPass(NULL);
+		bool new_value = LLPanelLandGeneral::enableBuyPass(nullptr);
 		return new_value;
 	}
 };
@@ -3693,7 +3693,7 @@ bool callback_freeze(const LLSD& notification, const LLSD& response)
 void handle_avatar_freeze(const LLSD& avatar_id)
 {
 		// Use avatar_id if available, otherwise default to right-click avatar
-		LLVOAvatar* avatar = NULL;
+		LLVOAvatar* avatar = nullptr;
 		if (avatar_id.asUUID().notNull())
 		{
 			avatar = find_avatar_from_object(avatar_id.asUUID());
@@ -3820,7 +3820,7 @@ bool callback_eject(const LLSD& notification, const LLSD& response)
 void handle_avatar_eject(const LLSD& avatar_id)
 {
 		// Use avatar_id if available, otherwise default to right-click avatar
-		LLVOAvatar* avatar = NULL;
+		LLVOAvatar* avatar = nullptr;
 		if (avatar_id.asUUID().notNull())
 		{
 			avatar = find_avatar_from_object(avatar_id.asUUID());
@@ -3897,7 +3897,7 @@ bool picks_tab_visible()
 bool enable_freeze_eject(const LLSD& avatar_id)
 {
 	// Use avatar_id if available, otherwise default to right-click avatar
-	LLVOAvatar* avatar = NULL;
+	LLVOAvatar* avatar = nullptr;
 	if (avatar_id.asUUID().notNull())
 	{
 		avatar = find_avatar_from_object(avatar_id.asUUID());
@@ -3973,7 +3973,7 @@ bool enable_buy_object()
     // In order to buy, there must only be 1 purchaseable object in
     // the selection manager.
 	if(LLSelectMgr::getInstance()->getSelection()->getRootObjectCount() != 1) return false;
-    LLViewerObject* obj = NULL;
+    LLViewerObject* obj = nullptr;
     LLSelectNode* node = LLSelectMgr::getInstance()->getSelection()->getFirstRootNode();
 	if(node)
     {
@@ -4382,7 +4382,7 @@ bool LLHaveCallingcard::operator()(LLInventoryCategory* cat,
 
 bool is_agent_mappable(const LLUUID& agent_id)
 {
-	const LLRelationship* buddy_info = NULL;
+	const LLRelationship* buddy_info = nullptr;
 	bool is_friend = LLAvatarActions::isFriend(agent_id);
 
 	if (is_friend)
@@ -5049,7 +5049,7 @@ static bool get_derezzable_objects(
 
 static bool can_derez(EDeRezDestination dest)
 {
-	LLViewerRegion* first_region = NULL;
+	LLViewerRegion* first_region = nullptr;
 	std::string error;
 	return get_derezzable_objects(dest, error, first_region, NULL, true);
 }
@@ -5150,9 +5150,9 @@ static void derez_objects(
 
 static void derez_objects(EDeRezDestination dest, const LLUUID& dest_id)
 {
-	LLViewerRegion* first_region = NULL;
+	LLViewerRegion* first_region = nullptr;
 	std::string error;
-	derez_objects(dest, dest_id, first_region, error, NULL);
+	derez_objects(dest, dest_id, first_region, error, nullptr);
 }
 
 void handle_take_copy()
@@ -5179,7 +5179,7 @@ void handle_link_objects()
 class LLObjectReturn : public view_listener_t
 {
 public:
-	LLObjectReturn() : mFirstRegion(NULL) {}
+	LLObjectReturn() : mFirstRegion(nullptr) {}
 
 private:
 	bool handleEvent(const LLSD& userdata)
@@ -5206,7 +5206,7 @@ private:
 
 		mReturnableObjects.clear();
 		mError.clear();
-		mFirstRegion = NULL;
+		mFirstRegion = nullptr;
 
 		// drop reference to current selection
 		mObjectSelection = NULL;
@@ -5586,7 +5586,7 @@ void show_buy_currency(const char* extra)
 	mesg << "Go to " << LLNotifications::instance().getGlobalString("BUY_CURRENCY_URL")<< "\nfor information on purchasing currency?";
 */
 	LLSD args;
-	if (extra != NULL)
+	if (extra != nullptr)
 	{
 		args["EXTRA"] = extra;
 	}
@@ -5800,7 +5800,7 @@ class LLToolsSelectNextPartFace : public view_listener_t
         bool ifwd = (userdata.asString() == "includenext");
         bool iprev = (userdata.asString() == "includeprevious");
 
-        LLViewerObject* to_select = NULL;
+        LLViewerObject* to_select = nullptr;
         bool restart_face_on_part = !cycle_faces;
         S32 new_te = 0;
 
@@ -5905,7 +5905,7 @@ class LLToolsSelectNextPartFace : public view_listener_t
         {
             if (gFocusMgr.childHasKeyboardFocus(gFloaterTools))
             {
-                gFocusMgr.setKeyboardFocus(NULL);	// force edit toolbox to commit any changes
+                gFocusMgr.setKeyboardFocus(nullptr);	// force edit toolbox to commit any changes
             }
             if (fwd || prev)
             {
@@ -6072,7 +6072,7 @@ class LLEditDelete : public view_listener_t
 void handle_spellcheck_replace_with_suggestion(const LLUICtrl* ctrl, const LLSD& param)
 {
 	const LLContextMenu* menu = dynamic_cast<const LLContextMenu*>(ctrl->getParent());
-	LLSpellCheckMenuHandler* spellcheck_handler = (menu) ? dynamic_cast<LLSpellCheckMenuHandler*>(menu->getSpawningView()) : NULL;
+	LLSpellCheckMenuHandler* spellcheck_handler = (menu) ? dynamic_cast<LLSpellCheckMenuHandler*>(menu->getSpawningView()) : nullptr;
 	if ( (!spellcheck_handler) || (!spellcheck_handler->getSpellCheck()) )
 	{
 		return;
@@ -6090,8 +6090,8 @@ void handle_spellcheck_replace_with_suggestion(const LLUICtrl* ctrl, const LLSD&
 bool visible_spellcheck_suggestion(LLUICtrl* ctrl, const LLSD& param)
 {
 	LLMenuItemGL* item = dynamic_cast<LLMenuItemGL*>(ctrl);
-	const LLContextMenu* menu = (item) ? dynamic_cast<const LLContextMenu*>(item->getParent()) : NULL;
-	const LLSpellCheckMenuHandler* spellcheck_handler = (menu) ? dynamic_cast<const LLSpellCheckMenuHandler*>(menu->getSpawningView()) : NULL;
+	const LLContextMenu* menu = (item) ? dynamic_cast<const LLContextMenu*>(item->getParent()) : nullptr;
+	const LLSpellCheckMenuHandler* spellcheck_handler = (menu) ? dynamic_cast<const LLSpellCheckMenuHandler*>(menu->getSpawningView()) : nullptr;
 	if ( (!spellcheck_handler) || (!spellcheck_handler->getSpellCheck()) )
 	{
 		return false;
@@ -6110,7 +6110,7 @@ bool visible_spellcheck_suggestion(LLUICtrl* ctrl, const LLSD& param)
 void handle_spellcheck_add_to_dictionary(const LLUICtrl* ctrl)
 {
 	const LLContextMenu* menu = dynamic_cast<const LLContextMenu*>(ctrl->getParent());
-	LLSpellCheckMenuHandler* spellcheck_handler = (menu) ? dynamic_cast<LLSpellCheckMenuHandler*>(menu->getSpawningView()) : NULL;
+	LLSpellCheckMenuHandler* spellcheck_handler = (menu) ? dynamic_cast<LLSpellCheckMenuHandler*>(menu->getSpawningView()) : nullptr;
 	if ( (spellcheck_handler) && (spellcheck_handler->canAddToDictionary()) )
 	{
 		spellcheck_handler->addToDictionary();
@@ -6120,14 +6120,14 @@ void handle_spellcheck_add_to_dictionary(const LLUICtrl* ctrl)
 bool enable_spellcheck_add_to_dictionary(const LLUICtrl* ctrl)
 {
 	const LLContextMenu* menu = dynamic_cast<const LLContextMenu*>(ctrl->getParent());
-	const LLSpellCheckMenuHandler* spellcheck_handler = (menu) ? dynamic_cast<const LLSpellCheckMenuHandler*>(menu->getSpawningView()) : NULL;
+	const LLSpellCheckMenuHandler* spellcheck_handler = (menu) ? dynamic_cast<const LLSpellCheckMenuHandler*>(menu->getSpawningView()) : nullptr;
 	return (spellcheck_handler) && (spellcheck_handler->canAddToDictionary());
 }
 
 void handle_spellcheck_add_to_ignore(const LLUICtrl* ctrl)
 {
 	const LLContextMenu* menu = dynamic_cast<const LLContextMenu*>(ctrl->getParent());
-	LLSpellCheckMenuHandler* spellcheck_handler = (menu) ? dynamic_cast<LLSpellCheckMenuHandler*>(menu->getSpawningView()) : NULL;
+	LLSpellCheckMenuHandler* spellcheck_handler = (menu) ? dynamic_cast<LLSpellCheckMenuHandler*>(menu->getSpawningView()) : nullptr;
 	if ( (spellcheck_handler) && (spellcheck_handler->canAddToIgnore()) )
 	{
 		spellcheck_handler->addToIgnore();
@@ -6137,7 +6137,7 @@ void handle_spellcheck_add_to_ignore(const LLUICtrl* ctrl)
 bool enable_spellcheck_add_to_ignore(const LLUICtrl* ctrl)
 {
 	const LLContextMenu* menu = dynamic_cast<const LLContextMenu*>(ctrl->getParent());
-	const LLSpellCheckMenuHandler* spellcheck_handler = (menu) ? dynamic_cast<const LLSpellCheckMenuHandler*>(menu->getSpawningView()) : NULL;
+	const LLSpellCheckMenuHandler* spellcheck_handler = (menu) ? dynamic_cast<const LLSpellCheckMenuHandler*>(menu->getSpawningView()) : nullptr;
 	return (spellcheck_handler) && (spellcheck_handler->canAddToIgnore());
 }
 
@@ -6165,13 +6165,13 @@ bool enable_object_delete()
 class LLObjectsReturnPackage
 {
 public:
-	LLObjectsReturnPackage() : mObjectSelection(), mReturnableObjects(), mError(),	mFirstRegion(NULL) {};
+	LLObjectsReturnPackage() : mObjectSelection(), mReturnableObjects(), mError(),	mFirstRegion(nullptr) {};
 	~LLObjectsReturnPackage()
 	{
 		mObjectSelection.clear();
 		mReturnableObjects.clear();
 		mError.clear();
-		mFirstRegion = NULL;
+		mFirstRegion = nullptr;
 	};
 
 	LLObjectSelectionHandle mObjectSelection;
@@ -6915,7 +6915,7 @@ class LLAvatarResetSkeleton: public view_listener_t
 {
     bool handleEvent(const LLSD& userdata)
     {
-		LLVOAvatar* avatar = NULL;
+		LLVOAvatar* avatar = nullptr;
         LLViewerObject *obj = LLSelectMgr::getInstance()->getSelection()->getPrimaryObject();
         if (obj)
         {
@@ -7043,7 +7043,7 @@ bool enable_pay_avatar()
 {
 	LLViewerObject* obj = LLSelectMgr::getInstance()->getSelection()->getPrimaryObject();
 	LLVOAvatar* avatar = find_avatar_from_object(obj);
-	return (avatar != NULL);
+	return (avatar != nullptr);
 }
 
 bool enable_pay_object()
@@ -7557,9 +7557,9 @@ private:
 		if (selectedObject)
 		{
 			S32 index = userdata.asInteger();
-			LLViewerJointAttachment* attachment_point = NULL;
+			LLViewerJointAttachment* attachment_point = nullptr;
 			if (index > 0)
-				attachment_point = get_if_there(gAgentAvatarp->mAttachmentPoints, index, (LLViewerJointAttachment*)NULL);
+				attachment_point = get_if_there(gAgentAvatarp->mAttachmentPoints, index, (LLViewerJointAttachment*)nullptr);
 			confirmReplaceAttachment(0, attachment_point);
 		}
 		return true;
@@ -7728,7 +7728,7 @@ class LLAttachmentDetachFromPoint : public view_listener_t
 	bool handleEvent(const LLSD& user_data)
 	{
 		uuid_vec_t ids_to_remove;
-		const LLViewerJointAttachment *attachment = get_if_there(gAgentAvatarp->mAttachmentPoints, user_data.asInteger(), (LLViewerJointAttachment*)NULL);
+		const LLViewerJointAttachment *attachment = get_if_there(gAgentAvatarp->mAttachmentPoints, user_data.asInteger(), (LLViewerJointAttachment*)nullptr);
 		if (attachment->getNumObjects() > 0)
 		{
 			for (LLViewerJointAttachment::attachedobjs_vec_t::const_iterator iter = attachment->mAttachedObjects.begin();
@@ -7753,7 +7753,7 @@ static bool onEnableAttachmentLabel(LLUICtrl* ctrl, const LLSD& data)
 	LLMenuItemGL* menu = dynamic_cast<LLMenuItemGL*>(ctrl);
 	if (menu)
 	{
-		const LLViewerJointAttachment *attachment = get_if_there(gAgentAvatarp->mAttachmentPoints, data["index"].asInteger(), (LLViewerJointAttachment*)NULL);
+		const LLViewerJointAttachment *attachment = get_if_there(gAgentAvatarp->mAttachmentPoints, data["index"].asInteger(), (LLViewerJointAttachment*)nullptr);
 		if (attachment)
 		{
 			label = data["label"].asString();
@@ -7857,14 +7857,14 @@ class LLAttachmentEnableDrop : public view_listener_t
 		// item is in your inventory
 
 		LLViewerObject*              object         = LLSelectMgr::getInstance()->getSelection()->getPrimaryObject();
-		LLViewerJointAttachment*     attachment     = NULL;
-		LLInventoryItem*             item           = NULL;
+		LLViewerJointAttachment*     attachment     = nullptr;
+		LLInventoryItem*             item           = nullptr;
 
 		// Do not enable drop if all faces of object are not enabled
 		if (object && LLSelectMgr::getInstance()->getSelection()->contains(object,SELECT_ALL_TES ))
 		{
     		S32 attachmentID  = ATTACHMENT_ID_FROM_STATE(object->getAttachmentState());
-			attachment = get_if_there(gAgentAvatarp->mAttachmentPoints, attachmentID, (LLViewerJointAttachment*)NULL);
+			attachment = get_if_there(gAgentAvatarp->mAttachmentPoints, attachmentID, (LLViewerJointAttachment*)nullptr);
 
 			if (attachment)
 			{
@@ -8399,7 +8399,7 @@ void handle_dump_attachments(void*)
 			 ++attachment_iter)
 		{
 			LLViewerObject *attached_object = attachment_iter->get();
-			bool visible = (attached_object != NULL &&
+			bool visible = (attached_object != nullptr &&
 							attached_object->mDrawable.notNull() && 
 							!attached_object->mDrawable->isRenderType(0));
 			LLVector3 pos;
@@ -8636,11 +8636,11 @@ class LLAdvancedHandleAttachedLightParticles: public view_listener_t
 		// update internal flags
 		if (control_name == "RenderAttachedLights")
 		{
-			menu_toggle_attached_lights(NULL);
+			menu_toggle_attached_lights(nullptr);
 		}
 		else if (control_name == "RenderAttachedParticles")
 		{
-			menu_toggle_attached_particles(NULL);
+			menu_toggle_attached_particles(nullptr);
 		}
 		return true;
 	}
@@ -8770,7 +8770,7 @@ class LLToolsEnableSaveToObjectInventory : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		bool new_value = enable_save_into_task_inventory(NULL);
+		bool new_value = enable_save_into_task_inventory(nullptr);
 		return new_value;
 	}
 };
@@ -9092,7 +9092,7 @@ LLVOAvatar* find_avatar_from_object( LLViewerObject* object )
 		}
 		else if( !object->isAvatar() )
 		{
-			object = NULL;
+			object = nullptr;
 		}
 	}
 

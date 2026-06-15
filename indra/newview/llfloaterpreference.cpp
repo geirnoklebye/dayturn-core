@@ -1420,7 +1420,7 @@ void LLFloaterPreference::buildPopupLists()
 		row["columns"][0]["font"] = "SANSSERIF_SMALL";
 		row["columns"][0]["width"] = 400;
 		
-		LLScrollListItem* item = NULL;
+		LLScrollListItem* item = nullptr;
 		
 		bool show_popup = !formp->getIgnored();
 		if (!show_popup)
@@ -1972,7 +1972,7 @@ void LLFloaterPreference::refreshUI()
 
 void LLFloaterPreference::updateSliderTextAdvanced(LLSliderCtrl* ctrl, LLTextBox* text_box)
 {
-	if (text_box == NULL || ctrl== NULL)
+	if (text_box == nullptr || ctrl== nullptr)
 		return;
 
 	// get range and points when text should change
@@ -2464,7 +2464,7 @@ private:
 static LLPanelInjector<LLPanelPreference> t_places("panel_preference");
 LLPanelPreference::LLPanelPreference()
 : LLPanel(),
-  mBandWidthUpdater(NULL)
+  mBandWidthUpdater(nullptr)
 {
 	mCommitCallbackRegistrar.add("Pref.setControlFalse",	boost::bind(&LLPanelPreference::setControlFalse,this, _2));
 	mCommitCallbackRegistrar.add("Pref.updateMediaAutoPlayCheckbox",	boost::bind(&LLPanelPreference::updateMediaAutoPlayCheckbox, this, _1));

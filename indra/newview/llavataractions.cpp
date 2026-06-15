@@ -804,7 +804,7 @@ namespace action_give_inventory
 	static LLInventoryPanel* get_outfit_editor_inventory_panel()
 	{
 		LLPanelOutfitEdit* panel_outfit_edit = dynamic_cast<LLPanelOutfitEdit*>(LLFloaterSidePanelContainer::getPanel("appearance", "panel_outfit_edit"));
-		if (NULL == panel_outfit_edit) return NULL;
+		if (nullptr == panel_outfit_edit) return nullptr;
 
 		LLInventoryPanel* inventory_panel = panel_outfit_edit->findChild<LLInventoryPanel>("folder_view");
 		return inventory_panel;
@@ -871,13 +871,13 @@ namespace action_give_inventory
 		for (std::set<LLUUID>::const_iterator it = inventory_selected_uuids.begin(); ; )
 		{
 			LLViewerInventoryCategory* inv_cat = gInventory.getCategory(*it);
-			if (NULL != inv_cat)
+			if (nullptr != inv_cat)
 			{
 				items_string = inv_cat->getName();
 				break;
 			}
 			LLViewerInventoryItem* inv_item = gInventory.getItem(*it);
-			if (NULL != inv_item)
+			if (nullptr != inv_item)
 			{
 				items_string.append(inv_item->getName());
 			}
@@ -1011,7 +1011,7 @@ namespace action_give_inventory
 		for ( ; it != inventory_selected_uuids.end() && folders_count <=1 ; ++it)
 		{
 			LLViewerInventoryCategory* inv_cat = gInventory.getCategory(*it);
-			if (NULL != inv_cat)
+			if (nullptr != inv_cat)
 			{
 				folders_count++;
 			}
@@ -1603,7 +1603,7 @@ void LLAvatarActions::requestFriendship(const LLUUID& target_id, const std::stri
 //static
 bool LLAvatarActions::isFriend(const LLUUID& id)
 {
-	return ( NULL != LLAvatarTracker::instance().getBuddyInfo(id) );
+	return ( nullptr != LLAvatarTracker::instance().getBuddyInfo(id) );
 }
 
 // static
@@ -1653,7 +1653,7 @@ bool LLAvatarActions::isOnYourLand(const LLUUID &id)
 	//
 	//	find the avatar
 	//
-	LLVOAvatar *avatar = NULL;
+	LLVOAvatar *avatar = nullptr;
 
 	if (id.notNull()) {
 		avatar = find_avatar_from_object(id);
@@ -1723,7 +1723,7 @@ void LLAvatarActions::teleportHomeCommit(const LLSD &notification, const LLSD &r
 	//	find the avatar
 	//
 	const LLUUID id = notification["payload"]["id"];
-	LLVOAvatar *avatar = NULL;
+	LLVOAvatar *avatar = nullptr;
 
 	if (id.notNull()) {
 		avatar = find_avatar_from_object(id);
@@ -1786,7 +1786,7 @@ void LLAvatarActions::estateBan(const LLUUID &id)
 	//
 	//	find the avatar
 	//
-	LLVOAvatar *avatar = NULL;
+	LLVOAvatar *avatar = nullptr;
 
 	if (id.notNull()) {
 		avatar = find_avatar_from_object(id);
@@ -1864,7 +1864,7 @@ void LLAvatarActions::estateBanCommit(const LLSD &notification, const LLSD &resp
 	//	find the avatar
 	//
 	const LLUUID id = notification["payload"]["id"];
-	LLVOAvatar *avatar = NULL;
+	LLVOAvatar *avatar = nullptr;
 
 	if (id.notNull()) {
 		avatar = find_avatar_from_object(id);

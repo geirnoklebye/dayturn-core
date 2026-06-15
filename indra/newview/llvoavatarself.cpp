@@ -126,7 +126,7 @@ struct LocalTextureData
 		mDiscard(MAX_DISCARD_LEVEL+1), 
 		mImage(NULL), 
 		mWearableID(IMG_DEFAULT_AVATAR),
-		mTexEntry(NULL)
+		mTexEntry(nullptr)
 	{}
 	LLPointer<LLViewerFetchedTexture> mImage;
 	bool mIsBakedReady;
@@ -164,7 +164,7 @@ LLVOAvatarSelf::LLVOAvatarSelf(const LLUUID& id,
 							   const LLPCode pcode,
 							   LLViewerRegion* regionp) :
 	LLVOAvatar(id, pcode, regionp),
-	mScreenp(NULL),
+	mScreenp(nullptr),
 	mLastRegionHandle(0),
 	mRegionCrossingCount(0),
 	// Value outside legal range, so will always be a mismatch the
@@ -357,7 +357,7 @@ bool LLVOAvatarSelf::buildMenus()
 	//-------------------------------------------------------------------------
 	// build the attach and detach menus
 	//-------------------------------------------------------------------------
-	gAttachBodyPartPieMenus[0] = NULL;
+	gAttachBodyPartPieMenus[0] = nullptr;
 
 	LLContextMenu::Params params;
 	params.label(LLTrans::getString("BodyPartsRightArm"));
@@ -373,7 +373,7 @@ bool LLVOAvatarSelf::buildMenus()
 	params.name(params.label);
 	gAttachBodyPartPieMenus[3] = LLUICtrlFactory::create<LLContextMenu> (params);
 
-	gAttachBodyPartPieMenus[4] = NULL;
+	gAttachBodyPartPieMenus[4] = nullptr;
 
 	params.label(LLTrans::getString("BodyPartsLeftLeg"));
 	params.name(params.label);
@@ -391,7 +391,7 @@ bool LLVOAvatarSelf::buildMenus()
 	params.name(params.label);
 	gAttachBodyPartPieMenus[8] = LLUICtrlFactory::create<LLContextMenu>(params);
 
-	gDetachBodyPartPieMenus[0] = NULL;
+	gDetachBodyPartPieMenus[0] = nullptr;
 
 	params.label(LLTrans::getString("BodyPartsRightArm"));
 	params.name(params.label);
@@ -405,7 +405,7 @@ bool LLVOAvatarSelf::buildMenus()
 	params.name(params.label);
 	gDetachBodyPartPieMenus[3] = LLUICtrlFactory::create<LLContextMenu> (params);
 
-	gDetachBodyPartPieMenus[4] = NULL;
+	gDetachBodyPartPieMenus[4] = nullptr;
 
 	params.label(LLTrans::getString("BodyPartsLeftLeg"));
 	params.name(params.label);
@@ -631,7 +631,7 @@ bool LLVOAvatarSelf::buildMenus()
 		{
 			S32 attach_index = attach_it->second;
 
-			LLViewerJointAttachment* attachment = get_if_there(mAttachmentPoints, attach_index, (LLViewerJointAttachment*)NULL);
+			LLViewerJointAttachment* attachment = get_if_there(mAttachmentPoints, attach_index, (LLViewerJointAttachment*)nullptr);
 			if (attachment)
 			{
 				LLMenuItemCallGL::Params item_params;
@@ -662,7 +662,7 @@ void LLVOAvatarSelf::cleanup()
 {
 	markDead();
  	delete mScreenp;
- 	mScreenp = NULL;
+ 	mScreenp = nullptr;
 	mRegionp = NULL;
 }
 
@@ -1174,7 +1174,7 @@ LLViewerObject* LLVOAvatarSelf::getWornAttachment(const LLUUID& inv_item_id)
 			return attached_object;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 bool LLVOAvatarSelf::getAttachedPointName(const LLUUID& inv_item_id, std::string& name) const
@@ -1212,7 +1212,7 @@ const LLViewerJointAttachment *LLVOAvatarSelf::attachObject(LLViewerObject *view
 	const LLViewerJointAttachment *attachment = LLVOAvatar::attachObject(viewer_object);
 	if (!attachment)
 	{
-		return 0;
+		return nullptr;
 	}
 
 	updateAttachmentVisibility(gAgentCamera.getCameraMode());
@@ -1348,7 +1348,7 @@ void LLVOAvatarSelf::localTextureLoaded(bool success, LLViewerFetchedTexture *sr
 	LLLocalTextureObject *local_tex_obj = getLocalTextureObject(index, 0);
 
 	// fix for EXT-268. Preventing using of NULL pointer
-	if(NULL == local_tex_obj)
+	if(nullptr == local_tex_obj)
 	{
 		LL_WARNS("TAG") << "There is no Local Texture Object with index: " << index 
 			<< ", final: " << final
@@ -1358,7 +1358,7 @@ void LLVOAvatarSelf::localTextureLoaded(bool success, LLViewerFetchedTexture *sr
 	if (success)
 	{
 		if (!local_tex_obj->getBakedReady() &&
-			local_tex_obj->getImage() != NULL &&
+			local_tex_obj->getImage() != nullptr &&
 			(local_tex_obj->getID() == src_id) &&
 			discard_level < local_tex_obj->getDiscard())
 		{
@@ -1375,7 +1375,7 @@ void LLVOAvatarSelf::localTextureLoaded(bool success, LLViewerFetchedTexture *sr
 	{
 		// Failed: asset is missing
 		if (!local_tex_obj->getBakedReady() &&
-			local_tex_obj->getImage() != NULL &&
+			local_tex_obj->getImage() != nullptr &&
 			local_tex_obj->getImage()->getID() == src_id)
 		{
 			local_tex_obj->setDiscard(0);
@@ -1388,7 +1388,7 @@ void LLVOAvatarSelf::localTextureLoaded(bool success, LLViewerFetchedTexture *sr
 // virtual
 bool LLVOAvatarSelf::getLocalTextureGL(ETextureIndex type, LLViewerTexture** tex_pp, U32 index) const
 {
-	*tex_pp = NULL;
+	*tex_pp = nullptr;
 
 	if (!isIndexLocalTexture(type)) return false;
 	if (getLocalTextureID(type, index) == IMG_DEFAULT_AVATAR) return true;
@@ -1406,13 +1406,13 @@ LLViewerFetchedTexture* LLVOAvatarSelf::getLocalTextureGL(LLAvatarAppearanceDefi
 {
 	if (!isIndexLocalTexture(type))
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	const LLLocalTextureObject *local_tex_obj = getLocalTextureObject(type, index);
 	if (!local_tex_obj)
 	{
-		return NULL;
+		return nullptr;
 	}
 	if (local_tex_obj->getID() == IMG_DEFAULT_AVATAR)
 	{
@@ -1426,7 +1426,7 @@ const LLUUID& LLVOAvatarSelf::getLocalTextureID(ETextureIndex type, U32 index) c
 	if (!isIndexLocalTexture(type)) return IMG_DEFAULT_AVATAR;
 
 	const LLLocalTextureObject *local_tex_obj = getLocalTextureObject(type, index);
-	if (local_tex_obj && local_tex_obj->getImage() != NULL)
+	if (local_tex_obj && local_tex_obj->getImage() != nullptr)
 	{
 		return local_tex_obj->getImage()->getID();
 	}
@@ -1819,7 +1819,7 @@ void LLVOAvatarSelf::setLocalTexture(ETextureIndex type, LLViewerTexture* src_te
 				}
 				else
 				{					
-					tex->setLoadedCallback(onLocalTextureLoaded, desired_discard, true, false, new LLAvatarTexData(getID(), type), NULL);
+					tex->setLoadedCallback(onLocalTextureLoaded, desired_discard, true, false, new LLAvatarTexData(getID(), type), nullptr);
 				}
 			}
 			tex->setMinDiscardLevel(desired_discard);
@@ -1874,7 +1874,7 @@ void LLVOAvatarSelf::dumpLocalTextures() const
 			LL_INFOS() << "LocTex " << name << ": Baked " << getTEImage(baked_equiv)->getID() << LL_ENDL;
 #endif
 		}
-		else if (local_tex_obj && local_tex_obj->getImage() != NULL)
+		else if (local_tex_obj && local_tex_obj->getImage() != nullptr)
 		{
 			if (local_tex_obj->getImage()->getID() == IMG_DEFAULT_AVATAR)
 			{
@@ -2542,7 +2542,7 @@ LLLocalTextureObject* LLVOAvatarSelf::getLocalTextureObject(LLAvatarAppearanceDe
 		return wearable->getLocalTextureObject(i);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -2700,7 +2700,7 @@ LLViewerTexLayerSet* LLVOAvatarSelf::getLayerSet(ETextureIndex index) const
                const EBakedTextureIndex baked_index = texture_dict->mBakedTextureIndex;
                return getLayerSet(baked_index);
        }
-       return NULL;
+       return nullptr;
 }
 
 LLViewerTexLayerSet* LLVOAvatarSelf::getLayerSet(EBakedTextureIndex baked_index) const
@@ -2713,7 +2713,7 @@ LLViewerTexLayerSet* LLVOAvatarSelf::getLayerSet(EBakedTextureIndex baked_index)
        {
 		   return  getTexLayerSet(baked_index);
        }
-       return NULL;
+       return nullptr;
 }
 
 

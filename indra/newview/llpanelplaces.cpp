@@ -870,7 +870,7 @@ void LLPanelPlaces::onOverflowButtonClicked()
 
 	if ((is_agent_place_info_visible ||
 		 mPlaceInfoType == REMOTE_PLACE_INFO_TYPE ||
-		 mPlaceInfoType == TELEPORT_HISTORY_INFO_TYPE) && mPlaceMenu != NULL)
+		 mPlaceInfoType == TELEPORT_HISTORY_INFO_TYPE) && mPlaceMenu != nullptr)
 	{
 		menu = mPlaceMenu;
 
@@ -895,7 +895,7 @@ void LLPanelPlaces::onOverflowButtonClicked()
 		menu->setItemVisible("landmark", mPlaceInfoType != TELEPORT_HISTORY_INFO_TYPE);
 		menu->arrangeAndClear();
 	}
-	else if (mPlaceInfoType == LANDMARK_INFO_TYPE && mLandmarkMenu != NULL)
+	else if (mPlaceInfoType == LANDMARK_INFO_TYPE && mLandmarkMenu != nullptr)
 	{
 		menu = mLandmarkMenu;
 
@@ -1333,7 +1333,7 @@ LLPanelPlaceInfo* LLPanelPlaces::getCurrentInfoPanel()
 		return mLandmarkInfo;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 static bool is_agent_in_selected_parcel(LLParcel* parcel)
