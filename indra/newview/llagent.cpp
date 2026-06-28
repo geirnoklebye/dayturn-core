@@ -310,16 +310,9 @@ bool LLAgent::isActionAllowed(const LLSD& sdname)
             }
         }
 
-        if (gAgent.isVoiceConnected() &&
-            allow_agent_voice &&
-            !LLVoiceClient::getInstance()->inTuningMode())
-		{
-			retval = true;
-		}
-		else
-		{
-			retval = false;
-		}
+		retval = gAgent.isVoiceConnected() &&
+				allow_agent_voice &&
+				!LLVoiceClient::getInstance()->inTuningMode();
 	}
 
 	return retval;
@@ -802,7 +795,7 @@ bool LLAgent::canFly()
 
 bool LLAgent::getFlying() const
 { 
-	return mControlFlags & AGENT_CONTROL_FLY; 
+	return static_cast<bool>(mControlFlags & AGENT_CONTROL_FLY);
 }
 
 //-----------------------------------------------------------------------------
@@ -2270,7 +2263,7 @@ void LLAgent::endAnimationUpdateUI()
 		gViewerWindow->showCursor();
 		// show menus
 		gMenuBarView->setVisible(true);
-		LLNavigationBar::getInstance()->setVisible(true && gSavedSettings.getbool("ShowNavbarNavigationPanel"));
+		LLNavigationBar::getInstance()->setVisible(gSavedSettings.getbool("ShowNavbarNavigationPanel"));
 		gStatusBar->setVisibleForMouselook(true);
 
         static LLCachedControl<bool> show_mini_location_panel(gSavedSettings, "ShowMiniLocationPanel");
@@ -2293,7 +2286,7 @@ void LLAgent::endAnimationUpdateUI()
 		}
 
 		// Only pop if we have pushed...
-		if (true == mViewsPushed)
+		if (mViewsPushed)
 		{
 #if 0 // Use this once all floaters are registered
 			LLFloaterReg::restoreVisibleInstances();
@@ -3272,7 +3265,7 @@ void LLAgent::sendAnimationRequests(const std::vector<LLUUID> &anim_ids, EAnimRe
 		}
 		msg->nextBlockFast(_PREHASH_AnimationList);
 		msg->addUUIDFast(_PREHASH_AnimID, (anim_ids[i]) );
-		msg->addBOOLFast(_PREHASH_StartAnim, (request == ANIM_REQUEST_START) ? TRUE : FALSE);
+		msg->addboolFast(_PREHASH_StartAnim, request == ANIM_REQUEST_START);
 		num_valid_anims++;
 	}
 
@@ -3307,7 +3300,7 @@ void LLAgent::sendAnimationRequest(const LLUUID &anim_id, EAnimRequest request)
 
 	msg->nextBlockFast(_PREHASH_AnimationList);
 	msg->addUUIDFast(_PREHASH_AnimID, (anim_id) );
-	msg->addBOOLFast(_PREHASH_StartAnim, (request == ANIM_REQUEST_START) ? TRUE : FALSE);
+	msg->addboolFast(_PREHASH_StartAnim, request == ANIM_REQUEST_START);
 
 	msg->nextBlockFast(_PREHASH_PhysicalAvatarEventList);
 	msg->addBinaryDataFast(_PREHASH_TypeData, nullptr, 0);
@@ -3331,7 +3324,7 @@ void LLAgent::sendAnimationStateReset()
 
 	msg->nextBlockFast(_PREHASH_AnimationList);
 	msg->addUUIDFast(_PREHASH_AnimID, LLUUID::null );
-	msg->addBOOLFast(_PREHASH_StartAnim, FALSE);
+	msg->addboolFast(_PREHASH_StartAnim, false);
 
 	msg->nextBlockFast(_PREHASH_PhysicalAvatarEventList);
 	msg->addBinaryDataFast(_PREHASH_TypeData, nullptr, 0);
@@ -3372,7 +3365,7 @@ void LLAgent::sendWalkRun(bool running)
 		msgsys->nextBlockFast(_PREHASH_AgentData);
 		msgsys->addUUIDFast(_PREHASH_AgentID, getID());
 		msgsys->addUUIDFast(_PREHASH_SessionID, getSessionID());
-		msgsys->addBOOLFast(_PREHASH_AlwaysRun, BOOL(running) );
+		msgsys->addboolFast(_PREHASH_AlwaysRun, running );
 		sendReliableMessage();
 	}
 }
@@ -4741,7 +4734,7 @@ void LLAgent::requestEnterGodMode()
 	msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
 	msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
 	msg->nextBlockFast(_PREHASH_RequestBlock);
-	msg->addBOOLFast(_PREHASH_Godlike, TRUE);
+	msg->addboolFast(_PREHASH_Godlike, true);
 	msg->addUUIDFast(_PREHASH_Token, LLUUID::null);
 
 	// simulators need to know about your request
@@ -4756,7 +4749,7 @@ void LLAgent::requestLeaveGodMode()
 	msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
 	msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
 	msg->nextBlockFast(_PREHASH_RequestBlock);
-	msg->addBOOLFast(_PREHASH_Godlike, FALSE);
+	msg->addboolFast(_PREHASH_Godlike, false);
 	msg->addUUIDFast(_PREHASH_Token, LLUUID::null);
 
 	// simulator needs to know about your request
