@@ -2125,7 +2125,7 @@ std::ostream& operator<<(std::ostream &s, const LLAgent &agent)
 	return s;
 }
 
-// TRUE if your own avatar needs to be rendered.  Usually only
+// true if your own avatar needs to be rendered.  Usually only
 // in third person and build.
 //-----------------------------------------------------------------------------
 // needsRenderAvatar()
@@ -4314,7 +4314,7 @@ void LLAgent::addTPNearbyChatSeparator()
         chat.mText = "";
 
         LLSD args;
-        args["do_not_log"] = TRUE;
+        args["do_not_log"] = true;
         nearby_chat->addMessage(chat, true, args);
     }
 }

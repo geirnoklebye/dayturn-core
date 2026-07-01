@@ -411,7 +411,7 @@ void FSPanelProfileSecondLife::onOpen(const LLSD& key)
 	
 	if (!own_profile)
 	{
-		mVoiceStatus = LLAvatarActions::canCall() && (LLAvatarActions::isFriend(avatar_id) ? LLAvatarTracker::instance().isBuddyOnline(avatar_id) : TRUE);
+		mVoiceStatus = LLAvatarActions::canCall() && (LLAvatarActions::isFriend(avatar_id) ? LLAvatarTracker::instance().isBuddyOnline(avatar_id) : true);
 		drop_target->setAgentID(avatar_id);
 		updateOnlineStatus();
 	}
@@ -693,7 +693,7 @@ void FSPanelProfileSecondLife::onChange(EStatusType status, const std::string &c
         return;
     }
 
-	mVoiceStatus = LLAvatarActions::canCall() && (LLAvatarActions::isFriend(getAvatarId()) ? LLAvatarTracker::instance().isBuddyOnline(getAvatarId()) : TRUE);
+	mVoiceStatus = LLAvatarActions::canCall() && (LLAvatarActions::isFriend(getAvatarId()) ? LLAvatarTracker::instance().isBuddyOnline(getAvatarId()) : true);
 }
 
 void FSPanelProfileSecondLife::setAvatarId(const LLUUID& id)
@@ -1155,12 +1155,12 @@ void FSPanelProfileInterests::resetData()
 	
 	for (S32 i = 0; i < WANT_CHECKS; ++i)
 	{
-		mWantChecks[i]->setValue(FALSE);
+		mWantChecks[i]->setValue(false);
 	}
 
 	for (S32 i = 0; i < SKILL_CHECKS; ++i)
 	{
-		mSkillChecks[i]->setValue(FALSE);
+		mSkillChecks[i]->setValue(false);
 	}
 }
 
@@ -1389,7 +1389,7 @@ void FSPanelPick::processProperties(void* data, EAvatarProcessorType type)
 void FSPanelPick::setSnapshotId(const LLUUID& id)
 {
     mSnapshotCtrl->setImageAssetID(id);
-    mSnapshotCtrl->setValid(TRUE);
+    mSnapshotCtrl->setValid(true);
 }
 
 void FSPanelPick::setPickName(const std::string& name)

@@ -306,7 +306,7 @@ void LLVOAvatarSelf::markDead()
 	bool success = LLVOAvatar::loadAvatar();
 
 	// set all parameters stored directly in the avatar to have
-	// the isSelfParam to be TRUE - this is used to prevent
+	// the isSelfParam to be true - this is used to prevent
 	// them from being animated or trigger accidental rebakes
 	// when we copy params from the wearable to the base avatar.
 	for (LLViewerVisualParam* param = (LLViewerVisualParam*) getFirstVisualParam(); 
@@ -1106,7 +1106,7 @@ void LLVOAvatarSelf::updateAttachmentVisibility(U32 camera_mode)
 //-----------------------------------------------------------------------------
 // updatedWearable( LLWearableType::EType type )
 // forces an update to any baked textures relevant to type.
-// will force an upload of the resulting bake if the second parameter is TRUE
+// will force an upload of the resulting bake if the second parameter is true
 //-----------------------------------------------------------------------------
 void LLVOAvatarSelf::wearableUpdated(LLWearableType::EType type)
 {

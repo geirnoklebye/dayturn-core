@@ -269,7 +269,7 @@ bool LLPanelGroupNotices::postBuild()
 //	mCreateMessage = getChild<LLTextEditor>("create_message",recurse);
 //
 //	mCreateInventoryName =  getChild<LLLineEditor>("create_inventory_name",recurse);
-//	mCreateInventoryName->setTabStop(FALSE);
+//	mCreateInventoryName->setTabStop(false);
 //	mCreateInventoryName->setEnabled(false);
 //
 //	mCreateInventoryIcon = getChild<LLIconCtrl>("create_inv_icon",recurse);
@@ -357,10 +357,10 @@ void LLPanelGroupNotices::activate()
 //{
 //	mInventoryItem = inv_item;
 //
-////	bool item_is_multi = FALSE;
+////	bool item_is_multi = false;
 ////	if ( inv_item->getFlags() & LLInventoryItemFlags::II_FLAGS_OBJECT_HAS_MULTIPLE_ITEMS )
 ////	{
-////		item_is_multi = TRUE;
+////		item_is_multi = true;
 ////	};
 ////
 ////	std::string icon_name = LLInventoryIcon::getIconName(inv_item->getType(),
@@ -471,7 +471,7 @@ void LLPanelGroupNotices::onClickNewMessage(void* data)
 //	self->mCreateSubject->clear();
 //	self->mCreateMessage->clear();
 //	if (self->mInventoryItem) onClickRemoveAttachment(self);
-//	self->mNoticesList->deselectAllItems(TRUE); // TRUE == don't commit on chnage
+//	self->mNoticesList->deselectAllItems(true); // true == don't commit on chnage
 }
 
 void LLPanelGroupNotices::refreshNotices()

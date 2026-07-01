@@ -403,9 +403,9 @@ void LLPanelPlaces::onOpen(const LLSD& key)
 			// The second toggle forces the list to be set to Landmark.
 			// This avoids extracting and duplicating all the state logic from togglePlaceInfoPanel() 
 			// here or some specific private method
-			togglePlaceInfoPanel(FALSE);
+			togglePlaceInfoPanel(false);
 			mPlaceInfoType = key_type;
-			togglePlaceInfoPanel(FALSE);
+			togglePlaceInfoPanel(false);
 			// Update the active tab
 			onTabSelected();
 			// Update the buttons at the bottom of the panel
@@ -435,7 +435,7 @@ void LLPanelPlaces::onOpen(const LLSD& key)
 			mPosGlobal.setZero();
 			mItem = NULL;
 			mRegionId.setNull();
-			togglePlaceInfoPanel(TRUE);
+			togglePlaceInfoPanel(true);
 
 			if (mPlaceInfoType == AGENT_INFO_TYPE)
 			{
@@ -979,7 +979,7 @@ void LLPanelPlaces::onOverflowMenuItemClicked(const LLSD& param)
 
 void LLPanelPlaces::onBackButtonClicked()
 {
-	togglePlaceInfoPanel(FALSE);
+	togglePlaceInfoPanel(false);
 
 	// Resetting mPlaceInfoType when Place Info panel is closed.
 	mPlaceInfoType = LLStringUtil::null;

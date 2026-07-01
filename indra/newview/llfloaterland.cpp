@@ -2503,8 +2503,8 @@ void LLPanelLandAccess::refresh()
         }
         else
         {
-            getChild<LLUICtrl>("public_access")->setValue(TRUE);
-            getChild<LLUICtrl>("GroupCheck")->setValue(FALSE);
+            getChild<LLUICtrl>("public_access")->setValue(true);
+            getChild<LLUICtrl>("GroupCheck")->setValue(false);
         }
 		std::string group_name;
 		gCacheName->getGroupName(parcel->getGroupID(), group_name);
@@ -2626,7 +2626,7 @@ void LLPanelLandAccess::refresh()
 
 		if(parcel->getRegionDenyAnonymousOverride())
 		{
-			getChild<LLUICtrl>("limit_payment")->setValue(TRUE);
+			getChild<LLUICtrl>("limit_payment")->setValue(true);
 			getChild<LLUICtrl>("limit_payment")->setLabelArg("[ESTATE_PAYMENT_LIMIT]", getString("access_estate_defined") );
 		}
 		else
@@ -2636,7 +2636,7 @@ void LLPanelLandAccess::refresh()
 		}
 		if(parcel->getRegionDenyAgeUnverifiedOverride())
 		{
-			getChild<LLUICtrl>("limit_age_verified")->setValue(TRUE);
+			getChild<LLUICtrl>("limit_age_verified")->setValue(true);
 			getChild<LLUICtrl>("limit_age_verified")->setLabelArg("[ESTATE_AGE_LIMIT]", getString("access_estate_defined") );
 		}
 		else
@@ -2664,12 +2664,12 @@ void LLPanelLandAccess::refresh()
 	}
 	else
 	{
-		getChild<LLUICtrl>("public_access")->setValue(FALSE);
-		getChild<LLUICtrl>("limit_payment")->setValue(FALSE);
-		getChild<LLUICtrl>("limit_age_verified")->setValue(FALSE);
-		getChild<LLUICtrl>("GroupCheck")->setValue(FALSE);
+		getChild<LLUICtrl>("public_access")->setValue(false);
+		getChild<LLUICtrl>("limit_payment")->setValue(false);
+		getChild<LLUICtrl>("limit_age_verified")->setValue(false);
+		getChild<LLUICtrl>("GroupCheck")->setValue(false);
 		getChild<LLUICtrl>("GroupCheck")->setLabelArg("[GROUP]", LLStringUtil::null );
-		getChild<LLUICtrl>("PassCheck")->setValue(FALSE);
+		getChild<LLUICtrl>("PassCheck")->setValue(false);
 		getChild<LLUICtrl>("PriceSpin")->setValue((F32)PARCEL_PASS_PRICE_DEFAULT);
 		getChild<LLUICtrl>("HoursSpin")->setValue(PARCEL_PASS_HOURS_DEFAULT );
 		getChild<LLUICtrl>("AccessList")->setToolTipArg(LLStringExplicit("[LISTED]"), llformat("%d",0));
@@ -2895,7 +2895,7 @@ void LLPanelLandAccess::onCommitAny(LLUICtrl *ctrl, void *userdata)
 	parcel->setParcelFlag(PF_USE_ACCESS_GROUP,	use_access_group);
 	parcel->setParcelFlag(PF_USE_ACCESS_LIST,	use_access_list);
 	parcel->setParcelFlag(PF_USE_PASS_LIST,		use_pass_list);
-	parcel->setParcelFlag(PF_USE_BAN_LIST,		TRUE);
+	parcel->setParcelFlag(PF_USE_BAN_LIST,		true);
 	parcel->setParcelFlag(PF_DENY_ANONYMOUS, 	limit_payment);
 	parcel->setParcelFlag(PF_DENY_AGEUNVERIFIED, limit_age_verified);
 

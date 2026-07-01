@@ -1959,7 +1959,7 @@ bool LLVivoxVoiceClient::terminateAudioSession(bool wait)
                        << " VoiceEnabled " << mVoiceEnabled
                        << " IsInitialized " << mIsInitialized
                        << " RelogRequested " << mRelogRequested
-                       << " ShuttingDown " << (sShuttingDown ? "TRUE" : "FALSE")
+                       << " ShuttingDown " << (sShuttingDown ? "true" : "false")
                        << " returning " << status
                        << LL_ENDL;
     return status;

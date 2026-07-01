@@ -1351,7 +1351,7 @@ protected:
 };
 
 
-//Returns TRUE if we are OK, FALSE if we are throttled
+//Returns true if we are OK, false if we are throttled
 //Set check_only true if you want to know the throttle status 
 //without registering a hit
 bool check_offer_throttle(const std::string& from_name, bool check_only)
@@ -2566,7 +2566,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 
 	if (is_audible)
 	{
-		//bool visible_in_chat_bubble = FALSE;
+		//bool visible_in_chat_bubble = false;
 
 		color.setVec(1.f,1.f,1.f,1.f);
 		msg->getStringFast(_PREHASH_ChatData, _PREHASH_Message, mesg);
@@ -5700,7 +5700,7 @@ void notify_cautioned_script_question(const LLSD& notification, const LLSD& resp
 		if (caution)
 		{
 			LLChat chat(notice.getString());
-	//		LLFloaterChat::addChat(chat, FALSE, FALSE);
+	//		LLFloaterChat::addChat(chat, false, false);
 		}
 	}
 }
@@ -6919,7 +6919,7 @@ void process_script_teleport_request(LLMessageSystem* msg, void**)
 	
 	// remove above two lines and replace with below line
 	// to re-enable parcel browser for llMapDestination()
-	// LLURLDispatcher::dispatch(LLSLURL::buildSLURL(sim_name, (S32)pos.mV[VX], (S32)pos.mV[VY], (S32)pos.mV[VZ]), FALSE);
+	// LLURLDispatcher::dispatch(LLSLURL::buildSLURL(sim_name, (S32)pos.mV[VX], (S32)pos.mV[VY], (S32)pos.mV[VZ]), false);
 	
 }
 

@@ -882,7 +882,7 @@ void LLPanelProfileClassified::updateInfoRect()
         // info_scroll_content_panel contains both info and edit panel
         // info panel can be very large and scroll bar will carry over.
         // Resize info panel to prevent scroll carry over when in edit mode.
-        mInfoScroll->reshape(mInfoScroll->getRect().getWidth(), DEFAULT_EDIT_CLASSIFIED_SCROLL_HEIGHT, FALSE);
+        mInfoScroll->reshape(mInfoScroll->getRect().getWidth(), DEFAULT_EDIT_CLASSIFIED_SCROLL_HEIGHT, false);
     }
     else
     {
@@ -892,7 +892,7 @@ void LLPanelProfileClassified::updateInfoRect()
         S32 delta_height = new_height - visible_rect.getHeight() + 5;
 
         LLRect rect = mInfoScroll->getRect();
-        mInfoScroll->reshape(rect.getWidth(), rect.getHeight() + delta_height, FALSE);
+        mInfoScroll->reshape(rect.getWidth(), rect.getHeight() + delta_height, false);
     }
 }
 
